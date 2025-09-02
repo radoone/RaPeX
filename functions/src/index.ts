@@ -1,9 +1,11 @@
 
 import * as logger from "firebase-functions/logger";
 import { onSchedule } from "firebase-functions/v2/scheduler";
+import { onRequest } from "firebase-functions/v2/https";
 import { initializeApp } from "firebase-admin/app";
 import { getFirestore, Timestamp, FieldValue } from "firebase-admin/firestore";
 import axios from "axios";
+import { checkProductSafety } from "./product-safety-checker.js";
 
 // Initialize Firebase Admin SDK
 // Make sure to set up service account credentials in your environment
@@ -67,13 +69,12 @@ export const dailyRapexDeltaLoader = onSchedule(
     timeZone: "Europe/Bratislava",
     region: "europe-west1", // Recommended region for European users
   },
-  async (event) => {
+  async (event: any) => {
     logger.info("Starting daily RAPEX delta loader job.", { event });
     await runRapexLoader();
   });
 
 // --- Manual HTTP Trigger for Testing ---
-import { onRequest } from "firebase-functions/v2/https";
 
 export const manualRapexLoader = onRequest(
   {
@@ -247,3 +248,92 @@ async function runRapexLoader() {
       throw error;
     }
 }
+
+// --- Product Safety Checker API ---
+export const checkProductSafetyAPI = onRequest(
+  {
+    region: "europe-west1",
+    memory: "512MiB",
+    timeoutSeconds: 120, // Longer timeout for AI processing
+    // invoker: "public", // Allow unauthenticated access - temporarily disabled
+    secrets: ["GOOGLE_API_KEY"],
+  },
+  async (req, res) => {
+    // Enable CORS
+    res.set('Access-Control-Allow-Origin', '*');
+    res.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.set('Access-Control-Allow-Headers', 'Content-Type');
+
+    if (req.method === 'OPTIONS') {
+      res.status(204).send('');
+      return;
+    }
+
+    try {
+      logger.info("Product safety check API called", {
+        method: req.method,
+        hasBody: !!req.body,
+        query: req.query
+      });
+
+      let productData;
+
+      if (req.method === 'POST' && req.body) {
+        // POST request with JSON body
+        productData = req.body;
+      } else if (req.method === 'GET' && req.query) {
+        // GET request with query parameters
+        productData = {
+          name: req.query.name || req.query.product,
+          category: req.query.category,
+          description: req.query.description,
+          imageUrl: req.query.imageUrl,
+          brand: req.query.brand,
+          model: req.query.model,
+        };
+      } else {
+        res.status(400).json({
+          error: "Missing product data",
+          usage: {
+            GET: "/checkProductSafetyAPI?name=Product&category=toys&description=Description",
+            POST: "/checkProductSafetyAPI with JSON body: {name, category, description, imageUrl?, brand?, model?}"
+          }
+        });
+        return;
+      }
+
+      // No testLatest mode; API key is required for AI analysis
+
+      // Validate required fields
+      if (!productData.name || !productData.category || !productData.description) {
+        res.status(400).json({
+          error: "Missing required fields",
+          required: ["name", "category", "description"],
+          provided: productData
+        });
+        return;
+      }
+
+      logger.info("Processing product safety check", { productData });
+
+      // Run the Genkit flow (requires GOOGLE_API_KEY secret)
+      const result = await checkProductSafety(productData);
+
+      logger.info("Product safety check completed", {
+        isSafe: result.isSafe,
+        warningsCount: result.warnings.length
+      });
+
+      res.status(200).json(result);
+
+    } catch (error) {
+      logger.error("Product safety check API error", { error });
+
+      res.status(500).json({
+        error: "Internal server error",
+        message: error instanceof Error ? error.message : String(error),
+        timestamp: new Date().toISOString()
+      });
+    }
+  }
+);
