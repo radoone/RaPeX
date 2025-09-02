@@ -1,0 +1,24 @@
+{
+  "name": "rapex-firebase",
+  "version": "1.0.0",
+  "description": "Firebase backend for RAPEX alerts system",
+  "private": true,
+  "scripts": {
+    "deploy": "firebase deploy",
+    "emulators": "firebase emulators:start",
+    "logs": "firebase functions:log",
+    "build": "cd functions && npm run build",
+    "test": "cd functions && npm test",
+    "lint": "cd functions && npm run lint"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0",
+    "firebase-functions": "^4.8.0"
+  },
+  "devDependencies": {
+    "firebase-tools": "^13.0.0"
+  },
+  "engines": {
+    "node": "18"
+  }
+}
