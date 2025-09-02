@@ -63,7 +63,7 @@ Tento projekt implementuje **inteligentný automatický delta loader** pre dáta
   - **Metódy**: GET, POST
   - **Účel**: Kontrola bezpečnosti výrobkov pomocou AI analýzy RAPEX alertov
   - **AI Model**: Google Gemini 2.5 Flash Lite
-  - **Autentifikácia**: Vyžaduje ID token (Bearer)
+  - **Autentifikácia**: Vyžaduje API kľúč (X-API-Key header)
 
 ### **Úložisko dát**
 - **Databáza**: Google Firestore
@@ -106,16 +106,41 @@ Tento projekt implementuje **inteligentný automatický delta loader** pre dáta
 
 ```
 rapex/
-├── firebase/              # Firebase backend
-│   ├── functions/         # Cloud Functions (RAPEX loader & AI)
-│   ├── firebase.json      # Firebase configuration
-│   ├── firestore.rules    # Firestore security rules
-│   └── firestore.indexes.json
-├── shopify-client/        # Shopify client application
-│   ├── src/              # Source code
-│   ├── package.json      # Shopify client dependencies
-│   └── tsconfig.json     # TypeScript configuration
-└── package.json          # Root workspace configuration
+├── firebase/                    # Firebase backend
+│   ├── functions/               # Cloud Functions (RAPEX loader & AI)
+│   │   ├── src/                 # TypeScript source files
+│   │   │   ├── index.ts         # Main functions entry point
+│   │   │   ├── product-safety-checker.ts # AI safety analysis
+│   │   │   └── check-data.ts    # RAPEX data processing
+│   │   ├── package.json         # Functions dependencies
+│   │   ├── tsconfig.json        # TypeScript config
+│   │   └── .env.example         # Environment variables template
+│   ├── firebase.json            # Firebase configuration
+│   ├── firestore.rules          # Firestore security rules
+│   └── firestore.indexes.json   # Firestore indexes
+├── shopify-client/             # Shopify client application
+│   └── ra-pex/                  # Main Shopify app
+│       ├── app/                 # Remix application
+│       │   ├── routes/          # App routes
+│       │   │   ├── app.manual-check.tsx    # Manual safety check
+│       │   │   ├── app.alerts.tsx          # Safety alerts dashboard
+│       │   │   ├── app._index.tsx          # Main dashboard
+│       │   │   └── auth.*.tsx              # Authentication routes
+│       │   ├── services/        # Business logic services
+│       │   │   ├── rapex-checker.server.ts # Server-side API calls
+│       │   │   └── rapex-checker.client.ts # Client utilities
+│       │   ├── db.server.ts      # Prisma database client
+│       │   └── shopify.server.ts # Shopify API client
+│       ├── prisma/              # Database schema & migrations
+│       │   ├── schema.prisma    # Prisma schema
+│       │   └── migrations/      # Database migrations
+│       ├── public/              # Static assets
+│       ├── scripts/             # Utility scripts
+│       ├── package.json         # App dependencies
+│       ├── tsconfig.json        # TypeScript config
+│       ├── RAPEX_SETUP.md       # Setup documentation
+│       └── Dockerfile           # Docker configuration
+└── package.json                # Root workspace configuration
 ```
 
 ## 🚀 Rýchle Nastavenie
@@ -140,11 +165,15 @@ npm install
 firebase login
 
 # 4. Nastavte projekt
-firebase use rapex-99a2c
+firebase use {project-id}
 
 # 5. Nastavte Google AI API kľúč
-gcloud secrets create GOOGLE_API_KEY --replication-policy=automatic --project=rapex-99a2c
-echo -n 'YOUR_GEMINI_API_KEY' | gcloud secrets versions add GOOGLE_API_KEY --data-file=- --project=rapex-99a2c
+gcloud secrets create GOOGLE_API_KEY --replication-policy=automatic --project={project-id}
+echo -n 'YOUR_GEMINI_API_KEY' | gcloud secrets versions add GOOGLE_API_KEY --data-file=- --project={project-id}
+
+# 6. Nastavte RAPEX API kľúč
+gcloud secrets create RAPEX_API_KEY --replication-policy=automatic --project={project-id}
+echo -n 'YOUR_RAPEX_API_KEY' | gcloud secrets versions add RAPEX_API_KEY --data-file=- --project={project-id}
 ```
 
 ### **Práca s jednotlivými projektmi**
@@ -163,7 +192,7 @@ npm run build
 ```bash
 # Nasadenie Firebase projektu (z firebase adresára)
 cd firebase
-firebase deploy --only functions,firestore --project rapex-99a2c
+firebase deploy --only functions,firestore --project {project-id}
 
 # Alebo z root adresára
 npm run firebase:deploy
@@ -174,29 +203,29 @@ npm run firebase:deploy
 ### **🤖 AI Product Safety Analysis** ⭐ **NAJNOVŠIE**
 
 #### **Endpoint**: `checkProductSafetyAPI`
-**URL**: `https://europe-west1-rapex-99a2c.cloudfunctions.net/checkProductSafetyAPI`
+**URL**: `https://europe-west1-{project-id}.cloudfunctions.net/checkProductSafetyAPI`
 
 #### **Autentifikácia**
 ```bash
-# Získanie ID tokenu
-gcloud auth print-identity-token
+# Nastavenie API kľúča ako environment premennej
+export RAPEX_API_KEY="your-rapex-api-key-here"
 ```
 
 #### **GET Request (Query Parameters)**
 ```bash
-curl -sS "https://europe-west1-rapex-99a2c.cloudfunctions.net/checkProductSafetyAPI?name=USB+charger&category=electronics&description=Fast+charger" \
+curl -sS "https://europe-west1-{project-id}.cloudfunctions.net/checkProductSafetyAPI?name=USB+charger&category=electronics&description=Fast+charger" \
   -H "Accept: application/json" \
-  -H "Authorization: Bearer $(gcloud auth print-identity-token)"
+  -H "X-API-Key: $RAPEX_API_KEY"
 ```
 
 #### **POST Request (JSON Body)**
 ```bash
-curl -sS -X POST https://europe-west1-rapex-99a2c.cloudfunctions.net/checkProductSafetyAPI \
+curl -sS -X POST https://europe-west1-{project-id}.cloudfunctions.net/checkProductSafetyAPI \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
+  -H "X-API-Key: $RAPEX_API_KEY" \
   -d '{
     "name": "USB charger",
-    "category": "electronics", 
+    "category": "electronics",
     "description": "Fast USB charger with EU plug",
     "brand": "Foo",
     "model": "Bar123"
@@ -239,10 +268,54 @@ curl -sS -X POST https://europe-west1-rapex-99a2c.cloudfunctions.net/checkProduc
 - **Risk Assessment**: Identifikuje úroveň rizika a poskytuje odporúčania
 - **Real-time Data**: Používa aktuálne RAPEX dáta z Firestore databázy
 
+### **🛍️ Shopify Integration** ⭐ **NOVÉ**
+
+#### **Prehľad**
+Projekt teraz obsahuje kompletnú integráciu so Shopify platformou pre automatickú kontrolu bezpečnosti produktov.
+
+#### **Komponenty integrácie**
+- **Shopify App**: Kompletná aplikácia s admin rozhraním
+- **Manual Product Check**: Manuálna kontrola jednotlivých produktov
+- **Automated Webhooks**: Automatická kontrola pri vytvorení/upravení produktov
+- **Safety Alerts Dashboard**: Prehľad všetkých bezpečnostných upozornení
+- **Database Integration**: Prisma s SQLite pre lokálne uloženie alertov
+
+#### **Nastavenie Shopify aplikácie**
+```bash
+# Prejdite do Shopify klienta
+cd shopify-client/ra-pex
+
+# Vytvorte .env súbor
+echo "RAPEX_API_KEY=your-rapex-api-key-here" > .env
+echo "FIREBASE_FUNCTIONS_BASE_URL=https://europe-west1-{project-id}.cloudfunctions.net" >> .env
+
+# Spustite development server
+npm run dev
+```
+
+#### **Funkcie Shopify aplikácie**
+- **📋 Product Selection**: Interaktívny výber produktov na kontrolu
+- **🔍 Safety Analysis**: Real-time analýza pomocou RAPEX databázy
+- **⚠️ Alert Management**: Správa a sledovanie bezpečnostných upozornení
+- **📊 Dashboard**: Prehľad štatistík a výsledkov kontrol
+- **🔧 Manual Override**: Manuálne prepísanie výsledkov kontroly
+
+#### **Webhook integrácie**
+Aplikácia automaticky reaguje na tieto Shopify webhooky:
+- `products/create` - Kontrola nových produktov
+- `products/update` - Re-kontrola upravených produktov
+- `app/uninstalled` - Čistenie dát pri odinštalovaní
+
+#### **Bezpečnosť a autentifikácia**
+- **API Key Protection**: Všetky API volania chránené RAPEX API kľúčom
+- **CORS Support**: Podpora pre cross-origin požiadavky
+- **Error Handling**: Robustné spracovanie chýb a výpadkov
+- **Rate Limiting**: Ochrana pred preťažením API
+
 ### **Možnosť 1: HTTP API Endpoint** ⭐ **NAJĽAHŠIE**
 ```bash
 # Manuálne spustenie cez HTTP
-curl -X GET https://europe-west1-rapex-99a2c.cloudfunctions.net/manualRapexLoader
+curl -X GET https://europe-west1-{project-id}.cloudfunctions.net/manualRapexLoader
 ```
 
 **Odpoveď:**
@@ -257,7 +330,7 @@ curl -X GET https://europe-west1-rapex-99a2c.cloudfunctions.net/manualRapexLoade
 ### **Možnosť 2: Webový prehliadač**
 Otvorte priamo v prehliadači:
 ```
-https://europe-west1-rapex-99a2c.cloudfunctions.net/manualRapexLoader
+https://europe-west1-{project-id}.cloudfunctions.net/manualRapexLoader
 ```
 
 ### **Možnosť 3: Google Cloud Console**
@@ -268,12 +341,12 @@ https://europe-west1-rapex-99a2c.cloudfunctions.net/manualRapexLoader
 ### **Monitoring a Debugging**
 ```bash
 # Sledovanie logov
-firebase functions:log --only dailyRapexDeltaLoader --project rapex-99a2c
-firebase functions:log --only manualRapexLoader --project rapex-99a2c
-firebase functions:log --only checkProductSafetyAPI --project rapex-99a2c
+firebase functions:log --only dailyRapexDeltaLoader --project {project-id}
+firebase functions:log --only manualRapexLoader --project {project-id}
+firebase functions:log --only checkProductSafetyAPI --project {project-id}
 
 # Kontrola stavu funkcií
-firebase functions:list --project rapex-99a2c
+firebase functions:list --project {project-id}
 ```
 
 ## 🔮 Budúce Rozšírenia
@@ -331,7 +404,7 @@ Poskytni odporúčania pre spotrebiteľov a výrobcov.
 - **Bezpečnosť**: Kľúče nie sú v kóde ani v logoch
 
 ### **Autentifikácia**
-- **HTTP Functions**: Vyžadujú Bearer token (ID token z gcloud)
+- **HTTP Functions**: Vyžadujú API kľúč (X-API-Key header)
 - **Scheduled Functions**: Spúšťajú sa automaticky s service account oprávneniami
 - **CORS**: Povolené pre webové aplikácie
 
