@@ -4,6 +4,7 @@ import tsparser from "@typescript-eslint/parser";
 import importPlugin from "eslint-plugin-import";
 
 export default [
+    
   js.configs.recommended,
   {
 
