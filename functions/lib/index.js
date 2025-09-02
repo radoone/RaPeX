@@ -1,21 +1,18 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.dailyRapexDeltaLoader = void 0;
-const logger = require("firebase-functions/logger");
-const firebase_functions_1 = require("firebase-functions");
-const app_1 = require("firebase-admin/app");
-const firestore_1 = require("firebase-admin/firestore");
-const axios_1 = require("axios");
+import * as logger from "firebase-functions/logger";
+import { onSchedule } from "firebase-functions/v2/scheduler";
+import { initializeApp } from "firebase-admin/app";
+import { getFirestore, Timestamp, FieldValue } from "firebase-admin/firestore";
+import axios from "axios";
 // Initialize Firebase Admin SDK
 // Make sure to set up service account credentials in your environment
 // https://firebase.google.com/docs/functions/beta/configuring-env-variables
 try {
-    (0, app_1.initializeApp)();
+    initializeApp();
 }
 catch (e) {
     logger.error("Failed to initialize Firebase Admin SDK.", e);
 }
-const db = (0, firestore_1.getFirestore)();
+const db = getFirestore();
 // --- Configuration ---
 const ODS_DATASET = "healthref-europe-rapex-en";
 const ODS_BASE_URL = "https://public.opendatasoft.com/api/records/1.0/search";
@@ -26,13 +23,43 @@ const ROWS_PER_PAGE = parseInt(process.env.ROWS_PER_PAGE || "500", 10);
 const MAX_PAGES = parseInt(process.env.MAX_PAGES || "20", 10);
 const BOOTSTRAP_DAYS = 30; // Days to fetch on the first run
 // --- Scheduled Function ---
-exports.dailyRapexDeltaLoader = firebase_functions_1.pubsub
-    .schedule("13 3 * * *")
-    .timeZone("Europe/Bratislava")
-    .onRun(async (context) => {
-    logger.info("Starting daily RAPEX delta loader job.", { context });
+export const dailyRapexDeltaLoader = onSchedule({
+    schedule: "13 3 * * *",
+    timeZone: "Europe/Bratislava",
+    region: "europe-west1", // Recommended region for European users
+}, async (event) => {
+    logger.info("Starting daily RAPEX delta loader job.", { event });
+    await runRapexLoader();
+});
+// --- Manual HTTP Trigger for Testing ---
+import { onRequest } from "firebase-functions/v2/https";
+export const manualRapexLoader = onRequest({
+    region: "europe-west1",
+    memory: "256MiB",
+}, async (req, res) => {
+    try {
+        logger.info("Manual RAPEX loader triggered via HTTP", { method: req.method, url: req.url });
+        await runRapexLoader();
+        res.status(200).json({
+            success: true,
+            message: "RAPEX loader completed successfully",
+            timestamp: new Date().toISOString()
+        });
+    }
+    catch (error) {
+        logger.error("Manual RAPEX loader failed", { error });
+        res.status(500).json({
+            success: false,
+            message: "RAPEX loader failed",
+            error: error instanceof Error ? error.message : String(error),
+            timestamp: new Date().toISOString()
+        });
+    }
+});
+// --- Shared loader function ---
+async function runRapexLoader() {
     const stateRef = db.collection(META_COLLECTION).doc(META_DOC);
-    const runStartTime = firestore_1.Timestamp.now();
+    const runStartTime = Timestamp.now();
     try {
         // Mark job as IN_PROGRESS
         await stateRef.set({
@@ -67,7 +94,7 @@ exports.dailyRapexDeltaLoader = firebase_functions_1.pubsub
         let newMaxRecordTimestamp = last_record_timestamp || "";
         while (hasMore && currentPage < MAX_PAGES) {
             const start = currentPage * ROWS_PER_PAGE;
-            const response = await axios_1.default.get(ODS_BASE_URL, {
+            const response = await axios.get(ODS_BASE_URL, {
                 params: {
                     dataset: ODS_DATASET,
                     sort: "-alert_date,-record_timestamp", // Newest first
@@ -104,8 +131,8 @@ exports.dailyRapexDeltaLoader = firebase_functions_1.pubsub
                         datasetid: record.datasetid,
                         recordid: record.recordid,
                         record_timestamp: record.record_timestamp,
-                        alert_date: firestore_1.Timestamp.fromDate(recordAlertDate),
-                        ingested_at: firestore_1.FieldValue.serverTimestamp(),
+                        alert_date: Timestamp.fromDate(recordAlertDate),
+                        ingested_at: FieldValue.serverTimestamp(),
                     },
                     fields: record.fields,
                 };
@@ -128,12 +155,12 @@ exports.dailyRapexDeltaLoader = firebase_functions_1.pubsub
         logger.info(`Successfully processed and upserted ${totalProcessed} records.`);
         // Update state for the next run
         const finalState = {
-            last_run_end: firestore_1.Timestamp.now(),
+            last_run_end: Timestamp.now(),
             last_run_status: "SUCCESS",
             last_run_processed_records: totalProcessed,
         };
         if (totalProcessed > 0) {
-            finalState.last_alert_date = firestore_1.Timestamp.fromDate(newMaxAlertDate);
+            finalState.last_alert_date = Timestamp.fromDate(newMaxAlertDate);
             finalState.last_record_timestamp = newMaxRecordTimestamp;
         }
         await stateRef.set(finalState, { merge: true });
@@ -142,11 +169,11 @@ exports.dailyRapexDeltaLoader = firebase_functions_1.pubsub
     catch (error) {
         logger.error("Error running RAPEX delta loader job.", { error });
         await stateRef.set({
-            last_run_end: firestore_1.Timestamp.now(),
+            last_run_end: Timestamp.now(),
             last_run_status: "FAILURE",
         }, { merge: true });
         // Re-throw error to signal failure to Cloud Functions
         throw error;
     }
-});
+}
 //# sourceMappingURL=index.js.map
