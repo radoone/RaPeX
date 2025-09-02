@@ -1,0 +1,19 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "rapex_alerts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "meta.alert_date",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "meta.record_timestamp",
+          "order": "DESCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}
