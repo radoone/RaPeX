@@ -255,17 +255,39 @@ export const checkProductSafetyAPI = onRequest(
     region: "europe-west1",
     memory: "512MiB",
     timeoutSeconds: 120, // Longer timeout for AI processing
-    // invoker: "public", // Allow unauthenticated access - temporarily disabled
-    secrets: ["GOOGLE_API_KEY"],
+    invoker: "public", // Allow unauthenticated access at platform level; API key enforced in code
+    secrets: ["GOOGLE_API_KEY", "RAPEX_API_KEY"],
   },
   async (req, res) => {
     // Enable CORS
     res.set('Access-Control-Allow-Origin', '*');
     res.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.set('Access-Control-Allow-Headers', 'Content-Type');
+    res.set('Access-Control-Allow-Headers', 'Content-Type, X-API-Key');
 
     if (req.method === 'OPTIONS') {
       res.status(204).send('');
+      return;
+    }
+
+    // Verify API key (robust parsing and comparison)
+    const headerValue = req.headers['x-api-key'];
+    const queryValue = req.query.apiKey as string | string[] | undefined;
+    const providedKeyRaw = Array.isArray(headerValue)
+      ? headerValue[0]
+      : (headerValue as string | undefined) ?? (Array.isArray(queryValue) ? queryValue[0] : queryValue);
+    const providedKey = (providedKeyRaw ?? '').toString().trim();
+    const expectedApiKey = (process.env.RAPEX_API_KEY ?? '').toString().trim();
+
+    if (!providedKey || !expectedApiKey || providedKey !== expectedApiKey) {
+      logger.warn("Unauthorized API access attempt", {
+        hasApiKey: !!providedKey,
+        apiKeyLength: providedKey.length,
+        expectedKeyLength: expectedApiKey.length
+      });
+      res.status(401).json({
+        error: "Unauthorized",
+        message: "Valid API key required"
+      });
       return;
     }
 
@@ -273,7 +295,8 @@ export const checkProductSafetyAPI = onRequest(
       logger.info("Product safety check API called", {
         method: req.method,
         hasBody: !!req.body,
-        query: req.query
+        query: req.query,
+        authorized: true
       });
 
       let productData;

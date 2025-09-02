@@ -1,1 +1,22 @@
-{}
+{
+  "name": "rapex-monorepo",
+  "version": "1.0.0",
+  "description": "Monorepo containing Firebase backend and Shopify client",
+  "private": true,
+  "workspaces": [
+    "firebase",
+    "shopify-client"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces",
+    "lint": "npm run lint --workspaces",
+    "firebase:deploy": "npm run deploy --workspace=firebase",
+    "shopify:dev": "npm run dev --workspace=shopify-client"
+  },
+
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
+}

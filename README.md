@@ -1,11 +1,12 @@
-# 🚨 RaPeX Daily Alert Loader
+# 🚨 RaPeX Monorepo
 
 [![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com/)
+[![Shopify](https://img.shields.io/badge/Shopify-7AB55C?style=for-the-badge&logo=shopify&logoColor=white)](https://www.shopify.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
 [![AI](https://img.shields.io/badge/AI-Gemini%202.5%20Flash%20Lite-blue?style=for-the-badge&logo=google)](https://ai.google.dev/)
 
-> **Automatický systém pre sledovanie nebezpečných výrobkov v Európe s AI analýzou**
+> **Monorepo containing Firebase backend for RAPEX alerts and Shopify client integration**
 
 ## 📋 O Projekte
 
@@ -101,6 +102,22 @@ Tento projekt implementuje **inteligentný automatický delta loader** pre dáta
 - **Dataset**: [EU-RAPEX-en - Rapid Alert System for non-food dangerous products](https://public.opendatasoft.com/explore/dataset/healthref-europe-rapex-en/)
 - **API**: OpenDataSoft Records API (v1)
 
+## 📁 Monorepo Structure
+
+```
+rapex/
+├── firebase/              # Firebase backend
+│   ├── functions/         # Cloud Functions (RAPEX loader & AI)
+│   ├── firebase.json      # Firebase configuration
+│   ├── firestore.rules    # Firestore security rules
+│   └── firestore.indexes.json
+├── shopify-client/        # Shopify client application
+│   ├── src/              # Source code
+│   ├── package.json      # Shopify client dependencies
+│   └── tsconfig.json     # TypeScript configuration
+└── package.json          # Root workspace configuration
+```
+
 ## 🚀 Rýchle Nastavenie
 
 ### **Predpoklady**
@@ -116,8 +133,7 @@ Tento projekt implementuje **inteligentný automatický delta loader** pre dáta
 git clone https://github.com/radoone/RaPeX.git
 cd rapex
 
-# 2. Inštalujte závislosti
-cd functions
+# 2. Inštalujte závislosti pre celý workspace
 npm install
 
 # 3. Prihláste sa do Firebase
@@ -131,13 +147,26 @@ gcloud secrets create GOOGLE_API_KEY --replication-policy=automatic --project=ra
 echo -n 'YOUR_GEMINI_API_KEY' | gcloud secrets versions add GOOGLE_API_KEY --data-file=- --project=rapex-99a2c
 ```
 
+### **Práca s jednotlivými projektmi**
+```bash
+# Firebase backend
+npm run firebase:deploy
+
+# Shopify client development
+npm run shopify:dev
+
+# Build všetkých projektov
+npm run build
+```
+
 ### **Nasadenie**
 ```bash
-# Nasadenie funkcií a Firestore pravidiel
+# Nasadenie Firebase projektu (z firebase adresára)
+cd firebase
 firebase deploy --only functions,firestore --project rapex-99a2c
 
-# Alebo iba funkcie
-firebase deploy --only functions --project rapex-99a2c
+# Alebo z root adresára
+npm run firebase:deploy
 ```
 
 ## 🧪 Testovanie a Manuálne Spúšťanie
