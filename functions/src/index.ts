@@ -1,6 +1,6 @@
 
 import * as logger from "firebase-functions/logger";
-import { pubsub } from "firebase-functions";
+import { onSchedule } from "firebase-functions/v2/scheduler";
 import { initializeApp } from "firebase-admin/app";
 import { getFirestore, Timestamp, FieldValue } from "firebase-admin/firestore";
 import axios from "axios";
@@ -61,11 +61,49 @@ interface RapexAlertDocument {
 }
 
 // --- Scheduled Function ---
-export const dailyRapexDeltaLoader = pubsub
-  .schedule("13 3 * * *")
-  .timeZone("Europe/Bratislava")
-  .onRun(async (context) => {
-    logger.info("Starting daily RAPEX delta loader job.", { context });
+export const dailyRapexDeltaLoader = onSchedule(
+  {
+    schedule: "13 3 * * *",
+    timeZone: "Europe/Bratislava",
+    region: "europe-west1", // Recommended region for European users
+  },
+  async (event) => {
+    logger.info("Starting daily RAPEX delta loader job.", { event });
+    await runRapexLoader();
+  });
+
+// --- Manual HTTP Trigger for Testing ---
+import { onRequest } from "firebase-functions/v2/https";
+
+export const manualRapexLoader = onRequest(
+  {
+    region: "europe-west1",
+    memory: "256MiB",
+  },
+  async (req, res) => {
+    try {
+      logger.info("Manual RAPEX loader triggered via HTTP", { method: req.method, url: req.url });
+
+      await runRapexLoader();
+
+      res.status(200).json({
+        success: true,
+        message: "RAPEX loader completed successfully",
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      logger.error("Manual RAPEX loader failed", { error });
+      res.status(500).json({
+        success: false,
+        message: "RAPEX loader failed",
+        error: error instanceof Error ? error.message : String(error),
+        timestamp: new Date().toISOString()
+      });
+    }
+  });
+
+// --- Shared loader function ---
+async function runRapexLoader() {
 
     const stateRef = db.collection(META_COLLECTION).doc(META_DOC);
     const runStartTime = Timestamp.now();
@@ -208,4 +246,4 @@ export const dailyRapexDeltaLoader = pubsub
       // Re-throw error to signal failure to Cloud Functions
       throw error;
     }
-  });
+}
