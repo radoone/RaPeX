@@ -1,5 +1,5 @@
 {
-  "name": "rapex-monorepo",
+  "name": "safety-gate-monitor-eu-monorepo",
   "version": "1.0.0",
   "description": "Monorepo containing Firebase backend and Shopify client",
   "private": true,
