@@ -101,6 +101,28 @@ Tento projekt implementuje **inteligentný automatický delta loader** pre dáta
 
 - **Dataset**: [EU-RAPEX-en - Rapid Alert System for non-food dangerous products](https://public.opendatasoft.com/explore/dataset/healthref-europe-rapex-en/)
 - **API**: OpenDataSoft Records API (v1)
+- **Endpoint**: `https://public.opendatasoft.com/api/records/1.0/search`
+- **Dataset ID**: `healthref-europe-rapex-en`
+- **Celkový počet záznamov**: ~28,757 (stav k septembru 2025)
+- **Aktualizácia**: Denne prostredníctvom scheduled funkcie
+
+### **Dostupné polia dát:**
+- `alert_date` - Dátum upozornenia
+- `alert_country` - Krajina, ktorá nahlásila problém
+- `product_category` - Kategória produktu
+- `product_brand` - Značka produktu
+- `product_type` - Typ produktu
+- `risk_level` - Úroveň rizika (Serious risk, High risk, etc.)
+- `alert_type` - Typ upozornenia (Chemical, Electric shock, etc.)
+- `product_description` - Popis produktu
+- `measures_country` - Prijaté opatrenia
+- `rapex_url` - Odkaz na oficiálne RAPEX hlásenie
+
+### **OpenDataSoft API Features:**
+- **Facet search**: Pokročilé filtrovanie podľa kategórií
+- **Query language**: Podpora komplexných vyhľadávacích výrazov
+- **Pagination**: Efektívne načítanie veľkých datasetov
+- **Real-time data**: Priebežné aktualizácie z Európskej komisie
 
 ## 📁 Monorepo Structure
 
@@ -199,6 +221,25 @@ npm run firebase:deploy
 ```
 
 ## 🧪 Testovanie a Manuálne Spúšťanie
+
+### **🧪 OpenDataSoft API Test** ⭐ **NOVÉ**
+
+#### **Endpoint**: `testOpenDataSoftAPI`
+**URL**: `https://europe-west1-{project-id}.cloudfunctions.net/testOpenDataSoftAPI`
+
+#### **Testovanie OpenDataSoft API pripojenia**
+```bash
+# Základné testovanie
+curl "https://europe-west1-{project-id}.cloudfunctions.net/testOpenDataSoftAPI"
+
+# Testovanie s filtrami
+curl "https://europe-west1-{project-id}.cloudfunctions.net/testOpenDataSoftAPI?category=toys&country=Slovakia&risk=serious"
+```
+
+#### **Dostupné filtre:**
+- `category` - Kategória produktu (napr. "toys", "electronics")
+- `country` - Krajina hlásenia (napr. "Slovakia", "Germany")
+- `risk` - Úroveň rizika (napr. "serious", "high")
 
 ### **🤖 AI Product Safety Analysis** ⭐ **NAJNOVŠIE**
 
