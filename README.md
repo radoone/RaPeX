@@ -1,4 +1,4 @@
-# 🚨 RaPeX Monorepo
+# 🚨 Safety Gate Monorepo
 
 [![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com/)
 [![Shopify](https://img.shields.io/badge/Shopify-7AB55C?style=for-the-badge&logo=shopify&logoColor=white)](https://www.shopify.com/)
@@ -6,21 +6,21 @@
 [![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
 [![AI](https://img.shields.io/badge/AI-Gemini%202.5%20Flash%20Lite-blue?style=for-the-badge&logo=google)](https://ai.google.dev/)
 
-> **Monorepo containing Firebase backend for RAPEX alerts and Shopify client integration**
+> **Monorepo containing Firebase backend for Safety Gate alerts and Shopify client integration**
 
 ## 📋 O Projekte
 
-Tento projekt implementuje **inteligentný automatický delta loader** pre dáta z európskeho systému rýchleho varovania (RAPEX) o nebezpečných výrobkoch.
+Tento projekt implementuje **inteligentný automatický delta loader** pre dáta z európskeho systému rýchleho varovania (Safety Gate) o nebezpečných výrobkoch.
 
 **Hlavné účely:**
 - 🤖 **Pre AI systémy**: Poskytuje štruktúrované dáta pre analýzu bezpečnosti výrobkov
-- 🔍 **Pre vývojárov**: Umožňuje rýchle vyhľadávanie a filtrovanie RAPEX alertov
+- 🔍 **Pre vývojárov**: Umožňuje rýchle vyhľadávanie a filtrovanie Safety Gate alertov
 - 📊 **Pre analytikov**: Poskytuje kompletnú históriu alertov pre reporting
 - 🛡️ **Pre spotrebiteľov**: Pomáha identifikovať potenciálne nebezpečné výrobky
 - 🧠 **AI Safety Check**: Automatická analýza bezpečnosti nových produktov
 
 ### 🎯 **Čo projekt robí:**
-1. **Automaticky sťahuje** nové RAPEX alerty z oficiálneho európskeho datasetu
+1. **Automaticky sťahuje** nové Safety Gate alerty z oficiálneho európskeho datasetu
 2. **Ukladá do Firestore** všetky detaily vrátane metadát
 3. **Optimalizuje prenos** dát pomocou delta-loading prístupu
 4. **Poskytuje API** pre manuálne spúšťanie a testovanie
@@ -61,14 +61,14 @@ Tento projekt implementuje **inteligentný automatický delta loader** pre dáta
   - **Typ**: HTTP trigger (AI analýza bezpečnosti)
   - **Endpoint**: `https://europe-west1-{project-id}.cloudfunctions.net/checkProductSafetyAPI`
   - **Metódy**: GET, POST
-  - **Účel**: Kontrola bezpečnosti výrobkov pomocou AI analýzy RAPEX alertov
+  - **Účel**: Kontrola bezpečnosti výrobkov pomocou AI analýzy Safety Gate alertov
   - **AI Model**: Google Gemini 2.5 Flash Lite
   - **Autentifikácia**: Vyžaduje API kľúč (X-API-Key header)
 
 ### **Úložisko dát**
 - **Databáza**: Google Firestore
   - **Hlavná kolekcia**: `rapex_alerts`
-    - **Document ID**: `recordid` z RAPEX datasetu
+    - **Document ID**: `recordid` z Safety Gate datasetu
     - **Štruktúra**:
       ```json
       {
@@ -80,7 +80,7 @@ Tento projekt implementuje **inteligentný automatický delta loader** pre dáta
           "ingested_at": "Firestore Timestamp"
         },
         "fields": {
-          // Kompletný RAPEX payload
+          // Kompletný Safety Gate payload
           "product_category": "string",
           "risk_level": "string",
           "notifying_country": "string",
@@ -100,6 +100,7 @@ Tento projekt implementuje **inteligentný automatický delta loader** pre dáta
 ## Zdroj Dát
 
 - **Dataset**: [EU-RAPEX-en - Rapid Alert System for non-food dangerous products](https://public.opendatasoft.com/explore/dataset/healthref-europe-rapex-en/)
+  - **Oficiálny názov**: Safety Gate (predtým RAPEX)
 - **API**: OpenDataSoft Records API (v1)
 - **Endpoint**: `https://public.opendatasoft.com/api/records/1.0/search`
 - **Dataset ID**: `healthref-europe-rapex-en`
@@ -116,7 +117,7 @@ Tento projekt implementuje **inteligentný automatický delta loader** pre dáta
 - `alert_type` - Typ upozornenia (Chemical, Electric shock, etc.)
 - `product_description` - Popis produktu
 - `measures_country` - Prijaté opatrenia
-- `rapex_url` - Odkaz na oficiálne RAPEX hlásenie
+- `rapex_url` - Odkaz na oficiálne Safety Gate hlásenie
 
 ### **OpenDataSoft API Features:**
 - **Facet search**: Pokročilé filtrovanie podľa kategórií
@@ -193,9 +194,9 @@ firebase use {project-id}
 gcloud secrets create GOOGLE_API_KEY --replication-policy=automatic --project={project-id}
 echo -n 'YOUR_GEMINI_API_KEY' | gcloud secrets versions add GOOGLE_API_KEY --data-file=- --project={project-id}
 
-# 6. Nastavte RAPEX API kľúč
-gcloud secrets create RAPEX_API_KEY --replication-policy=automatic --project={project-id}
-echo -n 'YOUR_RAPEX_API_KEY' | gcloud secrets versions add RAPEX_API_KEY --data-file=- --project={project-id}
+# 6. Nastavte Safety Gate API kľúč
+gcloud secrets create SAFETY_GATE_API_KEY --replication-policy=automatic --project={project-id}
+echo -n 'YOUR_SAFETY_GATE_API_KEY' | gcloud secrets versions add SAFETY_GATE_API_KEY --data-file=- --project={project-id}
 ```
 
 ### **Práca s jednotlivými projektmi**
@@ -249,21 +250,21 @@ curl "https://europe-west1-{project-id}.cloudfunctions.net/testOpenDataSoftAPI?c
 #### **Autentifikácia**
 ```bash
 # Nastavenie API kľúča ako environment premennej
-export RAPEX_API_KEY="your-rapex-api-key-here"
+export SAFETY_GATE_API_KEY="your-safety-gate-api-key-here"
 ```
 
 #### **GET Request (Query Parameters)**
 ```bash
 curl -sS "https://europe-west1-{project-id}.cloudfunctions.net/checkProductSafetyAPI?name=USB+charger&category=electronics&description=Fast+charger" \
   -H "Accept: application/json" \
-  -H "X-API-Key: $RAPEX_API_KEY"
+  -H "X-API-Key: $SAFETY_GATE_API_KEY"
 ```
 
 #### **POST Request (JSON Body)**
 ```bash
 curl -sS -X POST https://europe-west1-{project-id}.cloudfunctions.net/checkProductSafetyAPI \
   -H "Content-Type: application/json" \
-  -H "X-API-Key: $RAPEX_API_KEY" \
+  -H "X-API-Key: $SAFETY_GATE_API_KEY" \
   -d '{
     "name": "USB charger",
     "category": "electronics",
@@ -304,10 +305,10 @@ curl -sS -X POST https://europe-west1-{project-id}.cloudfunctions.net/checkProdu
 ```
 
 #### **AI Analysis Features**
-- **Smart Matching**: AI porovnáva nový produkt s RAPEX alertami z posledných 7 dní
+- **Smart Matching**: AI porovnáva nový produkt s Safety Gate alertami z posledných 7 dní
 - **Similarity Scoring**: Hodnotí podobnosť (0-100) na základe kategórie, popisu, značky
 - **Risk Assessment**: Identifikuje úroveň rizika a poskytuje odporúčania
-- **Real-time Data**: Používa aktuálne RAPEX dáta z Firestore databázy
+- **Real-time Data**: Používa aktuálne Safety Gate dáta z Firestore databázy
 
 ### **🛍️ Shopify Integration** ⭐ **NOVÉ**
 
@@ -327,7 +328,7 @@ Projekt teraz obsahuje kompletnú integráciu so Shopify platformou pre automati
 cd shopify-client/ra-pex
 
 # Vytvorte .env súbor
-echo "RAPEX_API_KEY=your-rapex-api-key-here" > .env
+echo "SAFETY_GATE_API_KEY=your-rapex-api-key-here" > .env
 echo "FIREBASE_FUNCTIONS_BASE_URL=https://europe-west1-{project-id}.cloudfunctions.net" >> .env
 
 # Spustite development server
@@ -425,7 +426,7 @@ async function checkProductSafety(productName, category) {
 
 #### **AI Prompt Template:**
 ```
-Analyzuj tieto RAPEX alerty a identifikuj trendy v bezpečnosti výrobkov:
+Analyzuj tieto Safety Gate alerty a identifikuj trendy v bezpečnosti výrobkov:
 
 Produkt: {product_category}
 Riziko: {risk_level}

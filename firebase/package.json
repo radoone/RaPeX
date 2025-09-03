@@ -1,7 +1,7 @@
 {
   "name": "rapex-firebase",
   "version": "1.0.0",
-  "description": "Firebase backend for RAPEX alerts system",
+  "description": "Firebase backend for Safety Gate alerts system",
   "private": true,
   "scripts": {
     "deploy": "firebase deploy",

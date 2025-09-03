@@ -5,7 +5,7 @@ import { onRequest } from "firebase-functions/v2/https";
 import { initializeApp } from "firebase-admin/app";
 import { getFirestore, Timestamp, FieldValue } from "firebase-admin/firestore";
 import axios from "axios";
-import { checkProductSafety } from "./product-safety-checker.js";
+import { checkProductSafety } from "./safety-gate-checker.js";
 
 // Initialize Firebase Admin SDK
 // Make sure to set up service account credentials in your environment
@@ -92,8 +92,8 @@ export const dailyRapexDeltaLoader = onSchedule(
     region: "europe-west1", // Recommended region for European users
   },
   async (event: any) => {
-    logger.info("Starting daily RAPEX delta loader job.", { event });
-    await runRapexLoader();
+    logger.info("Starting daily Safety Gate delta loader job.", { event });
+    await runSafetyGateLoader();
   });
 
 // --- OpenDataSoft API Test Endpoint ---
@@ -144,7 +144,7 @@ export const testOpenDataSoftAPI = onRequest(
           params: testParams,
           timeout: 15000,
           headers: {
-            'User-Agent': 'RAPEX-API-Test/1.0',
+            'User-Agent': 'Safety-Gate-API-Test/1.0',
             'Accept': 'application/json',
           },
         }
@@ -194,20 +194,20 @@ export const manualRapexLoader = onRequest(
   },
   async (req, res) => {
     try {
-      logger.info("Manual RAPEX loader triggered via HTTP", { method: req.method, url: req.url });
+      logger.info("Manual Safety Gate loader triggered via HTTP", { method: req.method, url: req.url });
 
-      await runRapexLoader();
+      await runSafetyGateLoader();
 
       res.status(200).json({
         success: true,
-        message: "RAPEX loader completed successfully",
+        message: "Safety Gate loader completed successfully",
         timestamp: new Date().toISOString()
       });
     } catch (error) {
-      logger.error("Manual RAPEX loader failed", { error });
+      logger.error("Manual Safety Gate loader failed", { error });
       res.status(500).json({
         success: false,
-        message: "RAPEX loader failed",
+        message: "Safety Gate loader failed",
         error: error instanceof Error ? error.message : String(error),
         timestamp: new Date().toISOString()
       });
@@ -215,7 +215,7 @@ export const manualRapexLoader = onRequest(
   });
 
 // --- Shared loader function ---
-async function runRapexLoader() {
+async function runSafetyGateLoader() {
 
     const stateRef = db.collection(META_COLLECTION).doc(META_DOC);
     const runStartTime = Timestamp.now();
@@ -276,8 +276,8 @@ async function runRapexLoader() {
         }
 
         // Add refine parameter for more precise filtering if needed
-        if (process.env.RAPEX_FILTER_RISK_LEVEL) {
-          requestParams['refine.risk_level'] = process.env.RAPEX_FILTER_RISK_LEVEL;
+        if (process.env.SAFETY_GATE_FILTER_RISK_LEVEL) {
+          requestParams['refine.risk_level'] = process.env.SAFETY_GATE_FILTER_RISK_LEVEL;
         }
 
         logger.info(`Fetching page ${currentPage + 1} with enhanced parameters`, {
@@ -297,7 +297,7 @@ async function runRapexLoader() {
             params: requestParams,
             timeout: 30000, // 30 second timeout for large datasets
             headers: {
-              'User-Agent': 'RAPEX-Loader/1.0',
+              'User-Agent': 'Safety-Gate-Loader/1.0',
               'Accept': 'application/json',
             },
           },
@@ -330,7 +330,7 @@ async function runRapexLoader() {
           throw new Error('OpenDataSoft API returned invalid record structure');
         }
 
-        logger.info(`Processing ${records.length} RAPEX records from page ${currentPage + 1}`);
+        logger.info(`Processing ${records.length} Safety Gate records from page ${currentPage + 1}`);
 
         for (const record of records) {
           const recordAlertDate = new Date(record.fields.alert_date);
@@ -404,7 +404,7 @@ async function runRapexLoader() {
       logger.info("Job finished successfully.", { finalState });
 
     } catch (error) {
-      logger.error("Error running RAPEX delta loader job.", { error });
+      logger.error("Error running Safety Gate delta loader job.", { error });
       await stateRef.set({
         last_run_end: Timestamp.now(),
         last_run_status: "FAILURE",
@@ -421,7 +421,7 @@ export const checkProductSafetyAPI = onRequest(
     memory: "512MiB",
     timeoutSeconds: 120, // Longer timeout for AI processing
     invoker: "public", // Allow unauthenticated access at platform level; API key enforced in code
-    secrets: ["GOOGLE_API_KEY", "RAPEX_API_KEY"],
+    secrets: ["GOOGLE_API_KEY", "SAFETY_GATE_API_KEY"],
   },
   async (req, res) => {
     // Enable CORS
@@ -441,7 +441,7 @@ export const checkProductSafetyAPI = onRequest(
       ? headerValue[0]
       : (headerValue as string | undefined) ?? (Array.isArray(queryValue) ? queryValue[0] : queryValue);
     const providedKey = (providedKeyRaw ?? '').toString().trim();
-    const expectedApiKey = (process.env.RAPEX_API_KEY ?? '').toString().trim();
+    const expectedApiKey = (process.env.SAFETY_GATE_API_KEY ?? '').toString().trim();
 
     if (!providedKey || !expectedApiKey || providedKey !== expectedApiKey) {
       logger.warn("Unauthorized API access attempt", {
