@@ -29,6 +29,28 @@ const ROWS_PER_PAGE = parseInt(process.env.ROWS_PER_PAGE || "500", 10);
 const MAX_PAGES = parseInt(process.env.MAX_PAGES || "20", 10);
 const BOOTSTRAP_DAYS = 30; // Days to fetch on the first run
 
+// OpenDataSoft API configuration for enhanced filtering
+const ODS_API_CONFIG = {
+  dataset: ODS_DATASET,
+  baseUrl: ODS_BASE_URL,
+  // Available filter fields from OpenDataSoft documentation (corrected field names)
+  filterFields: [
+    'alert_level', 'alert_group', 'alert_country', 'product_country',
+    'product_counterfeit', 'alert_type', 'product_type', 'product_brand',
+    'product_category', 'oecd_portal_category', 'technical_defect',
+    'alert_other_countries', 'alert_date', 'measures_country'
+  ],
+  // Default sorting (newest first)
+  defaultSort: "-alert_date,-record_timestamp",
+  // Enhanced query parameters for better performance
+  facets: [
+    'alert_level', 'alert_group', 'alert_country', 'product_country',
+    'product_counterfeit', 'alert_type', 'product_type', 'product_brand',
+    'product_category', 'oecd_portal_category', 'technical_defect',
+    'alert_other_countries', 'measures_country'
+  ]
+};
+
 // --- Type Definitions ---
 interface LoaderState {
   last_alert_date: Timestamp | null;
@@ -73,6 +95,95 @@ export const dailyRapexDeltaLoader = onSchedule(
     logger.info("Starting daily RAPEX delta loader job.", { event });
     await runRapexLoader();
   });
+
+// --- OpenDataSoft API Test Endpoint ---
+
+export const testOpenDataSoftAPI = onRequest(
+  {
+    region: "europe-west1",
+    memory: "256MiB",
+  },
+  async (req, res) => {
+    try {
+      logger.info("Testing OpenDataSoft API connection", {
+        method: req.method,
+        query: req.query
+      });
+
+      // Test basic connectivity
+      const testParams: any = {
+        dataset: ODS_API_CONFIG.dataset,
+        rows: 1, // Just get one record for testing
+        sort: ODS_API_CONFIG.defaultSort,
+      };
+
+      // Add test filters from query parameters using OpenDataSoft query syntax
+      const filters: string[] = [];
+
+      if (req.query.category) {
+        filters.push(`product_category:"${req.query.category}"`);
+      }
+      if (req.query.country) {
+        filters.push(`alert_country:"${req.query.country}"`);
+      }
+      if (req.query.risk) {
+        filters.push(`risk_level:"${req.query.risk}"`);
+      }
+
+      if (filters.length > 0) {
+        testParams.q = filters.join(' AND ');
+      }
+
+      const response = await axios.get<{
+        records: RapexRecord[];
+        nhits?: number;
+        facet_groups?: any[];
+      }>(
+        ODS_API_CONFIG.baseUrl,
+        {
+          params: testParams,
+          timeout: 15000,
+          headers: {
+            'User-Agent': 'RAPEX-API-Test/1.0',
+            'Accept': 'application/json',
+          },
+        }
+      );
+
+      const result = {
+        success: true,
+        api: {
+          endpoint: ODS_API_CONFIG.baseUrl,
+          dataset: ODS_API_CONFIG.dataset,
+          parameters: testParams,
+        },
+        response: {
+          status: response.status,
+          totalRecords: response.data.nhits || 0,
+          recordsReturned: response.data.records?.length || 0,
+          facetsAvailable: response.data.facet_groups?.length || 0,
+        },
+        sampleRecord: response.data.records?.[0] || null,
+        timestamp: new Date().toISOString()
+      };
+
+      logger.info("OpenDataSoft API test completed successfully", result);
+      res.status(200).json(result);
+
+    } catch (error) {
+      logger.error("OpenDataSoft API test failed", { error });
+      res.status(500).json({
+        success: false,
+        error: error instanceof Error ? error.message : String(error),
+        api: {
+          endpoint: ODS_API_CONFIG.baseUrl,
+          dataset: ODS_API_CONFIG.dataset,
+        },
+        timestamp: new Date().toISOString()
+      });
+    }
+  }
+);
 
 // --- Manual HTTP Trigger for Testing ---
 
@@ -146,26 +257,80 @@ async function runRapexLoader() {
 
       while (hasMore && currentPage < MAX_PAGES) {
         const start = currentPage * ROWS_PER_PAGE;
-        const response = await axios.get<{ records: RapexRecord[] }>(
-          ODS_BASE_URL,
+
+        // Enhanced API request with OpenDataSoft parameters
+        const requestParams: any = {
+          dataset: ODS_API_CONFIG.dataset,
+          sort: ODS_API_CONFIG.defaultSort, // Newest first
+          rows: ROWS_PER_PAGE,
+          start,
+          // Include facets for better filtering capabilities
+          facet: ODS_API_CONFIG.facets,
+          // Add timezone for consistent date handling
+          timezone: 'Europe/Bratislava',
+        };
+
+        // Add query filter if exists
+        if (queryFilter) {
+          requestParams.q = queryFilter;
+        }
+
+        // Add refine parameter for more precise filtering if needed
+        if (process.env.RAPEX_FILTER_RISK_LEVEL) {
+          requestParams['refine.risk_level'] = process.env.RAPEX_FILTER_RISK_LEVEL;
+        }
+
+        logger.info(`Fetching page ${currentPage + 1} with enhanced parameters`, {
+          start,
+          rows: ROWS_PER_PAGE,
+          queryFilter,
+          facets: ODS_API_CONFIG.facets.length
+        });
+
+        const response = await axios.get<{
+          records: RapexRecord[];
+          nhits?: number;
+          facet_groups?: any[];
+        }>(
+          ODS_API_CONFIG.baseUrl,
           {
-            params: {
-              dataset: ODS_DATASET,
-              sort: "-alert_date,-record_timestamp", // Newest first
-              rows: ROWS_PER_PAGE,
-              start,
-              q: queryFilter,
+            params: requestParams,
+            timeout: 30000, // 30 second timeout for large datasets
+            headers: {
+              'User-Agent': 'RAPEX-Loader/1.0',
+              'Accept': 'application/json',
             },
           },
         );
 
         const records = response.data.records || [];
+
+        // Enhanced logging with OpenDataSoft API response details
+        logger.info(`OpenDataSoft API Response for page ${currentPage + 1}:`, {
+          totalRecords: records.length,
+          hasFacets: !!response.data.facet_groups,
+          facetsCount: response.data.facet_groups?.length || 0,
+          datasetId: ODS_API_CONFIG.dataset,
+          apiUrl: ODS_API_CONFIG.baseUrl
+        });
+
         if (records.length === 0) {
+          logger.info(`No more records found on page ${currentPage + 1}. Stopping pagination.`);
           hasMore = false;
           continue;
         }
 
-        logger.info(`Fetched page ${currentPage + 1}. Records: ${records.length}`);
+        // Validate record structure
+        if (records.length > 0 && (!records[0].fields || !records[0].recordid)) {
+          logger.error(`Invalid record structure received from OpenDataSoft API`, {
+            sampleRecord: records[0],
+            apiUrl: ODS_API_CONFIG.baseUrl,
+            dataset: ODS_API_CONFIG.dataset
+          });
+          throw new Error('OpenDataSoft API returned invalid record structure');
+        }
+
+        logger.info(`Processing ${records.length} RAPEX records from page ${currentPage + 1}`);
 
         for (const record of records) {
           const recordAlertDate = new Date(record.fields.alert_date);
