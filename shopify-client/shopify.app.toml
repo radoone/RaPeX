@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "30cce6af55e2dde430bd52cb0cea62b1"
-name = "Safety Gate Monitor for Sellers EU"
+name = "Safety Gate Monitor EU"
 application_url = "https://recommended-internet-existed-excellence.trycloudflare.com"
 embedded = true
 handle = "safety-gate-monitor-eu"
