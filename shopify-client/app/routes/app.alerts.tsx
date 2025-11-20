@@ -34,7 +34,7 @@ import {
 } from "@shopify/polaris-icons";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { session } = await authenticate.admin(request);
+  const { session, admin } = await authenticate.admin(request);
 
   const url = new URL(request.url);
   const page = parseInt(url.searchParams.get("page") || "1");
@@ -97,6 +97,53 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     }),
   ]);
 
+  // Fetch product images from Shopify
+  const productIds = rawAlerts
+    .map((alert: any) => alert.productId)
+    .filter(Boolean)
+    .map((id: string) => {
+      // Convert to GID format if not already
+      if (id.startsWith('gid://shopify/Product/')) {
+        return id;
+      }
+      return `gid://shopify/Product/${id}`;
+    });
+
+  const productImages: Record<string, string | null> = {};
+
+  if (productIds.length > 0) {
+    try {
+      const response = await admin.graphql(
+        `#graphql
+        query getProductImages($ids: [ID!]!) {
+          nodes(ids: $ids) {
+            ... on Product {
+              id
+              featuredImage {
+                url
+              }
+            }
+          }
+        }`,
+        { variables: { ids: productIds } }
+      );
+
+      const { data } = await response.json();
+
+      if (data?.nodes) {
+        data.nodes.forEach((node: any) => {
+          if (node && node.id) {
+            // Extract numeric ID from GID for mapping
+            const numericId = node.id.replace('gid://shopify/Product/', '');
+            productImages[numericId] = node.featuredImage?.url || null;
+          }
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching product images:", error);
+    }
+  }
+
   // Process alerts to extract alertType, riskDescription, and alertDetails from checkResult
   const alerts = rawAlerts.map((alert: any) => {
     let alertType = 'Unknown';
@@ -110,14 +157,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         alertType = firstWarning.alertType || firstWarning.alertDetails?.fields?.alert_type || 'Unknown';
         riskDescription = firstWarning.riskLegalProvision || firstWarning.alertDetails?.fields?.risk_legal_provision || '';
         alertDetails = firstWarning.alertDetails || null;
-
-        console.log('Parsed alert data:', {
-          alertId: alert.id,
-          alertType,
-          riskDescription: riskDescription?.substring(0, 100),
-          hasAlertDetails: !!alertDetails,
-          alertDetailsFields: alertDetails?.fields ? Object.keys(alertDetails.fields) : []
-        });
       }
     } catch (error) {
       console.error('Error parsing checkResult for alert', alert.id, error);
@@ -128,6 +167,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       alertType,
       riskDescription,
       alertDetails,
+      productImage: productImages[alert.productId] || null,
     };
   });
 
@@ -541,6 +581,10 @@ export default function AlertsPage() {
         alert={selectedAlert}
         open={modalOpen}
         onClose={() => setModalOpen(false)}
+        onDismiss={(alertId) => handleAlertAction(alertId, 'dismiss')}
+        onResolve={(alertId) => handleAlertAction(alertId, 'resolve')}
+        onReactivate={(alertId) => handleAlertAction(alertId, 'reactivate')}
+        isLoading={fetcher.state === 'submitting'}
       />
     </Page>
   );

@@ -34,6 +34,9 @@ const RapexAlertSchema = z.object({
     notifying_country: z.string(),
     product_brand: z.string().optional(),
     product_model: z.string().optional(),
+    product_image: z.string().optional(),
+    product_other_images: z.string().optional(),
+    pictures: z.array(z.string()).optional(),
   }),
 });
 
@@ -53,7 +56,7 @@ const SafetyCheckResultSchema = z.object({
 });
 
 // Function to search recent Safety Gate alerts
-async function searchRecentRapexAlerts(days: number = 7) {
+async function searchRecentRapexAlerts(days = 7) {
   const db = getFirestore();
   const cutoffDate = new Date();
   cutoffDate.setDate(cutoffDate.getDate() - days);
@@ -97,6 +100,11 @@ async function searchRecentRapexAlerts(days: number = 7) {
       // Optional fields preserved as strings if present
       product_brand: fields.product_brand != null ? String(fields.product_brand) : undefined,
       product_model: fields.product_model != null ? String(fields.product_model) : undefined,
+      // Map images to a unified pictures array
+      pictures: [
+        ...(fields.product_image ? [fields.product_image] : []),
+        ...(fields.product_other_images ? fields.product_other_images.split(',') : [])
+      ].filter(Boolean),
       ...fields,
     };
 
@@ -132,7 +140,7 @@ export const checkProductSafety = ai.defineFlow(
     outputSchema: SafetyCheckResultSchema,
   },
 
-  async (product) => {
+  async (product: z.infer<typeof ProductInputSchema>) => {
     console.log('Checking product safety:', product.name);
 
     // Step 1: Search recent Safety Gate alerts

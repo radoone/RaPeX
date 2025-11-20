@@ -237,15 +237,20 @@ const resources = {
   }
 };
 
-i18n
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  .init({
-    resources,
-    fallbackLng: "en",
-    interpolation: {
-      escapeValue: false
-    }
-  });
+const i18nInstance = i18n.use(initReactI18next);
+
+// Only use language detector on the client
+if (typeof window !== "undefined") {
+  i18nInstance.use(LanguageDetector);
+}
+
+i18nInstance.init({
+  resources,
+  fallbackLng: "en",
+  lng: typeof window === "undefined" ? "en" : undefined, // Force English on server to prevent singleton pollution
+  interpolation: {
+    escapeValue: false
+  }
+});
 
 export default i18n;

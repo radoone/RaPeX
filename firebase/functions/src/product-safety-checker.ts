@@ -53,7 +53,7 @@ const SafetyCheckResultSchema = z.object({
 });
 
 // Function to search recent Safety Gate alerts
-async function searchRecentRapexAlerts(days: number = 7) {
+async function searchRecentRapexAlerts(days = 7) {
   const db = getFirestore();
   const cutoffDate = new Date();
   cutoffDate.setDate(cutoffDate.getDate() - days);
@@ -132,7 +132,7 @@ export const checkProductSafety = ai.defineFlow(
     outputSchema: SafetyCheckResultSchema,
   },
 
-  async (product) => {
+  async (product: z.infer<typeof ProductInputSchema>) => {
     console.log('Checking product safety:', product.name);
 
     // Step 1: Search recent Safety Gate alerts

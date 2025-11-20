@@ -12,9 +12,6 @@
     "logs": "firebase functions:log",
     "check-data": "node --loader ts-node/esm src/check-data.ts"
   },
-  "engines": {
-    "node": "20"
-  },
   "main": "lib/index.js",
   "type": "module",
   "dependencies": {
@@ -31,5 +28,8 @@
     "eslint-plugin-import": "^2.32.0",
     "typescript": "^5.9.3"
   },
-  "private": true
+  "private": true,
+  "engines": {
+    "node": "22"
+  }
 }
