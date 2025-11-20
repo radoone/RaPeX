@@ -25,7 +25,7 @@ import { TitleBar } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
 import { shopifyProductToProductData } from "../services/safety-gate-checker.client";
 import prisma from "../db.server";
-import { AlertBadge, SafetyGatePortal } from "../components";
+import { AlertBadge, SafetyGatePortal, AlertDetailModal } from "../components";
 import {
   ClipboardChecklistIcon,
   AlertDiamondIcon,
@@ -151,13 +151,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       // Debug logging
       console.log('Safety check result:', {
         isSafe: safetyResult.isSafe,
-        warningsCount: safetyResult.warnings.length,
-        warnings: safetyResult.warnings.map(w => ({
-          alertId: w.alertId,
-          riskLevel: w.riskLevel,
-          alertType: w.alertType,
-          riskLegalProvision: w.riskLegalProvision?.substring(0, 100)
-        }))
+        warningsCount: safetyResult.warnings.length
       });
 
       // Store check result
@@ -352,39 +346,49 @@ export default function ManualCheckPage() {
 
   const statCards = [
     {
-      id: 'catalog',
+      id: 'catalog' as const,
       title: 'Products in scope',
       value: products.length,
       description: 'Latest products pulled from your Shopify store.',
       icon: ProductIcon,
-      background: 'bg-surface-secondary',
+      background: 'bg-surface-secondary' as const,
+      badge: undefined as string | undefined,
+      badgeTone: undefined as 'success' | 'critical' | undefined,
+      progress: undefined as number | undefined,
+      progressTone: undefined as 'success' | 'primary' | undefined,
+      progressLabel: undefined as string | undefined,
     },
     {
-      id: 'checks',
+      id: 'checks' as const,
       title: 'Manual checks completed',
       value: totalManualChecks,
       description: checkedProducts > 0
         ? `${checkedProducts} products have at least one manual scan.`
         : 'Run your first manual scan to create a compliance trail.',
       icon: ClipboardChecklistIcon,
-      background: 'bg-surface-emphasis',
+      background: 'bg-surface-emphasis' as const,
+      badge: undefined as string | undefined,
+      badgeTone: undefined as 'success' | 'critical' | undefined,
       progress: coverageRate,
-      progressTone: coverageRate === 100 ? 'success' : 'primary',
+      progressTone: (coverageRate === 100 ? 'success' : 'primary') as 'success' | 'primary',
       progressLabel: products.length > 0 ? `${coverageRate}% of listed products checked` : undefined,
     },
     {
-      id: 'unsafe',
+      id: 'unsafe' as const,
       title: 'Products needing review',
       value: unsafeProducts,
       description: unsafeProducts === 0
         ? 'No manual checks have flagged outstanding risks.'
         : 'Resolve flagged items before fulfilling new orders.',
       icon: AlertDiamondIcon,
-      background: unsafeProducts > 0 ? 'bg-surface-critical' : 'bg-surface-success',
+      background: (unsafeProducts > 0 ? 'bg-surface-critical' : 'bg-surface-success') as 'bg-surface-critical' | 'bg-surface-success',
       badge: unsafeProducts === 0 ? 'All clear' : `${unsafeProducts} flagged`,
-      badgeTone: unsafeProducts === 0 ? 'success' : 'critical',
+      badgeTone: (unsafeProducts === 0 ? 'success' : 'critical') as 'success' | 'critical',
+      progress: undefined as number | undefined,
+      progressTone: undefined as 'success' | 'primary' | undefined,
+      progressLabel: undefined as string | undefined,
     },
-  ] as const;
+  ];
 
   const handleProductCheck = useCallback((product: any) => {
     const productData = shopifyProductToProductData(product);
@@ -597,10 +601,10 @@ export default function ManualCheckPage() {
                           />
                           <InlineStack gap="100" wrap>
                             {productChecks.safeCount > 0 && (
-                              <Badge tone="success">{productChecks.safeCount} safe</Badge>
+                              <Badge tone="success">{`${productChecks.safeCount} safe`}</Badge>
                             )}
                             {productChecks.unsafeCount > 0 && (
-                              <Badge tone="critical">{productChecks.unsafeCount} unsafe</Badge>
+                              <Badge tone="critical">{`${productChecks.unsafeCount} unsafe`}</Badge>
                             )}
                           </InlineStack>
                         </BlockStack>
@@ -724,140 +728,37 @@ export default function ManualCheckPage() {
         </Layout.Section>
       </Layout>
       {/* Results Modal */}
-      <Modal
-        open={showResult && checkResult}
-        onClose={handleCloseModal}
-        title={`Safety Check Result: ${selectedProduct?.title || 'Unknown Product'}`}
-        size="large"
-        primaryAction={{
-          content: "Close",
-          onAction: handleCloseModal,
-        }}
-      >
-        <Modal.Section>
-          {checkResult && (
-            <BlockStack gap="400">
-              <Banner
-                tone={checkResult.isSafe ? 'success' : 'critical'}
-                icon={checkResult.isSafe ? CheckCircleIcon : AlertDiamondIcon}
-                title={checkResult.isSafe ? 'No issues found' : 'Potential safety risk detected'}
-              >
-                <p>{checkResult.recommendation}</p>
-                <p>Checked at: {new Date(checkResult.checkedAt).toLocaleString('en-GB')}</p>
-              </Banner>
-
-              {!checkResult.isSafe && checkResult.warnings?.length > 0 && (
-                <Badge tone="critical">
-                  {`${checkResult.warnings.length} ${checkResult.warnings.length === 1 ? 'warning' : 'warnings'} matched`}
-                </Badge>
-              )}
-
-              {checkResult.warnings && checkResult.warnings.length > 0 && (
-                <BlockStack gap="300">
-                  <Text as="h3" variant="headingMd">Safety Gate matches</Text>
-                  {checkResult.warnings.map((warning: any, index: number) => {
-                    const fields = warning.alertDetails?.fields || {};
-                    const meta = warning.alertDetails?.meta || {};
-                    return (
-                      <Card key={index} padding="400" background="bg-surface-critical">
-                        <BlockStack gap="300">
-                          <InlineStack align="space-between" blockAlign="start">
-                            <BlockStack gap="100">
-                              <InlineStack gap="200" blockAlign="center">
-                                <Icon source={AlertDiamondIcon} tone="critical" />
-                                <Text as="h4" variant="headingMd">
-                                  Alert {warning.alertId}
-                                </Text>
-                              </InlineStack>
-                              <InlineStack gap="200">
-                                <AlertBadge
-                                  alertLevel={fields.alert_level}
-                                  alertType={fields.alert_type}
-                                  riskDescription={warning.riskLegalProvision}
-                                />
-                                <Badge tone="info">{`${warning.similarity}% similarity`}</Badge>
-                              </InlineStack>
-                            </BlockStack>
-                            {fields.rapex_url && (
-                              <Button
-                                variant="secondary"
-                                size="slim"
-                                onClick={() => {
-                                  window.open(
-                                    fields.rapex_url,
-                                    'SafetyGatePortal',
-                                    'width=1200,height=800,left=100,top=100,resizable=yes,scrollbars=yes'
-                                  );
-                                }}
-                                icon={AlertDiamondIcon}
-                              >
-                                Open Safety Gate
-                              </Button>
-                            )}
-                          </InlineStack>
-                          <Divider />
-                          <BlockStack gap="200">
-                            <Text as="p" variant="bodyMd">
-                              <strong>Reason:</strong> {warning.reason}
-                            </Text>
-                            <InlineGrid columns={{ xs: 1, md: 2 }} gap="200">
-                              {[{
-                                label: 'Alert level',
-                                value: fields.alert_level || 'N/A',
-                              }, {
-                                label: 'Alert type',
-                                value: fields.alert_type || 'N/A',
-                              }, {
-                                label: 'Category',
-                                value: fields.product_category || 'N/A',
-                              }, {
-                                label: 'Brand',
-                                value: fields.product_brand || 'N/A',
-                              }, {
-                                label: 'Country',
-                                value: fields.notifying_country || 'N/A',
-                              }, {
-                                label: 'Alert date',
-                                value: fields.alert_date
-                                  ? new Date(fields.alert_date).toLocaleDateString('en-GB')
-                                  : (meta.alert_date ? new Date(meta.alert_date).toLocaleDateString('en-GB') : 'N/A'),
-                              }].map(({ label, value }) => (
-                                <BlockStack key={label} gap="100">
-                                  <Text as="p" variant="bodySm" tone="subdued">{label}</Text>
-                                  <Text as="p" variant="bodyMd" fontWeight="semibold">{value}</Text>
-                                </BlockStack>
-                              ))}
-                            </InlineGrid>
-                            {fields.risk_legal_provision && (
-                              <Card background="bg-surface-secondary">
-                                <BlockStack gap="100">
-                                  <Text as="p" variant="bodySm" fontWeight="bold">Risk legal provision</Text>
-                                  <Text as="p" variant="bodySm">{fields.risk_legal_provision}</Text>
-                                </BlockStack>
-                              </Card>
-                            )}
-                            {fields.product_description && (
-                              <BlockStack gap="100">
-                                <Text as="p" variant="bodySm" fontWeight="bold">Description</Text>
-                                <Text as="p" variant="bodySm">{fields.product_description}</Text>
-                              </BlockStack>
-                            )}
-                            {fields.alert_number && (
-                              <Text as="p" variant="bodySm" fontWeight="bold">
-                                Alert number: <Text as="span" variant="bodySm">{fields.alert_number}</Text>
-                              </Text>
-                            )}
-                          </BlockStack>
-                        </BlockStack>
-                      </Card>
-                    );
-                  })}
-                </BlockStack>
-              )}
-            </BlockStack>
-          )}
-        </Modal.Section>
-      </Modal>
+      {checkResult && (
+        <AlertDetailModal
+          open={showResult}
+          onClose={handleCloseModal}
+          alert={{
+            productTitle: selectedProduct?.title || 'Unknown Product',
+            productImage: selectedProduct?.featuredImage?.url || null,
+            riskLevel: checkResult.warnings?.[0]?.riskLevel || checkResult.warnings?.[0]?.alertDetails?.fields?.risk_level || 'Unknown',
+            alertType: checkResult.warnings?.[0]?.alertType || checkResult.warnings?.[0]?.alertDetails?.fields?.alert_type || 'Unknown',
+            riskDescription: checkResult.warnings?.[0]?.riskLegalProvision || checkResult.warnings?.[0]?.alertDetails?.fields?.risk_legal_provision || '',
+            status: checkResult.isSafe ? 'resolved' : 'active',
+            warningsCount: checkResult.warnings?.length || 0,
+            checkResult: JSON.stringify({
+              ...checkResult,
+              warnings: checkResult.warnings?.map((w: any) => ({
+                ...w,
+                alertDetails: {
+                  ...w.alertDetails,
+                  fields: {
+                    ...w.alertDetails?.fields,
+                    pictures: (w.alertDetails?.fields?.pictures?.length > 0)
+                      ? w.alertDetails.fields.pictures
+                      : ['https://via.placeholder.com/150']
+                  }
+                }
+              })) || []
+            }),
+            notes: null
+          }}
+        />
+      )}
       {/* Product History Modal */}
       {selectedProductHistory && (
         <Modal
@@ -898,6 +799,7 @@ export default function ManualCheckPage() {
                       icon={ViewIcon}
                       onClick={() => {
                         // Show detailed results for this specific check
+                        setSelectedProduct(selectedProductHistory.product);
                         setCheckResult(check);
                         setShowResult(true);
                         setShowHistoryModal(false);
@@ -912,6 +814,6 @@ export default function ManualCheckPage() {
           </Modal.Section>
         </Modal>
       )}
-    </Page>
+    </Page >
   );
 }

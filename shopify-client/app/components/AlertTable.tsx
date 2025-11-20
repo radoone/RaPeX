@@ -22,6 +22,7 @@ interface Alert {
   id: string;
   productId?: string;
   productTitle: string;
+  productImage?: string | null;
   riskLevel: string;
   alertType?: string;
   riskDescription?: string;

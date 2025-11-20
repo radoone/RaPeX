@@ -30,6 +30,7 @@ export interface SafetyCheckResult {
         notifying_country: string;
         product_brand?: string;
         product_model?: string;
+        pictures?: string[];
       };
     };
   }>;
