@@ -1,4 +1,14 @@
-import { DataTable, Link, InlineStack, BlockStack, Text, Badge, Icon } from "@shopify/polaris";
+import {
+  IndexTable,
+  Link,
+  InlineStack,
+  BlockStack,
+  Text,
+  Badge,
+  Icon,
+  useIndexResourceState,
+  EmptyState,
+} from "@shopify/polaris";
 import { AlertBadge } from "./AlertBadge";
 import { StatusBadge } from "./StatusBadge";
 import { AlertActions } from "./AlertActions";
@@ -19,6 +29,7 @@ interface Alert {
   warningsCount: number;
   createdAt: string;
   notes?: string | null;
+  [key: string]: unknown;
 }
 
 interface AlertTableProps {
@@ -40,76 +51,122 @@ export function AlertTable({
   isLoading = false,
   showProductLink = false,
 }: AlertTableProps) {
-  const rows = alerts.map((alert: Alert) => {
-    const adminProductId = alert.productId?.replace('gid://shopify/Product/', '') || '';
-    const productUrl = adminProductId ? `shopify:admin/products/${adminProductId}` : 'shopify:admin/products';
+  const resourceName = {
+    singular: 'alert',
+    plural: 'alerts',
+  };
 
-    return [
-      <InlineStack key={`product-${alert.id}`} gap="200" blockAlign="center">
-        <Icon source={ProductIcon} tone="primary" />
-        {showProductLink ? (
-          <Link url={productUrl} removeUnderline>
-            {alert.productTitle}
-          </Link>
-        ) : (
-          <Text as="span" variant="bodyMd" fontWeight="semibold">
-            {alert.productTitle}
-          </Text>
-        )}
-      </InlineStack>,
-    <BlockStack key={`risk-${alert.id}`} gap="100">
-      <AlertBadge
-        alertLevel={alert.riskLevel}
-        alertType={alert.alertType}
-        riskDescription={alert.riskDescription}
-      />
-      {alert.riskDescription && (
-        <Text as="span" variant="bodySm" tone="subdued">
-          {summarizeRisk(alert.riskDescription)}
-        </Text>
-      )}
-    </BlockStack>,
-    <StatusBadge key={`status-${alert.id}`} status={alert.status} />,
-    <Badge
-      key={`warnings-${alert.id}`}
-      tone={alert.warningsCount > 0 ? 'critical' : 'success'}
-      icon={alert.warningsCount > 0 ? AlertTriangleIcon : CheckCircleIcon}
-    >
-      {alert.warningsCount} {alert.warningsCount === 1 ? 'match' : 'matches'}
-    </Badge>,
-    <BlockStack key={`created-${alert.id}`} gap="100">
-      <Text as="span" variant="bodyMd">
-        {new Date(alert.createdAt).toLocaleDateString('en-GB')}
-      </Text>
-      <Text as="span" variant="bodySm" tone="subdued">
-        {new Date(alert.createdAt).toLocaleTimeString('en-GB')}
-      </Text>
-    </BlockStack>,
-    <AlertActions
-      key={`actions-${alert.id}`}
-      alertId={alert.id}
-      status={alert.status}
-      onViewDetails={() => onViewDetails(alert)}
-      onDismiss={onDismiss}
-      onResolve={onResolve}
-      onReactivate={onReactivate}
-      isLoading={isLoading}
-    />
-  ];
-  });
+  const { selectedResources, allResourcesSelected, handleSelectionChange } =
+    useIndexResourceState(alerts);
+
+  const rowMarkup = alerts.map(
+    (alert, index) => {
+      const adminProductId = alert.productId?.replace('gid://shopify/Product/', '') || '';
+      const productUrl = adminProductId ? `shopify:admin/products/${adminProductId}` : 'shopify:admin/products';
+
+      return (
+        <IndexTable.Row
+          id={alert.id}
+          key={alert.id}
+          selected={selectedResources.includes(alert.id)}
+          position={index}
+        >
+          <IndexTable.Cell>
+            <InlineStack gap="200" blockAlign="center">
+              <Icon source={ProductIcon} tone="primary" />
+              {showProductLink ? (
+                <Link url={productUrl} removeUnderline>
+                  <Text as="span" variant="bodyMd" fontWeight="semibold">
+                    {alert.productTitle}
+                  </Text>
+                </Link>
+              ) : (
+                <Text as="span" variant="bodyMd" fontWeight="semibold">
+                  {alert.productTitle}
+                </Text>
+              )}
+            </InlineStack>
+          </IndexTable.Cell>
+          <IndexTable.Cell>
+            <BlockStack gap="100">
+              <AlertBadge
+                alertLevel={alert.riskLevel}
+                alertType={alert.alertType}
+                riskDescription={alert.riskDescription}
+              />
+            </BlockStack>
+          </IndexTable.Cell>
+          <IndexTable.Cell>
+            <StatusBadge status={alert.status} />
+          </IndexTable.Cell>
+          <IndexTable.Cell>
+            <Badge
+              tone={alert.warningsCount > 0 ? 'critical' : 'success'}
+              icon={alert.warningsCount > 0 ? AlertTriangleIcon : CheckCircleIcon}
+            >
+              {`${alert.warningsCount} ${alert.warningsCount === 1 ? 'match' : 'matches'}`}
+            </Badge>
+          </IndexTable.Cell>
+          <IndexTable.Cell>
+            <BlockStack gap="050">
+              <Text as="span" variant="bodyMd">
+                {new Date(alert.createdAt).toLocaleDateString('en-GB')}
+              </Text>
+              <Text as="span" variant="bodySm" tone="subdued">
+                {new Date(alert.createdAt).toLocaleTimeString('en-GB')}
+              </Text>
+            </BlockStack>
+          </IndexTable.Cell>
+          <IndexTable.Cell>
+            <div onClick={(e) => e.stopPropagation()}>
+              <AlertActions
+                alertId={alert.id}
+                status={alert.status}
+                onViewDetails={() => onViewDetails(alert)}
+                onDismiss={onDismiss}
+                onResolve={onResolve}
+                onReactivate={onReactivate}
+                isLoading={isLoading}
+              />
+            </div>
+          </IndexTable.Cell>
+        </IndexTable.Row>
+      );
+    },
+  );
+
+  if (alerts.length === 0) {
+    return (
+      <EmptyState
+        heading="No safety alerts found"
+        image="https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"
+      >
+        <p>There are no alerts matching your criteria.</p>
+      </EmptyState>
+    );
+  }
 
   return (
-    <DataTable
-      columnContentTypes={['text', 'text', 'text', 'text', 'text', 'text']}
-      headings={['Product', 'Risk', 'Status', 'Matches', 'Created', 'Actions']}
-      rows={rows}
-    />
+    <IndexTable
+      resourceName={resourceName}
+      itemCount={alerts.length}
+      selectedItemsCount={
+        allResourcesSelected ? 'All' : selectedResources.length
+      }
+      onSelectionChange={handleSelectionChange}
+      headings={[
+        { title: 'Product' },
+        { title: 'Risk' },
+        { title: 'Status' },
+        { title: 'Matches' },
+        { title: 'Created' },
+        { title: 'Actions' },
+      ]}
+      selectable={false}
+    >
+      {rowMarkup}
+    </IndexTable>
   );
 }
 
-function summarizeRisk(description: string) {
-  if (description.length <= 80) {
-    return description;
-  }
-  return `${description.slice(0, 77)}...`;
-}
+
