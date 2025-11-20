@@ -18,7 +18,6 @@ import {
   Divider,
   ProgressBar,
 } from "@shopify/polaris";
-import { TitleBar } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
 import db from "../db.server";
 import {
@@ -371,70 +370,66 @@ export default function AlertsPage() {
   ] as const;
 
   return (
-    <Page>
-      <TitleBar title="Safety Alerts" />
-
+    <Page
+      title="Safety Alerts"
+      primaryAction={{
+        content: "Manual check",
+        icon: ClipboardChecklistIcon,
+        url: "/app/manual-check",
+      }}
+      secondaryActions={[
+        {
+          content: "Dashboard",
+          icon: AlertDiamondIcon,
+          url: "/app",
+        }
+      ]}
+    >
       <Layout>
         <Layout.Section>
           <BlockStack gap="500">
-            <Card background="bg-surface-secondary" padding="400" roundedAbove="sm">
-              <BlockStack gap="300">
-                <InlineStack align="space-between" blockAlign="center">
-                  <BlockStack gap="200">
-                    <Text as="h1" variant="headingLg">
-                      Stay ahead of product safety alerts
-                    </Text>
-                    <Text as="p" tone="subdued">
-                      Track open alerts, capture resolutions, and keep your compliance trail audit ready.
-                    </Text>
-                  </BlockStack>
-                  <InlineStack gap="200">
-                    <Button
-                      variant="primary"
-                      icon={ClipboardChecklistIcon}
-                      url="/app/manual-check"
-                    >
-                      Manual check
-                    </Button>
-                    <Button
-                      variant="secondary"
-                      icon={AlertDiamondIcon}
-                      url="/app"
-                    >
-                      Dashboard
-                    </Button>
-                  </InlineStack>
-                </InlineStack>
-              </BlockStack>
-            </Card>
-
             <InlineGrid columns={{ xs: 1, md: 3 }} gap="400">
               {statCards.map((stat) => (
-                <Card key={stat.id} background={stat.background} padding="400" roundedAbove="sm">
-                  <BlockStack gap="300">
-                    <InlineStack align="space-between" blockAlign="center">
-                      <Icon source={stat.icon} tone={stat.iconTone} />
-                      {stat.badge && (
-                        <Badge tone={stat.badgeTone}>{stat.badge}</Badge>
-                      )}
-                    </InlineStack>
-                    <Text as="p" variant="heading2xl">
-                      {stat.value.toLocaleString()}
-                    </Text>
-                    <Text as="p" tone="subdued">
-                      {stat.description}
-                    </Text>
-                    {stat.progress !== undefined && (
-                      <BlockStack gap="200">
-                        <ProgressBar progress={stat.progress} tone="success" />
-                        {stat.progressLabel && (
-                          <Text as="p" variant="bodySm" tone="subdued">
-                            {stat.progressLabel}
+                <Card key={stat.id} padding="400" roundedAbove="sm">
+                  <div style={{ height: '100%' }}>
+                    <BlockStack gap="400">
+                      <InlineStack align="space-between" blockAlign="start">
+                        <BlockStack gap="200">
+                          <Text as="h3" variant="headingSm" tone="subdued">
+                            {stat.title}
                           </Text>
+                          <Text as="p" variant="heading2xl">
+                            {stat.value.toLocaleString()}
+                          </Text>
+                        </BlockStack>
+                        <div style={{
+                          backgroundColor: 'var(--p-color-bg-surface-secondary)',
+                          borderRadius: 'var(--p-border-radius-200)',
+                          padding: 'var(--p-space-200)'
+                        }}>
+                          <Icon source={stat.icon} tone={stat.iconTone} />
+                        </div>
+                      </InlineStack>
+
+                      <BlockStack gap="200">
+                        {'progress' in stat && stat.progress !== undefined ? (
+                          <BlockStack gap="200">
+                            <ProgressBar progress={stat.progress} tone={stat.badgeTone === 'success' ? 'success' : 'primary'} size="small" />
+                            {stat.progressLabel && (
+                              <Text as="p" variant="bodySm" tone="subdued">
+                                {stat.progressLabel}
+                              </Text>
+                            )}
+                          </BlockStack>
+                        ) : (
+                          <Badge tone={stat.badgeTone}>{stat.badge}</Badge>
                         )}
+                        <Text as="p" variant="bodySm" tone="subdued">
+                          {stat.description}
+                        </Text>
                       </BlockStack>
-                    )}
-                  </BlockStack>
+                    </BlockStack>
+                  </div>
                 </Card>
               ))}
             </InlineGrid>
@@ -505,41 +500,40 @@ export default function AlertsPage() {
       </Layout>
 
       <Layout>
-        <Layout.Section variant="fullWidth">
-          <BlockStack gap="400">
-            <Card padding="400" roundedAbove="sm">
-              <BlockStack gap="300">
-                <InlineStack gap="200" blockAlign="center">
-                  <Icon source={ClipboardChecklistIcon} tone="primary" />
-                  <Text as="h2" variant="headingMd">
-                    Response checklist
+        <Layout.Section variant="oneThird">
+          <Card padding="400" roundedAbove="sm">
+            <BlockStack gap="300">
+              <InlineStack gap="200" blockAlign="center">
+                <Icon source={ClipboardChecklistIcon} tone="primary" />
+                <Text as="h2" variant="headingMd">
+                  Response checklist
+                </Text>
+              </InlineStack>
+              <BlockStack gap="200">
+                <InlineStack gap="200" blockAlign="start">
+                  <Icon source={AlertDiamondIcon} tone="critical" />
+                  <Text as="p" variant="bodyMd">
+                    Prioritise active alerts to pause selling risky products.
                   </Text>
                 </InlineStack>
-                <BlockStack gap="200">
-                  <InlineStack gap="200" blockAlign="start">
-                    <Icon source={AlertDiamondIcon} tone="critical" />
-                    <Text as="p" variant="bodyMd">
-                      Prioritise active alerts to pause selling risky products.
-                    </Text>
-                  </InlineStack>
-                  <InlineStack gap="200" blockAlign="start">
-                    <Icon source={CheckCircleIcon} tone="success" />
-                    <Text as="p" variant="bodyMd">
-                      Record every remediation step for your compliance log.
-                    </Text>
-                  </InlineStack>
-                  <InlineStack gap="200" blockAlign="start">
-                    <Icon source={HideIcon} tone="warning" />
-                    <Text as="p" variant="bodyMd">
-                      Dismiss alerts only after confirming the product is compliant.
-                    </Text>
-                  </InlineStack>
-                </BlockStack>
+                <InlineStack gap="200" blockAlign="start">
+                  <Icon source={CheckCircleIcon} tone="success" />
+                  <Text as="p" variant="bodyMd">
+                    Record every remediation step for your compliance log.
+                  </Text>
+                </InlineStack>
+                <InlineStack gap="200" blockAlign="start">
+                  <Icon source={HideIcon} tone="warning" />
+                  <Text as="p" variant="bodyMd">
+                    Dismiss alerts only after confirming the product is compliant.
+                  </Text>
+                </InlineStack>
               </BlockStack>
-            </Card>
-
-            <SafetyGatePortal />
-          </BlockStack>
+            </BlockStack>
+          </Card>
+        </Layout.Section>
+        <Layout.Section>
+          <SafetyGatePortal />
         </Layout.Section>
       </Layout>
 

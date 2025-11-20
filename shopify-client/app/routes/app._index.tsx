@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { useFetcher, useLoaderData } from "@remix-run/react";
+import { useFetcher, useLoaderData, useNavigation } from "@remix-run/react";
 import { json } from "@remix-run/node";
+import { useTranslation } from "react-i18next";
 import {
   Page,
   Layout,
@@ -18,22 +19,26 @@ import {
   ProgressBar,
   Divider,
   Tooltip,
+  CalloutCard,
+  SkeletonPage,
+  SkeletonBodyText,
+  SkeletonDisplayText,
 } from "@shopify/polaris";
-import { TitleBar, useAppBridge } from "@shopify/app-bridge-react";
+import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
 import db from "../db.server";
 import {
   AlertTable,
   AlertDetailModal,
   SafetyGatePortal,
+  LanguageSwitcher,
 } from "../components";
 import {
   AlertDiamondIcon,
   ChartVerticalIcon,
   ClipboardChecklistIcon,
-  ShieldCheckMarkIcon,
   TargetIcon,
-  CheckCircleIcon,
+  InfoIcon,
 } from "@shopify/polaris-icons";
 
 type BulkCheckResults = {
@@ -101,13 +106,38 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     }),
   ]);
 
+  // Process alerts to extract alertType and riskDescription from checkResult
+  const processedRecentAlerts = recentAlerts.map((alert: any) => {
+    let alertType = undefined;
+    let riskDescription = undefined;
+
+    try {
+      if (alert.checkResult) {
+        const checkResult = JSON.parse(alert.checkResult);
+        if (checkResult.warnings && checkResult.warnings.length > 0) {
+          const firstWarning = checkResult.warnings[0];
+          alertType = firstWarning.alertType || firstWarning.alertDetails?.fields?.alert_type;
+          riskDescription = firstWarning.riskLegalProvision || firstWarning.alertDetails?.fields?.risk_legal_provision;
+        }
+      }
+    } catch (error) {
+      console.error('Error parsing checkResult for alert', alert.id, error);
+    }
+
+    return {
+      ...alert,
+      alertType,
+      riskDescription,
+    };
+  });
+
   return json({
     stats: {
       activeAlerts,
       totalAlerts,
       totalChecks,
     },
-    recentAlerts,
+    recentAlerts: processedRecentAlerts,
   });
 };
 
@@ -159,6 +189,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         dismissedAt: null,
         dismissedBy: null,
         resolvedAt: null,
+        notes: null,
       },
     });
 
@@ -195,108 +226,77 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export default function Index() {
   const { stats, recentAlerts } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<ActionResponse>();
+  const navigation = useNavigation();
   const shopify = useAppBridge();
+  const { t } = useTranslation();
 
   const [selectedAlert, setSelectedAlert] = useState<any>(null);
   const [modalOpen, setModalOpen] = useState(false);
+
+  const isLoading = navigation.state === "loading";
+  const isSubmitting = fetcher.state === "submitting";
 
   const resolvedAlerts = Math.max(stats.totalAlerts - stats.activeAlerts, 0);
   const resolutionRate = stats.totalAlerts > 0
     ? Math.round((resolvedAlerts / stats.totalAlerts) * 100)
     : 100;
 
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   const statCards = [
     {
       id: 'active-alerts',
-      title: 'Active alerts',
+      title: t('dashboard.stats.activeAlerts'),
       value: stats.activeAlerts,
       description: stats.activeAlerts === 0
-        ? 'All safety issues are resolved.'
-        : 'Review these products today to stay compliant.',
+        ? t('dashboard.stats.descriptions.activeAlertsZero')
+        : t('dashboard.stats.descriptions.activeAlerts'),
       icon: AlertDiamondIcon,
       iconTone: stats.activeAlerts > 0 ? 'critical' : 'success',
-      badge: stats.activeAlerts === 0 ? 'All clear' : `${stats.activeAlerts} open`,
+      badge: stats.activeAlerts === 0 ? t('dashboard.stats.allClear') : t('dashboard.stats.open', { count: stats.activeAlerts }),
       badgeTone: stats.activeAlerts > 0 ? 'critical' : 'success',
       background: stats.activeAlerts > 0 ? 'bg-surface-critical' : 'bg-surface-success',
-      tooltip: 'Active alerts block affected products in your catalog until you dismiss or resolve them.',
+      action: () => scrollToSection('recent-alerts-card'),
     },
     {
       id: 'total-alerts',
-      title: 'Alerts logged',
+      title: t('dashboard.stats.alertsLogged'),
       value: stats.totalAlerts,
       description: stats.totalAlerts === 0
-        ? 'No historical alerts. Keep monitoring new products.'
-        : 'Includes resolved and dismissed alerts for audit trail.',
+        ? t('dashboard.stats.descriptions.alertsLoggedZero')
+        : t('dashboard.stats.descriptions.alertsLogged'),
       icon: ChartVerticalIcon,
       iconTone: 'warning',
-      badge: stats.totalAlerts > 0 ? `${resolvedAlerts} resolved` : 'New setup',
+      badge: stats.totalAlerts > 0 ? t('dashboard.stats.resolved', { count: resolvedAlerts }) : t('dashboard.stats.newSetup'),
       badgeTone: stats.totalAlerts > 0 ? 'success' : 'info',
       background: 'bg-surface-warning',
       progress: resolutionRate,
       progressTone: resolvedAlerts > 0 ? 'success' : 'primary',
       progressLabel: stats.totalAlerts > 0
-        ? `${resolutionRate}% of alerts resolved`
-        : 'Resolve alerts as they appear to stay compliant.',
-      tooltip: 'Track how many safety issues have been processed and closed.',
+        ? `${resolutionRate}%`
+        : '',
+      action: () => scrollToSection('recent-alerts-card'),
     },
     {
       id: 'products-checked',
-      title: 'Products checked',
+      title: t('dashboard.stats.productsChecked'),
       value: stats.totalChecks,
       description: stats.totalChecks === 0
-        ? 'Run a bulk check to scan your current catalog.'
-        : 'Automatic Shopify events continue to monitor updates.',
+        ? t('dashboard.stats.descriptions.productsCheckedZero')
+        : t('dashboard.stats.descriptions.productsChecked'),
       icon: ClipboardChecklistIcon,
       iconTone: stats.totalChecks > 0 ? 'primary' : 'subdued',
-      badge: stats.totalChecks === 0 ? 'Action needed' : 'Auto monitoring',
+      badge: stats.totalChecks === 0 ? t('dashboard.stats.actionNeeded') : t('dashboard.stats.autoMonitoring'),
       badgeTone: stats.totalChecks === 0 ? 'warning' : 'success',
       background: 'bg-surface-emphasis',
-      tooltip: 'Every time a product changes we log a safety check for your records.',
+      action: () => scrollToSection('bulk-check-card'),
     },
   ] as const;
-
-  const howItWorksItems = [
-    "Products are automatically checked when they're created or updated",
-    'Safety alerts are generated if matches are found in the Safety Gate database',
-    'You can dismiss, resolve, or reactivate alerts to manage follow-up',
-    'Bulk and manual checks keep your entire catalog covered',
-  ] as const;
-
-  const quickActions = [
-    {
-      id: 'manage-alerts',
-      title: 'Manage safety alerts',
-      description: 'Review open issues, capture resolutions, and keep a clear audit trail.',
-      icon: AlertDiamondIcon,
-      action: {
-        label: 'Open alerts',
-        url: '/app/alerts',
-      },
-    },
-    {
-      id: 'manual-check',
-      title: 'Run a manual check',
-      description: 'Scan an individual product when you need instant reassurance.',
-      icon: ClipboardChecklistIcon,
-      action: {
-        label: 'Start manual check',
-        url: '/app/manual-check',
-      },
-    },
-    {
-      id: 'safety-gate',
-      title: 'Safety Gate portal',
-      description: 'Search the EU database for deeper context and historic notices.',
-      icon: TargetIcon,
-      action: {
-        label: 'Open portal',
-        url: 'https://ec.europa.eu/safety-gate-alerts/screen/search?resetSearch=true',
-        external: true as const,
-      },
-    },
-  ];
-
-
 
   const dismissAlert = (alertId: string, notes: string = '') => {
     fetcher.submit(
@@ -333,7 +333,8 @@ export default function Index() {
   };
 
   const runBulkCheck = () => {
-    if (confirm('Are you sure you want to check all products in your store? This may take some time depending on the number of products.')) {
+    if (isSubmitting) return;
+    if (confirm(t('common.confirm'))) {
       fetcher.submit(
         { action: 'bulkCheck' },
         { method: 'POST' }
@@ -351,120 +352,185 @@ export default function Index() {
     : 0;
   const bulkDuration = bulkResults && bulkResults.endTime
     ? Math.max(
-        0,
-        Math.round(
-          (new Date(bulkResults.endTime).getTime() - new Date(bulkResults.startTime).getTime()) / 1000,
-        ),
-      )
+      0,
+      Math.round(
+        (new Date(bulkResults.endTime).getTime() - new Date(bulkResults.startTime).getTime()) / 1000,
+      ),
+    )
     : 0;
 
   useEffect(() => {
-    if (fetcher.data && 'success' in fetcher.data && fetcher.data.success && fetcher.data.message) {
-      shopify.toast.show(fetcher.data.message);
+    if (fetcher.data) {
+      if (fetcher.data.success && fetcher.data.message) {
+        shopify.toast.show(fetcher.data.message);
+      } else if (!fetcher.data.success && fetcher.data.error) {
+        shopify.toast.show(fetcher.data.error, { isError: true });
+      }
     }
   }, [fetcher.data, shopify]);
 
-  return (
-    <Page>
-      <TitleBar title="Safety Gate EU" />
+  if (isLoading) {
+    return (
+      <SkeletonPage primaryAction>
+        <Layout>
+          <Layout.Section>
+            <Card padding="400">
+              <SkeletonBodyText lines={2} />
+            </Card>
+            <Card padding="400">
+              <SkeletonDisplayText size="small" />
+              <SkeletonBodyText lines={3} />
+            </Card>
+          </Layout.Section>
+        </Layout>
+      </SkeletonPage>
+    );
+  }
 
+  return (
+    <Page
+      title={t('dashboard.title')}
+      primaryAction={{
+        content: t('dashboard.bulkCheck.action'),
+        onAction: runBulkCheck,
+        disabled: isSubmitting,
+      }}
+    >
       <Layout>
         <Layout.Section>
           <BlockStack gap="500">
+            <InlineStack align="end" gap="200">
+              <Tooltip
+                content={
+                  <BlockStack gap="200">
+                    <BlockStack gap="050">
+                      <Text as="p" fontWeight="bold">{t('dashboard.howItWorks.autoMonitoring.title')}</Text>
+                      <Text as="p">{t('dashboard.howItWorks.autoMonitoring.description')}</Text>
+                    </BlockStack>
+                    <BlockStack gap="050">
+                      <Text as="p" fontWeight="bold">{t('dashboard.howItWorks.alertGeneration.title')}</Text>
+                      <Text as="p">{t('dashboard.howItWorks.alertGeneration.description')}</Text>
+                    </BlockStack>
+                  </BlockStack>
+                }
+                dismissOnMouseOut
+              >
+                <div style={{ cursor: 'help' }}>
+                  <Icon source={InfoIcon} tone="base" />
+                </div>
+              </Tooltip>
+              <LanguageSwitcher />
+            </InlineStack>
+
             {stats.activeAlerts > 0 && (
               <Banner
                 tone="critical"
                 icon={AlertDiamondIcon}
-                title="Active safety alerts need attention"
+                title={t('dashboard.activeAlertsBanner.title')}
                 action={{
-                  content: "Review first alert",
+                  content: t('dashboard.activeAlertsBanner.reviewAction'),
                   onAction: openFirstAlert,
                   disabled: recentAlerts.length === 0,
                 }}
                 secondaryAction={{
-                  content: "Manual check",
+                  content: t('dashboard.activeAlertsBanner.manualCheckAction'),
                   url: "/app/manual-check",
                 }}
               >
                 <p>
-                  Resolve {stats.activeAlerts} active {stats.activeAlerts === 1 ? 'alert' : 'alerts'} to keep affected
-                  products available in your store.
+                  {t('dashboard.activeAlertsBanner.content', { count: stats.activeAlerts })}
                 </p>
               </Banner>
             )}
 
-            <Card background="bg-surface-secondary" padding="400" roundedAbove="sm">
-              <BlockStack gap="300">
-                <InlineStack align="space-between" blockAlign="center">
-                  <BlockStack gap="200">
-                    <Text as="h1" variant="headingLg">
-                      Monitor product safety at a glance
+            {(isSubmitting || bulkResults) && (
+              <div id="bulk-check-card">
+                <CalloutCard
+                  title={t('dashboard.bulkCheck.title')}
+                  illustration="https://cdn.shopify.com/s/assets/admin/checkout/settings-customizecart-705f57c725ac05be5a34ec20c05b94298cb8afd10aac7bd9c7ad02030f48cfa0.svg"
+                  primaryAction={{
+                    content: t('dashboard.bulkCheck.action'),
+                    onAction: runBulkCheck,
+                  }}
+                >
+                  <BlockStack gap="400">
+                    <Text as="p">
+                      {isSubmitting
+                        ? 'Scanning your products against the Safety Gate database...'
+                        : t('dashboard.bulkCheck.description')}
                     </Text>
-                    <Text as="p" tone="subdued">
-                      Track alerts, run catalog checks, and keep regulators satisfied.
-                    </Text>
-                  </BlockStack>
-                  <Button
-                    variant="primary"
-                    onClick={openFirstAlert}
-                    disabled={recentAlerts.length === 0}
-                  >
-                    Review alerts
-                  </Button>
-                </InlineStack>
-              </BlockStack>
-            </Card>
 
-            <InlineGrid columns={{ xs: 1, md: 3 }} gap="400">
-              {statCards.map((stat) => (
-                <Card key={stat.id} background={stat.background} padding="400" roundedAbove="sm">
-                  <BlockStack gap="300">
-                    <InlineStack align="space-between" blockAlign="center">
-                      <Icon source={stat.icon} tone={stat.iconTone} />
-                      <Tooltip content={stat.tooltip}>
-                        <Badge tone={stat.badgeTone}>{stat.badge}</Badge>
-                      </Tooltip>
-                    </InlineStack>
-                    <Text as="p" variant="heading2xl">
-                      {stat.value.toLocaleString()}
-                    </Text>
-                    <Text as="p" tone="subdued">
-                      {stat.description}
-                    </Text>
-                    {stat.progress !== undefined && (
+                    {bulkResults && (
                       <BlockStack gap="200">
-                        <ProgressBar progress={stat.progress} tone={stat.progressTone ?? 'primary'} />
-                        <Text as="p" variant="bodySm" tone="subdued">
-                          {stat.progressLabel}
-                        </Text>
+                        <Divider />
+                        <InlineStack gap="200">
+                          <Badge tone="info">{t('dashboard.bulkCheck.processed', { count: bulkResults.processed })}</Badge>
+                          <Badge tone="success">{t('dashboard.bulkCheck.checked', { count: bulkResults.checked })}</Badge>
+                          <Badge tone="warning">{t('dashboard.bulkCheck.alerts', { count: bulkResults.alertsCreated })}</Badge>
+                          {bulkResults.errors > 0 && (
+                            <Badge tone="critical">{t('dashboard.bulkCheck.errors', { count: bulkResults.errors })}</Badge>
+                          )}
+                        </InlineStack>
+                        <ProgressBar progress={bulkCompletion} tone="primary" />
+                        <InlineStack gap="200" blockAlign="center">
+                          <Text as="p" variant="bodySm" tone="subdued">
+                            {t('dashboard.bulkCheck.completed', { seconds: bulkDuration })}
+                          </Text>
+                          <Text as="p" variant="bodySm" tone="subdued">
+                            {t('dashboard.bulkCheck.started', { date: new Date(bulkResults.startTime).toLocaleString('en-GB') })}
+                          </Text>
+                        </InlineStack>
                       </BlockStack>
                     )}
                   </BlockStack>
-                </Card>
-              ))}
-            </InlineGrid>
+                </CalloutCard>
+              </div>
+            )}
 
             <InlineGrid columns={{ xs: 1, md: 3 }} gap="400">
-              {quickActions.map((action) => (
-                <Card key={action.id} padding="400" roundedAbove="sm" background="bg-surface">
-                  <BlockStack gap="300">
-                    <InlineStack gap="200" blockAlign="center">
-                      <Icon source={action.icon} tone="primary" />
-                      <Text as="h2" variant="headingMd">
-                        {action.title}
-                      </Text>
-                    </InlineStack>
-                    <Text as="p" tone="subdued">
-                      {action.description}
-                    </Text>
-                    <Button
-                      variant="primary"
-                      url={action.action.url}
-                      external={action.action.external}
-                    >
-                      {action.action.label}
-                    </Button>
-                  </BlockStack>
+              {statCards.map((stat) => (
+                <Card key={stat.id} padding="400" roundedAbove="sm">
+                  <div
+                    role="button"
+                    onClick={stat.action}
+                    style={{ cursor: 'pointer', height: '100%' }}
+                  >
+                    <BlockStack gap="400">
+                      <InlineStack align="space-between" blockAlign="start">
+                        <BlockStack gap="200">
+                          <Text as="h3" variant="headingSm" tone="subdued">
+                            {stat.title}
+                          </Text>
+                          <Text as="p" variant="heading2xl">
+                            {stat.value.toLocaleString()}
+                          </Text>
+                        </BlockStack>
+                        <div style={{
+                          backgroundColor: 'var(--p-color-bg-surface-secondary)',
+                          borderRadius: 'var(--p-border-radius-200)',
+                          padding: 'var(--p-space-200)'
+                        }}>
+                          <Icon source={stat.icon} tone={stat.iconTone} />
+                        </div>
+                      </InlineStack>
+
+                      <BlockStack gap="200">
+                        {'progress' in stat && stat.progress !== undefined ? (
+                          <BlockStack gap="200">
+                            <ProgressBar progress={stat.progress} tone={stat.progressTone ?? 'primary'} size="small" />
+                            <Text as="p" variant="bodySm" tone="subdued">
+                              {stat.progressLabel}
+                            </Text>
+                          </BlockStack>
+                        ) : (
+                          <Badge tone={stat.badgeTone}>{stat.badge}</Badge>
+                        )}
+                        <Text as="p" variant="bodySm" tone="subdued">
+                          {stat.description}
+                        </Text>
+                      </BlockStack>
+                    </BlockStack>
+                  </div>
                 </Card>
               ))}
             </InlineGrid>
@@ -475,190 +541,83 @@ export default function Index() {
 
       <Layout>
         <Layout.Section variant="fullWidth">
-          <Card background="bg-surface-emphasis" padding="400" roundedAbove="sm">
-            <BlockStack gap="300">
-              <InlineStack align="space-between" blockAlign="start">
-                <InlineStack gap="200" blockAlign="center">
-                  <Icon source={ClipboardChecklistIcon} tone="primary" />
-                  <BlockStack gap="100">
+          <div id="recent-alerts-card">
+            <Card padding="400" roundedAbove="sm">
+              <BlockStack gap="300">
+                <InlineStack align="space-between" blockAlign="center">
+                  <InlineStack gap="200" blockAlign="center">
+                    <Icon source={AlertDiamondIcon} tone="critical" />
+                    <BlockStack gap="100">
                       <Text as="h2" variant="headingMd">
-                        Bulk safety check
+                        {t('dashboard.recentAlerts.title')}
                       </Text>
-                      <Text as="p" tone="subdued">
-                        Scan every product in your store against the Safety Gate database to catch hidden risks.
+                      <Text as="p" variant="bodySm" tone="subdued">
+                        {t('dashboard.recentAlerts.description')}
                       </Text>
                     </BlockStack>
                   </InlineStack>
-                  <Button
-                    variant="primary"
-                    onClick={runBulkCheck}
-                    loading={fetcher.state === 'submitting'}
-                  >
-                    Check all products
-                  </Button>
+                  <Badge tone={stats.activeAlerts > 0 ? 'critical' : 'success'}>
+                    {stats.activeAlerts > 0 ? t('dashboard.recentAlerts.active', { count: stats.activeAlerts }) : t('dashboard.recentAlerts.allResolved')}
+                  </Badge>
                 </InlineStack>
 
-                {bulkResults && (
-                  <BlockStack gap="200">
-                    <Divider />
-                    <InlineStack gap="200">
-                      <Badge tone="info">Processed {bulkResults.processed.toLocaleString()}</Badge>
-                      <Badge tone="success">Checked {bulkResults.checked.toLocaleString()}</Badge>
-                      <Badge tone="warning">Alerts {bulkResults.alertsCreated.toLocaleString()}</Badge>
-                      {bulkResults.errors > 0 && (
-                        <Badge tone="critical">Errors {bulkResults.errors.toLocaleString()}</Badge>
-                      )}
-                    </InlineStack>
-                    <ProgressBar progress={bulkCompletion} tone="primary" />
-                    <InlineStack gap="200" blockAlign="center">
-                      <Text as="p" variant="bodySm" tone="subdued">
-                        Completed in {bulkDuration} seconds
-                      </Text>
-                      <Text as="p" variant="bodySm" tone="subdued">
-                        Started {new Date(bulkResults.startTime).toLocaleString('en-GB')}
-                      </Text>
-                    </InlineStack>
-                  </BlockStack>
+                {recentAlerts.length === 0 ? (
+                  <EmptyState
+                    heading={t('dashboard.recentAlerts.emptyState.heading')}
+                    image="https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"
+                  >
+                    <p>
+                      {t('dashboard.recentAlerts.emptyState.content')}
+                    </p>
+                  </EmptyState>
+                ) : (
+                  <AlertTable
+                    alerts={recentAlerts}
+                    onViewDetails={viewDetails}
+                    onDismiss={(alertId) => dismissAlert(alertId)}
+                    onResolve={(alertId) => resolveAlert(alertId)}
+                    onReactivate={(alertId) => reactivateAlert(alertId)}
+                    isLoading={isSubmitting}
+                    showProductLink={true}
+                  />
                 )}
               </BlockStack>
             </Card>
+          </div>
         </Layout.Section>
       </Layout>
 
       <Layout>
-        <Layout.Section variant="fullWidth">
+        <Layout.Section variant="oneThird">
           <Card padding="400" roundedAbove="sm">
-            <BlockStack gap="300">
-              <InlineStack align="space-between" blockAlign="center">
-                <InlineStack gap="200" blockAlign="center">
-                  <Icon source={AlertDiamondIcon} tone="critical" />
-                  <BlockStack gap="100">
-                    <Text as="h2" variant="headingMd">
-                      Recent safety alerts
-                    </Text>
-                    <Text as="p" variant="bodySm" tone="subdued">
-                      Investigate the latest matches from Safety Gate before fulfilling orders.
-                    </Text>
-                  </BlockStack>
-                </InlineStack>
-                <Badge tone={stats.activeAlerts > 0 ? 'critical' : 'success'}>
-                  {stats.activeAlerts > 0 ? `${stats.activeAlerts} active` : 'All resolved'}
-                </Badge>
-              </InlineStack>
-
-              {recentAlerts.length === 0 ? (
-                <EmptyState
-                  heading="No safety alerts yet"
-                  image="https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"
+            <BlockStack gap="400">
+              <Text as="h2" variant="headingMd">
+                {t('dashboard.quickActions.title')}
+              </Text>
+              <BlockStack gap="200">
+                <Button
+                  variant="plain"
+                  textAlign="left"
+                  url="/app/manual-check"
+                  icon={ClipboardChecklistIcon}
                 >
-                  <p>
-                    Great news—no products are currently flagged. Keep monitoring to maintain compliance.
-                  </p>
-                </EmptyState>
-              ) : (
-                <AlertTable
-                  alerts={recentAlerts}
-                  onViewDetails={viewDetails}
-                  onDismiss={(alertId) => dismissAlert(alertId)}
-                  onResolve={(alertId) => resolveAlert(alertId)}
-                  onReactivate={(alertId) => reactivateAlert(alertId)}
-                  isLoading={fetcher.state === 'submitting'}
-                  showProductLink={true}
-                />
-              )}
+                  {t('dashboard.quickActions.manualCheck')}
+                </Button>
+                <Button
+                  variant="plain"
+                  textAlign="left"
+                  target="_blank"
+                  url="https://ec.europa.eu/safety-gate-alerts/screen/home"
+                  icon={TargetIcon}
+                >
+                  {t('dashboard.quickActions.browsePortal')}
+                </Button>
+              </BlockStack>
             </BlockStack>
           </Card>
         </Layout.Section>
-      </Layout>
-
-      <Layout>
-        <Layout.Section variant="fullWidth">
-          <BlockStack gap="400">
-            <InlineGrid columns={{ xs: 1, md: 2, lg: 3 }} gap="400">
-              <Card padding="400" roundedAbove="sm">
-                <BlockStack gap="300">
-                  <InlineStack gap="200" blockAlign="center">
-                    <Icon source={TargetIcon} tone="primary" />
-                    <Text as="h2" variant="headingMd">
-                      Next steps
-                    </Text>
-                  </InlineStack>
-                  <BlockStack gap="200">
-                    <InlineStack gap="200" blockAlign="center">
-                      <Icon source={AlertDiamondIcon} tone="critical" />
-                      <Text as="p" variant="bodyMd">
-                        Resolve active alerts to unblock affected listings.
-                      </Text>
-                    </InlineStack>
-                    <InlineStack gap="200" blockAlign="center">
-                      <Icon source={ClipboardChecklistIcon} tone="success" />
-                      <Text as="p" variant="bodyMd">
-                        Run manual checks when sourcing or updating high-risk products.
-                      </Text>
-                    </InlineStack>
-                    <InlineStack gap="200" blockAlign="center">
-                      <Icon source={ShieldCheckMarkIcon} tone="success" />
-                      <Text as="p" variant="bodyMd">
-                        Document outcomes to show regulators your due diligence.
-                      </Text>
-                    </InlineStack>
-                  </BlockStack>
-                  <InlineStack gap="200" wrap>
-                    <Button variant="secondary" size="slim" url="/app/manual-check">
-                      Go to manual check
-                    </Button>
-                    <Button
-                      variant="tertiary"
-                      size="slim"
-                      external
-                      url="https://ec.europa.eu/safety-gate-alerts/screen/home"
-                    >
-                      Safety Gate guidance
-                    </Button>
-                  </InlineStack>
-                </BlockStack>
-              </Card>
-
-              <Card padding="400" roundedAbove="sm">
-                <BlockStack gap="300">
-                  <InlineStack gap="200" blockAlign="center">
-                    <Icon source={ShieldCheckMarkIcon} tone="success" />
-                    <Text as="h2" variant="headingMd">
-                      About Safety Gate EU
-                    </Text>
-                  </InlineStack>
-                  <Text as="p" variant="bodyMd">
-                    Safety Gate is the European rapid alert system for dangerous non-food products. This app
-                    monitors your Shopify catalog against that database so you can make safer merchandising
-                    decisions.
-                  </Text>
-                </BlockStack>
-              </Card>
-
-              <Card padding="400" roundedAbove="sm">
-                <BlockStack gap="300">
-                  <InlineStack gap="200" blockAlign="center">
-                    <Icon source={CheckCircleIcon} tone="success" />
-                    <Text as="h2" variant="headingMd">
-                      How it works
-                    </Text>
-                  </InlineStack>
-                  <BlockStack gap="200">
-                    {howItWorksItems.map((item) => (
-                      <InlineStack key={item} gap="200" blockAlign="start">
-                        <Icon source={CheckCircleIcon} tone="success" />
-                        <Text as="p" variant="bodyMd">
-                          {item}
-                        </Text>
-                      </InlineStack>
-                    ))}
-                  </BlockStack>
-                </BlockStack>
-              </Card>
-            </InlineGrid>
-
-            <SafetyGatePortal />
-          </BlockStack>
+        <Layout.Section>
+          <SafetyGatePortal />
         </Layout.Section>
       </Layout>
 

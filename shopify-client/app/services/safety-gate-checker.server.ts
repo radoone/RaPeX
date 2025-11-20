@@ -163,102 +163,104 @@ export async function bulkCheckProducts(admin: any, shop: string, db: any) {
         }
       `;
 
-      const variables = {
+      const variables: { first: number; after: string | null } = {
         first: 50, // Process 50 products at a time
         after: cursor
       };
 
-      const productsResponse = await admin.graphql(productsQuery, { variables });
-      const productsJson = await productsResponse.json();
+      const productsResponse: Response = await admin.graphql(productsQuery, { variables });
+      const productsJson: any = await productsResponse.json();
 
       if (!productsJson.data?.products) {
         console.error('Failed to fetch products:', productsJson);
         throw new Error('Failed to fetch products from Shopify');
       }
 
-      const { edges, pageInfo } = productsJson.data.products;
+      const { edges, pageInfo }: { edges: any[]; pageInfo: { hasNextPage: boolean; endCursor: string | null } } = productsJson.data.products;
       hasNextPage = pageInfo.hasNextPage;
       cursor = pageInfo.endCursor;
 
-      // Process products in batches to avoid overwhelming the API
-      for (const edge of edges) {
-        const product = edge.node;
-        results.processed++;
+      // Process products in batches to avoid overwhelming the API and speed up processing
+      const batchSize = 5;
+      for (let i = 0; i < edges.length; i += batchSize) {
+        const batch = edges.slice(i, i + batchSize);
+        
+        await Promise.all(batch.map(async (edge: any) => {
+          const product = edge.node;
+          results.processed++;
 
-        try {
-          // Convert Shopify product to Safety Gate format
-          const productData = shopifyProductToProductData(product);
+          try {
+            // Convert Shopify product to Safety Gate format
+            const productData = shopifyProductToProductData(product);
 
-          // Check product safety
-          const safetyResult = await checkProductSafety(productData);
-          results.checked++;
+            // Check product safety
+            const safetyResult = await checkProductSafety(productData);
+            results.checked++;
 
-          // Handle safety check results
-          if (!safetyResult.isSafe && safetyResult.warnings.length > 0) {
-            // Check if alert already exists
-            const existingAlert = await db.safetyAlert.findFirst({
-              where: {
+            // Handle safety check results
+            if (!safetyResult.isSafe && safetyResult.warnings.length > 0) {
+              // Check if alert already exists
+              const existingAlert = await db.safetyAlert.findFirst({
+                where: {
+                  productId: product.id,
+                  shop: shop,
+                  status: 'active',
+                },
+              });
+
+              if (!existingAlert) {
+                await db.safetyAlert.create({
+                  data: {
+                    productId: product.id,
+                    productTitle: product.title,
+                    productHandle: product.handle,
+                    shop: shop,
+                    checkResult: JSON.stringify(safetyResult),
+                    status: 'active',
+                    riskLevel: safetyResult.warnings[0]?.alertDetails?.fields?.alert_level ||
+                               safetyResult.warnings[0]?.alertDetails?.fields?.risk_level ||
+                               safetyResult.warnings[0]?.riskLevel ||
+                               'Unknown',
+                    warningsCount: safetyResult.warnings.length,
+                  },
+                });
+                results.alertsCreated++;
+                console.log(`🚨 Alert created for: ${product.title}`);
+              }
+            }
+
+            // Always log the check
+            await db.safetyCheck.create({
+              data: {
                 productId: product.id,
+                productTitle: product.title,
                 shop: shop,
-                status: 'active',
+                isSafe: safetyResult.isSafe,
+                checkedAt: new Date(safetyResult.checkedAt),
               },
             });
 
-            if (!existingAlert) {
-              await db.safetyAlert.create({
-                data: {
-                  productId: product.id,
-                  productTitle: product.title,
-                  productHandle: product.handle,
-                  shop: shop,
-                  checkResult: JSON.stringify(safetyResult),
-                  status: 'active',
-                  riskLevel: safetyResult.warnings[0]?.alertDetails?.fields?.alert_level ||
-                             safetyResult.warnings[0]?.alertDetails?.fields?.risk_level ||
-                             safetyResult.warnings[0]?.riskLevel ||
-                             'Unknown',
-                  warningsCount: safetyResult.warnings.length,
-                },
-              });
-              results.alertsCreated++;
-              console.log(`🚨 Alert created for: ${product.title}`);
-            }
+          } catch (error) {
+            console.error(`Error processing product ${product.title}:`, error);
+            results.errors++;
+
+            // Log error but continue processing
+            await db.webhookError.create({
+              data: {
+                shop: shop,
+                topic: 'bulk_check',
+                error: error instanceof Error ? error.message : 'Unknown error',
+                payload: JSON.stringify({ productId: product.id, productTitle: product.title }),
+              },
+            }).catch((dbError: any) => {
+              console.error('Failed to log error to database:', dbError);
+            });
           }
+        }));
 
-          // Always log the check
-          await db.safetyCheck.create({
-            data: {
-              productId: product.id,
-              productTitle: product.title,
-              shop: shop,
-              isSafe: safetyResult.isSafe,
-              checkedAt: new Date(safetyResult.checkedAt),
-            },
-          });
-
-        } catch (error) {
-          console.error(`Error processing product ${product.title}:`, error);
-          results.errors++;
-
-          // Log error but continue processing
-          await db.webhookError.create({
-            data: {
-              shop: shop,
-              topic: 'bulk_check',
-              error: error instanceof Error ? error.message : 'Unknown error',
-              payload: JSON.stringify({ productId: product.id, productTitle: product.title }),
-            },
-          }).catch(dbError => {
-            console.error('Failed to log error to database:', dbError);
-          });
-        }
+        // Small delay between batches to be respectful to the API
+        await new Promise(resolve => setTimeout(resolve, 100));
       }
-
-      // Log progress
-      console.log(`📊 Bulk check progress: ${results.processed} processed, ${results.checked} checked, ${results.alertsCreated} alerts created`);
-
-      // Small delay between batches to be respectful to the API
-      await new Promise(resolve => setTimeout(resolve, 100));
     }
 
     results.endTime = new Date();
