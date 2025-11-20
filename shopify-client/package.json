@@ -45,7 +45,6 @@
     "vite-tsconfig-paths": "^5.0.1"
   },
   "devDependencies": {
-    "@playwright/test": "^1.56.1",
     "@remix-run/eslint-config": "^2.16.1",
     "@remix-run/route-config": "^2.16.1",
     "@shopify/api-codegen-preset": "^1.1.1",
