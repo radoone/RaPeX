@@ -9,6 +9,7 @@ import {
 import { AppProvider } from "@shopify/shopify-app-remix/react";
 import polarisStyles from "@shopify/polaris/build/esm/styles.css?url";
 import { authenticate } from "./shopify.server";
+import "./i18n";
 
 export const links = () => [{ rel: "stylesheet", href: polarisStyles }];
 

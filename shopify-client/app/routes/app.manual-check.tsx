@@ -489,7 +489,7 @@ export default function ManualCheckPage() {
                     <Button
                       variant="secondary"
                       icon={ClipboardChecklistIcon}
-                      external
+                      target="_blank"
                       url="https://ec.europa.eu/safety-gate-alerts/screen/search?resetSearch=true"
                     >
                       Safety Gate search
@@ -782,8 +782,13 @@ export default function ManualCheckPage() {
                               <Button
                                 variant="secondary"
                                 size="slim"
-                                external
-                                url={fields.rapex_url}
+                                onClick={() => {
+                                  window.open(
+                                    fields.rapex_url,
+                                    'SafetyGatePortal',
+                                    'width=1200,height=800,left=100,top=100,resizable=yes,scrollbars=yes'
+                                  );
+                                }}
                                 icon={AlertDiamondIcon}
                               >
                                 Open Safety Gate

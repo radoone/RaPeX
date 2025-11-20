@@ -53,7 +53,7 @@ export function AlertDetailModal({ alert, open, onClose }: AlertDetailModalProps
       />
       <StatusBadge status={alert.status} />
       <Badge tone={warningsCount > 0 ? 'critical' : 'success'}>
-        {warningsCount} {warningsCount === 1 ? 'match' : 'matches'}
+        {`${warningsCount} ${warningsCount === 1 ? 'match' : 'matches'}`}
       </Badge>
     </InlineStack>
   );
@@ -148,8 +148,13 @@ export function AlertDetailModal({ alert, open, onClose }: AlertDetailModalProps
                               <Button
                                 variant="secondary"
                                 size="slim"
-                                external
-                                url={fields.rapex_url}
+                                onClick={() => {
+                                  window.open(
+                                    fields.rapex_url,
+                                    'SafetyGatePortal',
+                                    'width=1200,height=800,left=100,top=100,resizable=yes,scrollbars=yes'
+                                  );
+                                }}
                                 icon={ClipboardChecklistIcon}
                               >
                                 Open Safety Gate

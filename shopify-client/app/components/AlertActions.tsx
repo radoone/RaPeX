@@ -28,7 +28,7 @@ export function AlertActions({
   return (
     <InlineStack gap="200">
       <Button
-        size="micro"
+        size="slim"
         variant="secondary"
         icon={ViewIcon}
         onClick={() => onViewDetails(alertId)}
@@ -38,7 +38,7 @@ export function AlertActions({
       {status === 'active' && (
         <>
           <Button
-            size="micro"
+            size="slim"
             variant="secondary"
             tone="critical"
             icon={HideIcon}
@@ -48,7 +48,7 @@ export function AlertActions({
             Dismiss
           </Button>
           <Button
-            size="micro"
+            size="slim"
             variant="primary"
             tone="success"
             icon={CheckCircleIcon}
@@ -61,7 +61,7 @@ export function AlertActions({
       )}
       {(status === 'dismissed' || status === 'resolved') && (
         <Button
-          size="micro"
+          size="slim"
           variant="secondary"
           icon={RefreshIcon}
           onClick={() => onReactivate?.(alertId)}
