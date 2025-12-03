@@ -1,37 +1,15 @@
 import { useState, useCallback } from "react";
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node";
-import { useLoaderData, useFetcher } from "@remix-run/react";
+import { useLoaderData, useFetcher, useNavigate } from "@remix-run/react";
 import { json } from "@remix-run/node";
-import {
-  Page,
-  Layout,
-  Card,
-  Text,
-  InlineStack,
-  InlineGrid,
-  BlockStack,
-  EmptyState,
-  Pagination,
-  Badge,
-  Button,
-  Icon,
-  Divider,
-  ProgressBar,
-} from "@shopify/polaris";
 import { authenticate } from "../shopify.server";
 import db from "../db.server";
 import {
-  AlertFilters,
   AlertTable,
   AlertDetailModal,
   SafetyGatePortal,
+  PageHeader,
 } from "../components";
-import {
-  AlertDiamondIcon,
-  CheckCircleIcon,
-  ClipboardChecklistIcon,
-  HideIcon,
-} from "@shopify/polaris-icons";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { session, admin } = await authenticate.admin(request);
@@ -41,158 +19,73 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const pageSize = 25;
   const offset = (page - 1) * pageSize;
 
-  // Filters
   const statusFilters = url.searchParams.getAll("status");
   const riskLevelFilters = url.searchParams.getAll("riskLevel");
   const search = url.searchParams.get("search") || undefined;
 
-  const whereClause: any = {
-    shop: session.shop,
-  };
-
-  if (statusFilters.length > 0) {
-    whereClause.status = statusFilters.length === 1 ? statusFilters[0] : { in: statusFilters };
-  }
-
-  if (riskLevelFilters.length > 0) {
-    whereClause.riskLevel = riskLevelFilters.length === 1 ? riskLevelFilters[0] : { in: riskLevelFilters };
-  }
-
-  if (search) {
-    whereClause.productTitle = {
-      contains: search,
-      mode: 'insensitive',
-    };
-  }
+  const whereClause: any = { shop: session.shop };
+  if (statusFilters.length > 0) whereClause.status = statusFilters.length === 1 ? statusFilters[0] : { in: statusFilters };
+  if (riskLevelFilters.length > 0) whereClause.riskLevel = riskLevelFilters.length === 1 ? riskLevelFilters[0] : { in: riskLevelFilters };
+  if (search) whereClause.productTitle = { contains: search, mode: 'insensitive' };
 
   const [rawAlerts, totalCount, activeCount, resolvedCount, dismissedCount] = await Promise.all([
-    db.safetyAlert.findMany({
-      where: whereClause,
-      orderBy: {
-        createdAt: 'desc',
-      },
-      skip: offset,
-      take: pageSize,
-    }),
-    db.safetyAlert.count({
-      where: whereClause,
-    }),
-    db.safetyAlert.count({
-      where: {
-        shop: session.shop,
-        status: 'active',
-      },
-    }),
-    db.safetyAlert.count({
-      where: {
-        shop: session.shop,
-        status: 'resolved',
-      },
-    }),
-    db.safetyAlert.count({
-      where: {
-        shop: session.shop,
-        status: 'dismissed',
-      },
-    }),
+    db.safetyAlert.findMany({ where: whereClause, orderBy: { createdAt: 'desc' }, skip: offset, take: pageSize }),
+    db.safetyAlert.count({ where: whereClause }),
+    db.safetyAlert.count({ where: { shop: session.shop, status: 'active' } }),
+    db.safetyAlert.count({ where: { shop: session.shop, status: 'resolved' } }),
+    db.safetyAlert.count({ where: { shop: session.shop, status: 'dismissed' } }),
   ]);
 
-  // Fetch product images from Shopify
-  const productIds = rawAlerts
-    .map((alert: any) => alert.productId)
-    .filter(Boolean)
-    .map((id: string) => {
-      // Convert to GID format if not already
-      if (id.startsWith('gid://shopify/Product/')) {
-        return id;
-      }
-      return `gid://shopify/Product/${id}`;
-    });
+  const productIds = rawAlerts.map((a: any) => a.productId).filter(Boolean).map((id: string) =>
+    id.startsWith('gid://shopify/Product/') ? id : `gid://shopify/Product/${id}`
+  );
 
   const productImages: Record<string, string | null> = {};
-
   if (productIds.length > 0) {
     try {
-      const response = await admin.graphql(
-        `#graphql
+      const response = await admin.graphql(`#graphql
         query getProductImages($ids: [ID!]!) {
-          nodes(ids: $ids) {
-            ... on Product {
-              id
-              featuredImage {
-                url
-              }
-            }
-          }
-        }`,
-        { variables: { ids: productIds } }
-      );
-
+          nodes(ids: $ids) { ... on Product { id featuredImage { url } } }
+        }`, { variables: { ids: productIds } });
       const { data } = await response.json();
-
-      if (data?.nodes) {
-        data.nodes.forEach((node: any) => {
-          if (node && node.id) {
-            // Extract numeric ID from GID for mapping
-            const numericId = node.id.replace('gid://shopify/Product/', '');
-            productImages[numericId] = node.featuredImage?.url || null;
-          }
-        });
-      }
+      data?.nodes?.forEach((node: any) => {
+        if (node?.id) {
+          const numericId = node.id.replace('gid://shopify/Product/', '');
+          productImages[numericId] = node.featuredImage?.url || null;
+          productImages[node.id] = node.featuredImage?.url || null;
+        }
+      });
     } catch (error) {
       console.error("Error fetching product images:", error);
     }
   }
 
-  // Process alerts to extract alertType, riskDescription, and alertDetails from checkResult
   const alerts = rawAlerts.map((alert: any) => {
-    let alertType = 'Unknown';
-    let riskDescription = '';
-    let alertDetails = null;
-
+    let alertType = 'Unknown', riskDescription = '', alertDetails = null;
     try {
       const checkResult = JSON.parse(alert.checkResult);
-      if (checkResult.warnings && checkResult.warnings.length > 0) {
-        const firstWarning = checkResult.warnings[0];
-        alertType = firstWarning.alertType || firstWarning.alertDetails?.fields?.alert_type || 'Unknown';
-        riskDescription = firstWarning.riskLegalProvision || firstWarning.alertDetails?.fields?.risk_legal_provision || '';
-        alertDetails = firstWarning.alertDetails || null;
+      const warnings = Array.isArray(checkResult?.warnings) ? checkResult.warnings : [];
+      if (warnings.length > 0) {
+        const first = warnings[0];
+        alertType = first.alertType || first.alertDetails?.fields?.alert_type || 'Unknown';
+        riskDescription = first.riskLegalProvision || first.alertDetails?.fields?.risk_legal_provision || '';
+        alertDetails = first.alertDetails || null;
+        const fields = first.alertDetails?.fields || {};
+        const pics = [...(fields.pictures || []), fields.product_image].filter(Boolean);
+        if (pics[0]) alertDetails = { ...alertDetails, fallbackImage: typeof pics[0] === 'string' ? pics[0] : pics[0].url };
       }
-    } catch (error) {
-      console.error('Error parsing checkResult for alert', alert.id, error);
-    }
-
+    } catch {}
     return {
-      ...alert,
-      alertType,
-      riskDescription,
-      alertDetails,
-      productImage: productImages[alert.productId] || null,
+      ...alert, alertType, riskDescription, alertDetails,
+      productImage: productImages[alert.productId] || productImages[`gid://shopify/Product/${alert.productId}`] || alertDetails?.fallbackImage || null,
     };
   });
 
-  const totalPages = Math.ceil(totalCount / pageSize);
-
   return json({
     alerts,
-    pagination: {
-      currentPage: page,
-      totalPages,
-      totalCount,
-      hasNext: page < totalPages,
-      hasPrevious: page > 1,
-    },
-    filters: {
-      status: statusFilters,
-      riskLevel: riskLevelFilters,
-      search,
-    },
-    stats: {
-      active: activeCount,
-      resolved: resolvedCount,
-      dismissed: dismissedCount,
-      total: activeCount + resolvedCount + dismissedCount,
-    },
+    pagination: { currentPage: page, totalPages: Math.ceil(totalCount / pageSize), totalCount, hasNext: page < Math.ceil(totalCount / pageSize), hasPrevious: page > 1 },
+    filters: { status: statusFilters, riskLevel: riskLevelFilters, search },
+    stats: { active: activeCount, resolved: resolvedCount, dismissed: dismissedCount, total: activeCount + resolvedCount + dismissedCount },
   });
 };
 
@@ -204,388 +97,206 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   switch (action) {
     case "dismiss":
-      await db.safetyAlert.update({
-        where: { id: alertId },
-        data: {
-          status: 'dismissed',
-          dismissedAt: new Date(),
-          dismissedBy: session.id,
-          notes: formData.get("notes") as string || undefined,
-        },
-      });
+      await db.safetyAlert.update({ where: { id: alertId }, data: { status: 'dismissed', dismissedAt: new Date(), dismissedBy: session.id, notes: formData.get("notes") as string || undefined } });
       break;
-
     case "resolve":
-      await db.safetyAlert.update({
-        where: { id: alertId },
-        data: {
-          status: 'resolved',
-          resolvedAt: new Date(),
-          notes: formData.get("notes") as string || undefined,
-        },
-      });
+      await db.safetyAlert.update({ where: { id: alertId }, data: { status: 'resolved', resolvedAt: new Date(), notes: formData.get("notes") as string || undefined } });
       break;
-
     case "reactivate":
-      await db.safetyAlert.update({
-        where: { id: alertId },
-        data: {
-          status: 'active',
-          dismissedAt: null,
-          dismissedBy: null,
-          resolvedAt: null,
-        },
-      });
+      await db.safetyAlert.update({ where: { id: alertId }, data: { status: 'active', dismissedAt: null, dismissedBy: null, resolvedAt: null } });
       break;
   }
-
   return json({ success: true });
 };
 
 export default function AlertsPage() {
   const { alerts, pagination, filters, stats } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
+  const navigate = useNavigate();
 
-  const [selectedAlert, setSelectedAlert] = useState<any>(null);
-  const [modalOpen, setModalOpen] = useState(false);
   const [searchValue, setSearchValue] = useState(filters.search || '');
   const [statusFilter, setStatusFilter] = useState<string[]>(filters.status || []);
-  const [riskLevelFilter, setRiskLevelFilter] = useState<string[]>(filters.riskLevel || []);
 
-  const viewAlertDetails = useCallback((alert: any) => {
-    setSelectedAlert(alert);
-    setModalOpen(true);
-  }, []);
+  const applyFilters = useCallback((overrides?: { search?: string; status?: string[]; page?: number }) => {
+    const params = new URLSearchParams();
+    const s = (overrides?.search ?? searchValue).trim();
+    if (s) params.set('search', s);
+    (overrides?.status ?? statusFilter).forEach(v => params.append('status', v));
+    const p = overrides?.page ?? 1;
+    if (p > 1) params.set('page', p.toString());
+    const queryString = params.toString();
+    navigate(queryString ? `/app/alerts?${queryString}` : '/app/alerts');
+  }, [searchValue, statusFilter, navigate]);
 
-  const navigateWithParams = useCallback((params: URLSearchParams) => {
-    const query = params.toString();
-    window.location.search = query;
-  }, []);
-
-  const applyWithOverrides = useCallback(
-    (overrides?: { search?: string; status?: string[]; risk?: string[]; page?: number }) => {
-      const nextSearch = overrides?.search ?? searchValue;
-      const nextStatus = overrides?.status ?? statusFilter;
-      const nextRisk = overrides?.risk ?? riskLevelFilter;
-
-      const params = new URLSearchParams();
-      const trimmedSearch = nextSearch.trim();
-      if (trimmedSearch.length > 0) {
-        params.set('search', trimmedSearch);
-      }
-      nextStatus.forEach((status) => params.append('status', status));
-      nextRisk.forEach((risk) => params.append('riskLevel', risk));
-
-      const nextPage = overrides?.page ?? 1;
-      if (nextPage > 1) {
-        params.set('page', nextPage.toString());
-      }
-
-      navigateWithParams(params);
-    },
-    [navigateWithParams, riskLevelFilter, searchValue, statusFilter],
-  );
-
-  const handleSearchChange = useCallback((value: string) => {
-    setSearchValue(value);
-  }, []);
-
-  const handleStatusFilterChange = useCallback((value: string[]) => {
-    setStatusFilter(value);
-  }, []);
-
-  const handleRiskLevelFilterChange = useCallback((value: string[]) => {
-    setRiskLevelFilter(value);
-  }, []);
-
-  const handleApplyFilters = useCallback(() => {
-    applyWithOverrides({ page: 1 });
-  }, [applyWithOverrides]);
-
-  const handleClearFilters = useCallback(() => {
-    setSearchValue('');
-    setStatusFilter([]);
-    setRiskLevelFilter([]);
-    applyWithOverrides({ search: '', status: [], risk: [], page: 1 });
-  }, [applyWithOverrides]);
-
-  const handleAlertAction = useCallback((alertId: string, action: string, notes: string = '') => {
-    fetcher.submit(
-      { action, alertId, notes },
-      { method: 'POST' },
-    );
-    setModalOpen(false);
+  const handleAlertAction = useCallback((alertId: string, action: string) => {
+    fetcher.submit({ action, alertId }, { method: 'POST' });
   }, [fetcher]);
 
-  const handlePageChange = useCallback((page: number) => {
-    const safePage = Math.max(1, Math.min(page, Math.max(pagination.totalPages, 1)));
-    applyWithOverrides({ page: safePage });
-  }, [applyWithOverrides, pagination.totalPages]);
-
-  const hasActiveFilters =
-    searchValue.trim().length > 0 || statusFilter.length > 0 || riskLevelFilter.length > 0;
-
-  const appliedFilters: { key: string; label: string; onRemove: () => void }[] = [];
-  if (statusFilter.length > 0) {
-    appliedFilters.push({
-      key: 'status',
-      label: `Status: ${statusFilter.join(', ')}`,
-      onRemove: () => {
-        setStatusFilter([]);
-        applyWithOverrides({ status: [], page: 1 });
-      },
-    });
-  }
-  if (riskLevelFilter.length > 0) {
-    appliedFilters.push({
-      key: 'riskLevel',
-      label: `Risk level: ${riskLevelFilter.join(', ')}`,
-      onRemove: () => {
-        setRiskLevelFilter([]);
-        applyWithOverrides({ risk: [], page: 1 });
-      },
-    });
-  }
-
-  const filterComponent = (
-    <AlertFilters
-      searchValue={searchValue}
-      statusFilter={statusFilter}
-      riskLevelFilter={riskLevelFilter}
-      appliedFilters={appliedFilters}
-      onSearchChange={handleSearchChange}
-      onStatusFilterChange={handleStatusFilterChange}
-      onRiskLevelFilterChange={handleRiskLevelFilterChange}
-      onClearFilters={handleClearFilters}
-    />
-  );
-
-  const totalHistoricalAlerts = stats.total;
-  const resolvedRate = totalHistoricalAlerts > 0
-    ? Math.round((stats.resolved / totalHistoricalAlerts) * 100)
-    : 0;
-
-  const statCards = [
-    {
-      id: 'active',
-      title: 'Active alerts',
-      value: stats.active,
-      description: stats.active === 0
-        ? 'All alerts are currently resolved.'
-        : 'Review these alerts and document remediation steps.',
-      icon: AlertDiamondIcon,
-      background: stats.active > 0 ? 'bg-surface-critical' : 'bg-surface-success',
-      badge: stats.active > 0 ? `${stats.active} open` : 'All clear',
-      badgeTone: stats.active > 0 ? 'critical' : 'success',
-      iconTone: stats.active > 0 ? 'critical' : 'success',
-    },
-    {
-      id: 'resolved',
-      title: 'Resolved alerts',
-      value: stats.resolved,
-      description: stats.resolved === 0
-        ? 'No alerts have been marked as resolved yet.'
-        : 'Keep evidence of the actions you took for regulators.',
-      icon: CheckCircleIcon,
-      background: 'bg-surface-success',
-      badge: totalHistoricalAlerts > 0 ? `${resolvedRate}% resolved` : undefined,
-      badgeTone: 'success' as const,
-      progress: resolvedRate,
-      progressLabel: totalHistoricalAlerts > 0 ? `${resolvedRate}% of alerts resolved` : undefined,
-      iconTone: 'success' as const,
-    },
-    {
-      id: 'dismissed',
-      title: 'Dismissed alerts',
-      value: stats.dismissed,
-      description: stats.dismissed === 0
-        ? 'No alerts have been dismissed.'
-        : 'Dismiss alerts after verifying products are compliant.',
-      icon: HideIcon,
-      background: 'bg-surface-secondary',
-      badge: stats.dismissed > 0 ? `${stats.dismissed} archived` : undefined,
-      badgeTone: 'attention' as const,
-      iconTone: 'warning' as const,
-    },
-  ] as const;
+  const resolvedRate = stats.total > 0 ? Math.round((stats.resolved / stats.total) * 100) : 0;
 
   return (
-    <Page
-      title="Safety Alerts"
-      primaryAction={{
-        content: "Manual check",
-        icon: ClipboardChecklistIcon,
-        url: "/app/manual-check",
-      }}
-      secondaryActions={[
-        {
-          content: "Dashboard",
-          icon: AlertDiamondIcon,
-          url: "/app",
-        }
-      ]}
-    >
-      <Layout>
-        <Layout.Section>
-          <BlockStack gap="500">
-            <InlineGrid columns={{ xs: 1, md: 3 }} gap="400">
-              {statCards.map((stat) => (
-                <Card key={stat.id} padding="400" roundedAbove="sm">
-                  <div style={{ height: '100%' }}>
-                    <BlockStack gap="400">
-                      <InlineStack align="space-between" blockAlign="start">
-                        <BlockStack gap="200">
-                          <Text as="h3" variant="headingSm" tone="subdued">
-                            {stat.title}
-                          </Text>
-                          <Text as="p" variant="heading2xl">
-                            {stat.value.toLocaleString()}
-                          </Text>
-                        </BlockStack>
-                        <div style={{
-                          backgroundColor: 'var(--p-color-bg-surface-secondary)',
-                          borderRadius: 'var(--p-border-radius-200)',
-                          padding: 'var(--p-space-200)'
-                        }}>
-                          <Icon source={stat.icon} tone={stat.iconTone} />
-                        </div>
-                      </InlineStack>
-
-                      <BlockStack gap="200">
-                        {'progress' in stat && stat.progress !== undefined ? (
-                          <BlockStack gap="200">
-                            <ProgressBar progress={stat.progress} tone={stat.badgeTone === 'success' ? 'success' : 'primary'} size="small" />
-                            {stat.progressLabel && (
-                              <Text as="p" variant="bodySm" tone="subdued">
-                                {stat.progressLabel}
-                              </Text>
-                            )}
-                          </BlockStack>
-                        ) : (
-                          <Badge tone={stat.badgeTone}>{stat.badge}</Badge>
-                        )}
-                        <Text as="p" variant="bodySm" tone="subdued">
-                          {stat.description}
-                        </Text>
-                      </BlockStack>
-                    </BlockStack>
-                  </div>
-                </Card>
-              ))}
-            </InlineGrid>
-
-            <Card padding="400" roundedAbove="sm">
-              <BlockStack gap="300">
-                <InlineStack align="space-between" blockAlign="center">
-                  <BlockStack gap="100">
-                    <Text as="h2" variant="headingMd">
-                      Alerts ({pagination.totalCount})
-                    </Text>
-                    <Text as="p" tone="subdued">
-                      Filter and prioritise alerts before acting on affected products.
-                    </Text>
-                  </BlockStack>
-                  <Badge tone={stats.active > 0 ? 'critical' : 'success'}>
-                    {stats.active > 0 ? `${stats.active} active` : 'No active alerts'}
-                  </Badge>
-                </InlineStack>
-
-                {filterComponent}
-
-                <InlineStack align="end" gap="200">
-                  <Button variant="tertiary" onClick={handleClearFilters} disabled={!hasActiveFilters}>
-                    Clear filters
-                  </Button>
-                  <Button variant="primary" onClick={handleApplyFilters}>
-                    Apply filters
-                  </Button>
-                </InlineStack>
-
-                <Divider />
-
-                {alerts.length === 0 ? (
-                  <EmptyState
-                    heading="No alerts found"
-                    image="https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"
-                  >
-                    <p>No safety alerts match your current filters.</p>
-                  </EmptyState>
-                ) : (
-                  <>
-                    <AlertTable
-                      alerts={alerts}
-                      onViewDetails={viewAlertDetails}
-                      onDismiss={(alertId) => handleAlertAction(alertId, 'dismiss')}
-                      onResolve={(alertId) => handleAlertAction(alertId, 'resolve')}
-                      onReactivate={(alertId) => handleAlertAction(alertId, 'reactivate')}
-                      isLoading={fetcher.state === 'submitting'}
-                      showProductLink
-                    />
-
-                    {pagination.totalPages > 1 && (
-                      <Pagination
-                        label={`Page ${pagination.currentPage} of ${pagination.totalPages}`}
-                        hasPrevious={pagination.hasPrevious}
-                        onPrevious={() => handlePageChange(pagination.currentPage - 1)}
-                        hasNext={pagination.hasNext}
-                        onNext={() => handlePageChange(pagination.currentPage + 1)}
-                      />
-                    )}
-                  </>
-                )}
-              </BlockStack>
-            </Card>
-          </BlockStack>
-        </Layout.Section>
-      </Layout>
-
-      <Layout>
-        <Layout.Section variant="oneThird">
-          <Card padding="400" roundedAbove="sm">
-            <BlockStack gap="300">
-              <InlineStack gap="200" blockAlign="center">
-                <Icon source={ClipboardChecklistIcon} tone="primary" />
-                <Text as="h2" variant="headingMd">
-                  Response checklist
-                </Text>
-              </InlineStack>
-              <BlockStack gap="200">
-                <InlineStack gap="200" blockAlign="start">
-                  <Icon source={AlertDiamondIcon} tone="critical" />
-                  <Text as="p" variant="bodyMd">
-                    Prioritise active alerts to pause selling risky products.
-                  </Text>
-                </InlineStack>
-                <InlineStack gap="200" blockAlign="start">
-                  <Icon source={CheckCircleIcon} tone="success" />
-                  <Text as="p" variant="bodyMd">
-                    Record every remediation step for your compliance log.
-                  </Text>
-                </InlineStack>
-                <InlineStack gap="200" blockAlign="start">
-                  <Icon source={HideIcon} tone="warning" />
-                  <Text as="p" variant="bodyMd">
-                    Dismiss alerts only after confirming the product is compliant.
-                  </Text>
-                </InlineStack>
-              </BlockStack>
-            </BlockStack>
-          </Card>
-        </Layout.Section>
-        <Layout.Section>
-          <SafetyGatePortal />
-        </Layout.Section>
-      </Layout>
-
-      <AlertDetailModal
-        alert={selectedAlert}
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        onDismiss={(alertId) => handleAlertAction(alertId, 'dismiss')}
-        onResolve={(alertId) => handleAlertAction(alertId, 'resolve')}
-        onReactivate={(alertId) => handleAlertAction(alertId, 'reactivate')}
-        isLoading={fetcher.state === 'submitting'}
+    <s-page size="large" className="page-shell">
+      <PageHeader
+        title="Safety alerts"
+        subtitle="Filter and action matches from Safety Gate."
+        breadcrumbs={[
+          { label: "Dashboard", href: "/app" },
+          { label: "Safety alerts" },
+        ]}
+        meta={(
+          <>
+            <s-badge tone={stats.active > 0 ? "critical" : "success"}>{stats.active} active</s-badge>
+            <s-badge tone="info">{stats.total} total</s-badge>
+          </>
+        )}
+        primaryAction={{ label: "Manual check", href: "/app/manual-check", variant: "primary" }}
+        secondaryActions={[
+          { label: "Dashboard", href: "/app", variant: "secondary" },
+          { label: "Settings", href: "/app/settings", variant: "tertiary" },
+        ]}
       />
-    </Page>
+
+      {/* Overview Metrics Card - using Shopify pattern */}
+      <s-section padding="base">
+        <s-grid
+          gridTemplateColumns="@container (inline-size <= 400px) 1fr, 1fr auto 1fr auto 1fr"
+          gap="small"
+        >
+          <s-clickable
+            onClick={() => navigate('/app/alerts?status=active')}
+            paddingBlock="small-400"
+            paddingInline="small-100"
+            borderRadius="base"
+          >
+            <s-grid gap="small-300">
+              <s-heading>Active Alerts</s-heading>
+              <s-stack direction="inline" gap="small-200">
+                <s-text size="large">{stats.active}</s-text>
+                <s-badge tone={stats.active > 0 ? "critical" : "success"} icon={stats.active > 0 ? "alert" : "checkmark"}>
+                  {stats.active > 0 ? "Needs review" : "All clear"}
+                </s-badge>
+              </s-stack>
+              <s-text tone="subdued">{stats.total} total recorded</s-text>
+            </s-grid>
+          </s-clickable>
+
+          <s-divider direction="block" />
+
+          <s-clickable
+            onClick={() => navigate('/app/alerts?status=resolved')}
+            paddingBlock="small-400"
+            paddingInline="small-100"
+            borderRadius="base"
+          >
+            <s-grid gap="small-300">
+              <s-heading>Resolution Rate</s-heading>
+              <s-stack direction="inline" gap="small-200">
+                <s-text size="large">{resolvedRate}%</s-text>
+                <s-badge tone={resolvedRate >= 50 ? "success" : "warning"} icon={resolvedRate >= 50 ? "arrow-up" : "arrow-down"}>
+                  {stats.resolved} resolved
+                </s-badge>
+              </s-stack>
+              <s-text tone="subdued">{stats.resolved} resolved • {stats.dismissed} dismissed</s-text>
+            </s-grid>
+          </s-clickable>
+
+          <s-divider direction="block" />
+
+          <s-clickable
+            onClick={() => navigate('/app/alerts?status=dismissed')}
+            paddingBlock="small-400"
+            paddingInline="small-100"
+            borderRadius="base"
+          >
+            <s-grid gap="small-300">
+              <s-heading>Dismissed</s-heading>
+              <s-stack direction="inline" gap="small-200">
+                <s-text size="large">{stats.dismissed}</s-text>
+                <s-badge tone="info">
+                  Archived
+                </s-badge>
+              </s-stack>
+              <s-text tone="subdued">{stats.dismissed === 0 ? "No dismissed alerts yet" : "Keep notes for audit"}</s-text>
+            </s-grid>
+          </s-clickable>
+        </s-grid>
+      </s-section>
+
+      {/* Main Alerts Table - Shopify Index Table style */}
+      <AlertTable
+        alerts={alerts}
+        onViewDetails={() => {}}
+        onDismiss={(id) => handleAlertAction(id, 'dismiss')}
+        onResolve={(id) => handleAlertAction(id, 'resolve')}
+        onReactivate={(id) => handleAlertAction(id, 'reactivate')}
+        isLoading={fetcher.state === 'submitting'}
+        showProductLink
+        modalIdPrefix="alert-detail"
+        searchValue={searchValue}
+        onSearchChange={(value) => {
+          setSearchValue(value);
+          // Debounced search - apply after typing stops
+          setTimeout(() => applyFilters({ search: value }), 300);
+        }}
+        statusFilter={statusFilter}
+        onStatusChange={(status) => {
+          const newFilter = status ? [status] : [];
+          setStatusFilter(newFilter);
+          applyFilters({ status: newFilter });
+        }}
+        stats={stats}
+      />
+
+      {/* Pagination */}
+      {pagination.totalPages > 1 && (
+        <s-section padding="base">
+          <s-stack direction="inline" align="space-between" blockAlign="center">
+            <s-text tone="subdued">
+              Page {pagination.currentPage} of {pagination.totalPages} ({pagination.totalCount} alerts)
+            </s-text>
+            <s-stack direction="inline" gap="small">
+              <s-button 
+                variant="secondary" 
+                onClick={() => applyFilters({ page: pagination.currentPage - 1 })} 
+                disabled={!pagination.hasPrevious || undefined}
+              >
+                Previous
+              </s-button>
+              <s-button 
+                variant="secondary" 
+                onClick={() => applyFilters({ page: pagination.currentPage + 1 })} 
+                disabled={!pagination.hasNext || undefined}
+              >
+                Next
+              </s-button>
+            </s-stack>
+          </s-stack>
+        </s-section>
+      )}
+
+      <s-grid gap="base" gridTemplateColumns="1fr 1fr">
+        <s-section heading="Response checklist">
+          <s-stack gap="small">
+            <s-text>• Prioritise active alerts</s-text>
+            <s-text>• Document remediation steps</s-text>
+            <s-text>• Verify before dismissing</s-text>
+          </s-stack>
+        </s-section>
+        <SafetyGatePortal />
+      </s-grid>
+
+      {/* Render a modal for each alert - s-modal uses commandFor to open */}
+      {alerts.map((alert) => (
+        <AlertDetailModal
+          key={alert.id}
+          alert={alert}
+          modalId={`alert-detail-${alert.id}`}
+          onDismiss={(id) => handleAlertAction(id, 'dismiss')}
+          onResolve={(id) => handleAlertAction(id, 'resolve')}
+          onReactivate={(id) => handleAlertAction(id, 'reactivate')}
+          isLoading={fetcher.state === 'submitting'}
+        />
+      ))}
+    </s-page>
   );
 }

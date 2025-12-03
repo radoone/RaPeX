@@ -81,36 +81,10 @@ const resources = {
         "dashboard": "Dashboard",
         "safetyAlerts": "Safety Alerts",
         "manualCheck": "Manual Check",
-        "settings": "Settings",
-        "quickGuide": "Quick Guide"
+        "settings": "Settings"
       },
       "settings": {
         "title": "Settings"
-      },
-      "guide": {
-        "title": "Quick Guide",
-        "importance": {
-          "title": "Why monitoring Safety Gate is critical",
-          "description": "Protecting your business and customers requires active monitoring of the EU Safety Gate database.",
-          "points": {
-            "safety": {
-              "title": "Consumer Safety",
-              "description": "Prevent injuries and health risks by identifying dangerous products before they reach your customers."
-            },
-            "compliance": {
-              "title": "Legal Compliance (GPSR)",
-              "description": "The new General Product Safety Regulation (GPSR) requires strict adherence to safety standards. Monitoring alerts helps you stay compliant and avoid fines."
-            },
-            "reputation": {
-              "title": "Brand Reputation",
-              "description": "Selling unsafe products can destroy customer trust. Proactive monitoring demonstrates your commitment to quality and safety."
-            },
-            "business": {
-              "title": "Business Continuity",
-              "description": "Avoid costly product recalls, market bans, and legal actions that could threaten your business operations."
-            }
-          }
-        }
       },
       "common": {
         "loading": "Loading...",
@@ -197,36 +171,10 @@ const resources = {
         "dashboard": "Nástenka",
         "safetyAlerts": "Bezpečnostné upozornenia",
         "manualCheck": "Manuálna kontrola",
-        "settings": "Nastavenia",
-        "quickGuide": "Rýchly návod"
+        "settings": "Nastavenia"
       },
       "settings": {
         "title": "Nastavenia"
-      },
-      "guide": {
-        "title": "Rýchly návod",
-        "importance": {
-          "title": "Prečo je monitorovanie Safety Gate kritické",
-          "description": "Ochrana vášho podnikania a zákazníkov vyžaduje aktívne monitorovanie databázy Safety Gate EÚ.",
-          "points": {
-            "safety": {
-              "title": "Bezpečnosť spotrebiteľov",
-              "description": "Predchádzajte zraneniam a zdravotným rizikám identifikáciou nebezpečných produktov skôr, ako sa dostanú k vašim zákazníkom."
-            },
-            "compliance": {
-              "title": "Právny súlad (GPSR)",
-              "description": "Nové nariadenie o všeobecnej bezpečnosti výrobkov (GPSR) vyžaduje prísne dodržiavanie bezpečnostných noriem. Monitorovanie upozornení vám pomáha zostať v súlade a vyhnúť sa pokutám."
-            },
-            "reputation": {
-              "title": "Reputácia značky",
-              "description": "Predaj nebezpečných produktov môže zničiť dôveru zákazníkov. Proaktívne monitorovanie dokazuje váš záväzok ku kvalite a bezpečnosti."
-            },
-            "business": {
-              "title": "Kontinuita podnikania",
-              "description": "Vyhnite sa nákladnému sťahovaniu produktov, zákazom na trhu a právnym krokom, ktoré by mohli ohroziť vaše podnikanie."
-            }
-          }
-        }
       },
       "common": {
         "loading": "Načítava sa...",

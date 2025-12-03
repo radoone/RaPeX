@@ -1,383 +1,486 @@
-import {
-  Modal,
-  BlockStack,
-  InlineStack,
-  Text,
-  Card,
-  Badge,
-  Banner,
-  Button,
-  InlineGrid,
-  Divider,
-  Icon,
-  Thumbnail,
-} from "@shopify/polaris";
-import { useState } from "react";
+import { useMemo, useState, useRef, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { AlertBadge } from "./AlertBadge";
+import { RiskMeter } from "./RiskMeter";
 import { StatusBadge } from "./StatusBadge";
-import {
-  AlertDiamondIcon,
-  CheckCircleIcon,
-  ClipboardChecklistIcon,
-  ClockIcon,
-  HideIcon,
-  RefreshIcon,
-} from "@shopify/polaris-icons";
 
 interface AlertDetailModalProps {
   alert: any;
-  open: boolean;
-  onClose: () => void;
-  onDismiss?: (alertId: string) => void;
-  onResolve?: (alertId: string) => void;
+  modalId: string;
+  onDismiss?: (alertId: string, notes?: string) => void;
+  onResolve?: (alertId: string, notes?: string) => void;
   onReactivate?: (alertId: string) => void;
   isLoading?: boolean;
 }
 
 export function AlertDetailModal({
   alert,
-  open,
-  onClose,
+  modalId,
   onDismiss,
   onResolve,
   onReactivate,
-  isLoading = false
+  isLoading = false,
 }: AlertDetailModalProps) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const dismissBtnRef = useRef<HTMLElement>(null);
+  const resolveBtnRef = useRef<HTMLElement>(null);
+  const reactivateBtnRef = useRef<HTMLElement>(null);
+
+  // Close lightbox
+  const closeLightbox = useCallback(() => {
+    setSelectedImage(null);
+  }, []);
+
+  const parsed = useMemo(() => {
+    if (!alert) return null;
+    try {
+      return alert.checkResult ? JSON.parse(alert.checkResult) : null;
+    } catch (error) {
+      console.error("Unable to parse checkResult", error);
+      return null;
+    }
+  }, [alert]);
+
+  // Handle dismiss button click
+  useEffect(() => {
+    const btn = dismissBtnRef.current;
+    if (!btn || !alert) return;
+    
+    const handleClick = () => onDismiss?.(alert.id);
+    btn.addEventListener('click', handleClick);
+    return () => btn.removeEventListener('click', handleClick);
+  }, [alert, onDismiss]);
+
+  // Handle resolve button click
+  useEffect(() => {
+    const btn = resolveBtnRef.current;
+    if (!btn || !alert) return;
+    
+    const handleClick = () => onResolve?.(alert.id);
+    btn.addEventListener('click', handleClick);
+    return () => btn.removeEventListener('click', handleClick);
+  }, [alert, onResolve]);
+
+  // Handle reactivate button click
+  useEffect(() => {
+    const btn = reactivateBtnRef.current;
+    if (!btn || !alert) return;
+    
+    const handleClick = () => onReactivate?.(alert.id);
+    btn.addEventListener('click', handleClick);
+    return () => btn.removeEventListener('click', handleClick);
+  }, [alert, onReactivate]);
 
   if (!alert) return null;
 
-  let checkResult: any = null;
-  let parseError: string | null = null;
-
-  try {
-    checkResult = alert.checkResult ? JSON.parse(alert.checkResult) : null;
-  } catch (error) {
-    parseError = error instanceof Error ? error.message : 'Unable to read safety check results.';
-  }
-
-  const warnings: any[] = Array.isArray(checkResult?.warnings) ? checkResult.warnings : [];
-  const recommendation = checkResult?.recommendation ?? 'Review this product before continuing to sell it.';
-  const checkedAt = checkResult?.checkedAt ? new Date(checkResult.checkedAt) : null;
-  const isSafe = checkResult?.isSafe === true;
+  const warnings: any[] = Array.isArray(parsed?.warnings) ? parsed.warnings : [];
+  const recommendation = parsed?.recommendation ?? "Review this product before continuing to sell it.";
+  const checkedAt = parsed?.checkedAt ? new Date(parsed.checkedAt) : null;
+  const isSafe = parsed?.isSafe === true;
   const warningsCount = warnings.length || alert.warningsCount || 0;
+  const primaryWarning = warnings[0];
+  const similarity = typeof primaryWarning?.similarity === "number" ? primaryWarning.similarity : null;
 
-  const headerBadges = (
-    <InlineStack gap="200" wrap>
-      <AlertBadge
-        alertLevel={alert.riskLevel}
-        alertType={alert.alertType}
-        riskDescription={alert.riskDescription}
-      />
-      <StatusBadge status={alert.status} />
-      <Badge tone={warningsCount > 0 ? 'critical' : 'success'}>
-        {`${warningsCount} ${warningsCount === 1 ? 'match' : 'matches'}`}
-      </Badge>
-    </InlineStack>
-  );
+  // Helper to get images from warning
+  const getWarningImages = (warning: any) => {
+    const fields = warning.alertDetails?.fields || {};
+    let pictures = Array.isArray(fields.pictures) ? fields.pictures : [];
+    if (pictures.length === 0) {
+      if (fields.product_image) pictures.push(fields.product_image);
+      if (fields.product_other_images && typeof fields.product_other_images === "string") {
+        pictures.push(
+          ...fields.product_other_images
+            .split(",")
+            .map((entry: string) => entry.trim())
+            .filter(Boolean)
+        );
+      }
+    }
+    return pictures;
+  };
 
   return (
     <>
-      <Modal
-        open={open}
-        onClose={onClose}
-        title={`Safety Alert: ${alert.productTitle}`}
-        size="large"
-        primaryAction={alert.status === 'active' && onResolve ? {
-          content: 'Resolve',
-          icon: CheckCircleIcon,
-          onAction: () => onResolve(alert.id),
-          loading: isLoading
-        } : undefined}
-        secondaryActions={[
-          ...(alert.status === 'active' && onDismiss ? [{
-            content: 'Dismiss',
-            icon: HideIcon,
-            onAction: () => onDismiss(alert.id),
-            loading: isLoading,
-            destructive: true
-          }] : []),
-          ...((alert.status === 'dismissed' || alert.status === 'resolved') && onReactivate ? [{
-            content: 'Reactivate',
-            icon: RefreshIcon,
-            onAction: () => onReactivate(alert.id),
-            loading: isLoading
-          }] : [])
-        ]}
-      >
-        <Modal.Section>
-          <BlockStack gap="500">
-            <Card background="bg-surface-secondary" padding="400" roundedAbove="sm">
-              <BlockStack gap="300">
-                <InlineStack align="space-between" blockAlign="center">
-                  <InlineStack gap="400" blockAlign="center">
-                    {alert.productImage && (
-                      <div onClick={() => setSelectedImage(alert.productImage)} style={{ cursor: 'pointer' }}>
-                        <Thumbnail
-                          source={alert.productImage}
-                          alt={alert.productTitle}
-                          size="large"
-                        />
-                      </div>
-                    )}
-                    <BlockStack gap="200">
-                      <Text as="h2" variant="headingMd">
-                        {alert.productTitle}
-                      </Text>
-                      {headerBadges}
-                    </BlockStack>
-                  </InlineStack>
-                  {checkedAt && (
-                    <InlineStack gap="100" blockAlign="center">
-                      <Icon source={ClockIcon} tone="subdued" />
-                      <Text as="span" variant="bodySm" tone="subdued">
-                        Checked {checkedAt.toLocaleString('en-GB')}
-                      </Text>
-                    </InlineStack>
-                  )}
-                </InlineStack>
-
-                {alert.notes && (
-                  <Card background="bg-surface-info">
-                    <BlockStack gap="100">
-                      <Text as="p" variant="bodySm" fontWeight="bold">
-                        Internal notes
-                      </Text>
-                      <Text as="p" variant="bodySm">{alert.notes}</Text>
-                    </BlockStack>
-                  </Card>
+      <s-modal id={modalId} heading="Safety Alert Details" size="large">
+        <s-stack gap="large">
+          {/* Product Overview Section */}
+          <s-box
+            padding="large"
+            borderRadius="large"
+            background="bg-surface-secondary"
+          >
+            <s-stack gap="base">
+              <s-stack direction="inline" gap="large" blockAlign="start" wrap>
+                {/* Product Image */}
+                {alert.productImage && (
+                  <div
+                    onClick={() => setSelectedImage(alert.productImage)}
+                    className="alert-image-clickable"
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') setSelectedImage(alert.productImage);
+                    }}
+                    style={{ flexShrink: 0 }}
+                  >
+                    <s-thumbnail
+                      src={alert.productImage}
+                      alt={alert.productTitle}
+                      size="extra-large"
+                    />
+                  </div>
                 )}
-              </BlockStack>
-            </Card>
+                
+                {/* Product Info */}
+                <s-stack gap="base" style={{ flex: 1, minWidth: 0 }}>
+                  <s-heading size="large">{alert.productTitle}</s-heading>
+                  
+                  <s-stack direction="inline" gap="small" wrap>
+                    <StatusBadge status={alert.status} />
+                    <AlertBadge
+                      alertLevel={alert.riskLevel}
+                      alertType={alert.alertType}
+                      riskDescription={alert.riskDescription}
+                    />
+                    <s-badge tone={warningsCount > 0 ? "critical" : "success"}>
+                      {warningsCount} {warningsCount === 1 ? "match" : "matches"}
+                    </s-badge>
+                  </s-stack>
 
-            {parseError ? (
-              <Banner tone="critical" title="Unable to display safety results">
-                <p>{parseError}</p>
-              </Banner>
-            ) : (
-              <BlockStack gap="400">
-                <Banner
-                  tone={isSafe ? 'success' : 'critical'}
-                  icon={isSafe ? CheckCircleIcon : AlertDiamondIcon}
-                  title={isSafe ? 'No issues found' : 'Potential safety risk detected'}
-                >
-                  <p>{recommendation}</p>
+                  <RiskMeter riskLevel={alert.riskLevel} similarity={similarity} />
+                  
                   {checkedAt && (
-                    <p>Checked at: {checkedAt.toLocaleString('en-GB')}</p>
+                    <s-text tone="subdued" size="small">
+                      Last checked: {checkedAt.toLocaleString("en-GB")}
+                    </s-text>
                   )}
-                </Banner>
+                </s-stack>
+              </s-stack>
+            </s-stack>
+          </s-box>
 
-                {warnings.length > 0 ? (
-                  <BlockStack gap="300">
-                    <Text as="h3" variant="headingMd">
-                      Safety Gate matches
-                    </Text>
-                    {warnings.map((warning: any, index: number) => {
-                      const fields = warning.alertDetails?.fields || {};
-                      const meta = warning.alertDetails?.meta || {};
-                      const alertDate = fields.alert_date || meta.alert_date;
-                      const formattedDate = alertDate ? new Date(alertDate).toLocaleDateString('en-GB') : 'N/A';
-                      const similarity = warning.similarity ?? 0;
-                      const alertIdentifier = warning.alertId || `#${index + 1}`;
+          {/* Notes Section */}
+          {alert.notes && (
+            <s-banner tone="info" heading="Internal Notes">
+              <s-text>{alert.notes}</s-text>
+            </s-banner>
+          )}
 
-                      // Pictures are now normalized by the API into an array of strings
-                      let pictures = Array.isArray(fields.pictures) ? fields.pictures : [];
+          {/* Status Banner */}
+          <s-banner
+            tone={isSafe ? "success" : "critical"}
+            heading={isSafe ? "No Safety Issues Found" : "⚠️ Potential Safety Risk Detected"}
+          >
+            <s-text>{recommendation}</s-text>
+          </s-banner>
 
-                      // Fallback: If pictures array is empty, try to use legacy product_image and product_other_images fields
-                      if (pictures.length === 0) {
-                        if (fields.product_image) {
-                          pictures.push(fields.product_image);
-                        }
-                        if (fields.product_other_images && typeof fields.product_other_images === 'string') {
-                          const otherImages = fields.product_other_images.split(',').map((s: string) => s.trim()).filter(Boolean);
-                          pictures.push(...otherImages);
-                        }
-                      }
+          {/* Safety Gate Matches Section */}
+          {warnings.length > 0 ? (
+            <s-section heading={`Safety Gate Matches (${warnings.length})`}>
+              <s-stack gap="large">
+                {warnings.map((warning: any, index: number) => (
+                  <WarningCard
+                    key={`warning-${index}`}
+                    warning={warning}
+                    index={index}
+                    onImageClick={setSelectedImage}
+                    getWarningImages={getWarningImages}
+                  />
+                ))}
+              </s-stack>
+            </s-section>
+          ) : (
+            <s-banner tone="success" heading="No Safety Gate Matches">
+              <s-text>This product did not match any entries in the EU Safety Gate database.</s-text>
+            </s-banner>
+          )}
+        </s-stack>
 
-                      return (
-                        <Card key={`${alertIdentifier}-${index}`} padding="400" background="bg-surface-critical">
-                          <BlockStack gap="300">
-                            <InlineStack align="space-between" blockAlign="start">
-                              <BlockStack gap="100">
-                                <InlineStack gap="200" blockAlign="center">
-                                  <Icon source={AlertDiamondIcon} tone="critical" />
-                                  <Text as="h4" variant="headingMd">
-                                    Alert {alertIdentifier}
-                                  </Text>
-                                </InlineStack>
-                                <InlineStack gap="200" wrap>
-                                  <AlertBadge
-                                    alertLevel={fields.alert_level}
-                                    alertType={fields.alert_type}
-                                    riskDescription={warning.riskLegalProvision}
-                                  />
-                                  <Badge tone="info">{`${similarity}% similarity`}</Badge>
-                                </InlineStack>
-                              </BlockStack>
-                              {fields.rapex_url && (
-                                <Button
-                                  variant="secondary"
-                                  size="slim"
-                                  onClick={() => {
-                                    window.open(
-                                      fields.rapex_url,
-                                      'SafetyGatePortal',
-                                      'width=1200,height=800,left=100,top=100,resizable=yes,scrollbars=yes'
-                                    );
-                                  }}
-                                  icon={ClipboardChecklistIcon}
-                                >
-                                  Open Safety Gate
-                                </Button>
-                              )}
-                            </InlineStack>
-
-                            <Divider />
-
-                            <InlineGrid columns={['twoThirds', 'oneThird']} gap="400">
-                              <BlockStack gap="200">
-                                <Text as="p" variant="bodyMd">
-                                  <strong>Reason:</strong> {warning.reason || 'Not specified'}
-                                </Text>
-
-                                <InlineGrid columns={{ xs: 1, md: 2 }} gap="200">
-                                  {[{
-                                    label: 'Alert level',
-                                    value: fields.alert_level || 'N/A',
-                                  }, {
-                                    label: 'Alert type',
-                                    value: fields.alert_type || 'N/A',
-                                  }, {
-                                    label: 'Category',
-                                    value: fields.product_category || 'N/A',
-                                  }, {
-                                    label: 'Brand',
-                                    value: fields.product_brand || 'N/A',
-                                  }, {
-                                    label: 'Country',
-                                    value: fields.notifying_country || 'N/A',
-                                  }, {
-                                    label: 'Alert date',
-                                    value: formattedDate,
-                                  }].map(({ label, value }) => (
-                                    <BlockStack key={`${alertIdentifier}-${label}`} gap="100">
-                                      <Text as="p" variant="bodySm" tone="subdued">{label}</Text>
-                                      <Text as="p" variant="bodyMd" fontWeight="semibold">{value}</Text>
-                                    </BlockStack>
-                                  ))}
-                                </InlineGrid>
-
-                                {fields.risk_legal_provision && (
-                                  <Card background="bg-surface-secondary">
-                                    <BlockStack gap="100">
-                                      <Text as="p" variant="bodySm" fontWeight="bold">
-                                        Risk legal provision
-                                      </Text>
-                                      <Text as="p" variant="bodySm">{fields.risk_legal_provision}</Text>
-                                    </BlockStack>
-                                  </Card>
-                                )}
-
-                                {fields.product_description && (
-                                  <BlockStack gap="100">
-                                    <Text as="p" variant="bodySm" fontWeight="bold">Description</Text>
-                                    <Text as="p" variant="bodySm">{fields.product_description}</Text>
-                                  </BlockStack>
-                                )}
-
-                                {fields.alert_number && (
-                                  <Text as="p" variant="bodySm" fontWeight="bold">
-                                    Alert number: <Text as="span" variant="bodySm">{fields.alert_number}</Text>
-                                  </Text>
-                                )}
-                              </BlockStack>
-
-                              {/* Alert Images */}
-                              <BlockStack gap="200">
-                                <Text as="h5" variant="headingSm">Alert Images</Text>
-                                {pictures.length > 0 ? (
-                                  <div style={{
-                                    display: 'grid',
-                                    gridTemplateColumns: 'repeat(auto-fill, minmax(60px, 1fr))',
-                                    gap: '8px'
-                                  }}>
-                                    {pictures.slice(0, 4).map((pic: any, i: number) => {
-                                      const src = typeof pic === 'string' ? pic : (pic.url || pic.src);
-                                      if (!src) return null;
-
-                                      return (
-                                        <div key={i}
-                                          onClick={() => setSelectedImage(src)}
-                                          style={{
-                                            aspectRatio: '1',
-                                            overflow: 'hidden',
-                                            borderRadius: '4px',
-                                            border: '1px solid var(--p-color-border)',
-                                            cursor: 'pointer'
-                                          }}>
-                                          <img
-                                            src={src}
-                                            alt={`Alert image ${i + 1}`}
-                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                          />
-                                        </div>
-                                      );
-                                    })}
-                                  </div>
-                                ) : (
-                                  <div style={{
-                                    background: 'var(--p-color-bg-surface-tertiary)',
-                                    borderRadius: '4px',
-                                    padding: '16px',
-                                    textAlign: 'center'
-                                  }}>
-                                    <Text as="p" tone="subdued" variant="bodySm">No images available</Text>
-                                  </div>
-                                )}
-                              </BlockStack>
-                            </InlineGrid>
-                          </BlockStack>
-                        </Card>
-                      );
-                    })}
-                  </BlockStack>
-                ) : (
-                  <Card padding="400" background="bg-surface-success">
-                    <BlockStack gap="200">
-                      <InlineStack gap="200" blockAlign="center">
-                        <Icon source={CheckCircleIcon} tone="success" />
-                        <Text as="p" variant="bodyMd">
-                          No Safety Gate matches were found for this alert.
-                        </Text>
-                      </InlineStack>
-                    </BlockStack>
-                  </Card>
-                )}
-              </BlockStack>
-            )}
-          </BlockStack>
-        </Modal.Section>
-      </Modal>
-
-      {/* Image Lightbox Modal */}
-      {selectedImage && (
-        <Modal
-          open={!!selectedImage}
-          onClose={() => setSelectedImage(null)}
-          title="Image Preview"
-          size="large"
+        {/* Footer Actions */}
+        {alert.status === "active" && (
+          <>
+            <s-button
+              ref={dismissBtnRef}
+              slot="secondary-actions"
+              variant="secondary"
+              commandFor={modalId}
+              command="--hide"
+              loading={isLoading || undefined}
+            >
+              Dismiss Alert
+            </s-button>
+            <s-button
+              ref={resolveBtnRef}
+              slot="primary-action"
+              variant="primary"
+              commandFor={modalId}
+              command="--hide"
+              loading={isLoading || undefined}
+            >
+              Mark as Resolved
+            </s-button>
+          </>
+        )}
+        {(alert.status === "dismissed" || alert.status === "resolved") && (
+          <s-button
+            ref={reactivateBtnRef}
+            slot="secondary-actions"
+            variant="secondary"
+            commandFor={modalId}
+            command="--hide"
+            loading={isLoading || undefined}
+          >
+            Reactivate
+          </s-button>
+        )}
+        <s-button
+          slot="secondary-actions"
+          variant="secondary"
+          commandFor={modalId}
+          command="--hide"
         >
-          <Modal.Section>
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '300px' }}>
-              <img
-                src={selectedImage}
-                alt="Full size preview"
-                style={{ maxWidth: '100%', maxHeight: '80vh', objectFit: 'contain' }}
-              />
-            </div>
-          </Modal.Section>
-        </Modal>
+          Close
+        </s-button>
+      </s-modal>
+
+      {/* Image Lightbox Overlay */}
+      {selectedImage && typeof document !== 'undefined' && createPortal(
+        <div 
+          className="image-lightbox-overlay"
+          onClick={closeLightbox}
+        >
+          <div 
+            className="image-lightbox-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button 
+              className="image-lightbox-close"
+              onClick={closeLightbox}
+              aria-label="Close"
+              type="button"
+            >
+              ×
+            </button>
+            <img 
+              src={selectedImage} 
+              alt="Alert image enlarged"
+              className="image-lightbox-image"
+            />
+          </div>
+        </div>,
+        document.body
       )}
     </>
+  );
+}
+
+// Warning card with full details and images
+function WarningCard({
+  warning,
+  index,
+  onImageClick,
+  getWarningImages,
+}: {
+  warning: any;
+  index: number;
+  onImageClick: (src: string) => void;
+  getWarningImages: (warning: any) => any[];
+}) {
+  const fields = warning.alertDetails?.fields || {};
+  const meta = warning.alertDetails?.meta || {};
+  const alertDate = fields.alert_date || meta.alert_date;
+  const formattedDate = alertDate
+    ? new Date(alertDate).toLocaleDateString("en-GB")
+    : "—";
+  const warningSimilarity = warning.similarity ?? 0;
+  const pictures = getWarningImages(warning);
+
+  // Get correct field names from Safety Gate database
+  const notifyingCountry = fields.alert_country || fields.notifying_country;
+  const originCountry = fields.product_country || fields.country_of_origin;
+  const productName = fields.product_name || fields.name;
+  const productModel = fields.product_model_type || fields.product_model || fields.model;
+
+  return (
+    <s-box
+      padding="large"
+      borderColor={warningSimilarity >= 80 ? "border-critical" : warningSimilarity >= 60 ? "border-warning" : "border"}
+      borderWidth="base"
+      borderRadius="large"
+      background="bg-surface"
+    >
+      <s-stack gap="base">
+        {/* Header with badges and link */}
+        <s-stack direction="inline" align="space-between" blockAlign="center" wrap>
+          <s-stack direction="inline" gap="small" wrap>
+            <s-badge 
+              tone={warningSimilarity >= 80 ? "critical" : warningSimilarity >= 60 ? "warning" : "info"}
+            >
+              {warningSimilarity}% match
+            </s-badge>
+            <AlertBadge
+              alertLevel={fields.alert_level}
+              alertType={fields.alert_type}
+              riskDescription={warning.riskLegalProvision}
+            />
+            {fields.product_category && (
+              <s-badge>{fields.product_category}</s-badge>
+            )}
+          </s-stack>
+          {fields.rapex_url && (
+            <s-link href={fields.rapex_url} target="_blank">
+              Open in Safety Gate ↗
+            </s-link>
+          )}
+        </s-stack>
+
+        {/* Alert number header */}
+        {fields.alert_number && (
+          <s-text tone="subdued" size="small">Alert number: {fields.alert_number}</s-text>
+        )}
+
+        {/* Match Reason - highlighted */}
+        {warning.reason && (
+          <s-box
+            padding="base"
+            borderRadius="base"
+            borderColor="border-info"
+            borderWidth="base"
+            background="bg-surface-info"
+          >
+            <s-stack gap="small-200">
+              <s-stack direction="inline" gap="small" blockAlign="center">
+                <s-text fontWeight="bold" tone="info">Why this matched</s-text>
+              </s-stack>
+              <s-text>{warning.reason}</s-text>
+            </s-stack>
+          </s-box>
+        )}
+
+        {/* Main content: Image + Details table */}
+        <s-stack direction="inline" gap="large" blockAlign="start" wrap>
+          {/* Images - all in one row */}
+          {pictures.length > 0 && (
+            <s-stack direction="inline" gap="small" wrap style={{ flexShrink: 0 }}>
+              {pictures.slice(0, 6).map((pic: any, idx: number) => {
+                const src = typeof pic === "string" ? pic : pic?.url || pic?.src;
+                if (!src) return null;
+                return (
+                  <div
+                    key={`${src}-${idx}`}
+                    onClick={() => onImageClick(src)}
+                    className="alert-image-clickable"
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') onImageClick(src);
+                    }}
+                  >
+                    <s-thumbnail src={src} alt={`Reference ${idx + 1}`} size="large" />
+                  </div>
+                );
+              })}
+            </s-stack>
+          )}
+
+          {/* Details table */}
+          <s-box style={{ flex: 1, minWidth: "280px" }}>
+            <s-section padding="none">
+              <s-table>
+                <s-table-header-row>
+                  <s-table-header listSlot="primary"></s-table-header>
+                  <s-table-header listSlot="secondary"></s-table-header>
+                </s-table-header-row>
+                <s-table-body>
+                  <s-table-row>
+                    <s-table-cell>Risk Level</s-table-cell>
+                    <s-table-cell>{fields.alert_level || "—"}</s-table-cell>
+                  </s-table-row>
+                  {productName && (
+                    <s-table-row>
+                      <s-table-cell>Product Name</s-table-cell>
+                      <s-table-cell>{productName}</s-table-cell>
+                    </s-table-row>
+                  )}
+                  {fields.product_brand && (
+                    <s-table-row>
+                      <s-table-cell>Brand</s-table-cell>
+                      <s-table-cell>{fields.product_brand}</s-table-cell>
+                    </s-table-row>
+                  )}
+                  {productModel && (
+                    <s-table-row>
+                      <s-table-cell>Model / Type</s-table-cell>
+                      <s-table-cell>{productModel}</s-table-cell>
+                    </s-table-row>
+                  )}
+                  <s-table-row>
+                    <s-table-cell>Category</s-table-cell>
+                    <s-table-cell>{fields.product_category || "—"}</s-table-cell>
+                  </s-table-row>
+                  {notifyingCountry && (
+                    <s-table-row>
+                      <s-table-cell>Notifying Country</s-table-cell>
+                      <s-table-cell>{notifyingCountry}</s-table-cell>
+                    </s-table-row>
+                  )}
+                  {originCountry && (
+                    <s-table-row>
+                      <s-table-cell>Country of Origin</s-table-cell>
+                      <s-table-cell>{originCountry}</s-table-cell>
+                    </s-table-row>
+                  )}
+                  <s-table-row>
+                    <s-table-cell>Alert Date</s-table-cell>
+                    <s-table-cell>{formattedDate}</s-table-cell>
+                  </s-table-row>
+                  {fields.alert_type && (
+                    <s-table-row>
+                      <s-table-cell>Risk Type</s-table-cell>
+                      <s-table-cell>{fields.alert_type}</s-table-cell>
+                    </s-table-row>
+                  )}
+                </s-table-body>
+              </s-table>
+            </s-section>
+          </s-box>
+        </s-stack>
+
+        {/* Description */}
+        {fields.product_description && (
+          <s-box
+            padding="base"
+            borderRadius="base"
+            background="bg-surface-secondary"
+          >
+            <s-stack gap="small-200">
+              <s-text tone="subdued" size="small">Product Description</s-text>
+              <s-text>{fields.product_description}</s-text>
+            </s-stack>
+          </s-box>
+        )}
+
+        {/* Risk description */}
+        {fields.alert_description && (
+          <s-box
+            padding="base"
+            borderRadius="base"
+            background="bg-surface-critical"
+          >
+            <s-stack gap="small-200">
+              <s-text tone="subdued" size="small">Risk Description</s-text>
+              <s-text>{fields.alert_description}</s-text>
+            </s-stack>
+          </s-box>
+        )}
+
+        {/* Risk Legal Provision */}
+        {fields.risk_legal_provision && (
+          <s-banner tone="warning" heading="Legal Provision">
+            <s-text>{fields.risk_legal_provision}</s-text>
+          </s-banner>
+        )}
+      </s-stack>
+    </s-box>
   );
 }

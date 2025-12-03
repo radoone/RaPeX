@@ -1,9 +1,44 @@
 import { shopifyProductToProductData, type ProductData } from "./safety-gate-checker.client";
+import db from "../db.server";
 
 // Firebase Functions API configuration
 const FIREBASE_FUNCTIONS_BASE_URL = process.env.FIREBASE_FUNCTIONS_BASE_URL ||
   'https://europe-west1-rapex-99a2c.cloudfunctions.net';
 const SAFETY_GATE_API_KEY = process.env.SAFETY_GATE_API_KEY || 'default-api-key';
+
+export async function getSimilarityThresholdForShop(shop: string): Promise<number> {
+  const envDefault = Number(process.env.SAFETY_GATE_SIMILARITY_THRESHOLD || '0');
+  try {
+    const setting = await db.safetySetting.findUnique({
+      where: { shop },
+    });
+    if (setting && Number.isFinite(setting.similarityThreshold)) {
+      return setting.similarityThreshold;
+    }
+  } catch (error) {
+    console.error('Error fetching similarity threshold for shop', shop, error);
+  }
+  return Number.isFinite(envDefault) ? envDefault : 0;
+}
+
+function applySimilarityThreshold<T extends SafetyCheckResult>(result: T, threshold: number): T {
+  const safeThreshold = Number.isFinite(threshold) && threshold > 0 ? threshold : 0;
+
+  if (safeThreshold <= 0) {
+    return result;
+  }
+
+  const filteredWarnings = result.warnings.filter((warning) => {
+    const similarity = Number.isFinite(warning.similarity) ? warning.similarity : 0;
+    return similarity >= safeThreshold;
+  });
+
+  return {
+    ...result,
+    warnings: filteredWarnings,
+    isSafe: filteredWarnings.length === 0 ? true : result.isSafe,
+  };
+}
 
 export interface SafetyCheckResult {
   isSafe: boolean;
@@ -41,8 +76,13 @@ export interface SafetyCheckResult {
 /**
  * Checks product safety against Safety Gate database using Firebase Functions API
  */
-export async function checkProductSafety(productData: ProductData): Promise<SafetyCheckResult> {
+export async function checkProductSafety(productData: ProductData, similarityThreshold?: number): Promise<SafetyCheckResult> {
   try {
+    const envDefault = Number(process.env.SAFETY_GATE_SIMILARITY_THRESHOLD || '0');
+    const effectiveThreshold = Number.isFinite(similarityThreshold)
+      ? similarityThreshold!
+      : (Number.isFinite(envDefault) ? envDefault : 0);
+
     const response = await fetch(`${FIREBASE_FUNCTIONS_BASE_URL}/checkProductSafetyAPI`, {
       method: 'POST',
       headers: {
@@ -56,7 +96,8 @@ export async function checkProductSafety(productData: ProductData): Promise<Safe
       throw new Error(`Safety Gate API returned ${response.status}: ${response.statusText}`);
     }
 
-    const result = await response.json() as SafetyCheckResult;
+    const rawResult = await response.json() as SafetyCheckResult;
+    const result = applySimilarityThreshold(rawResult, effectiveThreshold);
     return result;
 
   } catch (error) {
@@ -75,7 +116,7 @@ export async function checkProductSafety(productData: ProductData): Promise<Safe
 /**
  * Check multiple products at once
  */
-export async function checkMultipleProducts(products: ProductData[]): Promise<Record<string, SafetyCheckResult>> {
+export async function checkMultipleProducts(products: ProductData[], similarityThreshold?: number): Promise<Record<string, SafetyCheckResult>> {
   const results: Record<string, SafetyCheckResult> = {};
 
   // Check products in parallel (but limit concurrency to avoid overwhelming the API)
@@ -83,7 +124,7 @@ export async function checkMultipleProducts(products: ProductData[]): Promise<Re
   for (let i = 0; i < products.length; i += batchSize) {
     const batch = products.slice(i, i + batchSize);
     const batchPromises = batch.map(async (product) => {
-      const result = await checkProductSafety(product);
+      const result = await checkProductSafety(product, similarityThreshold);
       return { product, result };
     });
 
@@ -110,7 +151,8 @@ export async function bulkCheckProducts(admin: any, shop: string, db: any) {
   };
 
   try {
-    console.log(`🚀 Starting bulk product safety check for ${shop}`);
+    const similarityThreshold = await getSimilarityThresholdForShop(shop);
+    console.log(`🚀 Starting bulk product safety check for ${shop} (threshold ${similarityThreshold})`);
 
     let hasNextPage = true;
     let cursor: string | null = null;
@@ -195,7 +237,7 @@ export async function bulkCheckProducts(admin: any, shop: string, db: any) {
             const productData = shopifyProductToProductData(product);
 
             // Check product safety
-            const safetyResult = await checkProductSafety(productData);
+            const safetyResult = await checkProductSafety(productData, similarityThreshold);
             results.checked++;
 
             // Handle safety check results

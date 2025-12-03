@@ -1,7 +1,7 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { authenticate } from "../shopify.server";
 import db from "../db.server";
-import { checkProductSafety, shopifyProductToProductData } from "../services/safety-gate-checker.server";
+import { checkProductSafety, getSimilarityThresholdForShop, shopifyProductToProductData } from "../services/safety-gate-checker.server";
 
 /**
  * Webhook handler for product updates
@@ -17,11 +17,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
     // Convert Shopify product to format needed for Safety Gate checking
     const productData = shopifyProductToProductData(product);
+    const similarityThreshold = await getSimilarityThresholdForShop(shop);
 
     console.log(`Re-checking updated product: ${productData.name}`);
 
     // Check product against Safety Gate database
-    const safetyResult = await checkProductSafety(productData);
+    const safetyResult = await checkProductSafety(productData, similarityThreshold);
 
     // Look for existing alerts for this product
     const existingAlert = await db.safetyAlert.findFirst({

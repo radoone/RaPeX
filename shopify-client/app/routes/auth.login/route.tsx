@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { Form, useActionData, useLoaderData } from "@remix-run/react";
+import { Form, useActionData, useLoaderData, useRouteError } from "@remix-run/react";
 import {
   AppProvider as PolarisAppProvider,
   Button,
@@ -20,17 +20,28 @@ import { loginErrorMessage } from "./error.server";
 export const links = () => [{ rel: "stylesheet", href: polarisStyles }];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const errors = loginErrorMessage(await login(request));
-
-  return { errors, polarisTranslations };
+  try {
+    const errors = loginErrorMessage(await login(request));
+    return { errors, polarisTranslations };
+  } catch (error) {
+    console.error("Auth login loader failed", error);
+    return {
+      errors: { shop: "Authentication failed. Please re-enter your shop domain." },
+      polarisTranslations,
+    };
+  }
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const errors = loginErrorMessage(await login(request));
-
-  return {
-    errors,
-  };
+  try {
+    const errors = loginErrorMessage(await login(request));
+    return { errors };
+  } catch (error) {
+    console.error("Auth login action failed", error);
+    return {
+      errors: { shop: "Authentication failed. Please try again." },
+    };
+  }
 };
 
 export default function Auth() {
@@ -60,6 +71,32 @@ export default function Auth() {
               />
               <Button submit>Log in</Button>
             </FormLayout>
+          </Form>
+        </Card>
+      </Page>
+    </PolarisAppProvider>
+  );
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+  const message =
+    (error as any)?.data?.message ||
+    (error as any)?.message ||
+    "Something went wrong while loading the login screen.";
+
+  return (
+    <PolarisAppProvider i18n={polarisTranslations}>
+      <Page>
+        <Card>
+          <Text variant="headingMd" as="h2">
+            Login error
+          </Text>
+          <Text as="p" tone="subdued">
+            {message}
+          </Text>
+          <Form method="get" action="/auth/login">
+            <Button submit>Try again</Button>
           </Form>
         </Card>
       </Page>

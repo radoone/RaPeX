@@ -1,11 +1,3 @@
-import { InlineStack, Button } from "@shopify/polaris";
-import {
-  ViewIcon,
-  HideIcon,
-  CheckCircleIcon,
-  RefreshIcon,
-} from "@shopify/polaris-icons";
-
 interface AlertActionsProps {
   alertId: string;
   status: string;
@@ -26,50 +18,47 @@ export function AlertActions({
   isLoading = false
 }: AlertActionsProps) {
   return (
-    <InlineStack gap="200">
-      <Button
-        size="slim"
+    <s-stack direction="inline" gap="small">
+      <s-button
+        size="small"
         variant="secondary"
-        icon={ViewIcon}
         onClick={() => onViewDetails(alertId)}
+        loading={isLoading || undefined}
       >
-        View Details
-      </Button>
+        View
+      </s-button>
       {status === 'active' && (
         <>
-          <Button
-            size="slim"
+          <s-button
+            size="small"
             variant="secondary"
             tone="critical"
-            icon={HideIcon}
             onClick={() => onDismiss?.(alertId)}
-            loading={isLoading}
+            loading={isLoading || undefined}
           >
             Dismiss
-          </Button>
-          <Button
-            size="slim"
+          </s-button>
+          <s-button
+            size="small"
             variant="primary"
             tone="success"
-            icon={CheckCircleIcon}
             onClick={() => onResolve?.(alertId)}
-            loading={isLoading}
+            loading={isLoading || undefined}
           >
             Resolve
-          </Button>
+          </s-button>
         </>
       )}
       {(status === 'dismissed' || status === 'resolved') && (
-        <Button
-          size="slim"
+        <s-button
+          size="small"
           variant="secondary"
-          icon={RefreshIcon}
           onClick={() => onReactivate?.(alertId)}
-          loading={isLoading}
+          loading={isLoading || undefined}
         >
           Reactivate
-        </Button>
+        </s-button>
       )}
-    </InlineStack>
+    </s-stack>
   );
 }
