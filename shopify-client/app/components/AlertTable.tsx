@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from "react";
-import { useNavigate } from "@remix-run/react";
+import { useTranslation } from "react-i18next";
 
 interface Alert {
   id: string;
@@ -48,6 +48,7 @@ export function AlertTable({
   onStatusChange,
   stats,
 }: AlertTableProps) {
+  const { t } = useTranslation();
   const [sortBy, setSortBy] = useState<string>("created");
   const [sortOrder, setSortOrder] = useState<string>("desc");
 
@@ -55,7 +56,7 @@ export function AlertTable({
   const activeTab = statusFilter.length === 1 ? statusFilter[0] : "all";
 
   return (
-    <s-section padding="none" accessibilityLabel="Safety alerts table">
+    <s-section padding="none" accessibilityLabel={t('alerts.table.accessibilityLabel')}>
       <s-table>
         {/* Filters slot - like Shopify Index Table */}
         <s-stack slot="filters" gap="small">
@@ -66,71 +67,71 @@ export function AlertTable({
               size="small"
               onClick={() => onStatusChange?.("")}
             >
-              All {stats ? `(${stats.total})` : ""}
+              {t('alerts.table.tabs.all')} {stats ? `(${stats.total})` : ""}
             </s-button>
             <s-button
               variant={activeTab === "active" ? "secondary" : "tertiary"}
               size="small"
               onClick={() => onStatusChange?.("active")}
             >
-              Active {stats?.active ? `(${stats.active})` : ""}
+              {t('alerts.table.tabs.active')} {stats?.active ? `(${stats.active})` : ""}
             </s-button>
             <s-button
               variant={activeTab === "resolved" ? "secondary" : "tertiary"}
               size="small"
               onClick={() => onStatusChange?.("resolved")}
             >
-              Resolved {stats?.resolved ? `(${stats.resolved})` : ""}
+              {t('alerts.table.tabs.resolved')} {stats?.resolved ? `(${stats.resolved})` : ""}
             </s-button>
             <s-button
               variant={activeTab === "dismissed" ? "secondary" : "tertiary"}
               size="small"
               onClick={() => onStatusChange?.("dismissed")}
             >
-              Dismissed {stats?.dismissed ? `(${stats.dismissed})` : ""}
+              {t('alerts.table.tabs.dismissed')} {stats?.dismissed ? `(${stats.dismissed})` : ""}
             </s-button>
           </s-stack>
 
           {/* Search and sort row */}
           <s-grid gap="small-200" gridTemplateColumns="1fr auto">
             <s-text-field
-              label="Search alerts"
+              label={t('alerts.table.searchLabel')}
               labelAccessibilityVisibility="exclusive"
               icon="search"
-              placeholder="Search by product name..."
+              placeholder={t('alerts.table.searchPlaceholder')}
               value={searchValue}
               onInput={(e: any) => onSearchChange?.(e.currentTarget.value || "")}
             />
             <s-button
               variant="secondary"
-              accessibilityLabel="Sort"
+              accessibilityLabel={t('alerts.table.sort')}
               commandFor="sort-actions-popover"
             >
-              Sort
+              {t('alerts.table.sort')}
             </s-button>
             <s-popover id="sort-actions-popover">
               <s-stack gap="none">
                 <s-box padding="small">
-                  <s-choice-list label="Sort by" name="sortBy">
+                  <s-choice-list label={t('alerts.table.sortBy')} name="sortBy">
                     <s-choice value="created" selected={sortBy === "created"} onClick={() => setSortBy("created")}>
-                      Date detected
+                      {t('alerts.table.sortOptions.created')}
                     </s-choice>
                     <s-choice value="risk" selected={sortBy === "risk"} onClick={() => setSortBy("risk")}>
-                      Risk level
+                      {t('alerts.table.sortOptions.risk')}
                     </s-choice>
                     <s-choice value="name" selected={sortBy === "name"} onClick={() => setSortBy("name")}>
-                      Product name
+                      {t('alerts.table.sortOptions.name')}
                     </s-choice>
                   </s-choice-list>
                 </s-box>
                 <s-divider />
                 <s-box padding="small">
-                  <s-choice-list label="Order" name="sortOrder">
+                  <s-choice-list label={t('alerts.table.order')} name="sortOrder">
                     <s-choice value="desc" selected={sortOrder === "desc"} onClick={() => setSortOrder("desc")}>
-                      Newest first
+                      {t('alerts.table.orderOptions.desc')}
                     </s-choice>
                     <s-choice value="asc" selected={sortOrder === "asc"} onClick={() => setSortOrder("asc")}>
-                      Oldest first
+                      {t('alerts.table.orderOptions.asc')}
                     </s-choice>
                   </s-choice-list>
                 </s-box>
@@ -140,11 +141,11 @@ export function AlertTable({
         </s-stack>
 
         <s-table-header-row>
-          <s-table-header listSlot="primary">Product</s-table-header>
-          <s-table-header listSlot="inline">Status</s-table-header>
-          <s-table-header listSlot="labeled">Risk</s-table-header>
-          <s-table-header listSlot="labeled">Detected</s-table-header>
-          <s-table-header>Actions</s-table-header>
+          <s-table-header listSlot="primary">{t('alerts.table.headers.product')}</s-table-header>
+          <s-table-header listSlot="inline">{t('alerts.table.headers.status')}</s-table-header>
+          <s-table-header listSlot="labeled">{t('alerts.table.headers.risk')}</s-table-header>
+          <s-table-header listSlot="labeled">{t('alerts.table.headers.detected')}</s-table-header>
+          <s-table-header>{t('alerts.table.headers.actions')}</s-table-header>
         </s-table-header-row>
         <s-table-body>
           {alerts.length === 0 ? (
@@ -152,7 +153,7 @@ export function AlertTable({
               <s-table-cell colSpan={5}>
                 <s-box padding="large">
                   <s-stack gap="small" align="center">
-                    <s-text tone="subdued">No alerts matching your filters</s-text>
+                    <s-text tone="subdued">{t('alerts.table.empty')}</s-text>
                   </s-stack>
                 </s-box>
               </s-table-cell>
@@ -198,10 +199,12 @@ function AlertRow({
   showProductLink: boolean;
   modalId: string;
 }) {
+  const { t, i18n } = useTranslation();
   const viewBtnRef = useRef<HTMLElement>(null);
   const dismissBtnRef = useRef<HTMLElement>(null);
   const resolveBtnRef = useRef<HTMLElement>(null);
   const reactivateBtnRef = useRef<HTMLElement>(null);
+  const dateLocale = i18n.language === 'sk' ? 'sk-SK' : 'en-GB';
 
   // View button handler
   useEffect(() => {
@@ -241,25 +244,22 @@ function AlertRow({
 
   const adminProductId = alert.productId?.replace('gid://shopify/Product/', '') || '';
   const createdDate = new Date(alert.createdAt);
-  const warningsLabel = `${alert.warningsCount} ${alert.warningsCount === 1 ? "match" : "matches"}`;
+  const warningsLabel = t('dashboard.recentAlerts.matchCount', { count: alert.warningsCount });
 
   // Badge tones
   const statusTone = alert.status === 'active' ? 'critical' : alert.status === 'resolved' ? 'success' : 'neutral';
   const riskTone = alert.riskLevel?.toLowerCase().includes('serious') ? 'critical' 
     : alert.riskLevel?.toLowerCase().includes('high') ? 'warning' : 'info';
 
-  const checkboxId = `alert-checkbox-${alert.id}`;
-
   return (
-    <s-table-row clickDelegate={checkboxId}>
+    <s-table-row>
       {/* Product Cell - Shopify style */}
       <s-table-cell>
         <s-stack direction="inline" gap="small" alignItems="center">
-          <s-checkbox id={checkboxId} />
           {alert.productImage ? (
             <s-clickable
               href={showProductLink && adminProductId ? `shopify:admin/products/${adminProductId}` : undefined}
-              accessibilityLabel={`${alert.productTitle} thumbnail`}
+              accessibilityLabel={t('alerts.table.thumbnailLabel', { title: alert.productTitle })}
               border="base"
               borderRadius="base"
               overflow="hidden"
@@ -300,7 +300,11 @@ function AlertRow({
       {/* Status Cell */}
       <s-table-cell>
         <s-badge tone={statusTone}>
-          {alert.status.charAt(0).toUpperCase() + alert.status.slice(1)}
+          {alert.status === 'active'
+            ? t('status.needsReview')
+            : alert.status === 'resolved'
+              ? t('status.resolved')
+              : t('status.dismissed')}
         </s-badge>
       </s-table-cell>
 
@@ -308,7 +312,7 @@ function AlertRow({
       <s-table-cell>
         <s-stack gap="small-100">
           <s-badge tone={riskTone}>
-            {alert.riskLevel || 'Unknown'}
+            {alert.riskLevel || t('common.unknown')}
           </s-badge>
           <s-text tone="subdued" size="small">{warningsLabel}</s-text>
         </s-stack>
@@ -317,7 +321,7 @@ function AlertRow({
       {/* Date Cell */}
       <s-table-cell>
         <s-text suppressHydrationWarning>
-          {formatRelativeDate(createdDate)}
+          {formatRelativeDate(createdDate, t, dateLocale)}
         </s-text>
       </s-table-cell>
 
@@ -331,7 +335,7 @@ function AlertRow({
             commandFor={modalId}
             command="--show"
           >
-            View
+            {t('actions.view')}
           </s-button>
           {alert.status === 'active' && (
             <s-button 
@@ -340,7 +344,7 @@ function AlertRow({
               variant="primary" 
               loading={isLoading || undefined}
             >
-              Resolve
+              {t('actions.resolve')}
             </s-button>
           )}
         </s-stack>
@@ -350,13 +354,17 @@ function AlertRow({
 }
 
 // Format date as relative (Today, Yesterday, etc.)
-function formatRelativeDate(date: Date): string {
+function formatRelativeDate(
+  date: Date,
+  t: (key: string, options?: Record<string, any>) => string,
+  locale: string
+): string {
   const now = new Date();
   const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
   
-  if (diffDays === 0) return "Today";
-  if (diffDays === 1) return "Yesterday";
-  if (diffDays < 7) return `${diffDays} days ago`;
-  if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
-  return date.toLocaleDateString("en-GB");
+  if (diffDays === 0) return t('dates.today');
+  if (diffDays === 1) return t('dates.yesterday');
+  if (diffDays < 7) return t('dates.daysAgo', { count: diffDays });
+  if (diffDays < 30) return t('dates.weeksAgo', { count: Math.floor(diffDays / 7) });
+  return date.toLocaleDateString(locale);
 }

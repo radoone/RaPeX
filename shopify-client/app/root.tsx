@@ -6,9 +6,11 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "@remix-run/react";
+import { useEffect } from "react";
 import { AppProvider } from "@shopify/shopify-app-remix/react";
 import { authenticate } from "./shopify.server";
 import "./i18n";
+import i18n from "./i18n";
 import themeStyles from "./styles/theme.css?url";
 
 // Note: Polaris styles are loaded via CDN polaris.js - no need for duplicate import
@@ -29,6 +31,20 @@ export const loader = async ({ request }: { request: Request }) => {
 
 export default function App() {
   const { apiKey } = useLoaderData<typeof loader>();
+
+  // Sync document language so Polaris web components render localized copy.
+  useEffect(() => {
+    const syncLang = () => {
+      const lang = i18n.language || "en";
+      document.documentElement.setAttribute("lang", lang);
+    };
+
+    syncLang();
+    i18n.on("languageChanged", syncLang);
+    return () => {
+      i18n.off("languageChanged", syncLang);
+    };
+  }, []);
 
   return (
     <html lang="en" suppressHydrationWarning>

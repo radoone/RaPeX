@@ -75,10 +75,10 @@ export function AlertFilters({
             size="small"
           />
         </div>
-        
-        <s-button 
-          variant="tertiary" 
-          size="small" 
+
+        <s-button
+          variant="tertiary"
+          size="small"
           onClick={() => setIsExpanded(!isExpanded)}
         >
           {isExpanded ? "Hide filters" : "Filters"}

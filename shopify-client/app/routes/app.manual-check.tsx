@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node";
 import { useLoaderData, useFetcher } from "@remix-run/react";
 import { json } from "@remix-run/node";
+import { useTranslation } from "react-i18next";
 import { authenticate } from "../shopify.server";
 import { shopifyProductToProductData } from "../services/safety-gate-checker.client";
 import prisma from "../db.server";
@@ -89,11 +90,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export default function ManualCheckPage() {
   const { products, checksByProduct } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
+  const { t, i18n } = useTranslation();
 
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [checkResult, setCheckResult] = useState<any>(null);
   const [showResult, setShowResult] = useState(false);
   const [hasProcessedResult, setHasProcessedResult] = useState(false);
+  const dateLocale = i18n.language === 'sk' ? 'sk-SK' : 'en-GB';
 
   const productCheckEntries = Object.values(checksByProduct || {});
   const checkedProducts = productCheckEntries.filter((e: any) => e.totalChecks > 0).length;
@@ -126,85 +129,87 @@ export default function ManualCheckPage() {
   return (
     <s-page size="large" className="page-shell">
       <PageHeader
-        title="Manual safety check"
-        subtitle="Run a targeted Safety Gate check for a specific product."
+        title={t('manualCheck.title')}
+        subtitle={t('manualCheck.subtitle')}
         breadcrumbs={[
-          { label: "Dashboard", href: "/app" },
-          { label: "Manual check" },
+          { label: t('manualCheck.breadcrumbs.dashboard'), href: "/app" },
+          { label: t('manualCheck.breadcrumbs.current') },
         ]}
         meta={(
           <>
             <s-badge tone={unsafeProducts > 0 ? "critical" : "success"}>
-              {unsafeProducts === 0 ? "All clear" : `${unsafeProducts} flagged`}
+              {unsafeProducts === 0 ? t('status.allClear') : t('manualCheck.badges.flagged', { count: unsafeProducts })}
             </s-badge>
-            <s-badge tone="info">{totalChecks} checks</s-badge>
+            <s-badge tone="info">{t('manualCheck.badges.checks', { count: totalChecks })}</s-badge>
           </>
         )}
-        primaryAction={{ label: "View alerts", href: "/app/alerts", variant: "primary" }}
+        primaryAction={{ label: t('actions.viewAlerts'), href: "/app/alerts", variant: "primary" }}
         secondaryActions={[
-          { label: "Dashboard", href: "/app", variant: "secondary" },
-          { label: "Settings", href: "/app/settings", variant: "tertiary" },
+          { label: t('actions.dashboard'), href: "/app", variant: "secondary" },
+          { label: t('actions.settings'), href: "/app/settings", variant: "tertiary" },
         ]}
       />
 
       {/* Error/success banners */}
       {fetcher.data && 'error' in fetcher.data && fetcher.data.error && (
-        <s-banner tone="critical" heading="Check failed">
+        <s-banner tone="critical" heading={t('manualCheck.banners.failedHeading')}>
           <s-text>{(fetcher.data as any).error}</s-text>
         </s-banner>
       )}
 
       {fetcher.data && 'alertCreated' in fetcher.data && fetcher.data.alertCreated && (
-        <s-banner tone="warning" heading="Safety alert created">
-          <s-text>A potential safety issue was found for this product.</s-text>
-          <s-button slot="secondary-actions" variant="secondary" href="/app/alerts">Review alerts</s-button>
+        <s-banner tone="warning" heading={t('manualCheck.banners.alertHeading')}>
+          <s-text>{t('manualCheck.banners.alertDescription')}</s-text>
+          <s-button slot="secondary-actions" variant="secondary" href="/app/alerts">{t('actions.reviewAlerts')}</s-button>
         </s-banner>
       )}
 
-      <s-section heading="Checks overview">
+      <s-section heading={t('manualCheck.overview.title')}>
         <div className="metric-grid">
           <SummaryCard
-            title="Products in scope"
+            title={t('manualCheck.overview.productsInScope')}
             value={products.length}
-            description="Latest products from your store."
-            badge={<s-badge tone="info">Updated</s-badge>}
+            description={t('manualCheck.overview.productsDescription')}
+            badge={<s-badge tone="info">{t('status.updated')}</s-badge>}
           />
           <SummaryCard
-            title="Manual checks completed"
+            title={t('manualCheck.overview.manualCompleted')}
             value={totalChecks}
-            badge={<s-badge tone="info">{coverageRate}% coverage</s-badge>}
+            badge={<s-badge tone="info">{t('manualCheck.overview.coverage', { coverage: coverageRate })}</s-badge>}
             progress={products.length > 0 ? coverageRate : undefined}
-            description={`${checkedProducts} of ${products.length} products checked`}
+            description={t('manualCheck.overview.manualCompletedDescription', { checked: checkedProducts, total: products.length })}
           />
           <SummaryCard
-            title="Products flagged"
+            title={t('manualCheck.overview.productsFlagged')}
             value={unsafeProducts}
-            badge={<s-badge tone={unsafeProducts === 0 ? "success" : "critical"}>{unsafeProducts === 0 ? "All clear" : "Needs review"}</s-badge>}
-            description={unsafeProducts === 0 ? "No risks detected yet." : "Prioritise these products for action."}
+            badge={<s-badge tone={unsafeProducts === 0 ? "success" : "critical"}>{unsafeProducts === 0 ? t('status.allClear') : t('status.needsReview')}</s-badge>}
+            description={unsafeProducts === 0 ? t('manualCheck.overview.noRisks') : t('manualCheck.overview.prioritise')}
           />
         </div>
       </s-section>
 
       {/* Product list */}
-      <s-section heading={`Product Catalogue (${products.length})`}>
+      <s-section heading={t('manualCheck.catalogue.heading', { count: products.length })}>
         {products.length === 0 ? (
-          <s-empty-state heading="No products found">
-            <s-text>No products are available for checking.</s-text>
+          <s-empty-state heading={t('manualCheck.catalogue.emptyHeading')}>
+            <s-text>{t('manualCheck.catalogue.emptyBody')}</s-text>
           </s-empty-state>
         ) : (
           <div className="catalogue-table">
             <div className="catalogue-row catalogue-row--header">
-              <s-text>Product</s-text>
-              <s-text>Status</s-text>
-              <s-text>Checks</s-text>
-              <s-text>Action</s-text>
+              <s-text>{t('manualCheck.catalogue.columns.product')}</s-text>
+              <s-text>{t('manualCheck.catalogue.columns.status')}</s-text>
+              <s-text>{t('manualCheck.catalogue.columns.checks')}</s-text>
+              <s-text>{t('manualCheck.catalogue.columns.action')}</s-text>
             </div>
             {products.map((product: any) => {
               const productId = product.id.replace('gid://shopify/Product/', '');
               const checks = checksByProduct[productId] || { totalChecks: 0, lastCheck: null, isSafe: null };
               const lastCheck = checks.lastCheck ? new Date(checks.lastCheck.checkedAt) : null;
               const statusTone = checks.lastCheck ? (checks.isSafe ? 'success' : 'critical') : 'info';
-              const statusLabel = checks.lastCheck ? (checks.isSafe ? 'Safe' : 'Unsafe') : 'Not checked';
+              const statusLabel = checks.lastCheck
+                ? (checks.isSafe ? t('manualCheck.catalogue.status.safe') : t('manualCheck.catalogue.status.unsafe'))
+                : t('manualCheck.catalogue.status.notChecked');
 
               return (
                 <div key={product.id} className="catalogue-row">
@@ -213,7 +218,7 @@ export default function ManualCheckPage() {
                     <div className="catalogue-meta">
                       <s-text fontWeight="bold">{product.title}</s-text>
                       <div className="catalogue-subtitle">
-                        {product.vendor || 'Unknown vendor'} - {product.productType || 'No type'}
+                        {product.vendor || t('manualCheck.catalogue.unknownVendor')} - {product.productType || t('manualCheck.catalogue.noType')}
                       </div>
                     </div>
                   </div>
@@ -221,14 +226,16 @@ export default function ManualCheckPage() {
                   <div className="catalogue-meta">
                     <s-badge tone={statusTone}>{statusLabel}</s-badge>
                     {lastCheck && (
-                      <s-text tone="subdued" size="small">Last checked {lastCheck.toLocaleDateString('en-GB')}</s-text>
+                      <s-text tone="subdued" size="small">
+                        {t('manualCheck.catalogue.lastChecked', { date: lastCheck.toLocaleDateString(dateLocale) })}
+                      </s-text>
                     )}
                   </div>
 
                   <div className="catalogue-stat">
-                    <s-text fontWeight="semibold">{checks.totalChecks} checks</s-text>
+                    <s-text fontWeight="semibold">{t('manualCheck.catalogue.columns.checks')} {checks.totalChecks}</s-text>
                     <s-text tone="subdued" size="small">
-                      {checks.totalChecks > 0 ? `${checks.totalChecks} total` : "Run your first check"}
+                      {checks.totalChecks > 0 ? t('manualCheck.catalogue.totalChecks', { count: checks.totalChecks }) : t('manualCheck.catalogue.firstCheck')}
                     </s-text>
                   </div>
 
@@ -239,7 +246,7 @@ export default function ManualCheckPage() {
                       loading={isLoading && selectedProduct?.id === product.id || undefined}
                       onClick={() => handleProductCheck(product)}
                     >
-                      {checks.totalChecks > 0 ? 'Check again' : 'Check safety'}
+                      {checks.totalChecks > 0 ? t('manualCheck.catalogue.actions.checkAgain') : t('manualCheck.catalogue.actions.checkSafety')}
                     </s-button>
                   </div>
                 </div>
@@ -250,11 +257,11 @@ export default function ManualCheckPage() {
       </s-section>
 
       <s-grid gap="base" gridTemplateColumns="repeat(auto-fit, minmax(240px, 1fr))">
-        <s-section heading="Quick Actions">
+        <s-section heading={t('manualCheck.quickActions.title')}>
           <s-stack gap="small">
-            <s-button variant="secondary" href="/app">Dashboard</s-button>
-            <s-button variant="primary" href="/app/alerts">View alerts</s-button>
-            <s-button variant="secondary" href="/app/settings">Settings</s-button>
+            <s-button variant="secondary" href="/app">{t('actions.dashboard')}</s-button>
+            <s-button variant="primary" href="/app/alerts">{t('actions.viewAlerts')}</s-button>
+            <s-button variant="secondary" href="/app/settings">{t('actions.settings')}</s-button>
           </s-stack>
         </s-section>
 
@@ -267,10 +274,10 @@ export default function ManualCheckPage() {
           open={showResult}
           onClose={() => { setShowResult(false); setCheckResult(null); setSelectedProduct(null); }}
           alert={{
-            productTitle: selectedProduct?.title || 'Unknown Product',
+            productTitle: selectedProduct?.title || t('manualCheck.modal.unknownProduct'),
             productImage: selectedProduct?.featuredImage?.url || null,
-            riskLevel: checkResult.warnings?.[0]?.riskLevel || 'Unknown',
-            alertType: checkResult.warnings?.[0]?.alertType || 'Unknown',
+            riskLevel: checkResult.warnings?.[0]?.riskLevel || t('manualCheck.modal.unknown'),
+            alertType: checkResult.warnings?.[0]?.alertType || t('manualCheck.modal.unknown'),
             status: checkResult.isSafe ? 'resolved' : 'active',
             warningsCount: checkResult.warnings?.length || 0,
             checkResult: JSON.stringify(checkResult),

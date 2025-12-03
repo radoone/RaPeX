@@ -71,6 +71,12 @@ declare namespace JSX {
     // Tags and filters
     "s-tag": any;
     "s-filters": any;
+    "s-chip": any;
+    "s-clickable-chip": any;
+
+    // Interactive
+    "s-clickable": any;
+    "s-image": any;
 
     // States
     "s-empty-state": any;

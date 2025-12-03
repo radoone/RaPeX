@@ -45,7 +45,7 @@ export function AlertDetailModal({
   useEffect(() => {
     const btn = dismissBtnRef.current;
     if (!btn || !alert) return;
-    
+
     const handleClick = () => onDismiss?.(alert.id);
     btn.addEventListener('click', handleClick);
     return () => btn.removeEventListener('click', handleClick);
@@ -55,7 +55,7 @@ export function AlertDetailModal({
   useEffect(() => {
     const btn = resolveBtnRef.current;
     if (!btn || !alert) return;
-    
+
     const handleClick = () => onResolve?.(alert.id);
     btn.addEventListener('click', handleClick);
     return () => btn.removeEventListener('click', handleClick);
@@ -65,7 +65,7 @@ export function AlertDetailModal({
   useEffect(() => {
     const btn = reactivateBtnRef.current;
     if (!btn || !alert) return;
-    
+
     const handleClick = () => onReactivate?.(alert.id);
     btn.addEventListener('click', handleClick);
     return () => btn.removeEventListener('click', handleClick);
@@ -130,11 +130,11 @@ export function AlertDetailModal({
                     />
                   </div>
                 )}
-                
+
                 {/* Product Info */}
                 <s-stack gap="base" style={{ flex: 1, minWidth: 0 }}>
                   <s-heading size="large">{alert.productTitle}</s-heading>
-                  
+
                   <s-stack direction="inline" gap="small" wrap>
                     <StatusBadge status={alert.status} />
                     <AlertBadge
@@ -148,7 +148,7 @@ export function AlertDetailModal({
                   </s-stack>
 
                   <RiskMeter riskLevel={alert.riskLevel} similarity={similarity} />
-                  
+
                   {checkedAt && (
                     <s-text tone="subdued" size="small">
                       Last checked: {checkedAt.toLocaleString("en-GB")}
@@ -245,15 +245,15 @@ export function AlertDetailModal({
 
       {/* Image Lightbox Overlay */}
       {selectedImage && typeof document !== 'undefined' && createPortal(
-        <div 
+        <div
           className="image-lightbox-overlay"
           onClick={closeLightbox}
         >
-          <div 
+          <div
             className="image-lightbox-content"
             onClick={(e) => e.stopPropagation()}
           >
-            <button 
+            <button
               className="image-lightbox-close"
               onClick={closeLightbox}
               aria-label="Close"
@@ -261,8 +261,8 @@ export function AlertDetailModal({
             >
               ×
             </button>
-            <img 
-              src={selectedImage} 
+            <img
+              src={selectedImage}
               alt="Alert image enlarged"
               className="image-lightbox-image"
             />
@@ -313,7 +313,7 @@ function WarningCard({
         {/* Header with badges and link */}
         <s-stack direction="inline" align="space-between" blockAlign="center" wrap>
           <s-stack direction="inline" gap="small" wrap>
-            <s-badge 
+            <s-badge
               tone={warningSimilarity >= 80 ? "critical" : warningSimilarity >= 60 ? "warning" : "info"}
             >
               {warningSimilarity}% match

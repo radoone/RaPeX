@@ -1,8 +1,12 @@
+import { useTranslation } from "react-i18next";
+
 export function SafetyGatePortal() {
+  const { t } = useTranslation();
+
   return (
-    <s-section heading="Safety Gate Portal">
+    <s-section heading={t('portal.title')}>
       <s-text>
-        Access the official European Safety Gate database to search for dangerous products and view detailed safety alerts.
+        {t('portal.description')}
       </s-text>
       <s-stack direction="inline" gap="small" wrap>
         <s-button
@@ -10,14 +14,14 @@ export function SafetyGatePortal() {
           href="https://ec.europa.eu/safety-gate-alerts/screen/search?resetSearch=true"
           target="_blank"
         >
-          Search Database
+          {t('portal.searchDatabase')}
         </s-button>
         <s-button
           variant="secondary"
           href="https://ec.europa.eu/safety-gate-alerts/screen/home"
           target="_blank"
         >
-          Safety Gate Home
+          {t('portal.home')}
         </s-button>
       </s-stack>
     </s-section>

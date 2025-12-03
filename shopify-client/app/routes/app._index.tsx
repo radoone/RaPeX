@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { useFetcher, useLoaderData, useNavigation, useNavigate } from "@remix-run/react";
-import { json } from "@remix-run/node";
+import { useFetcher, useLoaderData, useNavigation, useNavigate, data } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
@@ -96,7 +95,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
           const firstWarning = checkResult.warnings[0];
           alertType = firstWarning.alertType || firstWarning.alertDetails?.fields?.alert_type;
           riskDescription = firstWarning.riskLegalProvision || firstWarning.alertDetails?.fields?.risk_legal_provision;
-          
+
           const fields = firstWarning.alertDetails?.fields || {};
           const pics = [...(fields.pictures || []), fields.product_image].filter(Boolean);
           if (pics[0]) fallbackImage = typeof pics[0] === 'string' ? pics[0] : pics[0].url;
@@ -106,17 +105,17 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       console.error('Error parsing checkResult for alert', alert.id, error);
     }
 
-    const productImage = productImages[alert.productId] || 
-                        productImages[`gid://shopify/Product/${alert.productId}`] || 
+    const productImage = productImages[alert.productId] ||
+                        productImages[`gid://shopify/Product/${alert.productId}`] ||
                         fallbackImage || null;
 
     return { ...alert, alertType, riskDescription, productImage };
   });
 
-  return json({
+  return {
     stats: { activeAlerts, totalAlerts, resolvedAlerts, dismissedAlerts, totalChecks },
     recentAlerts: processedRecentAlerts,
-  });
+  };
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -129,14 +128,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       const { admin } = await authenticate.admin(request);
       const { bulkCheckProducts } = await import("../services/safety-gate-checker.server");
       const results = await bulkCheckProducts(admin, session.shop, db);
-      return json({
+      return {
         success: true,
         message: `Bulk check completed: ${results.processed} products processed, ${results.alertsCreated} alerts created`,
         results
-      });
+      };
     } catch (error) {
       console.error('Bulk check failed:', error);
-      return json({ success: false, error: error instanceof Error ? error.message : 'Bulk check failed' }, { status: 500 });
+      return data({ success: false, error: error instanceof Error ? error.message : 'Bulk check failed' }, { status: 500 });
     }
   }
 
@@ -264,13 +263,13 @@ export default function Index() {
     <s-page>
       {/* Primary Actions - Using slots */}
       <s-button ref={bulkCheckBtnRef} slot="primary-action" variant="primary" loading={isSubmitting || undefined}>
-        Check all products
+        {t('actions.checkAll')}
       </s-button>
       <s-button ref={manualCheckBtnRef} slot="secondary-actions">
-        Manual check
+        {t('actions.manualCheck')}
       </s-button>
       <s-button ref={settingsBtnRef} slot="secondary-actions">
-        Settings
+        {t('actions.settings')}
       </s-button>
 
       {/* === Banner === */}
@@ -281,15 +280,21 @@ export default function Index() {
           dismissible
           onDismiss={() => setVisible({ ...visible, banner: false })}
         >
-          {stats.activeAlerts} {stats.activeAlerts === 1 ? 'product needs' : 'products need'} safety review.{' '}
-          <s-link onClick={() => navigate('/app/alerts')}>Review alerts</s-link> before fulfilling orders.
+          {t('dashboard.activeAlertsBanner.content', { count: stats.activeAlerts })}{' '}
+          <s-link onClick={() => navigate('/app/alerts')}>{t('dashboard.activeAlertsBanner.reviewAction')}</s-link>
+          {' • '}
+          <s-link onClick={() => navigate('/app/manual-check')}>{t('dashboard.activeAlertsBanner.manualCheckAction')}</s-link>
         </s-banner>
       )}
 
       {/* Bulk Check Results Banner */}
       {bulkResults && (
         <s-banner tone="success" dismissible>
-          Bulk check completed: {bulkResults.processed} processed, {bulkResults.checked} checked, {bulkResults.alertsCreated} alerts created.
+          {t('dashboard.bulkResults.success', {
+            processed: bulkResults.processed,
+            checked: bulkResults.checked,
+            alertsCreated: bulkResults.alertsCreated
+          })}
         </s-banner>
       )}
 
@@ -305,16 +310,16 @@ export default function Index() {
                 gap="small-300"
                 alignItems="center"
               >
-                <s-heading>Setup Guide</s-heading>
+                <s-heading>{t('dashboard.setup.title')}</s-heading>
                 <s-button
-                  accessibilityLabel="Dismiss Guide"
+                  accessibilityLabel={t('dashboard.setup.title')}
                   onClick={() => setVisible({ ...visible, setupGuide: false })}
                   variant="tertiary"
                   tone="neutral"
                   icon="x"
                 />
                 <s-button
-                  accessibilityLabel="Toggle setup guide"
+                  accessibilityLabel={t('dashboard.setup.title')}
                   onClick={() => setExpanded({ ...expanded, setupGuide: !expanded.setupGuide })}
                   variant="tertiary"
                   tone="neutral"
@@ -322,10 +327,10 @@ export default function Index() {
                 />
               </s-grid>
               <s-paragraph>
-                Get your store ready for EU product safety compliance.
+                {t('dashboard.setup.description')}
               </s-paragraph>
               <s-paragraph color="subdued">
-                {progress} out of 3 steps completed
+                {t('dashboard.setup.progress', { completed: progress, total: 3 })}
               </s-paragraph>
             </s-grid>
 
@@ -340,12 +345,12 @@ export default function Index() {
               <s-box>
                 <s-grid gridTemplateColumns="1fr auto" gap="base" padding="small">
                   <s-checkbox
-                    label="Run your first bulk product check"
+                    label={t('dashboard.setup.steps.step1.label')}
                     onInput={(e: any) => setProgress(e.currentTarget?.checked ? progress + 1 : progress - 1)}
                   />
                   <s-button
                     onClick={() => setExpanded({ ...expanded, step1: !expanded.step1 })}
-                    accessibilityLabel="Toggle step 1 details"
+                    accessibilityLabel={t('dashboard.setup.steps.step1.label')}
                     variant="tertiary"
                     icon={expanded.step1 ? "chevron-up" : "chevron-down"}
                   />
@@ -354,10 +359,10 @@ export default function Index() {
                   <s-box padding="base" background="subdued" borderRadius="base">
                     <s-stack gap="small">
                       <s-paragraph>
-                        Click "Check all products" to scan your entire catalog against the EU Safety Gate database.
+                        {t('dashboard.setup.steps.step1.description')}
                       </s-paragraph>
                       <s-button ref={bulkCheckBtn2Ref} loading={isSubmitting || undefined}>
-                        Check all products
+                        {t('actions.checkAll')}
                       </s-button>
                     </s-stack>
                   </s-box>
@@ -369,12 +374,12 @@ export default function Index() {
               <s-box>
                 <s-grid gridTemplateColumns="1fr auto" gap="base" padding="small">
                   <s-checkbox
-                    label="Review any safety alerts"
+                    label={t('dashboard.setup.steps.step2.label')}
                     onInput={(e: any) => setProgress(e.currentTarget?.checked ? progress + 1 : progress - 1)}
                   />
                   <s-button
                     onClick={() => setExpanded({ ...expanded, step2: !expanded.step2 })}
-                    accessibilityLabel="Toggle step 2 details"
+                    accessibilityLabel={t('dashboard.setup.steps.step2.label')}
                     variant="tertiary"
                     icon={expanded.step2 ? "chevron-up" : "chevron-down"}
                   />
@@ -382,7 +387,7 @@ export default function Index() {
                 <s-box padding="small" paddingBlockStart="none" display={expanded.step2 ? "auto" : "none"}>
                   <s-box padding="base" background="subdued" borderRadius="base">
                     <s-paragraph>
-                      Check the alerts page to review any products that match Safety Gate warnings.
+                      {t('dashboard.setup.steps.step2.description')}
                     </s-paragraph>
                   </s-box>
                 </s-box>
@@ -393,12 +398,12 @@ export default function Index() {
               <s-box>
                 <s-grid gridTemplateColumns="1fr auto" gap="base" padding="small">
                   <s-checkbox
-                    label="Configure automatic monitoring"
+                    label={t('dashboard.setup.steps.step3.label')}
                     onInput={(e: any) => setProgress(e.currentTarget?.checked ? progress + 1 : progress - 1)}
                   />
                   <s-button
                     onClick={() => setExpanded({ ...expanded, step3: !expanded.step3 })}
-                    accessibilityLabel="Toggle step 3 details"
+                    accessibilityLabel={t('dashboard.setup.steps.step3.label')}
                     variant="tertiary"
                     icon={expanded.step3 ? "chevron-up" : "chevron-down"}
                   />
@@ -406,7 +411,7 @@ export default function Index() {
                 <s-box padding="small" paddingBlockStart="none" display={expanded.step3 ? "auto" : "none"}>
                   <s-box padding="base" background="subdued" borderRadius="base">
                     <s-paragraph>
-                      Enable automatic checks in Settings to monitor new products automatically.
+                      {t('dashboard.setup.steps.step3.description')}
                     </s-paragraph>
                   </s-box>
                 </s-box>
@@ -429,14 +434,14 @@ export default function Index() {
             borderRadius="base"
           >
             <s-grid gap="small-300">
-              <s-heading>Active Alerts</s-heading>
+              <s-heading>{t('dashboard.metricsCard.activeAlertsHeading')}</s-heading>
               <s-stack direction="inline" gap="small-200">
                 <s-text size="large">{stats.activeAlerts}</s-text>
                 <s-badge tone={stats.activeAlerts > 0 ? "critical" : "success"} icon={stats.activeAlerts > 0 ? "alert" : "checkmark"}>
-                  {stats.activeAlerts > 0 ? "Needs review" : "All clear"}
+                  {stats.activeAlerts > 0 ? t('status.needsReview') : t('status.allClear')}
                 </s-badge>
               </s-stack>
-              <s-text tone="subdued">{stats.totalAlerts} total recorded</s-text>
+              <s-text tone="subdued">{t('dashboard.metricsCard.totalRecorded', { count: stats.totalAlerts })}</s-text>
             </s-grid>
           </s-clickable>
 
@@ -449,14 +454,16 @@ export default function Index() {
             borderRadius="base"
           >
             <s-grid gap="small-300">
-              <s-heading>Resolution Rate</s-heading>
+              <s-heading>{t('dashboard.metricsCard.resolutionHeading')}</s-heading>
               <s-stack direction="inline" gap="small-200">
                 <s-text size="large">{resolutionRate}%</s-text>
                 <s-badge tone={resolutionRate >= 50 ? "success" : "warning"} icon={resolutionRate >= 50 ? "arrow-up" : "arrow-down"}>
-                  {resolvedAlerts} resolved
+                  {t('dashboard.metricsCard.resolved', { count: resolvedAlerts })}
                 </s-badge>
               </s-stack>
-              <s-text tone="subdued">{resolvedAlerts} resolved • {stats.dismissedAlerts} dismissed</s-text>
+              <s-text tone="subdued">
+                {t('dashboard.metricsCard.resolvedAndDismissed', { resolved: resolvedAlerts, dismissed: stats.dismissedAlerts })}
+              </s-text>
             </s-grid>
           </s-clickable>
 
@@ -469,14 +476,14 @@ export default function Index() {
             borderRadius="base"
           >
             <s-grid gap="small-300">
-              <s-heading>Products Checked</s-heading>
+              <s-heading>{t('dashboard.metricsCard.productsCheckedHeading')}</s-heading>
               <s-stack direction="inline" gap="small-200">
                 <s-text size="large">{stats.totalChecks}</s-text>
                 <s-badge tone={stats.totalChecks > 0 ? "success" : "warning"}>
-                  {stats.totalChecks > 0 ? "Monitored" : "Run check"}
+                  {stats.totalChecks > 0 ? t('status.monitored') : t('status.runCheck')}
                 </s-badge>
               </s-stack>
-              <s-text tone="subdued">Safety Gate scans</s-text>
+              <s-text tone="subdued">{t('dashboard.metricsCard.scans')}</s-text>
             </s-grid>
           </s-clickable>
         </s-grid>
@@ -485,19 +492,19 @@ export default function Index() {
       {/* === Recent Alerts === */}
       <s-section>
         <s-grid gridTemplateColumns="1fr auto" alignItems="center" paddingBlockEnd="small-400">
-          <s-heading>Recent Alerts</s-heading>
-          <s-button onClick={() => navigate('/app/alerts')}>View all</s-button>
+          <s-heading>{t('dashboard.recentAlerts.title')}</s-heading>
+          <s-button onClick={() => navigate('/app/alerts')}>{t('actions.viewAlerts')}</s-button>
         </s-grid>
 
         {recentAlerts.length === 0 ? (
           <s-box padding="large" background="subdued" borderRadius="base">
             <s-stack gap="small" alignItems="center">
-              <s-text>No safety alerts yet.</s-text>
+              <s-text>{t('dashboard.recentAlerts.emptyState.heading')}</s-text>
               <s-paragraph tone="subdued">
-                Run a bulk check to scan your products against the EU Safety Gate database.
+                {t('dashboard.recentAlerts.emptyState.content')}
               </s-paragraph>
               <s-button ref={bulkCheckBtn3Ref} loading={isSubmitting || undefined}>
-                Check all products
+                {t('actions.checkAll')}
               </s-button>
             </s-stack>
           </s-box>
@@ -528,14 +535,18 @@ export default function Index() {
                     <s-heading size="small">{alert.productTitle}</s-heading>
                     <s-stack direction="inline" gap="small-200" wrap>
                       <s-badge tone={alert.status === 'active' ? 'critical' : alert.status === 'resolved' ? 'success' : 'info'}>
-                        {alert.status}
+                        {alert.status === 'active'
+                          ? t('status.needsReview')
+                          : alert.status === 'resolved'
+                            ? t('status.resolved')
+                            : t('status.dismissed')}
                       </s-badge>
                       {alert.alertType && (
                         <s-badge tone="warning">{alert.alertType}</s-badge>
                       )}
                     </s-stack>
                     <s-paragraph tone="subdued">
-                      {alert.warningsCount} {alert.warningsCount === 1 ? 'match' : 'matches'} found
+                      {t('dashboard.recentAlerts.matchCount', { count: alert.warningsCount })}
                     </s-paragraph>
                   </s-box>
                 </s-grid>
@@ -550,7 +561,7 @@ export default function Index() {
           justifyContent="center"
           paddingBlockStart="base"
         >
-          <s-link onClick={() => navigate('/app/alerts')}>See all alerts</s-link>
+          <s-link onClick={() => navigate('/app/alerts')}>{t('actions.viewAlerts')}</s-link>
         </s-stack>
       </s-section>
 
@@ -558,7 +569,7 @@ export default function Index() {
       {visible.news && (
         <s-section>
           <s-grid gridTemplateColumns="1fr auto" alignItems="center" paddingBlockEnd="small-400">
-            <s-heading>News</s-heading>
+            <s-heading>{t('news.title')}</s-heading>
             <s-button
               onClick={() => setVisible({ ...visible, news: false })}
               icon="x"
@@ -576,12 +587,12 @@ export default function Index() {
               padding="base"
               gap="small-400"
             >
-              <s-text tone="subdued">Dec 2025</s-text>
+              <s-text tone="subdued">{t('news.items.databaseUpdate.date')}</s-text>
               <s-link href="https://ec.europa.eu/safety-gate-alerts/screen/home" target="_blank">
-                <s-heading size="small">EU Safety Gate Database Updated</s-heading>
+                <s-heading size="small">{t('news.items.databaseUpdate.title')}</s-heading>
               </s-link>
               <s-paragraph>
-                The Safety Gate database is continuously updated with new product alerts. Run regular checks to stay compliant.
+                {t('news.items.databaseUpdate.description')}
               </s-paragraph>
             </s-grid>
 
@@ -593,12 +604,12 @@ export default function Index() {
               padding="base"
               gap="small-400"
             >
-              <s-text tone="subdued">GPSR 2024</s-text>
+              <s-text tone="subdued">{t('news.items.gpsr.date')}</s-text>
               <s-link href="https://ec.europa.eu/safety-gate-alerts/screen/pages/gpsr" target="_blank">
-                <s-heading size="small">General Product Safety Regulation</s-heading>
+                <s-heading size="small">{t('news.items.gpsr.title')}</s-heading>
               </s-link>
               <s-paragraph>
-                Learn about GPSR requirements and how to ensure your products meet EU safety standards.
+                {t('news.items.gpsr.description')}
               </s-paragraph>
             </s-grid>
           </s-grid>
@@ -609,7 +620,7 @@ export default function Index() {
       {visible.calloutCard && (
         <s-section>
           <s-grid gridTemplateColumns="1fr auto" alignItems="center" paddingBlockEnd="small-400">
-            <s-heading>Safety Gate Portal</s-heading>
+            <s-heading>{t('portal.title')}</s-heading>
             <s-button
               onClick={() => setVisible({ ...visible, calloutCard: false })}
               icon="x"
@@ -633,8 +644,8 @@ export default function Index() {
                   <s-icon name="search" />
                 </s-box>
                 <s-box>
-                  <s-heading size="small">Search Database</s-heading>
-                  <s-paragraph>Search the EU Safety Gate for dangerous products</s-paragraph>
+                  <s-heading size="small">{t('portal.searchDatabase')}</s-heading>
+                  <s-paragraph>{t('portal.searchDescription')}</s-paragraph>
                 </s-box>
                 <s-stack justifyContent="start">
                   <s-icon name="external" />
@@ -656,8 +667,8 @@ export default function Index() {
                   <s-icon name="home" />
                 </s-box>
                 <s-box>
-                  <s-heading size="small">Safety Gate Home</s-heading>
-                  <s-paragraph>Access the official European Commission portal</s-paragraph>
+                  <s-heading size="small">{t('portal.home')}</s-heading>
+                  <s-paragraph>{t('portal.homeDescription')}</s-paragraph>
                 </s-box>
                 <s-stack justifyContent="start">
                   <s-icon name="external" />
@@ -671,7 +682,7 @@ export default function Index() {
       {/* === Language Switcher === */}
       <s-section>
         <s-grid gridTemplateColumns="1fr auto" alignItems="center">
-          <s-text tone="subdued">Language</s-text>
+          <s-text tone="subdued">{t('common.language')}</s-text>
           <LanguageSwitcher />
         </s-grid>
       </s-section>

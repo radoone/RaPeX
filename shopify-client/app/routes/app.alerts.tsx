@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node";
 import { useLoaderData, useFetcher, useNavigate } from "@remix-run/react";
 import { json } from "@remix-run/node";
+import { useTranslation } from "react-i18next";
 import { authenticate } from "../shopify.server";
 import db from "../db.server";
 import {
@@ -113,6 +114,7 @@ export default function AlertsPage() {
   const { alerts, pagination, filters, stats } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [searchValue, setSearchValue] = useState(filters.search || '');
   const [statusFilter, setStatusFilter] = useState<string[]>(filters.status || []);
@@ -137,22 +139,22 @@ export default function AlertsPage() {
   return (
     <s-page size="large" className="page-shell">
       <PageHeader
-        title="Safety alerts"
-        subtitle="Filter and action matches from Safety Gate."
+        title={t('alerts.title')}
+        subtitle={t('alerts.subtitle')}
         breadcrumbs={[
-          { label: "Dashboard", href: "/app" },
-          { label: "Safety alerts" },
+          { label: t('alerts.breadcrumbs.dashboard'), href: "/app" },
+          { label: t('alerts.breadcrumbs.current') },
         ]}
         meta={(
           <>
-            <s-badge tone={stats.active > 0 ? "critical" : "success"}>{stats.active} active</s-badge>
-            <s-badge tone="info">{stats.total} total</s-badge>
+            <s-badge tone={stats.active > 0 ? "critical" : "success"}>{t('alerts.meta.active', { count: stats.active })}</s-badge>
+            <s-badge tone="info">{t('alerts.meta.total', { count: stats.total })}</s-badge>
           </>
         )}
-        primaryAction={{ label: "Manual check", href: "/app/manual-check", variant: "primary" }}
+        primaryAction={{ label: t('actions.manualCheck'), href: "/app/manual-check", variant: "primary" }}
         secondaryActions={[
-          { label: "Dashboard", href: "/app", variant: "secondary" },
-          { label: "Settings", href: "/app/settings", variant: "tertiary" },
+          { label: t('actions.dashboard'), href: "/app", variant: "secondary" },
+          { label: t('actions.settings'), href: "/app/settings", variant: "tertiary" },
         ]}
       />
 
@@ -169,14 +171,14 @@ export default function AlertsPage() {
             borderRadius="base"
           >
             <s-grid gap="small-300">
-              <s-heading>Active Alerts</s-heading>
+              <s-heading>{t('alerts.metrics.activeHeading')}</s-heading>
               <s-stack direction="inline" gap="small-200">
                 <s-text size="large">{stats.active}</s-text>
                 <s-badge tone={stats.active > 0 ? "critical" : "success"} icon={stats.active > 0 ? "alert" : "checkmark"}>
-                  {stats.active > 0 ? "Needs review" : "All clear"}
+                  {stats.active > 0 ? t('status.needsReview') : t('status.allClear')}
                 </s-badge>
               </s-stack>
-              <s-text tone="subdued">{stats.total} total recorded</s-text>
+              <s-text tone="subdued">{t('alerts.metrics.totalRecorded', { count: stats.total })}</s-text>
             </s-grid>
           </s-clickable>
 
@@ -189,14 +191,14 @@ export default function AlertsPage() {
             borderRadius="base"
           >
             <s-grid gap="small-300">
-              <s-heading>Resolution Rate</s-heading>
+              <s-heading>{t('alerts.metrics.resolutionHeading')}</s-heading>
               <s-stack direction="inline" gap="small-200">
                 <s-text size="large">{resolvedRate}%</s-text>
                 <s-badge tone={resolvedRate >= 50 ? "success" : "warning"} icon={resolvedRate >= 50 ? "arrow-up" : "arrow-down"}>
-                  {stats.resolved} resolved
+                  {t('alerts.metrics.resolved', { count: stats.resolved })}
                 </s-badge>
               </s-stack>
-              <s-text tone="subdued">{stats.resolved} resolved • {stats.dismissed} dismissed</s-text>
+              <s-text tone="subdued">{t('alerts.metrics.resolvedAndDismissed', { resolved: stats.resolved, dismissed: stats.dismissed })}</s-text>
             </s-grid>
           </s-clickable>
 
@@ -209,14 +211,16 @@ export default function AlertsPage() {
             borderRadius="base"
           >
             <s-grid gap="small-300">
-              <s-heading>Dismissed</s-heading>
+              <s-heading>{t('alerts.metrics.dismissedHeading')}</s-heading>
               <s-stack direction="inline" gap="small-200">
                 <s-text size="large">{stats.dismissed}</s-text>
                 <s-badge tone="info">
-                  Archived
+                  {t('alerts.metrics.archived')}
                 </s-badge>
               </s-stack>
-              <s-text tone="subdued">{stats.dismissed === 0 ? "No dismissed alerts yet" : "Keep notes for audit"}</s-text>
+              <s-text tone="subdued">
+                {stats.dismissed === 0 ? t('alerts.metrics.dismissedDescriptionZero') : t('alerts.metrics.dismissedDescription')}
+              </s-text>
             </s-grid>
           </s-clickable>
         </s-grid>
@@ -252,7 +256,11 @@ export default function AlertsPage() {
         <s-section padding="base">
           <s-stack direction="inline" align="space-between" blockAlign="center">
             <s-text tone="subdued">
-              Page {pagination.currentPage} of {pagination.totalPages} ({pagination.totalCount} alerts)
+              {t('pagination.pageOf', {
+                current: pagination.currentPage,
+                total: pagination.totalPages,
+                count: pagination.totalCount
+              })}
             </s-text>
             <s-stack direction="inline" gap="small">
               <s-button 
@@ -260,14 +268,14 @@ export default function AlertsPage() {
                 onClick={() => applyFilters({ page: pagination.currentPage - 1 })} 
                 disabled={!pagination.hasPrevious || undefined}
               >
-                Previous
+                {t('actions.previous')}
               </s-button>
               <s-button 
                 variant="secondary" 
                 onClick={() => applyFilters({ page: pagination.currentPage + 1 })} 
                 disabled={!pagination.hasNext || undefined}
               >
-                Next
+                {t('actions.next')}
               </s-button>
             </s-stack>
           </s-stack>
@@ -275,11 +283,11 @@ export default function AlertsPage() {
       )}
 
       <s-grid gap="base" gridTemplateColumns="1fr 1fr">
-        <s-section heading="Response checklist">
+        <s-section heading={t('alerts.checklist.title')}>
           <s-stack gap="small">
-            <s-text>• Prioritise active alerts</s-text>
-            <s-text>• Document remediation steps</s-text>
-            <s-text>• Verify before dismissing</s-text>
+            {[0, 1, 2].map((idx) => (
+              <s-text key={idx}>• {t(`alerts.checklist.items.${idx}`)}</s-text>
+            ))}
           </s-stack>
         </s-section>
         <SafetyGatePortal />
