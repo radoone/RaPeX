@@ -16,11 +16,20 @@ interface Alert {
   [key: string]: unknown;
 }
 
+// Resolution types for resolve/dismiss actions
+export type ResolutionType = 
+  | 'verified_safe'      // Product verified as safe after review
+  | 'removed_from_sale'  // Product removed from store
+  | 'modified_product'   // Product modified to address safety concern
+  | 'contacted_supplier' // Supplier has been contacted
+  | 'false_positive'     // Match was incorrect / not relevant
+  | 'not_my_product';    // Product doesn't match the alert
+
 interface AlertTableProps {
   alerts: Alert[];
   onViewDetails: (alert: Alert) => void;
-  onDismiss?: (alertId: string) => void;
-  onResolve?: (alertId: string) => void;
+  onDismiss?: (alertId: string, resolutionType?: ResolutionType) => void;
+  onResolve?: (alertId: string, resolutionType?: ResolutionType) => void;
   onReactivate?: (alertId: string) => void;
   isLoading?: boolean;
   showProductLink?: boolean;
@@ -192,8 +201,8 @@ function AlertRow({
 }: {
   alert: Alert;
   onViewDetails: (alert: Alert) => void;
-  onDismiss?: (alertId: string) => void;
-  onResolve?: (alertId: string) => void;
+  onDismiss?: (alertId: string, resolutionType?: ResolutionType) => void;
+  onResolve?: (alertId: string, resolutionType?: ResolutionType) => void;
   onReactivate?: (alertId: string) => void;
   isLoading: boolean;
   showProductLink: boolean;
@@ -201,10 +210,20 @@ function AlertRow({
 }) {
   const { t, i18n } = useTranslation();
   const viewBtnRef = useRef<HTMLElement>(null);
-  const dismissBtnRef = useRef<HTMLElement>(null);
-  const resolveBtnRef = useRef<HTMLElement>(null);
   const reactivateBtnRef = useRef<HTMLElement>(null);
+  
+  // Refs for resolve action buttons
+  const verifiedSafeBtnRef = useRef<HTMLElement>(null);
+  const removedFromSaleBtnRef = useRef<HTMLElement>(null);
+  const modifiedProductBtnRef = useRef<HTMLElement>(null);
+  const contactedSupplierBtnRef = useRef<HTMLElement>(null);
+  
+  // Refs for dismiss action buttons
+  const falsePositiveBtnRef = useRef<HTMLElement>(null);
+  const notMyProductBtnRef = useRef<HTMLElement>(null);
+  
   const dateLocale = i18n.language === 'sk' ? 'sk-SK' : 'en-GB';
+  const menuId = `resolve-menu-${alert.id}`;
 
   // View button handler
   useEffect(() => {
@@ -215,23 +234,29 @@ function AlertRow({
     return () => btn.removeEventListener('click', handleClick);
   }, [alert, onViewDetails]);
 
-  // Dismiss button handler
+  // Resolve action handlers
   useEffect(() => {
-    const btn = dismissBtnRef.current;
-    if (!btn) return;
-    const handleClick = () => onDismiss?.(alert.id);
-    btn.addEventListener('click', handleClick);
-    return () => btn.removeEventListener('click', handleClick);
-  }, [alert.id, onDismiss]);
-
-  // Resolve button handler
-  useEffect(() => {
-    const btn = resolveBtnRef.current;
-    if (!btn) return;
-    const handleClick = () => onResolve?.(alert.id);
-    btn.addEventListener('click', handleClick);
-    return () => btn.removeEventListener('click', handleClick);
-  }, [alert.id, onResolve]);
+    const handlers = [
+      { ref: verifiedSafeBtnRef, type: 'verified_safe' as ResolutionType, action: onResolve },
+      { ref: removedFromSaleBtnRef, type: 'removed_from_sale' as ResolutionType, action: onResolve },
+      { ref: modifiedProductBtnRef, type: 'modified_product' as ResolutionType, action: onResolve },
+      { ref: contactedSupplierBtnRef, type: 'contacted_supplier' as ResolutionType, action: onResolve },
+      { ref: falsePositiveBtnRef, type: 'false_positive' as ResolutionType, action: onDismiss },
+      { ref: notMyProductBtnRef, type: 'not_my_product' as ResolutionType, action: onDismiss },
+    ];
+    
+    const cleanups: (() => void)[] = [];
+    
+    handlers.forEach(({ ref, type, action }) => {
+      const btn = ref.current;
+      if (!btn) return;
+      const handleClick = () => action?.(alert.id, type);
+      btn.addEventListener('click', handleClick);
+      cleanups.push(() => btn.removeEventListener('click', handleClick));
+    });
+    
+    return () => cleanups.forEach(cleanup => cleanup());
+  }, [alert.id, onResolve, onDismiss]);
 
   // Reactivate button handler
   useEffect(() => {
@@ -331,20 +356,57 @@ function AlertRow({
           <s-button 
             ref={viewBtnRef}
             size="small" 
-            variant="tertiary"
+            variant="secondary"
             commandFor={modalId}
             command="--show"
           >
             {t('actions.view')}
           </s-button>
           {alert.status === 'active' && (
+            <>
+              <s-button 
+                size="small" 
+                variant="primary"
+                icon="caret-down"
+                commandFor={menuId}
+                loading={isLoading || undefined}
+              >
+                {t('actions.resolve')}
+              </s-button>
+              <s-menu id={menuId} accessibilityLabel={t('resolveActions.menuLabel')}>
+                <s-section heading={t('resolveActions.actionTaken')}>
+                  <s-button ref={verifiedSafeBtnRef} icon="checkmark-circle">
+                    ✅ {t('resolveActions.verifiedSafe')}
+                  </s-button>
+                  <s-button ref={removedFromSaleBtnRef} icon="delete">
+                    {t('resolveActions.removedFromSale')}
+                  </s-button>
+                  <s-button ref={modifiedProductBtnRef} icon="edit">
+                    {t('resolveActions.modifiedProduct')}
+                  </s-button>
+                  <s-button ref={contactedSupplierBtnRef} icon="email">
+                    {t('resolveActions.contactedSupplier')}
+                  </s-button>
+                </s-section>
+                <s-section heading={t('resolveActions.noActionNeeded')}>
+                  <s-button ref={falsePositiveBtnRef} icon="info">
+                    🔵 {t('resolveActions.falsePositive')}
+                  </s-button>
+                  <s-button ref={notMyProductBtnRef} icon="cancel">
+                    {t('resolveActions.notMyProduct')}
+                  </s-button>
+                </s-section>
+              </s-menu>
+            </>
+          )}
+          {(alert.status === 'dismissed' || alert.status === 'resolved') && (
             <s-button 
-              ref={resolveBtnRef} 
+              ref={reactivateBtnRef}
               size="small" 
-              variant="primary" 
+              variant="tertiary"
               loading={isLoading || undefined}
             >
-              {t('actions.resolve')}
+              {t('actions.reactivate')}
             </s-button>
           )}
         </s-stack>

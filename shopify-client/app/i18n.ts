@@ -138,7 +138,20 @@ const resources = {
         "previous": "Previous",
         "next": "Next",
         "view": "View",
-        "resolve": "Resolve"
+        "viewDetails": "View details",
+        "resolve": "Resolve",
+        "reactivate": "Reactivate"
+      },
+      "resolveActions": {
+        "menuLabel": "Resolution actions",
+        "actionTaken": "Action taken",
+        "noActionNeeded": "No action needed",
+        "verifiedSafe": "Product verified safe",
+        "removedFromSale": "Removed from sale",
+        "modifiedProduct": "Product modified",
+        "contactedSupplier": "Contacted supplier",
+        "falsePositive": "False positive",
+        "notMyProduct": "Not my product"
       },
       "dates": {
         "today": "Today",
@@ -450,7 +463,20 @@ const resources = {
         "previous": "Predchádzajúca",
         "next": "Ďalšia",
         "view": "Zobraziť",
-        "resolve": "Vyriešiť"
+        "viewDetails": "Zobraziť detaily",
+        "resolve": "Vyriešiť",
+        "reactivate": "Reaktivovať"
+      },
+      "resolveActions": {
+        "menuLabel": "Akcie riešenia",
+        "actionTaken": "Vykonaná akcia",
+        "noActionNeeded": "Akcia nie je potrebná",
+        "verifiedSafe": "Produkt overený ako bezpečný",
+        "removedFromSale": "Stiahnuté z predaja",
+        "modifiedProduct": "Produkt upravený",
+        "contactedSupplier": "Kontaktovaný dodávateľ",
+        "falsePositive": "Falošná zhoda",
+        "notMyProduct": "Nie je môj produkt"
       },
       "dates": {
         "today": "Dnes",

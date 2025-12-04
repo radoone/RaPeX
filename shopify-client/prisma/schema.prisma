@@ -32,21 +32,22 @@ model Session {
 }
 
 model SafetyAlert {
-  id            String    @id @default(cuid())
-  productId     String
-  productTitle  String
-  productHandle String?
-  shop          String
-  checkResult   String    // JSON string containing SafetyCheckResult
-  status        String    @default("active") // active, dismissed, resolved
-  riskLevel     String    // low, medium, high, serious
-  warningsCount Int       @default(0)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  dismissedAt   DateTime?
-  dismissedBy   String?
-  resolvedAt    DateTime?
-  notes         String?
+  id             String    @id @default(cuid())
+  productId      String
+  productTitle   String
+  productHandle  String?
+  shop           String
+  checkResult    String    // JSON string containing SafetyCheckResult
+  status         String    @default("active") // active, dismissed, resolved
+  riskLevel      String    // low, medium, high, serious
+  warningsCount  Int       @default(0)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  dismissedAt    DateTime?
+  dismissedBy    String?
+  resolvedAt     DateTime?
+  resolutionType String?   // Type of resolution: verified_safe, removed_from_sale, modified_product, contacted_supplier, false_positive, not_my_product
+  notes          String?
 
   @@index([shop, status])
   @@index([productId, shop])

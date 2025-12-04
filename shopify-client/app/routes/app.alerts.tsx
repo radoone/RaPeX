@@ -62,7 +62,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   }
 
   const alerts = rawAlerts.map((alert: any) => {
-    let alertType = 'Unknown', riskDescription = '', alertDetails = null;
+    let alertType = 'Unknown', riskDescription = '', alertDetails = null, riskLevelFromResult = null;
     try {
       const checkResult = JSON.parse(alert.checkResult);
       const warnings = Array.isArray(checkResult?.warnings) ? checkResult.warnings : [];
@@ -71,13 +71,20 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         alertType = first.alertType || first.alertDetails?.fields?.alert_type || 'Unknown';
         riskDescription = first.riskLegalProvision || first.alertDetails?.fields?.risk_legal_provision || '';
         alertDetails = first.alertDetails || null;
+        // Extract risk level from checkResult (more reliable than DB field for older records)
+        riskLevelFromResult = first.alertDetails?.fields?.alert_level ||
+                              first.alertDetails?.fields?.risk_level ||
+                              first.riskLevel || null;
         const fields = first.alertDetails?.fields || {};
         const pics = [...(fields.pictures || []), fields.product_image].filter(Boolean);
         if (pics[0]) alertDetails = { ...alertDetails, fallbackImage: typeof pics[0] === 'string' ? pics[0] : pics[0].url };
       }
     } catch {}
+    // Prefer riskLevel from checkResult, fallback to DB field
+    const effectiveRiskLevel = riskLevelFromResult || (alert.riskLevel !== 'unknown' ? alert.riskLevel : null) || 'Unknown';
     return {
       ...alert, alertType, riskDescription, alertDetails,
+      riskLevel: effectiveRiskLevel,
       productImage: productImages[alert.productId] || productImages[`gid://shopify/Product/${alert.productId}`] || alertDetails?.fallbackImage || null,
     };
   });
@@ -95,16 +102,43 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const action = formData.get("action") as string;
   const alertId = formData.get("alertId") as string;
+  const resolutionType = formData.get("resolutionType") as string | null;
 
   switch (action) {
     case "dismiss":
-      await db.safetyAlert.update({ where: { id: alertId }, data: { status: 'dismissed', dismissedAt: new Date(), dismissedBy: session.id, notes: formData.get("notes") as string || undefined } });
+      await db.safetyAlert.update({ 
+        where: { id: alertId }, 
+        data: { 
+          status: 'dismissed', 
+          dismissedAt: new Date(), 
+          dismissedBy: session.id, 
+          resolutionType: resolutionType || undefined,
+          notes: formData.get("notes") as string || undefined 
+        } 
+      });
       break;
     case "resolve":
-      await db.safetyAlert.update({ where: { id: alertId }, data: { status: 'resolved', resolvedAt: new Date(), notes: formData.get("notes") as string || undefined } });
+      await db.safetyAlert.update({ 
+        where: { id: alertId }, 
+        data: { 
+          status: 'resolved', 
+          resolvedAt: new Date(), 
+          resolutionType: resolutionType || undefined,
+          notes: formData.get("notes") as string || undefined 
+        } 
+      });
       break;
     case "reactivate":
-      await db.safetyAlert.update({ where: { id: alertId }, data: { status: 'active', dismissedAt: null, dismissedBy: null, resolvedAt: null } });
+      await db.safetyAlert.update({ 
+        where: { id: alertId }, 
+        data: { 
+          status: 'active', 
+          dismissedAt: null, 
+          dismissedBy: null, 
+          resolvedAt: null,
+          resolutionType: null
+        } 
+      });
       break;
   }
   return json({ success: true });
@@ -130,8 +164,8 @@ export default function AlertsPage() {
     navigate(queryString ? `/app/alerts?${queryString}` : '/app/alerts');
   }, [searchValue, statusFilter, navigate]);
 
-  const handleAlertAction = useCallback((alertId: string, action: string) => {
-    fetcher.submit({ action, alertId }, { method: 'POST' });
+  const handleAlertAction = useCallback((alertId: string, action: string, resolutionType?: string) => {
+    fetcher.submit({ action, alertId, resolutionType: resolutionType || '' }, { method: 'POST' });
   }, [fetcher]);
 
   const resolvedRate = stats.total > 0 ? Math.round((stats.resolved / stats.total) * 100) : 0;
@@ -230,8 +264,8 @@ export default function AlertsPage() {
       <AlertTable
         alerts={alerts}
         onViewDetails={() => {}}
-        onDismiss={(id) => handleAlertAction(id, 'dismiss')}
-        onResolve={(id) => handleAlertAction(id, 'resolve')}
+        onDismiss={(id, resolutionType) => handleAlertAction(id, 'dismiss', resolutionType)}
+        onResolve={(id, resolutionType) => handleAlertAction(id, 'resolve', resolutionType)}
         onReactivate={(id) => handleAlertAction(id, 'reactivate')}
         isLoading={fetcher.state === 'submitting'}
         showProductLink
@@ -299,8 +333,8 @@ export default function AlertsPage() {
           key={alert.id}
           alert={alert}
           modalId={`alert-detail-${alert.id}`}
-          onDismiss={(id) => handleAlertAction(id, 'dismiss')}
-          onResolve={(id) => handleAlertAction(id, 'resolve')}
+          onDismiss={(id, resolutionType) => handleAlertAction(id, 'dismiss', resolutionType)}
+          onResolve={(id, resolutionType) => handleAlertAction(id, 'resolve', resolutionType)}
           onReactivate={(id) => handleAlertAction(id, 'reactivate')}
           isLoading={fetcher.state === 'submitting'}
         />

@@ -36,6 +36,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       });
 
       // Store safety alert in database
+      // Risk level is stored in alertDetails.fields.alert_level from Safety Gate API
+      const firstWarning = safetyResult.warnings[0];
+      const riskLevel = firstWarning?.alertDetails?.fields?.alert_level ||
+                        firstWarning?.alertDetails?.fields?.risk_level ||
+                        firstWarning?.riskLevel ||
+                        'unknown';
+      
       await db.safetyAlert.create({
         data: {
           productId: product.id.toString(),
@@ -44,7 +51,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           shop: shop,
           checkResult: JSON.stringify(safetyResult),
           status: 'active',
-          riskLevel: safetyResult.warnings[0]?.riskLevel || 'unknown',
+          riskLevel,
           warningsCount: safetyResult.warnings.length,
         },
       });

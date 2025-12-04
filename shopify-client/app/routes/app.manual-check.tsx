@@ -7,6 +7,7 @@ import { authenticate } from "../shopify.server";
 import { shopifyProductToProductData } from "../services/safety-gate-checker.client";
 import prisma from "../db.server";
 import { SafetyGatePortal, AlertDetailModal, PageHeader, SummaryCard } from "../components";
+import type { ResolutionType } from "../components/AlertTable";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { admin, session } = await authenticate.admin(request);
@@ -65,12 +66,23 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       const threshold = await getSimilarityThresholdForShop(session.shop);
       const safetyResult = await checkProductSafety(productData, threshold);
 
+      let alertId: string | null = null;
+      
       if (!safetyResult.isSafe && safetyResult.warnings.length > 0) {
         const existing = await (prisma as any).safetyAlert.findFirst({ where: { productId, shop: session.shop, status: 'active' } });
         if (!existing) {
-          await (prisma as any).safetyAlert.create({
-            data: { productId, productTitle, shop: session.shop, checkResult: JSON.stringify(safetyResult), status: 'active', riskLevel: safetyResult.warnings[0]?.riskLevel || 'unknown', warningsCount: safetyResult.warnings.length },
+          // Risk level is stored in alertDetails.fields.alert_level from Safety Gate API
+          const firstWarning = safetyResult.warnings[0];
+          const riskLevel = firstWarning?.alertDetails?.fields?.alert_level ||
+                            firstWarning?.alertDetails?.fields?.risk_level ||
+                            firstWarning?.riskLevel ||
+                            'unknown';
+          const newAlert = await (prisma as any).safetyAlert.create({
+            data: { productId, productTitle, shop: session.shop, checkResult: JSON.stringify(safetyResult), status: 'active', riskLevel, warningsCount: safetyResult.warnings.length },
           });
+          alertId = newAlert.id;
+        } else {
+          alertId = existing.id;
         }
       }
 
@@ -78,7 +90,48 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         data: { productId, productTitle, shop: session.shop, isSafe: safetyResult.isSafe, checkedAt: new Date(safetyResult.checkedAt) },
       });
 
-      return json({ success: true, result: safetyResult, alertCreated: !safetyResult.isSafe && safetyResult.warnings.length > 0 });
+      return json({ success: true, result: safetyResult, alertCreated: !safetyResult.isSafe && safetyResult.warnings.length > 0, alertId });
+    } catch (error) {
+      return json({ success: false, error: error instanceof Error ? error.message : 'Unknown error' });
+    }
+  }
+
+  // Handle resolve action
+  if (action === "resolve") {
+    const alertId = formData.get("alertId") as string;
+    const resolutionType = formData.get("resolutionType") as string | null;
+
+    try {
+      await (prisma as any).safetyAlert.update({
+        where: { id: alertId },
+        data: {
+          status: "resolved",
+          resolvedAt: new Date(),
+          resolutionType: resolutionType || null,
+        },
+      });
+      return json({ success: true, action: "resolved" });
+    } catch (error) {
+      return json({ success: false, error: error instanceof Error ? error.message : 'Unknown error' });
+    }
+  }
+
+  // Handle dismiss action
+  if (action === "dismiss") {
+    const alertId = formData.get("alertId") as string;
+    const resolutionType = formData.get("resolutionType") as string | null;
+
+    try {
+      await (prisma as any).safetyAlert.update({
+        where: { id: alertId },
+        data: {
+          status: "dismissed",
+          dismissedAt: new Date(),
+          dismissedBy: session.shop,
+          resolutionType: resolutionType || null,
+        },
+      });
+      return json({ success: true, action: "dismissed" });
     } catch (error) {
       return json({ success: false, error: error instanceof Error ? error.message : 'Unknown error' });
     }
@@ -90,10 +143,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export default function ManualCheckPage() {
   const { products, checksByProduct } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
+  const resolveFetcher = useFetcher<typeof action>();
   const { t, i18n } = useTranslation();
 
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [checkResult, setCheckResult] = useState<any>(null);
+  const [currentAlertId, setCurrentAlertId] = useState<string | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [hasProcessedResult, setHasProcessedResult] = useState(false);
   const dateLocale = i18n.language === 'sk' ? 'sk-SK' : 'en-GB';
@@ -121,10 +176,55 @@ export default function ManualCheckPage() {
   useEffect(() => {
     if (fetcher.data && 'success' in fetcher.data && fetcher.data.success && !showResult && !hasProcessedResult) {
       setCheckResult((fetcher.data as any).result);
+      setCurrentAlertId((fetcher.data as any).alertId || null);
       setShowResult(true);
       setHasProcessedResult(true);
     }
   }, [fetcher.data, showResult, hasProcessedResult]);
+
+  // Handle resolve/dismiss completion - navigate to alerts if successful
+  useEffect(() => {
+    if (resolveFetcher.data && 'success' in resolveFetcher.data && resolveFetcher.data.success) {
+      setShowResult(false);
+      setCheckResult(null);
+      setCurrentAlertId(null);
+      setSelectedProduct(null);
+      // Optionally navigate to alerts page to see the resolved alert
+      // navigate('/app/alerts');
+    }
+  }, [resolveFetcher.data]);
+
+  // Handle resolve action
+  const handleResolve = useCallback((alertId: string, resolutionType?: ResolutionType) => {
+    resolveFetcher.submit({
+      action: "resolve",
+      alertId,
+      resolutionType: resolutionType || "",
+    }, { method: "POST" });
+  }, [resolveFetcher]);
+
+  // Handle dismiss action
+  const handleDismiss = useCallback((alertId: string, resolutionType?: ResolutionType) => {
+    resolveFetcher.submit({
+      action: "dismiss",
+      alertId,
+      resolutionType: resolutionType || "",
+    }, { method: "POST" });
+  }, [resolveFetcher]);
+
+  // Auto-open modal when result is ready
+  useEffect(() => {
+    if (showResult && checkResult) {
+      // Open the modal using command API
+      const modal = document.getElementById('manual-check-result-modal') as HTMLElement & { show?: () => void };
+      if (modal?.show) {
+        modal.show();
+      } else if (modal) {
+        // Fallback: dispatch custom event or set attribute
+        modal.setAttribute('open', 'true');
+      }
+    }
+  }, [showResult, checkResult]);
 
   return (
     <s-page size="large" className="page-shell">
@@ -160,6 +260,16 @@ export default function ManualCheckPage() {
       {fetcher.data && 'alertCreated' in fetcher.data && fetcher.data.alertCreated && (
         <s-banner tone="warning" heading={t('manualCheck.banners.alertHeading')}>
           <s-text>{t('manualCheck.banners.alertDescription')}</s-text>
+          <s-button 
+            slot="secondary-actions" 
+            variant="primary"
+            onClick={() => {
+              const modal = document.getElementById('manual-check-result-modal') as HTMLElement & { show?: () => void };
+              if (modal?.show) modal.show();
+            }}
+          >
+            {t('actions.viewDetails')}
+          </s-button>
           <s-button slot="secondary-actions" variant="secondary" href="/app/alerts">{t('actions.reviewAlerts')}</s-button>
         </s-banner>
       )}
@@ -271,18 +381,25 @@ export default function ManualCheckPage() {
       {/* Result modal */}
       {checkResult && (
         <AlertDetailModal
-          open={showResult}
-          onClose={() => { setShowResult(false); setCheckResult(null); setSelectedProduct(null); }}
+          modalId="manual-check-result-modal"
           alert={{
+            id: currentAlertId,
             productTitle: selectedProduct?.title || t('manualCheck.modal.unknownProduct'),
             productImage: selectedProduct?.featuredImage?.url || null,
-            riskLevel: checkResult.warnings?.[0]?.riskLevel || t('manualCheck.modal.unknown'),
-            alertType: checkResult.warnings?.[0]?.alertType || t('manualCheck.modal.unknown'),
+            riskLevel: checkResult.warnings?.[0]?.alertDetails?.fields?.alert_level ||
+                       checkResult.warnings?.[0]?.riskLevel || 
+                       t('manualCheck.modal.unknown'),
+            alertType: checkResult.warnings?.[0]?.alertDetails?.fields?.alert_type ||
+                       checkResult.warnings?.[0]?.alertType || 
+                       t('manualCheck.modal.unknown'),
             status: checkResult.isSafe ? 'resolved' : 'active',
             warningsCount: checkResult.warnings?.length || 0,
             checkResult: JSON.stringify(checkResult),
             notes: null
           }}
+          onResolve={currentAlertId ? handleResolve : undefined}
+          onDismiss={currentAlertId ? handleDismiss : undefined}
+          isLoading={resolveFetcher.state === 'submitting'}
         />
       )}
     </s-page>

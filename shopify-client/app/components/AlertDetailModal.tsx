@@ -1,14 +1,16 @@
 import { useMemo, useState, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
+import { useTranslation } from "react-i18next";
 import { AlertBadge } from "./AlertBadge";
 import { RiskMeter } from "./RiskMeter";
 import { StatusBadge } from "./StatusBadge";
+import type { ResolutionType } from "./AlertTable";
 
 interface AlertDetailModalProps {
   alert: any;
   modalId: string;
-  onDismiss?: (alertId: string, notes?: string) => void;
-  onResolve?: (alertId: string, notes?: string) => void;
+  onDismiss?: (alertId: string, resolutionType?: ResolutionType) => void;
+  onResolve?: (alertId: string, resolutionType?: ResolutionType) => void;
   onReactivate?: (alertId: string) => void;
   isLoading?: boolean;
 }
@@ -21,10 +23,21 @@ export function AlertDetailModal({
   onReactivate,
   isLoading = false,
 }: AlertDetailModalProps) {
+  const { t } = useTranslation();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const dismissBtnRef = useRef<HTMLElement>(null);
-  const resolveBtnRef = useRef<HTMLElement>(null);
   const reactivateBtnRef = useRef<HTMLElement>(null);
+  
+  // Refs for resolve action buttons
+  const verifiedSafeBtnRef = useRef<HTMLElement>(null);
+  const removedFromSaleBtnRef = useRef<HTMLElement>(null);
+  const modifiedProductBtnRef = useRef<HTMLElement>(null);
+  const contactedSupplierBtnRef = useRef<HTMLElement>(null);
+  
+  // Refs for dismiss action buttons
+  const falsePositiveBtnRef = useRef<HTMLElement>(null);
+  const notMyProductBtnRef = useRef<HTMLElement>(null);
+  
+  const resolveMenuId = `modal-resolve-menu-${modalId}`;
 
   // Close lightbox
   const closeLightbox = useCallback(() => {
@@ -41,25 +54,31 @@ export function AlertDetailModal({
     }
   }, [alert]);
 
-  // Handle dismiss button click
+  // Resolve action handlers
   useEffect(() => {
-    const btn = dismissBtnRef.current;
-    if (!btn || !alert) return;
-
-    const handleClick = () => onDismiss?.(alert.id);
-    btn.addEventListener('click', handleClick);
-    return () => btn.removeEventListener('click', handleClick);
-  }, [alert, onDismiss]);
-
-  // Handle resolve button click
-  useEffect(() => {
-    const btn = resolveBtnRef.current;
-    if (!btn || !alert) return;
-
-    const handleClick = () => onResolve?.(alert.id);
-    btn.addEventListener('click', handleClick);
-    return () => btn.removeEventListener('click', handleClick);
-  }, [alert, onResolve]);
+    if (!alert) return;
+    
+    const handlers = [
+      { ref: verifiedSafeBtnRef, type: 'verified_safe' as ResolutionType, action: onResolve },
+      { ref: removedFromSaleBtnRef, type: 'removed_from_sale' as ResolutionType, action: onResolve },
+      { ref: modifiedProductBtnRef, type: 'modified_product' as ResolutionType, action: onResolve },
+      { ref: contactedSupplierBtnRef, type: 'contacted_supplier' as ResolutionType, action: onResolve },
+      { ref: falsePositiveBtnRef, type: 'false_positive' as ResolutionType, action: onDismiss },
+      { ref: notMyProductBtnRef, type: 'not_my_product' as ResolutionType, action: onDismiss },
+    ];
+    
+    const cleanups: (() => void)[] = [];
+    
+    handlers.forEach(({ ref, type, action }) => {
+      const btn = ref.current;
+      if (!btn) return;
+      const handleClick = () => action?.(alert.id, type);
+      btn.addEventListener('click', handleClick);
+      cleanups.push(() => btn.removeEventListener('click', handleClick));
+    });
+    
+    return () => cleanups.forEach(cleanup => cleanup());
+  }, [alert, onResolve, onDismiss]);
 
   // Handle reactivate button click
   useEffect(() => {
@@ -200,25 +219,38 @@ export function AlertDetailModal({
         {alert.status === "active" && (
           <>
             <s-button
-              ref={dismissBtnRef}
-              slot="secondary-actions"
-              variant="secondary"
-              commandFor={modalId}
-              command="--hide"
-              loading={isLoading || undefined}
-            >
-              Dismiss Alert
-            </s-button>
-            <s-button
-              ref={resolveBtnRef}
               slot="primary-action"
               variant="primary"
-              commandFor={modalId}
-              command="--hide"
+              icon="caret-down"
+              commandFor={resolveMenuId}
               loading={isLoading || undefined}
             >
-              Mark as Resolved
+              {t('actions.resolve')}
             </s-button>
+            <s-menu id={resolveMenuId} accessibilityLabel={t('resolveActions.menuLabel')}>
+              <s-section heading={t('resolveActions.actionTaken')}>
+                <s-button ref={verifiedSafeBtnRef} icon="checkmark-circle" commandFor={modalId} command="--hide">
+                  ✅ {t('resolveActions.verifiedSafe')}
+                </s-button>
+                <s-button ref={removedFromSaleBtnRef} icon="delete" commandFor={modalId} command="--hide">
+                  {t('resolveActions.removedFromSale')}
+                </s-button>
+                <s-button ref={modifiedProductBtnRef} icon="edit" commandFor={modalId} command="--hide">
+                  {t('resolveActions.modifiedProduct')}
+                </s-button>
+                <s-button ref={contactedSupplierBtnRef} icon="email" commandFor={modalId} command="--hide">
+                  {t('resolveActions.contactedSupplier')}
+                </s-button>
+              </s-section>
+              <s-section heading={t('resolveActions.noActionNeeded')}>
+                <s-button ref={falsePositiveBtnRef} icon="info" commandFor={modalId} command="--hide">
+                  🔵 {t('resolveActions.falsePositive')}
+                </s-button>
+                <s-button ref={notMyProductBtnRef} icon="cancel" commandFor={modalId} command="--hide">
+                  {t('resolveActions.notMyProduct')}
+                </s-button>
+              </s-section>
+            </s-menu>
           </>
         )}
         {(alert.status === "dismissed" || alert.status === "resolved") && (
@@ -230,7 +262,7 @@ export function AlertDetailModal({
             command="--hide"
             loading={isLoading || undefined}
           >
-            Reactivate
+            {t('actions.reactivate')}
           </s-button>
         )}
         <s-button
@@ -239,7 +271,7 @@ export function AlertDetailModal({
           commandFor={modalId}
           command="--hide"
         >
-          Close
+          {t('common.cancel')}
         </s-button>
       </s-modal>
 

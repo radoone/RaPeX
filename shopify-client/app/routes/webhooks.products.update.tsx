@@ -34,13 +34,20 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     });
 
     if (!safetyResult.isSafe && safetyResult.warnings.length > 0) {
+      // Risk level is stored in alertDetails.fields.alert_level from Safety Gate API
+      const firstWarning = safetyResult.warnings[0];
+      const riskLevel = firstWarning?.alertDetails?.fields?.alert_level ||
+                        firstWarning?.alertDetails?.fields?.risk_level ||
+                        firstWarning?.riskLevel ||
+                        'unknown';
+      
       if (existingAlert) {
         // Update existing alert with new check result
         await db.safetyAlert.update({
           where: { id: existingAlert.id },
           data: {
             checkResult: JSON.stringify(safetyResult),
-            riskLevel: safetyResult.warnings[0]?.riskLevel || 'unknown',
+            riskLevel,
             warningsCount: safetyResult.warnings.length,
             updatedAt: new Date(),
           },
@@ -57,7 +64,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             shop: shop,
             checkResult: JSON.stringify(safetyResult),
             status: 'active',
-            riskLevel: safetyResult.warnings[0]?.riskLevel || 'unknown',
+            riskLevel,
             warningsCount: safetyResult.warnings.length,
           },
         });

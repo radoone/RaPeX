@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useNavigate } from "@remix-run/react";
 
 type HeaderAction = {
   label: string;
@@ -31,7 +32,17 @@ export function PageHeader({
   primaryAction,
   secondaryActions,
 }: PageHeaderProps) {
+  const navigate = useNavigate();
   const hasActions = Boolean(primaryAction) || Boolean(secondaryActions?.length);
+
+  // Handle action click - use Remix navigate for internal links
+  const handleActionClick = (action: HeaderAction) => {
+    if (action.onClick) {
+      action.onClick();
+    } else if (action.href) {
+      navigate(action.href);
+    }
+  };
 
   return (
     <s-section className="page-header">
@@ -39,7 +50,11 @@ export function PageHeader({
         <div className="page-header__breadcrumbs">
           {breadcrumbs.map((crumb, index) => (
             <span key={`${crumb.label}-${index}`}>
-              {crumb.href ? <s-link href={crumb.href}>{crumb.label}</s-link> : crumb.label}
+              {crumb.href ? (
+                <s-clickable onClick={() => navigate(crumb.href!)}>{crumb.label}</s-clickable>
+              ) : (
+                crumb.label
+              )}
               {index < breadcrumbs.length - 1 && <span aria-hidden="true">/</span>}
             </span>
           ))}
@@ -60,8 +75,7 @@ export function PageHeader({
                 key={`${action.label}-${index}`}
                 variant={action.variant || "secondary"}
                 tone={action.tone}
-                href={action.href}
-                onClick={action.onClick}
+                onClick={() => handleActionClick(action)}
                 loading={action.loading || undefined}
               >
                 {action.label}
@@ -71,8 +85,7 @@ export function PageHeader({
               <s-button
                 variant={primaryAction.variant || "primary"}
                 tone={primaryAction.tone}
-                href={primaryAction.href}
-                onClick={primaryAction.onClick}
+                onClick={() => handleActionClick(primaryAction)}
                 loading={primaryAction.loading || undefined}
               >
                 {primaryAction.label}
