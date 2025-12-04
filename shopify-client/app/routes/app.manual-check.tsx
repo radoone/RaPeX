@@ -137,6 +137,27 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
   }
 
+  // Handle reactivate action
+  if (action === "reactivate") {
+    const alertId = formData.get("alertId") as string;
+
+    try {
+      await (prisma as any).safetyAlert.update({
+        where: { id: alertId },
+        data: {
+          status: "active",
+          dismissedAt: null,
+          dismissedBy: null,
+          resolvedAt: null,
+          resolutionType: null,
+        },
+      });
+      return json({ success: true, action: "reactivated" });
+    } catch (error) {
+      return json({ success: false, error: error instanceof Error ? error.message : 'Unknown error' });
+    }
+  }
+
   return json({ success: false, error: "Invalid action" });
 };
 
@@ -209,6 +230,14 @@ export default function ManualCheckPage() {
       action: "dismiss",
       alertId,
       resolutionType: resolutionType || "",
+    }, { method: "POST" });
+  }, [resolveFetcher]);
+
+  // Handle reactivate action
+  const handleReactivate = useCallback((alertId: string) => {
+    resolveFetcher.submit({
+      action: "reactivate",
+      alertId,
     }, { method: "POST" });
   }, [resolveFetcher]);
 
@@ -373,30 +402,50 @@ export default function ManualCheckPage() {
         <SafetyGatePortal />
       </s-grid>
 
-      {/* Result modal */}
-      {checkResult && (
-        <AlertDetailModal
-          modalId="manual-check-result-modal"
-          alert={{
-            id: currentAlertId,
-            productTitle: selectedProduct?.title || t('manualCheck.modal.unknownProduct'),
-            productImage: selectedProduct?.featuredImage?.url || null,
-            riskLevel: checkResult.warnings?.[0]?.alertDetails?.fields?.alert_level ||
-                       checkResult.warnings?.[0]?.riskLevel || 
-                       t('manualCheck.modal.unknown'),
-            alertType: checkResult.warnings?.[0]?.alertDetails?.fields?.alert_type ||
-                       checkResult.warnings?.[0]?.alertType || 
-                       t('manualCheck.modal.unknown'),
-            status: checkResult.isSafe ? 'resolved' : 'active',
-            warningsCount: checkResult.warnings?.length || 0,
-            checkResult: JSON.stringify(checkResult),
-            notes: null
-          }}
-          onResolve={currentAlertId ? handleResolve : undefined}
-          onDismiss={currentAlertId ? handleDismiss : undefined}
-          isLoading={resolveFetcher.state === 'submitting'}
-        />
-      )}
+      {/* Result modal - same format as Alerts page */}
+      {checkResult && (() => {
+        // Transform checkResult to match Alerts page format
+        const warnings = Array.isArray(checkResult?.warnings) ? checkResult.warnings : [];
+        const firstWarning = warnings[0];
+        const alertType = firstWarning?.alertType || firstWarning?.alertDetails?.fields?.alert_type || 'Unknown';
+        const riskDescription = firstWarning?.riskLegalProvision || firstWarning?.alertDetails?.fields?.risk_legal_provision || '';
+        const alertDetails = firstWarning?.alertDetails || null;
+        const riskLevel = firstWarning?.alertDetails?.fields?.alert_level ||
+                         firstWarning?.alertDetails?.fields?.risk_level ||
+                         firstWarning?.riskLevel || 'Unknown';
+        
+        // Get fallback image from warning if product has no image
+        const fields = firstWarning?.alertDetails?.fields || {};
+        const pics = [...(fields.pictures || []), fields.product_image].filter(Boolean);
+        const fallbackImage = pics[0] ? (typeof pics[0] === 'string' ? pics[0] : pics[0].url) : null;
+
+        const alert = {
+          id: currentAlertId,
+          productId: selectedProduct?.id?.replace('gid://shopify/Product/', '') || '',
+          productTitle: selectedProduct?.title || t('manualCheck.modal.unknownProduct'),
+          productImage: selectedProduct?.featuredImage?.url || fallbackImage || null,
+          riskLevel,
+          alertType,
+          riskDescription,
+          alertDetails,
+          status: checkResult.isSafe ? 'resolved' : 'active',
+          warningsCount: warnings.length,
+          checkResult: JSON.stringify(checkResult),
+          notes: null,
+          createdAt: new Date().toISOString(),
+        };
+
+        return (
+          <AlertDetailModal
+            modalId="manual-check-result-modal"
+            alert={alert}
+            onResolve={currentAlertId ? handleResolve : undefined}
+            onDismiss={currentAlertId ? handleDismiss : undefined}
+            onReactivate={currentAlertId ? handleReactivate : undefined}
+            isLoading={resolveFetcher.state === 'submitting'}
+          />
+        );
+      })()}
     </s-page>
   );
 }
