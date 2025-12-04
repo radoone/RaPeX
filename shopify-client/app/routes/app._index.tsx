@@ -6,7 +6,8 @@ import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
 import db from "../db.server";
 import { LanguageSwitcher } from "../components";
-import { checkProductSafety, getSimilarityThresholdForShop, shopifyProductToProductData } from "../services/safety-gate-checker.server";
+import { checkProductSafety, getSimilarityThresholdForShop } from "../services/safety-gate-checker.server";
+import { shopifyProductToProductData } from "../services/safety-gate-checker.client";
 
 type BulkCheckResults = {
   processed: number;
@@ -137,11 +138,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const uncheckedProductCount = Math.max(0, totalProductsCount - checkedProductCount);
 
   return json({
-    stats: { 
-      activeAlerts, 
-      totalAlerts, 
-      resolvedAlerts, 
-      dismissedAlerts, 
+    stats: {
+      activeAlerts,
+      totalAlerts,
+      resolvedAlerts,
+      dismissedAlerts,
       totalChecks,
       totalProducts: totalProductsCount,
       checkedProducts: checkedProductCount,
@@ -170,7 +171,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       };
 
       const similarityThreshold = await getSimilarityThresholdForShop(session.shop);
-      
+
       // Get already checked product IDs if not including them
       let checkedProductIds: Set<string> = new Set();
       if (!includeAlreadyChecked) {
@@ -228,16 +229,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           }
         `;
 
-        const productsResponse = await admin.graphql(productsQuery, { 
-          variables: { first: 50, after: cursor } 
+        const productsResponse: Response = await admin.graphql(productsQuery, {
+          variables: { first: 50, after: cursor }
         });
-        const productsJson = await productsResponse.json();
+        const productsJson: any = await productsResponse.json();
 
         if (!productsJson.data?.products) {
           throw new Error('Failed to fetch products from Shopify');
         }
 
-        const { edges, pageInfo } = productsJson.data.products;
+        const { edges, pageInfo }: { edges: any[]; pageInfo: { hasNextPage: boolean; endCursor: string | null } } = productsJson.data.products;
         hasNextPage = pageInfo.hasNextPage;
         cursor = pageInfo.endCursor;
 
@@ -388,7 +389,7 @@ export default function Index() {
   const runBulkCheck = useCallback(() => {
     if (isSubmitting) return;
     fetcher.submit(
-      { action: 'bulkCheck', includeAlreadyChecked: includeAlreadyChecked.toString() }, 
+      { action: 'bulkCheck', includeAlreadyChecked: includeAlreadyChecked.toString() },
       { method: 'POST' }
     );
   }, [isSubmitting, includeAlreadyChecked, fetcher]);
@@ -506,15 +507,15 @@ export default function Index() {
             <s-stack gap="base">
               <s-stack direction="inline" align="space-between" blockAlign="center">
                 <s-heading>✅ Safety Check Complete</s-heading>
-                <s-button 
-                  variant="tertiary" 
+                <s-button
+                  variant="tertiary"
                   icon={expanded.results ? "chevron-up" : "chevron-down"}
                   onClick={() => setExpanded({ ...expanded, results: !expanded.results })}
                 >
                   {expanded.results ? 'Hide details' : 'Show details'}
                 </s-button>
               </s-stack>
-              
+
               {/* Summary stats */}
               <s-grid gridTemplateColumns="repeat(auto-fit, minmax(120px, 1fr))" gap="base">
                 <s-box padding="base" borderRadius="base" background="bg-surface">
@@ -701,22 +702,22 @@ export default function Index() {
                 onInput={(e: any) => setIncludeAlreadyChecked(e.currentTarget?.checked)}
               />
               <s-text tone="subdued" size="small">
-                {includeAlreadyChecked 
-                  ? `Will check all ${stats.totalProducts} products` 
+                {includeAlreadyChecked
+                  ? `Will check all ${stats.totalProducts} products`
                   : `Will check ${stats.uncheckedProducts} unchecked products (skip ${stats.checkedProducts} already checked)`}
               </s-text>
             </s-stack>
 
-            <s-button 
-              ref={bulkCheckBtn3Ref} 
-              variant="primary" 
+            <s-button
+              ref={bulkCheckBtn3Ref}
+              variant="primary"
               loading={isSubmitting || undefined}
               disabled={stats.uncheckedProducts === 0 && !includeAlreadyChecked || undefined}
             >
-              {isSubmitting 
-                ? 'Checking...' 
-                : includeAlreadyChecked 
-                  ? `Check All ${stats.totalProducts} Products` 
+              {isSubmitting
+                ? 'Checking...'
+                : includeAlreadyChecked
+                  ? `Check All ${stats.totalProducts} Products`
                   : `Check ${stats.uncheckedProducts} Unchecked Products`}
             </s-button>
           </s-stack>
