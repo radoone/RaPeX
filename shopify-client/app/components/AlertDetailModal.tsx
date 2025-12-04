@@ -154,25 +154,53 @@ export function AlertDetailModal({
                 <s-stack gap="base" style={{ flex: 1, minWidth: 0 }}>
                   <s-heading size="large">{alert.productTitle}</s-heading>
 
-                  <s-stack direction="inline" gap="small" wrap>
-                    <StatusBadge status={alert.status} />
-                    <AlertBadge
-                      alertLevel={alert.riskLevel}
-                      alertType={alert.alertType}
-                      riskDescription={alert.riskDescription}
-                    />
-                    <s-badge tone={warningsCount > 0 ? "critical" : "success"}>
-                      {warningsCount} {warningsCount === 1 ? "match" : "matches"}
-                    </s-badge>
-                  </s-stack>
+                <s-stack direction="inline" gap="small" wrap>
+                  <StatusBadge status={alert.status} />
+                  <s-badge tone={warningsCount > 0 ? "critical" : "success"}>
+                    {warningsCount} {warningsCount === 1 ? "match" : "matches"}
+                  </s-badge>
+                </s-stack>
 
-                  <RiskMeter riskLevel={alert.riskLevel} similarity={similarity} />
+                <s-grid
+                  gap="small-200"
+                  gridTemplateColumns="repeat(auto-fit, minmax(220px, 1fr))"
+                >
+                  <s-box padding="base" borderRadius="base" background="bg-surface">
+                    <s-text tone="subdued" size="small">Risk</s-text>
+                    <s-stack direction="inline" gap="small" blockAlign="center">
+                      <AlertBadge
+                        alertLevel={alert.riskLevel}
+                        alertType={alert.alertType}
+                        riskDescription={alert.riskDescription}
+                      />
+                      {typeof similarity === "number" && (
+                        <s-badge tone="info">{similarity}% match</s-badge>
+                      )}
+                    </s-stack>
+                  </s-box>
 
-                  {checkedAt && (
+                  <s-box padding="base" borderRadius="base" background="bg-surface">
+                    <s-text tone="subdued" size="small">Matches</s-text>
+                    <s-heading size="small">{warningsCount}</s-heading>
                     <s-text tone="subdued" size="small">
-                      Last checked: {checkedAt.toLocaleString("en-GB")}
+                      {warningsCount === 1 ? "Safety Gate entry" : "Safety Gate entries"}
                     </s-text>
-                  )}
+                  </s-box>
+
+                  <s-box padding="base" borderRadius="base" background="bg-surface">
+                    <s-text tone="subdued" size="small">Status</s-text>
+                    <s-stack direction="inline" gap="small" blockAlign="center">
+                      <StatusBadge status={alert.status} />
+                    </s-stack>
+                    {checkedAt && (
+                      <s-text tone="subdued" size="small">
+                        Checked {checkedAt.toLocaleString("en-GB")}
+                      </s-text>
+                    )}
+                  </s-box>
+                </s-grid>
+
+                <RiskMeter riskLevel={alert.riskLevel} similarity={similarity} />
                 </s-stack>
               </s-stack>
             </s-stack>
