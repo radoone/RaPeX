@@ -66,89 +66,89 @@ export function AlertTable({
 
   return (
     <s-section padding="none" accessibilityLabel={t('alerts.table.accessibilityLabel')}>
-      <s-table>
-        {/* Filters slot - like Shopify Index Table */}
-        <s-stack slot="filters" gap="small">
-          {/* Tabs for status */}
-          <s-stack direction="inline" gap="none">
-            <s-button
-              variant={activeTab === "all" ? "secondary" : "tertiary"}
-              size="small"
-              onClick={() => onStatusChange?.("")}
-            >
-              {t('alerts.table.tabs.all')} {stats ? `(${stats.total})` : ""}
-            </s-button>
-            <s-button
-              variant={activeTab === "active" ? "secondary" : "tertiary"}
-              size="small"
-              onClick={() => onStatusChange?.("active")}
-            >
-              {t('alerts.table.tabs.active')} {stats?.active ? `(${stats.active})` : ""}
-            </s-button>
-            <s-button
-              variant={activeTab === "resolved" ? "secondary" : "tertiary"}
-              size="small"
-              onClick={() => onStatusChange?.("resolved")}
-            >
-              {t('alerts.table.tabs.resolved')} {stats?.resolved ? `(${stats.resolved})` : ""}
-            </s-button>
-            <s-button
-              variant={activeTab === "dismissed" ? "secondary" : "tertiary"}
-              size="small"
-              onClick={() => onStatusChange?.("dismissed")}
-            >
-              {t('alerts.table.tabs.dismissed')} {stats?.dismissed ? `(${stats.dismissed})` : ""}
-            </s-button>
-          </s-stack>
-
-          {/* Search and sort row */}
-          <s-grid gap="small-200" gridTemplateColumns="1fr auto">
-            <s-text-field
-              label={t('alerts.table.searchLabel')}
-              labelAccessibilityVisibility="exclusive"
-              icon="search"
-              placeholder={t('alerts.table.searchPlaceholder')}
-              value={searchValue}
-              onInput={(e: any) => onSearchChange?.(e.currentTarget.value || "")}
-            />
-            <s-button
-              variant="secondary"
-              accessibilityLabel={t('alerts.table.sort')}
-              commandFor="sort-actions-popover"
-            >
-              {t('alerts.table.sort')}
-            </s-button>
-            <s-popover id="sort-actions-popover">
-              <s-stack gap="none">
-                <s-box padding="small">
-                  <s-choice-list label={t('alerts.table.sortBy')} name="sortBy">
-                    <s-choice value="created" selected={sortBy === "created"} onClick={() => setSortBy("created")}>
-                      {t('alerts.table.sortOptions.created')}
-                    </s-choice>
-                    <s-choice value="risk" selected={sortBy === "risk"} onClick={() => setSortBy("risk")}>
-                      {t('alerts.table.sortOptions.risk')}
-                    </s-choice>
-                    <s-choice value="name" selected={sortBy === "name"} onClick={() => setSortBy("name")}>
-                      {t('alerts.table.sortOptions.name')}
-                    </s-choice>
-                  </s-choice-list>
-                </s-box>
-                <s-divider />
-                <s-box padding="small">
-                  <s-choice-list label={t('alerts.table.order')} name="sortOrder">
-                    <s-choice value="desc" selected={sortOrder === "desc"} onClick={() => setSortOrder("desc")}>
-                      {t('alerts.table.orderOptions.desc')}
-                    </s-choice>
-                    <s-choice value="asc" selected={sortOrder === "asc"} onClick={() => setSortOrder("asc")}>
-                      {t('alerts.table.orderOptions.asc')}
-                    </s-choice>
-                  </s-choice-list>
-                </s-box>
-              </s-stack>
-            </s-popover>
-          </s-grid>
+      {/* Filters above table */}
+      <s-stack gap="small" style={{ paddingBottom: 'var(--s-space-base)' }}>
+        {/* Tabs for status */}
+        <s-stack direction="inline" gap="none">
+          <s-button
+            variant={activeTab === "all" ? "secondary" : "tertiary"}
+            size="small"
+            onClick={() => onStatusChange?.("")}
+          >
+            {t('alerts.table.tabs.all')} {stats ? `(${stats.total})` : ""}
+          </s-button>
+          <s-button
+            variant={activeTab === "active" ? "secondary" : "tertiary"}
+            size="small"
+            onClick={() => onStatusChange?.("active")}
+          >
+            {t('alerts.table.tabs.active')} {stats?.active ? `(${stats.active})` : ""}
+          </s-button>
+          <s-button
+            variant={activeTab === "resolved" ? "secondary" : "tertiary"}
+            size="small"
+            onClick={() => onStatusChange?.("resolved")}
+          >
+            {t('alerts.table.tabs.resolved')} {stats?.resolved ? `(${stats.resolved})` : ""}
+          </s-button>
+          <s-button
+            variant={activeTab === "dismissed" ? "secondary" : "tertiary"}
+            size="small"
+            onClick={() => onStatusChange?.("dismissed")}
+          >
+            {t('alerts.table.tabs.dismissed')} {stats?.dismissed ? `(${stats.dismissed})` : ""}
+          </s-button>
         </s-stack>
 
+        {/* Search and sort row */}
+        <s-grid gap="small-200" gridTemplateColumns="1fr auto">
+          <s-text-field
+            label={t('alerts.table.searchLabel')}
+            labelAccessibilityVisibility="exclusive"
+            icon="search"
+            placeholder={t('alerts.table.searchPlaceholder')}
+            value={searchValue}
+            onInput={(e: any) => onSearchChange?.(e.currentTarget.value || "")}
+          />
+          <s-button
+            variant="secondary"
+            accessibilityLabel={t('alerts.table.sort')}
+            commandFor="sort-actions-popover"
+          >
+            {t('alerts.table.sort')}
+          </s-button>
+          <s-popover id="sort-actions-popover">
+            <s-stack gap="none">
+              <s-box padding="small">
+                <s-choice-list label={t('alerts.table.sortBy')} name="sortBy">
+                  <s-choice value="created" selected={sortBy === "created"} onClick={() => setSortBy("created")}>
+                    {t('alerts.table.sortOptions.created')}
+                  </s-choice>
+                  <s-choice value="risk" selected={sortBy === "risk"} onClick={() => setSortBy("risk")}>
+                    {t('alerts.table.sortOptions.risk')}
+                  </s-choice>
+                  <s-choice value="name" selected={sortBy === "name"} onClick={() => setSortBy("name")}>
+                    {t('alerts.table.sortOptions.name')}
+                  </s-choice>
+                </s-choice-list>
+              </s-box>
+              <s-divider />
+              <s-box padding="small">
+                <s-choice-list label={t('alerts.table.order')} name="sortOrder">
+                  <s-choice value="desc" selected={sortOrder === "desc"} onClick={() => setSortOrder("desc")}>
+                    {t('alerts.table.orderOptions.desc')}
+                  </s-choice>
+                  <s-choice value="asc" selected={sortOrder === "asc"} onClick={() => setSortOrder("asc")}>
+                    {t('alerts.table.orderOptions.asc')}
+                  </s-choice>
+                </s-choice-list>
+              </s-box>
+            </s-stack>
+          </s-popover>
+        </s-grid>
+      </s-stack>
+
+      <s-table>
         <s-table-header-row>
           <s-table-header listSlot="primary">{t('alerts.table.headers.product')}</s-table-header>
           <s-table-header listSlot="inline">{t('alerts.table.headers.status')}</s-table-header>
