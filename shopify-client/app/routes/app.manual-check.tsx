@@ -215,13 +215,10 @@ export default function ManualCheckPage() {
   // Auto-open modal when result is ready
   useEffect(() => {
     if (showResult && checkResult) {
-      // Open the modal using command API
-      const modal = document.getElementById('manual-check-result-modal') as HTMLElement & { show?: () => void };
-      if (modal?.show) {
-        modal.show();
-      } else if (modal) {
-        // Fallback: dispatch custom event or set attribute
-        modal.setAttribute('open', 'true');
+      // Open the modal using Polaris Web showOverlay() method
+      const modal = document.getElementById('manual-check-result-modal') as HTMLElement & { showOverlay?: () => void };
+      if (modal?.showOverlay) {
+        modal.showOverlay();
       }
     }
   }, [showResult, checkResult]);
@@ -263,10 +260,8 @@ export default function ManualCheckPage() {
           <s-button 
             slot="secondary-actions" 
             variant="primary"
-            onClick={() => {
-              const modal = document.getElementById('manual-check-result-modal') as HTMLElement & { show?: () => void };
-              if (modal?.show) modal.show();
-            }}
+            commandFor="manual-check-result-modal"
+            command="--show"
           >
             {t('actions.viewDetails')}
           </s-button>
