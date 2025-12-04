@@ -118,17 +118,27 @@ export function AlertDetailModal({
     return pictures;
   };
 
+  // Risk level color
+  const getRiskColor = (level: string) => {
+    const l = (level || '').toLowerCase();
+    if (l === 'serious' || l === 'high') return 'critical';
+    if (l === 'medium') return 'warning';
+    return 'info';
+  };
+
   return (
     <>
       <s-modal id={modalId} heading="Safety Alert Details" size="large">
         <s-stack gap="large">
-          {/* Product Overview Section */}
-          <s-box
-            padding="large"
-            borderRadius="large"
-            background="bg-surface-secondary"
-          >
+          
+          {/* ═══════════════════════════════════════════════════════════════
+              SECTION 1: YOUR PRODUCT
+          ═══════════════════════════════════════════════════════════════ */}
+          <s-box padding="large" borderRadius="large" background="bg-surface-secondary">
             <s-stack gap="base">
+              {/* Section Label */}
+              <s-text tone="subdued" fontWeight="bold" size="small">YOUR PRODUCT</s-text>
+              
               <s-stack direction="inline" gap="large" blockAlign="start" wrap>
                 {/* Product Image */}
                 {alert.productImage && (
@@ -151,58 +161,75 @@ export function AlertDetailModal({
                 )}
 
                 {/* Product Info */}
-                <s-stack gap="base" style={{ flex: 1, minWidth: 0 }}>
+                <s-stack gap="small" style={{ flex: 1, minWidth: 0 }}>
                   <s-heading size="large">{alert.productTitle}</s-heading>
-
-                <s-stack direction="inline" gap="small" wrap>
-                  <StatusBadge status={alert.status} />
-                  <s-badge tone={warningsCount > 0 ? "critical" : "success"}>
-                    {warningsCount} {warningsCount === 1 ? "match" : "matches"}
-                  </s-badge>
-                </s-stack>
-
-                <s-grid
-                  gap="small-200"
-                  gridTemplateColumns="repeat(auto-fit, minmax(220px, 1fr))"
-                >
-                  <s-box padding="base" borderRadius="base" background="bg-surface">
-                    <s-text tone="subdued" size="small">Risk</s-text>
-                    <s-stack direction="inline" gap="small" blockAlign="center">
-                      <AlertBadge
-                        alertLevel={alert.riskLevel}
-                        alertType={alert.alertType}
-                        riskDescription={alert.riskDescription}
-                      />
-                      {typeof similarity === "number" && (
-                        <s-badge tone="info">{similarity}% match</s-badge>
-                      )}
-                    </s-stack>
-                  </s-box>
-
-                  <s-box padding="base" borderRadius="base" background="bg-surface">
-                    <s-text tone="subdued" size="small">Matches</s-text>
-                    <s-heading size="small">{warningsCount}</s-heading>
+                  
+                  <s-stack direction="inline" gap="small" wrap>
+                    <StatusBadge status={alert.status} />
+                    <AlertBadge
+                      alertLevel={alert.riskLevel}
+                      alertType={alert.alertType}
+                      riskDescription={alert.riskDescription}
+                    />
+                  </s-stack>
+                  
+                  {checkedAt && (
                     <s-text tone="subdued" size="small">
-                      {warningsCount === 1 ? "Safety Gate entry" : "Safety Gate entries"}
+                      Checked: {checkedAt.toLocaleString("en-GB")}
                     </s-text>
-                  </s-box>
-
-                  <s-box padding="base" borderRadius="base" background="bg-surface">
-                    <s-text tone="subdued" size="small">Status</s-text>
-                    <s-stack direction="inline" gap="small" blockAlign="center">
-                      <StatusBadge status={alert.status} />
-                    </s-stack>
-                    {checkedAt && (
-                      <s-text tone="subdued" size="small">
-                        Checked {checkedAt.toLocaleString("en-GB")}
-                      </s-text>
-                    )}
-                  </s-box>
-                </s-grid>
-
-                <RiskMeter riskLevel={alert.riskLevel} similarity={similarity} />
+                  )}
                 </s-stack>
               </s-stack>
+            </s-stack>
+          </s-box>
+
+          {/* ═══════════════════════════════════════════════════════════════
+              SECTION 2: RISK ASSESSMENT SUMMARY
+          ═══════════════════════════════════════════════════════════════ */}
+          <s-box
+            padding="large"
+            borderRadius="large"
+            borderWidth="base"
+            borderColor={isSafe ? "border-success" : "border-critical"}
+            background={isSafe ? "bg-surface-success" : "bg-surface-critical"}
+          >
+            <s-stack gap="base">
+              {/* Header */}
+              <s-stack direction="inline" gap="small" blockAlign="center">
+                <s-text size="large" fontWeight="bold">
+                  {isSafe ? "✅" : "⚠️"} {isSafe ? "No Safety Issues Found" : "Potential Safety Risk"}
+                </s-text>
+              </s-stack>
+              
+              {/* Stats Row */}
+              <s-stack direction="inline" gap="large" wrap>
+                <s-stack gap="small-100">
+                  <s-text tone="subdued" size="small">Safety Gate Matches</s-text>
+                  <s-text size="large" fontWeight="bold">{warningsCount}</s-text>
+                </s-stack>
+                
+                {similarity !== null && (
+                  <s-stack gap="small-100">
+                    <s-text tone="subdued" size="small">Highest Match</s-text>
+                    <s-text size="large" fontWeight="bold">{similarity}%</s-text>
+                  </s-stack>
+                )}
+                
+                <s-stack gap="small-100">
+                  <s-text tone="subdued" size="small">Risk Level</s-text>
+                  <AlertBadge
+                    alertLevel={alert.riskLevel}
+                    alertType={alert.alertType}
+                    riskDescription={alert.riskDescription}
+                  />
+                </s-stack>
+              </s-stack>
+              
+              {/* Risk Meter */}
+              <RiskMeter riskLevel={alert.riskLevel} similarity={similarity} />
+              
+              {/* Recommendation */}
+              <s-text>{recommendation}</s-text>
             </s-stack>
           </s-box>
 
@@ -213,18 +240,16 @@ export function AlertDetailModal({
             </s-banner>
           )}
 
-          {/* Status Banner */}
-          <s-banner
-            tone={isSafe ? "success" : "critical"}
-            heading={isSafe ? "No Safety Issues Found" : "⚠️ Potential Safety Risk Detected"}
-          >
-            <s-text>{recommendation}</s-text>
-          </s-banner>
-
-          {/* Safety Gate Matches Section */}
-          {warnings.length > 0 ? (
-            <s-section heading={`Safety Gate Matches (${warnings.length})`}>
-              <s-stack gap="large">
+          {/* ═══════════════════════════════════════════════════════════════
+              SECTION 3: SAFETY GATE MATCHES
+          ═══════════════════════════════════════════════════════════════ */}
+          {warnings.length > 0 && (
+            <s-stack gap="base">
+              <s-text tone="subdued" fontWeight="bold" size="small">
+                SAFETY GATE MATCHES ({warnings.length})
+              </s-text>
+              
+              <s-stack gap="base">
                 {warnings.map((warning: any, index: number) => (
                   <WarningCard
                     key={`warning-${index}`}
@@ -235,11 +260,7 @@ export function AlertDetailModal({
                   />
                 ))}
               </s-stack>
-            </s-section>
-          ) : (
-            <s-banner tone="success" heading="No Safety Gate Matches">
-              <s-text>This product did not match any entries in the EU Safety Gate database.</s-text>
-            </s-banner>
+            </s-stack>
           )}
         </s-stack>
 
@@ -333,7 +354,9 @@ export function AlertDetailModal({
   );
 }
 
-// Warning card with full details and images
+// ═══════════════════════════════════════════════════════════════════════════
+// WARNING CARD - Individual Safety Gate match
+// ═══════════════════════════════════════════════════════════════════════════
 function WarningCard({
   warning,
   index,
@@ -360,21 +383,26 @@ function WarningCard({
   const productName = fields.product_name || fields.name;
   const productModel = fields.product_model_type || fields.product_model || fields.model;
 
+  // Determine card border color based on similarity
+  const borderColor = warningSimilarity >= 80 ? "border-critical" : warningSimilarity >= 60 ? "border-warning" : "border";
+  const matchTone = warningSimilarity >= 80 ? "critical" : warningSimilarity >= 60 ? "warning" : "info";
+
   return (
     <s-box
       padding="large"
-      borderColor={warningSimilarity >= 80 ? "border-critical" : warningSimilarity >= 60 ? "border-warning" : "border"}
+      borderColor={borderColor}
       borderWidth="base"
       borderRadius="large"
       background="bg-surface"
     >
       <s-stack gap="base">
-        {/* Header with badges and link */}
+        
+        {/* ─────────────────────────────────────────────────────────────
+            HEADER: Match percentage + badges + link
+        ───────────────────────────────────────────────────────────── */}
         <s-stack direction="inline" align="space-between" blockAlign="center" wrap>
-          <s-stack direction="inline" gap="small" wrap>
-            <s-badge
-              tone={warningSimilarity >= 80 ? "critical" : warningSimilarity >= 60 ? "warning" : "info"}
-            >
+          <s-stack direction="inline" gap="small" wrap blockAlign="center">
+            <s-badge tone={matchTone} size="large">
               {warningSimilarity}% match
             </s-badge>
             <AlertBadge
@@ -383,45 +411,48 @@ function WarningCard({
               riskDescription={warning.riskLegalProvision}
             />
             {fields.product_category && (
-              <s-badge>{fields.product_category}</s-badge>
+              <s-badge tone="neutral">{fields.product_category}</s-badge>
             )}
           </s-stack>
+          
           {fields.rapex_url && (
             <s-link href={fields.rapex_url} target="_blank">
-              Open in Safety Gate ↗
+              View on Safety Gate ↗
             </s-link>
           )}
         </s-stack>
 
-        {/* Alert number header */}
+        {/* Alert number */}
         {fields.alert_number && (
-          <s-text tone="subdued" size="small">Alert number: {fields.alert_number}</s-text>
+          <s-text tone="subdued" size="small">
+            Alert: {fields.alert_number} • {formattedDate}
+          </s-text>
         )}
 
-        {/* Match Reason - highlighted */}
+        {/* ─────────────────────────────────────────────────────────────
+            WHY THIS MATCHED (highlighted box)
+        ───────────────────────────────────────────────────────────── */}
         {warning.reason && (
           <s-box
             padding="base"
             borderRadius="base"
-            borderColor="border-info"
-            borderWidth="base"
             background="bg-surface-info"
           >
-            <s-stack gap="small-200">
-              <s-stack direction="inline" gap="small" blockAlign="center">
-                <s-text fontWeight="bold" tone="info">Why this matched</s-text>
-              </s-stack>
+            <s-stack gap="small-100">
+              <s-text fontWeight="bold" tone="info" size="small">💡 WHY THIS MATCHED</s-text>
               <s-text>{warning.reason}</s-text>
             </s-stack>
           </s-box>
         )}
 
-        {/* Main content: Image + Details table */}
-        <s-stack direction="inline" gap="large" blockAlign="start" wrap>
-          {/* Images - all in one row */}
+        {/* ─────────────────────────────────────────────────────────────
+            MAIN CONTENT: Images + Details side by side
+        ───────────────────────────────────────────────────────────── */}
+        <s-grid gap="large" gridTemplateColumns="auto 1fr">
+          {/* Images Column */}
           {pictures.length > 0 && (
-            <s-stack direction="inline" gap="small" wrap style={{ flexShrink: 0 }}>
-              {pictures.slice(0, 6).map((pic: any, idx: number) => {
+            <s-stack direction="inline" gap="small" wrap style={{ maxWidth: '200px' }}>
+              {pictures.slice(0, 4).map((pic: any, idx: number) => {
                 const src = typeof pic === "string" ? pic : pic?.url || pic?.src;
                 if (!src) return null;
                 return (
@@ -442,94 +473,81 @@ function WarningCard({
             </s-stack>
           )}
 
-          {/* Details list - using stack instead of table for cleaner rendering */}
-          <s-box style={{ flex: 1, minWidth: "280px" }} padding="base" borderRadius="base" background="bg-surface-secondary">
-            <s-stack gap="small-200">
-              <s-stack direction="inline" gap="base" align="space-between">
-                <s-text tone="subdued" size="small">Risk Level</s-text>
-                <s-text fontWeight="semibold">{fields.alert_level || "—"}</s-text>
+          {/* Details Column */}
+          <s-stack gap="small-200">
+            {productName && (
+              <s-stack gap="small-100">
+                <s-text tone="subdued" size="small">Product Name</s-text>
+                <s-text fontWeight="semibold">{productName}</s-text>
               </s-stack>
-              {productName && (
-                <s-stack direction="inline" gap="base" align="space-between">
-                  <s-text tone="subdued" size="small">Product Name</s-text>
-                  <s-text>{productName}</s-text>
-                </s-stack>
-              )}
+            )}
+            
+            <s-grid gap="base" gridTemplateColumns="1fr 1fr">
               {fields.product_brand && (
-                <s-stack direction="inline" gap="base" align="space-between">
+                <s-stack gap="small-100">
                   <s-text tone="subdued" size="small">Brand</s-text>
                   <s-text>{fields.product_brand}</s-text>
                 </s-stack>
               )}
+              
               {productModel && (
-                <s-stack direction="inline" gap="base" align="space-between">
-                  <s-text tone="subdued" size="small">Model / Type</s-text>
+                <s-stack gap="small-100">
+                  <s-text tone="subdued" size="small">Model</s-text>
                   <s-text>{productModel}</s-text>
                 </s-stack>
               )}
-              <s-stack direction="inline" gap="base" align="space-between">
-                <s-text tone="subdued" size="small">Category</s-text>
-                <s-text>{fields.product_category || "—"}</s-text>
-              </s-stack>
+              
               {notifyingCountry && (
-                <s-stack direction="inline" gap="base" align="space-between">
+                <s-stack gap="small-100">
                   <s-text tone="subdued" size="small">Notifying Country</s-text>
                   <s-text>{notifyingCountry}</s-text>
                 </s-stack>
               )}
+              
               {originCountry && (
-                <s-stack direction="inline" gap="base" align="space-between">
-                  <s-text tone="subdued" size="small">Country of Origin</s-text>
+                <s-stack gap="small-100">
+                  <s-text tone="subdued" size="small">Origin</s-text>
                   <s-text>{originCountry}</s-text>
                 </s-stack>
               )}
-              <s-stack direction="inline" gap="base" align="space-between">
-                <s-text tone="subdued" size="small">Alert Date</s-text>
-                <s-text>{formattedDate}</s-text>
-              </s-stack>
-              {fields.alert_type && (
-                <s-stack direction="inline" gap="base" align="space-between">
-                  <s-text tone="subdued" size="small">Risk Type</s-text>
-                  <s-text>{fields.alert_type}</s-text>
-                </s-stack>
-              )}
-            </s-stack>
-          </s-box>
-        </s-stack>
+            </s-grid>
+          </s-stack>
+        </s-grid>
 
-        {/* Description */}
-        {fields.product_description && (
-          <s-box
-            padding="base"
-            borderRadius="base"
-            background="bg-surface-secondary"
-          >
-            <s-stack gap="small-200">
-              <s-text tone="subdued" size="small">Product Description</s-text>
-              <s-text>{fields.product_description}</s-text>
-            </s-stack>
-          </s-box>
-        )}
-
-        {/* Risk description */}
+        {/* ─────────────────────────────────────────────────────────────
+            RISK DESCRIPTION (if present)
+        ───────────────────────────────────────────────────────────── */}
         {fields.alert_description && (
           <s-box
             padding="base"
             borderRadius="base"
             background="bg-surface-critical"
           >
-            <s-stack gap="small-200">
-              <s-text tone="subdued" size="small">Risk Description</s-text>
+            <s-stack gap="small-100">
+              <s-text fontWeight="bold" tone="critical" size="small">⚠️ RISK DESCRIPTION</s-text>
               <s-text>{fields.alert_description}</s-text>
             </s-stack>
           </s-box>
         )}
 
-        {/* Risk Legal Provision */}
+        {/* Product Description (collapsible feel) */}
+        {fields.product_description && (
+          <s-box padding="base" borderRadius="base" background="bg-surface-secondary">
+            <s-stack gap="small-100">
+              <s-text tone="subdued" size="small">Product Description</s-text>
+              <s-text size="small">{fields.product_description}</s-text>
+            </s-stack>
+          </s-box>
+        )}
+
+        {/* Legal Provision */}
         {fields.risk_legal_provision && (
-          <s-banner tone="warning" heading="Legal Provision">
-            <s-text>{fields.risk_legal_provision}</s-text>
-          </s-banner>
+          <s-box padding="base" borderRadius="base" background="bg-surface-warning">
+            <s-stack gap="small-100">
+              <s-text fontWeight="bold" tone="warning" size="small">📋 LEGAL PROVISION</s-text>
+              <s-text size="small">{fields.risk_legal_provision}</s-text>
+            </s-stack>
+          </s-box>
         )}
       </s-stack>
     </s-box>
