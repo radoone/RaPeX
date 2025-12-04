@@ -27,7 +27,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const whereClause: any = { shop: session.shop };
   if (statusFilters.length > 0) whereClause.status = statusFilters.length === 1 ? statusFilters[0] : { in: statusFilters };
   if (riskLevelFilters.length > 0) whereClause.riskLevel = riskLevelFilters.length === 1 ? riskLevelFilters[0] : { in: riskLevelFilters };
-  if (search) whereClause.productTitle = { contains: search, mode: 'insensitive' };
+  // Prisma version here does not support `mode: 'insensitive'`; fallback to default contains
+  if (search) whereClause.productTitle = { contains: search };
 
   const [rawAlerts, totalCount, activeCount, resolvedCount, dismissedCount] = await Promise.all([
     db.safetyAlert.findMany({ where: whereClause, orderBy: { createdAt: 'desc' }, skip: offset, take: pageSize }),
