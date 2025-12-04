@@ -415,66 +415,58 @@ function WarningCard({
             </s-stack>
           )}
 
-          {/* Details table */}
-          <s-box style={{ flex: 1, minWidth: "280px" }}>
-            <s-section padding="none">
-              <s-table>
-                <s-table-header-row>
-                  <s-table-header listSlot="primary">Field</s-table-header>
-                  <s-table-header listSlot="secondary">Value</s-table-header>
-                </s-table-header-row>
-                <s-table-body>
-                  <s-table-row>
-                    <s-table-cell>Risk Level</s-table-cell>
-                    <s-table-cell>{fields.alert_level || "—"}</s-table-cell>
-                  </s-table-row>
-                  {productName && (
-                    <s-table-row>
-                      <s-table-cell>Product Name</s-table-cell>
-                      <s-table-cell>{productName}</s-table-cell>
-                    </s-table-row>
-                  )}
-                  {fields.product_brand && (
-                    <s-table-row>
-                      <s-table-cell>Brand</s-table-cell>
-                      <s-table-cell>{fields.product_brand}</s-table-cell>
-                    </s-table-row>
-                  )}
-                  {productModel && (
-                    <s-table-row>
-                      <s-table-cell>Model / Type</s-table-cell>
-                      <s-table-cell>{productModel}</s-table-cell>
-                    </s-table-row>
-                  )}
-                  <s-table-row>
-                    <s-table-cell>Category</s-table-cell>
-                    <s-table-cell>{fields.product_category || "—"}</s-table-cell>
-                  </s-table-row>
-                  {notifyingCountry && (
-                    <s-table-row>
-                      <s-table-cell>Notifying Country</s-table-cell>
-                      <s-table-cell>{notifyingCountry}</s-table-cell>
-                    </s-table-row>
-                  )}
-                  {originCountry && (
-                    <s-table-row>
-                      <s-table-cell>Country of Origin</s-table-cell>
-                      <s-table-cell>{originCountry}</s-table-cell>
-                    </s-table-row>
-                  )}
-                  <s-table-row>
-                    <s-table-cell>Alert Date</s-table-cell>
-                    <s-table-cell>{formattedDate}</s-table-cell>
-                  </s-table-row>
-                  {fields.alert_type && (
-                    <s-table-row>
-                      <s-table-cell>Risk Type</s-table-cell>
-                      <s-table-cell>{fields.alert_type}</s-table-cell>
-                    </s-table-row>
-                  )}
-                </s-table-body>
-              </s-table>
-            </s-section>
+          {/* Details list - using stack instead of table for cleaner rendering */}
+          <s-box style={{ flex: 1, minWidth: "280px" }} padding="base" borderRadius="base" background="bg-surface-secondary">
+            <s-stack gap="small-200">
+              <s-stack direction="inline" gap="base" align="space-between">
+                <s-text tone="subdued" size="small">Risk Level</s-text>
+                <s-text fontWeight="semibold">{fields.alert_level || "—"}</s-text>
+              </s-stack>
+              {productName && (
+                <s-stack direction="inline" gap="base" align="space-between">
+                  <s-text tone="subdued" size="small">Product Name</s-text>
+                  <s-text>{productName}</s-text>
+                </s-stack>
+              )}
+              {fields.product_brand && (
+                <s-stack direction="inline" gap="base" align="space-between">
+                  <s-text tone="subdued" size="small">Brand</s-text>
+                  <s-text>{fields.product_brand}</s-text>
+                </s-stack>
+              )}
+              {productModel && (
+                <s-stack direction="inline" gap="base" align="space-between">
+                  <s-text tone="subdued" size="small">Model / Type</s-text>
+                  <s-text>{productModel}</s-text>
+                </s-stack>
+              )}
+              <s-stack direction="inline" gap="base" align="space-between">
+                <s-text tone="subdued" size="small">Category</s-text>
+                <s-text>{fields.product_category || "—"}</s-text>
+              </s-stack>
+              {notifyingCountry && (
+                <s-stack direction="inline" gap="base" align="space-between">
+                  <s-text tone="subdued" size="small">Notifying Country</s-text>
+                  <s-text>{notifyingCountry}</s-text>
+                </s-stack>
+              )}
+              {originCountry && (
+                <s-stack direction="inline" gap="base" align="space-between">
+                  <s-text tone="subdued" size="small">Country of Origin</s-text>
+                  <s-text>{originCountry}</s-text>
+                </s-stack>
+              )}
+              <s-stack direction="inline" gap="base" align="space-between">
+                <s-text tone="subdued" size="small">Alert Date</s-text>
+                <s-text>{formattedDate}</s-text>
+              </s-stack>
+              {fields.alert_type && (
+                <s-stack direction="inline" gap="base" align="space-between">
+                  <s-text tone="subdued" size="small">Risk Type</s-text>
+                  <s-text>{fields.alert_type}</s-text>
+                </s-stack>
+              )}
+            </s-stack>
           </s-box>
         </s-stack>
 
