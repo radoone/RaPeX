@@ -319,6 +319,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             });
 
           } catch (error) {
+            console.error('Bulk check error for product', product.id, product.title, error);
             results.errors++;
             results.products.push({
               id: product.id,
