@@ -410,9 +410,6 @@ function WarningCard({
               alertType={fields.alert_type}
               riskDescription={warning.riskLegalProvision}
             />
-            {fields.product_category && (
-              <s-badge tone="neutral">{fields.product_category}</s-badge>
-            )}
           </s-stack>
           
           {fields.rapex_url && (
@@ -473,45 +470,65 @@ function WarningCard({
             </s-stack>
           )}
 
-          {/* Details Column */}
-          <s-stack gap="small-200">
-            {productName && (
-              <s-stack gap="small-100">
-                <s-text tone="subdued" size="small">Product Name</s-text>
-                <s-text fontWeight="semibold">{productName}</s-text>
-              </s-stack>
-            )}
-            
-            <s-grid gap="base" gridTemplateColumns="1fr 1fr">
-              {fields.product_brand && (
-                <s-stack gap="small-100">
-                  <s-text tone="subdued" size="small">Brand</s-text>
-                  <s-text>{fields.product_brand}</s-text>
-                </s-stack>
-              )}
-              
-              {productModel && (
-                <s-stack gap="small-100">
-                  <s-text tone="subdued" size="small">Model</s-text>
-                  <s-text>{productModel}</s-text>
-                </s-stack>
-              )}
-              
-              {notifyingCountry && (
-                <s-stack gap="small-100">
-                  <s-text tone="subdued" size="small">Notifying Country</s-text>
-                  <s-text>{notifyingCountry}</s-text>
-                </s-stack>
-              )}
-              
-              {originCountry && (
-                <s-stack gap="small-100">
-                  <s-text tone="subdued" size="small">Origin</s-text>
-                  <s-text>{originCountry}</s-text>
-                </s-stack>
-              )}
-            </s-grid>
-          </s-stack>
+          {/* Details Table */}
+          <s-box style={{ flex: 1 }}>
+            <s-table>
+              <s-table-header-row>
+                <s-table-header listSlot="primary">Field</s-table-header>
+                <s-table-header listSlot="secondary">Value</s-table-header>
+              </s-table-header-row>
+              <s-table-body>
+                {productName && (
+                  <s-table-row>
+                    <s-table-cell><s-text tone="subdued">Product Name</s-text></s-table-cell>
+                    <s-table-cell><s-text fontWeight="semibold">{productName}</s-text></s-table-cell>
+                  </s-table-row>
+                )}
+                {fields.product_brand && (
+                  <s-table-row>
+                    <s-table-cell><s-text tone="subdued">Brand</s-text></s-table-cell>
+                    <s-table-cell>{fields.product_brand}</s-table-cell>
+                  </s-table-row>
+                )}
+                {productModel && (
+                  <s-table-row>
+                    <s-table-cell><s-text tone="subdued">Model</s-text></s-table-cell>
+                    <s-table-cell>{productModel}</s-table-cell>
+                  </s-table-row>
+                )}
+                {fields.product_category && (
+                  <s-table-row>
+                    <s-table-cell><s-text tone="subdued">Category</s-text></s-table-cell>
+                    <s-table-cell>{fields.product_category}</s-table-cell>
+                  </s-table-row>
+                )}
+                {notifyingCountry && (
+                  <s-table-row>
+                    <s-table-cell><s-text tone="subdued">Notifying Country</s-text></s-table-cell>
+                    <s-table-cell>{notifyingCountry}</s-table-cell>
+                  </s-table-row>
+                )}
+                {originCountry && (
+                  <s-table-row>
+                    <s-table-cell><s-text tone="subdued">Origin</s-text></s-table-cell>
+                    <s-table-cell>{originCountry}</s-table-cell>
+                  </s-table-row>
+                )}
+                <s-table-row>
+                  <s-table-cell><s-text tone="subdued">Alert Date</s-text></s-table-cell>
+                  <s-table-cell>{formattedDate}</s-table-cell>
+                </s-table-row>
+                {fields.alert_level && (
+                  <s-table-row>
+                    <s-table-cell><s-text tone="subdued">Risk Level</s-text></s-table-cell>
+                    <s-table-cell>
+                      <AlertBadge alertLevel={fields.alert_level} alertType={fields.alert_type} />
+                    </s-table-cell>
+                  </s-table-row>
+                )}
+              </s-table-body>
+            </s-table>
+          </s-box>
         </s-grid>
 
         {/* ─────────────────────────────────────────────────────────────
