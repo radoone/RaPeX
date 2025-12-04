@@ -370,88 +370,100 @@ export default function ManualCheckPage() {
         </div>
       </s-section>
 
-      {/* Product list */}
-      <s-section heading={t('manualCheck.catalogue.heading', { count: products.length })}>
+      {/* Product list - using Polaris s-table for accessibility */}
+      <s-section heading={t('manualCheck.catalogue.heading', { count: products.length })} padding="none">
         {products.length === 0 ? (
           <s-empty-state heading={t('manualCheck.catalogue.emptyHeading')}>
             <s-text>{t('manualCheck.catalogue.emptyBody')}</s-text>
           </s-empty-state>
         ) : (
-          <div className="catalogue-table">
-            <div className="catalogue-row catalogue-row--header">
-              <s-text>{t('manualCheck.catalogue.columns.product')}</s-text>
-              <s-text>{t('manualCheck.catalogue.columns.status')}</s-text>
-              <s-text>{t('manualCheck.catalogue.columns.checks')}</s-text>
-              <s-text>{t('manualCheck.catalogue.columns.action')}</s-text>
-            </div>
-            {products.map((product: any) => {
-              const productId = product.id.replace('gid://shopify/Product/', '');
-              const checks = checksByProduct[productId] || { totalChecks: 0, lastCheck: null, isSafe: null };
-              const lastCheck = checks.lastCheck ? new Date(checks.lastCheck.checkedAt) : null;
-              const statusTone = checks.lastCheck ? (checks.isSafe ? 'success' : 'critical') : 'info';
-              const statusLabel = checks.lastCheck
-                ? (checks.isSafe ? t('manualCheck.catalogue.status.safe') : t('manualCheck.catalogue.status.unsafe'))
-                : t('manualCheck.catalogue.status.notChecked');
+          <s-table>
+            <s-table-header-row>
+              <s-table-header listSlot="primary">{t('manualCheck.catalogue.columns.product')}</s-table-header>
+              <s-table-header listSlot="inline">{t('manualCheck.catalogue.columns.status')}</s-table-header>
+              <s-table-header listSlot="labeled">{t('manualCheck.catalogue.columns.checks')}</s-table-header>
+              <s-table-header>{t('manualCheck.catalogue.columns.action')}</s-table-header>
+            </s-table-header-row>
+            <s-table-body>
+              {products.map((product: any) => {
+                const productId = product.id.replace('gid://shopify/Product/', '');
+                const checks = checksByProduct[productId] || { totalChecks: 0, lastCheck: null, isSafe: null };
+                const lastCheck = checks.lastCheck ? new Date(checks.lastCheck.checkedAt) : null;
+                const statusTone = checks.lastCheck ? (checks.isSafe ? 'success' : 'critical') : 'info';
+                const statusLabel = checks.lastCheck
+                  ? (checks.isSafe ? t('manualCheck.catalogue.status.safe') : t('manualCheck.catalogue.status.unsafe'))
+                  : t('manualCheck.catalogue.status.notChecked');
 
-              // Check if product has an existing alert
-              const existingAlert = alertsByProduct[productId];
-              const hasAlert = !!existingAlert;
+                // Check if product has an existing alert
+                const existingAlert = alertsByProduct[productId];
+                const hasAlert = !!existingAlert;
 
-              return (
-                <div key={product.id} className="catalogue-row">
-                  <div className="catalogue-product">
-                    <s-thumbnail src={product.featuredImage?.url} alt={product.title} size="small" />
-                    <div className="catalogue-meta">
-                      <s-text fontWeight="bold">{product.title}</s-text>
-                      <div className="catalogue-subtitle">
-                        {product.vendor || t('manualCheck.catalogue.unknownVendor')} - {product.productType || t('manualCheck.catalogue.noType')}
-                      </div>
-                    </div>
-                  </div>
+                return (
+                  <s-table-row key={product.id}>
+                    {/* Product Cell */}
+                    <s-table-cell>
+                      <s-stack direction="inline" gap="small" blockAlign="center">
+                        <s-thumbnail src={product.featuredImage?.url} alt={product.title} size="small" />
+                        <s-stack gap="small-100">
+                          <s-text fontWeight="semibold">{product.title}</s-text>
+                          <s-text tone="subdued" size="small">
+                            {product.vendor || t('manualCheck.catalogue.unknownVendor')} - {product.productType || t('manualCheck.catalogue.noType')}
+                          </s-text>
+                        </s-stack>
+                      </s-stack>
+                    </s-table-cell>
 
-                  <div className="catalogue-meta">
-                    <s-badge tone={statusTone}>{statusLabel}</s-badge>
-                    {lastCheck && (
-                      <s-text tone="subdued" size="small">
-                        {t('manualCheck.catalogue.lastChecked', { date: lastCheck.toLocaleDateString(dateLocale) })}
-                      </s-text>
-                    )}
-                  </div>
+                    {/* Status Cell */}
+                    <s-table-cell>
+                      <s-stack gap="small-100">
+                        <s-badge tone={statusTone}>{statusLabel}</s-badge>
+                        {lastCheck && (
+                          <s-text tone="subdued" size="small">
+                            {t('manualCheck.catalogue.lastChecked', { date: lastCheck.toLocaleDateString(dateLocale) })}
+                          </s-text>
+                        )}
+                      </s-stack>
+                    </s-table-cell>
 
-                  <div className="catalogue-stat">
-                    <s-text fontWeight="semibold">{t('manualCheck.catalogue.columns.checks')} {checks.totalChecks}</s-text>
-                    <s-text tone="subdued" size="small">
-                      {checks.totalChecks > 0 ? t('manualCheck.catalogue.totalChecks', { count: checks.totalChecks }) : t('manualCheck.catalogue.firstCheck')}
-                    </s-text>
-                  </div>
+                    {/* Checks Cell */}
+                    <s-table-cell>
+                      <s-stack gap="small-100">
+                        <s-text fontWeight="semibold">{checks.totalChecks}</s-text>
+                        <s-text tone="subdued" size="small">
+                          {checks.totalChecks > 0 ? t('manualCheck.catalogue.totalChecks', { count: checks.totalChecks }) : t('manualCheck.catalogue.firstCheck')}
+                        </s-text>
+                      </s-stack>
+                    </s-table-cell>
 
-                  <div className="catalogue-actions">
-                    <s-stack direction="inline" gap="small">
-                      {/* View button - opens detail modal if alert exists */}
-                      {hasAlert && (
+                    {/* Actions Cell */}
+                    <s-table-cell>
+                      <s-stack direction="inline" gap="small">
+                        {/* View button - opens detail modal if alert exists */}
+                        {hasAlert && (
+                          <s-button
+                            size="small"
+                            variant="secondary"
+                            commandFor={`manual-alert-${existingAlert.id}`}
+                            command="--show"
+                          >
+                            {t('actions.view')}
+                          </s-button>
+                        )}
                         <s-button
                           size="small"
-                          variant="secondary"
-                          commandFor={`manual-alert-${existingAlert.id}`}
-                          command="--show"
+                          variant="primary"
+                          loading={isLoading && selectedProduct?.id === product.id || undefined}
+                          onClick={() => handleProductCheck(product)}
                         >
-                          {t('actions.view')}
+                          {checks.totalChecks > 0 ? t('manualCheck.catalogue.actions.checkAgain') : t('manualCheck.catalogue.actions.checkSafety')}
                         </s-button>
-                      )}
-                      <s-button
-                        size="small"
-                        variant="primary"
-                        loading={isLoading && selectedProduct?.id === product.id || undefined}
-                        onClick={() => handleProductCheck(product)}
-                      >
-                        {checks.totalChecks > 0 ? t('manualCheck.catalogue.actions.checkAgain') : t('manualCheck.catalogue.actions.checkSafety')}
-                      </s-button>
-                    </s-stack>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+                      </s-stack>
+                    </s-table-cell>
+                  </s-table-row>
+                );
+              })}
+            </s-table-body>
+          </s-table>
         )}
       </s-section>
 
