@@ -6,6 +6,7 @@ import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
 import db from "../db.server";
 import { LanguageSwitcher } from "../components";
+import { checkProductSafety, getSimilarityThresholdForShop, shopifyProductToProductData } from "../services/safety-gate-checker.server";
 
 type BulkCheckResults = {
   processed: number;
@@ -158,8 +159,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   if (actionType === "bulkCheck") {
     try {
-      const { checkProductSafety, getSimilarityThresholdForShop, shopifyProductToProductData } = await import("../services/safety-gate-checker.server");
-      
       const results: BulkCheckResults = {
         processed: 0,
         checked: 0,
