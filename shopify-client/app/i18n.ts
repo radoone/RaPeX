@@ -129,6 +129,7 @@ const resources = {
       },
       "actions": {
         "checkAll": "Check all products",
+        "checking": "Checking...",
         "manualCheck": "Manual check",
         "settings": "Settings",
         "viewAlerts": "View alerts",
@@ -454,6 +455,7 @@ const resources = {
       },
       "actions": {
         "checkAll": "Skontrolovať všetky produkty",
+        "checking": "Kontrolujem...",
         "manualCheck": "Manuálna kontrola",
         "settings": "Nastavenia",
         "viewAlerts": "Zobraziť upozornenia",

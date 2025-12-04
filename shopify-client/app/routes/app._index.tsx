@@ -1,6 +1,6 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { useFetcher, useLoaderData, useNavigation, useNavigate, data } from "@remix-run/react";
+import { useFetcher, useLoaderData, useNavigation, useNavigate, json } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
@@ -10,19 +10,16 @@ import { LanguageSwitcher } from "../components";
 type BulkCheckResults = {
   processed: number;
   checked: number;
+  skipped: number;
   alertsCreated: number;
   errors: number;
-  startTime: Date;
-  endTime: Date | null;
-};
-
-type SerializedBulkCheckResults = {
-  processed: number;
-  checked: number;
-  alertsCreated: number;
-  errors: number;
-  startTime: string;
-  endTime: string | null;
+  totalProducts: number;
+  products: Array<{
+    id: string;
+    title: string;
+    status: 'checked' | 'skipped' | 'error' | 'alert_created';
+    message?: string;
+  }>;
 };
 
 type ActionResponse = {
@@ -30,12 +27,17 @@ type ActionResponse = {
   message?: string;
   error?: string;
   results?: BulkCheckResults;
+  progress?: {
+    current: number;
+    total: number;
+    status: string;
+  };
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { session, admin } = await authenticate.admin(request);
 
-  const [activeAlerts, totalAlerts, resolvedAlerts, dismissedAlerts, totalChecks, recentAlerts] = await Promise.all([
+  const [activeAlerts, totalAlerts, resolvedAlerts, dismissedAlerts, totalChecks, recentAlerts, checkedProductIds] = await Promise.all([
     db.safetyAlert.count({
       where: { shop: session.shop, status: 'active' },
     }),
@@ -55,6 +57,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       where: { shop: session.shop },
       orderBy: { createdAt: 'desc' },
       take: 5,
+    }),
+    // Get list of already checked product IDs
+    db.safetyCheck.findMany({
+      where: { shop: session.shop },
+      select: { productId: true },
+      distinct: ['productId'],
     }),
   ]);
 
@@ -112,34 +120,231 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     return { ...alert, alertType, riskDescription, productImage };
   });
 
-  return {
-    stats: { activeAlerts, totalAlerts, resolvedAlerts, dismissedAlerts, totalChecks },
+  // Get total products count from Shopify
+  let totalProductsCount = 0;
+  try {
+    const countResponse = await admin.graphql(`#graphql
+      query { productsCount { count } }
+    `);
+    const countJson = await countResponse.json();
+    totalProductsCount = countJson.data?.productsCount?.count || 0;
+  } catch (e) {
+    console.error("Error getting products count:", e);
+  }
+
+  const checkedProductCount = checkedProductIds.length;
+  const uncheckedProductCount = Math.max(0, totalProductsCount - checkedProductCount);
+
+  return json({
+    stats: { 
+      activeAlerts, 
+      totalAlerts, 
+      resolvedAlerts, 
+      dismissedAlerts, 
+      totalChecks,
+      totalProducts: totalProductsCount,
+      checkedProducts: checkedProductCount,
+      uncheckedProducts: uncheckedProductCount,
+    },
     recentAlerts: processedRecentAlerts,
-  };
+  });
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const { session } = await authenticate.admin(request);
+  const { session, admin } = await authenticate.admin(request);
   const formData = await request.formData();
-  const action = formData.get("action");
+  const actionType = formData.get("action");
+  const includeAlreadyChecked = formData.get("includeAlreadyChecked") === "true";
 
-  if (action === "bulkCheck") {
+  if (actionType === "bulkCheck") {
     try {
-      const { admin } = await authenticate.admin(request);
-      const { bulkCheckProducts } = await import("../services/safety-gate-checker.server");
-      const results = await bulkCheckProducts(admin, session.shop, db);
-      return {
-        success: true,
-        message: `Bulk check completed: ${results.processed} products processed, ${results.alertsCreated} alerts created`,
-        results
+      const { checkProductSafety, getSimilarityThresholdForShop, shopifyProductToProductData } = await import("../services/safety-gate-checker.server");
+      
+      const results: BulkCheckResults = {
+        processed: 0,
+        checked: 0,
+        skipped: 0,
+        alertsCreated: 0,
+        errors: 0,
+        totalProducts: 0,
+        products: [],
       };
+
+      const similarityThreshold = await getSimilarityThresholdForShop(session.shop);
+      
+      // Get already checked product IDs if not including them
+      let checkedProductIds: Set<string> = new Set();
+      if (!includeAlreadyChecked) {
+        const checkedProducts = await db.safetyCheck.findMany({
+          where: { shop: session.shop },
+          select: { productId: true },
+          distinct: ['productId'],
+        });
+        checkedProductIds = new Set(checkedProducts.map(p => p.productId));
+      }
+
+      let hasNextPage = true;
+      let cursor: string | null = null;
+
+      // First, count total products
+      const countResponse = await admin.graphql(`#graphql
+        query { productsCount { count } }
+      `);
+      const countJson = await countResponse.json();
+      results.totalProducts = countJson.data?.productsCount?.count || 0;
+
+      while (hasNextPage) {
+        const productsQuery = `
+          query getProducts($first: Int!, $after: String) {
+            products(first: $first, after: $after) {
+              edges {
+                node {
+                  id
+                  title
+                  handle
+                  productType
+                  vendor
+                  tags
+                  description
+                  descriptionHtml
+                  featuredImage { url altText }
+                  variants(first: 1) {
+                    edges {
+                      node {
+                        id
+                        title
+                        selectedOptions { name value }
+                        image { url altText }
+                        price
+                      }
+                    }
+                  }
+                  updatedAt
+                  createdAt
+                }
+                cursor
+              }
+              pageInfo { hasNextPage endCursor }
+            }
+          }
+        `;
+
+        const productsResponse = await admin.graphql(productsQuery, { 
+          variables: { first: 50, after: cursor } 
+        });
+        const productsJson = await productsResponse.json();
+
+        if (!productsJson.data?.products) {
+          throw new Error('Failed to fetch products from Shopify');
+        }
+
+        const { edges, pageInfo } = productsJson.data.products;
+        hasNextPage = pageInfo.hasNextPage;
+        cursor = pageInfo.endCursor;
+
+        // Process products
+        for (const edge of edges) {
+          const product = edge.node;
+          results.processed++;
+
+          // Skip if already checked (unless includeAlreadyChecked is true)
+          if (!includeAlreadyChecked && checkedProductIds.has(product.id)) {
+            results.skipped++;
+            results.products.push({
+              id: product.id,
+              title: product.title,
+              status: 'skipped',
+              message: 'Already checked',
+            });
+            continue;
+          }
+
+          try {
+            const productData = shopifyProductToProductData(product);
+            const safetyResult = await checkProductSafety(productData, similarityThreshold);
+            results.checked++;
+
+            if (!safetyResult.isSafe && safetyResult.warnings.length > 0) {
+              const existingAlert = await db.safetyAlert.findFirst({
+                where: { productId: product.id, shop: session.shop, status: 'active' },
+              });
+
+              if (!existingAlert) {
+                await db.safetyAlert.create({
+                  data: {
+                    productId: product.id,
+                    productTitle: product.title,
+                    productHandle: product.handle,
+                    shop: session.shop,
+                    checkResult: JSON.stringify(safetyResult),
+                    status: 'active',
+                    riskLevel: safetyResult.warnings[0]?.alertDetails?.fields?.alert_level ||
+                               safetyResult.warnings[0]?.alertDetails?.fields?.risk_level ||
+                               safetyResult.warnings[0]?.riskLevel || 'Unknown',
+                    warningsCount: safetyResult.warnings.length,
+                  },
+                });
+                results.alertsCreated++;
+                results.products.push({
+                  id: product.id,
+                  title: product.title,
+                  status: 'alert_created',
+                  message: `${safetyResult.warnings.length} safety issues found`,
+                });
+              } else {
+                results.products.push({
+                  id: product.id,
+                  title: product.title,
+                  status: 'checked',
+                  message: 'Alert already exists',
+                });
+              }
+            } else {
+              results.products.push({
+                id: product.id,
+                title: product.title,
+                status: 'checked',
+                message: 'Safe',
+              });
+            }
+
+            await db.safetyCheck.create({
+              data: {
+                productId: product.id,
+                productTitle: product.title,
+                shop: session.shop,
+                isSafe: safetyResult.isSafe,
+                checkedAt: new Date(safetyResult.checkedAt),
+              },
+            });
+
+          } catch (error) {
+            results.errors++;
+            results.products.push({
+              id: product.id,
+              title: product.title,
+              status: 'error',
+              message: error instanceof Error ? error.message : 'Unknown error',
+            });
+          }
+        }
+
+        // Small delay between pages
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+
+      return json({
+        success: true,
+        message: `Checked ${results.checked} products, created ${results.alertsCreated} alerts`,
+        results,
+      });
     } catch (error) {
       console.error('Bulk check failed:', error);
-      return data({ success: false, error: error instanceof Error ? error.message : 'Bulk check failed' }, { status: 500 });
+      return json({ success: false, error: error instanceof Error ? error.message : 'Bulk check failed' }, { status: 500 });
     }
   }
 
-  return json({ error: "Invalid action" }, { status: 400 });
+  return json({ success: false, error: "Invalid action" }, { status: 400 });
 };
 
 export default function Index() {
@@ -150,26 +355,24 @@ export default function Index() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  // Visibility state for dismissible sections
+  // UI state
   const [visible, setVisible] = useState({
     banner: stats.activeAlerts > 0,
     setupGuide: stats.totalChecks === 0,
     calloutCard: true,
     news: true,
   });
-
-  // Expanded state for setup guide
   const [expanded, setExpanded] = useState({
     setupGuide: true,
     step1: false,
     step2: false,
     step3: false,
+    results: false,
   });
-
-  // Progress tracking
   const [progress, setProgress] = useState(0);
+  const [includeAlreadyChecked, setIncludeAlreadyChecked] = useState(false);
 
-  // Button refs for native event listeners
+  // Button refs
   const bulkCheckBtnRef = useRef<HTMLElement>(null);
   const bulkCheckBtn2Ref = useRef<HTMLElement>(null);
   const bulkCheckBtn3Ref = useRef<HTMLElement>(null);
@@ -182,16 +385,15 @@ export default function Index() {
   const resolvedAlerts = stats.resolvedAlerts;
   const resolutionRate = stats.totalAlerts > 0 ? Math.round((resolvedAlerts / stats.totalAlerts) * 100) : 100;
 
-  const runBulkCheck = () => {
+  const runBulkCheck = useCallback(() => {
     if (isSubmitting) return;
-    fetcher.submit({ action: 'bulkCheck' }, { method: 'POST' });
-  };
+    fetcher.submit(
+      { action: 'bulkCheck', includeAlreadyChecked: includeAlreadyChecked.toString() }, 
+      { method: 'POST' }
+    );
+  }, [isSubmitting, includeAlreadyChecked, fetcher]);
 
-  const hasBulkCheckResults = (data: any): data is { success: boolean; results: SerializedBulkCheckResults } => {
-    return data?.success === true && data.results !== undefined;
-  };
-
-  const bulkResults = hasBulkCheckResults(fetcher.data) ? fetcher.data.results : null;
+  const bulkResults = fetcher.data?.success && fetcher.data.results ? fetcher.data.results : null;
 
   // Native event listeners for buttons
   useEffect(() => {
@@ -201,7 +403,7 @@ export default function Index() {
       bulkBtn.addEventListener('click', handleClick);
       return () => bulkBtn.removeEventListener('click', handleClick);
     }
-  }, [isSubmitting]);
+  }, [runBulkCheck]);
 
   useEffect(() => {
     const bulkBtn = bulkCheckBtn2Ref.current;
@@ -210,7 +412,7 @@ export default function Index() {
       bulkBtn.addEventListener('click', handleClick);
       return () => bulkBtn.removeEventListener('click', handleClick);
     }
-  }, [isSubmitting]);
+  }, [runBulkCheck]);
 
   useEffect(() => {
     const bulkBtn = bulkCheckBtn3Ref.current;
@@ -219,7 +421,7 @@ export default function Index() {
       bulkBtn.addEventListener('click', handleClick);
       return () => bulkBtn.removeEventListener('click', handleClick);
     }
-  }, [isSubmitting]);
+  }, [runBulkCheck]);
 
   useEffect(() => {
     const manualBtn = manualCheckBtnRef.current;
@@ -261,9 +463,9 @@ export default function Index() {
 
   return (
     <s-page>
-      {/* Primary Actions - Using slots */}
+      {/* Primary Actions */}
       <s-button ref={bulkCheckBtnRef} slot="primary-action" variant="primary" loading={isSubmitting || undefined}>
-        {t('actions.checkAll')}
+        {isSubmitting ? t('actions.checking') : t('actions.checkAll')}
       </s-button>
       <s-button ref={manualCheckBtnRef} slot="secondary-actions">
         {t('actions.manualCheck')}
@@ -272,8 +474,7 @@ export default function Index() {
         {t('actions.settings')}
       </s-button>
 
-      {/* === Banner === */}
-      {/* Use banners sparingly. Only one banner should be visible at a time. */}
+      {/* Active Alerts Banner */}
       {visible.banner && stats.activeAlerts > 0 && (
         <s-banner
           tone="critical"
@@ -287,60 +488,118 @@ export default function Index() {
         </s-banner>
       )}
 
-      {/* Bulk Check Results Banner */}
-      {bulkResults && (
-        <s-banner tone="success" dismissible>
-          {t('dashboard.bulkResults.success', {
-            processed: bulkResults.processed,
-            checked: bulkResults.checked,
-            alertsCreated: bulkResults.alertsCreated
-          })}
+      {/* Progress Banner during check */}
+      {isSubmitting && (
+        <s-banner tone="info" heading="🔍 Checking products...">
+          <s-stack gap="small">
+            <s-text>Please wait while we check your products against the Safety Gate database.</s-text>
+            <s-progress-bar progress={50} accessibilityLabel="Checking products" />
+            <s-text tone="subdued">This may take a few minutes depending on the number of products.</s-text>
+          </s-stack>
         </s-banner>
       )}
 
-      {/* === Setup Guide === */}
-      {/* Keep instructions brief and direct. Only ask merchants for required information. */}
+      {/* Bulk Check Results Summary */}
+      {bulkResults && (
+        <s-section>
+          <s-box padding="large" borderRadius="large" background="bg-surface-success" borderWidth="base" borderColor="border-success">
+            <s-stack gap="base">
+              <s-stack direction="inline" align="space-between" blockAlign="center">
+                <s-heading>✅ Safety Check Complete</s-heading>
+                <s-button 
+                  variant="tertiary" 
+                  icon={expanded.results ? "chevron-up" : "chevron-down"}
+                  onClick={() => setExpanded({ ...expanded, results: !expanded.results })}
+                >
+                  {expanded.results ? 'Hide details' : 'Show details'}
+                </s-button>
+              </s-stack>
+              
+              {/* Summary stats */}
+              <s-grid gridTemplateColumns="repeat(auto-fit, minmax(120px, 1fr))" gap="base">
+                <s-box padding="base" borderRadius="base" background="bg-surface">
+                  <s-text tone="subdued" size="small">Total Products</s-text>
+                  <s-heading size="large">{bulkResults.totalProducts}</s-heading>
+                </s-box>
+                <s-box padding="base" borderRadius="base" background="bg-surface">
+                  <s-text tone="subdued" size="small">Checked</s-text>
+                  <s-heading size="large">{bulkResults.checked}</s-heading>
+                </s-box>
+                <s-box padding="base" borderRadius="base" background="bg-surface">
+                  <s-text tone="subdued" size="small">Skipped</s-text>
+                  <s-heading size="large">{bulkResults.skipped}</s-heading>
+                </s-box>
+                <s-box padding="base" borderRadius="base" background={bulkResults.alertsCreated > 0 ? "bg-surface-critical" : "bg-surface"}>
+                  <s-text tone="subdued" size="small">Alerts Created</s-text>
+                  <s-heading size="large">{bulkResults.alertsCreated}</s-heading>
+                </s-box>
+                {bulkResults.errors > 0 && (
+                  <s-box padding="base" borderRadius="base" background="bg-surface-warning">
+                    <s-text tone="subdued" size="small">Errors</s-text>
+                    <s-heading size="large">{bulkResults.errors}</s-heading>
+                  </s-box>
+                )}
+              </s-grid>
+
+              {/* Detailed product list (expandable) */}
+              {expanded.results && bulkResults.products.length > 0 && (
+                <s-box padding="base" borderRadius="base" background="bg-surface" style={{ maxHeight: '400px', overflow: 'auto' }}>
+                  <s-stack gap="small">
+                    <s-text fontWeight="bold">Product Details</s-text>
+                    {bulkResults.products.map((product, idx) => (
+                      <s-stack key={idx} direction="inline" gap="small" align="space-between" blockAlign="center">
+                        <s-stack direction="inline" gap="small" blockAlign="center">
+                          {product.status === 'alert_created' && <s-badge tone="critical">⚠️ Alert</s-badge>}
+                          {product.status === 'checked' && <s-badge tone="success">✓ Safe</s-badge>}
+                          {product.status === 'skipped' && <s-badge tone="info">↷ Skipped</s-badge>}
+                          {product.status === 'error' && <s-badge tone="warning">✕ Error</s-badge>}
+                          <s-text>{product.title}</s-text>
+                        </s-stack>
+                        <s-text tone="subdued" size="small">{product.message}</s-text>
+                      </s-stack>
+                    ))}
+                  </s-stack>
+                </s-box>
+              )}
+
+              {/* Action buttons */}
+              {bulkResults.alertsCreated > 0 && (
+                <s-stack direction="inline" gap="small">
+                  <s-button variant="primary" onClick={() => navigate('/app/alerts')}>
+                    Review {bulkResults.alertsCreated} Alerts
+                  </s-button>
+                </s-stack>
+              )}
+            </s-stack>
+          </s-box>
+        </s-section>
+      )}
+
+      {/* Setup Guide */}
       {visible.setupGuide && stats.totalChecks === 0 && (
         <s-section>
           <s-grid gap="small">
-            {/* Header */}
             <s-grid gap="small-200">
-              <s-grid
-                gridTemplateColumns="1fr auto auto"
-                gap="small-300"
-                alignItems="center"
-              >
+              <s-grid gridTemplateColumns="1fr auto auto" gap="small-300" alignItems="center">
                 <s-heading>{t('dashboard.setup.title')}</s-heading>
                 <s-button
-                  accessibilityLabel={t('dashboard.setup.title')}
                   onClick={() => setVisible({ ...visible, setupGuide: false })}
                   variant="tertiary"
                   tone="neutral"
                   icon="x"
                 />
                 <s-button
-                  accessibilityLabel={t('dashboard.setup.title')}
                   onClick={() => setExpanded({ ...expanded, setupGuide: !expanded.setupGuide })}
                   variant="tertiary"
                   tone="neutral"
                   icon={expanded.setupGuide ? "chevron-up" : "chevron-down"}
                 />
               </s-grid>
-              <s-paragraph>
-                {t('dashboard.setup.description')}
-              </s-paragraph>
-              <s-paragraph color="subdued">
-                {t('dashboard.setup.progress', { completed: progress, total: 3 })}
-              </s-paragraph>
+              <s-paragraph>{t('dashboard.setup.description')}</s-paragraph>
+              <s-paragraph color="subdued">{t('dashboard.setup.progress', { completed: progress, total: 3 })}</s-paragraph>
             </s-grid>
 
-            {/* Steps Container */}
-            <s-box
-              borderRadius="base"
-              border="base"
-              background="base"
-              display={expanded.setupGuide ? "auto" : "none"}
-            >
+            <s-box borderRadius="base" border="base" background="base" display={expanded.setupGuide ? "auto" : "none"}>
               {/* Step 1 */}
               <s-box>
                 <s-grid gridTemplateColumns="1fr auto" gap="base" padding="small">
@@ -350,7 +609,6 @@ export default function Index() {
                   />
                   <s-button
                     onClick={() => setExpanded({ ...expanded, step1: !expanded.step1 })}
-                    accessibilityLabel={t('dashboard.setup.steps.step1.label')}
                     variant="tertiary"
                     icon={expanded.step1 ? "chevron-up" : "chevron-down"}
                   />
@@ -358,9 +616,7 @@ export default function Index() {
                 <s-box padding="small" paddingBlockStart="none" display={expanded.step1 ? "auto" : "none"}>
                   <s-box padding="base" background="subdued" borderRadius="base">
                     <s-stack gap="small">
-                      <s-paragraph>
-                        {t('dashboard.setup.steps.step1.description')}
-                      </s-paragraph>
+                      <s-paragraph>{t('dashboard.setup.steps.step1.description')}</s-paragraph>
                       <s-button ref={bulkCheckBtn2Ref} loading={isSubmitting || undefined}>
                         {t('actions.checkAll')}
                       </s-button>
@@ -379,16 +635,13 @@ export default function Index() {
                   />
                   <s-button
                     onClick={() => setExpanded({ ...expanded, step2: !expanded.step2 })}
-                    accessibilityLabel={t('dashboard.setup.steps.step2.label')}
                     variant="tertiary"
                     icon={expanded.step2 ? "chevron-up" : "chevron-down"}
                   />
                 </s-grid>
                 <s-box padding="small" paddingBlockStart="none" display={expanded.step2 ? "auto" : "none"}>
                   <s-box padding="base" background="subdued" borderRadius="base">
-                    <s-paragraph>
-                      {t('dashboard.setup.steps.step2.description')}
-                    </s-paragraph>
+                    <s-paragraph>{t('dashboard.setup.steps.step2.description')}</s-paragraph>
                   </s-box>
                 </s-box>
               </s-box>
@@ -403,16 +656,13 @@ export default function Index() {
                   />
                   <s-button
                     onClick={() => setExpanded({ ...expanded, step3: !expanded.step3 })}
-                    accessibilityLabel={t('dashboard.setup.steps.step3.label')}
                     variant="tertiary"
                     icon={expanded.step3 ? "chevron-up" : "chevron-down"}
                   />
                 </s-grid>
                 <s-box padding="small" paddingBlockStart="none" display={expanded.step3 ? "auto" : "none"}>
                   <s-box padding="base" background="subdued" borderRadius="base">
-                    <s-paragraph>
-                      {t('dashboard.setup.steps.step3.description')}
-                    </s-paragraph>
+                    <s-paragraph>{t('dashboard.setup.steps.step3.description')}</s-paragraph>
                   </s-box>
                 </s-box>
               </s-box>
@@ -421,7 +671,59 @@ export default function Index() {
         </s-section>
       )}
 
-      {/* === Metrics Card === */}
+      {/* Check All Products Section */}
+      <s-section heading="Product Safety Check">
+        <s-box padding="large" borderRadius="large" background="bg-surface-secondary">
+          <s-stack gap="base">
+            <s-stack direction="inline" gap="large" wrap>
+              <s-stack gap="small-100">
+                <s-text tone="subdued" size="small">Total Products</s-text>
+                <s-heading size="large">{stats.totalProducts}</s-heading>
+              </s-stack>
+              <s-stack gap="small-100">
+                <s-text tone="subdued" size="small">Already Checked</s-text>
+                <s-heading size="large">{stats.checkedProducts}</s-heading>
+              </s-stack>
+              <s-stack gap="small-100">
+                <s-text tone="subdued" size="small">Not Yet Checked</s-text>
+                <s-heading size="large" style={{ color: stats.uncheckedProducts > 0 ? 'var(--s-color-text-critical)' : 'inherit' }}>
+                  {stats.uncheckedProducts}
+                </s-heading>
+              </s-stack>
+            </s-stack>
+
+            <s-divider />
+
+            <s-stack gap="small">
+              <s-checkbox
+                label="Include already checked products"
+                checked={includeAlreadyChecked || undefined}
+                onInput={(e: any) => setIncludeAlreadyChecked(e.currentTarget?.checked)}
+              />
+              <s-text tone="subdued" size="small">
+                {includeAlreadyChecked 
+                  ? `Will check all ${stats.totalProducts} products` 
+                  : `Will check ${stats.uncheckedProducts} unchecked products (skip ${stats.checkedProducts} already checked)`}
+              </s-text>
+            </s-stack>
+
+            <s-button 
+              ref={bulkCheckBtn3Ref} 
+              variant="primary" 
+              loading={isSubmitting || undefined}
+              disabled={stats.uncheckedProducts === 0 && !includeAlreadyChecked || undefined}
+            >
+              {isSubmitting 
+                ? 'Checking...' 
+                : includeAlreadyChecked 
+                  ? `Check All ${stats.totalProducts} Products` 
+                  : `Check ${stats.uncheckedProducts} Unchecked Products`}
+            </s-button>
+          </s-stack>
+        </s-box>
+      </s-section>
+
+      {/* Metrics Card */}
       <s-section padding="base">
         <s-grid
           gridTemplateColumns="@container (inline-size <= 400px) 1fr, 1fr auto 1fr auto 1fr"
@@ -489,7 +791,7 @@ export default function Index() {
         </s-grid>
       </s-section>
 
-      {/* === Recent Alerts === */}
+      {/* Recent Alerts */}
       <s-section>
         <s-grid gridTemplateColumns="1fr auto" alignItems="center" paddingBlockEnd="small-400">
           <s-heading>{t('dashboard.recentAlerts.title')}</s-heading>
@@ -503,9 +805,6 @@ export default function Index() {
               <s-paragraph tone="subdued">
                 {t('dashboard.recentAlerts.emptyState.content')}
               </s-paragraph>
-              <s-button ref={bulkCheckBtn3Ref} loading={isSubmitting || undefined}>
-                {t('actions.checkAll')}
-              </s-button>
             </s-stack>
           </s-box>
         ) : (
@@ -521,11 +820,7 @@ export default function Index() {
               >
                 <s-grid gridTemplateColumns="auto 1fr" alignItems="start" gap="base">
                   {alert.productImage ? (
-                    <s-thumbnail
-                      size="small"
-                      src={alert.productImage}
-                      alt={alert.productTitle}
-                    />
+                    <s-thumbnail size="small" src={alert.productImage} alt={alert.productTitle} />
                   ) : (
                     <s-box background="subdued" borderRadius="base" padding="small-400">
                       <s-icon name="product" />
@@ -555,17 +850,12 @@ export default function Index() {
           </s-grid>
         )}
 
-        <s-stack
-          direction="inline"
-          alignItems="center"
-          justifyContent="center"
-          paddingBlockStart="base"
-        >
+        <s-stack direction="inline" alignItems="center" justifyContent="center" paddingBlockStart="base">
           <s-link onClick={() => navigate('/app/alerts')}>{t('actions.viewAlerts')}</s-link>
         </s-stack>
       </s-section>
 
-      {/* === News === */}
+      {/* News */}
       {visible.news && (
         <s-section>
           <s-grid gridTemplateColumns="1fr auto" alignItems="center" paddingBlockEnd="small-400">
@@ -575,48 +865,28 @@ export default function Index() {
               icon="x"
               tone="neutral"
               variant="tertiary"
-              accessibilityLabel="Dismiss news section"
             />
           </s-grid>
           <s-grid gridTemplateColumns="repeat(auto-fit, minmax(240px, 1fr))" gap="base">
-            {/* News item 1 */}
-            <s-grid
-              background="base"
-              border="base"
-              borderRadius="base"
-              padding="base"
-              gap="small-400"
-            >
+            <s-grid background="base" border="base" borderRadius="base" padding="base" gap="small-400">
               <s-text tone="subdued">{t('news.items.databaseUpdate.date')}</s-text>
               <s-link href="https://ec.europa.eu/safety-gate-alerts/screen/home" target="_blank">
                 <s-heading size="small">{t('news.items.databaseUpdate.title')}</s-heading>
               </s-link>
-              <s-paragraph>
-                {t('news.items.databaseUpdate.description')}
-              </s-paragraph>
+              <s-paragraph>{t('news.items.databaseUpdate.description')}</s-paragraph>
             </s-grid>
-
-            {/* News item 2 */}
-            <s-grid
-              background="base"
-              border="base"
-              borderRadius="base"
-              padding="base"
-              gap="small-400"
-            >
+            <s-grid background="base" border="base" borderRadius="base" padding="base" gap="small-400">
               <s-text tone="subdued">{t('news.items.gpsr.date')}</s-text>
               <s-link href="https://ec.europa.eu/safety-gate-alerts/screen/pages/gpsr" target="_blank">
                 <s-heading size="small">{t('news.items.gpsr.title')}</s-heading>
               </s-link>
-              <s-paragraph>
-                {t('news.items.gpsr.description')}
-              </s-paragraph>
+              <s-paragraph>{t('news.items.gpsr.description')}</s-paragraph>
             </s-grid>
           </s-grid>
         </s-section>
       )}
 
-      {/* === Safety Gate Portal (Callout Card) === */}
+      {/* Safety Gate Portal */}
       {visible.calloutCard && (
         <s-section>
           <s-grid gridTemplateColumns="1fr auto" alignItems="center" paddingBlockEnd="small-400">
@@ -626,11 +896,9 @@ export default function Index() {
               icon="x"
               tone="neutral"
               variant="tertiary"
-              accessibilityLabel="Dismiss section"
             />
           </s-grid>
           <s-grid gridTemplateColumns="repeat(auto-fit, minmax(240px, 1fr))" gap="base">
-            {/* Search Database */}
             <s-clickable
               href="https://ec.europa.eu/safety-gate-alerts/screen/search?resetSearch=true"
               target="_blank"
@@ -652,8 +920,6 @@ export default function Index() {
                 </s-stack>
               </s-grid>
             </s-clickable>
-
-            {/* Safety Gate Home */}
             <s-clickable
               href="https://ec.europa.eu/safety-gate-alerts/screen/home"
               target="_blank"
@@ -679,7 +945,7 @@ export default function Index() {
         </s-section>
       )}
 
-      {/* === Language Switcher === */}
+      {/* Language Switcher */}
       <s-section>
         <s-grid gridTemplateColumns="1fr auto" alignItems="center">
           <s-text tone="subdued">{t('common.language')}</s-text>
