@@ -420,8 +420,8 @@ function WarningCard({
             <s-section padding="none">
               <s-table>
                 <s-table-header-row>
-                  <s-table-header listSlot="primary"></s-table-header>
-                  <s-table-header listSlot="secondary"></s-table-header>
+                  <s-table-header listSlot="primary">Field</s-table-header>
+                  <s-table-header listSlot="secondary">Value</s-table-header>
                 </s-table-header-row>
                 <s-table-body>
                   <s-table-row>
