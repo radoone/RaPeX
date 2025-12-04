@@ -221,33 +221,32 @@ export function AlertDetailModal({
             <s-button
               slot="primary-action"
               variant="primary"
-              icon="caret-down"
               commandFor={resolveMenuId}
               loading={isLoading || undefined}
             >
-              {t('actions.resolve')}
+              {t('actions.resolve')} ▾
             </s-button>
             <s-menu id={resolveMenuId} accessibilityLabel={t('resolveActions.menuLabel')}>
               <s-section heading={t('resolveActions.actionTaken')}>
-                <s-button ref={verifiedSafeBtnRef} icon="checkmark-circle" commandFor={modalId} command="--hide">
+                <s-button ref={verifiedSafeBtnRef} commandFor={modalId} command="--hide">
                   ✅ {t('resolveActions.verifiedSafe')}
                 </s-button>
-                <s-button ref={removedFromSaleBtnRef} icon="delete" commandFor={modalId} command="--hide">
-                  {t('resolveActions.removedFromSale')}
+                <s-button ref={removedFromSaleBtnRef} commandFor={modalId} command="--hide">
+                  🗑️ {t('resolveActions.removedFromSale')}
                 </s-button>
-                <s-button ref={modifiedProductBtnRef} icon="edit" commandFor={modalId} command="--hide">
-                  {t('resolveActions.modifiedProduct')}
+                <s-button ref={modifiedProductBtnRef} commandFor={modalId} command="--hide">
+                  ✏️ {t('resolveActions.modifiedProduct')}
                 </s-button>
-                <s-button ref={contactedSupplierBtnRef} icon="email" commandFor={modalId} command="--hide">
-                  {t('resolveActions.contactedSupplier')}
+                <s-button ref={contactedSupplierBtnRef} commandFor={modalId} command="--hide">
+                  📧 {t('resolveActions.contactedSupplier')}
                 </s-button>
               </s-section>
               <s-section heading={t('resolveActions.noActionNeeded')}>
-                <s-button ref={falsePositiveBtnRef} icon="info" commandFor={modalId} command="--hide">
+                <s-button ref={falsePositiveBtnRef} commandFor={modalId} command="--hide">
                   🔵 {t('resolveActions.falsePositive')}
                 </s-button>
-                <s-button ref={notMyProductBtnRef} icon="cancel" commandFor={modalId} command="--hide">
-                  {t('resolveActions.notMyProduct')}
+                <s-button ref={notMyProductBtnRef} commandFor={modalId} command="--hide">
+                  ❌ {t('resolveActions.notMyProduct')}
                 </s-button>
               </s-section>
             </s-menu>

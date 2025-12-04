@@ -367,33 +367,32 @@ function AlertRow({
               <s-button 
                 size="small" 
                 variant="primary"
-                icon="caret-down"
                 commandFor={menuId}
                 loading={isLoading || undefined}
               >
-                {t('actions.resolve')}
+                {t('actions.resolve')} ▾
               </s-button>
               <s-menu id={menuId} accessibilityLabel={t('resolveActions.menuLabel')}>
                 <s-section heading={t('resolveActions.actionTaken')}>
-                  <s-button ref={verifiedSafeBtnRef} icon="checkmark-circle">
+                  <s-button ref={verifiedSafeBtnRef}>
                     ✅ {t('resolveActions.verifiedSafe')}
                   </s-button>
-                  <s-button ref={removedFromSaleBtnRef} icon="delete">
-                    {t('resolveActions.removedFromSale')}
+                  <s-button ref={removedFromSaleBtnRef}>
+                    🗑️ {t('resolveActions.removedFromSale')}
                   </s-button>
-                  <s-button ref={modifiedProductBtnRef} icon="edit">
-                    {t('resolveActions.modifiedProduct')}
+                  <s-button ref={modifiedProductBtnRef}>
+                    ✏️ {t('resolveActions.modifiedProduct')}
                   </s-button>
-                  <s-button ref={contactedSupplierBtnRef} icon="email">
-                    {t('resolveActions.contactedSupplier')}
+                  <s-button ref={contactedSupplierBtnRef}>
+                    📧 {t('resolveActions.contactedSupplier')}
                   </s-button>
                 </s-section>
                 <s-section heading={t('resolveActions.noActionNeeded')}>
-                  <s-button ref={falsePositiveBtnRef} icon="info">
+                  <s-button ref={falsePositiveBtnRef}>
                     🔵 {t('resolveActions.falsePositive')}
                   </s-button>
-                  <s-button ref={notMyProductBtnRef} icon="cancel">
-                    {t('resolveActions.notMyProduct')}
+                  <s-button ref={notMyProductBtnRef}>
+                    ❌ {t('resolveActions.notMyProduct')}
                   </s-button>
                 </s-section>
               </s-menu>
