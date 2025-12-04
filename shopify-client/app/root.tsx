@@ -14,10 +14,8 @@ import i18n from "./i18n";
 import themeStyles from "./styles/theme.css?url";
 
 // Note: Polaris styles are loaded via CDN polaris.js - no need for duplicate import
-// Links are ordered to prevent hydration mismatch
-export const links = () => [
-  { rel: "stylesheet", href: themeStyles },
-];
+// Empty links array - all stylesheets loaded inline to prevent hydration mismatch
+export const links = () => [];
 
 export const loader = async ({ request }: { request: Request }) => {
   const url = new URL(request.url);
@@ -55,6 +53,7 @@ export default function App() {
         <meta name="shopify-api-key" content={apiKey} />
         <link rel="preconnect" href="https://cdn.shopify.com/" />
         <link rel="stylesheet" href="https://cdn.shopify.com/static/fonts/inter/v4/styles.css" />
+        <link rel="stylesheet" href={themeStyles} />
         <script src="https://cdn.shopify.com/shopifycloud/app-bridge.js"></script>
         <script src="https://cdn.shopify.com/shopifycloud/polaris.js"></script>
         <Meta />
