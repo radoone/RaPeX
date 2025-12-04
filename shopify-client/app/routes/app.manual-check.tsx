@@ -31,9 +31,54 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const products = productsJson.data?.products?.edges?.map((e: any) => e.node) || [];
 
   const productIds = products.map((p: any) => p.id.replace('gid://shopify/Product/', ''));
+  
+  // Load safety checks
   const productChecks = await (prisma as any).safetyCheck.findMany({
     where: { shop: session.shop, productId: { in: productIds } },
     orderBy: { checkedAt: 'desc' },
+  });
+
+  // Load existing alerts for products (same transformation as Alerts page)
+  const rawAlerts = await (prisma as any).safetyAlert.findMany({
+    where: { shop: session.shop, productId: { in: productIds } },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  // Transform alerts same as Alerts page
+  const alertsByProduct: Record<string, any> = {};
+  rawAlerts.forEach((alert: any) => {
+    let alertType = 'Unknown', riskDescription = '', alertDetails = null, riskLevelFromResult = null;
+    try {
+      const checkResult = JSON.parse(alert.checkResult);
+      const warnings = Array.isArray(checkResult?.warnings) ? checkResult.warnings : [];
+      if (warnings.length > 0) {
+        const first = warnings[0];
+        alertType = first.alertType || first.alertDetails?.fields?.alert_type || 'Unknown';
+        riskDescription = first.riskLegalProvision || first.alertDetails?.fields?.risk_legal_provision || '';
+        alertDetails = first.alertDetails || null;
+        riskLevelFromResult = first.alertDetails?.fields?.alert_level ||
+                              first.alertDetails?.fields?.risk_level ||
+                              first.riskLevel || null;
+        const fields = first.alertDetails?.fields || {};
+        const pics = [...(fields.pictures || []), fields.product_image].filter(Boolean);
+        if (pics[0]) alertDetails = { ...alertDetails, fallbackImage: typeof pics[0] === 'string' ? pics[0] : pics[0].url };
+      }
+    } catch {}
+    const effectiveRiskLevel = riskLevelFromResult || (alert.riskLevel !== 'unknown' ? alert.riskLevel : null) || 'Unknown';
+    
+    // Get product image from products array
+    const product = products.find((p: any) => p.id.replace('gid://shopify/Product/', '') === alert.productId);
+    
+    const transformedAlert = {
+      ...alert, alertType, riskDescription, alertDetails,
+      riskLevel: effectiveRiskLevel,
+      productImage: product?.featuredImage?.url || alertDetails?.fallbackImage || null,
+    };
+    
+    // Store by productId - keep the most recent/active one
+    if (!alertsByProduct[alert.productId] || alert.status === 'active') {
+      alertsByProduct[alert.productId] = transformedAlert;
+    }
   });
 
   const checksByProduct = productChecks.reduce((acc: any, check: any) => {
@@ -48,7 +93,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     return acc;
   }, {});
 
-  return json({ products, checksByProduct });
+  return json({ products, checksByProduct, alertsByProduct });
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -162,7 +207,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function ManualCheckPage() {
-  const { products, checksByProduct } = useLoaderData<typeof loader>();
+  const { products, checksByProduct, alertsByProduct } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
   const resolveFetcher = useFetcher<typeof action>();
   const { t, i18n } = useTranslation();
@@ -173,6 +218,9 @@ export default function ManualCheckPage() {
   const [showResult, setShowResult] = useState(false);
   const [hasProcessedResult, setHasProcessedResult] = useState(false);
   const dateLocale = i18n.language === 'sk' ? 'sk-SK' : 'en-GB';
+
+  // Get all alerts from alertsByProduct for modals
+  const existingAlerts = Object.values(alertsByProduct || {}) as any[];
 
   const productCheckEntries = Object.values(checksByProduct || {});
   const checkedProducts = productCheckEntries.filter((e: any) => e.totalChecks > 0).length;
@@ -345,6 +393,10 @@ export default function ManualCheckPage() {
                 ? (checks.isSafe ? t('manualCheck.catalogue.status.safe') : t('manualCheck.catalogue.status.unsafe'))
                 : t('manualCheck.catalogue.status.notChecked');
 
+              // Check if product has an existing alert
+              const existingAlert = alertsByProduct[productId];
+              const hasAlert = !!existingAlert;
+
               return (
                 <div key={product.id} className="catalogue-row">
                   <div className="catalogue-product">
@@ -374,14 +426,27 @@ export default function ManualCheckPage() {
                   </div>
 
                   <div className="catalogue-actions">
-                    <s-button
-                      size="small"
-                      variant="primary"
-                      loading={isLoading && selectedProduct?.id === product.id || undefined}
-                      onClick={() => handleProductCheck(product)}
-                    >
-                      {checks.totalChecks > 0 ? t('manualCheck.catalogue.actions.checkAgain') : t('manualCheck.catalogue.actions.checkSafety')}
-                    </s-button>
+                    <s-stack direction="inline" gap="small">
+                      {/* View button - opens detail modal if alert exists */}
+                      {hasAlert && (
+                        <s-button
+                          size="small"
+                          variant="secondary"
+                          commandFor={`manual-alert-${existingAlert.id}`}
+                          command="--show"
+                        >
+                          {t('actions.view')}
+                        </s-button>
+                      )}
+                      <s-button
+                        size="small"
+                        variant="primary"
+                        loading={isLoading && selectedProduct?.id === product.id || undefined}
+                        onClick={() => handleProductCheck(product)}
+                      >
+                        {checks.totalChecks > 0 ? t('manualCheck.catalogue.actions.checkAgain') : t('manualCheck.catalogue.actions.checkSafety')}
+                      </s-button>
+                    </s-stack>
                   </div>
                 </div>
               );
@@ -402,7 +467,20 @@ export default function ManualCheckPage() {
         <SafetyGatePortal />
       </s-grid>
 
-      {/* Result modal - same format as Alerts page */}
+      {/* Modals for existing alerts - same as Alerts page */}
+      {existingAlerts.map((alert) => (
+        <AlertDetailModal
+          key={alert.id}
+          modalId={`manual-alert-${alert.id}`}
+          alert={alert}
+          onResolve={(id, resolutionType) => handleResolve(id, resolutionType)}
+          onDismiss={(id, resolutionType) => handleDismiss(id, resolutionType)}
+          onReactivate={(id) => handleReactivate(id)}
+          isLoading={resolveFetcher.state === 'submitting'}
+        />
+      ))}
+
+      {/* New check result modal - for freshly checked products */}
       {checkResult && (() => {
         // Transform checkResult to match Alerts page format
         const warnings = Array.isArray(checkResult?.warnings) ? checkResult.warnings : [];
@@ -419,7 +497,7 @@ export default function ManualCheckPage() {
         const pics = [...(fields.pictures || []), fields.product_image].filter(Boolean);
         const fallbackImage = pics[0] ? (typeof pics[0] === 'string' ? pics[0] : pics[0].url) : null;
 
-        const alert = {
+        const newAlert = {
           id: currentAlertId,
           productId: selectedProduct?.id?.replace('gid://shopify/Product/', '') || '',
           productTitle: selectedProduct?.title || t('manualCheck.modal.unknownProduct'),
@@ -438,7 +516,7 @@ export default function ManualCheckPage() {
         return (
           <AlertDetailModal
             modalId="manual-check-result-modal"
-            alert={alert}
+            alert={newAlert}
             onResolve={currentAlertId ? handleResolve : undefined}
             onDismiss={currentAlertId ? handleDismiss : undefined}
             onReactivate={currentAlertId ? handleReactivate : undefined}
