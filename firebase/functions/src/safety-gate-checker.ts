@@ -1,4 +1,4 @@
-import { genkit, z } from 'genkit';
+import { genkit, z, type Part } from 'genkit';
 import { googleAI } from '@genkit-ai/googleai';
 import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 import axios from 'axios';
@@ -7,6 +7,22 @@ import axios from 'axios';
 const ai = genkit({
   plugins: [googleAI()],
 });
+
+const ALERT_LOOKBACK_DAYS = 365; // Only compare against alerts from the last year
+
+type EncodedImage = {
+  url: string;
+  contentType?: string;
+};
+
+function guessContentType(url: string): string | undefined {
+  const lower = url.toLowerCase();
+  if (lower.endsWith('.jpg') || lower.endsWith('.jpeg')) return 'image/jpeg';
+  if (lower.endsWith('.png')) return 'image/png';
+  if (lower.endsWith('.webp')) return 'image/webp';
+  if (lower.endsWith('.gif')) return 'image/gif';
+  return undefined;
+}
 
 // Define input/output schemas
 const ProductInputSchema = z.object({
@@ -40,23 +56,25 @@ const RapexAlertSchema = z.object({
   }),
 });
 
+const MatchSchema = z.object({
+  alertId: z.string(),
+  similarity: z.number(),
+  riskLevel: z.string(),
+  alertType: z.string(),
+  riskLegalProvision: z.string(),
+  reason: z.string(),
+  alertDetails: RapexAlertSchema,
+});
+
 const SafetyCheckResultSchema = z.object({
   isSafe: z.boolean(),
-  warnings: z.array(z.object({
-    alertId: z.string(),
-    similarity: z.number(),
-    riskLevel: z.string(),
-    alertType: z.string(),
-    riskLegalProvision: z.string(),
-    reason: z.string(),
-    alertDetails: RapexAlertSchema,
-  })),
+  warnings: z.array(MatchSchema),
   recommendation: z.string(),
   checkedAt: z.string(),
 });
 
 // Function to search recent Safety Gate alerts
-async function searchRecentRapexAlerts(days = 7) {
+async function searchRecentRapexAlerts(days = ALERT_LOOKBACK_DAYS) {
   const db = getFirestore();
   const cutoffDate = new Date();
   cutoffDate.setDate(cutoffDate.getDate() - days);
@@ -90,6 +108,7 @@ async function searchRecentRapexAlerts(days = 7) {
 
     // Ensure required field strings exist
     const normalizedFields = {
+      ...fields,
       product_category: String(fields.product_category || ''),
       product_description: String(fields.product_description || ''),
       risk_level: String(fields.risk_level || ''),
@@ -100,13 +119,17 @@ async function searchRecentRapexAlerts(days = 7) {
       // Optional fields preserved as strings if present
       product_brand: fields.product_brand != null ? String(fields.product_brand) : undefined,
       product_model: fields.product_model != null ? String(fields.product_model) : undefined,
-      // Map images to a unified pictures array
-      pictures: [
-        ...(fields.product_image ? [fields.product_image] : []),
-        ...(fields.product_other_images ? fields.product_other_images.split(',') : [])
-      ].filter(Boolean),
-      ...fields,
-    };
+    } as any;
+
+    const normalizedPictures = [
+      ...(Array.isArray(fields.pictures) ? fields.pictures : []),
+      ...(fields.product_image ? [fields.product_image] : []),
+      ...(typeof fields.product_other_images === 'string' ? fields.product_other_images.split(',') : []),
+    ]
+      .map((pic: any) => (typeof pic === 'string' ? pic.trim() : pic))
+      .filter(Boolean);
+
+    normalizedFields.pictures = normalizedPictures;
 
     return {
       id: doc.id,
@@ -116,20 +139,43 @@ async function searchRecentRapexAlerts(days = 7) {
   });
 }
 
-// Function to download image as base64
-async function downloadImageAsBase64(imageUrl: string): Promise<string | null> {
+// Always use data URI to have control over content-type and avoid charset issues
+// Some servers (e.g., Shopify CDN) incorrectly include charset in Content-Type for images
+// Gemini API doesn't support charset parameter for image MIME types
+async function prepareImageMedia(imageUrl: string): Promise<EncodedImage | null> {
+  if (typeof imageUrl !== 'string' || !imageUrl.trim()) return null;
+
+  const trimmed = imageUrl.trim();
+  
+  // Always load image and use data URI to ensure proper content-type without charset
+  // This avoids issues when Genkit SDK loads images from URLs and receives charset in headers
   try {
-    const response = await axios.get(imageUrl, {
+    const response = await axios.get(trimmed, {
       responseType: 'arraybuffer',
       timeout: 10000,
     });
 
     const base64 = Buffer.from(response.data, 'binary').toString('base64');
-    return `data:${response.headers['content-type']};base64,${base64}`;
+    let contentType = response.headers['content-type'] || guessContentType(trimmed) || 'application/octet-stream';
+    
+    // Remove charset parameter from image MIME types (Gemini API doesn't support it)
+    if (contentType.startsWith('image/')) {
+      contentType = contentType.split(';')[0].trim();
+    }
+    
+    return {
+      url: `data:${contentType};base64,${base64}`,
+      contentType,
+    };
   } catch (error) {
-    console.warn(`Failed to download image from ${imageUrl}:`, error instanceof Error ? error.message : String(error));
+    console.warn(`Failed to load image from ${trimmed}:`, error instanceof Error ? error.message : String(error));
     return null;
   }
+}
+
+function isUnsupportedMimeError(error: unknown): boolean {
+  const msg = error instanceof Error ? error.message : String(error ?? '');
+  return msg.toLowerCase().includes('unsupported mime type');
 }
 
 // Main product safety checker flow
@@ -143,8 +189,8 @@ export const checkProductSafety = ai.defineFlow(
   async (product: z.infer<typeof ProductInputSchema>) => {
     console.log('Checking product safety:', product.name);
 
-    // Step 1: Search recent Safety Gate alerts
-    const recentAlerts = await searchRecentRapexAlerts(7);
+    // Step 1: Search Safety Gate alerts from the last year
+    const recentAlerts = await searchRecentRapexAlerts(ALERT_LOOKBACK_DAYS);
 
     if (recentAlerts.length === 0) {
       return {
@@ -175,64 +221,125 @@ Description: ${product.description}
 Brand: ${product.brand || 'Not specified'}
 Model: ${product.model || 'Not specified'}
 
-RECENT SAFETY GATE ALERTS (last 7 days):
+RECENT SAFETY GATE ALERTS (last 12 months):
 ${alertsText}
 
 TASK:
 1. Compare the new product with each Safety Gate alert
-2. Identify potential matches or similarities
-3. For each potential match, provide:
+2. Prioritize alerts from the last year only; ignore older records.
+3. If images are provided, use visual similarity alongside the text fields.
+4. For each potential match, provide:
    - Similarity score (0-100, where 100 is identical)
    - Reason for the match
    - Risk assessment
 
-Return ONLY a JSON array of matches where similarity > 30. Each match should have:
+Return ONLY a JSON array of matches where similarity > 50. Each match should have:
 - alertId: the Safety Gate alert ID
-- similarity: similarity score (30-100)
+- similarity: similarity score (50-100)
 - reason: detailed explanation of why you think this is a match
 - riskAssessment: assessment of the risk level
 
 If no matches found, return empty array.`;
 
-    // Step 4: Add image comparison if available
-    let productImage = null;
-    if (product.imageUrl) {
-      productImage = await downloadImageAsBase64(product.imageUrl);
-      if (productImage) {
-        comparisonPrompt += `
+    // Step 4: Build prompt parts (always using data URI to control content-type)
+    const buildPromptParts = async (): Promise<Part[]> => {
+      const parts: Part[] = [
+        { text: 'System: Return ONLY a JSON array of matches; no prose.' },
+        { text: comparisonPrompt },
+      ];
 
-PRODUCT IMAGE ANALYSIS:
-The product has an associated image. Consider visual similarity when comparing with RAPEX alerts that might involve similar product types or appearances.`;
+      const productImage = product.imageUrl
+        ? await prepareImageMedia(product.imageUrl)
+        : null;
+
+      if (productImage) {
+        parts.push({ text: 'Product reference image:' });
+        parts.push({ media: productImage });
+      }
+
+      const alertImages: Array<{ alertId: string; media: EncodedImage }> = [];
+      for (const alert of recentAlerts) {
+        const pictures = Array.isArray((alert as any).fields?.pictures)
+          ? (alert as any).fields.pictures as any[]
+          : [];
+        const firstPicture = pictures.find((pic) => typeof pic === 'string' && pic.trim());
+        if (!firstPicture) continue;
+
+        const encoded = await prepareImageMedia(firstPicture as string);
+        if (encoded) {
+          alertImages.push({ alertId: alert.id, media: encoded });
+        }
+
+        if (alertImages.length >= 2) {
+          break; // limit payload size
+        }
+      }
+
+      if (alertImages.length > 0) {
+        parts.push({ text: 'Reference Safety Gate alert images (match them to the alert IDs above):' });
+        for (const image of alertImages) {
+          parts.push({ text: `Alert ${image.alertId} image:` });
+          parts.push({ media: image.media });
+        }
+      }
+
+      return parts;
+    };
+
+    const promptParts = await buildPromptParts();
+
+    // Step 5: Use Gemini to analyze similarities with layered fallbacks
+    const attempts = [
+      { model: 'gemini-2.5-flash', promptType: 'multimodal', label: '2.5 multimodal' },
+      { model: 'gemini-2.5-flash', promptType: 'text', label: '2.5 text-only' },
+      { model: 'gemini-1.5-flash-002', promptType: 'multimodal', label: '1.5 multimodal' },
+      { model: 'gemini-1.5-flash-002', promptType: 'text', label: '1.5 text-only' },
+    ] as const;
+
+    let analysisResponse: any = null;
+    for (const attempt of attempts) {
+      const prompt = attempt.promptType === 'text'
+        ? comparisonPrompt
+        : promptParts;
+
+      try {
+        analysisResponse = await ai.generate({
+          model: googleAI.model(attempt.model),
+          prompt,
+          config: {
+            temperature: 0.1, // Low temperature for consistent analysis
+          },
+          output: { schema: z.array(MatchSchema) },
+        });
+        break;
+      } catch (error) {
+        const mimeIssue = isUnsupportedMimeError(error);
+        console.error(`Analysis attempt failed (${attempt.label})${mimeIssue ? ' [unsupported mime]' : ''}; trying next`, error);
       }
     }
 
-    // Step 5: Use Gemini to analyze similarities
-    const analysisResponse = await ai.generate({
-      model: googleAI.model('gemini-2.5-flash-lite'),
-      prompt: comparisonPrompt,
-      config: {
-        temperature: 0.1, // Low temperature for consistent analysis
-      },
-    });
+    if (!analysisResponse) {
+      return {
+        isSafe: true,
+        warnings: [],
+        recommendation: 'Unable to analyze product against Safety Gate alerts at this time.',
+        checkedAt: new Date().toISOString(),
+      };
+    }
 
     console.log('Gemini analysis response:', analysisResponse.text);
 
-    // Step 6: Parse the response
+    // Step 6: Parse the response via schema (avoid regex fallback)
     let matches: any[] = [];
-    try {
-      const parsedResponse = JSON.parse(analysisResponse.text);
-      matches = Array.isArray(parsedResponse) ? parsedResponse : [];
-    } catch (error) {
-      console.error('Failed to parse Gemini response:', error);
-      // Fallback: try to extract JSON from response
-      const jsonMatch = analysisResponse.text.match(/\[[\s\S]*\]/);
-      if (jsonMatch) {
-        try {
-          matches = JSON.parse(jsonMatch[0]);
-        } catch (fallbackError) {
-          console.error('Fallback parsing also failed:', fallbackError);
-          matches = [];
-        }
+    if (Array.isArray(analysisResponse.output)) {
+      matches = analysisResponse.output;
+    } else {
+      try {
+        const parsed = JSON.parse(analysisResponse.text);
+        matches = Array.isArray(parsed) ? parsed : [];
+      } catch (error) {
+        console.error('Failed to parse Gemini response:', error);
+        matches = [];
       }
     }
 

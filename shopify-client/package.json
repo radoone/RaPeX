@@ -31,6 +31,7 @@
     "@remix-run/react": "^2.17.2",
     "@remix-run/serve": "^2.17.2",
     "@shopify/app-bridge-react": "^4.2.8",
+    "@shopify/polaris": "^13.9.5",
     "@shopify/shopify-app-remix": "^4.0.6",
     "@shopify/shopify-app-session-storage-prisma": "^7.0.3",
     "i18next": "^25.7.2",
@@ -39,7 +40,7 @@
     "prisma": "^6.2.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-i18next": "^16.3.3",
+    "react-i18next": "^16.4.0",
     "vite-tsconfig-paths": "^5.1.4"
   },
   "devDependencies": {
@@ -48,8 +49,8 @@
     "@shopify/api-codegen-preset": "^1.2.0",
     "@types/eslint": "^9.6.1",
     "@types/node": "^24.6.0",
-    "@types/react": "^18.2.31",
-    "@types/react-dom": "^18.3.7",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^10.0.1",
     "happy-dom": "^20.0.10",
@@ -64,19 +65,5 @@
   "trustedDependencies": [
     "@shopify/plugin-cloudflare"
   ],
-  "resolutions": {
-    "@graphql-tools/url-loader": "8.0.16",
-    "@graphql-codegen/client-preset": "4.7.0",
-    "@graphql-codegen/typescript-operations": "4.5.0",
-    "minimatch": "9.0.5",
-    "vite": "^6.2.2"
-  },
-  "overrides": {
-    "@graphql-tools/url-loader": "8.0.16",
-    "@graphql-codegen/client-preset": "4.7.0",
-    "@graphql-codegen/typescript-operations": "4.5.0",
-    "minimatch": "9.0.5",
-    "vite": "^6.2.2"
-  },
   "author": "radoone"
 }
