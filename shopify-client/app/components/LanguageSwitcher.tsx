@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Button, ButtonGroup } from "@shopify/polaris";
 import { useTranslation } from "react-i18next";
 
 export function LanguageSwitcher() {
@@ -18,32 +17,29 @@ export function LanguageSwitcher() {
         setCurrentLang(lng);
     };
 
-    // During SSR and initial render, show neutral state
-    if (!mounted) {
-        return (
-            <ButtonGroup variant="segmented">
-                <Button size="micro">EN</Button>
-                <Button size="micro">SK</Button>
-            </ButtonGroup>
-        );
-    }
+    const buttonVariant = (lng: string) =>
+        mounted && currentLang === lng ? "primary" : "tertiary";
 
     return (
-        <ButtonGroup variant="segmented">
-            <Button
-                pressed={currentLang === 'en'}
+        <s-stack direction="inline" gap="small" blockAlign="center">
+            <s-button
+                type="button"
+                variant={buttonVariant('en')}
+                size="small"
+                aria-pressed={mounted && currentLang === 'en'}
                 onClick={() => changeLanguage('en')}
-                size="micro"
             >
                 EN
-            </Button>
-            <Button
-                pressed={currentLang === 'sk'}
+            </s-button>
+            <s-button
+                type="button"
+                variant={buttonVariant('sk')}
+                size="small"
+                aria-pressed={mounted && currentLang === 'sk'}
                 onClick={() => changeLanguage('sk')}
-                size="micro"
             >
                 SK
-            </Button>
-        </ButtonGroup>
+            </s-button>
+        </s-stack>
     );
 }

@@ -27,6 +27,7 @@ declare namespace JSX {
     "s-button": any;
     "s-button-group": any;
     "s-link": any;
+    "s-menu": any;
 
     // Forms
     "s-text-field": any;

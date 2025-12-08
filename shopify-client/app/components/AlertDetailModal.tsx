@@ -118,14 +118,6 @@ export function AlertDetailModal({
     return pictures;
   };
 
-  // Risk level color
-  const getRiskColor = (level: string) => {
-    const l = (level || '').toLowerCase();
-    if (l === 'serious' || l === 'high') return 'critical';
-    if (l === 'medium') return 'warning';
-    return 'info';
-  };
-
   return (
     <>
       <s-modal id={modalId} heading="Safety Alert Details" size="large">
@@ -270,32 +262,33 @@ export function AlertDetailModal({
             <s-button
               slot="primary-action"
               variant="primary"
+              icon="caret-down"
               commandFor={resolveMenuId}
               loading={isLoading || undefined}
             >
-              {t('actions.resolve')} ▾
+              {t('actions.resolve')}
             </s-button>
             <s-menu id={resolveMenuId} accessibilityLabel={t('resolveActions.menuLabel')}>
               <s-section heading={t('resolveActions.actionTaken')}>
                 <s-button ref={verifiedSafeBtnRef} commandFor={modalId} command="--hide">
-                  ✅ {t('resolveActions.verifiedSafe')}
+                  {t('resolveActions.verifiedSafe')}
                 </s-button>
                 <s-button ref={removedFromSaleBtnRef} commandFor={modalId} command="--hide">
-                  🗑️ {t('resolveActions.removedFromSale')}
+                  {t('resolveActions.removedFromSale')}
                 </s-button>
                 <s-button ref={modifiedProductBtnRef} commandFor={modalId} command="--hide">
-                  ✏️ {t('resolveActions.modifiedProduct')}
+                  {t('resolveActions.modifiedProduct')}
                 </s-button>
                 <s-button ref={contactedSupplierBtnRef} commandFor={modalId} command="--hide">
-                  📧 {t('resolveActions.contactedSupplier')}
+                  {t('resolveActions.contactedSupplier')}
                 </s-button>
               </s-section>
               <s-section heading={t('resolveActions.noActionNeeded')}>
                 <s-button ref={falsePositiveBtnRef} commandFor={modalId} command="--hide">
-                  🔵 {t('resolveActions.falsePositive')}
+                  {t('resolveActions.falsePositive')}
                 </s-button>
                 <s-button ref={notMyProductBtnRef} commandFor={modalId} command="--hide">
-                  ❌ {t('resolveActions.notMyProduct')}
+                  {t('resolveActions.notMyProduct')}
                 </s-button>
               </s-section>
             </s-menu>
@@ -343,7 +336,7 @@ export function AlertDetailModal({
             </button>
             <img
               src={selectedImage}
-              alt="Alert image enlarged"
+              alt="Enlarged safety alert"
               className="image-lightbox-image"
             />
           </div>

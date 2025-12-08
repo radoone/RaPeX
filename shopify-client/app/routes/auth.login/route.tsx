@@ -1,33 +1,19 @@
 import { useState } from "react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Form, useActionData, useLoaderData, useRouteError } from "@remix-run/react";
-import {
-  AppProvider as PolarisAppProvider,
-  Button,
-  Card,
-  FormLayout,
-  Page,
-  Text,
-  TextField,
-} from "@shopify/polaris";
-import polarisTranslations from "@shopify/polaris/locales/en.json";
-import polarisStyles from "@shopify/polaris/build/esm/styles.css?url";
 
 import { login } from "../../shopify.server";
 
 import { loginErrorMessage } from "./error.server";
 
-export const links = () => [{ rel: "stylesheet", href: polarisStyles }];
-
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   try {
     const errors = loginErrorMessage(await login(request));
-    return { errors, polarisTranslations };
+    return { errors };
   } catch (error) {
     console.error("Auth login loader failed", error);
     return {
       errors: { shop: "Authentication failed. Please re-enter your shop domain." },
-      polarisTranslations,
     };
   }
 };
@@ -51,30 +37,54 @@ export default function Auth() {
   const { errors } = actionData || loaderData;
 
   return (
-    <PolarisAppProvider i18n={loaderData.polarisTranslations}>
-      <Page>
-        <Card>
-          <Form method="post">
-            <FormLayout>
-              <Text variant="headingMd" as="h2">
-                Log in
-              </Text>
-              <TextField
-                type="text"
-                name="shop"
-                label="Shop domain"
-                helpText="example.myshopify.com"
-                value={shop}
-                onChange={setShop}
-                autoComplete="on"
-                error={errors.shop}
-              />
-              <Button submit>Log in</Button>
-            </FormLayout>
-          </Form>
-        </Card>
-      </Page>
-    </PolarisAppProvider>
+    <s-page size="small">
+      <s-section padding="base">
+        <s-box
+          padding="large"
+          borderRadius="large"
+          background="bg-surface"
+          borderWidth="base"
+          borderColor="border"
+          style={{ maxWidth: "520px", margin: "0 auto" }}
+        >
+          <s-stack gap="base">
+            <s-stack gap="small">
+              <s-heading size="medium">Log in</s-heading>
+              <s-text tone="subdued">Enter your shop domain to continue.</s-text>
+            </s-stack>
+
+            {errors?.shop && (
+              <s-banner tone="critical" heading="Authentication failed">
+                <s-text>{errors.shop}</s-text>
+              </s-banner>
+            )}
+
+            <Form method="post">
+              <s-stack gap="base">
+                <s-text-field
+                  name="shop"
+                  label="Shop domain"
+                  placeholder="example.myshopify.com"
+                  value={shop}
+                  onInput={(event: any) => {
+                    const value =
+                      event?.detail?.value ??
+                      event?.target?.value ??
+                      "";
+                    setShop(value);
+                  }}
+                  autoComplete="on"
+                  required
+                />
+                <s-button type="submit" variant="primary" style={{ width: "100%" }}>
+                  Log in
+                </s-button>
+              </s-stack>
+            </Form>
+          </s-stack>
+        </s-box>
+      </s-section>
+    </s-page>
   );
 }
 
@@ -86,20 +96,27 @@ export function ErrorBoundary() {
     "Something went wrong while loading the login screen.";
 
   return (
-    <PolarisAppProvider i18n={polarisTranslations}>
-      <Page>
-        <Card>
-          <Text variant="headingMd" as="h2">
-            Login error
-          </Text>
-          <Text as="p" tone="subdued">
-            {message}
-          </Text>
-          <Form method="get" action="/auth/login">
-            <Button submit>Try again</Button>
-          </Form>
-        </Card>
-      </Page>
-    </PolarisAppProvider>
+    <s-page size="small">
+      <s-section padding="base">
+        <s-box
+          padding="large"
+          borderRadius="large"
+          background="bg-surface"
+          borderWidth="base"
+          borderColor="border"
+          style={{ maxWidth: "520px", margin: "0 auto" }}
+        >
+          <s-stack gap="base">
+            <s-heading size="medium">Login error</s-heading>
+            <s-text tone="subdued">{message}</s-text>
+            <Form method="get" action="/auth/login">
+              <s-button type="submit" variant="primary">
+                Try again
+              </s-button>
+            </Form>
+          </s-stack>
+        </s-box>
+      </s-section>
+    </s-page>
   );
 }
