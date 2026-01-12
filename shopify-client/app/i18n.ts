@@ -47,7 +47,13 @@ const resources = {
           "alerts": "Alerts {{count}}",
           "errors": "Errors {{count}}",
           "completed": "Completed in {{seconds}} seconds",
-          "started": "Started {{date}}"
+          "started": "Started {{date}}",
+          "totalProducts": "Total products",
+          "alreadyChecked": "Already checked",
+          "notYetChecked": "Not yet checked",
+          "includeAlreadyChecked": "Include already checked products",
+          "willCheckAll": "Will check all {{count}} products",
+          "willCheckUnchecked": "Will check {{count}} unchecked products (skip {{skip}} already checked)"
         },
         "recentAlerts": {
           "title": "Recent safety alerts",
@@ -117,7 +123,36 @@ const resources = {
         "settings": "Settings"
       },
       "settings": {
-        "title": "Settings"
+        "title": "Settings",
+        "subtitle": "Configure thresholds and preferences for Safety Gate monitoring.",
+        "threshold": {
+          "title": "Similarity Threshold",
+          "howItWorks": "How this works",
+          "description": "The similarity threshold determines how closely a product must match a Safety Gate alert. Higher values (e.g., 80%) mean stricter matching with fewer false positives. Lower values (e.g., 40%) catch more potential matches but may include false positives.",
+          "currentDefault": "Current environment default",
+          "label": "Similarity threshold (%)",
+          "save": "Save",
+          "resetToDefault": "Reset to default"
+        },
+        "monitoring": {
+          "title": "Monitoring",
+          "automatic": {
+            "title": "Automatic checking",
+            "description": "Products are automatically checked when created or updated via webhooks.",
+            "enabled": "Enabled"
+          },
+          "manual": {
+            "title": "Manual checks",
+            "description": "Run on-demand safety checks for any product in your catalog.",
+            "goToManualCheck": "Go to Manual Check"
+          }
+        },
+        "navigation": {
+          "title": "Navigation",
+          "dashboard": "Dashboard",
+          "viewAlerts": "View alerts",
+          "manualCheck": "Manual check"
+        }
       },
       "common": {
         "loading": "Loading...",
@@ -130,6 +165,8 @@ const resources = {
       "actions": {
         "checkAll": "Check all products",
         "checking": "Checking...",
+        "checkAllProducts": "Check all {{count}} products",
+        "checkUnchecked": "Check {{count}} unchecked products",
         "manualCheck": "Manual check",
         "settings": "Settings",
         "viewAlerts": "View alerts",
@@ -373,7 +410,13 @@ const resources = {
           "alerts": "Upozornenia {{count}}",
           "errors": "Chyby {{count}}",
           "completed": "Dokončené za {{seconds}} sekúnd",
-          "started": "Spustené {{date}}"
+          "started": "Spustené {{date}}",
+          "totalProducts": "Produkty v rozsahu",
+          "alreadyChecked": "Už skontrolované",
+          "notYetChecked": "Zatiaľ nekontrolované",
+          "includeAlreadyChecked": "Zahrnúť už skontrolované produkty",
+          "willCheckAll": "Skontroluje všetkých {{count}} produktov",
+          "willCheckUnchecked": "Skontroluje {{count}} nekontrolovaných (preskočí {{skip}} už skontrolovaných)"
         },
         "recentAlerts": {
           "title": "Nedávne bezpečnostné upozornenia",
@@ -443,7 +486,36 @@ const resources = {
         "settings": "Nastavenia"
       },
       "settings": {
-        "title": "Nastavenia"
+        "title": "Nastavenia",
+        "subtitle": "Nakonfigurujte prahy a preferencie pre monitorovanie Safety Gate.",
+        "threshold": {
+          "title": "Prah podobnosti",
+          "howItWorks": "Ako to funguje",
+          "description": "Prah podobnosti určuje, ako presne musí produkt zodpovedať upozorneniu Safety Gate. Vyššie hodnoty (napr. 80%) znamenajú prísnejšie porovnávanie s menším počtom falošných zhôd. Nižšie hodnoty (napr. 40%) zachytia viac potenciálnych zhôd, ale môžu zahŕňať falošné zhody.",
+          "currentDefault": "Aktuálne predvolené prostredie",
+          "label": "Prah podobnosti (%)",
+          "save": "Uložiť",
+          "resetToDefault": "Obnoviť predvolené"
+        },
+        "monitoring": {
+          "title": "Monitorovanie",
+          "automatic": {
+            "title": "Automatická kontrola",
+            "description": "Produkty sú automaticky kontrolované pri vytvorení alebo aktualizácii cez webhooky.",
+            "enabled": "Povolené"
+          },
+          "manual": {
+            "title": "Manuálne kontroly",
+            "description": "Spustite kontroly bezpečnosti na požiadanie pre akýkoľvek produkt vo vašom katalógu.",
+            "goToManualCheck": "Prejsť na manuálnu kontrolu"
+          }
+        },
+        "navigation": {
+          "title": "Navigácia",
+          "dashboard": "Nástenka",
+          "viewAlerts": "Zobraziť upozornenia",
+          "manualCheck": "Manuálna kontrola"
+        }
       },
       "common": {
         "loading": "Načítava sa...",
@@ -456,6 +528,8 @@ const resources = {
       "actions": {
         "checkAll": "Skontrolovať všetky produkty",
         "checking": "Kontrolujem...",
+        "checkAllProducts": "Skontrolovať všetkých {{count}} produktov",
+        "checkUnchecked": "Skontrolovať {{count}} nekontrolovaných",
         "manualCheck": "Manuálna kontrola",
         "settings": "Nastavenia",
         "viewAlerts": "Zobraziť upozornenia",

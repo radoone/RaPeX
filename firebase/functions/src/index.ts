@@ -5,6 +5,8 @@ import { onRequest } from "firebase-functions/v2/https";
 import { initializeApp } from "firebase-admin/app";
 import { getFirestore, Timestamp, FieldValue } from "firebase-admin/firestore";
 import axios from "axios";
+import { genkit } from "genkit";
+import { googleAI } from "@genkit-ai/googleai";
 import { checkProductSafety } from "./safety-gate-checker.js";
 
 // Initialize Firebase Admin SDK
@@ -16,8 +18,10 @@ try {
   logger.error("Failed to initialize Firebase Admin SDK.", e);
 }
 
-
 const db = getFirestore();
+const ai = genkit({
+  plugins: [googleAI()],
+});
 
 // --- Configuration ---
 const ODS_DATASET = "healthref-europe-rapex-en";
@@ -28,6 +32,9 @@ const META_DOC = "loader_state";
 const ROWS_PER_PAGE = parseInt(process.env.ROWS_PER_PAGE || "500", 10);
 const MAX_PAGES = parseInt(process.env.MAX_PAGES || "20", 10);
 const BOOTSTRAP_DAYS = 30; // Days to fetch on the first run
+const TEXT_EMBEDDER = "googleai/text-embedding-004";
+const IMAGE_EMBEDDER = "googleai/multimodalembedding@001";
+const IMAGE_FETCH_TIMEOUT_MS = 10000;
 
 // OpenDataSoft API configuration for enhanced filtering
 const ODS_API_CONFIG = {
@@ -82,6 +89,85 @@ interface RapexAlertDocument {
   fields: {
     [key: string]: any;
   };
+  vector_text?: number[];
+  vector_image?: number[];
+}
+
+function getFirstPicture(fields: any): string | null {
+  const pictures = [
+    ...(Array.isArray(fields?.pictures) ? fields.pictures : []),
+    ...(fields?.product_image ? [fields.product_image] : []),
+    ...(typeof fields?.product_other_images === "string"
+      ? fields.product_other_images.split(",")
+      : []),
+  ];
+
+  const first = pictures.find((pic: any) => typeof pic === "string" && pic.trim());
+  return first ? first.trim() : null;
+}
+
+async function fetchImageAsDataUri(url: string): Promise<{ url: string; contentType: string } | null> {
+  if (!url) return null;
+
+  try {
+    const response = await axios.get(url, {
+      responseType: "arraybuffer",
+      timeout: IMAGE_FETCH_TIMEOUT_MS,
+    });
+
+    const base64 = Buffer.from(response.data, "binary").toString("base64");
+    let contentType = response.headers["content-type"] || "application/octet-stream";
+    if (contentType.startsWith("image/")) {
+      contentType = contentType.split(";")[0].trim();
+    }
+
+    return {
+      url: `data:${contentType};base64,${base64}`,
+      contentType,
+    };
+  } catch (error) {
+    logger.warn("Failed to fetch image for embedding", {
+      url,
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return null;
+  }
+}
+
+async function embedText(content: string): Promise<number[] | undefined> {
+  if (!content || !content.trim()) return undefined;
+
+  try {
+    const [result] = await ai.embed({
+      embedder: TEXT_EMBEDDER,
+      content,
+    });
+    return result?.embedding;
+  } catch (error) {
+    logger.warn("Text embedding failed", {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return undefined;
+  }
+}
+
+async function embedImage(url: string): Promise<number[] | undefined> {
+  const media = await fetchImageAsDataUri(url);
+  if (!media) return undefined;
+
+  try {
+    const [result] = await ai.embed({
+      embedder: IMAGE_EMBEDDER,
+      content: { content: [{ media }] },
+    });
+    return result?.embedding;
+  } catch (error) {
+    logger.warn("Image embedding failed", {
+      url,
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return undefined;
+  }
 }
 
 // --- Scheduled Function ---
@@ -354,6 +440,10 @@ async function runSafetyGateLoader() {
             continue; // Skip records from the same day that are older or same
           }
 
+          const vectorText = await embedText(record.fields?.product_description || "");
+          const primaryImageUrl = getFirstPicture(record.fields);
+          const vectorImage = primaryImageUrl ? await embedImage(primaryImageUrl) : undefined;
+
           // Prepare document for Firestore
           const docData: RapexAlertDocument = {
             meta: {
@@ -365,6 +455,14 @@ async function runSafetyGateLoader() {
             },
             fields: record.fields,
           };
+
+          if (vectorText && Array.isArray(vectorText)) {
+            docData.vector_text = vectorText;
+          }
+
+          if (vectorImage && Array.isArray(vectorImage)) {
+            docData.vector_image = vectorImage;
+          }
 
           const docRef = db.collection(FIRESTORE_COLLECTION).doc(record.recordid);
           bulkWriter.set(docRef, docData, { merge: true });

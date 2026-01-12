@@ -1,5 +1,7 @@
 import { genkit, z, type Part } from 'genkit';
+import type { DocumentData, RetrieverAction } from 'genkit/retriever';
 import { googleAI } from '@genkit-ai/googleai';
+import { defineFirestoreRetriever } from '@genkit-ai/firebase';
 import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 import axios from 'axios';
 
@@ -9,11 +11,42 @@ const ai = genkit({
 });
 
 const ALERT_LOOKBACK_DAYS = 365; // Only compare against alerts from the last year
+const RAG_TEXT_LIMIT = 12;
+const RAG_IMAGE_LIMIT = 6;
+const MAX_RAG_ALERTS = 12;
+const VECTOR_TEXT_FIELD = 'vector_text';
+const VECTOR_IMAGE_FIELD = 'vector_image';
 
 type EncodedImage = {
   url: string;
   contentType?: string;
 };
+
+type NormalizedAlert = {
+  id: string;
+  meta: {
+    recordid: string;
+    alert_date: string;
+    ingested_at: string;
+  };
+  fields: {
+    product_category: string;
+    product_description: string;
+    risk_level: string;
+    alert_level: string;
+    alert_type: string;
+    risk_legal_provision: string;
+    notifying_country: string;
+    product_brand?: string;
+    product_model?: string;
+    pictures?: string[];
+  };
+  distance?: number;
+  source?: 'retriever' | 'recent';
+};
+
+let textRetriever: RetrieverAction | null = null;
+let imageRetriever: RetrieverAction | null = null;
 
 function guessContentType(url: string): string | undefined {
   const lower = url.toLowerCase();
@@ -22,6 +55,190 @@ function guessContentType(url: string): string | undefined {
   if (lower.endsWith('.webp')) return 'image/webp';
   if (lower.endsWith('.gif')) return 'image/gif';
   return undefined;
+}
+
+function normalizeTimestamp(value: any): string {
+  if (!value) return '';
+  if (typeof value === 'string') return value;
+  if (value instanceof Date) return value.toISOString();
+  if (typeof value.toDate === 'function') return value.toDate().toISOString();
+  return String(value);
+}
+
+function normalizePictures(fields: any): string[] {
+  const normalizedPictures = [
+    ...(Array.isArray(fields?.pictures) ? fields.pictures : []),
+    ...(fields?.product_image ? [fields.product_image] : []),
+    ...(typeof fields?.product_other_images === 'string'
+      ? fields.product_other_images.split(',')
+      : []),
+  ]
+    .map((pic: any) => (typeof pic === 'string' ? pic.trim() : pic))
+    .filter(Boolean);
+
+  return normalizedPictures;
+}
+
+function ensureTextRetriever(): RetrieverAction | null {
+  if (textRetriever) return textRetriever;
+
+  try {
+    textRetriever = defineFirestoreRetriever(ai, {
+      name: 'rapex-text-retriever',
+      firestore: getFirestore(),
+      collection: 'rapex_alerts',
+      embedder: 'googleai/text-embedding-004',
+      vectorField: VECTOR_TEXT_FIELD,
+      contentField: 'fields.product_description',
+      distanceResultField: 'distance',
+    });
+  } catch (error) {
+    console.warn('Unable to initialize text retriever; falling back to DB scan', error);
+    textRetriever = null;
+  }
+
+  return textRetriever;
+}
+
+function ensureImageRetriever(): RetrieverAction | null {
+  if (imageRetriever) return imageRetriever;
+
+  try {
+    imageRetriever = defineFirestoreRetriever(ai, {
+      name: 'rapex-image-retriever',
+      firestore: getFirestore(),
+      collection: 'rapex_alerts',
+      embedder: 'googleai/multimodalembedding@001',
+      vectorField: VECTOR_IMAGE_FIELD,
+      contentField: 'fields.product_description',
+      distanceResultField: 'distance',
+    });
+  } catch (error) {
+    console.warn('Unable to initialize image retriever; image similarity will be skipped', error);
+    imageRetriever = null;
+  }
+
+  return imageRetriever;
+}
+
+function normalizeRetrieverDocument(doc: DocumentData): NormalizedAlert | null {
+  const metadata: any = (doc as any)?.metadata || {};
+  const metaSection: any = metadata.meta || metadata;
+  const fieldsSection: any = metadata.fields || {};
+
+  const recordId = String(
+    metaSection.recordid ??
+      metadata.recordid ??
+      metadata.id ??
+      metaSection.id ??
+      ''
+  );
+  const alertId = recordId || String(metadata.id || '');
+
+  if (!alertId) {
+    return null;
+  }
+
+  const pictures = normalizePictures(fieldsSection);
+
+  return {
+    id: alertId,
+    meta: {
+      recordid: recordId || alertId,
+      alert_date: normalizeTimestamp(metaSection.alert_date || metadata.alert_date),
+      ingested_at: normalizeTimestamp(metaSection.ingested_at || metadata.ingested_at),
+    },
+    fields: {
+      product_category: String(fieldsSection.product_category || ''),
+      product_description: String(fieldsSection.product_description || ''),
+      risk_level: String(fieldsSection.risk_level || ''),
+      alert_level: String(fieldsSection.alert_level || ''),
+      alert_type: String(fieldsSection.alert_type || ''),
+      risk_legal_provision: String(fieldsSection.risk_legal_provision || ''),
+      notifying_country: String(fieldsSection.notifying_country || ''),
+      product_brand: fieldsSection.product_brand != null ? String(fieldsSection.product_brand) : undefined,
+      product_model: fieldsSection.product_model != null ? String(fieldsSection.product_model) : undefined,
+      pictures,
+    },
+    distance: metadata.distance,
+    source: 'retriever',
+  };
+}
+
+async function retrieveAlertsWithRag(
+  product: z.infer<typeof ProductInputSchema>
+): Promise<NormalizedAlert[]> {
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - ALERT_LOOKBACK_DAYS);
+
+  const candidates: NormalizedAlert[] = [];
+  const seen = new Set<string>();
+
+  const textR = ensureTextRetriever();
+  const imageR = ensureImageRetriever();
+
+  if (!textR && !imageR) {
+    return [];
+  }
+
+  if (textR) {
+    try {
+      const result = await ai.retrieve({
+        retriever: textR,
+        query: product.description,
+        options: { limit: RAG_TEXT_LIMIT },
+      });
+      for (const doc of result || []) {
+        const normalized = normalizeRetrieverDocument(doc);
+        if (!normalized || seen.has(normalized.id)) continue;
+
+        const alertDate = normalized.meta.alert_date ? new Date(normalized.meta.alert_date) : null;
+        if (alertDate && !Number.isNaN(alertDate.getTime()) && alertDate < cutoffDate) {
+          continue;
+        }
+
+        seen.add(normalized.id);
+        candidates.push(normalized);
+      }
+    } catch (error) {
+      console.warn('Text retriever query failed; falling back to DB scan', error);
+    }
+  }
+
+  if (imageR && product.imageUrl) {
+    const encodedImage = await prepareImageMedia(product.imageUrl);
+    if (encodedImage) {
+      try {
+        const result = await ai.retrieve({
+          retriever: imageR,
+          query: { content: [{ media: encodedImage }] },
+          options: { limit: RAG_IMAGE_LIMIT },
+        });
+        for (const doc of result || []) {
+          const normalized = normalizeRetrieverDocument(doc);
+          if (!normalized || seen.has(normalized.id)) continue;
+
+          const alertDate = normalized.meta.alert_date ? new Date(normalized.meta.alert_date) : null;
+          if (alertDate && !Number.isNaN(alertDate.getTime()) && alertDate < cutoffDate) {
+            continue;
+          }
+
+          seen.add(normalized.id);
+          candidates.push(normalized);
+        }
+      } catch (error) {
+        console.warn('Image retriever query failed; continuing without image recall', error);
+      }
+    }
+  }
+
+  candidates.sort((a, b) => {
+    const aDistance = typeof a.distance === 'number' ? a.distance : Number.POSITIVE_INFINITY;
+    const bDistance = typeof b.distance === 'number' ? b.distance : Number.POSITIVE_INFINITY;
+    return aDistance - bDistance;
+  });
+
+  return candidates.slice(0, MAX_RAG_ALERTS);
 }
 
 // Define input/output schemas
@@ -74,7 +291,7 @@ const SafetyCheckResultSchema = z.object({
 });
 
 // Function to search recent Safety Gate alerts
-async function searchRecentRapexAlerts(days = ALERT_LOOKBACK_DAYS) {
+async function searchRecentRapexAlerts(days = ALERT_LOOKBACK_DAYS): Promise<NormalizedAlert[]> {
   const db = getFirestore();
   const cutoffDate = new Date();
   cutoffDate.setDate(cutoffDate.getDate() - days);
@@ -121,20 +338,13 @@ async function searchRecentRapexAlerts(days = ALERT_LOOKBACK_DAYS) {
       product_model: fields.product_model != null ? String(fields.product_model) : undefined,
     } as any;
 
-    const normalizedPictures = [
-      ...(Array.isArray(fields.pictures) ? fields.pictures : []),
-      ...(fields.product_image ? [fields.product_image] : []),
-      ...(typeof fields.product_other_images === 'string' ? fields.product_other_images.split(',') : []),
-    ]
-      .map((pic: any) => (typeof pic === 'string' ? pic.trim() : pic))
-      .filter(Boolean);
-
-    normalizedFields.pictures = normalizedPictures;
+    normalizedFields.pictures = normalizePictures(fields);
 
     return {
       id: doc.id,
       meta: normalizedMeta,
       fields: normalizedFields,
+      source: 'recent' as const,
     };
   });
 }
@@ -189,8 +399,11 @@ export const checkProductSafety = ai.defineFlow(
   async (product: z.infer<typeof ProductInputSchema>) => {
     console.log('Checking product safety:', product.name);
 
-    // Step 1: Search Safety Gate alerts from the last year
-    const recentAlerts = await searchRecentRapexAlerts(ALERT_LOOKBACK_DAYS);
+    // Step 1: Prefer RAG (vector) retrieval, fallback to recent alerts scan
+    const ragAlerts = await retrieveAlertsWithRag(product);
+    const recentAlerts = ragAlerts.length > 0
+      ? ragAlerts
+      : await searchRecentRapexAlerts(ALERT_LOOKBACK_DAYS);
 
     if (recentAlerts.length === 0) {
       return {
@@ -202,14 +415,23 @@ export const checkProductSafety = ai.defineFlow(
     }
 
     // Step 2: Prepare comparison data
-    const alertsText = recentAlerts.map(alert =>
-      `Alert ID: ${alert.id}
+    const alertsText = recentAlerts.map(alert => {
+      const distanceLabel = typeof alert.distance === 'number'
+        ? ` (distance: ${alert.distance.toFixed(4)})`
+        : '';
+
+      const sourceLabel = alert.source === 'retriever'
+        ? `Source: vector retriever${distanceLabel}`
+        : 'Source: recent time-filtered scan';
+
+      return `Alert ID: ${alert.id}
 Product: ${alert.fields.product_description}
 Category: ${alert.fields.product_category}
 Brand: ${alert.fields.product_brand || 'Unknown'}
 Risk Level: ${alert.fields.risk_level}
-Country: ${alert.fields.notifying_country}`
-    ).join('\n\n');
+Country: ${alert.fields.notifying_country}
+${sourceLabel}`;
+    }).join('\n\n');
 
     // Step 3: Create comparison prompt
     let comparisonPrompt = `You are a product safety expert analyzing potential matches between a new product and existing RAPEX alerts.
@@ -352,12 +574,13 @@ If no matches found, return empty array.`;
       };
       const alertDetails = alert ? {
         meta: {
+          ...alert.meta,
           recordid: String(alert.meta?.recordid || alert.id || ''),
           alert_date: String(alert.meta?.alert_date || ''),
           ingested_at: String(alert.meta?.ingested_at || ''),
-          ...alert.meta,
         },
         fields: {
+          ...(alert.fields || {}),
           product_category: String(alert.fields?.product_category || ''),
           product_description: String(alert.fields?.product_description || ''),
           risk_level: String(alert.fields?.risk_level || ''),
@@ -365,7 +588,6 @@ If no matches found, return empty array.`;
           alert_type: String(alert.fields?.alert_type || ''),
           risk_legal_provision: String(alert.fields?.risk_legal_provision || ''),
           notifying_country: String(alert.fields?.notifying_country || ''),
-          ...(alert.fields || {}),
         },
       } : defaultAlert;
 

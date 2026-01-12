@@ -74,13 +74,13 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         alertDetails = first.alertDetails || null;
         // Extract risk level from checkResult (more reliable than DB field for older records)
         riskLevelFromResult = first.alertDetails?.fields?.alert_level ||
-                              first.alertDetails?.fields?.risk_level ||
-                              first.riskLevel || null;
+          first.alertDetails?.fields?.risk_level ||
+          first.riskLevel || null;
         const fields = first.alertDetails?.fields || {};
         const pics = [...(fields.pictures || []), fields.product_image].filter(Boolean);
         if (pics[0]) alertDetails = { ...alertDetails, fallbackImage: typeof pics[0] === 'string' ? pics[0] : pics[0].url };
       }
-    } catch {}
+    } catch { }
     // Prefer riskLevel from checkResult, fallback to DB field
     const effectiveRiskLevel = riskLevelFromResult || (alert.riskLevel !== 'unknown' ? alert.riskLevel : null) || 'Unknown';
     return {
@@ -107,38 +107,38 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   switch (action) {
     case "dismiss":
-      await db.safetyAlert.update({ 
-        where: { id: alertId }, 
-        data: { 
-          status: 'dismissed', 
-          dismissedAt: new Date(), 
-          dismissedBy: session.id, 
+      await db.safetyAlert.update({
+        where: { id: alertId },
+        data: {
+          status: 'dismissed',
+          dismissedAt: new Date(),
+          dismissedBy: session.id,
           resolutionType: resolutionType || undefined,
-          notes: formData.get("notes") as string || undefined 
-        } 
+          notes: formData.get("notes") as string || undefined
+        }
       });
       break;
     case "resolve":
-      await db.safetyAlert.update({ 
-        where: { id: alertId }, 
-        data: { 
-          status: 'resolved', 
-          resolvedAt: new Date(), 
+      await db.safetyAlert.update({
+        where: { id: alertId },
+        data: {
+          status: 'resolved',
+          resolvedAt: new Date(),
           resolutionType: resolutionType || undefined,
-          notes: formData.get("notes") as string || undefined 
-        } 
+          notes: formData.get("notes") as string || undefined
+        }
       });
       break;
     case "reactivate":
-      await db.safetyAlert.update({ 
-        where: { id: alertId }, 
-        data: { 
-          status: 'active', 
-          dismissedAt: null, 
-          dismissedBy: null, 
+      await db.safetyAlert.update({
+        where: { id: alertId },
+        data: {
+          status: 'active',
+          dismissedAt: null,
+          dismissedBy: null,
           resolvedAt: null,
           resolutionType: null
-        } 
+        }
       });
       break;
   }
@@ -193,69 +193,102 @@ export default function AlertsPage() {
         ]}
       />
 
-      {/* Overview Metrics Card - using Shopify pattern */}
+      {/* Overview Metrics Cards - Shopify Style with Icons */}
       <s-section padding="base">
-        <s-grid
-          gridTemplateColumns="@container (inline-size <= 400px) 1fr, 1fr auto 1fr auto 1fr"
-          gap="small"
-        >
+        <s-grid gridTemplateColumns="repeat(auto-fit, minmax(280px, 1fr))" gap="base">
+          {/* Active Alerts Card */}
           <s-clickable
             onClick={() => navigate('/app/alerts?status=active')}
-            paddingBlock="small-400"
-            paddingInline="small-100"
-            borderRadius="base"
+            border="base"
+            borderRadius="large"
+            padding="base"
+            inlineSize="100%"
           >
-            <s-grid gap="small-300">
-              <s-heading>{t('alerts.metrics.activeHeading')}</s-heading>
-              <s-stack direction="inline" gap="small-200">
-                <s-text size="large">{stats.active}</s-text>
-                <s-badge tone={stats.active > 0 ? "critical" : "success"} icon={stats.active > 0 ? "alert" : "checkmark"}>
-                  {stats.active > 0 ? t('status.needsReview') : t('status.allClear')}
-                </s-badge>
+            <s-grid gridTemplateColumns="auto 1fr" gap="base" alignItems="center">
+              <s-box
+                padding="small"
+                borderRadius="full"
+                background={stats.active > 0 ? "bg-fill-critical-secondary" : "bg-fill-success-secondary"}
+                inlineSize="40px"
+                blockSize="40px"
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <s-text size="large">{stats.active > 0 ? "⚠️" : "✅"}</s-text>
+              </s-box>
+              <s-stack gap="small-200">
+                <s-text tone="subdued" size="small">{t('alerts.metrics.activeHeading')}</s-text>
+                <s-stack direction="inline" gap="small" blockAlign="center">
+                  <s-heading size="large">{stats.active}</s-heading>
+                  <s-badge tone={stats.active > 0 ? "critical" : "success"}>
+                    {stats.active > 0 ? t('status.needsReview') : t('status.allClear')}
+                  </s-badge>
+                </s-stack>
+                <s-text tone="subdued" size="small">{t('alerts.metrics.totalRecorded', { count: stats.total })}</s-text>
               </s-stack>
-              <s-text tone="subdued">{t('alerts.metrics.totalRecorded', { count: stats.total })}</s-text>
             </s-grid>
           </s-clickable>
 
-          <s-divider direction="block" />
-
+          {/* Resolution Rate Card */}
           <s-clickable
             onClick={() => navigate('/app/alerts?status=resolved')}
-            paddingBlock="small-400"
-            paddingInline="small-100"
-            borderRadius="base"
+            border="base"
+            borderRadius="large"
+            padding="base"
+            inlineSize="100%"
           >
-            <s-grid gap="small-300">
-              <s-heading>{t('alerts.metrics.resolutionHeading')}</s-heading>
-              <s-stack direction="inline" gap="small-200">
-                <s-text size="large">{resolvedRate}%</s-text>
-                <s-badge tone={resolvedRate >= 50 ? "success" : "warning"} icon={resolvedRate >= 50 ? "arrow-up" : "arrow-down"}>
-                  {t('alerts.metrics.resolved', { count: stats.resolved })}
-                </s-badge>
+            <s-grid gridTemplateColumns="auto 1fr" gap="base" alignItems="center">
+              <s-box
+                padding="small"
+                borderRadius="full"
+                background="bg-fill-success-secondary"
+                inlineSize="40px"
+                blockSize="40px"
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <s-text size="large">🎯</s-text>
+              </s-box>
+              <s-stack gap="small-200">
+                <s-text tone="subdued" size="small">{t('alerts.metrics.resolutionHeading')}</s-text>
+                <s-stack direction="inline" gap="small" blockAlign="center">
+                  <s-heading size="large">{resolvedRate}%</s-heading>
+                  <s-badge tone={resolvedRate >= 50 ? "success" : "warning"}>
+                    {t('alerts.metrics.resolved', { count: stats.resolved })}
+                  </s-badge>
+                </s-stack>
+                <s-text tone="subdued" size="small">{t('alerts.metrics.resolvedAndDismissed', { resolved: stats.resolved, dismissed: stats.dismissed })}</s-text>
               </s-stack>
-              <s-text tone="subdued">{t('alerts.metrics.resolvedAndDismissed', { resolved: stats.resolved, dismissed: stats.dismissed })}</s-text>
             </s-grid>
           </s-clickable>
 
-          <s-divider direction="block" />
-
+          {/* Dismissed/Archived Card */}
           <s-clickable
             onClick={() => navigate('/app/alerts?status=dismissed')}
-            paddingBlock="small-400"
-            paddingInline="small-100"
-            borderRadius="base"
+            border="base"
+            borderRadius="large"
+            padding="base"
+            inlineSize="100%"
           >
-            <s-grid gap="small-300">
-              <s-heading>{t('alerts.metrics.dismissedHeading')}</s-heading>
-              <s-stack direction="inline" gap="small-200">
-                <s-text size="large">{stats.dismissed}</s-text>
-                <s-badge tone="info">
-                  {t('alerts.metrics.archived')}
-                </s-badge>
+            <s-grid gridTemplateColumns="auto 1fr" gap="base" alignItems="center">
+              <s-box
+                padding="small"
+                borderRadius="full"
+                background="bg-fill-info-secondary"
+                inlineSize="40px"
+                blockSize="40px"
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <s-text size="large">📁</s-text>
+              </s-box>
+              <s-stack gap="small-200">
+                <s-text tone="subdued" size="small">{t('alerts.metrics.dismissedHeading')}</s-text>
+                <s-stack direction="inline" gap="small" blockAlign="center">
+                  <s-heading size="large">{stats.dismissed}</s-heading>
+                  <s-badge tone="info">{t('alerts.metrics.archived')}</s-badge>
+                </s-stack>
+                <s-text tone="subdued" size="small">
+                  {stats.dismissed === 0 ? t('alerts.metrics.dismissedDescriptionZero') : t('alerts.metrics.dismissedDescription')}
+                </s-text>
               </s-stack>
-              <s-text tone="subdued">
-                {stats.dismissed === 0 ? t('alerts.metrics.dismissedDescriptionZero') : t('alerts.metrics.dismissedDescription')}
-              </s-text>
             </s-grid>
           </s-clickable>
         </s-grid>
@@ -264,7 +297,7 @@ export default function AlertsPage() {
       {/* Main Alerts Table - Shopify Index Table style */}
       <AlertTable
         alerts={alerts}
-        onViewDetails={() => {}}
+        onViewDetails={() => { }}
         onDismiss={(id, resolutionType) => handleAlertAction(id, 'dismiss', resolutionType)}
         onResolve={(id, resolutionType) => handleAlertAction(id, 'resolve', resolutionType)}
         onReactivate={(id) => handleAlertAction(id, 'reactivate')}
@@ -298,16 +331,16 @@ export default function AlertsPage() {
               })}
             </s-text>
             <s-stack direction="inline" gap="small">
-              <s-button 
-                variant="secondary" 
-                onClick={() => applyFilters({ page: pagination.currentPage - 1 })} 
+              <s-button
+                variant="secondary"
+                onClick={() => applyFilters({ page: pagination.currentPage - 1 })}
                 disabled={!pagination.hasPrevious || undefined}
               >
                 {t('actions.previous')}
               </s-button>
-              <s-button 
-                variant="secondary" 
-                onClick={() => applyFilters({ page: pagination.currentPage + 1 })} 
+              <s-button
+                variant="secondary"
+                onClick={() => applyFilters({ page: pagination.currentPage + 1 })}
                 disabled={!pagination.hasNext || undefined}
               >
                 {t('actions.next')}

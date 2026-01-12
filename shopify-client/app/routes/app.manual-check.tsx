@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node";
-import { useLoaderData, useFetcher } from "@remix-run/react";
+import { useLoaderData, useFetcher, useNavigate } from "@remix-run/react";
 import { json } from "@remix-run/node";
 import { useTranslation } from "react-i18next";
 import { authenticate } from "../shopify.server";
@@ -31,7 +31,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const products = productsJson.data?.products?.edges?.map((e: any) => e.node) || [];
 
   const productIds = products.map((p: any) => p.id.replace('gid://shopify/Product/', ''));
-  
+
   // Load safety checks
   const productChecks = await (prisma as any).safetyCheck.findMany({
     where: { shop: session.shop, productId: { in: productIds } },
@@ -57,24 +57,24 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         riskDescription = first.riskLegalProvision || first.alertDetails?.fields?.risk_legal_provision || '';
         alertDetails = first.alertDetails || null;
         riskLevelFromResult = first.alertDetails?.fields?.alert_level ||
-                              first.alertDetails?.fields?.risk_level ||
-                              first.riskLevel || null;
+          first.alertDetails?.fields?.risk_level ||
+          first.riskLevel || null;
         const fields = first.alertDetails?.fields || {};
         const pics = [...(fields.pictures || []), fields.product_image].filter(Boolean);
         if (pics[0]) alertDetails = { ...alertDetails, fallbackImage: typeof pics[0] === 'string' ? pics[0] : pics[0].url };
       }
-    } catch {}
+    } catch { }
     const effectiveRiskLevel = riskLevelFromResult || (alert.riskLevel !== 'unknown' ? alert.riskLevel : null) || 'Unknown';
-    
+
     // Get product image from products array
     const product = products.find((p: any) => p.id.replace('gid://shopify/Product/', '') === alert.productId);
-    
+
     const transformedAlert = {
       ...alert, alertType, riskDescription, alertDetails,
       riskLevel: effectiveRiskLevel,
       productImage: product?.featuredImage?.url || alertDetails?.fallbackImage || null,
     };
-    
+
     // Store by productId - keep the most recent/active one
     if (!alertsByProduct[alert.productId] || alert.status === 'active') {
       alertsByProduct[alert.productId] = transformedAlert;
@@ -112,16 +112,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       const safetyResult = await checkProductSafety(productData, threshold);
 
       let alertId: string | null = null;
-      
+
       if (!safetyResult.isSafe && safetyResult.warnings.length > 0) {
         const existing = await (prisma as any).safetyAlert.findFirst({ where: { productId, shop: session.shop, status: 'active' } });
         if (!existing) {
           // Risk level is stored in alertDetails.fields.alert_level from Safety Gate API
           const firstWarning = safetyResult.warnings[0];
           const riskLevel = firstWarning?.alertDetails?.fields?.alert_level ||
-                            firstWarning?.alertDetails?.fields?.risk_level ||
-                            firstWarning?.riskLevel ||
-                            'unknown';
+            firstWarning?.alertDetails?.fields?.risk_level ||
+            firstWarning?.riskLevel ||
+            'unknown';
           const newAlert = await (prisma as any).safetyAlert.create({
             data: { productId, productTitle, shop: session.shop, checkResult: JSON.stringify(safetyResult), status: 'active', riskLevel, warningsCount: safetyResult.warnings.length },
           });
@@ -211,6 +211,7 @@ export default function ManualCheckPage() {
   const fetcher = useFetcher<typeof action>();
   const resolveFetcher = useFetcher<typeof action>();
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
 
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [checkResult, setCheckResult] = useState<any>(null);
@@ -334,8 +335,8 @@ export default function ManualCheckPage() {
       {fetcher.data && 'alertCreated' in fetcher.data && fetcher.data.alertCreated && (
         <s-banner tone="warning" heading={t('manualCheck.banners.alertHeading')}>
           <s-text>{t('manualCheck.banners.alertDescription')}</s-text>
-          <s-button 
-            slot="secondary-actions" 
+          <s-button
+            slot="secondary-actions"
             variant="primary"
             commandFor="manual-check-result-modal"
             command="--show"
@@ -346,28 +347,104 @@ export default function ManualCheckPage() {
         </s-banner>
       )}
 
-      <s-section heading={t('manualCheck.overview.title')}>
-        <div className="metric-grid">
-          <SummaryCard
-            title={t('manualCheck.overview.productsInScope')}
-            value={products.length}
-            description={t('manualCheck.overview.productsDescription')}
-            badge={<s-badge tone="info">{t('status.updated')}</s-badge>}
-          />
-          <SummaryCard
-            title={t('manualCheck.overview.manualCompleted')}
-            value={totalChecks}
-            badge={<s-badge tone="info">{t('manualCheck.overview.coverage', { coverage: coverageRate })}</s-badge>}
-            progress={products.length > 0 ? coverageRate : undefined}
-            description={t('manualCheck.overview.manualCompletedDescription', { checked: checkedProducts, total: products.length })}
-          />
-          <SummaryCard
-            title={t('manualCheck.overview.productsFlagged')}
-            value={unsafeProducts}
-            badge={<s-badge tone={unsafeProducts === 0 ? "success" : "critical"}>{unsafeProducts === 0 ? t('status.allClear') : t('status.needsReview')}</s-badge>}
-            description={unsafeProducts === 0 ? t('manualCheck.overview.noRisks') : t('manualCheck.overview.prioritise')}
-          />
-        </div>
+      {/* Overview Metrics Cards - Shopify Style with Icons */}
+      <s-section padding="base">
+        <s-grid gridTemplateColumns="repeat(auto-fit, minmax(280px, 1fr))" gap="base">
+          {/* Products in Scope Card */}
+          <s-clickable
+            border="base"
+            borderRadius="large"
+            padding="base"
+            inlineSize="100%"
+          >
+            <s-grid gridTemplateColumns="auto 1fr" gap="base" alignItems="center">
+              <s-box
+                padding="small"
+                borderRadius="full"
+                background="bg-fill-info-secondary"
+                inlineSize="40px"
+                blockSize="40px"
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <s-text size="large">📦</s-text>
+              </s-box>
+              <s-stack gap="small-200">
+                <s-text tone="subdued" size="small">{t('manualCheck.overview.productsInScope')}</s-text>
+                <s-stack direction="inline" gap="small" blockAlign="center">
+                  <s-heading size="large">{products.length}</s-heading>
+                  <s-badge tone="info">{t('status.updated')}</s-badge>
+                </s-stack>
+                <s-text tone="subdued" size="small">{t('manualCheck.overview.productsDescription')}</s-text>
+              </s-stack>
+            </s-grid>
+          </s-clickable>
+
+          {/* Manual Checks Completed Card */}
+          <s-clickable
+            border="base"
+            borderRadius="large"
+            padding="base"
+            inlineSize="100%"
+          >
+            <s-grid gridTemplateColumns="auto 1fr" gap="base" alignItems="center">
+              <s-box
+                padding="small"
+                borderRadius="full"
+                background="bg-fill-success-secondary"
+                inlineSize="40px"
+                blockSize="40px"
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <s-text size="large">✅</s-text>
+              </s-box>
+              <s-stack gap="small-200">
+                <s-text tone="subdued" size="small">{t('manualCheck.overview.manualCompleted')}</s-text>
+                <s-stack direction="inline" gap="small" blockAlign="center">
+                  <s-heading size="large">{totalChecks}</s-heading>
+                  <s-badge tone="info">{t('manualCheck.overview.coverage', { coverage: coverageRate })}</s-badge>
+                </s-stack>
+                {products.length > 0 && (
+                  <s-progress-bar progress={coverageRate} tone="success" />
+                )}
+                <s-text tone="subdued" size="small">{t('manualCheck.overview.manualCompletedDescription', { checked: checkedProducts, total: products.length })}</s-text>
+              </s-stack>
+            </s-grid>
+          </s-clickable>
+
+          {/* Products Flagged Card */}
+          <s-clickable
+            onClick={() => navigate('/app/alerts?status=active')}
+            border="base"
+            borderRadius="large"
+            padding="base"
+            inlineSize="100%"
+          >
+            <s-grid gridTemplateColumns="auto 1fr" gap="base" alignItems="center">
+              <s-box
+                padding="small"
+                borderRadius="full"
+                background={unsafeProducts === 0 ? "bg-fill-success-secondary" : "bg-fill-critical-secondary"}
+                inlineSize="40px"
+                blockSize="40px"
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <s-text size="large">{unsafeProducts === 0 ? "🛡️" : "⚠️"}</s-text>
+              </s-box>
+              <s-stack gap="small-200">
+                <s-text tone="subdued" size="small">{t('manualCheck.overview.productsFlagged')}</s-text>
+                <s-stack direction="inline" gap="small" blockAlign="center">
+                  <s-heading size="large">{unsafeProducts}</s-heading>
+                  <s-badge tone={unsafeProducts === 0 ? "success" : "critical"}>
+                    {unsafeProducts === 0 ? t('status.allClear') : t('status.needsReview')}
+                  </s-badge>
+                </s-stack>
+                <s-text tone="subdued" size="small">
+                  {unsafeProducts === 0 ? t('manualCheck.overview.noRisks') : t('manualCheck.overview.prioritise')}
+                </s-text>
+              </s-stack>
+            </s-grid>
+          </s-clickable>
+        </s-grid>
       </s-section>
 
       {/* Product list - using Polaris s-table for accessibility */}
@@ -501,9 +578,9 @@ export default function ManualCheckPage() {
         const riskDescription = firstWarning?.riskLegalProvision || firstWarning?.alertDetails?.fields?.risk_legal_provision || '';
         const alertDetails = firstWarning?.alertDetails || null;
         const riskLevel = firstWarning?.alertDetails?.fields?.alert_level ||
-                         firstWarning?.alertDetails?.fields?.risk_level ||
-                         firstWarning?.riskLevel || 'Unknown';
-        
+          firstWarning?.alertDetails?.fields?.risk_level ||
+          firstWarning?.riskLevel || 'Unknown';
+
         // Get fallback image from warning if product has no image
         const fields = firstWarning?.alertDetails?.fields || {};
         const pics = [...(fields.pictures || []), fields.product_image].filter(Boolean);
