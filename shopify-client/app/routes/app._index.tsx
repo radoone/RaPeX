@@ -672,7 +672,174 @@ export default function Index() {
         </s-section>
       )}
 
-      {/* Check All Products Section */}
+      {/* Metrics Cards - Shopify Style with Icons */}
+      <s-section>
+        <s-grid gridTemplateColumns="repeat(auto-fit, minmax(280px, 1fr))" gap="base">
+          {/* Active Alerts Card */}
+          <s-clickable
+            onClick={() => navigate('/app/alerts?status=active')}
+            border="base"
+            borderRadius="large"
+            padding="base"
+            inlineSize="100%"
+          >
+            <s-grid gridTemplateColumns="auto 1fr" gap="base" alignItems="center">
+              <s-box
+                padding="small"
+                borderRadius="full"
+                background={stats.activeAlerts > 0 ? "bg-fill-critical-secondary" : "bg-fill-success-secondary"}
+                inlineSize="40px"
+                blockSize="40px"
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <s-text size="large">{stats.activeAlerts > 0 ? "⚠️" : "✅"}</s-text>
+              </s-box>
+              <s-stack gap="small-200">
+                <s-text tone="subdued" size="small">{t('dashboard.stats.activeAlerts')}</s-text>
+                <s-stack direction="inline" gap="small" blockAlign="center">
+                  <s-heading size="large">{stats.activeAlerts}</s-heading>
+                  <s-badge tone={stats.activeAlerts > 0 ? "critical" : "success"}>
+                    {stats.activeAlerts > 0 ? t('status.needsReview') : t('status.allClear')}
+                  </s-badge>
+                </s-stack>
+              </s-stack>
+            </s-grid>
+          </s-clickable>
+
+          {/* Alerts Logged Card */}
+          <s-clickable
+            onClick={() => navigate('/app/alerts')}
+            border="base"
+            borderRadius="large"
+            padding="base"
+            inlineSize="100%"
+          >
+            <s-grid gridTemplateColumns="auto 1fr" gap="base" alignItems="center">
+              <s-box
+                padding="small"
+                borderRadius="full"
+                background="bg-fill-info-secondary"
+                inlineSize="40px"
+                blockSize="40px"
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <s-text size="large">📑</s-text>
+              </s-box>
+              <s-stack gap="small-200">
+                <s-text tone="subdued" size="small">{t('dashboard.stats.alertsLogged')}</s-text>
+                <s-stack direction="inline" gap="small" blockAlign="center">
+                  <s-heading size="large">{stats.totalAlerts}</s-heading>
+                  <s-badge tone="info">
+                    {stats.resolvedAlerts > 0 ? t('dashboard.stats.resolved', { count: stats.resolvedAlerts }) : t('common.all')}
+                  </s-badge>
+                </s-stack>
+              </s-stack>
+            </s-grid>
+          </s-clickable>
+
+          {/* Products Checked Card */}
+          <s-clickable
+            onClick={() => navigate('/app/manual-check')}
+            border="base"
+            borderRadius="large"
+            padding="base"
+            inlineSize="100%"
+          >
+            <s-grid gridTemplateColumns="auto 1fr" gap="base" alignItems="center">
+              <s-box
+                padding="small"
+                borderRadius="full"
+                background="bg-fill-success-secondary"
+                inlineSize="40px"
+                blockSize="40px"
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <s-text size="large">🛡️</s-text>
+              </s-box>
+              <s-stack gap="small-200">
+                <s-text tone="subdued" size="small">{t('dashboard.stats.productsChecked')}</s-text>
+                <s-stack direction="inline" gap="small" blockAlign="center">
+                  <s-heading size="large">{stats.totalChecks}</s-heading>
+                  <s-badge tone={stats.totalChecks > 0 ? "success" : "warning"}>
+                    {stats.totalChecks > 0 ? t('dashboard.stats.autoMonitoring') : t('dashboard.stats.newSetup')}
+                  </s-badge>
+                </s-stack>
+              </s-stack>
+            </s-grid>
+          </s-clickable>
+        </s-grid>
+      </s-section>
+
+      {/* Recent Alerts */}
+      <s-section>
+        <s-grid gridTemplateColumns="1fr auto" alignItems="center" paddingBlockEnd="small-400">
+          <s-stack direction="inline" gap="small" blockAlign="center">
+            <s-heading>{t('dashboard.recentAlerts.title')}</s-heading>
+            {recentAlerts.length > 0 && (
+              <s-badge tone={recentAlerts.some(a => a.status === 'active') ? "critical" : "success"}>
+                {recentAlerts.filter(a => a.status === 'active').length > 0
+                  ? t('dashboard.recentAlerts.active', { count: recentAlerts.filter(a => a.status === 'active').length })
+                  : t('dashboard.recentAlerts.allResolved')}
+              </s-badge>
+            )}
+          </s-stack>
+          <s-button onClick={() => navigate('/app/alerts')}>{t('actions.viewAlerts')}</s-button>
+        </s-grid>
+
+        {recentAlerts.length === 0 ? (
+          <s-box padding="large" background="subdued" borderRadius="large" border="base">
+            <s-stack gap="small" alignItems="center">
+              <s-box padding="base" borderRadius="full" background="bg-fill-success-secondary">
+                <s-icon name="checkmark" />
+              </s-box>
+              <s-heading size="small">{t('dashboard.recentAlerts.emptyState.heading')}</s-heading>
+              <s-text tone="subdued" alignment="center">
+                {t('dashboard.recentAlerts.emptyState.content')}
+              </s-text>
+            </s-stack>
+          </s-box>
+        ) : (
+          <s-grid gridTemplateColumns="repeat(auto-fit, minmax(280px, 1fr))" gap="base">
+            {recentAlerts.map((alert) => (
+              <s-clickable
+                key={alert.id}
+                onClick={() => navigate('/app/alerts')}
+                border="base"
+                borderRadius="large"
+                padding="base"
+                inlineSize="100%"
+              >
+                <s-grid gridTemplateColumns="auto 1fr" alignItems="start" gap="base">
+                  {alert.productImage ? (
+                    <s-thumbnail size="small" src={alert.productImage} alt={alert.productTitle} />
+                  ) : (
+                    <s-box background="subdued" borderRadius="base" padding="small-400">
+                      <s-icon name="product" />
+                    </s-box>
+                  )}
+                  <s-box>
+                    <s-heading size="small" style={{ marginBottom: '4px' }}>{alert.productTitle}</s-heading>
+                    <s-stack direction="inline" gap="small-200" wrap>
+                      <s-badge tone={alert.status === 'active' ? 'critical' : alert.status === 'resolved' ? 'success' : 'info'}>
+                        {alert.status === 'active'
+                          ? t('status.needsReview')
+                          : alert.status === 'resolved'
+                            ? t('status.resolved')
+                            : t('status.dismissed')}
+                      </s-badge>
+                      {alert.alertType && (
+                        <s-badge tone="warning">{alert.alertType}</s-badge>
+                      )}
+                    </s-stack>
+                  </s-box>
+                </s-grid>
+              </s-clickable>
+            ))}
+          </s-grid>
+        )}
+      </s-section>
+
+      {/* Check All Products Section - Moved down and made secondary if alerts exist */}
       <s-section>
         <s-box padding="base" border="base" borderRadius="large" background="bg-surface">
           <s-stack gap="base">
@@ -729,195 +896,6 @@ export default function Index() {
             </s-button>
           </s-stack>
         </s-box>
-      </s-section>
-
-      {/* Metrics Cards - Shopify Style with Icons */}
-      <s-section>
-        <s-grid gridTemplateColumns="repeat(auto-fit, minmax(280px, 1fr))" gap="base">
-          {/* Active Alerts Card */}
-          <s-clickable
-            onClick={() => navigate('/app/alerts?status=active')}
-            border="base"
-            borderRadius="large"
-            padding="base"
-            inlineSize="100%"
-          >
-            <s-grid gridTemplateColumns="auto 1fr" gap="base" alignItems="center">
-              <s-box
-                padding="small"
-                borderRadius="full"
-                background={stats.activeAlerts > 0 ? "bg-fill-critical-secondary" : "bg-fill-success-secondary"}
-                inlineSize="40px"
-                blockSize="40px"
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              >
-                <s-text size="large">{stats.activeAlerts > 0 ? "⚠️" : "✅"}</s-text>
-              </s-box>
-              <s-stack gap="small-200">
-                <s-text tone="subdued" size="small">{t('dashboard.stats.activeAlerts')}</s-text>
-                <s-stack direction="inline" gap="small" blockAlign="center">
-                  <s-heading size="large">{stats.activeAlerts}</s-heading>
-                  <s-badge tone={stats.activeAlerts > 0 ? "critical" : "success"}>
-                    {stats.activeAlerts > 0 ? t('status.needsReview') : t('status.allClear')}
-                  </s-badge>
-                </s-stack>
-                <s-text tone="subdued" size="small">
-                  {stats.activeAlerts > 0
-                    ? t('dashboard.stats.descriptions.activeAlerts')
-                    : t('dashboard.stats.descriptions.activeAlertsZero')}
-                </s-text>
-              </s-stack>
-            </s-grid>
-          </s-clickable>
-
-          {/* Alerts Logged Card */}
-          <s-clickable
-            onClick={() => navigate('/app/alerts')}
-            border="base"
-            borderRadius="large"
-            padding="base"
-            inlineSize="100%"
-          >
-            <s-grid gridTemplateColumns="auto 1fr" gap="base" alignItems="center">
-              <s-box
-                padding="small"
-                borderRadius="full"
-                background="bg-fill-info-secondary"
-                inlineSize="40px"
-                blockSize="40px"
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              >
-                <s-text size="large">📑</s-text>
-              </s-box>
-              <s-stack gap="small-200">
-                <s-text tone="subdued" size="small">{t('dashboard.stats.alertsLogged')}</s-text>
-                <s-stack direction="inline" gap="small" blockAlign="center">
-                  <s-heading size="large">{stats.totalAlerts}</s-heading>
-                  <s-badge tone="info">
-                    {stats.resolvedAlerts > 0 ? t('dashboard.stats.resolved', { count: stats.resolvedAlerts }) : t('common.all')}
-                  </s-badge>
-                </s-stack>
-                <s-text tone="subdued" size="small">
-                  {stats.totalAlerts > 0
-                    ? t('dashboard.stats.descriptions.alertsLogged')
-                    : t('dashboard.stats.descriptions.alertsLoggedZero')}
-                </s-text>
-              </s-stack>
-            </s-grid>
-          </s-clickable>
-
-          {/* Products Checked Card */}
-          <s-clickable
-            onClick={() => navigate('/app/manual-check')}
-            border="base"
-            borderRadius="large"
-            padding="base"
-            inlineSize="100%"
-          >
-            <s-grid gridTemplateColumns="auto 1fr" gap="base" alignItems="center">
-              <s-box
-                padding="small"
-                borderRadius="full"
-                background="bg-fill-success-secondary"
-                inlineSize="40px"
-                blockSize="40px"
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              >
-                <s-text size="large">🛡️</s-text>
-              </s-box>
-              <s-stack gap="small-200">
-                <s-text tone="subdued" size="small">{t('dashboard.stats.productsChecked')}</s-text>
-                <s-stack direction="inline" gap="small" blockAlign="center">
-                  <s-heading size="large">{stats.totalChecks}</s-heading>
-                  <s-badge tone={stats.totalChecks > 0 ? "success" : "warning"}>
-                    {stats.totalChecks > 0 ? t('dashboard.stats.autoMonitoring') : t('dashboard.stats.newSetup')}
-                  </s-badge>
-                </s-stack>
-                <s-text tone="subdued" size="small">
-                  {stats.totalChecks > 0
-                    ? t('dashboard.stats.descriptions.productsChecked')
-                    : t('dashboard.stats.descriptions.productsCheckedZero')}
-                </s-text>
-              </s-stack>
-            </s-grid>
-          </s-clickable>
-        </s-grid>
-      </s-section>
-
-      {/* Recent Alerts */}
-      <s-section>
-        <s-grid gridTemplateColumns="1fr auto" alignItems="center" paddingBlockEnd="small-400">
-          <s-stack direction="inline" gap="small" blockAlign="center">
-            <s-heading>{t('dashboard.recentAlerts.title')}</s-heading>
-            {recentAlerts.length > 0 && (
-              <s-badge tone={recentAlerts.some(a => a.status === 'active') ? "critical" : "success"}>
-                {recentAlerts.filter(a => a.status === 'active').length > 0
-                  ? t('dashboard.recentAlerts.active', { count: recentAlerts.filter(a => a.status === 'active').length })
-                  : t('dashboard.recentAlerts.allResolved')}
-              </s-badge>
-            )}
-          </s-stack>
-          <s-button onClick={() => navigate('/app/alerts')}>{t('actions.viewAlerts')}</s-button>
-        </s-grid>
-
-        {recentAlerts.length === 0 ? (
-          <s-box padding="large" background="subdued" borderRadius="large" border="base">
-            <s-stack gap="small" alignItems="center">
-              <s-box padding="base" borderRadius="full" background="bg-fill-success-secondary">
-                <s-icon name="checkmark" />
-              </s-box>
-              <s-heading size="small">{t('dashboard.recentAlerts.emptyState.heading')}</s-heading>
-              <s-text tone="subdued" alignment="center">
-                {t('dashboard.recentAlerts.emptyState.content')}
-              </s-text>
-            </s-stack>
-          </s-box>
-        ) : (
-          <s-grid gridTemplateColumns="repeat(auto-fit, minmax(280px, 1fr))" gap="base">
-            {recentAlerts.map((alert) => (
-              <s-clickable
-                key={alert.id}
-                onClick={() => navigate('/app/alerts')}
-                border="base"
-                borderRadius="large"
-                padding="base"
-                inlineSize="100%"
-              >
-                <s-grid gridTemplateColumns="auto 1fr" alignItems="start" gap="base">
-                  {alert.productImage ? (
-                    <s-thumbnail size="small" src={alert.productImage} alt={alert.productTitle} />
-                  ) : (
-                    <s-box background="subdued" borderRadius="base" padding="small-400">
-                      <s-icon name="product" />
-                    </s-box>
-                  )}
-                  <s-box>
-                    <s-heading size="small">{alert.productTitle}</s-heading>
-                    <s-stack direction="inline" gap="small-200" wrap>
-                      <s-badge tone={alert.status === 'active' ? 'critical' : alert.status === 'resolved' ? 'success' : 'info'}>
-                        {alert.status === 'active'
-                          ? t('status.needsReview')
-                          : alert.status === 'resolved'
-                            ? t('status.resolved')
-                            : t('status.dismissed')}
-                      </s-badge>
-                      {alert.alertType && (
-                        <s-badge tone="warning">{alert.alertType}</s-badge>
-                      )}
-                    </s-stack>
-                    <s-paragraph tone="subdued">
-                      {t('dashboard.recentAlerts.matchCount', { count: alert.warningsCount })}
-                    </s-paragraph>
-                  </s-box>
-                </s-grid>
-              </s-clickable>
-            ))}
-          </s-grid>
-        )}
-
-        <s-stack direction="inline" alignItems="center" justifyContent="center" paddingBlockStart="base">
-          <s-link onClick={() => navigate('/app/alerts')}>{t('actions.viewAlerts')}</s-link>
-        </s-stack>
       </s-section>
 
       {/* News */}

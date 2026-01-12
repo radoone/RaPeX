@@ -17,7 +17,7 @@ interface Alert {
 }
 
 // Resolution types for resolve/dismiss actions
-export type ResolutionType = 
+export type ResolutionType =
   | 'verified_safe'      // Product verified as safe after review
   | 'removed_from_sale'  // Product removed from store
   | 'modified_product'   // Product modified to address safety concern
@@ -211,17 +211,17 @@ function AlertRow({
   const { t, i18n } = useTranslation();
   const viewBtnRef = useRef<HTMLElement>(null);
   const reactivateBtnRef = useRef<HTMLElement>(null);
-  
+
   // Refs for resolve action buttons
   const verifiedSafeBtnRef = useRef<HTMLElement>(null);
   const removedFromSaleBtnRef = useRef<HTMLElement>(null);
   const modifiedProductBtnRef = useRef<HTMLElement>(null);
   const contactedSupplierBtnRef = useRef<HTMLElement>(null);
-  
+
   // Refs for dismiss action buttons
   const falsePositiveBtnRef = useRef<HTMLElement>(null);
   const notMyProductBtnRef = useRef<HTMLElement>(null);
-  
+
   const dateLocale = i18n.language === 'sk' ? 'sk-SK' : 'en-GB';
   const menuId = `resolve-menu-${alert.id}`;
 
@@ -244,9 +244,9 @@ function AlertRow({
       { ref: falsePositiveBtnRef, type: 'false_positive' as ResolutionType, action: onDismiss },
       { ref: notMyProductBtnRef, type: 'not_my_product' as ResolutionType, action: onDismiss },
     ];
-    
+
     const cleanups: (() => void)[] = [];
-    
+
     handlers.forEach(({ ref, type, action }) => {
       const btn = ref.current;
       if (!btn) return;
@@ -254,7 +254,7 @@ function AlertRow({
       btn.addEventListener('click', handleClick);
       cleanups.push(() => btn.removeEventListener('click', handleClick));
     });
-    
+
     return () => cleanups.forEach(cleanup => cleanup());
   }, [alert.id, onResolve, onDismiss]);
 
@@ -273,7 +273,7 @@ function AlertRow({
 
   // Badge tones
   const statusTone = alert.status === 'active' ? 'critical' : alert.status === 'resolved' ? 'success' : 'neutral';
-  const riskTone = alert.riskLevel?.toLowerCase().includes('serious') ? 'critical' 
+  const riskTone = alert.riskLevel?.toLowerCase().includes('serious') ? 'critical'
     : alert.riskLevel?.toLowerCase().includes('high') ? 'warning' : 'info';
 
   return (
@@ -353,9 +353,9 @@ function AlertRow({
       {/* Actions Cell */}
       <s-table-cell>
         <s-stack direction="inline" gap="small-200">
-          <s-button 
+          <s-button
             ref={viewBtnRef}
-            size="small" 
+            size="small"
             variant="secondary"
             commandFor={modalId}
             command="--show"
@@ -364,8 +364,8 @@ function AlertRow({
           </s-button>
           {alert.status === 'active' && (
             <>
-              <s-button 
-                size="small" 
+              <s-button
+                size="small"
                 variant="primary"
                 commandFor={menuId}
                 loading={isLoading || undefined}
@@ -374,36 +374,37 @@ function AlertRow({
               </s-button>
               <s-menu id={menuId} accessibilityLabel={t('resolveActions.menuLabel')}>
                 <s-section heading={t('resolveActions.actionTaken')}>
-                  <s-button ref={verifiedSafeBtnRef}>
-                    ✅ {t('resolveActions.verifiedSafe')}
+                  <s-button ref={verifiedSafeBtnRef} icon="checkmark">
+                    {t('resolveActions.verifiedSafe')}
                   </s-button>
-                  <s-button ref={removedFromSaleBtnRef}>
-                    🗑️ {t('resolveActions.removedFromSale')}
+                  <s-button ref={removedFromSaleBtnRef} icon="delete">
+                    {t('resolveActions.removedFromSale')}
                   </s-button>
-                  <s-button ref={modifiedProductBtnRef}>
-                    ✏️ {t('resolveActions.modifiedProduct')}
+                  <s-button ref={modifiedProductBtnRef} icon="edit">
+                    {t('resolveActions.modifiedProduct')}
                   </s-button>
-                  <s-button ref={contactedSupplierBtnRef}>
-                    📧 {t('resolveActions.contactedSupplier')}
+                  <s-button ref={contactedSupplierBtnRef} icon="email">
+                    {t('resolveActions.contactedSupplier')}
                   </s-button>
                 </s-section>
                 <s-section heading={t('resolveActions.noActionNeeded')}>
                   <s-button ref={falsePositiveBtnRef}>
-                    🔵 {t('resolveActions.falsePositive')}
+                    {t('resolveActions.falsePositive')}
                   </s-button>
                   <s-button ref={notMyProductBtnRef}>
-                    ❌ {t('resolveActions.notMyProduct')}
+                    {t('resolveActions.notMyProduct')}
                   </s-button>
                 </s-section>
               </s-menu>
             </>
           )}
           {(alert.status === 'dismissed' || alert.status === 'resolved') && (
-            <s-button 
+            <s-button
               ref={reactivateBtnRef}
-              size="small" 
+              size="small"
               variant="tertiary"
               loading={isLoading || undefined}
+              icon="undo"
             >
               {t('actions.reactivate')}
             </s-button>
@@ -415,14 +416,14 @@ function AlertRow({
 }
 
 // Format date as relative (Today, Yesterday, etc.)
-function formatRelativeDate(
+export function formatRelativeDate(
   date: Date,
   t: (key: string, options?: Record<string, any>) => string,
   locale: string
 ): string {
   const now = new Date();
   const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
-  
+
   if (diffDays === 0) return t('dates.today');
   if (diffDays === 1) return t('dates.yesterday');
   if (diffDays < 7) return t('dates.daysAgo', { count: diffDays });

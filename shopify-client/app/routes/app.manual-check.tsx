@@ -7,7 +7,7 @@ import { authenticate } from "../shopify.server";
 import { shopifyProductToProductData } from "../services/safety-gate-checker.client";
 import prisma from "../db.server";
 import { SafetyGatePortal, AlertDetailModal, PageHeader, SummaryCard } from "../components";
-import type { ResolutionType } from "../components/AlertTable";
+import { AlertTable, type ResolutionType, formatRelativeDate } from "../components/AlertTable";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { admin, session } = await authenticate.admin(request);
@@ -458,7 +458,6 @@ export default function ManualCheckPage() {
             <s-table-header-row>
               <s-table-header listSlot="primary">{t('manualCheck.catalogue.columns.product')}</s-table-header>
               <s-table-header listSlot="inline">{t('manualCheck.catalogue.columns.status')}</s-table-header>
-              <s-table-header listSlot="labeled">{t('manualCheck.catalogue.columns.checks')}</s-table-header>
               <s-table-header>{t('manualCheck.catalogue.columns.action')}</s-table-header>
             </s-table-header-row>
             <s-table-body>
@@ -484,7 +483,7 @@ export default function ManualCheckPage() {
                         <s-stack gap="small-100">
                           <s-text fontWeight="semibold">{product.title}</s-text>
                           <s-text tone="subdued" size="small">
-                            {product.vendor || t('manualCheck.catalogue.unknownVendor')} - {product.productType || t('manualCheck.catalogue.noType')}
+                            {product.vendor || t('manualCheck.catalogue.unknownVendor')}
                           </s-text>
                         </s-stack>
                       </s-stack>
@@ -496,19 +495,9 @@ export default function ManualCheckPage() {
                         <s-badge tone={statusTone}>{statusLabel}</s-badge>
                         {lastCheck && (
                           <s-text tone="subdued" size="small">
-                            {t('manualCheck.catalogue.lastChecked', { date: lastCheck.toLocaleDateString(dateLocale) })}
+                            {formatRelativeDate(lastCheck, t, dateLocale)}
                           </s-text>
                         )}
-                      </s-stack>
-                    </s-table-cell>
-
-                    {/* Checks Cell */}
-                    <s-table-cell>
-                      <s-stack gap="small-100">
-                        <s-text fontWeight="semibold">{checks.totalChecks}</s-text>
-                        <s-text tone="subdued" size="small">
-                          {checks.totalChecks > 0 ? t('manualCheck.catalogue.totalChecks', { count: checks.totalChecks }) : t('manualCheck.catalogue.firstCheck')}
-                        </s-text>
                       </s-stack>
                     </s-table-cell>
 
