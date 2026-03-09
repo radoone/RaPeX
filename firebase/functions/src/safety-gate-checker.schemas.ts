@@ -8,6 +8,7 @@ export const ProductInputSchema = functionsAi.defineSchema(
     category: z.string().describe("Product category (toys, electronics, etc.)"),
     description: z.string().describe("Product description"),
     imageUrl: z.string().optional().describe("URL to product image"),
+    imageUrls: z.array(z.string()).optional().describe("URLs to product images"),
     brand: z.string().optional().describe("Product brand"),
     model: z.string().optional().describe("Product model"),
   }),
@@ -62,6 +63,13 @@ export const SafetyCheckResultSchema = functionsAi.defineSchema(
     warnings: z.array(MatchSchema),
     recommendation: z.string(),
     checkedAt: z.string(),
+    analysis: z.object({
+      mode: z.enum(["text-only", "with-image"]),
+      productImagesProvided: z.number(),
+      productImagesUsed: z.number(),
+      alertImagesUsed: z.number(),
+      candidateAlertsConsidered: z.number(),
+    }),
   }),
 );
 
@@ -77,7 +85,7 @@ export const AnalysisPromptInputSchema = functionsAi.defineSchema(
   "AnalysisPromptInput",
   z.object({
     comparisonPrompt: z.string(),
-    productImage: EncodedImageSchema.nullable(),
+    productImages: z.array(EncodedImageSchema),
     alertImages: z.array(
       z.object({
         alertId: z.string(),

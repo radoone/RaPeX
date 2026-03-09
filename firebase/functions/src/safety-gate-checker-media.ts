@@ -1,7 +1,10 @@
 import axios from "axios";
+import type { ProductInput } from "./safety-gate-checker.schemas.js";
 import type { EncodedImage } from "./safety-gate-checker.types.js";
 
 const IMAGE_TIMEOUT_MS = 10000;
+const MAX_PRODUCT_IMAGES = 4;
+const MAX_ALERT_IMAGES = 8;
 
 function guessContentType(url: string): string | undefined {
   const lower = url.toLowerCase();
@@ -30,6 +33,19 @@ export function normalizePictures(fields: any): string[] {
   ]
     .map((picture: any) => (typeof picture === "string" ? picture.trim() : picture))
     .filter(Boolean);
+}
+
+export function getProductImageUrls(product: ProductInput, maxImages = MAX_PRODUCT_IMAGES): string[] {
+  const candidates = [
+    ...(Array.isArray(product.imageUrls) ? product.imageUrls : []),
+    ...(product.imageUrl ? [product.imageUrl] : []),
+  ];
+
+  return [...new Set(candidates.map((image) => image.trim()).filter(Boolean))].slice(0, maxImages);
+}
+
+export function limitImageUrls(urls: string[], maxImages = MAX_ALERT_IMAGES): string[] {
+  return [...new Set(urls.map((image) => image.trim()).filter(Boolean))].slice(0, maxImages);
 }
 
 export async function prepareImageMedia(imageUrl: string): Promise<EncodedImage | null> {

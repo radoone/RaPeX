@@ -11,6 +11,12 @@ export interface Product {
     url: string;
     altText?: string;
   };
+  images?: {
+    nodes: Array<{
+      url: string;
+      altText?: string;
+    }>;
+  };
   variants: ProductVariant[];
   createdAt: string;
   updatedAt: string;
@@ -58,6 +64,13 @@ export interface SafetyCheckResult {
   }>;
   recommendation: string;
   checkedAt: string;
+  analysis: {
+    mode: "text-only" | "with-image";
+    productImagesProvided: number;
+    productImagesUsed: number;
+    alertImagesUsed: number;
+    candidateAlertsConsidered: number;
+  };
 }
 
 export interface SafetyGateAlertDetails {

@@ -3,7 +3,11 @@ import type {
   SafetyCheckResult,
   ProductInput,
 } from "./safety-gate-checker.schemas.js";
-import type { AnalysisMatchCandidate, NormalizedAlert } from "./safety-gate-checker.types.js";
+import type {
+  AnalysisMatchCandidate,
+  NormalizedAlert,
+  SafetyCheckAnalysis,
+} from "./safety-gate-checker.types.js";
 
 type AnalysisResponseShape = {
   output?: unknown;
@@ -62,21 +66,35 @@ Return ONLY a JSON array of matches where similarity > 50. Each match should hav
 If no matches found, return empty array.`;
 }
 
-export function createNoAlertsResult(): SafetyCheckResult {
+function createDefaultAnalysis(candidateAlertsConsidered: number, productImagesProvided = 0): SafetyCheckAnalysis {
+  return {
+    mode: "text-only",
+    productImagesProvided,
+    productImagesUsed: 0,
+    alertImagesUsed: 0,
+    candidateAlertsConsidered,
+  };
+}
+
+export function createNoAlertsResult(productImagesProvided = 0): SafetyCheckResult {
   return {
     isSafe: true,
     warnings: [],
     recommendation: "No recent Safety Gate alerts found. Product appears safe based on available data.",
     checkedAt: new Date().toISOString(),
+    analysis: createDefaultAnalysis(0, productImagesProvided),
   };
 }
 
-export function createUnavailableAnalysisResult(): SafetyCheckResult {
+export function createUnavailableAnalysisResult(
+  analysis: SafetyCheckAnalysis,
+): SafetyCheckResult {
   return {
     isSafe: true,
     warnings: [],
     recommendation: "Unable to analyze product against Safety Gate alerts at this time.",
     checkedAt: new Date().toISOString(),
+    analysis,
   };
 }
 
@@ -164,6 +182,7 @@ function buildRecommendation(warnings: MatchResult[]): string {
 export function buildSafetyCheckResult(
   matches: AnalysisMatchCandidate[],
   alerts: NormalizedAlert[],
+  analysis: SafetyCheckAnalysis,
 ): SafetyCheckResult {
   const warnings = matches
     .map((match): MatchResult => {
@@ -190,5 +209,6 @@ export function buildSafetyCheckResult(
     warnings,
     recommendation: buildRecommendation(warnings),
     checkedAt: new Date().toISOString(),
+    analysis,
   };
 }

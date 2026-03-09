@@ -5,8 +5,41 @@ export interface ProductData {
   category: string;
   description: string;
   imageUrl?: string;
+  imageUrls?: string[];
   brand?: string;
   model?: string;
+}
+
+function pickImageUrl(candidate: any): string | undefined {
+  if (!candidate) {
+    return undefined;
+  }
+
+  if (typeof candidate === "string") {
+    return candidate.trim() || undefined;
+  }
+
+  const url = candidate.url || candidate.src || candidate.originalSrc;
+  return typeof url === "string" && url.trim() ? url.trim() : undefined;
+}
+
+function collectImageUrls(product: any, selectedVariant?: ProductVariant): string[] {
+  const candidates = [
+    pickImageUrl(product?.featuredImage),
+    pickImageUrl(product?.image),
+    ...(Array.isArray(product?.images) ? product.images.map(pickImageUrl) : []),
+    ...(Array.isArray(product?.images?.nodes) ? product.images.nodes.map(pickImageUrl) : []),
+    ...(Array.isArray(product?.images?.edges) ? product.images.edges.map((edge: any) => pickImageUrl(edge?.node)) : []),
+    pickImageUrl(selectedVariant?.image),
+    ...(Array.isArray(product?.variants)
+      ? product.variants.map((variant: any) => pickImageUrl(variant?.image))
+      : []),
+    ...(Array.isArray(product?.variants?.edges)
+      ? product.variants.edges.map((edge: any) => pickImageUrl(edge?.node?.image))
+      : []),
+  ];
+
+  return [...new Set(candidates.filter((url): url is string => Boolean(url)))].slice(0, 4);
 }
 
 /**
@@ -38,11 +71,14 @@ export function shopifyProductToProductData(product: any, selectedVariant?: Prod
   const brand = product.vendor ||
     product.tags?.find((tag: string) => tag.toLowerCase().includes('brand:'))?.replace(/brand:\s*/i, '');
 
+  const imageUrls = collectImageUrls(product, selectedVariant);
+
   return {
     name: product.title,
     category: category.toLowerCase(),
     description,
-    imageUrl: product.featuredImage?.url || selectedVariant?.image?.url,
+    imageUrl: imageUrls[0],
+    imageUrls,
     brand,
     model: selectedVariant?.title !== product.title ? selectedVariant?.title : undefined,
   };

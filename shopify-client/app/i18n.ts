@@ -259,6 +259,14 @@ const resources = {
         "updated": "Updated",
         "flagged": "flagged"
       },
+      "analysis": {
+        "withImage": "Checked with images",
+        "textOnly": "Text-only check",
+        "checkedAt": "Checked: {{date}}",
+        "productImagesUsed": "Product images: {{used}} / {{provided}}",
+        "alertImagesUsed": "Alert images compared: {{count}}",
+        "candidateAlerts": "Candidate alerts"
+      },
       "pagination": {
         "pageOf": "Page {{current}} of {{total}} ({{count}} alerts)"
       },
@@ -709,6 +717,14 @@ const resources = {
         "unsafe": "Nebezpečné",
         "updated": "Aktualizované",
         "flagged": "označené"
+      },
+      "analysis": {
+        "withImage": "Kontrola s obrázkami",
+        "textOnly": "Len textová kontrola",
+        "checkedAt": "Skontrolované: {{date}}",
+        "productImagesUsed": "Obrázky produktu: {{used}} / {{provided}}",
+        "alertImagesUsed": "Porovnané obrázky alertov: {{count}}",
+        "candidateAlerts": "Kandidátne alerty"
       },
       "pagination": {
         "pageOf": "Strana {{current}} z {{total}} ({{count}} upozornení)"

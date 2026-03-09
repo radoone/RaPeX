@@ -95,6 +95,7 @@ export function AlertDetailModal({
   const warnings: any[] = Array.isArray(parsed?.warnings) ? parsed.warnings : [];
   const recommendation = parsed?.recommendation ?? "Review this product before continuing to sell it.";
   const checkedAt = parsed?.checkedAt ? new Date(parsed.checkedAt) : null;
+  const analysis = parsed?.analysis ?? null;
   const isSafe = parsed?.isSafe === true;
   const warningsCount = warnings.length || alert.warningsCount || 0;
   const primaryWarning = warnings[0];
@@ -167,8 +168,25 @@ export function AlertDetailModal({
                   
                   {checkedAt && (
                     <s-text tone="subdued" size="small">
-                      Checked: {checkedAt.toLocaleString("en-GB")}
+                      {t("analysis.checkedAt", { date: checkedAt.toLocaleString("en-GB") })}
                     </s-text>
+                  )}
+
+                  {analysis && (
+                    <s-stack direction="inline" gap="small" wrap>
+                      <s-badge tone={analysis.mode === "with-image" ? "info" : "neutral"}>
+                        {analysis.mode === "with-image" ? t("analysis.withImage") : t("analysis.textOnly")}
+                      </s-badge>
+                      <s-badge tone="info">
+                        {t("analysis.productImagesUsed", {
+                          used: analysis.productImagesUsed || 0,
+                          provided: analysis.productImagesProvided || 0,
+                        })}
+                      </s-badge>
+                      <s-badge tone="info">
+                        {t("analysis.alertImagesUsed", { count: analysis.alertImagesUsed || 0 })}
+                      </s-badge>
+                    </s-stack>
                   )}
                 </s-stack>
               </s-stack>
@@ -204,6 +222,13 @@ export function AlertDetailModal({
                   <s-stack gap="small-100">
                     <s-text tone="subdued" size="small">Highest Match</s-text>
                     <s-text size="large" fontWeight="bold">{similarity}%</s-text>
+                  </s-stack>
+                )}
+
+                {analysis && (
+                  <s-stack gap="small-100">
+                    <s-text tone="subdued" size="small">{t("analysis.candidateAlerts")}</s-text>
+                    <s-text size="large" fontWeight="bold">{analysis.candidateAlertsConsidered || 0}</s-text>
                   </s-stack>
                 )}
                 
@@ -270,24 +295,24 @@ export function AlertDetailModal({
             </s-button>
             <s-menu id={resolveMenuId} accessibilityLabel={t('resolveActions.menuLabel')}>
               <s-section heading={t('resolveActions.actionTaken')}>
-                <s-button ref={verifiedSafeBtnRef} commandFor={modalId} command="--hide">
+                <s-button ref={verifiedSafeBtnRef} icon="check-circle" commandFor={modalId} command="--hide">
                   {t('resolveActions.verifiedSafe')}
                 </s-button>
-                <s-button ref={removedFromSaleBtnRef} commandFor={modalId} command="--hide">
+                <s-button ref={removedFromSaleBtnRef} icon="delete" commandFor={modalId} command="--hide">
                   {t('resolveActions.removedFromSale')}
                 </s-button>
-                <s-button ref={modifiedProductBtnRef} commandFor={modalId} command="--hide">
+                <s-button ref={modifiedProductBtnRef} icon="edit" commandFor={modalId} command="--hide">
                   {t('resolveActions.modifiedProduct')}
                 </s-button>
-                <s-button ref={contactedSupplierBtnRef} commandFor={modalId} command="--hide">
+                <s-button ref={contactedSupplierBtnRef} icon="email" commandFor={modalId} command="--hide">
                   {t('resolveActions.contactedSupplier')}
                 </s-button>
               </s-section>
               <s-section heading={t('resolveActions.noActionNeeded')}>
-                <s-button ref={falsePositiveBtnRef} commandFor={modalId} command="--hide">
+                <s-button ref={falsePositiveBtnRef} icon="x-circle" commandFor={modalId} command="--hide">
                   {t('resolveActions.falsePositive')}
                 </s-button>
-                <s-button ref={notMyProductBtnRef} commandFor={modalId} command="--hide">
+                <s-button ref={notMyProductBtnRef} icon="product-unavailable" commandFor={modalId} command="--hide">
                   {t('resolveActions.notMyProduct')}
                 </s-button>
               </s-section>
@@ -299,6 +324,7 @@ export function AlertDetailModal({
             ref={reactivateBtnRef}
             slot="secondary-actions"
             variant="secondary"
+            icon="undo"
             commandFor={modalId}
             command="--hide"
             loading={isLoading || undefined}

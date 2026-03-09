@@ -71,6 +71,13 @@ export interface SafetyCheckResult {
   }>;
   recommendation: string;
   checkedAt: string;
+  analysis: {
+    mode: "text-only" | "with-image";
+    productImagesProvided: number;
+    productImagesUsed: number;
+    alertImagesUsed: number;
+    candidateAlertsConsidered: number;
+  };
 }
 
 /**
@@ -98,6 +105,13 @@ export async function checkProductSafety(productData: ProductData, similarityThr
 
     const rawResult = await response.json() as SafetyCheckResult;
     const result = applySimilarityThreshold(rawResult, effectiveThreshold);
+    console.info("Safety Gate check completed", {
+      product: productData.name,
+      analysisMode: result.analysis?.mode,
+      productImagesUsed: result.analysis?.productImagesUsed ?? 0,
+      alertImagesUsed: result.analysis?.alertImagesUsed ?? 0,
+      candidateAlertsConsidered: result.analysis?.candidateAlertsConsidered ?? 0,
+    });
     return result;
 
   } catch (error) {
@@ -109,6 +123,13 @@ export async function checkProductSafety(productData: ProductData, similarityThr
       warnings: [],
       recommendation: `Unable to verify product safety against Safety Gate database. Error: ${error instanceof Error ? error.message : 'Unknown error'}`,
       checkedAt: new Date().toISOString(),
+      analysis: {
+        mode: "text-only",
+        productImagesProvided: productData.imageUrls?.length || (productData.imageUrl ? 1 : 0),
+        productImagesUsed: 0,
+        alertImagesUsed: 0,
+        candidateAlertsConsidered: 0,
+      },
     };
   }
 }
@@ -175,6 +196,12 @@ export async function bulkCheckProducts(admin: any, shop: string, db: any) {
                 featuredImage {
                   url
                   altText
+                }
+                images(first: 4) {
+                  nodes {
+                    url
+                    altText
+                  }
                 }
                 variants(first: 1) {
                   edges {

@@ -176,36 +176,8 @@ export default function AlertsPage() {
       <s-button slot="primary-action" variant="primary" href="/app/manual-check">
         {t('actions.manualCheck')}
       </s-button>
-      <s-button slot="secondary-actions" href="/app">
-        {t('actions.dashboard')}
-      </s-button>
-      <s-button slot="secondary-actions" href="/app/settings">
-        {t('actions.settings')}
-      </s-button>
 
       <div className="admin-stack">
-        {stats.active > 0 && (
-          <section className="admin-card admin-card--critical">
-            <div className="admin-card__header">
-              <div>
-                <p className="admin-eyebrow">{t("alerts.admin.actionNeeded")}</p>
-                <h2 className="admin-card__title">{t("alerts.admin.actionNeededTitle", { count: stats.active })}</h2>
-                <p className="admin-card__description">
-                  {t("alerts.admin.actionNeededDescription")}
-                </p>
-              </div>
-              <div className="admin-actions">
-                <s-button variant="primary" onClick={() => applyFilters({ status: ["active"], page: 1 })}>
-                  Show active only
-                </s-button>
-                <s-button variant="secondary" href="/app/manual-check">
-                  Check another product
-                </s-button>
-              </div>
-            </div>
-          </section>
-        )}
-
         <section className="metric-grid">
           <SummaryCard
             title={t('alerts.metrics.activeHeading')}
@@ -220,12 +192,6 @@ export default function AlertsPage() {
             description={t('alerts.metrics.resolvedAndDismissed', { resolved: stats.resolved, dismissed: stats.dismissed })}
             progress={resolvedRate}
             progressTone={resolvedRate >= 50 ? "success" : "warning"}
-          />
-          <SummaryCard
-            title={t('alerts.metrics.dismissedHeading')}
-            value={stats.dismissed}
-            badge={<s-badge tone="info">{t('alerts.metrics.archived')}</s-badge>}
-            description={stats.dismissed === 0 ? t('alerts.metrics.dismissedDescriptionZero') : t('alerts.metrics.dismissedDescription')}
           />
         </section>
 

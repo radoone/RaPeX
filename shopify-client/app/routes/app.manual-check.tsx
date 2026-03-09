@@ -20,6 +20,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
           node {
             id title handle vendor productType tags description
             featuredImage { url altText }
+            images(first: 4) { nodes { url altText } }
             variants(first: 5) { edges { node { id title price image { url } } } }
             updatedAt createdAt
           }
@@ -306,12 +307,6 @@ export default function ManualCheckPage() {
       <s-button slot="primary-action" variant="primary" href="/app/alerts">
         {t('actions.viewAlerts')}
       </s-button>
-      <s-button slot="secondary-actions" href="/app">
-        {t('actions.dashboard')}
-      </s-button>
-      <s-button slot="secondary-actions" href="/app/settings">
-        {t('actions.settings')}
-      </s-button>
 
       <div className="admin-stack">
         <section className="admin-card">
@@ -372,14 +367,6 @@ export default function ManualCheckPage() {
             value={products.length}
             badge={<s-badge tone="info">{t('status.updated')}</s-badge>}
             description={t('manualCheck.overview.productsDescription')}
-          />
-          <SummaryCard
-            title={t('manualCheck.overview.manualCompleted')}
-            value={totalChecks}
-            badge={<s-badge tone="info">{t('manualCheck.overview.coverage', { coverage: coverageRate })}</s-badge>}
-            description={t('manualCheck.overview.manualCompletedDescription', { checked: checkedProducts, total: products.length })}
-            progress={coverageRate}
-            progressTone="success"
           />
           <SummaryCard
             title={t('manualCheck.overview.productsFlagged')}
@@ -515,7 +502,7 @@ export default function ManualCheckPage() {
           id: currentAlertId,
           productId: selectedProduct?.id?.replace('gid://shopify/Product/', '') || '',
           productTitle: selectedProduct?.title || t('manualCheck.modal.unknownProduct'),
-          productImage: selectedProduct?.featuredImage?.url || fallbackImage || null,
+          productImage: selectedProduct?.featuredImage?.url || selectedProduct?.images?.nodes?.[0]?.url || fallbackImage || null,
           riskLevel,
           alertType,
           riskDescription,

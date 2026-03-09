@@ -3,6 +3,14 @@ export type EncodedImage = {
   contentType?: string;
 };
 
+export type SafetyCheckAnalysis = {
+  mode: "text-only" | "with-image";
+  productImagesProvided: number;
+  productImagesUsed: number;
+  alertImagesUsed: number;
+  candidateAlertsConsidered: number;
+};
+
 export type NormalizedAlert = {
   id: string;
   meta: {

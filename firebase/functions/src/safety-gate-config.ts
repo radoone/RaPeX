@@ -50,5 +50,5 @@ export const SCHEDULER_CONFIG = {
 
 export const PRODUCT_SAFETY_API_USAGE = {
   GET: "/checkProductSafetyAPI?name=Product&category=toys&description=Description",
-  POST: "/checkProductSafetyAPI with JSON body: {name, category, description, imageUrl?, brand?, model?}",
+  POST: "/checkProductSafetyAPI with JSON body: {name, category, description, imageUrl?, imageUrls?, brand?, model?}",
 } as const;

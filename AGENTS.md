@@ -90,8 +90,10 @@ Main files:
 - The core question is not "what alerts exist?" but "does this Shopify product match a dangerous product in Safety Gate?"
 - Matching is similarity-based, not exact-ID matching only.
 - Similarity can use product title, description, brand, model, category, and sometimes image data.
+- Similarity can use product title, description, brand, model, category, and multiple product images when available.
 - There is a per-shop similarity threshold in `SafetySetting`.
 - If the external/API check fails, the current implementation fails open and returns a safe result so sales are not blocked.
+- Safety check responses now include `analysis` metadata showing whether the check ran `text-only` or `with-image`, plus counts for product and alert images used.
 
 ## Data source
 

@@ -42,6 +42,15 @@ function coerceString(value: unknown): string | undefined {
   return trimmed ? trimmed : undefined;
 }
 
+function coerceStringArray(value: unknown): string[] | undefined {
+  const values = Array.isArray(value) ? value : [value];
+  const normalized = values
+    .map((entry) => coerceString(entry))
+    .filter((entry): entry is string => Boolean(entry));
+
+  return normalized.length > 0 ? normalized : undefined;
+}
+
 function extractApiKey(request: RequestShape): string {
   return (
     coerceString(request.headers["x-api-key"]) ||
@@ -57,6 +66,7 @@ function readProductData(request: RequestShape): Partial<ProductCheckInput> | nu
       category: coerceString(request.body.category),
       description: coerceString(request.body.description),
       imageUrl: coerceString(request.body.imageUrl),
+      imageUrls: coerceStringArray(request.body.imageUrls),
       brand: coerceString(request.body.brand),
       model: coerceString(request.body.model),
     };
@@ -68,6 +78,7 @@ function readProductData(request: RequestShape): Partial<ProductCheckInput> | nu
       category: coerceString(request.query.category),
       description: coerceString(request.query.description),
       imageUrl: coerceString(request.query.imageUrl),
+      imageUrls: coerceStringArray(request.query.imageUrls),
       brand: coerceString(request.query.brand),
       model: coerceString(request.query.model),
     };
@@ -139,6 +150,10 @@ export async function handleCheckProductSafetyRequest(
     logger.info("Product safety check completed", {
       isSafe: result.isSafe,
       warningsCount: result.warnings.length,
+      analysisMode: result.analysis.mode,
+      productImagesUsed: result.analysis.productImagesUsed,
+      alertImagesUsed: result.analysis.alertImagesUsed,
+      candidateAlertsConsidered: result.analysis.candidateAlertsConsidered,
     });
 
     response.status(200).json(result);

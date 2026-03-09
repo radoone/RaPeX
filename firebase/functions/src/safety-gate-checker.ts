@@ -8,7 +8,13 @@ import {
   type ProductInput,
   SafetyCheckResultSchema,
 } from "./safety-gate-checker.schemas.js";
-import { isUnsupportedMimeError, prepareImageMedia } from "./safety-gate-checker-media.js";
+import {
+  getProductImageUrls,
+  isUnsupportedMimeError,
+  limitImageUrls,
+  normalizePictures,
+  prepareImageMedia,
+} from "./safety-gate-checker-media.js";
 import {
   ALERT_LOOKBACK_DAYS,
   retrieveAlertsWithRag,
@@ -21,7 +27,7 @@ import {
   createUnavailableAnalysisResult,
   parseAnalysisMatches,
 } from "./safety-gate-checker-results.js";
-import type { EncodedImage, NormalizedAlert } from "./safety-gate-checker.types.js";
+import type { EncodedImage, NormalizedAlert, SafetyCheckAnalysis } from "./safety-gate-checker.types.js";
 
 const productMatchAnalysisPrompt = functionsAi.prompt<
   typeof AnalysisPromptInputSchema,
@@ -32,15 +38,18 @@ function appendMediaMessages(
   messages: Array<{ role: "model" | "user" | "system" | "tool"; content: Part[] }>,
   input: AnalysisPromptInput,
 ): Array<{ role: "model" | "user" | "system" | "tool"; content: Part[] }> {
-  if (!input.productImage && input.alertImages.length === 0) {
+  if (input.productImages.length === 0 && input.alertImages.length === 0) {
     return messages;
   }
 
   const mediaContent: Part[] = [];
 
-  if (input.productImage) {
-    mediaContent.push({ text: "Product reference image:" });
-    mediaContent.push({ media: input.productImage });
+  if (input.productImages.length > 0) {
+    mediaContent.push({ text: "Product reference images:" });
+    input.productImages.forEach((image, index) => {
+      mediaContent.push({ text: `Product image ${index + 1}:` });
+      mediaContent.push({ media: image });
+    });
   }
 
   if (input.alertImages.length > 0) {
@@ -65,31 +74,44 @@ function appendMediaMessages(
 async function buildPromptParts(
   product: ProductInput,
   alerts: NormalizedAlert[],
-): Promise<AnalysisPromptInput> {
-  const productImage = product.imageUrl ? await prepareImageMedia(product.imageUrl) : null;
+): Promise<AnalysisPromptInput & { analysis: Omit<SafetyCheckAnalysis, "mode" | "candidateAlertsConsidered"> }> {
+  const productImageUrls = getProductImageUrls(product);
+  const productImages: EncodedImage[] = [];
+  for (const imageUrl of productImageUrls) {
+    const encoded = await prepareImageMedia(imageUrl);
+    if (encoded) {
+      productImages.push(encoded);
+    }
+  }
 
   const alertImages: Array<{ alertId: string; media: EncodedImage }> = [];
   for (const alert of alerts) {
-    const pictures = Array.isArray(alert.fields?.pictures) ? alert.fields.pictures : [];
-    const firstPicture = pictures.find((picture) => typeof picture === "string" && picture.trim());
-    if (!firstPicture) {
-      continue;
+    const pictures = limitImageUrls(normalizePictures(alert.fields), 2);
+    for (const picture of pictures) {
+      const encoded = await prepareImageMedia(picture);
+      if (encoded) {
+        alertImages.push({ alertId: alert.id, media: encoded });
+      }
+
+      if (alertImages.length >= 8) {
+        break;
+      }
     }
 
-    const encoded = await prepareImageMedia(firstPicture);
-    if (encoded) {
-      alertImages.push({ alertId: alert.id, media: encoded });
-    }
-
-    if (alertImages.length >= 2) {
+    if (alertImages.length >= 8) {
       break;
     }
   }
 
   return {
     comparisonPrompt: "",
-    productImage,
+    productImages,
     alertImages,
+    analysis: {
+      productImagesProvided: productImageUrls.length,
+      productImagesUsed: productImages.length,
+      alertImagesUsed: alertImages.length,
+    },
   };
 }
 
@@ -106,24 +128,33 @@ async function analyzeProductMatches(product: ProductInput, alerts: NormalizedAl
   for (const attempt of attempts) {
     const input =
       attempt.promptType === "text"
-        ? { ...promptInput, productImage: null, alertImages: [] }
+        ? { ...promptInput, productImages: [], alertImages: [] }
         : promptInput;
+    const analysis: SafetyCheckAnalysis = {
+      mode: attempt.promptType === "text" ? "text-only" : "with-image",
+      productImagesProvided: promptInput.analysis.productImagesProvided,
+      productImagesUsed: input.productImages.length,
+      alertImagesUsed: input.alertImages.length,
+      candidateAlertsConsidered: alerts.length,
+    };
 
     try {
       if (attempt.promptType === "text") {
-        return await productMatchAnalysisPrompt(input, {
+        const response = await productMatchAnalysisPrompt(input, {
           model: googleAI.model(attempt.model),
         });
+        return { response, analysis };
       }
 
       const renderedPrompt = await productMatchAnalysisPrompt.render(input, {
         model: googleAI.model(attempt.model),
       });
-      return await functionsAi.generate({
+      const response = await functionsAi.generate({
         ...renderedPrompt,
         messages: appendMediaMessages(renderedPrompt.messages ?? [], input),
         model: googleAI.model(attempt.model),
       });
+      return { response, analysis };
     } catch (error) {
       const mimeIssue = isUnsupportedMimeError(error);
       console.error(
@@ -144,25 +175,33 @@ export const checkProductSafety = functionsAi.defineFlow(
   },
   async (product) => {
     console.log("Checking product safety:", product.name);
+    const productImageCount = getProductImageUrls(product).length;
 
     const ragAlerts = await retrieveAlertsWithRag(product);
     const candidateAlerts =
       ragAlerts.length > 0 ? ragAlerts : await searchRecentRapexAlerts(ALERT_LOOKBACK_DAYS);
 
     if (candidateAlerts.length === 0) {
-      return createNoAlertsResult();
+      return createNoAlertsResult(productImageCount);
     }
 
     const comparisonPrompt = buildComparisonPrompt(product, candidateAlerts);
-    const analysisResponse = await analyzeProductMatches(product, candidateAlerts, comparisonPrompt);
+    const analysisResult = await analyzeProductMatches(product, candidateAlerts, comparisonPrompt);
 
-    if (!analysisResponse) {
-      return createUnavailableAnalysisResult();
+    if (!analysisResult) {
+      return createUnavailableAnalysisResult({
+        mode: "text-only",
+        productImagesProvided: productImageCount,
+        productImagesUsed: 0,
+        alertImagesUsed: 0,
+        candidateAlertsConsidered: candidateAlerts.length,
+      });
     }
 
-    console.log("Gemini analysis response:", analysisResponse.text);
-    const matches = parseAnalysisMatches(analysisResponse);
-    return buildSafetyCheckResult(matches, candidateAlerts);
+    console.log("Gemini analysis response:", analysisResult.response.text);
+    console.log("Safety check analysis mode:", analysisResult.analysis);
+    const matches = parseAnalysisMatches(analysisResult.response);
+    return buildSafetyCheckResult(matches, candidateAlerts, analysisResult.analysis);
   },
 );
 

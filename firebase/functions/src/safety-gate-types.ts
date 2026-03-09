@@ -45,6 +45,7 @@ export interface ProductCheckInput {
   category: string;
   description: string;
   imageUrl?: string;
+  imageUrls?: string[];
   brand?: string;
   model?: string;
 }

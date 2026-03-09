@@ -374,7 +374,7 @@ function AlertRow({
               </s-button>
               <s-menu id={menuId} accessibilityLabel={t('resolveActions.menuLabel')}>
                 <s-section heading={t('resolveActions.actionTaken')}>
-                  <s-button ref={verifiedSafeBtnRef} icon="checkmark">
+                  <s-button ref={verifiedSafeBtnRef} icon="check-circle">
                     {t('resolveActions.verifiedSafe')}
                   </s-button>
                   <s-button ref={removedFromSaleBtnRef} icon="delete">
@@ -388,10 +388,10 @@ function AlertRow({
                   </s-button>
                 </s-section>
                 <s-section heading={t('resolveActions.noActionNeeded')}>
-                  <s-button ref={falsePositiveBtnRef}>
+                  <s-button ref={falsePositiveBtnRef} icon="x-circle">
                     {t('resolveActions.falsePositive')}
                   </s-button>
-                  <s-button ref={notMyProductBtnRef}>
+                  <s-button ref={notMyProductBtnRef} icon="product-unavailable">
                     {t('resolveActions.notMyProduct')}
                   </s-button>
                 </s-section>

@@ -44,26 +44,8 @@ export default function Settings() {
   return (
     <s-page size="large" className="page-shell">
       <s-heading slot="title" size="large">{t('settings.title')}</s-heading>
-      <s-button slot="secondary-actions" href="/app">
-        {t('actions.dashboard')}
-      </s-button>
-      <s-button slot="secondary-actions" href="/app/manual-check">
-        {t('actions.manualCheck')}
-      </s-button>
 
       <div className="admin-stack">
-        <section className="admin-card">
-          <div className="admin-card__header">
-            <div>
-              <p className="admin-eyebrow">{t("settingsAdmin.configuration")}</p>
-              <h2 className="admin-card__title">{t('settings.subtitle')}</h2>
-              <p className="admin-card__description">
-                {t("settingsAdmin.configurationDescription")}
-              </p>
-            </div>
-          </div>
-        </section>
-
         <section className="metric-grid">
           <SummaryCard
             title={t("settingsAdmin.currentThreshold")}
@@ -142,57 +124,14 @@ export default function Settings() {
           </div>
         </section>
 
-        <section className="admin-section-grid">
-          <div className="admin-card">
-            <div className="admin-card__header">
-              <div>
-                <p className="admin-eyebrow">{t('settings.monitoring.title')}</p>
-                <h2 className="admin-card__title">{t('settings.monitoring.title')}</h2>
-              </div>
-            </div>
-
-            <div className="admin-inline-stats">
-              <div className="admin-stat">
-                <span>{t('settings.monitoring.automatic.title')}</span>
-                <strong>{t('settings.monitoring.automatic.enabled')}</strong>
-                <p>{t('settings.monitoring.automatic.description')}</p>
-              </div>
-              <div className="admin-stat">
-                <span>{t('settings.monitoring.manual.title')}</span>
-                <strong>{t("settingsAdmin.onDemand")}</strong>
-                <p>{t('settings.monitoring.manual.description')}</p>
-              </div>
-            </div>
-
-            <div className="admin-actions">
-              <s-button variant="secondary" href="/app/manual-check">
-                {t('settings.monitoring.manual.goToManualCheck')}
-              </s-button>
-              <s-button variant="secondary" href="/app/alerts">
-                {t('actions.viewAlerts')}
-              </s-button>
+        <section className="admin-card">
+          <div className="admin-card__header">
+            <div>
+              <h2 className="admin-card__title">{t('common.language')}</h2>
             </div>
           </div>
-
-          <div className="admin-card">
-            <div className="admin-card__header">
-              <div>
-                <p className="admin-eyebrow">{t("settingsAdmin.workspace")}</p>
-                <h2 className="admin-card__title">{t('common.language')}</h2>
-              </div>
-            </div>
-
-            <div className="admin-form-block">
-              <LanguageSwitcher />
-              <div className="admin-actions">
-                <s-button variant="secondary" href="https://ec.europa.eu/safety-gate-alerts/screen/search?resetSearch=true" target="_blank">
-                  {t('portal.searchDatabase')}
-                </s-button>
-                <s-button variant="secondary" href="https://ec.europa.eu/safety-gate-alerts/screen/home" target="_blank">
-                  {t('portal.home')}
-                </s-button>
-              </div>
-            </div>
+          <div className="admin-form-block">
+            <LanguageSwitcher />
           </div>
         </section>
       </div>

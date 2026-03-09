@@ -208,6 +208,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
                   description
                   descriptionHtml
                   featuredImage { url altText }
+                  images(first: 4) { nodes { url altText } }
                   variants(first: 1) {
                     edges {
                       node {
@@ -355,14 +356,11 @@ export default function Index() {
   const shopify = useAppBridge();
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [includeAlreadyChecked, setIncludeAlreadyChecked] = useState(false);
+  const [includeAlreadyChecked] = useState(false);
 
   const isLoading = navigation.state === "loading";
   const isSubmitting = fetcher.state === "submitting";
-  const resolvedAlerts = stats.resolvedAlerts;
-  const resolutionRate = stats.totalAlerts > 0 ? Math.round((resolvedAlerts / stats.totalAlerts) * 100) : 100;
   const coverageRate = stats.totalProducts > 0 ? Math.round((stats.checkedProducts / stats.totalProducts) * 100) : 0;
-  const bulkResults = fetcher.data?.success && fetcher.data.results ? fetcher.data.results : null;
   const runBulkCheck = () => {
     if (isSubmitting) return;
     fetcher.submit(
@@ -403,15 +401,7 @@ export default function Index() {
       >
         {isSubmitting
           ? t('actions.checking')
-          : includeAlreadyChecked
-            ? t('actions.checkAll')
-            : t('actions.checkUnchecked', { count: stats.uncheckedProducts })}
-      </s-button>
-      <s-button slot="secondary-actions" onClick={() => navigate('/app/manual-check')}>
-        {t('actions.manualCheck')}
-      </s-button>
-      <s-button slot="secondary-actions" onClick={() => navigate('/app/settings')}>
-        {t('actions.settings')}
+          : t('actions.checkUnchecked', { count: stats.uncheckedProducts })}
       </s-button>
 
       <div className="admin-stack">
@@ -427,14 +417,9 @@ export default function Index() {
                   {t("dashboard.admin.actionNeededDescription")}
                 </p>
               </div>
-              <div className="admin-actions">
-                <s-button variant="primary" onClick={() => navigate("/app/alerts?status=active")}>
-                  {t("actions.reviewAlerts")}
-                </s-button>
-                <s-button variant="secondary" onClick={() => navigate("/app/manual-check")}>
-                  {t("dashboard.admin.reviewOneProduct")}
-                </s-button>
-              </div>
+              <s-button variant="primary" onClick={() => navigate("/app/alerts?status=active")}>
+                {t("actions.reviewAlerts")}
+              </s-button>
             </div>
           </section>
         ) : (
@@ -473,198 +458,64 @@ export default function Index() {
             badge={<s-badge tone="success">{t("dashboard.stats.autoMonitoring")}</s-badge>}
             description={t("dashboard.admin.checksCompletedDescription")}
           />
-          <SummaryCard
-            title={t("dashboard.admin.resolvedRateTitle")}
-            value={`${resolutionRate}%`}
-            badge={<s-badge tone={resolutionRate >= 80 ? "success" : "warning"}>{t("dashboard.stats.resolved", { count: stats.resolvedAlerts })}</s-badge>}
-            description={t("dashboard.admin.resolvedRateDescription")}
-            progress={resolutionRate}
-            progressTone={resolutionRate >= 80 ? "success" : "warning"}
-          />
         </section>
 
-        <section className="admin-section-grid">
-          <div className="admin-card">
-            <div className="admin-card__header">
-              <div>
-                <p className="admin-eyebrow">{t("dashboard.admin.priorityQueue")}</p>
-                <h2 className="admin-card__title">{t("dashboard.admin.recentAlertsTitle")}</h2>
-                <p className="admin-card__description">
-                  {t("dashboard.admin.recentAlertsDescription")}
-                </p>
-              </div>
-              <s-button variant="secondary" onClick={() => navigate("/app/alerts")}>
-                {t("actions.viewAlerts")}
-              </s-button>
-            </div>
-
-            {recentAlerts.length === 0 ? (
-              <div className="admin-empty-state">
-                <h3>{t("dashboard.admin.noAlertsTitle")}</h3>
-                <p>{t("dashboard.admin.noAlertsDescription")}</p>
-              </div>
-            ) : (
-              <div className="admin-alert-list">
-                {recentAlerts.map((alert) => (
-                  <div className="admin-alert-row" key={alert.id}>
-                    <div className="admin-alert-row__media">
-                      {alert.productImage ? (
-                        <img src={alert.productImage} alt={alert.productTitle} className="admin-alert-row__image" />
-                      ) : (
-                        <div className="admin-alert-row__placeholder">!</div>
-                      )}
-                    </div>
-                    <div className="admin-alert-row__content">
-                      <div className="admin-alert-row__meta">
-                        <h3>{alert.productTitle}</h3>
-                        <p>{alert.riskDescription || t("dashboard.admin.fallbackAlertDescription")}</p>
-                      </div>
-                      <div className="admin-inline-meta">
-                        <s-badge tone={alert.status === "active" ? "critical" : alert.status === "resolved" ? "success" : "info"}>
-                          {alert.status === "active"
-                            ? t("status.needsReview")
-                            : alert.status === "resolved"
-                              ? t("status.resolved")
-                              : t("status.dismissed")}
-                        </s-badge>
-                        {alert.alertType && <s-badge tone="warning">{alert.alertType}</s-badge>}
-                      </div>
-                    </div>
-                    <div className="admin-alert-row__actions">
-                      <s-button variant="secondary" onClick={() => navigate("/app/alerts")}>
-                        Review
-                      </s-button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div className="admin-card">
-            <div className="admin-card__header">
-              <div>
-                <p className="admin-eyebrow">{t("dashboard.admin.coverage")}</p>
-                <h2 className="admin-card__title">{t("dashboard.admin.bulkCheckTitle")}</h2>
-                <p className="admin-card__description">
-                  {t("dashboard.admin.bulkCheckDescription")}
-                </p>
-              </div>
-            </div>
-
-            <div className="admin-inline-stats">
-              <div className="admin-stat">
-                <span>{t("dashboard.admin.stats.totalProducts")}</span>
-                <strong>{stats.totalProducts}</strong>
-              </div>
-              <div className="admin-stat">
-                <span>{t("dashboard.admin.stats.alreadyChecked")}</span>
-                <strong>{stats.checkedProducts}</strong>
-              </div>
-              <div className="admin-stat">
-                <span>{t("dashboard.admin.stats.stillUnchecked")}</span>
-                <strong>{stats.uncheckedProducts}</strong>
-              </div>
-            </div>
-
-            <div className="admin-form-block">
-              <s-checkbox
-                label={t("dashboard.bulkCheck.includeAlreadyChecked")}
-                checked={includeAlreadyChecked || undefined}
-                onInput={(e: any) => setIncludeAlreadyChecked(Boolean(e.currentTarget?.checked))}
-              />
-              <p className="admin-helper">
-                {includeAlreadyChecked
-                  ? t("dashboard.admin.bulkCheckAllSummary", { count: stats.totalProducts })
-                  : t("dashboard.admin.bulkCheckUncheckedSummary", { count: stats.uncheckedProducts, skip: stats.checkedProducts })}
+        <section className="admin-card">
+          <div className="admin-card__header">
+            <div>
+              <p className="admin-eyebrow">{t("dashboard.admin.priorityQueue")}</p>
+              <h2 className="admin-card__title">{t("dashboard.admin.recentAlertsTitle")}</h2>
+              <p className="admin-card__description">
+                {t("dashboard.admin.recentAlertsDescription")}
               </p>
             </div>
-
-            <div className="admin-actions">
-              <s-button
-                variant="primary"
-                loading={isSubmitting || undefined}
-                disabled={stats.uncheckedProducts === 0 && !includeAlreadyChecked || undefined}
-                onClick={runBulkCheck}
-              >
-                {isSubmitting ? t("actions.checking") : t("dashboard.admin.runBulkCheck")}
-              </s-button>
-              <s-button variant="secondary" onClick={() => navigate("/app/manual-check")}>
-                Manual check
-              </s-button>
-            </div>
+            <s-button variant="secondary" onClick={() => navigate("/app/alerts")}>
+              {t("actions.viewAlerts")}
+            </s-button>
           </div>
-        </section>
 
-        {bulkResults && (
-          <section className="admin-card">
-            <div className="admin-card__header">
-              <div>
-                <p className="admin-eyebrow">{t("dashboard.admin.latestRun")}</p>
-                <h2 className="admin-card__title">{t("dashboard.admin.bulkCheckSummary")}</h2>
-                <p className="admin-card__description">
-                  {t("dashboard.admin.bulkCheckSummaryDescription")}
-                </p>
-              </div>
-              {bulkResults.alertsCreated > 0 && (
-                <s-button variant="primary" onClick={() => navigate("/app/alerts")}>
-                  Review {bulkResults.alertsCreated} alert{bulkResults.alertsCreated === 1 ? "" : "s"}
-                </s-button>
-              )}
+          {recentAlerts.length === 0 ? (
+            <div className="admin-empty-state">
+              <h3>{t("dashboard.admin.noAlertsTitle")}</h3>
+              <p>{t("dashboard.admin.noAlertsDescription")}</p>
             </div>
-
-            <div className="admin-inline-stats">
-              <div className="admin-stat">
-                <span>{t("dashboard.admin.stats.checked")}</span>
-                <strong>{bulkResults.checked}</strong>
-              </div>
-              <div className="admin-stat">
-                <span>{t("dashboard.admin.stats.skipped")}</span>
-                <strong>{bulkResults.skipped}</strong>
-              </div>
-              <div className="admin-stat">
-                <span>{t("dashboard.admin.stats.alertsCreated")}</span>
-                <strong>{bulkResults.alertsCreated}</strong>
-              </div>
-              <div className="admin-stat">
-                <span>{t("dashboard.admin.stats.errors")}</span>
-                <strong>{bulkResults.errors}</strong>
-              </div>
-            </div>
-
-            {bulkResults.products.length > 0 && (
-              <div className="admin-result-list">
-                {bulkResults.products.slice(0, 8).map((product) => (
-                  <div className="admin-result-row" key={product.id}>
-                    <div>
-                      <strong>{product.title}</strong>
-                      <p>{product.message || t("dashboard.admin.results.completed")}</p>
-                    </div>
-                    <s-badge
-                      tone={
-                        product.status === "alert_created"
-                          ? "critical"
-                          : product.status === "error"
-                            ? "warning"
-                            : product.status === "skipped"
-                              ? "info"
-                              : "success"
-                      }
-                    >
-                      {product.status === "alert_created"
-                        ? t("dashboard.admin.results.alertCreated")
-                        : product.status === "error"
-                          ? t("dashboard.admin.results.error")
-                          : product.status === "skipped"
-                            ? t("dashboard.admin.results.skipped")
-                            : t("dashboard.admin.results.checked")}
-                    </s-badge>
+          ) : (
+            <div className="admin-alert-list">
+              {recentAlerts.map((alert) => (
+                <div className="admin-alert-row" key={alert.id}>
+                  <div className="admin-alert-row__media">
+                    {alert.productImage ? (
+                      <img src={alert.productImage} alt={alert.productTitle} className="admin-alert-row__image" />
+                    ) : (
+                      <div className="admin-alert-row__placeholder">!</div>
+                    )}
                   </div>
-                ))}
-              </div>
-            )}
-          </section>
-        )}
+                  <div className="admin-alert-row__content">
+                    <div className="admin-alert-row__meta">
+                      <h3>{alert.productTitle}</h3>
+                      <p>{alert.riskDescription || t("dashboard.admin.fallbackAlertDescription")}</p>
+                    </div>
+                    <div className="admin-inline-meta">
+                      <s-badge tone={alert.status === "active" ? "critical" : alert.status === "resolved" ? "success" : "info"}>
+                        {alert.status === "active"
+                          ? t("status.needsReview")
+                          : alert.status === "resolved"
+                            ? t("status.resolved")
+                            : t("status.dismissed")}
+                      </s-badge>
+                      {alert.alertType && <s-badge tone="warning">{alert.alertType}</s-badge>}
+                    </div>
+                  </div>
+                  <div className="admin-alert-row__actions">
+                    <s-button variant="secondary" onClick={() => navigate("/app/alerts")}>
+                      {t("actions.view")}
+                    </s-button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
       </div>
     </s-page>
   );

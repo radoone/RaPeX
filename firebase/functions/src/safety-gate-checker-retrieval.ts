@@ -3,7 +3,12 @@ import { getFirestore, Timestamp } from "firebase-admin/firestore";
 import type { DocumentData, RetrieverAction } from "genkit/retriever";
 import { functionsAi } from "./firebase-admin.js";
 import type { ProductInput } from "./safety-gate-checker.schemas.js";
-import { normalizePictures, normalizeTimestamp, prepareImageMedia } from "./safety-gate-checker-media.js";
+import {
+  getProductImageUrls,
+  normalizePictures,
+  normalizeTimestamp,
+  prepareImageMedia,
+} from "./safety-gate-checker-media.js";
 import type { NormalizedAlert } from "./safety-gate-checker.types.js";
 
 export const ALERT_LOOKBACK_DAYS = 365;
@@ -139,9 +144,13 @@ export async function retrieveAlertsWithRag(product: ProductInput): Promise<Norm
     }
   }
 
-  if (activeImageRetriever && product.imageUrl) {
-    const encodedImage = await prepareImageMedia(product.imageUrl);
-    if (encodedImage) {
+  if (activeImageRetriever) {
+    for (const imageUrl of getProductImageUrls(product)) {
+      const encodedImage = await prepareImageMedia(imageUrl);
+      if (!encodedImage) {
+        continue;
+      }
+
       try {
         const result = await functionsAi.retrieve({
           retriever: activeImageRetriever,
