@@ -99,7 +99,12 @@ export function AlertDetailModal({
   const isSafe = parsed?.isSafe === true;
   const warningsCount = warnings.length || alert.warningsCount || 0;
   const primaryWarning = warnings[0];
-  const similarity = typeof primaryWarning?.similarity === "number" ? primaryWarning.similarity : null;
+  const overallSimilarity = typeof primaryWarning?.overallSimilarity === "number"
+    ? primaryWarning.overallSimilarity
+    : null;
+  const imageSimilarity = typeof primaryWarning?.imageSimilarity === "number"
+    ? primaryWarning.imageSimilarity
+    : null;
 
   // Helper to get images from warning
   const getWarningImages = (warning: any) => {
@@ -218,10 +223,17 @@ export function AlertDetailModal({
                   <s-text size="large" fontWeight="bold">{warningsCount}</s-text>
                 </s-stack>
                 
-                {similarity !== null && (
+                {overallSimilarity !== null && (
                   <s-stack gap="small-100">
-                    <s-text tone="subdued" size="small">Highest Match</s-text>
-                    <s-text size="large" fontWeight="bold">{similarity}%</s-text>
+                    <s-text tone="subdued" size="small">{t("analysis.overallMatch")}</s-text>
+                    <s-text size="large" fontWeight="bold">{overallSimilarity}%</s-text>
+                  </s-stack>
+                )}
+
+                {imageSimilarity !== null && (
+                  <s-stack gap="small-100">
+                    <s-text tone="subdued" size="small">{t("analysis.imageMatch")}</s-text>
+                    <s-text size="large" fontWeight="bold">{imageSimilarity}%</s-text>
                   </s-stack>
                 )}
 
@@ -243,7 +255,15 @@ export function AlertDetailModal({
               </s-stack>
               
               {/* Risk Meter */}
-              <RiskMeter riskLevel={alert.riskLevel} similarity={similarity} />
+              <RiskMeter riskLevel={alert.riskLevel} overallSimilarity={overallSimilarity} />
+
+              {overallSimilarity !== null && (
+                <s-text tone="subdued" size="small">
+                  {imageSimilarity !== null
+                    ? t("analysis.scoreHelper")
+                    : t("analysis.scoreHelper")}
+                </s-text>
+              )}
               
               {/* Recommendation */}
               <s-text>{recommendation}</s-text>
@@ -387,13 +407,17 @@ function WarningCard({
   onImageClick: (src: string) => void;
   getWarningImages: (warning: any) => any[];
 }) {
+  const { t } = useTranslation();
   const fields = warning.alertDetails?.fields || {};
   const meta = warning.alertDetails?.meta || {};
   const alertDate = fields.alert_date || meta.alert_date;
   const formattedDate = alertDate
     ? new Date(alertDate).toLocaleDateString("en-GB")
     : "—";
-  const warningSimilarity = warning.similarity ?? 0;
+  const warningOverallSimilarity =
+    typeof warning.overallSimilarity === "number" ? warning.overallSimilarity : 0;
+  const warningImageSimilarity =
+    typeof warning.imageSimilarity === "number" ? warning.imageSimilarity : null;
   const pictures = getWarningImages(warning);
 
   // Get correct field names from Safety Gate database
@@ -403,8 +427,9 @@ function WarningCard({
   const productModel = fields.product_model_type || fields.product_model || fields.model;
 
   // Determine card border color based on similarity
-  const borderColor = warningSimilarity >= 80 ? "border-critical" : warningSimilarity >= 60 ? "border-warning" : "border";
-  const matchTone = warningSimilarity >= 80 ? "critical" : warningSimilarity >= 60 ? "warning" : "info";
+  const borderColor = warningOverallSimilarity >= 80 ? "border-critical" : warningOverallSimilarity >= 60 ? "border-warning" : "border";
+  const matchTone = warningOverallSimilarity >= 80 ? "critical" : warningOverallSimilarity >= 60 ? "warning" : "info";
+  const isImageFirst = warning.scoreBreakdown?.scoringMode === "image-first";
 
   return (
     <s-box
@@ -422,8 +447,13 @@ function WarningCard({
         <s-stack direction="inline" align="space-between" blockAlign="center" wrap>
           <s-stack direction="inline" gap="small" wrap blockAlign="center">
             <s-badge tone={matchTone} size="large">
-              {warningSimilarity}% match
+              {t("analysis.overallMatchShort", { count: warningOverallSimilarity })}
             </s-badge>
+            {warningImageSimilarity !== null && (
+              <s-badge tone="info" size="large">
+                {t("analysis.imageMatchShort", { count: warningImageSimilarity })}
+              </s-badge>
+            )}
             <AlertBadge
               alertLevel={fields.alert_level}
               alertType={fields.alert_type}
@@ -455,8 +485,13 @@ function WarningCard({
             background="bg-surface-info"
           >
             <s-stack gap="small-100">
-              <s-text fontWeight="bold" tone="info" size="small">💡 WHY THIS MATCHED</s-text>
+              <s-text fontWeight="bold" tone="info" size="small">{t("analysis.whyThisMatched")}</s-text>
               <s-text>{warning.reason}</s-text>
+              {isImageFirst && (
+                <s-text tone="subdued" size="small">
+                  {t("analysis.imageDominated")}
+                </s-text>
+              )}
             </s-stack>
           </s-box>
         )}

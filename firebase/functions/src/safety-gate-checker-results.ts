@@ -14,6 +14,12 @@ type AnalysisResponseShape = {
   text: string;
 };
 
+const IMAGE_FIRST_VISUAL_WEIGHT = 0.78;
+const IMAGE_FIRST_TEXT_WEIGHT = 0.22;
+const TEXT_ONLY_VISUAL_WEIGHT = 0;
+const TEXT_ONLY_TEXT_WEIGHT = 1;
+const MIN_OVERALL_MATCH_SCORE = 45;
+
 function describeAlertSource(alert: NormalizedAlert): string {
   const distanceLabel =
     typeof alert.distance === "number" ? ` (distance: ${alert.distance.toFixed(4)})` : "";
@@ -36,9 +42,7 @@ ${describeAlertSource(alert)}`,
     )
     .join("\n\n");
 
-  return `You are a product safety expert analyzing potential matches between a new product and existing RAPEX alerts.
-
-NEW PRODUCT TO CHECK:
+  return `NEW PRODUCT TO CHECK:
 Name: ${product.name}
 Category: ${product.category}
 Description: ${product.description}
@@ -46,29 +50,13 @@ Brand: ${product.brand || "Not specified"}
 Model: ${product.model || "Not specified"}
 
 RECENT SAFETY GATE ALERTS (last 12 months):
-${alertsText}
-
-TASK:
-1. Compare the new product with each Safety Gate alert
-2. Prioritize alerts from the last year only; ignore older records.
-3. If images are provided, use visual similarity alongside the text fields.
-4. For each potential match, provide:
-   - Similarity score (0-100, where 100 is identical)
-   - Reason for the match
-   - Risk assessment
-
-Return ONLY a JSON array of matches where similarity > 50. Each match should have:
-- alertId: the Safety Gate alert ID
-- similarity: similarity score (50-100)
-- reason: detailed explanation of why you think this is a match
-- riskAssessment: assessment of the risk level
-
-If no matches found, return empty array.`;
+${alertsText}`;
 }
 
 function createDefaultAnalysis(candidateAlertsConsidered: number, productImagesProvided = 0): SafetyCheckAnalysis {
   return {
     mode: "text-only",
+    scoringMode: "text-only",
     productImagesProvided,
     productImagesUsed: 0,
     alertImagesUsed: 0,
@@ -96,6 +84,90 @@ export function createUnavailableAnalysisResult(
     checkedAt: new Date().toISOString(),
     analysis,
   };
+}
+
+function clampScore(value: number | undefined | null): number {
+  if (!Number.isFinite(value)) {
+    return 0;
+  }
+
+  return Math.min(Math.max(Math.round(Number(value)), 0), 100);
+}
+
+function getTextSimilarity(match: AnalysisMatchCandidate): number {
+  return clampScore(match.textSimilarity ?? match.overallSimilarity);
+}
+
+function getImageSimilarity(match: AnalysisMatchCandidate): number | undefined {
+  if (!Number.isFinite(match.imageSimilarity)) {
+    return undefined;
+  }
+
+  return clampScore(match.imageSimilarity);
+}
+
+function computeOverallSimilarity(
+  imageSimilarity: number | undefined,
+  textSimilarity: number,
+  scoringMode: "image-first" | "text-only",
+): number {
+  if (scoringMode === "text-only" || imageSimilarity == null) {
+    return clampScore(textSimilarity);
+  }
+
+  const weighted =
+    imageSimilarity * IMAGE_FIRST_VISUAL_WEIGHT + textSimilarity * IMAGE_FIRST_TEXT_WEIGHT;
+
+  if (imageSimilarity >= 90) {
+    return clampScore(Math.max(weighted, imageSimilarity - 5));
+  }
+
+  if (imageSimilarity >= 80) {
+    return clampScore(Math.max(weighted, imageSimilarity - 8));
+  }
+
+  if (imageSimilarity >= 70) {
+    return clampScore(Math.max(weighted, imageSimilarity - 12));
+  }
+
+  if (imageSimilarity <= 25 && textSimilarity >= 70) {
+    return clampScore(Math.min(weighted, 55));
+  }
+
+  return clampScore(weighted);
+}
+
+function getScoreBreakdown(
+  scoringMode: "image-first" | "text-only",
+): NonNullable<MatchResult["scoreBreakdown"]> {
+  if (scoringMode === "text-only") {
+    return {
+      visualWeight: TEXT_ONLY_VISUAL_WEIGHT,
+      textWeight: TEXT_ONLY_TEXT_WEIGHT,
+      scoringMode,
+    };
+  }
+
+  return {
+    visualWeight: IMAGE_FIRST_VISUAL_WEIGHT,
+    textWeight: IMAGE_FIRST_TEXT_WEIGHT,
+    scoringMode,
+  };
+}
+
+function enrichReason(
+  originalReason: string | undefined,
+  scoringMode: "image-first" | "text-only",
+  imageSimilarity: number | undefined,
+  overallSimilarity: number,
+): string {
+  const baseReason = originalReason?.trim() || "Potential similarity detected";
+
+  if (scoringMode === "image-first" && imageSimilarity != null) {
+    return `${baseReason} Visual packaging similarity carried the final review score (${imageSimilarity}% image match, ${overallSimilarity}% overall match).`;
+  }
+
+  return baseReason;
 }
 
 export function parseAnalysisMatches(
@@ -191,18 +263,32 @@ export function buildSafetyCheckResult(
       const alertType = alertDetails.fields.alert_type;
       const alertLevel = alertDetails.fields.alert_level;
       const riskLegalProvision = alertDetails.fields.risk_legal_provision;
+      const scoringMode =
+        analysis.scoringMode === "image-first" && Number.isFinite(match.imageSimilarity)
+          ? "image-first"
+          : "text-only";
+      const textSimilarity = getTextSimilarity(match);
+      const imageSimilarity = getImageSimilarity(match);
+      const overallSimilarity = computeOverallSimilarity(
+        imageSimilarity,
+        textSimilarity,
+        scoringMode,
+      );
 
       return {
         alertId: match.alertId || "",
-        similarity: match.similarity || 0,
+        overallSimilarity,
+        imageSimilarity,
+        textSimilarity,
+        scoreBreakdown: getScoreBreakdown(scoringMode),
         riskLevel: mapRiskLevel(alertDetails.fields.risk_level || ""),
         alertType: alertType || alertLevel || "Unknown",
         riskLegalProvision: riskLegalProvision || "",
-        reason: match.reason || "Potential similarity detected",
+        reason: enrichReason(match.reason, scoringMode, imageSimilarity, overallSimilarity),
         alertDetails,
       };
     })
-    .filter((warning) => warning.similarity > 30);
+    .filter((warning) => warning.overallSimilarity >= MIN_OVERALL_MATCH_SCORE);
 
   return {
     isSafe: warnings.length === 0,

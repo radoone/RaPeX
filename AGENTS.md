@@ -91,9 +91,12 @@ Main files:
 - Matching is similarity-based, not exact-ID matching only.
 - Similarity can use product title, description, brand, model, category, and sometimes image data.
 - Similarity can use product title, description, brand, model, category, and multiple product images when available.
+- Safety check responses now distinguish between `overallSimilarity` (final review score) and `imageSimilarity` (visual packaging similarity).
+- The old single `similarity` score is no longer part of the current checker response contract; use `overallSimilarity` in backend and UI code.
 - There is a per-shop similarity threshold in `SafetySetting`.
 - If the external/API check fails, the current implementation fails open and returns a safe result so sales are not blocked.
 - Safety check responses now include `analysis` metadata showing whether the check ran `text-only` or `with-image`, plus counts for product and alert images used.
+- When images are available, the checker uses image-first weighting so visually near-identical packaging is not overly penalized by weaker text fields. The per-shop threshold still applies to `overallSimilarity`.
 
 ## Data source
 

@@ -45,7 +45,16 @@ export const MatchSchema = functionsAi.defineSchema(
   "SafetyGateMatch",
   z.object({
     alertId: z.string(),
-    similarity: z.number(),
+    overallSimilarity: z.number(),
+    imageSimilarity: z.number().optional(),
+    textSimilarity: z.number().optional(),
+    scoreBreakdown: z
+      .object({
+        visualWeight: z.number(),
+        textWeight: z.number(),
+        scoringMode: z.enum(["image-first", "text-only"]),
+      })
+      .optional(),
     riskLevel: z.string(),
     alertType: z.string(),
     riskLegalProvision: z.string(),
@@ -65,6 +74,7 @@ export const SafetyCheckResultSchema = functionsAi.defineSchema(
     checkedAt: z.string(),
     analysis: z.object({
       mode: z.enum(["text-only", "with-image"]),
+      scoringMode: z.enum(["image-first", "text-only"]),
       productImagesProvided: z.number(),
       productImagesUsed: z.number(),
       alertImagesUsed: z.number(),

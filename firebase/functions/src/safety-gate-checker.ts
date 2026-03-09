@@ -74,7 +74,11 @@ function appendMediaMessages(
 async function buildPromptParts(
   product: ProductInput,
   alerts: NormalizedAlert[],
-): Promise<AnalysisPromptInput & { analysis: Omit<SafetyCheckAnalysis, "mode" | "candidateAlertsConsidered"> }> {
+): Promise<
+  AnalysisPromptInput & {
+    analysis: Omit<SafetyCheckAnalysis, "mode" | "candidateAlertsConsidered" | "scoringMode">;
+  }
+> {
   const productImageUrls = getProductImageUrls(product);
   const productImages: EncodedImage[] = [];
   for (const imageUrl of productImageUrls) {
@@ -132,6 +136,7 @@ async function analyzeProductMatches(product: ProductInput, alerts: NormalizedAl
         : promptInput;
     const analysis: SafetyCheckAnalysis = {
       mode: attempt.promptType === "text" ? "text-only" : "with-image",
+      scoringMode: attempt.promptType === "text" ? "text-only" : "image-first",
       productImagesProvided: promptInput.analysis.productImagesProvided,
       productImagesUsed: input.productImages.length,
       alertImagesUsed: input.alertImages.length,
@@ -191,6 +196,7 @@ export const checkProductSafety = functionsAi.defineFlow(
     if (!analysisResult) {
       return createUnavailableAnalysisResult({
         mode: "text-only",
+        scoringMode: "text-only",
         productImagesProvided: productImageCount,
         productImagesUsed: 0,
         alertImagesUsed: 0,

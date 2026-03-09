@@ -57,7 +57,14 @@ export interface SafetyCheckResult {
   isSafe: boolean;
   warnings: Array<{
     alertId: string;
-    similarity: number;
+    overallSimilarity: number;
+    imageSimilarity?: number;
+    textSimilarity?: number;
+    scoreBreakdown?: {
+      visualWeight: number;
+      textWeight: number;
+      scoringMode: "image-first" | "text-only";
+    };
     riskLevel: string;
     reason: string;
     alertDetails: SafetyGateAlertDetails;
@@ -66,6 +73,7 @@ export interface SafetyCheckResult {
   checkedAt: string;
   analysis: {
     mode: "text-only" | "with-image";
+    scoringMode: "image-first" | "text-only";
     productImagesProvided: number;
     productImagesUsed: number;
     alertImagesUsed: number;

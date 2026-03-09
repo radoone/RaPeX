@@ -2,12 +2,12 @@ import type { ReactNode } from "react";
 
 interface RiskMeterProps {
   riskLevel?: string;
-  similarity?: number | null;
+  overallSimilarity?: number | null;
   label?: ReactNode;
 }
 
-export function RiskMeter({ riskLevel, similarity, label }: RiskMeterProps) {
-  const { score, tone, title } = getRiskScore(riskLevel, similarity);
+export function RiskMeter({ riskLevel, overallSimilarity, label }: RiskMeterProps) {
+  const { score, tone, title } = getRiskScore(riskLevel, overallSimilarity);
 
   return (
     <s-stack gap="small-200">

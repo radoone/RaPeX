@@ -272,7 +272,14 @@ const resources = {
         "checkedAt": "Checked: {{date}}",
         "productImagesUsed": "Product images: {{used}} / {{provided}}",
         "alertImagesUsed": "Alert images compared: {{count}}",
-        "candidateAlerts": "Candidate alerts"
+        "candidateAlerts": "Candidate alerts",
+        "overallMatch": "Overall match",
+        "imageMatch": "Image match",
+        "overallMatchShort": "{{count}}% overall",
+        "imageMatchShort": "{{count}}% image",
+        "scoreHelper": "Overall match is the final review score. Image match reflects packaging similarity only.",
+        "whyThisMatched": "Why this matched",
+        "imageDominated": "This match was scored with image-first weighting, so visual packaging similarity carried more weight than text mismatch."
       },
       "pagination": {
         "pageOf": "Page {{current}} of {{total}} ({{count}} alerts)"
@@ -754,7 +761,14 @@ const resources = {
         "checkedAt": "Skontrolované: {{date}}",
         "productImagesUsed": "Obrázky produktu: {{used}} / {{provided}}",
         "alertImagesUsed": "Porovnané obrázky alertov: {{count}}",
-        "candidateAlerts": "Kandidátne alerty"
+        "candidateAlerts": "Kandidátne alerty",
+        "overallMatch": "Celková zhoda",
+        "imageMatch": "Zhoda obrázka",
+        "overallMatchShort": "{{count}}% celkom",
+        "imageMatchShort": "{{count}}% obrázok",
+        "scoreHelper": "Celková zhoda je finálne skóre pre rozhodnutie. Zhoda obrázka vyjadruje len podobnosť obalu.",
+        "whyThisMatched": "Prečo vznikla zhoda",
+        "imageDominated": "Táto zhoda bola skórovaná image-first vážením, takže vizuálna podobnosť obalu mala vyššiu váhu než textové rozdiely."
       },
       "pagination": {
         "pageOf": "Strana {{current}} z {{total}} ({{count}} upozornení)"

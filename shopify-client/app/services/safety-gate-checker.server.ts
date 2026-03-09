@@ -29,7 +29,7 @@ function applySimilarityThreshold<T extends SafetyCheckResult>(result: T, thresh
   }
 
   const filteredWarnings = result.warnings.filter((warning) => {
-    const similarity = Number.isFinite(warning.similarity) ? warning.similarity : 0;
+    const similarity = Number.isFinite(warning.overallSimilarity) ? warning.overallSimilarity : 0;
     return similarity >= safeThreshold;
   });
 
@@ -44,7 +44,14 @@ export interface SafetyCheckResult {
   isSafe: boolean;
   warnings: Array<{
     alertId: string;
-    similarity: number;
+    overallSimilarity: number;
+    imageSimilarity?: number;
+    textSimilarity?: number;
+    scoreBreakdown?: {
+      visualWeight: number;
+      textWeight: number;
+      scoringMode: "image-first" | "text-only";
+    };
     riskLevel: string;
     alertType: string;
     riskLegalProvision: string;
@@ -73,6 +80,7 @@ export interface SafetyCheckResult {
   checkedAt: string;
   analysis: {
     mode: "text-only" | "with-image";
+    scoringMode: "image-first" | "text-only";
     productImagesProvided: number;
     productImagesUsed: number;
     alertImagesUsed: number;
@@ -125,6 +133,7 @@ export async function checkProductSafety(productData: ProductData, similarityThr
       checkedAt: new Date().toISOString(),
       analysis: {
         mode: "text-only",
+        scoringMode: "text-only",
         productImagesProvided: productData.imageUrls?.length || (productData.imageUrl ? 1 : 0),
         productImagesUsed: 0,
         alertImagesUsed: 0,

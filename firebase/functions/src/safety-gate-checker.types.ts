@@ -5,6 +5,7 @@ export type EncodedImage = {
 
 export type SafetyCheckAnalysis = {
   mode: "text-only" | "with-image";
+  scoringMode: "image-first" | "text-only";
   productImagesProvided: number;
   productImagesUsed: number;
   alertImagesUsed: number;
@@ -38,7 +39,14 @@ export type NormalizedAlert = {
 
 export type AnalysisMatchCandidate = {
   alertId?: string;
-  similarity?: number;
+  overallSimilarity?: number;
+  imageSimilarity?: number;
+  textSimilarity?: number;
+  scoreBreakdown?: {
+    visualWeight?: number;
+    textWeight?: number;
+    scoringMode?: "image-first" | "text-only";
+  };
   riskLevel?: string;
   alertType?: string;
   riskLegalProvision?: string;
