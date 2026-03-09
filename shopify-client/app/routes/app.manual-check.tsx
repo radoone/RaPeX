@@ -3,6 +3,7 @@ import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node";
 import { useLoaderData, useFetcher } from "@remix-run/react";
 import { json } from "@remix-run/node";
 import { useTranslation } from "react-i18next";
+import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
 import { shopifyProductToProductData } from "../services/safety-gate-checker.client";
 import { checkProductSafety, getSimilarityThresholdForShop } from "../services/safety-gate-checker.server";
@@ -212,6 +213,7 @@ export default function ManualCheckPage() {
   const fetcher = useFetcher<typeof action>();
   const resolveFetcher = useFetcher<typeof action>();
   const { t, i18n } = useTranslation();
+  const shopify = useAppBridge();
 
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [checkResult, setCheckResult] = useState<any>(null);
@@ -251,6 +253,19 @@ export default function ManualCheckPage() {
       setHasProcessedResult(true);
     }
   }, [fetcher.data, showResult, hasProcessedResult]);
+
+  useEffect(() => {
+    if (!fetcher.data || !('success' in fetcher.data) || !fetcher.data.success) {
+      return;
+    }
+
+    if ('alertCreated' in fetcher.data && fetcher.data.alertCreated) {
+      shopify.toast.show(t('manualCheck.toasts.flagged'));
+      return;
+    }
+
+    shopify.toast.show(t('manualCheck.toasts.completed'));
+  }, [fetcher.data, shopify, t]);
 
   // Handle resolve/dismiss completion - navigate to alerts if successful
   useEffect(() => {
@@ -328,37 +343,33 @@ export default function ManualCheckPage() {
         </section>
 
         {fetcher.data && 'error' in fetcher.data && fetcher.data.error && (
-          <section className="admin-card admin-card--critical">
-            <div>
-              <p className="admin-eyebrow">{t("manualCheck.admin.checkFailed")}</p>
-              <h2 className="admin-card__title">{t('manualCheck.banners.failedHeading')}</h2>
-              <p className="admin-card__description">{(fetcher.data as any).error}</p>
-            </div>
-          </section>
+          <s-banner tone="critical" heading={t('manualCheck.banners.failedHeading')}>
+            <s-text>{(fetcher.data as any).error}</s-text>
+          </s-banner>
         )}
 
         {fetcher.data && 'alertCreated' in fetcher.data && fetcher.data.alertCreated && (
-          <section className="admin-card admin-card--critical">
-            <div className="admin-card__header">
-              <div>
-                <p className="admin-eyebrow">{t("manualCheck.admin.productFlagged")}</p>
-                <h2 className="admin-card__title">{t('manualCheck.banners.alertHeading')}</h2>
-                <p className="admin-card__description">{t('manualCheck.banners.alertDescription')}</p>
-              </div>
-              <div className="admin-actions">
-                <s-button
-                  variant="primary"
-                  commandFor="manual-check-result-modal"
-                  command="--show"
-                >
-                  {t('actions.viewDetails')}
-                </s-button>
-                <s-button variant="secondary" href="/app/alerts">
-                  {t('actions.reviewAlerts')}
-                </s-button>
-              </div>
+          <s-banner tone="critical" heading={t('manualCheck.banners.alertHeading')}>
+            <s-text>{t('manualCheck.banners.alertDescription')}</s-text>
+            <div style={{ marginTop: "var(--s-space-200)", display: "flex", gap: "var(--s-space-200)" }}>
+              <s-button
+                variant="primary"
+                commandFor="manual-check-result-modal"
+                command="--show"
+              >
+                {t('actions.viewDetails')}
+              </s-button>
+              <s-button variant="secondary" href="/app/alerts">
+                {t('actions.reviewAlerts')}
+              </s-button>
             </div>
-          </section>
+          </s-banner>
+        )}
+
+        {checkResult?.analysis?.mode === 'text-only' && (
+          <s-banner tone="info" heading={t('manualCheck.banners.textOnlyHeading')}>
+            <s-text>{t('manualCheck.banners.textOnlyDescription')}</s-text>
+          </s-banner>
         )}
 
         <section className="metric-grid">

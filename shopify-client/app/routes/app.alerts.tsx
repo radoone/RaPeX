@@ -1,8 +1,9 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node";
 import { useLoaderData, useFetcher, useNavigate } from "@remix-run/react";
 import { json } from "@remix-run/node";
 import { useTranslation } from "react-i18next";
+import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
 import db from "../db.server";
 import {
@@ -29,12 +30,17 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   // Prisma version here does not support `mode: 'insensitive'`; fallback to default contains
   if (search) whereClause.productTitle = { contains: search };
 
-  const [rawAlerts, totalCount, activeCount, resolvedCount, dismissedCount] = await Promise.all([
+  const [rawAlerts, totalCount, activeCount, resolvedCount, dismissedCount, activeAlertRiskSample] = await Promise.all([
     db.safetyAlert.findMany({ where: whereClause, orderBy: { createdAt: 'desc' }, skip: offset, take: pageSize }),
     db.safetyAlert.count({ where: whereClause }),
     db.safetyAlert.count({ where: { shop: session.shop, status: 'active' } }),
     db.safetyAlert.count({ where: { shop: session.shop, status: 'resolved' } }),
     db.safetyAlert.count({ where: { shop: session.shop, status: 'dismissed' } }),
+    db.safetyAlert.findMany({
+      where: { shop: session.shop, status: 'active' },
+      select: { riskLevel: true, checkResult: true },
+      take: 100,
+    }),
   ]);
 
   const productIds = rawAlerts.map((a: any) => a.productId).filter(Boolean).map((id: string) =>
@@ -89,11 +95,29 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     };
   });
 
+  const criticalActiveAlerts = activeAlertRiskSample.filter((alert: any) => {
+    try {
+      const parsed = alert.checkResult ? JSON.parse(alert.checkResult) : null;
+      const warning = Array.isArray(parsed?.warnings) ? parsed.warnings[0] : null;
+      const level = String(
+        warning?.alertDetails?.fields?.alert_level ||
+        warning?.alertDetails?.fields?.risk_level ||
+        warning?.riskLevel ||
+        alert.riskLevel ||
+        ""
+      ).toLowerCase();
+      return level.includes("serious") || level.includes("high") || level === "1" || level === "2";
+    } catch {
+      const level = String(alert.riskLevel || "").toLowerCase();
+      return level.includes("serious") || level.includes("high") || level === "1" || level === "2";
+    }
+  }).length;
+
   return json({
     alerts,
     pagination: { currentPage: page, totalPages: Math.ceil(totalCount / pageSize), totalCount, hasNext: page < Math.ceil(totalCount / pageSize), hasPrevious: page > 1 },
     filters: { status: statusFilters, riskLevel: riskLevelFilters, search },
-    stats: { active: activeCount, resolved: resolvedCount, dismissed: dismissedCount, total: activeCount + resolvedCount + dismissedCount },
+    stats: { active: activeCount, resolved: resolvedCount, dismissed: dismissedCount, total: activeCount + resolvedCount + dismissedCount, criticalActive: criticalActiveAlerts },
   });
 };
 
@@ -149,6 +173,7 @@ export default function AlertsPage() {
   const fetcher = useFetcher<typeof action>();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const shopify = useAppBridge();
 
   const [searchValue, setSearchValue] = useState(filters.search || '');
   const [statusFilter, setStatusFilter] = useState<string[]>(filters.status || []);
@@ -170,6 +195,12 @@ export default function AlertsPage() {
 
   const resolvedRate = stats.total > 0 ? Math.round((stats.resolved / stats.total) * 100) : 0;
 
+  useEffect(() => {
+    if (fetcher.data?.success) {
+      shopify.toast.show(t("alerts.toasts.updated"));
+    }
+  }, [fetcher.data, shopify, t]);
+
   return (
     <s-page size="large" className="page-shell">
       <s-heading slot="title" size="large">{t('alerts.title')}</s-heading>
@@ -178,6 +209,26 @@ export default function AlertsPage() {
       </s-button>
 
       <div className="admin-stack">
+        {stats.active > 0 && (
+          <s-banner
+            tone={stats.criticalActive > 0 ? "critical" : "warning"}
+            heading={stats.criticalActive > 0
+              ? t("alerts.admin.criticalBannerTitle", { count: stats.active })
+              : t("alerts.admin.warningBannerTitle", { count: stats.active })}
+          >
+            <s-text>
+              {stats.criticalActive > 0
+                ? t("alerts.admin.criticalBannerDescription", { count: stats.criticalActive })
+                : t("alerts.admin.warningBannerDescription")}
+            </s-text>
+            <div style={{ marginTop: "var(--s-space-200)" }}>
+              <s-button variant="primary" onClick={() => applyFilters({ status: ["active"] })}>
+                {t("actions.reviewAlerts")}
+              </s-button>
+            </div>
+          </s-banner>
+        )}
+
         <section className="metric-grid">
           <SummaryCard
             title={t('alerts.metrics.activeHeading')}

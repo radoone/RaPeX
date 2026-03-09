@@ -39,7 +39,7 @@ type ActionResponse = {
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { session, admin } = await authenticate.admin(request);
 
-  const [activeAlerts, totalAlerts, resolvedAlerts, dismissedAlerts, totalChecks, recentAlerts, checkedProductIds] = await Promise.all([
+  const [activeAlerts, totalAlerts, resolvedAlerts, dismissedAlerts, totalChecks, recentAlerts, checkedProductIds, activeAlertRiskSample] = await Promise.all([
     db.safetyAlert.count({
       where: { shop: session.shop, status: 'active' },
     }),
@@ -65,6 +65,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       where: { shop: session.shop },
       select: { productId: true },
       distinct: ['productId'],
+    }),
+    db.safetyAlert.findMany({
+      where: { shop: session.shop, status: 'active' },
+      select: { riskLevel: true, checkResult: true },
+      take: 100,
     }),
   ]);
 
@@ -136,6 +141,23 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   const checkedProductCount = checkedProductIds.length;
   const uncheckedProductCount = Math.max(0, totalProductsCount - checkedProductCount);
+  const criticalActiveAlerts = activeAlertRiskSample.filter((alert: any) => {
+    try {
+      const parsed = alert.checkResult ? JSON.parse(alert.checkResult) : null;
+      const warning = Array.isArray(parsed?.warnings) ? parsed.warnings[0] : null;
+      const level = String(
+        warning?.alertDetails?.fields?.alert_level ||
+        warning?.alertDetails?.fields?.risk_level ||
+        warning?.riskLevel ||
+        alert.riskLevel ||
+        ""
+      ).toLowerCase();
+      return level.includes("serious") || level.includes("high") || level === "1" || level === "2";
+    } catch {
+      const level = String(alert.riskLevel || "").toLowerCase();
+      return level.includes("serious") || level.includes("high") || level === "1" || level === "2";
+    }
+  }).length;
 
   return json({
     stats: {
@@ -147,6 +169,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       totalProducts: totalProductsCount,
       checkedProducts: checkedProductCount,
       uncheckedProducts: uncheckedProductCount,
+      criticalActiveAlerts,
     },
     recentAlerts: processedRecentAlerts,
   });
@@ -405,36 +428,24 @@ export default function Index() {
       </s-button>
 
       <div className="admin-stack">
-        {stats.activeAlerts > 0 ? (
-          <section className="admin-card admin-card--critical">
-            <div className="admin-card__header">
-              <div>
-                <p className="admin-eyebrow">{t("dashboard.admin.actionNeeded")}</p>
-                <h2 className="admin-card__title">
-                  {t("dashboard.admin.actionNeededTitle", { count: stats.activeAlerts })}
-                </h2>
-                <p className="admin-card__description">
-                  {t("dashboard.admin.actionNeededDescription")}
-                </p>
-              </div>
+        {stats.activeAlerts > 0 && (
+          <s-banner
+            tone={stats.criticalActiveAlerts > 0 ? "critical" : "warning"}
+            heading={stats.criticalActiveAlerts > 0
+              ? t("dashboard.admin.criticalBannerTitle", { count: stats.activeAlerts })
+              : t("dashboard.admin.warningBannerTitle", { count: stats.activeAlerts })}
+          >
+            <s-text>
+              {stats.criticalActiveAlerts > 0
+                ? t("dashboard.admin.criticalBannerDescription", { count: stats.criticalActiveAlerts })
+                : t("dashboard.admin.warningBannerDescription")}
+            </s-text>
+            <div style={{ marginTop: "var(--s-space-200)" }}>
               <s-button variant="primary" onClick={() => navigate("/app/alerts?status=active")}>
                 {t("actions.reviewAlerts")}
               </s-button>
             </div>
-          </section>
-        ) : (
-          <section className="admin-card">
-            <div className="admin-card__header">
-              <div>
-                <p className="admin-eyebrow">{t("dashboard.admin.storeStatus")}</p>
-                <h2 className="admin-card__title">{t("dashboard.admin.noActiveAlertsTitle")}</h2>
-                <p className="admin-card__description">
-                  {t("dashboard.admin.noActiveAlertsDescription")}
-                </p>
-              </div>
-              <s-badge tone="success">{t("status.allClear")}</s-badge>
-            </div>
-          </section>
+          </s-banner>
         )}
 
         <section className="metric-grid">

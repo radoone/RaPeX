@@ -120,6 +120,13 @@ const resources = {
           "actionNeededTitle": "{{count}} active alert needs review",
           "actionNeededTitle_plural": "{{count}} active alerts need review",
           "actionNeededDescription": "Review flagged products first so you can decide whether to keep them on sale, dismiss the match, or resolve the alert.",
+          "criticalBannerTitle": "{{count}} active alert includes high-risk matches",
+          "criticalBannerTitle_plural": "{{count}} active alerts include high-risk matches",
+          "criticalBannerDescription": "{{count}} active match is marked high or serious risk. Prioritise these products before new sales continue.",
+          "criticalBannerDescription_plural": "{{count}} active matches are marked high or serious risk. Prioritise these products before new sales continue.",
+          "warningBannerTitle": "{{count}} active alert needs a merchant decision",
+          "warningBannerTitle_plural": "{{count}} active alerts need merchant decisions",
+          "warningBannerDescription": "Review these matches, dismiss false positives, or resolve confirmed issues so the queue stays actionable.",
           "storeStatus": "Store status",
           "noActiveAlertsTitle": "No active safety alerts",
           "noActiveAlertsDescription": "Your latest checks do not currently require action. Keep scanning newly added products to maintain coverage.",
@@ -341,8 +348,18 @@ const resources = {
           "actionNeededTitle": "{{count}} active alert still needs a decision",
           "actionNeededTitle_plural": "{{count}} active alerts still need a decision",
           "actionNeededDescription": "Review matches, dismiss false positives, or resolve confirmed risks so the alert queue stays actionable.",
+          "criticalBannerTitle": "{{count}} active alert includes high-risk products",
+          "criticalBannerTitle_plural": "{{count}} active alerts include high-risk products",
+          "criticalBannerDescription": "{{count}} active alert is marked high or serious risk. Resolve those products first.",
+          "criticalBannerDescription_plural": "{{count}} active alerts are marked high or serious risk. Resolve those products first.",
+          "warningBannerTitle": "{{count}} active alert still needs review",
+          "warningBannerTitle_plural": "{{count}} active alerts still need review",
+          "warningBannerDescription": "Use this queue for real decisions only: resolve confirmed risks and dismiss false positives quickly.",
           "queue": "Alert queue",
           "queueDescription": "Keep the table focused on decisions: filter by status, search product names, and resolve matches directly from one place."
+        },
+        "toasts": {
+          "updated": "Alert updated"
         }
       },
       "manualCheck": {
@@ -359,7 +376,9 @@ const resources = {
         "banners": {
           "failedHeading": "Check failed",
           "alertHeading": "Safety alert created",
-          "alertDescription": "A potential safety issue was found for this product."
+          "alertDescription": "A potential safety issue was found for this product.",
+          "textOnlyHeading": "Image comparison was not available",
+          "textOnlyDescription": "This result used text fields only. If the product relies on visual differences, review the match more carefully."
         },
         "overview": {
           "title": "Checks overview",
@@ -411,6 +430,10 @@ const resources = {
           "productFlagged": "Product flagged",
           "catalog": "Catalog",
           "catalogDescription": "Products are sorted by latest Shopify updates so merchants can re-check recent changes first."
+        },
+        "toasts": {
+          "completed": "Safety check completed",
+          "flagged": "Potential safety issue found"
         }
       },
       "portal": {
@@ -579,6 +602,13 @@ const resources = {
           "actionNeededTitle": "{{count}} aktívne upozornenie vyžaduje kontrolu",
           "actionNeededTitle_plural": "{{count}} aktívne upozornenia vyžadujú kontrolu",
           "actionNeededDescription": "Najprv skontrolujte označené produkty, aby ste vedeli rozhodnúť, či ich ponechať v predaji, zamietnuť zhodu alebo uzavrieť upozornenie.",
+          "criticalBannerTitle": "{{count}} aktívne upozornenie obsahuje vysokorizikové zhody",
+          "criticalBannerTitle_plural": "{{count}} aktívne upozornenia obsahujú vysokorizikové zhody",
+          "criticalBannerDescription": "{{count}} aktívna zhoda je označená ako vysoké alebo vážne riziko. Tieto produkty riešte prednostne ešte pred ďalším predajom.",
+          "criticalBannerDescription_plural": "{{count}} aktívne zhody sú označené ako vysoké alebo vážne riziko. Tieto produkty riešte prednostne ešte pred ďalším predajom.",
+          "warningBannerTitle": "{{count}} aktívne upozornenie potrebuje rozhodnutie merchanta",
+          "warningBannerTitle_plural": "{{count}} aktívne upozornenia potrebujú rozhodnutie merchanta",
+          "warningBannerDescription": "Skontrolujte tieto zhody, zamietnite falošné poplachy alebo potvrdené problémy uzavrite, aby bol zoznam stále použiteľný.",
           "storeStatus": "Stav obchodu",
           "noActiveAlertsTitle": "Žiadne aktívne bezpečnostné upozornenia",
           "noActiveAlertsDescription": "Posledné kontroly momentálne nevyžadujú zásah. Pokračujte v skenovaní novo pridaných produktov, aby ste udržali pokrytie.",
@@ -800,8 +830,18 @@ const resources = {
           "actionNeededTitle": "{{count}} aktívne upozornenie ešte čaká na rozhodnutie",
           "actionNeededTitle_plural": "{{count}} aktívne upozornenia ešte čakajú na rozhodnutie",
           "actionNeededDescription": "Skontrolujte zhody, zamietnite falošné poplachy alebo uzavrite potvrdené riziká, aby zoznam upozornení ostal použiteľný.",
+          "criticalBannerTitle": "{{count}} aktívne upozornenie obsahuje vysokorizikové produkty",
+          "criticalBannerTitle_plural": "{{count}} aktívne upozornenia obsahujú vysokorizikové produkty",
+          "criticalBannerDescription": "{{count}} aktívne upozornenie je označené ako vysoké alebo vážne riziko. Najprv vyriešte tieto produkty.",
+          "criticalBannerDescription_plural": "{{count}} aktívne upozornenia sú označené ako vysoké alebo vážne riziko. Najprv vyriešte tieto produkty.",
+          "warningBannerTitle": "{{count}} aktívne upozornenie stále čaká na kontrolu",
+          "warningBannerTitle_plural": "{{count}} aktívne upozornenia stále čakajú na kontrolu",
+          "warningBannerDescription": "Tento zoznam používajte len na reálne rozhodnutia: potvrdené riziká vyriešte a falošné zhody rýchlo zamietnite.",
           "queue": "Zoznam upozornení",
           "queueDescription": "Tabuľka je zameraná na rozhodnutia: filtrujte podľa stavu, hľadajte podľa názvu produktu a spracujte zhody na jednom mieste."
+        },
+        "toasts": {
+          "updated": "Upozornenie bolo aktualizované"
         }
       },
       "manualCheck": {
@@ -818,7 +858,9 @@ const resources = {
         "banners": {
           "failedHeading": "Kontrola zlyhala",
           "alertHeading": "Vytvorené bezpečnostné upozornenie",
-          "alertDescription": "Pre tento produkt bola nájdená potenciálna bezpečnostná hrozba."
+          "alertDescription": "Pre tento produkt bola nájdená potenciálna bezpečnostná hrozba.",
+          "textOnlyHeading": "Porovnanie podľa obrázkov nebolo dostupné",
+          "textOnlyDescription": "Tento výsledok použil len textové polia. Ak produkt závisí od vizuálnych rozdielov, zhodu skontrolujte dôkladnejšie."
         },
         "overview": {
           "title": "Prehľad kontrol",
@@ -870,6 +912,10 @@ const resources = {
           "productFlagged": "Produkt označený",
           "catalog": "Katalóg",
           "catalogDescription": "Produkty sú zoradené podľa posledných aktualizácií v Shopify, aby bolo možné najprv skontrolovať čerstvé zmeny."
+        },
+        "toasts": {
+          "completed": "Bezpečnostná kontrola je dokončená",
+          "flagged": "Našiel sa možný bezpečnostný problém"
         }
       },
       "portal": {
