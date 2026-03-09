@@ -1,11 +1,11 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState } from "react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { useFetcher, useLoaderData, useNavigation, useNavigate, json } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
 import db from "../db.server";
-import { LanguageSwitcher } from "../components";
+import { SummaryCard } from "../components";
 import { checkProductSafety, getSimilarityThresholdForShop } from "../services/safety-gate-checker.server";
 import { shopifyProductToProductData } from "../services/safety-gate-checker.client";
 
@@ -355,92 +355,21 @@ export default function Index() {
   const shopify = useAppBridge();
   const { t } = useTranslation();
   const navigate = useNavigate();
-
-  // UI state
-  const [visible, setVisible] = useState({
-    banner: stats.activeAlerts > 0,
-    setupGuide: stats.totalChecks === 0,
-    calloutCard: true,
-    news: true,
-  });
-  const [expanded, setExpanded] = useState({
-    setupGuide: true,
-    step1: false,
-    step2: false,
-    step3: false,
-    results: false,
-  });
-  const [progress, setProgress] = useState(0);
   const [includeAlreadyChecked, setIncludeAlreadyChecked] = useState(false);
-
-  // Button refs
-  const bulkCheckBtnRef = useRef<HTMLElement>(null);
-  const bulkCheckBtn2Ref = useRef<HTMLElement>(null);
-  const bulkCheckBtn3Ref = useRef<HTMLElement>(null);
-  const manualCheckBtnRef = useRef<HTMLElement>(null);
-  const settingsBtnRef = useRef<HTMLElement>(null);
 
   const isLoading = navigation.state === "loading";
   const isSubmitting = fetcher.state === "submitting";
-
   const resolvedAlerts = stats.resolvedAlerts;
   const resolutionRate = stats.totalAlerts > 0 ? Math.round((resolvedAlerts / stats.totalAlerts) * 100) : 100;
-
-  const runBulkCheck = useCallback(() => {
+  const coverageRate = stats.totalProducts > 0 ? Math.round((stats.checkedProducts / stats.totalProducts) * 100) : 0;
+  const bulkResults = fetcher.data?.success && fetcher.data.results ? fetcher.data.results : null;
+  const runBulkCheck = () => {
     if (isSubmitting) return;
     fetcher.submit(
-      { action: 'bulkCheck', includeAlreadyChecked: includeAlreadyChecked.toString() },
-      { method: 'POST' }
+      { action: "bulkCheck", includeAlreadyChecked: includeAlreadyChecked.toString() },
+      { method: "POST" },
     );
-  }, [isSubmitting, includeAlreadyChecked, fetcher]);
-
-  const bulkResults = fetcher.data?.success && fetcher.data.results ? fetcher.data.results : null;
-
-  // Native event listeners for buttons
-  useEffect(() => {
-    const bulkBtn = bulkCheckBtnRef.current;
-    if (bulkBtn) {
-      const handleClick = () => runBulkCheck();
-      bulkBtn.addEventListener('click', handleClick);
-      return () => bulkBtn.removeEventListener('click', handleClick);
-    }
-  }, [runBulkCheck]);
-
-  useEffect(() => {
-    const bulkBtn = bulkCheckBtn2Ref.current;
-    if (bulkBtn) {
-      const handleClick = () => runBulkCheck();
-      bulkBtn.addEventListener('click', handleClick);
-      return () => bulkBtn.removeEventListener('click', handleClick);
-    }
-  }, [runBulkCheck]);
-
-  useEffect(() => {
-    const bulkBtn = bulkCheckBtn3Ref.current;
-    if (bulkBtn) {
-      const handleClick = () => runBulkCheck();
-      bulkBtn.addEventListener('click', handleClick);
-      return () => bulkBtn.removeEventListener('click', handleClick);
-    }
-  }, [runBulkCheck]);
-
-  useEffect(() => {
-    const manualBtn = manualCheckBtnRef.current;
-    if (manualBtn) {
-      const handleClick = () => navigate('/app/manual-check');
-      manualBtn.addEventListener('click', handleClick);
-      return () => manualBtn.removeEventListener('click', handleClick);
-    }
-  }, [navigate]);
-
-  useEffect(() => {
-    const settingsBtn = settingsBtnRef.current;
-    if (settingsBtn) {
-      const handleClick = () => navigate('/app/settings');
-      settingsBtn.addEventListener('click', handleClick);
-      return () => settingsBtn.removeEventListener('click', handleClick);
-    }
-  }, [navigate]);
+  };
 
   useEffect(() => {
     if (fetcher.data) {
@@ -463,503 +392,280 @@ export default function Index() {
   }
 
   return (
-    <s-page>
-      {/* Page Title & Actions */}
+    <s-page size="large" className="page-shell">
       <s-heading slot="title" size="large">{t('nav.dashboard')}</s-heading>
-
-      <s-button ref={bulkCheckBtnRef} slot="primary-action" variant="primary" loading={isSubmitting || undefined}>
-        {isSubmitting ? t('actions.checking') : t('actions.checkAll')}
+      <s-button
+        slot="primary-action"
+        variant="primary"
+        loading={isSubmitting || undefined}
+        onClick={runBulkCheck}
+        disabled={stats.uncheckedProducts === 0 && !includeAlreadyChecked || undefined}
+      >
+        {isSubmitting
+          ? t('actions.checking')
+          : includeAlreadyChecked
+            ? t('actions.checkAll')
+            : t('actions.checkUnchecked', { count: stats.uncheckedProducts })}
       </s-button>
-      <s-button ref={manualCheckBtnRef} slot="secondary-actions" onClick={() => navigate('/app/manual-check')}>
+      <s-button slot="secondary-actions" onClick={() => navigate('/app/manual-check')}>
         {t('actions.manualCheck')}
       </s-button>
-      <s-button ref={settingsBtnRef} slot="secondary-actions" onClick={() => navigate('/app/settings')}>
+      <s-button slot="secondary-actions" onClick={() => navigate('/app/settings')}>
         {t('actions.settings')}
       </s-button>
 
-      {/* Active Alerts Banner */}
-      {visible.banner && stats.activeAlerts > 0 && (
-        <s-banner
-          tone="critical"
-          dismissible
-          onDismiss={() => setVisible({ ...visible, banner: false })}
-        >
-          {t('dashboard.activeAlertsBanner.content', { count: stats.activeAlerts })}{' '}
-          <s-link onClick={() => navigate('/app/alerts')}>{t('dashboard.activeAlertsBanner.reviewAction')}</s-link>
-          {' • '}
-          <s-link onClick={() => navigate('/app/manual-check')}>{t('dashboard.activeAlertsBanner.manualCheckAction')}</s-link>
-        </s-banner>
-      )}
-
-      {/* Progress Banner during check */}
-      {isSubmitting && (
-        <s-banner tone="info" heading="🔍 Checking products...">
-          <s-stack gap="small">
-            <s-text>Please wait while we check your products against the Safety Gate database.</s-text>
-            <s-progress-bar progress={50} accessibilityLabel="Checking products" />
-            <s-text tone="subdued">This may take a few minutes depending on the number of products.</s-text>
-          </s-stack>
-        </s-banner>
-      )}
-
-      {/* Bulk Check Results Summary */}
-      {bulkResults && (
-        <s-section>
-          <s-box padding="large" borderRadius="large" background="bg-surface-success" borderWidth="base" borderColor="border-success">
-            <s-stack gap="base">
-              <s-stack direction="inline" align="space-between" blockAlign="center">
-                <s-heading>✅ Safety Check Complete</s-heading>
-                <s-button
-                  variant="tertiary"
-                  icon={expanded.results ? "chevron-up" : "chevron-down"}
-                  onClick={() => setExpanded({ ...expanded, results: !expanded.results })}
-                >
-                  {expanded.results ? 'Hide details' : 'Show details'}
+      <div className="admin-stack">
+        {stats.activeAlerts > 0 ? (
+          <section className="admin-card admin-card--critical">
+            <div className="admin-card__header">
+              <div>
+                <p className="admin-eyebrow">{t("dashboard.admin.actionNeeded")}</p>
+                <h2 className="admin-card__title">
+                  {t("dashboard.admin.actionNeededTitle", { count: stats.activeAlerts })}
+                </h2>
+                <p className="admin-card__description">
+                  {t("dashboard.admin.actionNeededDescription")}
+                </p>
+              </div>
+              <div className="admin-actions">
+                <s-button variant="primary" onClick={() => navigate("/app/alerts?status=active")}>
+                  {t("actions.reviewAlerts")}
                 </s-button>
-              </s-stack>
-
-              {/* Summary stats */}
-              <s-grid gridTemplateColumns="repeat(auto-fit, minmax(120px, 1fr))" gap="base">
-                <s-box padding="base" borderRadius="base" background="bg-surface">
-                  <s-text tone="subdued" size="small">Total Products</s-text>
-                  <s-heading size="large">{bulkResults.totalProducts}</s-heading>
-                </s-box>
-                <s-box padding="base" borderRadius="base" background="bg-surface">
-                  <s-text tone="subdued" size="small">Checked</s-text>
-                  <s-heading size="large">{bulkResults.checked}</s-heading>
-                </s-box>
-                <s-box padding="base" borderRadius="base" background="bg-surface">
-                  <s-text tone="subdued" size="small">Skipped</s-text>
-                  <s-heading size="large">{bulkResults.skipped}</s-heading>
-                </s-box>
-                <s-box padding="base" borderRadius="base" background={bulkResults.alertsCreated > 0 ? "bg-surface-critical" : "bg-surface"}>
-                  <s-text tone="subdued" size="small">Alerts Created</s-text>
-                  <s-heading size="large">{bulkResults.alertsCreated}</s-heading>
-                </s-box>
-                {bulkResults.errors > 0 && (
-                  <s-box padding="base" borderRadius="base" background="bg-surface-warning">
-                    <s-text tone="subdued" size="small">Errors</s-text>
-                    <s-heading size="large">{bulkResults.errors}</s-heading>
-                  </s-box>
-                )}
-              </s-grid>
-
-              {/* Detailed product list (expandable) */}
-              {expanded.results && bulkResults.products.length > 0 && (
-                <s-box padding="base" borderRadius="base" background="bg-surface" style={{ maxHeight: '400px', overflow: 'auto' }}>
-                  <s-stack gap="small">
-                    <s-text fontWeight="bold">Product Details</s-text>
-                    {bulkResults.products.map((product, idx) => (
-                      <s-stack key={idx} direction="inline" gap="small" align="space-between" blockAlign="center">
-                        <s-stack direction="inline" gap="small" blockAlign="center">
-                          {product.status === 'alert_created' && <s-badge tone="critical">⚠️ Alert</s-badge>}
-                          {product.status === 'checked' && <s-badge tone="success">✓ Safe</s-badge>}
-                          {product.status === 'skipped' && <s-badge tone="info">↷ Skipped</s-badge>}
-                          {product.status === 'error' && <s-badge tone="warning">✕ Error</s-badge>}
-                          <s-text>{product.title}</s-text>
-                        </s-stack>
-                        <s-text tone="subdued" size="small">{product.message}</s-text>
-                      </s-stack>
-                    ))}
-                  </s-stack>
-                </s-box>
-              )}
-
-              {/* Action buttons */}
-              {bulkResults.alertsCreated > 0 && (
-                <s-stack direction="inline" gap="small">
-                  <s-button variant="primary" onClick={() => navigate('/app/alerts')}>
-                    Review {bulkResults.alertsCreated} Alerts
-                  </s-button>
-                </s-stack>
-              )}
-            </s-stack>
-          </s-box>
-        </s-section>
-      )}
-
-      {/* Setup Guide - Always visible until products are checked */}
-      {stats.totalChecks === 0 && (
-        <s-section>
-          <s-grid gap="small">
-            <s-grid gap="small-200">
-              <s-grid gridTemplateColumns="1fr auto" gap="small-300" alignItems="center">
-                <s-heading>{t('dashboard.setup.title')}</s-heading>
-                <s-button
-                  onClick={() => setExpanded({ ...expanded, setupGuide: !expanded.setupGuide })}
-                  variant="tertiary"
-                  tone="neutral"
-                  icon={expanded.setupGuide ? "chevron-up" : "chevron-down"}
-                />
-              </s-grid>
-              <s-paragraph>{t('dashboard.setup.description')}</s-paragraph>
-              <s-progress-bar
-                progress={Math.round((progress / 3) * 100)}
-                accessibilityLabel={t('dashboard.setup.progress', { completed: progress, total: 3 })}
-              />
-              <s-text tone="subdued" size="small">{t('dashboard.setup.progress', { completed: progress, total: 3 })}</s-text>
-            </s-grid>
-
-            <s-box borderRadius="base" border="base" background="base" display={expanded.setupGuide ? "auto" : "none"}>
-              {/* Step 1 */}
-              <s-box>
-                <s-grid gridTemplateColumns="1fr auto" gap="base" padding="small">
-                  <s-checkbox
-                    label={t('dashboard.setup.steps.step1.label')}
-                    onInput={(e: any) => setProgress(e.currentTarget?.checked ? progress + 1 : progress - 1)}
-                  />
-                  <s-button
-                    onClick={() => setExpanded({ ...expanded, step1: !expanded.step1 })}
-                    variant="tertiary"
-                    icon={expanded.step1 ? "chevron-up" : "chevron-down"}
-                  />
-                </s-grid>
-                <s-box padding="small" paddingBlockStart="none" display={expanded.step1 ? "auto" : "none"}>
-                  <s-box padding="base" background="subdued" borderRadius="base">
-                    <s-stack gap="small">
-                      <s-paragraph>{t('dashboard.setup.steps.step1.description')}</s-paragraph>
-                      <s-button ref={bulkCheckBtn2Ref} loading={isSubmitting || undefined}>
-                        {t('actions.checkAll')}
-                      </s-button>
-                    </s-stack>
-                  </s-box>
-                </s-box>
-              </s-box>
-              <s-divider />
-
-              {/* Step 2 */}
-              <s-box>
-                <s-grid gridTemplateColumns="1fr auto" gap="base" padding="small">
-                  <s-checkbox
-                    label={t('dashboard.setup.steps.step2.label')}
-                    onInput={(e: any) => setProgress(e.currentTarget?.checked ? progress + 1 : progress - 1)}
-                  />
-                  <s-button
-                    onClick={() => setExpanded({ ...expanded, step2: !expanded.step2 })}
-                    variant="tertiary"
-                    icon={expanded.step2 ? "chevron-up" : "chevron-down"}
-                  />
-                </s-grid>
-                <s-box padding="small" paddingBlockStart="none" display={expanded.step2 ? "auto" : "none"}>
-                  <s-box padding="base" background="subdued" borderRadius="base">
-                    <s-paragraph>{t('dashboard.setup.steps.step2.description')}</s-paragraph>
-                  </s-box>
-                </s-box>
-              </s-box>
-              <s-divider />
-
-              {/* Step 3 */}
-              <s-box>
-                <s-grid gridTemplateColumns="1fr auto" gap="base" padding="small">
-                  <s-checkbox
-                    label={t('dashboard.setup.steps.step3.label')}
-                    onInput={(e: any) => setProgress(e.currentTarget?.checked ? progress + 1 : progress - 1)}
-                  />
-                  <s-button
-                    onClick={() => setExpanded({ ...expanded, step3: !expanded.step3 })}
-                    variant="tertiary"
-                    icon={expanded.step3 ? "chevron-up" : "chevron-down"}
-                  />
-                </s-grid>
-                <s-box padding="small" paddingBlockStart="none" display={expanded.step3 ? "auto" : "none"}>
-                  <s-box padding="base" background="subdued" borderRadius="base">
-                    <s-paragraph>{t('dashboard.setup.steps.step3.description')}</s-paragraph>
-                  </s-box>
-                </s-box>
-              </s-box>
-            </s-box>
-          </s-grid>
-        </s-section>
-      )}
-
-      {/* Metrics Cards - Shopify Style with Icons */}
-      <s-section>
-        <s-grid gridTemplateColumns="repeat(auto-fit, minmax(280px, 1fr))" gap="base">
-          {/* Active Alerts Card */}
-          <s-clickable
-            onClick={() => navigate('/app/alerts?status=active')}
-            border="base"
-            borderRadius="large"
-            padding="base"
-            inlineSize="100%"
-          >
-            <s-grid gridTemplateColumns="auto 1fr" gap="base" alignItems="center">
-              <s-box
-                padding="small"
-                borderRadius="full"
-                background={stats.activeAlerts > 0 ? "bg-fill-critical-secondary" : "bg-fill-success-secondary"}
-                inlineSize="40px"
-                blockSize="40px"
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              >
-                <s-text size="large">{stats.activeAlerts > 0 ? "⚠️" : "✅"}</s-text>
-              </s-box>
-              <s-stack gap="small-200">
-                <s-text tone="subdued" size="small">{t('dashboard.stats.activeAlerts')}</s-text>
-                <s-stack direction="inline" gap="small" blockAlign="center">
-                  <s-heading size="large">{stats.activeAlerts}</s-heading>
-                  <s-badge tone={stats.activeAlerts > 0 ? "critical" : "success"}>
-                    {stats.activeAlerts > 0 ? t('status.needsReview') : t('status.allClear')}
-                  </s-badge>
-                </s-stack>
-              </s-stack>
-            </s-grid>
-          </s-clickable>
-
-          {/* Alerts Logged Card */}
-          <s-clickable
-            onClick={() => navigate('/app/alerts')}
-            border="base"
-            borderRadius="large"
-            padding="base"
-            inlineSize="100%"
-          >
-            <s-grid gridTemplateColumns="auto 1fr" gap="base" alignItems="center">
-              <s-box
-                padding="small"
-                borderRadius="full"
-                background="bg-fill-info-secondary"
-                inlineSize="40px"
-                blockSize="40px"
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              >
-                <s-text size="large">📑</s-text>
-              </s-box>
-              <s-stack gap="small-200">
-                <s-text tone="subdued" size="small">{t('dashboard.stats.alertsLogged')}</s-text>
-                <s-stack direction="inline" gap="small" blockAlign="center">
-                  <s-heading size="large">{stats.totalAlerts}</s-heading>
-                  <s-badge tone="info">
-                    {stats.resolvedAlerts > 0 ? t('dashboard.stats.resolved', { count: stats.resolvedAlerts }) : t('common.all')}
-                  </s-badge>
-                </s-stack>
-              </s-stack>
-            </s-grid>
-          </s-clickable>
-
-          {/* Products Checked Card */}
-          <s-clickable
-            onClick={() => navigate('/app/manual-check')}
-            border="base"
-            borderRadius="large"
-            padding="base"
-            inlineSize="100%"
-          >
-            <s-grid gridTemplateColumns="auto 1fr" gap="base" alignItems="center">
-              <s-box
-                padding="small"
-                borderRadius="full"
-                background="bg-fill-success-secondary"
-                inlineSize="40px"
-                blockSize="40px"
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              >
-                <s-text size="large">🛡️</s-text>
-              </s-box>
-              <s-stack gap="small-200">
-                <s-text tone="subdued" size="small">{t('dashboard.stats.productsChecked')}</s-text>
-                <s-stack direction="inline" gap="small" blockAlign="center">
-                  <s-heading size="large">{stats.totalChecks}</s-heading>
-                  <s-badge tone={stats.totalChecks > 0 ? "success" : "warning"}>
-                    {stats.totalChecks > 0 ? t('dashboard.stats.autoMonitoring') : t('dashboard.stats.newSetup')}
-                  </s-badge>
-                </s-stack>
-              </s-stack>
-            </s-grid>
-          </s-clickable>
-        </s-grid>
-      </s-section>
-
-      {/* Recent Alerts */}
-      <s-section>
-        <s-grid gridTemplateColumns="1fr auto" alignItems="center" paddingBlockEnd="small-400">
-          <s-stack direction="inline" gap="small" blockAlign="center">
-            <s-heading>{t('dashboard.recentAlerts.title')}</s-heading>
-            {recentAlerts.length > 0 && (
-              <s-badge tone={recentAlerts.some(a => a.status === 'active') ? "critical" : "success"}>
-                {recentAlerts.filter(a => a.status === 'active').length > 0
-                  ? t('dashboard.recentAlerts.active', { count: recentAlerts.filter(a => a.status === 'active').length })
-                  : t('dashboard.recentAlerts.allResolved')}
-              </s-badge>
-            )}
-          </s-stack>
-          <s-button onClick={() => navigate('/app/alerts')}>{t('actions.viewAlerts')}</s-button>
-        </s-grid>
-
-        {recentAlerts.length === 0 ? (
-          <s-box padding="large" background="subdued" borderRadius="large" border="base">
-            <s-stack gap="small" alignItems="center">
-              <s-box padding="base" borderRadius="full" background="bg-fill-success-secondary">
-                <s-icon name="checkmark" />
-              </s-box>
-              <s-heading size="small">{t('dashboard.recentAlerts.emptyState.heading')}</s-heading>
-              <s-text tone="subdued" alignment="center">
-                {t('dashboard.recentAlerts.emptyState.content')}
-              </s-text>
-            </s-stack>
-          </s-box>
+                <s-button variant="secondary" onClick={() => navigate("/app/manual-check")}>
+                  {t("dashboard.admin.reviewOneProduct")}
+                </s-button>
+              </div>
+            </div>
+          </section>
         ) : (
-          <s-grid gridTemplateColumns="repeat(auto-fit, minmax(280px, 1fr))" gap="base">
-            {recentAlerts.map((alert) => (
-              <s-clickable
-                key={alert.id}
-                onClick={() => navigate('/app/alerts')}
-                border="base"
-                borderRadius="large"
-                padding="base"
-                inlineSize="100%"
-              >
-                <s-grid gridTemplateColumns="auto 1fr" alignItems="start" gap="base">
-                  {alert.productImage ? (
-                    <s-thumbnail size="small" src={alert.productImage} alt={alert.productTitle} />
-                  ) : (
-                    <s-box background="subdued" borderRadius="base" padding="small-400">
-                      <s-icon name="product" />
-                    </s-box>
-                  )}
-                  <s-box>
-                    <s-heading size="small" style={{ marginBottom: '4px' }}>{alert.productTitle}</s-heading>
-                    <s-stack direction="inline" gap="small-200" wrap>
-                      <s-badge tone={alert.status === 'active' ? 'critical' : alert.status === 'resolved' ? 'success' : 'info'}>
-                        {alert.status === 'active'
-                          ? t('status.needsReview')
-                          : alert.status === 'resolved'
-                            ? t('status.resolved')
-                            : t('status.dismissed')}
-                      </s-badge>
-                      {alert.alertType && (
-                        <s-badge tone="warning">{alert.alertType}</s-badge>
-                      )}
-                    </s-stack>
-                  </s-box>
-                </s-grid>
-              </s-clickable>
-            ))}
-          </s-grid>
+          <section className="admin-card">
+            <div className="admin-card__header">
+              <div>
+                <p className="admin-eyebrow">{t("dashboard.admin.storeStatus")}</p>
+                <h2 className="admin-card__title">{t("dashboard.admin.noActiveAlertsTitle")}</h2>
+                <p className="admin-card__description">
+                  {t("dashboard.admin.noActiveAlertsDescription")}
+                </p>
+              </div>
+              <s-badge tone="success">{t("status.allClear")}</s-badge>
+            </div>
+          </section>
         )}
-      </s-section>
 
-      {/* Check All Products Section - Moved down and made secondary if alerts exist */}
-      <s-section>
-        <s-box padding="base" border="base" borderRadius="large" background="bg-surface">
-          <s-stack gap="base">
-            <s-stack direction="inline" gap="small" blockAlign="center">
-              <s-box background="bg-fill-info-secondary" borderRadius="base" padding="small-200" inlineSize="32px" blockSize="32px" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <s-text size="large">🔍</s-text>
-              </s-box>
-              <s-heading size="small">{t('dashboard.bulkCheck.title')}</s-heading>
-            </s-stack>
+        <section className="metric-grid">
+          <SummaryCard
+            title={t("dashboard.stats.activeAlerts")}
+            value={stats.activeAlerts}
+            badge={<s-badge tone={stats.activeAlerts > 0 ? "critical" : "success"}>{stats.activeAlerts > 0 ? t("status.needsReview") : t("status.allClear")}</s-badge>}
+            description={t("dashboard.admin.activeAlertsDescription")}
+          />
+          <SummaryCard
+            title={t("dashboard.admin.catalogCoverageTitle")}
+            value={`${coverageRate}%`}
+            badge={<s-badge tone="info">{stats.checkedProducts}/{stats.totalProducts || 0} {t("dashboard.admin.stats.totalProducts").toLowerCase()}</s-badge>}
+            description={t("dashboard.admin.catalogCoverageDescription")}
+            progress={coverageRate}
+            progressTone="primary"
+          />
+          <SummaryCard
+            title={t("dashboard.admin.checksCompletedTitle")}
+            value={stats.totalChecks}
+            badge={<s-badge tone="success">{t("dashboard.stats.autoMonitoring")}</s-badge>}
+            description={t("dashboard.admin.checksCompletedDescription")}
+          />
+          <SummaryCard
+            title={t("dashboard.admin.resolvedRateTitle")}
+            value={`${resolutionRate}%`}
+            badge={<s-badge tone={resolutionRate >= 80 ? "success" : "warning"}>{t("dashboard.stats.resolved", { count: stats.resolvedAlerts })}</s-badge>}
+            description={t("dashboard.admin.resolvedRateDescription")}
+            progress={resolutionRate}
+            progressTone={resolutionRate >= 80 ? "success" : "warning"}
+          />
+        </section>
 
-            <s-grid gridTemplateColumns="repeat(auto-fit, minmax(140px, 1fr))" gap="base">
-              <s-stack gap="small-100">
-                <s-text tone="subdued" size="small">{t('dashboard.bulkCheck.totalProducts')}</s-text>
-                <s-text fontWeight="bold" size="large">{stats.totalProducts}</s-text>
-              </s-stack>
-              <s-stack gap="small-100">
-                <s-text tone="subdued" size="small">{t('dashboard.bulkCheck.alreadyChecked')}</s-text>
-                <s-text fontWeight="bold" size="large">{stats.checkedProducts}</s-text>
-              </s-stack>
-              <s-stack gap="small-100">
-                <s-text tone="subdued" size="small">{t('dashboard.bulkCheck.notYetChecked')}</s-text>
-                <s-text fontWeight="bold" size="large" tone={stats.uncheckedProducts > 0 ? "warning" : "success"}>
-                  {stats.uncheckedProducts}
-                </s-text>
-              </s-stack>
-            </s-grid>
+        <section className="admin-section-grid">
+          <div className="admin-card">
+            <div className="admin-card__header">
+              <div>
+                <p className="admin-eyebrow">{t("dashboard.admin.priorityQueue")}</p>
+                <h2 className="admin-card__title">{t("dashboard.admin.recentAlertsTitle")}</h2>
+                <p className="admin-card__description">
+                  {t("dashboard.admin.recentAlertsDescription")}
+                </p>
+              </div>
+              <s-button variant="secondary" onClick={() => navigate("/app/alerts")}>
+                {t("actions.viewAlerts")}
+              </s-button>
+            </div>
 
-            <s-divider />
+            {recentAlerts.length === 0 ? (
+              <div className="admin-empty-state">
+                <h3>{t("dashboard.admin.noAlertsTitle")}</h3>
+                <p>{t("dashboard.admin.noAlertsDescription")}</p>
+              </div>
+            ) : (
+              <div className="admin-alert-list">
+                {recentAlerts.map((alert) => (
+                  <div className="admin-alert-row" key={alert.id}>
+                    <div className="admin-alert-row__media">
+                      {alert.productImage ? (
+                        <img src={alert.productImage} alt={alert.productTitle} className="admin-alert-row__image" />
+                      ) : (
+                        <div className="admin-alert-row__placeholder">!</div>
+                      )}
+                    </div>
+                    <div className="admin-alert-row__content">
+                      <div className="admin-alert-row__meta">
+                        <h3>{alert.productTitle}</h3>
+                        <p>{alert.riskDescription || t("dashboard.admin.fallbackAlertDescription")}</p>
+                      </div>
+                      <div className="admin-inline-meta">
+                        <s-badge tone={alert.status === "active" ? "critical" : alert.status === "resolved" ? "success" : "info"}>
+                          {alert.status === "active"
+                            ? t("status.needsReview")
+                            : alert.status === "resolved"
+                              ? t("status.resolved")
+                              : t("status.dismissed")}
+                        </s-badge>
+                        {alert.alertType && <s-badge tone="warning">{alert.alertType}</s-badge>}
+                      </div>
+                    </div>
+                    <div className="admin-alert-row__actions">
+                      <s-button variant="secondary" onClick={() => navigate("/app/alerts")}>
+                        Review
+                      </s-button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
 
-            <s-stack gap="small">
+          <div className="admin-card">
+            <div className="admin-card__header">
+              <div>
+                <p className="admin-eyebrow">{t("dashboard.admin.coverage")}</p>
+                <h2 className="admin-card__title">{t("dashboard.admin.bulkCheckTitle")}</h2>
+                <p className="admin-card__description">
+                  {t("dashboard.admin.bulkCheckDescription")}
+                </p>
+              </div>
+            </div>
+
+            <div className="admin-inline-stats">
+              <div className="admin-stat">
+                <span>{t("dashboard.admin.stats.totalProducts")}</span>
+                <strong>{stats.totalProducts}</strong>
+              </div>
+              <div className="admin-stat">
+                <span>{t("dashboard.admin.stats.alreadyChecked")}</span>
+                <strong>{stats.checkedProducts}</strong>
+              </div>
+              <div className="admin-stat">
+                <span>{t("dashboard.admin.stats.stillUnchecked")}</span>
+                <strong>{stats.uncheckedProducts}</strong>
+              </div>
+            </div>
+
+            <div className="admin-form-block">
               <s-checkbox
-                label={t('dashboard.bulkCheck.includeAlreadyChecked')}
+                label={t("dashboard.bulkCheck.includeAlreadyChecked")}
                 checked={includeAlreadyChecked || undefined}
-                onInput={(e: any) => setIncludeAlreadyChecked(e.currentTarget?.checked)}
+                onInput={(e: any) => setIncludeAlreadyChecked(Boolean(e.currentTarget?.checked))}
               />
-              <s-text tone="subdued" size="small">
+              <p className="admin-helper">
                 {includeAlreadyChecked
-                  ? t('dashboard.bulkCheck.willCheckAll', { count: stats.totalProducts })
-                  : t('dashboard.bulkCheck.willCheckUnchecked', { count: stats.uncheckedProducts, skip: stats.checkedProducts })}
-              </s-text>
-            </s-stack>
+                  ? t("dashboard.admin.bulkCheckAllSummary", { count: stats.totalProducts })
+                  : t("dashboard.admin.bulkCheckUncheckedSummary", { count: stats.uncheckedProducts, skip: stats.checkedProducts })}
+              </p>
+            </div>
 
-            <s-button
-              ref={bulkCheckBtn3Ref}
-              variant="primary"
-              loading={isSubmitting || undefined}
-              disabled={stats.uncheckedProducts === 0 && !includeAlreadyChecked || undefined}
-            >
-              {isSubmitting
-                ? t('actions.checking')
-                : includeAlreadyChecked
-                  ? t('actions.checkAllProducts', { count: stats.totalProducts })
-                  : t('actions.checkUnchecked', { count: stats.uncheckedProducts })}
-            </s-button>
-          </s-stack>
-        </s-box>
-      </s-section>
-
-      {/* News */}
-      {visible.news && (
-        <s-section>
-          <s-grid gridTemplateColumns="1fr auto" alignItems="center" paddingBlockEnd="small-400">
-            <s-heading>{t('news.title')}</s-heading>
-            <s-button
-              onClick={() => setVisible({ ...visible, news: false })}
-              icon="x"
-              tone="neutral"
-              variant="tertiary"
-            />
-          </s-grid>
-          <s-grid gridTemplateColumns="repeat(auto-fit, minmax(280px, 1fr))" gap="base">
-            <s-box background="base" border="base" borderRadius="large" padding="base">
-              <s-stack gap="small">
-                <s-badge tone="info">{t('news.items.databaseUpdate.date')}</s-badge>
-                <s-link href="https://ec.europa.eu/safety-gate-alerts/screen/home" target="_blank">
-                  <s-heading size="small">{t('news.items.databaseUpdate.title')}</s-heading>
-                </s-link>
-                <s-text tone="subdued" size="small">{t('news.items.databaseUpdate.description')}</s-text>
-              </s-stack>
-            </s-box>
-            <s-box background="base" border="base" borderRadius="large" padding="base">
-              <s-stack gap="small">
-                <s-badge tone="warning">{t('news.items.gpsr.date')}</s-badge>
-                <s-link href="https://ec.europa.eu/safety-gate-alerts/screen/pages/gpsr" target="_blank">
-                  <s-heading size="small">{t('news.items.gpsr.title')}</s-heading>
-                </s-link>
-                <s-text tone="subdued" size="small">{t('news.items.gpsr.description')}</s-text>
-              </s-stack>
-            </s-box>
-          </s-grid>
-        </s-section>
-      )}
-
-      {/* Safety Gate Portal */}
-      {visible.calloutCard && (
-        <s-section>
-          <s-box padding="base" border="base" borderRadius="large" background="bg-surface">
-            <s-grid gridTemplateColumns="1fr auto" alignItems="start" gap="base">
-              <s-stack gap="small">
-                <s-heading size="small">{t('portal.title')}</s-heading>
-                <s-text tone="subdued">{t('portal.description') || "Prístup k oficiálnej databáze Safety Gate na vyhľadávanie nebezpečných produktov a detailných upozornení."}</s-text>
-                <s-stack direction="inline" gap="small">
-                  <s-button variant="primary" href="https://ec.europa.eu/safety-gate-alerts/screen/search?resetSearch=true" target="_blank">
-                    {t('portal.searchDatabase')}
-                  </s-button>
-                  <s-button variant="secondary" href="https://ec.europa.eu/safety-gate-alerts/screen/home" target="_blank">
-                    {t('portal.home')}
-                  </s-button>
-                </s-stack>
-              </s-stack>
+            <div className="admin-actions">
               <s-button
-                onClick={() => setVisible({ ...visible, calloutCard: false })}
-                icon="x"
-                tone="neutral"
-                variant="tertiary"
-              />
-            </s-grid>
-          </s-box>
-        </s-section>
-      )}
+                variant="primary"
+                loading={isSubmitting || undefined}
+                disabled={stats.uncheckedProducts === 0 && !includeAlreadyChecked || undefined}
+                onClick={runBulkCheck}
+              >
+                {isSubmitting ? t("actions.checking") : t("dashboard.admin.runBulkCheck")}
+              </s-button>
+              <s-button variant="secondary" onClick={() => navigate("/app/manual-check")}>
+                Manual check
+              </s-button>
+            </div>
+          </div>
+        </section>
+
+        {bulkResults && (
+          <section className="admin-card">
+            <div className="admin-card__header">
+              <div>
+                <p className="admin-eyebrow">{t("dashboard.admin.latestRun")}</p>
+                <h2 className="admin-card__title">{t("dashboard.admin.bulkCheckSummary")}</h2>
+                <p className="admin-card__description">
+                  {t("dashboard.admin.bulkCheckSummaryDescription")}
+                </p>
+              </div>
+              {bulkResults.alertsCreated > 0 && (
+                <s-button variant="primary" onClick={() => navigate("/app/alerts")}>
+                  Review {bulkResults.alertsCreated} alert{bulkResults.alertsCreated === 1 ? "" : "s"}
+                </s-button>
+              )}
+            </div>
+
+            <div className="admin-inline-stats">
+              <div className="admin-stat">
+                <span>{t("dashboard.admin.stats.checked")}</span>
+                <strong>{bulkResults.checked}</strong>
+              </div>
+              <div className="admin-stat">
+                <span>{t("dashboard.admin.stats.skipped")}</span>
+                <strong>{bulkResults.skipped}</strong>
+              </div>
+              <div className="admin-stat">
+                <span>{t("dashboard.admin.stats.alertsCreated")}</span>
+                <strong>{bulkResults.alertsCreated}</strong>
+              </div>
+              <div className="admin-stat">
+                <span>{t("dashboard.admin.stats.errors")}</span>
+                <strong>{bulkResults.errors}</strong>
+              </div>
+            </div>
+
+            {bulkResults.products.length > 0 && (
+              <div className="admin-result-list">
+                {bulkResults.products.slice(0, 8).map((product) => (
+                  <div className="admin-result-row" key={product.id}>
+                    <div>
+                      <strong>{product.title}</strong>
+                      <p>{product.message || t("dashboard.admin.results.completed")}</p>
+                    </div>
+                    <s-badge
+                      tone={
+                        product.status === "alert_created"
+                          ? "critical"
+                          : product.status === "error"
+                            ? "warning"
+                            : product.status === "skipped"
+                              ? "info"
+                              : "success"
+                      }
+                    >
+                      {product.status === "alert_created"
+                        ? t("dashboard.admin.results.alertCreated")
+                        : product.status === "error"
+                          ? t("dashboard.admin.results.error")
+                          : product.status === "skipped"
+                            ? t("dashboard.admin.results.skipped")
+                            : t("dashboard.admin.results.checked")}
+                    </s-badge>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+        )}
+      </div>
     </s-page>
   );
 }

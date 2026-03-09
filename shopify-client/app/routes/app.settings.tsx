@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { authenticate } from "../shopify.server";
 import db from "../db.server";
 import { getSimilarityThresholdForShop } from "../services/safety-gate-checker.server";
-import { SafetyGatePortal, LanguageSwitcher } from "../components";
+import { LanguageSwitcher, SummaryCard } from "../components";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { session } = await authenticate.admin(request);
@@ -42,30 +42,60 @@ export default function Settings() {
   const isSubmitting = navigation.state === "submitting" || navigation.state === "loading";
 
   return (
-    <s-page>
-      {/* Page Title */}
+    <s-page size="large" className="page-shell">
       <s-heading slot="title" size="large">{t('settings.title')}</s-heading>
+      <s-button slot="secondary-actions" href="/app">
+        {t('actions.dashboard')}
+      </s-button>
+      <s-button slot="secondary-actions" href="/app/manual-check">
+        {t('actions.manualCheck')}
+      </s-button>
 
-      {/* Main content */}
-      <s-section>
-        <s-text tone="subdued">{t('settings.subtitle')}</s-text>
-      </s-section>
+      <div className="admin-stack">
+        <section className="admin-card">
+          <div className="admin-card__header">
+            <div>
+              <p className="admin-eyebrow">{t("settingsAdmin.configuration")}</p>
+              <h2 className="admin-card__title">{t('settings.subtitle')}</h2>
+              <p className="admin-card__description">
+                {t("settingsAdmin.configurationDescription")}
+              </p>
+            </div>
+          </div>
+        </section>
 
-      <s-section>
-        <s-box padding="base" border="base" borderRadius="large" background="bg-surface">
-          <s-stack gap="base">
-            <s-heading size="small">{t('settings.threshold.title')}</s-heading>
+        <section className="metric-grid">
+          <SummaryCard
+            title={t("settingsAdmin.currentThreshold")}
+            value={`${value}%`}
+            badge={<s-badge tone="info">{t("settingsAdmin.storeSetting")}</s-badge>}
+            description={t("settingsAdmin.currentThresholdDescription")}
+          />
+          <SummaryCard
+            title={t("settingsAdmin.environmentDefault")}
+            value={`${envDefault}%`}
+            badge={<s-badge tone="warning">{t("settingsAdmin.fallback")}</s-badge>}
+            description={t("settingsAdmin.environmentDefaultDescription")}
+          />
+        </section>
 
-            <s-banner tone="info" heading={t('settings.threshold.howItWorks')}>
-              <s-text>{t('settings.threshold.description')}</s-text>
-            </s-banner>
+        <section className="admin-section-grid admin-section-grid--wide">
+          <div className="admin-card">
+            <div className="admin-card__header">
+              <div>
+                <p className="admin-eyebrow">{t("settingsAdmin.matchingStrictness")}</p>
+                <h2 className="admin-card__title">{t('settings.threshold.title')}</h2>
+                <p className="admin-card__description">{t('settings.threshold.description')}</p>
+              </div>
+            </div>
+
+            <div className="admin-note">
+              <strong>{t('settings.threshold.howItWorks')}</strong>
+              <span>{t("settingsAdmin.strictnessHint")}</span>
+            </div>
 
             <Form method="post">
-              <s-stack gap="base">
-                <s-text>
-                  {t('settings.threshold.currentDefault')}: <strong>{envDefault}%</strong>
-                </s-text>
-
+              <div className="admin-form-block">
                 <s-number-field
                   label={t('settings.threshold.label')}
                   name="similarityThreshold"
@@ -75,73 +105,96 @@ export default function Settings() {
                   onChange={(e: any) => setValue(e.currentTarget.value)}
                 />
 
-                <s-stack direction="inline" gap="small">
+                <div className="admin-actions">
                   <s-button type="submit" variant="primary" loading={isSubmitting || undefined}>
                     {t('settings.threshold.save')}
                   </s-button>
-                  <s-button type="button" variant="tertiary" onClick={() => setValue(envDefault.toString())}>
+                  <s-button type="button" variant="secondary" onClick={() => setValue(envDefault.toString())}>
                     {t('settings.threshold.resetToDefault')}
                   </s-button>
-                </s-stack>
-              </s-stack>
+                </div>
+              </div>
             </Form>
-          </s-stack>
-        </s-box>
-      </s-section>
+          </div>
 
-      <s-section>
-        <s-box padding="base" border="base" borderRadius="large" background="bg-surface">
-          <s-stack gap="base">
-            <s-heading size="small">{t('settings.monitoring.title')}</s-heading>
+          <div className="admin-card">
+            <div className="admin-card__header">
+              <div>
+                <p className="admin-eyebrow">{t("settingsAdmin.guidance")}</p>
+                <h2 className="admin-card__title">{t("settingsAdmin.recommendedSetup")}</h2>
+              </div>
+            </div>
 
-            <s-grid gap="base" gridTemplateColumns="1fr 1fr">
-              <s-box padding="base" background="bg-surface-secondary" borderRadius="base">
-                <s-stack gap="small">
-                  <s-text fontWeight="bold">{t('settings.monitoring.automatic.title')}</s-text>
-                  <s-text tone="subdued">{t('settings.monitoring.automatic.description')}</s-text>
-                  <s-badge tone="success">{t('settings.monitoring.automatic.enabled')}</s-badge>
-                </s-stack>
-              </s-box>
+            <div className="admin-guidance-list">
+              <div className="admin-guidance-item">
+                <strong>{t("settingsAdmin.guidanceItems.broadTitle")}</strong>
+                <p>{t("settingsAdmin.guidanceItems.broadDescription")}</p>
+              </div>
+              <div className="admin-guidance-item">
+                <strong>{t("settingsAdmin.guidanceItems.balancedTitle")}</strong>
+                <p>{t("settingsAdmin.guidanceItems.balancedDescription")}</p>
+              </div>
+              <div className="admin-guidance-item">
+                <strong>{t("settingsAdmin.guidanceItems.strictTitle")}</strong>
+                <p>{t("settingsAdmin.guidanceItems.strictDescription")}</p>
+              </div>
+            </div>
+          </div>
+        </section>
 
-              <s-box padding="base" background="bg-surface-secondary" borderRadius="base">
-                <s-stack gap="small">
-                  <s-text fontWeight="bold">{t('settings.monitoring.manual.title')}</s-text>
-                  <s-text tone="subdued">{t('settings.monitoring.manual.description')}</s-text>
-                  <s-button variant="secondary" size="small" href="/app/manual-check">
-                    {t('settings.monitoring.manual.goToManualCheck')}
-                  </s-button>
-                </s-stack>
-              </s-box>
-            </s-grid>
-          </s-stack>
-        </s-box>
-      </s-section>
+        <section className="admin-section-grid">
+          <div className="admin-card">
+            <div className="admin-card__header">
+              <div>
+                <p className="admin-eyebrow">{t('settings.monitoring.title')}</p>
+                <h2 className="admin-card__title">{t('settings.monitoring.title')}</h2>
+              </div>
+            </div>
 
-      {/* Aside sidebar */}
-      <div slot="aside">
-        <s-section>
-          <s-box padding="base" border="base" borderRadius="large" background="bg-surface">
-            <s-stack gap="base">
-              <s-heading size="small">{t('settings.navigation.title')}</s-heading>
-              <s-stack gap="small">
-                <s-button variant="secondary" href="/app">{t('settings.navigation.dashboard')}</s-button>
-                <s-button variant="secondary" href="/app/alerts">{t('settings.navigation.viewAlerts')}</s-button>
-                <s-button variant="secondary" href="/app/manual-check">{t('settings.navigation.manualCheck')}</s-button>
-              </s-stack>
-            </s-stack>
-          </s-box>
-        </s-section>
+            <div className="admin-inline-stats">
+              <div className="admin-stat">
+                <span>{t('settings.monitoring.automatic.title')}</span>
+                <strong>{t('settings.monitoring.automatic.enabled')}</strong>
+                <p>{t('settings.monitoring.automatic.description')}</p>
+              </div>
+              <div className="admin-stat">
+                <span>{t('settings.monitoring.manual.title')}</span>
+                <strong>{t("settingsAdmin.onDemand")}</strong>
+                <p>{t('settings.monitoring.manual.description')}</p>
+              </div>
+            </div>
 
-        <SafetyGatePortal />
+            <div className="admin-actions">
+              <s-button variant="secondary" href="/app/manual-check">
+                {t('settings.monitoring.manual.goToManualCheck')}
+              </s-button>
+              <s-button variant="secondary" href="/app/alerts">
+                {t('actions.viewAlerts')}
+              </s-button>
+            </div>
+          </div>
 
-        <s-section>
-          <s-box padding="base" border="base" borderRadius="large" background="bg-surface">
-            <s-stack gap="base">
-              <s-heading size="small">{t('common.language')}</s-heading>
+          <div className="admin-card">
+            <div className="admin-card__header">
+              <div>
+                <p className="admin-eyebrow">{t("settingsAdmin.workspace")}</p>
+                <h2 className="admin-card__title">{t('common.language')}</h2>
+              </div>
+            </div>
+
+            <div className="admin-form-block">
               <LanguageSwitcher />
-            </s-stack>
-          </s-box>
-        </s-section>
+              <div className="admin-actions">
+                <s-button variant="secondary" href="https://ec.europa.eu/safety-gate-alerts/screen/search?resetSearch=true" target="_blank">
+                  {t('portal.searchDatabase')}
+                </s-button>
+                <s-button variant="secondary" href="https://ec.europa.eu/safety-gate-alerts/screen/home" target="_blank">
+                  {t('portal.home')}
+                </s-button>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     </s-page>
   );

@@ -1,14 +1,14 @@
 import { useState, useCallback, useEffect } from "react";
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node";
-import { useLoaderData, useFetcher, useNavigate } from "@remix-run/react";
+import { useLoaderData, useFetcher } from "@remix-run/react";
 import { json } from "@remix-run/node";
 import { useTranslation } from "react-i18next";
 import { authenticate } from "../shopify.server";
 import { shopifyProductToProductData } from "../services/safety-gate-checker.client";
 import { checkProductSafety, getSimilarityThresholdForShop } from "../services/safety-gate-checker.server";
 import prisma from "../db.server";
-import { SafetyGatePortal, AlertDetailModal, PageHeader, SummaryCard } from "../components";
-import { AlertTable, type ResolutionType, formatRelativeDate } from "../components/AlertTable";
+import { AlertDetailModal, SummaryCard } from "../components";
+import { type ResolutionType, formatRelativeDate } from "../components/AlertTable";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { admin, session } = await authenticate.admin(request);
@@ -211,7 +211,6 @@ export default function ManualCheckPage() {
   const fetcher = useFetcher<typeof action>();
   const resolveFetcher = useFetcher<typeof action>();
   const { t, i18n } = useTranslation();
-  const navigate = useNavigate();
 
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [checkResult, setCheckResult] = useState<any>(null);
@@ -303,247 +302,184 @@ export default function ManualCheckPage() {
 
   return (
     <s-page size="large" className="page-shell">
-      <PageHeader
-        title={t('manualCheck.title')}
-        subtitle={t('manualCheck.subtitle')}
-        breadcrumbs={[
-          { label: t('manualCheck.breadcrumbs.dashboard'), href: "/app" },
-          { label: t('manualCheck.breadcrumbs.current') },
-        ]}
-        meta={(
-          <>
-            <s-badge tone={unsafeProducts > 0 ? "critical" : "success"}>
-              {unsafeProducts === 0 ? t('status.allClear') : t('manualCheck.badges.flagged', { count: unsafeProducts })}
-            </s-badge>
-            <s-badge tone="info">{t('manualCheck.badges.checks', { count: totalChecks })}</s-badge>
-          </>
+      <s-heading slot="title" size="large">{t('manualCheck.title')}</s-heading>
+      <s-button slot="primary-action" variant="primary" href="/app/alerts">
+        {t('actions.viewAlerts')}
+      </s-button>
+      <s-button slot="secondary-actions" href="/app">
+        {t('actions.dashboard')}
+      </s-button>
+      <s-button slot="secondary-actions" href="/app/settings">
+        {t('actions.settings')}
+      </s-button>
+
+      <div className="admin-stack">
+        <section className="admin-card">
+          <div className="admin-card__header">
+            <div>
+              <p className="admin-eyebrow">{t("manualCheck.admin.manualReview")}</p>
+              <h2 className="admin-card__title">{t('manualCheck.subtitle')}</h2>
+              <p className="admin-card__description">
+                {t("manualCheck.admin.manualReviewDescription")}
+              </p>
+            </div>
+            <div className="admin-inline-meta">
+              <s-badge tone={unsafeProducts > 0 ? "critical" : "success"}>
+                {unsafeProducts === 0 ? t('status.allClear') : t('manualCheck.badges.flagged', { count: unsafeProducts })}
+              </s-badge>
+              <s-badge tone="info">{t('manualCheck.badges.checks', { count: totalChecks })}</s-badge>
+            </div>
+          </div>
+        </section>
+
+        {fetcher.data && 'error' in fetcher.data && fetcher.data.error && (
+          <section className="admin-card admin-card--critical">
+            <div>
+              <p className="admin-eyebrow">{t("manualCheck.admin.checkFailed")}</p>
+              <h2 className="admin-card__title">{t('manualCheck.banners.failedHeading')}</h2>
+              <p className="admin-card__description">{(fetcher.data as any).error}</p>
+            </div>
+          </section>
         )}
-        primaryAction={{ label: t('actions.viewAlerts'), href: "/app/alerts", variant: "primary" }}
-        secondaryActions={[
-          { label: t('actions.dashboard'), href: "/app", variant: "secondary" },
-          { label: t('actions.settings'), href: "/app/settings", variant: "tertiary" },
-        ]}
-      />
 
-      {/* Error/success banners */}
-      {fetcher.data && 'error' in fetcher.data && fetcher.data.error && (
-        <s-banner tone="critical" heading={t('manualCheck.banners.failedHeading')}>
-          <s-text>{(fetcher.data as any).error}</s-text>
-        </s-banner>
-      )}
+        {fetcher.data && 'alertCreated' in fetcher.data && fetcher.data.alertCreated && (
+          <section className="admin-card admin-card--critical">
+            <div className="admin-card__header">
+              <div>
+                <p className="admin-eyebrow">{t("manualCheck.admin.productFlagged")}</p>
+                <h2 className="admin-card__title">{t('manualCheck.banners.alertHeading')}</h2>
+                <p className="admin-card__description">{t('manualCheck.banners.alertDescription')}</p>
+              </div>
+              <div className="admin-actions">
+                <s-button
+                  variant="primary"
+                  commandFor="manual-check-result-modal"
+                  command="--show"
+                >
+                  {t('actions.viewDetails')}
+                </s-button>
+                <s-button variant="secondary" href="/app/alerts">
+                  {t('actions.reviewAlerts')}
+                </s-button>
+              </div>
+            </div>
+          </section>
+        )}
 
-      {fetcher.data && 'alertCreated' in fetcher.data && fetcher.data.alertCreated && (
-        <s-banner tone="warning" heading={t('manualCheck.banners.alertHeading')}>
-          <s-text>{t('manualCheck.banners.alertDescription')}</s-text>
-          <s-button
-            slot="secondary-actions"
-            variant="primary"
-            commandFor="manual-check-result-modal"
-            command="--show"
-          >
-            {t('actions.viewDetails')}
-          </s-button>
-          <s-button slot="secondary-actions" variant="secondary" href="/app/alerts">{t('actions.reviewAlerts')}</s-button>
-        </s-banner>
-      )}
+        <section className="metric-grid">
+          <SummaryCard
+            title={t('manualCheck.overview.productsInScope')}
+            value={products.length}
+            badge={<s-badge tone="info">{t('status.updated')}</s-badge>}
+            description={t('manualCheck.overview.productsDescription')}
+          />
+          <SummaryCard
+            title={t('manualCheck.overview.manualCompleted')}
+            value={totalChecks}
+            badge={<s-badge tone="info">{t('manualCheck.overview.coverage', { coverage: coverageRate })}</s-badge>}
+            description={t('manualCheck.overview.manualCompletedDescription', { checked: checkedProducts, total: products.length })}
+            progress={coverageRate}
+            progressTone="success"
+          />
+          <SummaryCard
+            title={t('manualCheck.overview.productsFlagged')}
+            value={unsafeProducts}
+            badge={<s-badge tone={unsafeProducts === 0 ? "success" : "critical"}>{unsafeProducts === 0 ? t('status.allClear') : t('status.needsReview')}</s-badge>}
+            description={unsafeProducts === 0 ? t('manualCheck.overview.noRisks') : t('manualCheck.overview.prioritise')}
+          />
+        </section>
 
-      {/* Overview Metrics Cards - Shopify Style with Icons */}
-      <s-section padding="base">
-        <s-grid gridTemplateColumns="repeat(auto-fit, minmax(280px, 1fr))" gap="base">
-          {/* Products in Scope Card */}
-          <s-clickable
-            border="base"
-            borderRadius="large"
-            padding="base"
-            inlineSize="100%"
-          >
-            <s-grid gridTemplateColumns="auto 1fr" gap="base" alignItems="center">
-              <s-box
-                padding="small"
-                borderRadius="full"
-                background="bg-fill-info-secondary"
-                inlineSize="40px"
-                blockSize="40px"
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              >
-                <s-text size="large">📦</s-text>
-              </s-box>
-              <s-stack gap="small-200">
-                <s-text tone="subdued" size="small">{t('manualCheck.overview.productsInScope')}</s-text>
-                <s-stack direction="inline" gap="small" blockAlign="center">
-                  <s-heading size="large">{products.length}</s-heading>
-                  <s-badge tone="info">{t('status.updated')}</s-badge>
-                </s-stack>
-                <s-text tone="subdued" size="small">{t('manualCheck.overview.productsDescription')}</s-text>
-              </s-stack>
-            </s-grid>
-          </s-clickable>
+        <section className="admin-card">
+          <div className="admin-card__header">
+            <div>
+              <p className="admin-eyebrow">{t("manualCheck.admin.catalog")}</p>
+              <h2 className="admin-card__title">{t('manualCheck.catalogue.heading', { count: products.length })}</h2>
+              <p className="admin-card__description">
+                {t("manualCheck.admin.catalogDescription")}
+              </p>
+            </div>
+          </div>
 
-          {/* Manual Checks Completed Card */}
-          <s-clickable
-            border="base"
-            borderRadius="large"
-            padding="base"
-            inlineSize="100%"
-          >
-            <s-grid gridTemplateColumns="auto 1fr" gap="base" alignItems="center">
-              <s-box
-                padding="small"
-                borderRadius="full"
-                background="bg-fill-success-secondary"
-                inlineSize="40px"
-                blockSize="40px"
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              >
-                <s-text size="large">✅</s-text>
-              </s-box>
-              <s-stack gap="small-200">
-                <s-text tone="subdued" size="small">{t('manualCheck.overview.manualCompleted')}</s-text>
-                <s-stack direction="inline" gap="small" blockAlign="center">
-                  <s-heading size="large">{totalChecks}</s-heading>
-                  <s-badge tone="info">{t('manualCheck.overview.coverage', { coverage: coverageRate })}</s-badge>
-                </s-stack>
-                {products.length > 0 && (
-                  <s-progress-bar progress={coverageRate} tone="success" />
-                )}
-                <s-text tone="subdued" size="small">{t('manualCheck.overview.manualCompletedDescription', { checked: checkedProducts, total: products.length })}</s-text>
-              </s-stack>
-            </s-grid>
-          </s-clickable>
+          {products.length === 0 ? (
+            <div className="admin-empty-state">
+              <h3>{t('manualCheck.catalogue.emptyHeading')}</h3>
+              <p>{t('manualCheck.catalogue.emptyBody')}</p>
+            </div>
+          ) : (
+            <s-table>
+              <s-table-header-row>
+                <s-table-header listSlot="primary">{t('manualCheck.catalogue.columns.product')}</s-table-header>
+                <s-table-header listSlot="inline">{t('manualCheck.catalogue.columns.status')}</s-table-header>
+                <s-table-header>{t('manualCheck.catalogue.columns.action')}</s-table-header>
+              </s-table-header-row>
+              <s-table-body>
+                {products.map((product: any) => {
+                  const productId = product.id.replace('gid://shopify/Product/', '');
+                  const checks = checksByProduct[productId] || { totalChecks: 0, lastCheck: null, isSafe: null };
+                  const lastCheck = checks.lastCheck ? new Date(checks.lastCheck.checkedAt) : null;
+                  const statusTone = checks.lastCheck ? (checks.isSafe ? 'success' : 'critical') : 'info';
+                  const statusLabel = checks.lastCheck
+                    ? (checks.isSafe ? t('manualCheck.catalogue.status.safe') : t('manualCheck.catalogue.status.unsafe'))
+                    : t('manualCheck.catalogue.status.notChecked');
+                  const existingAlert = alertsByProduct[productId];
+                  const hasAlert = Boolean(existingAlert);
 
-          {/* Products Flagged Card */}
-          <s-clickable
-            onClick={() => navigate('/app/alerts?status=active')}
-            border="base"
-            borderRadius="large"
-            padding="base"
-            inlineSize="100%"
-          >
-            <s-grid gridTemplateColumns="auto 1fr" gap="base" alignItems="center">
-              <s-box
-                padding="small"
-                borderRadius="full"
-                background={unsafeProducts === 0 ? "bg-fill-success-secondary" : "bg-fill-critical-secondary"}
-                inlineSize="40px"
-                blockSize="40px"
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              >
-                <s-text size="large">{unsafeProducts === 0 ? "🛡️" : "⚠️"}</s-text>
-              </s-box>
-              <s-stack gap="small-200">
-                <s-text tone="subdued" size="small">{t('manualCheck.overview.productsFlagged')}</s-text>
-                <s-stack direction="inline" gap="small" blockAlign="center">
-                  <s-heading size="large">{unsafeProducts}</s-heading>
-                  <s-badge tone={unsafeProducts === 0 ? "success" : "critical"}>
-                    {unsafeProducts === 0 ? t('status.allClear') : t('status.needsReview')}
-                  </s-badge>
-                </s-stack>
-                <s-text tone="subdued" size="small">
-                  {unsafeProducts === 0 ? t('manualCheck.overview.noRisks') : t('manualCheck.overview.prioritise')}
-                </s-text>
-              </s-stack>
-            </s-grid>
-          </s-clickable>
-        </s-grid>
-      </s-section>
+                  return (
+                    <s-table-row key={product.id}>
+                      <s-table-cell>
+                        <div className="admin-product-cell">
+                          <s-thumbnail src={product.featuredImage?.url} alt={product.title} size="small" />
+                          <div className="admin-product-cell__content">
+                            <strong>{product.title}</strong>
+                            <p>
+                              {product.vendor || t('manualCheck.catalogue.unknownVendor')}
+                              {product.productType ? ` • ${product.productType}` : ""}
+                            </p>
+                          </div>
+                        </div>
+                      </s-table-cell>
 
-      {/* Product list - using Polaris s-table for accessibility */}
-      <s-section heading={t('manualCheck.catalogue.heading', { count: products.length })} padding="none">
-        {products.length === 0 ? (
-          <s-empty-state heading={t('manualCheck.catalogue.emptyHeading')}>
-            <s-text>{t('manualCheck.catalogue.emptyBody')}</s-text>
-          </s-empty-state>
-        ) : (
-          <s-table>
-            <s-table-header-row>
-              <s-table-header listSlot="primary">{t('manualCheck.catalogue.columns.product')}</s-table-header>
-              <s-table-header listSlot="inline">{t('manualCheck.catalogue.columns.status')}</s-table-header>
-              <s-table-header>{t('manualCheck.catalogue.columns.action')}</s-table-header>
-            </s-table-header-row>
-            <s-table-body>
-              {products.map((product: any) => {
-                const productId = product.id.replace('gid://shopify/Product/', '');
-                const checks = checksByProduct[productId] || { totalChecks: 0, lastCheck: null, isSafe: null };
-                const lastCheck = checks.lastCheck ? new Date(checks.lastCheck.checkedAt) : null;
-                const statusTone = checks.lastCheck ? (checks.isSafe ? 'success' : 'critical') : 'info';
-                const statusLabel = checks.lastCheck
-                  ? (checks.isSafe ? t('manualCheck.catalogue.status.safe') : t('manualCheck.catalogue.status.unsafe'))
-                  : t('manualCheck.catalogue.status.notChecked');
+                      <s-table-cell>
+                        <div className="admin-status-stack">
+                          <s-badge tone={statusTone}>{statusLabel}</s-badge>
+                          {lastCheck && (
+                            <span className="admin-helper">
+                              {formatRelativeDate(lastCheck, t, dateLocale)}
+                            </span>
+                          )}
+                        </div>
+                      </s-table-cell>
 
-                // Check if product has an existing alert
-                const existingAlert = alertsByProduct[productId];
-                const hasAlert = !!existingAlert;
-
-                return (
-                  <s-table-row key={product.id}>
-                    {/* Product Cell */}
-                    <s-table-cell>
-                      <s-stack direction="inline" gap="small" blockAlign="center">
-                        <s-thumbnail src={product.featuredImage?.url} alt={product.title} size="small" />
-                        <s-stack gap="small-100">
-                          <s-text fontWeight="semibold">{product.title}</s-text>
-                          <s-text tone="subdued" size="small">
-                            {product.vendor || t('manualCheck.catalogue.unknownVendor')}
-                          </s-text>
-                        </s-stack>
-                      </s-stack>
-                    </s-table-cell>
-
-                    {/* Status Cell */}
-                    <s-table-cell>
-                      <s-stack gap="small-100">
-                        <s-badge tone={statusTone}>{statusLabel}</s-badge>
-                        {lastCheck && (
-                          <s-text tone="subdued" size="small">
-                            {formatRelativeDate(lastCheck, t, dateLocale)}
-                          </s-text>
-                        )}
-                      </s-stack>
-                    </s-table-cell>
-
-                    {/* Actions Cell */}
-                    <s-table-cell>
-                      <s-stack direction="inline" gap="small">
-                        {/* View button - opens detail modal if alert exists */}
-                        {hasAlert && (
+                      <s-table-cell>
+                        <div className="admin-actions">
+                          {hasAlert && (
+                            <s-button
+                              size="small"
+                              variant="secondary"
+                              commandFor={`manual-alert-${existingAlert.id}`}
+                              command="--show"
+                            >
+                              {t('actions.view')}
+                            </s-button>
+                          )}
                           <s-button
                             size="small"
-                            variant="secondary"
-                            commandFor={`manual-alert-${existingAlert.id}`}
-                            command="--show"
+                            variant="primary"
+                            loading={isLoading && selectedProduct?.id === product.id || undefined}
+                            onClick={() => handleProductCheck(product)}
                           >
-                            {t('actions.view')}
+                            {checks.totalChecks > 0 ? t('manualCheck.catalogue.actions.checkAgain') : t('manualCheck.catalogue.actions.checkSafety')}
                           </s-button>
-                        )}
-                        <s-button
-                          size="small"
-                          variant="primary"
-                          loading={isLoading && selectedProduct?.id === product.id || undefined}
-                          onClick={() => handleProductCheck(product)}
-                        >
-                          {checks.totalChecks > 0 ? t('manualCheck.catalogue.actions.checkAgain') : t('manualCheck.catalogue.actions.checkSafety')}
-                        </s-button>
-                      </s-stack>
-                    </s-table-cell>
-                  </s-table-row>
-                );
-              })}
-            </s-table-body>
-          </s-table>
-        )}
-      </s-section>
-
-      <s-grid gap="base" gridTemplateColumns="repeat(auto-fit, minmax(240px, 1fr))">
-        <s-section heading={t('manualCheck.quickActions.title')}>
-          <s-stack gap="small">
-            <s-button variant="secondary" href="/app">{t('actions.dashboard')}</s-button>
-            <s-button variant="primary" href="/app/alerts">{t('actions.viewAlerts')}</s-button>
-            <s-button variant="secondary" href="/app/settings">{t('actions.settings')}</s-button>
-          </s-stack>
-        </s-section>
-
-        <SafetyGatePortal />
-      </s-grid>
+                        </div>
+                      </s-table-cell>
+                    </s-table-row>
+                  );
+                })}
+              </s-table-body>
+            </s-table>
+          )}
+        </section>
+      </div>
 
       {/* Modals for existing alerts - same as Alerts page */}
       {existingAlerts.map((alert) => (

@@ -114,6 +114,54 @@ const resources = {
         },
         "bulkResults": {
           "success": "Bulk check completed: {{processed}} processed, {{checked}} checked, {{alertsCreated}} alerts created."
+        },
+        "admin": {
+          "actionNeeded": "Action needed",
+          "actionNeededTitle": "{{count}} active alert needs review",
+          "actionNeededTitle_plural": "{{count}} active alerts need review",
+          "actionNeededDescription": "Review flagged products first so you can decide whether to keep them on sale, dismiss the match, or resolve the alert.",
+          "storeStatus": "Store status",
+          "noActiveAlertsTitle": "No active safety alerts",
+          "noActiveAlertsDescription": "Your latest checks do not currently require action. Keep scanning newly added products to maintain coverage.",
+          "activeAlertsDescription": "Products that still need a decision.",
+          "catalogCoverageTitle": "Catalog coverage",
+          "catalogCoverageDescription": "Share of catalog already checked against Safety Gate.",
+          "checksCompletedTitle": "Checks completed",
+          "checksCompletedDescription": "Includes automatic and manual checks.",
+          "resolvedRateTitle": "Resolved rate",
+          "resolvedRateDescription": "How much of logged alert activity has already been closed.",
+          "priorityQueue": "Priority queue",
+          "recentAlertsTitle": "Recent safety alerts",
+          "recentAlertsDescription": "Most recent flagged products from your store, ordered so merchants can act quickly.",
+          "noAlertsTitle": "No alerts yet",
+          "noAlertsDescription": "Your alerts list will appear here after the first unsafe product match is detected.",
+          "fallbackAlertDescription": "Matched against a Safety Gate alert.",
+          "coverage": "Coverage",
+          "bulkCheckTitle": "Bulk catalog check",
+          "bulkCheckDescription": "Scan unchecked products first, or include the whole catalog when you want a fresh pass.",
+          "bulkCheckAllSummary": "This will run a full pass for all {{count}} products.",
+          "bulkCheckUncheckedSummary": "This will check {{count}} remaining products and skip {{skip}} already reviewed items.",
+          "latestRun": "Latest run",
+          "bulkCheckSummary": "Bulk check summary",
+          "bulkCheckSummaryDescription": "Keep this summary compact so merchants can confirm outcomes without opening a second screen.",
+          "stats": {
+            "totalProducts": "Total products",
+            "alreadyChecked": "Already checked",
+            "stillUnchecked": "Still unchecked",
+            "checked": "Checked",
+            "skipped": "Skipped",
+            "alertsCreated": "Alerts created",
+            "errors": "Errors"
+          },
+          "results": {
+            "completed": "Completed",
+            "alertCreated": "Alert created",
+            "error": "Error",
+            "skipped": "Skipped",
+            "checked": "Checked"
+          },
+          "reviewOneProduct": "Check one product",
+          "runBulkCheck": "Run bulk check"
         }
       },
       "nav": {
@@ -279,6 +327,14 @@ const resources = {
           },
           "empty": "No alerts matching your filters",
           "thumbnailLabel": "{{title}} thumbnail"
+        },
+        "admin": {
+          "actionNeeded": "Action needed",
+          "actionNeededTitle": "{{count}} active alert still needs a decision",
+          "actionNeededTitle_plural": "{{count}} active alerts still need a decision",
+          "actionNeededDescription": "Review matches, dismiss false positives, or resolve confirmed risks so the alert queue stays actionable.",
+          "queue": "Alert queue",
+          "queueDescription": "Keep the table focused on decisions: filter by status, search product names, and resolve matches directly from one place."
         }
       },
       "manualCheck": {
@@ -339,6 +395,14 @@ const resources = {
         "modal": {
           "unknownProduct": "Unknown Product",
           "unknown": "Unknown"
+        },
+        "admin": {
+          "manualReview": "Manual review",
+          "manualReviewDescription": "Pick any product from your latest catalog updates and run a targeted Safety Gate check on demand.",
+          "checkFailed": "Check failed",
+          "productFlagged": "Product flagged",
+          "catalog": "Catalog",
+          "catalogDescription": "Products are sorted by latest Shopify updates so merchants can re-check recent changes first."
         }
       },
       "portal": {
@@ -363,6 +427,30 @@ const resources = {
             "description": "Learn about GPSR requirements and how to ensure your products meet EU safety standards."
           }
         }
+      },
+      "settingsAdmin": {
+        "configuration": "Configuration",
+        "configurationDescription": "Keep the page focused on one merchant decision: how strict the checker should be when comparing products to Safety Gate alerts.",
+        "currentThreshold": "Current threshold",
+        "storeSetting": "Store setting",
+        "currentThresholdDescription": "Lower values catch more possible matches. Higher values reduce false positives.",
+        "environmentDefault": "Environment default",
+        "fallback": "Fallback",
+        "environmentDefaultDescription": "Used when the shop has no custom threshold saved yet.",
+        "matchingStrictness": "Matching strictness",
+        "strictnessHint": "40-60% is broader scanning. 70-85% is stricter and usually produces fewer false positives.",
+        "guidance": "Guidance",
+        "recommendedSetup": "Recommended setup",
+        "guidanceItems": {
+          "broadTitle": "Broad monitoring",
+          "broadDescription": "Use around 50% when you prefer catching more possible matches and are comfortable reviewing more alerts.",
+          "balancedTitle": "Balanced default",
+          "balancedDescription": "Use around 65-70% for a practical mix of recall and precision for most Shopify catalogs.",
+          "strictTitle": "Strict matching",
+          "strictDescription": "Use 80%+ when your catalog is stable and you want fewer manual reviews."
+        },
+        "workspace": "Workspace",
+        "onDemand": "On demand"
       }
     }
   },
@@ -477,6 +565,54 @@ const resources = {
         },
         "bulkResults": {
           "success": "Hromadná kontrola dokončená: {{processed}} spracovaných, {{checked}} skontrolovaných, {{alertsCreated}} vytvorených upozornení."
+        },
+        "admin": {
+          "actionNeeded": "Potrebná akcia",
+          "actionNeededTitle": "{{count}} aktívne upozornenie vyžaduje kontrolu",
+          "actionNeededTitle_plural": "{{count}} aktívne upozornenia vyžadujú kontrolu",
+          "actionNeededDescription": "Najprv skontrolujte označené produkty, aby ste vedeli rozhodnúť, či ich ponechať v predaji, zamietnuť zhodu alebo uzavrieť upozornenie.",
+          "storeStatus": "Stav obchodu",
+          "noActiveAlertsTitle": "Žiadne aktívne bezpečnostné upozornenia",
+          "noActiveAlertsDescription": "Posledné kontroly momentálne nevyžadujú zásah. Pokračujte v skenovaní novo pridaných produktov, aby ste udržali pokrytie.",
+          "activeAlertsDescription": "Produkty, pri ktorých ešte treba rozhodnúť.",
+          "catalogCoverageTitle": "Pokrytie katalógu",
+          "catalogCoverageDescription": "Podiel katalógu, ktorý už bol skontrolovaný voči Safety Gate.",
+          "checksCompletedTitle": "Dokončené kontroly",
+          "checksCompletedDescription": "Zahŕňa automatické aj manuálne kontroly.",
+          "resolvedRateTitle": "Miera uzavretia",
+          "resolvedRateDescription": "Aká časť zaznamenaných upozornení už bola uzavretá.",
+          "priorityQueue": "Prioritný zoznam",
+          "recentAlertsTitle": "Nedávne bezpečnostné upozornenia",
+          "recentAlertsDescription": "Najnovšie označené produkty z vášho obchodu, zoradené tak, aby na ne merchant vedel rýchlo reagovať.",
+          "noAlertsTitle": "Zatiaľ žiadne upozornenia",
+          "noAlertsDescription": "Zoznam upozornení sa zobrazí po prvej zistenej nebezpečnej zhode produktu.",
+          "fallbackAlertDescription": "Zhoda s upozornením v databáze Safety Gate.",
+          "coverage": "Pokrytie",
+          "bulkCheckTitle": "Hromadná kontrola katalógu",
+          "bulkCheckDescription": "Najprv skontrolujte nekontrolované produkty alebo zahrňte celý katalóg, ak chcete spustiť nový úplný prechod.",
+          "bulkCheckAllSummary": "Spustí sa úplná kontrola všetkých {{count}} produktov.",
+          "bulkCheckUncheckedSummary": "Skontroluje sa zostávajúcich {{count}} produktov a preskočí sa {{skip}} už skontrolovaných položiek.",
+          "latestRun": "Posledný beh",
+          "bulkCheckSummary": "Súhrn hromadnej kontroly",
+          "bulkCheckSummaryDescription": "Súhrn ostáva kompaktný, aby merchant vedel potvrdiť výsledky bez otvárania ďalšej obrazovky.",
+          "stats": {
+            "totalProducts": "Všetky produkty",
+            "alreadyChecked": "Už skontrolované",
+            "stillUnchecked": "Ešte nekontrolované",
+            "checked": "Skontrolované",
+            "skipped": "Preskočené",
+            "alertsCreated": "Vytvorené upozornenia",
+            "errors": "Chyby"
+          },
+          "results": {
+            "completed": "Dokončené",
+            "alertCreated": "Upozornenie vytvorené",
+            "error": "Chyba",
+            "skipped": "Preskočené",
+            "checked": "Skontrolované"
+          },
+          "reviewOneProduct": "Skontrolovať jeden produkt",
+          "runBulkCheck": "Spustiť hromadnú kontrolu"
         }
       },
       "nav": {
@@ -642,6 +778,14 @@ const resources = {
           },
           "empty": "Žiadne upozornenia pre zvolené filtre",
           "thumbnailLabel": "Náhľad {{title}}"
+        },
+        "admin": {
+          "actionNeeded": "Potrebná akcia",
+          "actionNeededTitle": "{{count}} aktívne upozornenie ešte čaká na rozhodnutie",
+          "actionNeededTitle_plural": "{{count}} aktívne upozornenia ešte čakajú na rozhodnutie",
+          "actionNeededDescription": "Skontrolujte zhody, zamietnite falošné poplachy alebo uzavrite potvrdené riziká, aby zoznam upozornení ostal použiteľný.",
+          "queue": "Zoznam upozornení",
+          "queueDescription": "Tabuľka je zameraná na rozhodnutia: filtrujte podľa stavu, hľadajte podľa názvu produktu a spracujte zhody na jednom mieste."
         }
       },
       "manualCheck": {
@@ -702,6 +846,14 @@ const resources = {
         "modal": {
           "unknownProduct": "Neznámy produkt",
           "unknown": "Neznáme"
+        },
+        "admin": {
+          "manualReview": "Manuálna kontrola",
+          "manualReviewDescription": "Vyberte produkt z posledných aktualizácií katalógu a spustite cielenú kontrolu Safety Gate na požiadanie.",
+          "checkFailed": "Kontrola zlyhala",
+          "productFlagged": "Produkt označený",
+          "catalog": "Katalóg",
+          "catalogDescription": "Produkty sú zoradené podľa posledných aktualizácií v Shopify, aby bolo možné najprv skontrolovať čerstvé zmeny."
         }
       },
       "portal": {
@@ -726,6 +878,30 @@ const resources = {
             "description": "Zistite požiadavky GPSR a ako zabezpečiť, že vaše produkty spĺňajú štandardy EÚ."
           }
         }
+      },
+      "settingsAdmin": {
+        "configuration": "Konfigurácia",
+        "configurationDescription": "Stránka je zameraná na jedno rozhodnutie merchanta: aké prísne má byť porovnávanie produktov s upozorneniami Safety Gate.",
+        "currentThreshold": "Aktuálny prah",
+        "storeSetting": "Nastavenie obchodu",
+        "currentThresholdDescription": "Nižšie hodnoty zachytia viac možných zhôd. Vyššie hodnoty znižujú počet falošných poplachov.",
+        "environmentDefault": "Predvolená hodnota prostredia",
+        "fallback": "Záloha",
+        "environmentDefaultDescription": "Použije sa vtedy, keď obchod ešte nemá uložený vlastný prah.",
+        "matchingStrictness": "Prísnosť porovnávania",
+        "strictnessHint": "40-60% znamená širšie skenovanie. 70-85% je prísnejšie a zvyčajne vytvára menej falošných zhôd.",
+        "guidance": "Odporúčania",
+        "recommendedSetup": "Odporúčané nastavenie",
+        "guidanceItems": {
+          "broadTitle": "Širšie monitorovanie",
+          "broadDescription": "Použite okolo 50%, ak chcete zachytiť viac možných zhôd a neprekáža vám viac manuálneho preverovania.",
+          "balancedTitle": "Vyvážený základ",
+          "balancedDescription": "Použite približne 65-70% pre praktický pomer medzi zachytením zhôd a presnosťou pre väčšinu Shopify katalógov.",
+          "strictTitle": "Prísne porovnávanie",
+          "strictDescription": "Použite 80%+ ak je váš katalóg stabilný a chcete menej manuálnych kontrol."
+        },
+        "workspace": "Pracovné prostredie",
+        "onDemand": "Na požiadanie"
       }
     }
   }

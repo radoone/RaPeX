@@ -8,8 +8,7 @@ import db from "../db.server";
 import {
   AlertTable,
   AlertDetailModal,
-  SafetyGatePortal,
-  PageHeader,
+  SummaryCard,
 } from "../components";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -173,193 +172,132 @@ export default function AlertsPage() {
 
   return (
     <s-page size="large" className="page-shell">
-      <PageHeader
-        title={t('alerts.title')}
-        subtitle={t('alerts.subtitle')}
-        breadcrumbs={[
-          { label: t('alerts.breadcrumbs.dashboard'), href: "/app" },
-          { label: t('alerts.breadcrumbs.current') },
-        ]}
-        meta={(
-          <>
-            <s-badge tone={stats.active > 0 ? "critical" : "success"}>{t('alerts.meta.active', { count: stats.active })}</s-badge>
-            <s-badge tone="info">{t('alerts.meta.total', { count: stats.total })}</s-badge>
-          </>
+      <s-heading slot="title" size="large">{t('alerts.title')}</s-heading>
+      <s-button slot="primary-action" variant="primary" href="/app/manual-check">
+        {t('actions.manualCheck')}
+      </s-button>
+      <s-button slot="secondary-actions" href="/app">
+        {t('actions.dashboard')}
+      </s-button>
+      <s-button slot="secondary-actions" href="/app/settings">
+        {t('actions.settings')}
+      </s-button>
+
+      <div className="admin-stack">
+        {stats.active > 0 && (
+          <section className="admin-card admin-card--critical">
+            <div className="admin-card__header">
+              <div>
+                <p className="admin-eyebrow">{t("alerts.admin.actionNeeded")}</p>
+                <h2 className="admin-card__title">{t("alerts.admin.actionNeededTitle", { count: stats.active })}</h2>
+                <p className="admin-card__description">
+                  {t("alerts.admin.actionNeededDescription")}
+                </p>
+              </div>
+              <div className="admin-actions">
+                <s-button variant="primary" onClick={() => applyFilters({ status: ["active"], page: 1 })}>
+                  Show active only
+                </s-button>
+                <s-button variant="secondary" href="/app/manual-check">
+                  Check another product
+                </s-button>
+              </div>
+            </div>
+          </section>
         )}
-        primaryAction={{ label: t('actions.manualCheck'), href: "/app/manual-check", variant: "primary" }}
-        secondaryActions={[
-          { label: t('actions.dashboard'), href: "/app", variant: "secondary" },
-          { label: t('actions.settings'), href: "/app/settings", variant: "tertiary" },
-        ]}
-      />
 
-      {/* Overview Metrics Cards - Shopify Style with Icons */}
-      <s-section padding="base">
-        <s-grid gridTemplateColumns="repeat(auto-fit, minmax(280px, 1fr))" gap="base">
-          {/* Active Alerts Card */}
-          <s-clickable
-            onClick={() => navigate('/app/alerts?status=active')}
-            border="base"
-            borderRadius="large"
-            padding="base"
-            inlineSize="100%"
-          >
-            <s-grid gridTemplateColumns="auto 1fr" gap="base" alignItems="center">
-              <s-box
-                padding="small"
-                borderRadius="full"
-                background={stats.active > 0 ? "bg-fill-critical-secondary" : "bg-fill-success-secondary"}
-                inlineSize="40px"
-                blockSize="40px"
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              >
-                <s-text size="large">{stats.active > 0 ? "⚠️" : "✅"}</s-text>
-              </s-box>
-              <s-stack gap="small-200">
-                <s-text tone="subdued" size="small">{t('alerts.metrics.activeHeading')}</s-text>
-                <s-stack direction="inline" gap="small" blockAlign="center">
-                  <s-heading size="large">{stats.active}</s-heading>
-                  <s-badge tone={stats.active > 0 ? "critical" : "success"}>
-                    {stats.active > 0 ? t('status.needsReview') : t('status.allClear')}
-                  </s-badge>
-                </s-stack>
-                <s-text tone="subdued" size="small">{t('alerts.metrics.totalRecorded', { count: stats.total })}</s-text>
-              </s-stack>
-            </s-grid>
-          </s-clickable>
+        <section className="metric-grid">
+          <SummaryCard
+            title={t('alerts.metrics.activeHeading')}
+            value={stats.active}
+            badge={<s-badge tone={stats.active > 0 ? "critical" : "success"}>{stats.active > 0 ? t('status.needsReview') : t('status.allClear')}</s-badge>}
+            description={t('alerts.metrics.totalRecorded', { count: stats.total })}
+          />
+          <SummaryCard
+            title={t('alerts.metrics.resolutionHeading')}
+            value={`${resolvedRate}%`}
+            badge={<s-badge tone={resolvedRate >= 50 ? "success" : "warning"}>{t('alerts.metrics.resolved', { count: stats.resolved })}</s-badge>}
+            description={t('alerts.metrics.resolvedAndDismissed', { resolved: stats.resolved, dismissed: stats.dismissed })}
+            progress={resolvedRate}
+            progressTone={resolvedRate >= 50 ? "success" : "warning"}
+          />
+          <SummaryCard
+            title={t('alerts.metrics.dismissedHeading')}
+            value={stats.dismissed}
+            badge={<s-badge tone="info">{t('alerts.metrics.archived')}</s-badge>}
+            description={stats.dismissed === 0 ? t('alerts.metrics.dismissedDescriptionZero') : t('alerts.metrics.dismissedDescription')}
+          />
+        </section>
 
-          {/* Resolution Rate Card */}
-          <s-clickable
-            onClick={() => navigate('/app/alerts?status=resolved')}
-            border="base"
-            borderRadius="large"
-            padding="base"
-            inlineSize="100%"
-          >
-            <s-grid gridTemplateColumns="auto 1fr" gap="base" alignItems="center">
-              <s-box
-                padding="small"
-                borderRadius="full"
-                background="bg-fill-success-secondary"
-                inlineSize="40px"
-                blockSize="40px"
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              >
-                <s-text size="large">🎯</s-text>
-              </s-box>
-              <s-stack gap="small-200">
-                <s-text tone="subdued" size="small">{t('alerts.metrics.resolutionHeading')}</s-text>
-                <s-stack direction="inline" gap="small" blockAlign="center">
-                  <s-heading size="large">{resolvedRate}%</s-heading>
-                  <s-badge tone={resolvedRate >= 50 ? "success" : "warning"}>
-                    {t('alerts.metrics.resolved', { count: stats.resolved })}
-                  </s-badge>
-                </s-stack>
-                <s-text tone="subdued" size="small">{t('alerts.metrics.resolvedAndDismissed', { resolved: stats.resolved, dismissed: stats.dismissed })}</s-text>
-              </s-stack>
-            </s-grid>
-          </s-clickable>
+        <section className="admin-card">
+          <div className="admin-card__header">
+            <div>
+              <p className="admin-eyebrow">{t("alerts.admin.queue")}</p>
+              <h2 className="admin-card__title">{t('alerts.subtitle')}</h2>
+              <p className="admin-card__description">
+                {t("alerts.admin.queueDescription")}
+              </p>
+            </div>
+            <div className="admin-inline-meta">
+              <s-badge tone={stats.active > 0 ? "critical" : "success"}>{t('alerts.meta.active', { count: stats.active })}</s-badge>
+              <s-badge tone="info">{t('alerts.meta.total', { count: stats.total })}</s-badge>
+            </div>
+          </div>
 
-          {/* Dismissed/Archived Card */}
-          <s-clickable
-            onClick={() => navigate('/app/alerts?status=dismissed')}
-            border="base"
-            borderRadius="large"
-            padding="base"
-            inlineSize="100%"
-          >
-            <s-grid gridTemplateColumns="auto 1fr" gap="base" alignItems="center">
-              <s-box
-                padding="small"
-                borderRadius="full"
-                background="bg-fill-info-secondary"
-                inlineSize="40px"
-                blockSize="40px"
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              >
-                <s-text size="large">📁</s-text>
-              </s-box>
-              <s-stack gap="small-200">
-                <s-text tone="subdued" size="small">{t('alerts.metrics.dismissedHeading')}</s-text>
-                <s-stack direction="inline" gap="small" blockAlign="center">
-                  <s-heading size="large">{stats.dismissed}</s-heading>
-                  <s-badge tone="info">{t('alerts.metrics.archived')}</s-badge>
-                </s-stack>
-                <s-text tone="subdued" size="small">
-                  {stats.dismissed === 0 ? t('alerts.metrics.dismissedDescriptionZero') : t('alerts.metrics.dismissedDescription')}
-                </s-text>
-              </s-stack>
-            </s-grid>
-          </s-clickable>
-        </s-grid>
-      </s-section>
+          <AlertTable
+            alerts={alerts}
+            onViewDetails={() => { }}
+            onDismiss={(id, resolutionType) => handleAlertAction(id, 'dismiss', resolutionType)}
+            onResolve={(id, resolutionType) => handleAlertAction(id, 'resolve', resolutionType)}
+            onReactivate={(id) => handleAlertAction(id, 'reactivate')}
+            isLoading={fetcher.state === 'submitting'}
+            showProductLink
+            modalIdPrefix="alert-detail"
+            searchValue={searchValue}
+            onSearchChange={(value) => {
+              setSearchValue(value);
+              setTimeout(() => applyFilters({ search: value }), 300);
+            }}
+            statusFilter={statusFilter}
+            onStatusChange={(status) => {
+              const newFilter = status ? [status] : [];
+              setStatusFilter(newFilter);
+              applyFilters({ status: newFilter });
+            }}
+            stats={stats}
+          />
+        </section>
 
-      {/* Main Alerts Table - Shopify Index Table style */}
-      <AlertTable
-        alerts={alerts}
-        onViewDetails={() => { }}
-        onDismiss={(id, resolutionType) => handleAlertAction(id, 'dismiss', resolutionType)}
-        onResolve={(id, resolutionType) => handleAlertAction(id, 'resolve', resolutionType)}
-        onReactivate={(id) => handleAlertAction(id, 'reactivate')}
-        isLoading={fetcher.state === 'submitting'}
-        showProductLink
-        modalIdPrefix="alert-detail"
-        searchValue={searchValue}
-        onSearchChange={(value) => {
-          setSearchValue(value);
-          // Debounced search - apply after typing stops
-          setTimeout(() => applyFilters({ search: value }), 300);
-        }}
-        statusFilter={statusFilter}
-        onStatusChange={(status) => {
-          const newFilter = status ? [status] : [];
-          setStatusFilter(newFilter);
-          applyFilters({ status: newFilter });
-        }}
-        stats={stats}
-      />
-
-      {/* Pagination */}
-      {pagination.totalPages > 1 && (
-        <s-section padding="base">
-          <s-stack direction="inline" align="space-between" blockAlign="center">
-            <s-text tone="subdued">
-              {t('pagination.pageOf', {
-                current: pagination.currentPage,
-                total: pagination.totalPages,
-                count: pagination.totalCount
-              })}
-            </s-text>
-            <s-stack direction="inline" gap="small">
-              <s-button
-                variant="secondary"
-                onClick={() => applyFilters({ page: pagination.currentPage - 1 })}
-                disabled={!pagination.hasPrevious || undefined}
-              >
-                {t('actions.previous')}
-              </s-button>
-              <s-button
-                variant="secondary"
-                onClick={() => applyFilters({ page: pagination.currentPage + 1 })}
-                disabled={!pagination.hasNext || undefined}
-              >
-                {t('actions.next')}
-              </s-button>
-            </s-stack>
-          </s-stack>
-        </s-section>
-      )}
-
-      <s-grid gap="base" gridTemplateColumns="1fr 1fr">
-        <s-section heading={t('alerts.checklist.title')}>
-          <s-stack gap="small">
-            {[0, 1, 2].map((idx) => (
-              <s-text key={idx}>• {t(`alerts.checklist.items.${idx}`)}</s-text>
-            ))}
-          </s-stack>
-        </s-section>
-        <SafetyGatePortal />
-      </s-grid>
+        {pagination.totalPages > 1 && (
+          <section className="admin-card">
+            <div className="admin-card__header">
+              <p className="admin-card__description">
+                {t('pagination.pageOf', {
+                  current: pagination.currentPage,
+                  total: pagination.totalPages,
+                  count: pagination.totalCount
+                })}
+              </p>
+              <div className="admin-actions">
+                <s-button
+                  variant="secondary"
+                  onClick={() => applyFilters({ page: pagination.currentPage - 1 })}
+                  disabled={!pagination.hasPrevious || undefined}
+                >
+                  {t('actions.previous')}
+                </s-button>
+                <s-button
+                  variant="secondary"
+                  onClick={() => applyFilters({ page: pagination.currentPage + 1 })}
+                  disabled={!pagination.hasNext || undefined}
+                >
+                  {t('actions.next')}
+                </s-button>
+              </div>
+            </div>
+          </section>
+        )}
+      </div>
 
       {/* Render a modal for each alert - s-modal uses commandFor to open */}
       {alerts.map((alert) => (

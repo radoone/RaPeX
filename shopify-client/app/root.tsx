@@ -9,7 +9,6 @@ import {
 import { useEffect } from "react";
 import { AppProvider } from "@shopify/shopify-app-remix/react";
 import { authenticate } from "./shopify.server";
-import "./i18n";
 import i18n from "./i18n";
 import themeStyles from "./styles/theme.css?url";
 

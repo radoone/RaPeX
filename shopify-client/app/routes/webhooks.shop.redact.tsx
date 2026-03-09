@@ -8,7 +8,7 @@ import db from "../db.server";
  * We must delete all data associated with this shop.
  */
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const { payload, topic, shop } = await authenticate.webhook(request);
+  const { topic, shop } = await authenticate.webhook(request);
 
   console.log(`Received ${topic} webhook for ${shop}`);
   console.log("Shop redact request - deleting all data for:", shop);

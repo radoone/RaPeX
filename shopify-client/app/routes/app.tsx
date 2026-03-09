@@ -1,5 +1,4 @@
-import { Link, Outlet, useLoaderData, useRouteError } from "@remix-run/react";
-import { boundary } from "@shopify/shopify-app-remix/server";
+import { Link, Outlet, isRouteErrorResponse, useLoaderData, useRouteError } from "@remix-run/react";
 import { NavMenu } from "@shopify/app-bridge-react";
 import { json } from "@remix-run/node";
 import { useTranslation } from "react-i18next";
@@ -42,5 +41,32 @@ export default function App() {
 
 // Shopify needs Remix to catch some thrown responses, so that their headers are included in the response.
 export function ErrorBoundary() {
-  return boundary.error(useRouteError());
+  const error = useRouteError();
+
+  const message = isRouteErrorResponse(error)
+    ? typeof error.data === "string"
+      ? error.data
+      : error.statusText || "Request failed."
+    : error instanceof Error
+      ? error.message
+      : "Something went wrong while loading the app.";
+
+  return (
+    <s-page>
+      <s-section padding="base">
+        <s-box
+          padding="large"
+          borderRadius="large"
+          background="bg-surface"
+          borderWidth="base"
+          borderColor="border"
+        >
+          <s-stack gap="small">
+            <s-heading size="medium">Application error</s-heading>
+            <s-text tone="subdued">{message}</s-text>
+          </s-stack>
+        </s-box>
+      </s-section>
+    </s-page>
+  );
 }
