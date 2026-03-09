@@ -5,6 +5,7 @@ import { json } from "@remix-run/node";
 import { useTranslation } from "react-i18next";
 import { authenticate } from "../shopify.server";
 import { shopifyProductToProductData } from "../services/safety-gate-checker.client";
+import { checkProductSafety, getSimilarityThresholdForShop } from "../services/safety-gate-checker.server";
 import prisma from "../db.server";
 import { SafetyGatePortal, AlertDetailModal, PageHeader, SummaryCard } from "../components";
 import { AlertTable, type ResolutionType, formatRelativeDate } from "../components/AlertTable";
@@ -107,7 +108,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const productTitle = formData.get("productTitle") as string;
 
     try {
-      const { checkProductSafety, getSimilarityThresholdForShop } = await import("../services/safety-gate-checker.server");
       const threshold = await getSimilarityThresholdForShop(session.shop);
       const safetyResult = await checkProductSafety(productData, threshold);
 

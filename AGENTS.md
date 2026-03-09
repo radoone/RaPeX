@@ -62,9 +62,12 @@ It:
 - allows manual checks from the UI
 - allows bulk checking of store products
 - stores merchant-facing results in Prisma/SQLite
+- uses Prisma 7 config-based datasource setup, so the SQLite URL lives in `shopify-client/prisma.config.ts`, not in `shopify-client/prisma/schema.prisma`
 
 Main files:
 - `shopify-client/app/services/safety-gate-checker.server.ts`
+- `shopify-client/app/db.server.ts`
+- `shopify-client/prisma.config.ts`
 - `shopify-client/app/routes/app._index.tsx`
 - `shopify-client/app/routes/app.manual-check.tsx`
 - `shopify-client/app/routes/app.alerts.tsx`
@@ -113,6 +116,8 @@ When explaining or changing behavior, prefer these files as the source of truth:
 - image/media normalization for matcher inputs: `firebase/functions/src/safety-gate-checker-media.ts`
 - Genkit prompt asset for product matching text instructions: `firebase/functions/prompts/productMatchAnalysis.prompt`
 - Shopify-to-checker integration: `shopify-client/app/services/safety-gate-checker.server.ts`
+- Prisma 7 datasource config and migrations path: `shopify-client/prisma.config.ts`
+- Prisma runtime client and SQLite adapter wiring: `shopify-client/app/db.server.ts`
 - product normalization: `shopify-client/app/services/safety-gate-checker.client.ts`
 - merchant alert persistence: `shopify-client/prisma/schema.prisma`
 
