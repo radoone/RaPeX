@@ -1,0 +1,89 @@
+import axios from "axios";
+import * as logger from "firebase-functions/logger";
+import { embeddingsAi } from "./firebase-admin.js";
+import { SAFETY_GATE_CONFIG } from "./safety-gate-config.js";
+
+export function getFirstPicture(fields: Record<string, unknown> | null | undefined): string | null {
+  const pictures = [
+    ...(Array.isArray(fields?.pictures) ? fields.pictures : []),
+    ...(fields?.product_image ? [fields.product_image] : []),
+    ...(typeof fields?.product_other_images === "string"
+      ? fields.product_other_images.split(",")
+      : []),
+  ];
+
+  const first = pictures.find((picture) => typeof picture === "string" && picture.trim());
+  return typeof first === "string" ? first.trim() : null;
+}
+
+async function fetchImageAsDataUri(
+  url: string,
+): Promise<{ url: string; contentType: string } | null> {
+  if (!url) {
+    return null;
+  }
+
+  try {
+    const response = await axios.get(url, {
+      responseType: "arraybuffer",
+      timeout: SAFETY_GATE_CONFIG.imageFetchTimeoutMs,
+    });
+
+    const base64 = Buffer.from(response.data, "binary").toString("base64");
+    let contentType = response.headers["content-type"] || "application/octet-stream";
+    if (contentType.startsWith("image/")) {
+      contentType = contentType.split(";")[0].trim();
+    }
+
+    return {
+      url: `data:${contentType};base64,${base64}`,
+      contentType,
+    };
+  } catch (error) {
+    logger.warn("Failed to fetch image for embedding", {
+      url,
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return null;
+  }
+}
+
+export async function embedText(content: string): Promise<number[] | undefined> {
+  if (!content.trim()) {
+    return undefined;
+  }
+
+  try {
+    const [result] = await embeddingsAi.embed({
+      embedder: SAFETY_GATE_CONFIG.textEmbedder,
+      content,
+    });
+    return result?.embedding;
+  } catch (error) {
+    logger.warn("Text embedding failed", {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return undefined;
+  }
+}
+
+export async function embedImage(url: string): Promise<number[] | undefined> {
+  const media = await fetchImageAsDataUri(url);
+  if (!media) {
+    return undefined;
+  }
+
+  try {
+    const [result] = await embeddingsAi.embed({
+      embedder: SAFETY_GATE_CONFIG.imageEmbedder,
+      content: { content: [{ media }] },
+    });
+    return result?.embedding;
+  } catch (error) {
+    logger.warn("Image embedding failed", {
+      url,
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return undefined;
+  }
+}

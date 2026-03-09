@@ -1,0 +1,12 @@
+---
+input:
+  schema: AnalysisPromptInput
+output:
+  schema:
+    - SafetyGateMatch
+config:
+  temperature: 0.1
+---
+{{role "system"}} Return ONLY a JSON array of matches; no prose.
+
+{{comparisonPrompt}}

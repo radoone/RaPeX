@@ -6,26 +6,30 @@
 [![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
 [![AI](https://img.shields.io/badge/AI-Gemini%202.5%20Flash%20Lite-blue?style=for-the-badge&logo=google)](https://ai.google.dev/)
 
-> **Monorepo containing Firebase backend for Safety Gate alerts and Shopify client integration**
+> **Monorepo for checking Shopify products against the EU Safety Gate (formerly RAPEX) database**
 
 ## 📋 O Projekte
 
-Tento projekt implementuje **inteligentný automatický delta loader** pre dáta z európskeho systému rýchleho varovania (Safety Gate) o nebezpečných výrobkoch.
+Tento projekt je primárne **checker pre Shopify katalog**, ktory overuje, ci sa produkty predavane v obchode nachadzaju v databaze EU Safety Gate (predtym RAPEX), alebo su jej alertom dost podobne.
 
-**Hlavné účely:**
-- 🤖 **Pre AI systémy**: Poskytuje štruktúrované dáta pre analýzu bezpečnosti výrobkov
-- 🔍 **Pre vývojárov**: Umožňuje rýchle vyhľadávanie a filtrovanie Safety Gate alertov
-- 📊 **Pre analytikov**: Poskytuje kompletnú históriu alertov pre reporting
-- 🛡️ **Pre spotrebiteľov**: Pomáha identifikovať potenciálne nebezpečné výrobky
-- 🧠 **AI Safety Check**: Automatická analýza bezpečnosti nových produktov
+Firebase cast riesi ingest a indexaciu Safety Gate dat. Shopify cast riesi realny user-facing workflow:
+- pri vytvoreni alebo update produktu spusti kontrolu
+- umozni manualny check vybranych produktov
+- umozni bulk check celeho katalogu
+- ulozi a zobrazi alerty pre konkretneho merchanta
+
+**Sekundarne ucely:**
+- 🤖 **Pre AI analyzu**: uklada strukturovane data a embeddingy pre similarity check
+- 🔍 **Pre vyvoj**: poskytuje endpointy a interny data layer na testovanie a debug
+- 📊 **Pre reporting**: uchovava historiu checkov a alertov
 
 ### 🎯 **Čo projekt robí:**
-1. **Automaticky sťahuje** nové Safety Gate alerty z oficiálneho európskeho datasetu
-2. **Ukladá do Firestore** všetky detaily vrátane metadát
-3. **Optimalizuje prenos** dát pomocou delta-loading prístupu
-4. **Poskytuje API** pre manuálne spúšťanie a testovanie
-5. **Udržiava stav** posledného behu pre efektívne aktualizácie
-6. **AI analýza** bezpečnosti produktov pomocou Google Gemini
+1. **Importuje** nove Safety Gate alerty do Firestore
+2. **Udrziava** checkpointy a delta-loading, aby sa nestahovali stale tie iste data
+3. **Vystavuje API** na kontrolu produktu proti importovanym alertom
+4. **Porovnava Shopify produkty** podla nazvu, popisu, kategorie, brandu, modelu a niekedy aj obrazka
+5. **Uklada vysledky** do Shopify app databazy ako safety checks a safety alerts
+6. **Zobrazuje merchantovi** alerty, historiu a threshold nastavenia v Shopify admin appke
 
 ## ✨ Kľúčové Funkcie
 

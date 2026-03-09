@@ -1,4 +1,27 @@
-# @shopify/shopify-app-template-remix
+# RaPeX Changelog
+
+Recent entries below are based on the GitHub history of [`radoone/RaPeX`](https://github.com/radoone/RaPeX).
+
+## 2026.01.12
+- [`98f79f0`](https://github.com/radoone/RaPeX/commit/98f79f0) Refactor dashboard and manual check UI, upgrade alert actions icons
+- [`84a5e1d`](https://github.com/radoone/RaPeX/commit/84a5e1d) feat: implement i18n, refactor UI, and update Firebase functions
+
+## 2025.12.08
+- [`650a209`](https://github.com/radoone/RaPeX/commit/650a209) chore: Update dependencies and improve safety gate checker functionality
+- [`f823771`](https://github.com/radoone/RaPeX/commit/f823771) Migrate to Polaris web components
+
+## 2025.12.04
+- [`2c6faf8`](https://github.com/radoone/RaPeX/commit/2c6faf8) fix: type annotate products fetch in bulk check
+- [`3b75f04`](https://github.com/radoone/RaPeX/commit/3b75f04) fix: import bulk check helpers statically to avoid undefined function
+- [`8a54321`](https://github.com/radoone/RaPeX/commit/8a54321) chore: log per-product errors during bulk check
+- [`238cd27`](https://github.com/radoone/RaPeX/commit/238cd27) fix: Add missing SafetySetting migration SQL file
+- [`dd86e3d`](https://github.com/radoone/RaPeX/commit/dd86e3d) feat: Improve bulk check with progress, summary, and skip already checked
+- [`0752188`](https://github.com/radoone/RaPeX/commit/0752188) fix: drop unsupported case-insensitive mode in alerts search
+- [`169a830`](https://github.com/radoone/RaPeX/commit/169a830) feat: Use proper table for product details in WarningCard
+- [`7c6de35`](https://github.com/radoone/RaPeX/commit/7c6de35) feat: Redesign Safety Alert Details modal for better clarity
+- [`a3a6c50`](https://github.com/radoone/RaPeX/commit/a3a6c50) chore: Polish Safety Alert details layout
+- [`af3c23b`](https://github.com/radoone/RaPeX/commit/af3c23b) fix: Load all stylesheets inline to eliminate hydration mismatch
+- [`87a3188`](https://github.com/radoone/RaPeX/commit/87a3188) fix: Move CDN links from links() to head to fix hydration mismatch
 
 ## 2025.07.07
 - [#1103](https://github.com/Shopify/shopify-app-template-remix/pull/1086) Remove deprecated .npmrc config values
