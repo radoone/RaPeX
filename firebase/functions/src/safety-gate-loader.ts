@@ -142,11 +142,11 @@ function buildAlertDocument(
   };
 
   if (vectorText?.length) {
-    document.vector_text = vectorText;
+    document.vector_text = FieldValue.vector(vectorText);
   }
 
   if (vectorImage?.length) {
-    document.vector_image = vectorImage;
+    document.vector_image = FieldValue.vector(vectorImage);
   }
 
   return document;

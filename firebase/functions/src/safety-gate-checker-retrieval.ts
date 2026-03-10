@@ -1,4 +1,5 @@
 import { defineFirestoreRetriever } from "@genkit-ai/firebase";
+import { vertexAI } from "@genkit-ai/google-genai";
 import { getFirestore, Timestamp } from "firebase-admin/firestore";
 import type { DocumentData, RetrieverAction } from "genkit/retriever";
 import { functionsAi } from "./firebase-admin.js";
@@ -18,9 +19,29 @@ const RAG_IMAGE_LIMIT = 6;
 const MAX_RAG_ALERTS = 12;
 const VECTOR_TEXT_FIELD = "vector_text";
 const VECTOR_IMAGE_FIELD = "vector_image";
+const TEXT_VECTOR_DIMENSIONS = 1536;
+const IMAGE_VECTOR_DIMENSIONS = 1408;
 
 let textRetriever: RetrieverAction | null = null;
 let imageRetriever: RetrieverAction | null = null;
+
+function toVertexInlineMedia(encodedImage: { url: string; contentType?: string }) {
+  const contentType = encodedImage.contentType ?? "application/octet-stream";
+
+  if (!encodedImage.url.startsWith("data:")) {
+    return {
+      ...encodedImage,
+      contentType,
+    };
+  }
+
+  const [, base64 = ""] = encodedImage.url.split(",", 2);
+  return {
+    ...encodedImage,
+    url: base64,
+    contentType,
+  };
+}
 
 function ensureTextRetriever(): RetrieverAction | null {
   if (textRetriever) {
@@ -32,7 +53,9 @@ function ensureTextRetriever(): RetrieverAction | null {
       name: "rapex-text-retriever",
       firestore: getFirestore(),
       collection: "rapex_alerts",
-      embedder: "googleai/text-embedding-004",
+      embedder: vertexAI.embedder("gemini-embedding-001", {
+        outputDimensionality: TEXT_VECTOR_DIMENSIONS,
+      }),
       vectorField: VECTOR_TEXT_FIELD,
       contentField: "fields.product_description",
       distanceResultField: "distance",
@@ -55,7 +78,9 @@ function ensureImageRetriever(): RetrieverAction | null {
       name: "rapex-image-retriever",
       firestore: getFirestore(),
       collection: "rapex_alerts",
-      embedder: "googleai/multimodalembedding@001",
+      embedder: vertexAI.embedder("multimodalembedding@001", {
+        outputDimensionality: IMAGE_VECTOR_DIMENSIONS,
+      }),
       vectorField: VECTOR_IMAGE_FIELD,
       contentField: "fields.product_description",
       distanceResultField: "distance",
@@ -150,11 +175,12 @@ export async function retrieveAlertsWithRag(product: ProductInput): Promise<Norm
       if (!encodedImage) {
         continue;
       }
+      const vertexInlineMedia = toVertexInlineMedia(encodedImage);
 
       try {
         const result = await functionsAi.retrieve({
           retriever: activeImageRetriever,
-          query: { content: [{ media: encodedImage }] },
+          query: { content: [{ media: vertexInlineMedia }] },
           options: { limit: RAG_IMAGE_LIMIT },
         });
 

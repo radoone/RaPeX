@@ -16,7 +16,7 @@ export function getFirstPicture(fields: Record<string, unknown> | null | undefin
   return typeof first === "string" ? first.trim() : null;
 }
 
-async function fetchImageAsDataUri(
+async function fetchImageAsBase64(
   url: string,
 ): Promise<{ url: string; contentType: string } | null> {
   if (!url) {
@@ -35,10 +35,7 @@ async function fetchImageAsDataUri(
       contentType = contentType.split(";")[0].trim();
     }
 
-    return {
-      url: `data:${contentType};base64,${base64}`,
-      contentType,
-    };
+    return { url: base64, contentType };
   } catch (error) {
     logger.warn("Failed to fetch image for embedding", {
       url,
@@ -57,6 +54,9 @@ export async function embedText(content: string): Promise<number[] | undefined> 
     const [result] = await embeddingsAi.embed({
       embedder: SAFETY_GATE_CONFIG.textEmbedder,
       content,
+      options: {
+        outputDimensionality: 1536,
+      },
     });
     return result?.embedding;
   } catch (error) {
@@ -68,7 +68,7 @@ export async function embedText(content: string): Promise<number[] | undefined> 
 }
 
 export async function embedImage(url: string): Promise<number[] | undefined> {
-  const media = await fetchImageAsDataUri(url);
+  const media = await fetchImageAsBase64(url);
   if (!media) {
     return undefined;
   }
@@ -77,6 +77,9 @@ export async function embedImage(url: string): Promise<number[] | undefined> {
     const [result] = await embeddingsAi.embed({
       embedder: SAFETY_GATE_CONFIG.imageEmbedder,
       content: { content: [{ media }] },
+      options: {
+        outputDimensionality: 1408,
+      },
     });
     return result?.embedding;
   } catch (error) {

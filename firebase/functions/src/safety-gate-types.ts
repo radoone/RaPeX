@@ -1,5 +1,7 @@
 import type { FieldValue, Timestamp } from "firebase-admin/firestore";
 
+type FirestoreVectorValue = ReturnType<typeof import("firebase-admin/firestore").FieldValue.vector>;
+
 export interface LoaderState {
   last_alert_date: Timestamp | null;
   last_record_timestamp: string | null;
@@ -30,8 +32,8 @@ export interface RapexAlertDocument {
     ingested_at: FieldValue;
   };
   fields: RapexRecordFields;
-  vector_text?: number[];
-  vector_image?: number[];
+  vector_text?: FirestoreVectorValue;
+  vector_image?: FirestoreVectorValue;
 }
 
 export interface OpenDataSoftResponse {

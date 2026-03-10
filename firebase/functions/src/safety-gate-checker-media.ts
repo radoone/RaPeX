@@ -20,6 +20,18 @@ export function normalizeTimestamp(value: any): string {
   if (typeof value === "string") return value;
   if (value instanceof Date) return value.toISOString();
   if (typeof value.toDate === "function") return value.toDate().toISOString();
+  if (typeof value === "object") {
+    const seconds =
+      typeof value.seconds === "number"
+        ? value.seconds
+        : typeof value._seconds === "number"
+          ? value._seconds
+          : null;
+
+    if (seconds != null) {
+      return new Date(seconds * 1000).toISOString();
+    }
+  }
   return String(value);
 }
 

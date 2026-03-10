@@ -177,9 +177,27 @@ export function parseAnalysisMatches(
     return analysisResponse.output as AnalysisMatchCandidate[];
   }
 
+  if (analysisResponse.output && typeof analysisResponse.output === "object") {
+    const objectValues = Object.values(analysisResponse.output as Record<string, unknown>);
+    if (objectValues.every((value) => value && typeof value === "object")) {
+      return objectValues as AnalysisMatchCandidate[];
+    }
+  }
+
   try {
     const parsed = JSON.parse(analysisResponse.text);
-    return Array.isArray(parsed) ? (parsed as AnalysisMatchCandidate[]) : [];
+    if (Array.isArray(parsed)) {
+      return parsed as AnalysisMatchCandidate[];
+    }
+
+    if (parsed && typeof parsed === "object") {
+      const objectValues = Object.values(parsed as Record<string, unknown>);
+      if (objectValues.every((value) => value && typeof value === "object")) {
+        return objectValues as AnalysisMatchCandidate[];
+      }
+    }
+
+    return [];
   } catch (error) {
     console.error("Failed to parse Gemini response:", error);
     return [];
