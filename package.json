@@ -12,7 +12,10 @@
     "test": "npm run test --workspaces",
     "lint": "npm run lint --workspaces",
     "firebase:deploy": "npm run deploy --workspace=firebase",
-    "shopify:dev": "npm run dev --workspace=shopify-client"
+    "shopify:dev": "npm run dev --workspace=shopify-client",
+    "marketing:dev": "vite --config marketing-site/vite.config.ts",
+    "marketing:build": "vite build --config marketing-site/vite.config.ts",
+    "marketing:preview": "vite preview --config marketing-site/vite.config.ts"
   },
 
   "engines": {

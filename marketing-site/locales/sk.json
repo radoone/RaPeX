@@ -1,0 +1,110 @@
+{
+  "meta": {
+    "title": "Safety Gate Monitor pre Shopify",
+    "description": "Safety Gate Monitor pomáha Shopify obchodom zachytiť rizikové produkty porovnaním katalógu s databázou EU Safety Gate / RAPEX."
+  },
+  "nav": {
+    "howItWorks": "Ako to funguje",
+    "language": "Jazyk",
+    "languageSwitcher": "Prepínač jazykov",
+    "locales": {
+      "en": "Angličtina",
+      "sk": "Slovenčina"
+    }
+  },
+  "hero": {
+    "eyebrow": "Monitoring bezpečnosti produktov pre Shopify",
+    "title": "Zachyťte rizikové produkty skôr, než pôjdu do predaja.",
+    "lede": "Safety Gate Monitor kontroluje váš Shopify katalóg voči databáze EU Safety Gate / RAPEX a upozorní na produkty, ktoré sa môžu zhodovať s nahlásenými nebezpečnými výrobkami.",
+    "ctaPrimary": "Inštalovať na Shopify",
+    "ctaSecondary": "Ako to funguje",
+    "pointsLabel": "Hlavné dôvody",
+    "points": [
+      "Kontroluje text produktu, značku, kategóriu aj obrázky",
+      "Zapadne do manuálnych kontrol, bulk review aj aktualizácií produktov",
+      "Pomáha znížiť sťažnosti, vratky a problémy s dôverou"
+    ]
+  },
+  "preview": {
+    "aria": "Náhľad bezpečnostnej kontroly produktu",
+    "label": "Pohľad obchodníka",
+    "live": "Živá kontrola",
+    "productTitle": "Detská balančná kolobežka",
+    "productSubtitle": "Prichádza úprava produktu od dodávateľa",
+    "overall": "Celková podobnosť",
+    "image": "Vizuálna podobnosť",
+    "alert": "Zhoda s varovaním na stiahnutú hračku v EU Safety Gate.",
+    "action": "Odporúčanie: skontrolujte podklady od dodávateľa pred zverejnením.",
+    "chips": [
+      "Priorita vizuálnej zhody",
+      "Prahy pre každý obchod",
+      "Alerty pripravené pre Shopify"
+    ]
+  },
+  "signals": {
+    "aria": "Hlavné výhody",
+    "items": [
+      {
+        "title": "Zachyťte rizikové produkty včas",
+        "body": "Označí produkty, ktoré sa príliš podobajú na nebezpečné položky už nahlásené v EU Safety Gate."
+      },
+      {
+        "title": "Znížte čas ručnej kontroly",
+        "body": "Kontroly bežia v bežnom Shopify workflow namiesto pomalého preverovania v tabuľkách."
+      },
+      {
+        "title": "Chráňte dôveru a tržby",
+        "body": "Získate skorší signál predtým, než rizikové produkty spôsobia sťažnosti, vratky alebo škodu značke."
+      }
+    ],
+    "eyebrow": "Prečo to merchanti používajú",
+    "title": "Jednoduchá produktová safety kontrola pre Shopify obchody."
+  },
+  "workflow": {
+    "eyebrow": "Ako to funguje",
+    "title": "Tri kroky, jasný výstup.",
+    "steps": [
+      {
+        "title": "Import alert dát",
+        "body": "Backend drží Safety Gate záznamy aktuálne a pripravené na porovnávanie."
+      },
+      {
+        "title": "Kontrola Shopify produktov",
+        "body": "Nové, upravené, manuálne aj bulk kontroly posielajú produktové dáta do matcheru."
+      },
+      {
+        "title": "Vyhodnotenie alertu",
+        "body": "Merchant vidí kontext zhody a vie produkt preveriť, pozastaviť alebo odstrániť."
+      }
+    ]
+  },
+  "footer": {
+    "eyebrow": "Safety Gate Monitor",
+    "title": "Spravte z produktovej bezpečnosti opakovateľný Shopify workflow.",
+    "backToTop": "Späť hore"
+  },
+  "cta": {
+    "eyebrow": "Inštalácia",
+    "title": "Nainštalujte aplikáciu do svojho Shopify obchodu.",
+    "body": "Zadajte svoju myshopify.com doménu a spustite inštaláciu.",
+    "label": "Doména obchodu",
+    "placeholder": "vas-obchod.myshopify.com",
+    "button": "Inštalovať na Shopify"
+  },
+  "risk": {
+    "eyebrow": "Čo je v hre",
+    "title": "Safety problém môže stáť viac než jednu objednávku.",
+    "items": [
+      {
+        "badge": "Varovanie",
+        "title": "Riziko pokút a zásahu úradov",
+        "body": "Nebezpečné produkty môžu viesť k regulačnému tlaku, nútenému stiahnutiu, zákazníckym nárokom a drahému operatívnemu riešeniu."
+      },
+      {
+        "badge": "Kritické",
+        "title": "Strata dôvery sa vracia ťažko",
+        "body": "Zákazník odpustí meškanie zásielky. Oveľa ťažšie zabudne na problém s bezpečnosťou produktu spojený s vaším obchodom."
+      }
+    ]
+  }
+}

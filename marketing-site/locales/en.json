@@ -1,0 +1,110 @@
+{
+  "meta": {
+    "title": "Safety Gate Monitor for Shopify",
+    "description": "Safety Gate Monitor helps Shopify merchants catch risky products by comparing catalog items against the EU Safety Gate / RAPEX database."
+  },
+  "nav": {
+    "howItWorks": "How it works",
+    "language": "Language",
+    "languageSwitcher": "Language switcher",
+    "locales": {
+      "en": "English",
+      "sk": "Slovak"
+    }
+  },
+  "hero": {
+    "eyebrow": "Shopify product safety monitoring",
+    "title": "Catch risky products before they go live.",
+    "lede": "Safety Gate Monitor checks your Shopify catalog against the EU Safety Gate / RAPEX database and flags products that may match reported dangerous items.",
+    "ctaPrimary": "Install on Shopify",
+    "ctaSecondary": "How it works",
+    "pointsLabel": "Key selling points",
+    "points": [
+      "Checks product text, brand, category, and images",
+      "Fits manual checks, bulk reviews, and product updates",
+      "Helps reduce complaints, returns, and trust issues"
+    ]
+  },
+  "preview": {
+    "aria": "Product safety summary preview",
+    "label": "Merchant view",
+    "live": "Live check",
+    "productTitle": "Kids balance scooter",
+    "productSubtitle": "Incoming product update from supplier",
+    "overall": "Overall similarity",
+    "image": "Image similarity",
+    "alert": "Matched against a recalled toy listing in EU Safety Gate.",
+    "action": "Suggested action: review supplier docs before publishing.",
+    "chips": [
+      "Image-first matching",
+      "Per-shop threshold",
+      "Shopify-ready alerts"
+    ]
+  },
+  "signals": {
+    "aria": "Main advantages",
+    "items": [
+      {
+        "title": "Catch risky products early",
+        "body": "Flag products that look too close to dangerous items already reported in EU Safety Gate."
+      },
+      {
+        "title": "Reduce manual review time",
+        "body": "Run checks inside normal Shopify product workflows instead of relying on slow spreadsheet reviews."
+      },
+      {
+        "title": "Protect trust and revenue",
+        "body": "Get earlier warnings before risky products trigger complaints, returns, or brand damage."
+      }
+    ],
+    "eyebrow": "Why merchants use it",
+    "title": "A simple product safety check for Shopify stores."
+  },
+  "workflow": {
+    "eyebrow": "How it works",
+    "title": "Three steps, clear output.",
+    "steps": [
+      {
+        "title": "Import alert data",
+        "body": "The backend keeps Safety Gate records up to date and ready for matching."
+      },
+      {
+        "title": "Check Shopify products",
+        "body": "New, updated, manual, and bulk checks all send product data into the matcher."
+      },
+      {
+        "title": "Review the alert",
+        "body": "Merchants see the match context and can review, pause, or remove the product."
+      }
+    ]
+  },
+  "footer": {
+    "eyebrow": "Safety Gate Monitor",
+    "title": "Turn product safety into a repeatable Shopify workflow.",
+    "backToTop": "Back to top"
+  },
+  "cta": {
+    "eyebrow": "Install",
+    "title": "Install the app in your Shopify store.",
+    "body": "Enter your myshopify.com domain to start the install flow.",
+    "label": "Shop domain",
+    "placeholder": "your-store.myshopify.com",
+    "button": "Install on Shopify"
+  },
+  "risk": {
+    "eyebrow": "What is at stake",
+    "title": "A safety issue can cost more than one sale.",
+    "items": [
+      {
+        "badge": "Warning",
+        "title": "Fines and enforcement risk",
+        "body": "Dangerous products can lead to regulatory scrutiny, forced removals, customer claims, and expensive operational cleanup."
+      },
+      {
+        "badge": "Critical",
+        "title": "Trust loss is harder to recover",
+        "body": "Customers may forgive a shipping delay. They rarely forget a product safety problem tied to your store."
+      }
+    ]
+  }
+}
