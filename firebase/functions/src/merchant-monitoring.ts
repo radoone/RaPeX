@@ -10,7 +10,6 @@ import { ALERT_LOOKBACK_DAYS } from "./safety-gate-checker-retrieval.js";
 import { embedImage, embedText } from "./safety-gate-embeddings.js";
 import type {
   MerchantMonitorStateDocument,
-  MerchantProductDocument,
   MerchantProductUpsertInput,
 } from "./safety-gate-types.js";
 
@@ -268,30 +267,30 @@ export async function upsertMerchantProduct(
   ]);
 
   const docId = merchantProductDocId(shop, productId);
-  const payload: MerchantProductDocument = {
+  const payload: Record<string, unknown> = {
     shop,
     productId,
     productTitle: input.productTitle,
-    productHandle: input.productHandle,
     name: input.product.name,
     category: input.product.category,
     description: input.product.description,
-    imageUrl: primaryImage,
-    imageUrls: input.product.imageUrls,
-    brand: input.product.brand,
-    model: input.product.model,
-    sourceUpdatedAt: input.sourceUpdatedAt,
     createdAt: FieldValue.serverTimestamp(),
     updatedAt: FieldValue.serverTimestamp(),
     lastCheckedAt: FieldValue.serverTimestamp(),
-    vector_text: vectorText?.length ? FieldValue.vector(vectorText) : undefined,
-    vector_image: vectorImage?.length ? FieldValue.vector(vectorImage) : undefined,
+    ...(input.productHandle ? { productHandle: input.productHandle } : {}),
+    ...(primaryImage ? { imageUrl: primaryImage } : {}),
+    ...(input.product.imageUrls?.length ? { imageUrls: input.product.imageUrls } : {}),
+    ...(input.product.brand ? { brand: input.product.brand } : {}),
+    ...(input.product.model ? { model: input.product.model } : {}),
+    ...(input.sourceUpdatedAt ? { sourceUpdatedAt: input.sourceUpdatedAt } : {}),
+    ...(vectorText?.length ? { vector_text: FieldValue.vector(vectorText) } : {}),
+    ...(vectorImage?.length ? { vector_image: FieldValue.vector(vectorImage) } : {}),
   };
 
   await db
     .collection(FIRESTORE_COLLECTIONS.merchantProducts)
     .doc(docId)
-    .set(payload as unknown as Record<string, unknown>, { merge: true });
+    .set(payload, { merge: true });
 
   return {
     shop,
