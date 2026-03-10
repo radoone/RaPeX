@@ -25,6 +25,7 @@ export function AlertDetailModal({
 }: AlertDetailModalProps) {
   const { t } = useTranslation();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const lightboxDialogRef = useRef<HTMLDialogElement>(null);
   const reactivateBtnRef = useRef<HTMLElement>(null);
   
   // Refs for resolve action buttons
@@ -43,6 +44,22 @@ export function AlertDetailModal({
   const closeLightbox = useCallback(() => {
     setSelectedImage(null);
   }, []);
+
+  useEffect(() => {
+    const dialog = lightboxDialogRef.current;
+    if (!dialog) return;
+
+    if (selectedImage) {
+      if (!dialog.open) {
+        dialog.showModal();
+      }
+      return;
+    }
+
+    if (dialog.open) {
+      dialog.close();
+    }
+  }, [selectedImage]);
 
   const parsed = useMemo(() => {
     if (!alert) return null;
@@ -99,12 +116,20 @@ export function AlertDetailModal({
   const isSafe = parsed?.isSafe === true;
   const warningsCount = warnings.length || alert.warningsCount || 0;
   const primaryWarning = warnings[0];
+  const primaryFields = primaryWarning?.alertDetails?.fields || {};
   const overallSimilarity = typeof primaryWarning?.overallSimilarity === "number"
     ? primaryWarning.overallSimilarity
     : null;
   const imageSimilarity = typeof primaryWarning?.imageSimilarity === "number"
     ? primaryWarning.imageSimilarity
     : null;
+  const hasActiveRisk = alert.status === "active" && !isSafe;
+  const hasActiveSafeState = alert.status === "active" && isSafe;
+  const focusVariant = hasActiveRisk
+    ? "critical"
+    : hasActiveSafeState
+      ? "safe"
+      : "reviewed";
 
   // Helper to get images from warning
   const getWarningImages = (warning: any) => {
@@ -142,18 +167,22 @@ export function AlertDetailModal({
                 {alert.productImage && (
                   <div
                     onClick={() => setSelectedImage(alert.productImage)}
-                    className="alert-image-clickable"
+                    className="alert-image-clickable alert-image-clickable--product"
                     role="button"
                     tabIndex={0}
+                    aria-label={`Open image for ${alert.productTitle}`}
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter') setSelectedImage(alert.productImage);
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        setSelectedImage(alert.productImage);
+                      }
                     }}
                     style={{ flexShrink: 0 }}
                   >
-                    <s-thumbnail
+                    <img
                       src={alert.productImage}
                       alt={alert.productTitle}
-                      size="extra-large"
+                      className="alert-product-image"
                     />
                   </div>
                 )}
@@ -212,9 +241,46 @@ export function AlertDetailModal({
               {/* Header */}
               <s-stack direction="inline" gap="small" blockAlign="center">
                 <s-text size="large" fontWeight="bold">
-                  {isSafe ? "✅" : "⚠️"} {isSafe ? "No Safety Issues Found" : "Potential Safety Risk"}
+                  {isSafe ? "✅" : "⚠️"} {isSafe ? t("analysis.noIssuesFound") : t("analysis.potentialRisk")}
                 </s-text>
               </s-stack>
+
+              <div className={`alert-focus-card alert-focus-card--${focusVariant}`}>
+                <p className="alert-focus-card__title">
+                  {hasActiveRisk
+                    ? t("analysis.focus.criticalTitle")
+                    : hasActiveSafeState
+                      ? t("analysis.focus.safeTitle")
+                      : t("analysis.focus.reviewedTitle")}
+                </p>
+                <p className="alert-focus-card__lead">
+                  {hasActiveRisk
+                    ? t("analysis.focus.criticalLead")
+                    : hasActiveSafeState
+                      ? t("analysis.focus.safeLead")
+                      : t("analysis.focus.reviewedLead")}
+                </p>
+                <ol className="alert-focus-card__steps">
+                  {hasActiveRisk ? (
+                    <>
+                      <li>{t("analysis.focus.criticalStepCompare")}</li>
+                      <li>{t("analysis.focus.criticalStepDecide")}</li>
+                      <li>{t("analysis.focus.criticalStepDocument")}</li>
+                    </>
+                  ) : hasActiveSafeState ? (
+                    <>
+                      <li>{t("analysis.focus.safeStepMonitor")}</li>
+                      <li>{t("analysis.focus.safeStepRecheck")}</li>
+                      <li>{t("analysis.focus.safeStepClose")}</li>
+                    </>
+                  ) : (
+                    <>
+                      <li>{t("analysis.focus.reviewedStepAudit")}</li>
+                      <li>{t("analysis.focus.reviewedStepReactivate")}</li>
+                    </>
+                  )}
+                </ol>
+              </div>
               
               {/* Stats Row */}
               <s-stack direction="inline" gap="large" wrap>
@@ -267,6 +333,15 @@ export function AlertDetailModal({
               
               {/* Recommendation */}
               <s-text>{recommendation}</s-text>
+
+              {hasActiveRisk && (
+                <s-text tone="subdued" size="small">
+                  {t("analysis.primaryRiskFocus", {
+                    category: primaryFields.alert_type || alert.alertType || t("common.unknown"),
+                    level: primaryFields.alert_level || primaryFields.risk_level || alert.riskLevel || t("common.unknown"),
+                  })}
+                </s-text>
+              )}
             </s-stack>
           </s-box>
 
@@ -284,6 +359,9 @@ export function AlertDetailModal({
             <s-stack gap="base">
               <s-text tone="subdued" fontWeight="bold" size="small">
                 SAFETY GATE MATCHES ({warnings.length})
+              </s-text>
+              <s-text tone="subdued" size="small">
+                {t("analysis.matchesHint")}
               </s-text>
               
               <s-stack gap="base">
@@ -362,31 +440,36 @@ export function AlertDetailModal({
         </s-button>
       </s-modal>
 
-      {/* Image Lightbox Overlay */}
-      {selectedImage && typeof document !== 'undefined' && createPortal(
-        <div
-          className="image-lightbox-overlay"
-          onClick={closeLightbox}
+      {/* Image Lightbox (top-layer dialog so it always appears above s-modal) */}
+      {typeof document !== "undefined" && createPortal(
+        <dialog
+          ref={lightboxDialogRef}
+          className="image-lightbox-dialog"
+          onClose={closeLightbox}
+          onClick={(event) => {
+            if (event.target === event.currentTarget) {
+              closeLightbox();
+            }
+          }}
         >
-          <div
-            className="image-lightbox-content"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              className="image-lightbox-close"
-              onClick={closeLightbox}
-              aria-label="Close"
-              type="button"
-            >
-              ×
-            </button>
-            <img
-              src={selectedImage}
-              alt="Enlarged safety alert"
-              className="image-lightbox-image"
-            />
-          </div>
-        </div>,
+          {selectedImage && (
+            <div className="image-lightbox-content" onClick={(e) => e.stopPropagation()}>
+              <button
+                className="image-lightbox-close"
+                onClick={closeLightbox}
+                aria-label="Close"
+                type="button"
+              >
+                ×
+              </button>
+              <img
+                src={selectedImage}
+                alt="Enlarged safety alert"
+                className="image-lightbox-image"
+              />
+            </div>
+          )}
+        </dialog>,
         document.body
       )}
     </>

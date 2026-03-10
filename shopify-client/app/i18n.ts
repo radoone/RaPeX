@@ -269,6 +269,8 @@ const resources = {
       "analysis": {
         "withImage": "Checked with images",
         "textOnly": "Text-only check",
+        "noIssuesFound": "No Safety Issues Found",
+        "potentialRisk": "Potential Safety Risk",
         "checkedAt": "Checked: {{date}}",
         "productImagesUsed": "Product images: {{used}} / {{provided}}",
         "alertImagesUsed": "Alert images compared: {{count}}",
@@ -279,7 +281,25 @@ const resources = {
         "imageMatchShort": "{{count}}% image",
         "scoreHelper": "Overall match is the final review score. Image match reflects packaging similarity only.",
         "whyThisMatched": "Why this matched",
-        "imageDominated": "This match was scored with image-first weighting, so visual packaging similarity carried more weight than text mismatch."
+        "imageDominated": "This match was scored with image-first weighting, so visual packaging similarity carried more weight than text mismatch.",
+        "matchesHint": "Start with the top match card below and confirm visual packaging first, then model and brand details.",
+        "primaryRiskFocus": "Primary risk focus: {{category}} at {{level}} level. Confirm this first before deciding.",
+        "focus": {
+          "criticalTitle": "Action required now",
+          "criticalLead": "This product has a high-confidence match. Resolve only after review.",
+          "criticalStepCompare": "Compare your product photo with the first Safety Gate match below.",
+          "criticalStepDecide": "Choose a resolution in the Resolve menu based on your review.",
+          "criticalStepDocument": "Add internal notes for traceability and supplier follow-up.",
+          "safeTitle": "No urgent action needed",
+          "safeLead": "Current result is safe. Keep monitoring product updates.",
+          "safeStepMonitor": "Keep this product in automatic monitoring.",
+          "safeStepRecheck": "Run a new check if images, packaging, or supplier change.",
+          "safeStepClose": "Close this detail and continue with other active alerts.",
+          "reviewedTitle": "Review already completed",
+          "reviewedLead": "This alert is not active. Keep records clear for audits.",
+          "reviewedStepAudit": "Verify the selected resolution and notes.",
+          "reviewedStepReactivate": "Reactivate only if new product evidence appears."
+        }
       },
       "pagination": {
         "pageOf": "Page {{current}} of {{total}} ({{count}} alerts)"
@@ -758,6 +778,8 @@ const resources = {
       "analysis": {
         "withImage": "Kontrola s obrázkami",
         "textOnly": "Len textová kontrola",
+        "noIssuesFound": "Neboli nájdené bezpečnostné problémy",
+        "potentialRisk": "Potenciálne bezpečnostné riziko",
         "checkedAt": "Skontrolované: {{date}}",
         "productImagesUsed": "Obrázky produktu: {{used}} / {{provided}}",
         "alertImagesUsed": "Porovnané obrázky alertov: {{count}}",
@@ -768,7 +790,25 @@ const resources = {
         "imageMatchShort": "{{count}}% obrázok",
         "scoreHelper": "Celková zhoda je finálne skóre pre rozhodnutie. Zhoda obrázka vyjadruje len podobnosť obalu.",
         "whyThisMatched": "Prečo vznikla zhoda",
-        "imageDominated": "Táto zhoda bola skórovaná image-first vážením, takže vizuálna podobnosť obalu mala vyššiu váhu než textové rozdiely."
+        "imageDominated": "Táto zhoda bola skórovaná image-first vážením, takže vizuálna podobnosť obalu mala vyššiu váhu než textové rozdiely.",
+        "matchesHint": "Začnite prvou kartou zhody nižšie. Najprv potvrďte podobnosť obalu, potom model a značku.",
+        "primaryRiskFocus": "Hlavné riziko na kontrolu: {{category}} na úrovni {{level}}. Toto overte ako prvé.",
+        "focus": {
+          "criticalTitle": "Potrebná okamžitá akcia",
+          "criticalLead": "Produkt má zhodu s vysokou istotou. Vyriešte ho až po kontrole.",
+          "criticalStepCompare": "Porovnajte fotku produktu s prvou zhodou zo Safety Gate nižšie.",
+          "criticalStepDecide": "Vyberte riešenie v menu Vyriešiť podľa výsledku kontroly.",
+          "criticalStepDocument": "Doplňte internú poznámku kvôli dohľadateľnosti a komunikácii s dodávateľom.",
+          "safeTitle": "Nie je potrebná urgentná akcia",
+          "safeLead": "Aktuálny výsledok je bezpečný. Pokračujte v monitorovaní zmien produktu.",
+          "safeStepMonitor": "Nechajte produkt v automatickom monitorovaní.",
+          "safeStepRecheck": "Spustite novú kontrolu pri zmene obrázkov, obalu alebo dodávateľa.",
+          "safeStepClose": "Zatvorte detail a pokračujte na ďalšie aktívne upozornenia.",
+          "reviewedTitle": "Kontrola už bola uzavretá",
+          "reviewedLead": "Tento alert nie je aktívny. Udržujte záznam čistý pre audit.",
+          "reviewedStepAudit": "Overte zvolený typ riešenia a poznámky.",
+          "reviewedStepReactivate": "Reaktivujte len ak pribudnú nové dôkazy o produkte."
+        }
       },
       "pagination": {
         "pageOf": "Strana {{current}} z {{total}} ({{count}} upozornení)"
