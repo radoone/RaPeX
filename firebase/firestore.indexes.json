@@ -31,40 +31,75 @@
           "order": "ASCENDING"
         }
       ]
+    },
+    {
+      "collectionGroup": "rapex_alerts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "vector_text",
+          "vectorConfig": {
+            "dimension": 1536,
+            "flat": {}
+          }
+        }
+      ]
+    },
+    {
+      "collectionGroup": "rapex_alerts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "vector_image",
+          "vectorConfig": {
+            "dimension": 1408,
+            "flat": {}
+          }
+        }
+      ]
+    },
+    {
+      "collectionGroup": "merchant_products",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "vector_text",
+          "vectorConfig": {
+            "dimension": 1536,
+            "flat": {}
+          }
+        }
+      ]
+    },
+    {
+      "collectionGroup": "merchant_products",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "vector_image",
+          "vectorConfig": {
+            "dimension": 1408,
+            "flat": {}
+          }
+        }
+      ]
     }
   ],
-  "fieldOverrides": [
-    {
-      "collectionGroup": "rapex_alerts",
-      "fieldPath": "vector_text",
-      "vectorConfig": {
-        "dimension": "1536",
-        "flat": {}
-      }
-    },
-    {
-      "collectionGroup": "rapex_alerts",
-      "fieldPath": "vector_image",
-      "vectorConfig": {
-        "dimension": "1408",
-        "flat": {}
-      }
-    },
-    {
-      "collectionGroup": "merchant_products",
-      "fieldPath": "vector_text",
-      "vectorConfig": {
-        "dimension": "1536",
-        "flat": {}
-      }
-    },
-    {
-      "collectionGroup": "merchant_products",
-      "fieldPath": "vector_image",
-      "vectorConfig": {
-        "dimension": "1408",
-        "flat": {}
-      }
-    }
-  ]
+  "fieldOverrides": []
 }
