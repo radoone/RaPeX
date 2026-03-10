@@ -3,7 +3,7 @@ import { NavMenu } from "@shopify/app-bridge-react";
 import { json } from "@remix-run/node";
 import { useTranslation } from "react-i18next";
 import { authenticate } from "../shopify.server";
-import db from "../db.server";
+import db from "../merchant-db.server";
 
 export const loader = async ({ request }: { request: Request }) => {
   const { session } = await authenticate.admin(request);

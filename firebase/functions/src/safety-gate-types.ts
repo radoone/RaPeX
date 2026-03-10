@@ -51,3 +51,50 @@ export interface ProductCheckInput {
   brand?: string;
   model?: string;
 }
+
+export interface MerchantProductUpsertInput {
+  shop: string;
+  productId: string;
+  productTitle: string;
+  productHandle?: string;
+  product: ProductCheckInput;
+  sourceUpdatedAt?: string;
+}
+
+export interface MerchantProductDocument {
+  shop: string;
+  productId: string;
+  productTitle: string;
+  productHandle?: string;
+  name: string;
+  category: string;
+  description: string;
+  imageUrl?: string;
+  imageUrls?: string[];
+  brand?: string;
+  model?: string;
+  sourceUpdatedAt?: string;
+  createdAt: FieldValue;
+  updatedAt: FieldValue;
+  lastImmediateCheckAt?: FieldValue;
+  lastDeltaCheckAt?: FieldValue;
+  lastCheckedAt?: FieldValue;
+  vector_text?: FirestoreVectorValue;
+  vector_image?: FirestoreVectorValue;
+}
+
+export interface MerchantMonitorStateDocument {
+  shop: string;
+  createdAt: FieldValue;
+  updatedAt: FieldValue;
+  lastMonitorRunStart?: FieldValue;
+  lastMonitorRunEnd?: FieldValue;
+  lastMonitorStatus?: "SUCCESS" | "FAILURE" | "IN_PROGRESS";
+  lastRapexAlertDate?: Timestamp | null;
+  lastRapexRecordTimestamp?: string | null;
+  lastProductsScanned?: number;
+  lastAlertsCreated?: number;
+  lastMatchesFound?: number;
+  lastRunMode?: "delta" | "bootstrap" | "manual";
+  lastError?: string;
+}

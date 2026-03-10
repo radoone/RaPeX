@@ -1,6 +1,7 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { authenticate } from "../shopify.server";
 import db from "../db.server";
+import { purgeMerchantShopData } from "../merchant-db.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const { shop, session, topic } = await authenticate.webhook(request);
@@ -12,6 +13,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   if (session) {
     await db.session.deleteMany({ where: { shop } });
   }
+
+  await purgeMerchantShopData(shop).catch((error) => {
+    console.error("Failed to purge Firestore merchant data on uninstall", { shop, error });
+  });
 
   return new Response();
 };

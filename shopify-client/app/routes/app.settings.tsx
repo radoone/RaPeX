@@ -4,7 +4,7 @@ import { useLoaderData, useNavigation, Form } from "@remix-run/react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { authenticate } from "../shopify.server";
-import db from "../db.server";
+import db from "../merchant-db.server";
 import { getSimilarityThresholdForShop } from "../services/safety-gate-checker.server";
 import { LanguageSwitcher, SummaryCard } from "../components";
 

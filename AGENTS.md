@@ -23,15 +23,18 @@ If you only remember one sentence, remember this:
 
 ### 1. Firebase backend
 
-The Firebase Functions project does two jobs:
+The Firebase Functions project does four jobs:
 
 - imports Safety Gate alerts into Firestore
 - exposes an API that checks a product against those alerts
+- upserts merchant Shopify products (including vectors) to Firestore
+- runs per-shop RAPEX delta monitoring based on checkpoints
 
 Main files:
 - `firebase/functions/src/index.ts`
 - `firebase/functions/src/safety-gate-loader.ts`
 - `firebase/functions/src/safety-gate-http.ts`
+- `firebase/functions/src/merchant-monitoring.ts`
 - `firebase/functions/src/safety-gate-config.ts`
 - `firebase/functions/src/safety-gate-checker.ts`
 - `firebase/functions/src/safety-gate-checker-retrieval.ts`
@@ -42,11 +45,17 @@ Main files:
 
 ### 2. Firestore database
 
-Firestore is the alert knowledge base.
+Firestore is both the RAPEX knowledge base and the merchant app datastore.
 
 Main collections:
 - `rapex_alerts`: imported Safety Gate records
 - `rapex_meta/loader_state`: loader checkpoint and run status
+- `merchant_products`: per-shop Shopify product snapshots with vectors
+- `merchant_alerts`: per-shop alert records for matched Shopify products
+- `merchant_checks`: per-shop check history
+- `merchant_settings`: per-shop settings (including similarity threshold)
+- `merchant_webhook_errors`: per-shop webhook error log
+- `merchant_monitor_state`: per-shop RAPEX delta monitoring checkpoint/state
 
 Imported alert documents store:
 - raw Safety Gate fields
@@ -60,12 +69,15 @@ The Shopify app is the merchant-facing UI and workflow layer.
 It:
 - listens to Shopify product create/update webhooks
 - allows manual checks from the UI
-- allows bulk checking of store products
-- stores merchant-facing results in Prisma/SQLite
+- allows user-triggered RAPEX delta monitoring runs
+- stores merchant-facing business data in Firestore
+- keeps Prisma/SQLite only for Shopify auth sessions
 - uses Prisma 7 config-based datasource setup, so the SQLite URL lives in `shopify-client/prisma.config.ts`, not in `shopify-client/prisma/schema.prisma`
 
 Main files:
 - `shopify-client/app/services/safety-gate-checker.server.ts`
+- `shopify-client/app/merchant-db.server.ts`
+- `shopify-client/app/firestore.server.ts`
 - `shopify-client/app/db.server.ts`
 - `shopify-client/prisma.config.ts`
 - `shopify-client/app/routes/app._index.tsx`
@@ -74,6 +86,14 @@ Main files:
 - `shopify-client/app/routes/webhooks.products.create.tsx`
 - `shopify-client/app/routes/webhooks.products.update.tsx`
 
+### 4. Marketing site
+
+There is also a standalone marketing landing page in:
+- `marketing-site/`
+
+It is intentionally separate from the embedded Shopify app so sales/marketing pages
+can be worked on without changing Shopify auth or app routes.
+
 ## Real workflow
 
 1. A scheduled Firebase function fetches new Safety Gate data from the OpenDataSoft dataset `healthref-europe-rapex-en`.
@@ -81,8 +101,10 @@ Main files:
 3. The loader stores a checkpoint in `rapex_meta/loader_state` so later runs can do delta loading.
 4. When a Shopify product is created, updated, manually checked, or bulk-checked, the Shopify app sends normalized product data to Firebase endpoint `checkProductSafetyAPI`.
 5. The backend compares the product against recent/imported Safety Gate alerts, using AI plus Firestore retrieval/embeddings.
-6. The Shopify app stores the outcome in Prisma models such as `SafetyAlert`, `SafetyCheck`, and `SafetySetting`.
-7. The merchant sees alerts, history, and threshold settings inside the Shopify app.
+6. The Shopify app upserts checked Shopify products to Firestore `merchant_products` through Firebase endpoint `upsertMerchantProductAPI`.
+7. Merchant-facing alerts/checks/settings are stored in Firestore (`merchant_alerts`, `merchant_checks`, `merchant_settings`).
+8. Daily and user-triggered monitoring compares persisted merchant products only against RAPEX records newer than each shop checkpoint in `merchant_monitor_state`.
+9. Prisma remains only for Shopify sessions.
 
 ## Important product behavior
 
@@ -93,7 +115,7 @@ Main files:
 - Similarity can use product title, description, brand, model, category, and multiple product images when available.
 - Safety check responses now distinguish between `overallSimilarity` (final review score) and `imageSimilarity` (visual packaging similarity).
 - The old single `similarity` score is no longer part of the current checker response contract; use `overallSimilarity` in backend and UI code.
-- There is a per-shop similarity threshold in `SafetySetting`.
+- There is a per-shop similarity threshold in Firestore collection `merchant_settings`.
 - If the external/API check fails, the current implementation fails open and returns a safe result so sales are not blocked.
 - Safety check responses now include `analysis` metadata showing whether the check ran `text-only` or `with-image`, plus counts for product and alert images used.
 - When images are available, the checker uses image-first weighting so visually near-identical packaging is not overly penalized by weaker text fields. The per-shop threshold still applies to `overallSimilarity`.
@@ -114,6 +136,7 @@ When explaining or changing behavior, prefer these files as the source of truth:
 - ingestion and API surface: `firebase/functions/src/index.ts`
 - loader internals and OpenDataSoft fetch flow: `firebase/functions/src/safety-gate-loader.ts`
 - HTTP parsing/auth/CORS for product checks: `firebase/functions/src/safety-gate-http.ts`
+- merchant product upsert + delta monitoring: `firebase/functions/src/merchant-monitoring.ts`
 - shared Firebase config/constants: `firebase/functions/src/safety-gate-config.ts`
 - main product matching logic: `firebase/functions/src/safety-gate-checker.ts`
 - alert retrieval and Firestore/RAG lookup: `firebase/functions/src/safety-gate-checker-retrieval.ts`
@@ -121,10 +144,12 @@ When explaining or changing behavior, prefer these files as the source of truth:
 - image/media normalization for matcher inputs: `firebase/functions/src/safety-gate-checker-media.ts`
 - Genkit prompt asset for product matching text instructions: `firebase/functions/prompts/productMatchAnalysis.prompt`
 - Shopify-to-checker integration: `shopify-client/app/services/safety-gate-checker.server.ts`
+- Shopify Firestore business data adapter: `shopify-client/app/merchant-db.server.ts`
+- Shopify Firestore Admin init: `shopify-client/app/firestore.server.ts`
 - Prisma 7 datasource config and migrations path: `shopify-client/prisma.config.ts`
-- Prisma runtime client and SQLite adapter wiring: `shopify-client/app/db.server.ts`
+- Prisma runtime client and SQLite adapter wiring (sessions only): `shopify-client/app/db.server.ts`
 - product normalization: `shopify-client/app/services/safety-gate-checker.client.ts`
-- merchant alert persistence: `shopify-client/prisma/schema.prisma`
+- Prisma schema: `shopify-client/prisma/schema.prisma` (contains only `Session` in current architecture)
 
 ## Maintenance rule
 

@@ -27,19 +27,23 @@ export const SAFETY_GATE_CONFIG = {
   imageEmbedder: "vertexai/multimodalembedding@001",
   imageFetchTimeoutMs: 10000,
   requestTimeoutMs: 30000,
-  testRequestTimeoutMs: 15000,
 } as const;
 
 export const FIRESTORE_COLLECTIONS = {
   alerts: "rapex_alerts",
   meta: "rapex_meta",
   loaderStateDoc: "loader_state",
+  merchantProducts: "merchant_products",
+  merchantAlerts: "merchant_alerts",
+  merchantChecks: "merchant_checks",
+  merchantSettings: "merchant_settings",
+  merchantWebhookErrors: "merchant_webhook_errors",
+  merchantMonitorState: "merchant_monitor_state",
 } as const;
 
 export const SAFETY_GATE_HEADERS = {
   accept: "application/json",
   loaderUserAgent: "Safety-Gate-Loader/1.0",
-  testUserAgent: "Safety-Gate-API-Test/1.0",
 } as const;
 
 export const SCHEDULER_CONFIG = {

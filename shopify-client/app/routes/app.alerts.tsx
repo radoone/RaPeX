@@ -5,7 +5,7 @@ import { json } from "@remix-run/node";
 import { useTranslation } from "react-i18next";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
-import db from "../db.server";
+import db from "../merchant-db.server";
 import {
   AlertTable,
   AlertDetailModal,

@@ -172,6 +172,36 @@ async function analyzeProductMatches(product: ProductInput, alerts: NormalizedAl
   return null;
 }
 
+export async function checkProductAgainstAlerts(
+  product: ProductInput,
+  candidateAlerts: NormalizedAlert[],
+) {
+  const productImageCount = getProductImageUrls(product).length;
+
+  if (candidateAlerts.length === 0) {
+    return createNoAlertsResult(productImageCount);
+  }
+
+  const comparisonPrompt = buildComparisonPrompt(product, candidateAlerts);
+  const analysisResult = await analyzeProductMatches(product, candidateAlerts, comparisonPrompt);
+
+  if (!analysisResult) {
+    return createUnavailableAnalysisResult({
+      mode: "text-only",
+      scoringMode: "text-only",
+      productImagesProvided: productImageCount,
+      productImagesUsed: 0,
+      alertImagesUsed: 0,
+      candidateAlertsConsidered: candidateAlerts.length,
+    });
+  }
+
+  console.log("Gemini analysis response:", analysisResult.response.text);
+  console.log("Safety check analysis mode:", analysisResult.analysis);
+  const matches = parseAnalysisMatches(analysisResult.response);
+  return buildSafetyCheckResult(matches, candidateAlerts, analysisResult.analysis);
+}
+
 export const checkProductSafety = functionsAi.defineFlow(
   {
     name: "checkProductSafety",
@@ -180,34 +210,10 @@ export const checkProductSafety = functionsAi.defineFlow(
   },
   async (product) => {
     console.log("Checking product safety:", product.name);
-    const productImageCount = getProductImageUrls(product).length;
-
     const ragAlerts = await retrieveAlertsWithRag(product);
     const candidateAlerts =
       ragAlerts.length > 0 ? ragAlerts : await searchRecentRapexAlerts(ALERT_LOOKBACK_DAYS);
-
-    if (candidateAlerts.length === 0) {
-      return createNoAlertsResult(productImageCount);
-    }
-
-    const comparisonPrompt = buildComparisonPrompt(product, candidateAlerts);
-    const analysisResult = await analyzeProductMatches(product, candidateAlerts, comparisonPrompt);
-
-    if (!analysisResult) {
-      return createUnavailableAnalysisResult({
-        mode: "text-only",
-        scoringMode: "text-only",
-        productImagesProvided: productImageCount,
-        productImagesUsed: 0,
-        alertImagesUsed: 0,
-        candidateAlertsConsidered: candidateAlerts.length,
-      });
-    }
-
-    console.log("Gemini analysis response:", analysisResult.response.text);
-    console.log("Safety check analysis mode:", analysisResult.analysis);
-    const matches = parseAnalysisMatches(analysisResult.response);
-    return buildSafetyCheckResult(matches, candidateAlerts, analysisResult.analysis);
+    return checkProductAgainstAlerts(product, candidateAlerts);
   },
 );
 

@@ -6,8 +6,12 @@ import { useTranslation } from "react-i18next";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
 import { shopifyProductToProductData } from "../services/safety-gate-checker.client";
-import { checkProductSafety, getSimilarityThresholdForShop } from "../services/safety-gate-checker.server";
-import prisma from "../db.server";
+import {
+  checkProductSafety,
+  getSimilarityThresholdForShop,
+  upsertMerchantProductForMonitoring,
+} from "../services/safety-gate-checker.server";
+import db from "../merchant-db.server";
 import { AlertDetailModal, SummaryCard } from "../components";
 import { type ResolutionType, formatRelativeDate } from "../components/AlertTable";
 
@@ -36,13 +40,13 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const productIds = products.map((p: any) => p.id.replace('gid://shopify/Product/', ''));
 
   // Load safety checks
-  const productChecks = await (prisma as any).safetyCheck.findMany({
+  const productChecks = await db.safetyCheck.findMany({
     where: { shop: session.shop, productId: { in: productIds } },
     orderBy: { checkedAt: 'desc' },
   });
 
   // Load existing alerts for products (same transformation as Alerts page)
-  const rawAlerts = await (prisma as any).safetyAlert.findMany({
+  const rawAlerts = await db.safetyAlert.findMany({
     where: { shop: session.shop, productId: { in: productIds } },
     orderBy: { createdAt: 'desc' },
   });
@@ -112,11 +116,19 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     try {
       const threshold = await getSimilarityThresholdForShop(session.shop);
       const safetyResult = await checkProductSafety(productData, threshold);
+      await upsertMerchantProductForMonitoring({
+        shop: session.shop,
+        productId,
+        productTitle,
+        productHandle: formData.get("productHandle") as string || undefined,
+        product: productData,
+        sourceUpdatedAt: formData.get("productUpdatedAt") as string || undefined,
+      });
 
       let alertId: string | null = null;
 
       if (!safetyResult.isSafe && safetyResult.warnings.length > 0) {
-        const existing = await (prisma as any).safetyAlert.findFirst({ where: { productId, shop: session.shop, status: 'active' } });
+        const existing = await db.safetyAlert.findFirst({ where: { productId, shop: session.shop, status: 'active' } });
         if (!existing) {
           // Risk level is stored in alertDetails.fields.alert_level from Safety Gate API
           const firstWarning = safetyResult.warnings[0];
@@ -124,16 +136,43 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             firstWarning?.alertDetails?.fields?.risk_level ||
             firstWarning?.riskLevel ||
             'unknown';
-          const newAlert = await (prisma as any).safetyAlert.create({
+          const newAlert = await db.safetyAlert.create({
             data: { productId, productTitle, shop: session.shop, checkResult: JSON.stringify(safetyResult), status: 'active', riskLevel, warningsCount: safetyResult.warnings.length },
           });
           alertId = newAlert.id;
         } else {
+          await db.safetyAlert.update({
+            where: { id: existing.id },
+            data: {
+              checkResult: JSON.stringify(safetyResult),
+              riskLevel,
+              warningsCount: safetyResult.warnings.length,
+              status: "active",
+              resolvedAt: null,
+              dismissedAt: null,
+              dismissedBy: null,
+              resolutionType: null,
+            },
+          });
           alertId = existing.id;
+        }
+      } else {
+        const existingActive = await db.safetyAlert.findFirst({
+          where: { productId, shop: session.shop, status: "active" },
+        });
+        if (existingActive) {
+          await db.safetyAlert.update({
+            where: { id: existingActive.id },
+            data: {
+              status: "resolved",
+              resolvedAt: new Date(),
+              notes: "Manual re-check marked product as safe.",
+            },
+          });
         }
       }
 
-      await (prisma as any).safetyCheck.create({
+      await db.safetyCheck.create({
         data: { productId, productTitle, shop: session.shop, isSafe: safetyResult.isSafe, checkedAt: new Date(safetyResult.checkedAt) },
       });
 
@@ -149,7 +188,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const resolutionType = formData.get("resolutionType") as string | null;
 
     try {
-      await (prisma as any).safetyAlert.update({
+      await db.safetyAlert.update({
         where: { id: alertId },
         data: {
           status: "resolved",
@@ -169,7 +208,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const resolutionType = formData.get("resolutionType") as string | null;
 
     try {
-      await (prisma as any).safetyAlert.update({
+      await db.safetyAlert.update({
         where: { id: alertId },
         data: {
           status: "dismissed",
@@ -189,7 +228,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const alertId = formData.get("alertId") as string;
 
     try {
-      await (prisma as any).safetyAlert.update({
+      await db.safetyAlert.update({
         where: { id: alertId },
         data: {
           status: "active",
@@ -238,6 +277,8 @@ export default function ManualCheckPage() {
       productData: JSON.stringify(productData),
       productId: product.id.replace('gid://shopify/Product/', ''),
       productTitle: product.title,
+      productHandle: product.handle || "",
+      productUpdatedAt: product.updatedAt || "",
     }, { method: "POST" });
     setSelectedProduct(product);
     setHasProcessedResult(false);

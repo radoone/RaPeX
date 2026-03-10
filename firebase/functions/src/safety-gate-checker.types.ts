@@ -18,6 +18,7 @@ export type NormalizedAlert = {
     recordid: string;
     alert_date: string;
     ingested_at: string;
+    record_timestamp?: string;
   };
   fields: {
     product_category: string;

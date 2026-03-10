@@ -67,15 +67,6 @@ function buildLoaderRequestParams(start: number, queryFilter: string) {
   return params;
 }
 
-function parseQueryValue(value: unknown): string | undefined {
-  if (Array.isArray(value)) {
-    const first = value[0];
-    return typeof first === "string" && first.trim() ? first.trim() : undefined;
-  }
-
-  return typeof value === "string" && value.trim() ? value.trim() : undefined;
-}
-
 async function fetchOpenDataSoftRecords(
   params: Record<string, unknown>,
   userAgent: string,
@@ -318,56 +309,4 @@ export async function runSafetyGateLoader(): Promise<void> {
     await markRunFailed();
     throw error;
   }
-}
-
-export async function runOpenDataSoftApiTest(query: Record<string, unknown>) {
-  const filters: string[] = [];
-  const category = parseQueryValue(query.category);
-  const country = parseQueryValue(query.country);
-  const risk = parseQueryValue(query.risk);
-
-  if (category) {
-    filters.push(`product_category:"${category}"`);
-  }
-
-  if (country) {
-    filters.push(`alert_country:"${country}"`);
-  }
-
-  if (risk) {
-    filters.push(`risk_level:"${risk}"`);
-  }
-
-  const testParams: Record<string, unknown> = {
-    dataset: SAFETY_GATE_CONFIG.dataset,
-    rows: 1,
-    sort: SAFETY_GATE_CONFIG.defaultSort,
-  };
-
-  if (filters.length > 0) {
-    testParams.q = filters.join(" AND ");
-  }
-
-  const { data, status } = await fetchOpenDataSoftRecords(
-    testParams,
-    SAFETY_GATE_HEADERS.testUserAgent,
-    SAFETY_GATE_CONFIG.testRequestTimeoutMs,
-  );
-
-  return {
-    success: true,
-    api: {
-      endpoint: SAFETY_GATE_CONFIG.baseUrl,
-      dataset: SAFETY_GATE_CONFIG.dataset,
-      parameters: testParams,
-    },
-    response: {
-      status,
-      totalRecords: data.nhits || 0,
-      recordsReturned: data.records?.length || 0,
-      facetsAvailable: data.facet_groups?.length || 0,
-    },
-    sampleRecord: data.records?.[0] || null,
-    timestamp: new Date().toISOString(),
-  };
 }

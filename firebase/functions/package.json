@@ -5,7 +5,6 @@
     "lint": "eslint src safety_gate_fields.js",
     "build": "rm -rf lib && tsc",
     "build:watch": "tsc --watch",
-    "backfill:pilot": "node lib/backfill-rapex-embeddings.js",
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",

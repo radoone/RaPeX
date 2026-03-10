@@ -1,13 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { useFetcher, useLoaderData, useNavigation, useNavigate, json } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
-import db from "../db.server";
+import db from "../merchant-db.server";
 import { SummaryCard } from "../components";
-import { checkProductSafety, getSimilarityThresholdForShop } from "../services/safety-gate-checker.server";
-import { shopifyProductToProductData } from "../services/safety-gate-checker.client";
+import {
+  runMerchantDeltaMonitoring,
+} from "../services/safety-gate-checker.server";
 
 type BulkCheckResults = {
   processed: number;
@@ -176,191 +177,31 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const { session, admin } = await authenticate.admin(request);
+  const { session } = await authenticate.admin(request);
   const formData = await request.formData();
   const actionType = formData.get("action");
   const includeAlreadyChecked = formData.get("includeAlreadyChecked") === "true";
 
   if (actionType === "bulkCheck") {
     try {
+      const monitoring = await runMerchantDeltaMonitoring(session.shop, {
+        forceFullScan: includeAlreadyChecked,
+        limit: 300,
+      });
+
       const results: BulkCheckResults = {
-        processed: 0,
-        checked: 0,
+        processed: monitoring.productsScanned,
+        checked: monitoring.productsScanned,
         skipped: 0,
-        alertsCreated: 0,
+        alertsCreated: monitoring.alertsCreated,
         errors: 0,
-        totalProducts: 0,
+        totalProducts: monitoring.productsScanned,
         products: [],
       };
 
-      const similarityThreshold = await getSimilarityThresholdForShop(session.shop);
-
-      // Get already checked product IDs if not including them
-      let checkedProductIds: Set<string> = new Set();
-      if (!includeAlreadyChecked) {
-        const checkedProducts = await db.safetyCheck.findMany({
-          where: { shop: session.shop },
-          select: { productId: true },
-          distinct: ['productId'],
-        });
-        checkedProductIds = new Set(checkedProducts.map(p => p.productId));
-      }
-
-      let hasNextPage = true;
-      let cursor: string | null = null;
-
-      // First, count total products
-      const countResponse = await admin.graphql(`#graphql
-        query { productsCount { count } }
-      `);
-      const countJson = await countResponse.json();
-      results.totalProducts = countJson.data?.productsCount?.count || 0;
-
-      while (hasNextPage) {
-        const productsQuery = `
-          query getProducts($first: Int!, $after: String) {
-            products(first: $first, after: $after) {
-              edges {
-                node {
-                  id
-                  title
-                  handle
-                  productType
-                  vendor
-                  tags
-                  description
-                  descriptionHtml
-                  featuredImage { url altText }
-                  images(first: 4) { nodes { url altText } }
-                  variants(first: 1) {
-                    edges {
-                      node {
-                        id
-                        title
-                        selectedOptions { name value }
-                        image { url altText }
-                        price
-                      }
-                    }
-                  }
-                  updatedAt
-                  createdAt
-                }
-                cursor
-              }
-              pageInfo { hasNextPage endCursor }
-            }
-          }
-        `;
-
-        const productsResponse: Response = await admin.graphql(productsQuery, {
-          variables: { first: 50, after: cursor }
-        });
-        const productsJson: any = await productsResponse.json();
-
-        if (!productsJson.data?.products) {
-          throw new Error('Failed to fetch products from Shopify');
-        }
-
-        const { edges, pageInfo }: { edges: any[]; pageInfo: { hasNextPage: boolean; endCursor: string | null } } = productsJson.data.products;
-        hasNextPage = pageInfo.hasNextPage;
-        cursor = pageInfo.endCursor;
-
-        // Process products
-        for (const edge of edges) {
-          const product = edge.node;
-          results.processed++;
-
-          // Skip if already checked (unless includeAlreadyChecked is true)
-          if (!includeAlreadyChecked && checkedProductIds.has(product.id)) {
-            results.skipped++;
-            results.products.push({
-              id: product.id,
-              title: product.title,
-              status: 'skipped',
-              message: 'Already checked',
-            });
-            continue;
-          }
-
-          try {
-            const productData = shopifyProductToProductData(product);
-            const safetyResult = await checkProductSafety(productData, similarityThreshold);
-            results.checked++;
-
-            if (!safetyResult.isSafe && safetyResult.warnings.length > 0) {
-              const existingAlert = await db.safetyAlert.findFirst({
-                where: { productId: product.id, shop: session.shop, status: 'active' },
-              });
-
-              if (!existingAlert) {
-                await db.safetyAlert.create({
-                  data: {
-                    productId: product.id,
-                    productTitle: product.title,
-                    productHandle: product.handle,
-                    shop: session.shop,
-                    checkResult: JSON.stringify(safetyResult),
-                    status: 'active',
-                    riskLevel: safetyResult.warnings[0]?.alertDetails?.fields?.alert_level ||
-                      safetyResult.warnings[0]?.alertDetails?.fields?.risk_level ||
-                      safetyResult.warnings[0]?.riskLevel || 'Unknown',
-                    warningsCount: safetyResult.warnings.length,
-                  },
-                });
-                results.alertsCreated++;
-                results.products.push({
-                  id: product.id,
-                  title: product.title,
-                  status: 'alert_created',
-                  message: `${safetyResult.warnings.length} safety issues found`,
-                });
-              } else {
-                results.products.push({
-                  id: product.id,
-                  title: product.title,
-                  status: 'checked',
-                  message: 'Alert already exists',
-                });
-              }
-            } else {
-              results.products.push({
-                id: product.id,
-                title: product.title,
-                status: 'checked',
-                message: 'Safe',
-              });
-            }
-
-            await db.safetyCheck.create({
-              data: {
-                productId: product.id,
-                productTitle: product.title,
-                shop: session.shop,
-                isSafe: safetyResult.isSafe,
-                checkedAt: new Date(safetyResult.checkedAt),
-              },
-            });
-
-          } catch (error) {
-            console.error('Bulk check error for product', product.id, product.title, error);
-            results.errors++;
-            results.products.push({
-              id: product.id,
-              title: product.title,
-              status: 'error',
-              message: error instanceof Error ? error.message : 'Unknown error',
-            });
-          }
-        }
-
-        // Small delay between pages
-        await new Promise(resolve => setTimeout(resolve, 100));
-      }
-
       return json({
         success: true,
-        message: `Checked ${results.checked} products, created ${results.alertsCreated} alerts`,
+        message: `Monitoring scanned ${monitoring.productsScanned} products against ${monitoring.rapexAlertsScanned} new RAPEX alerts and created ${monitoring.alertsCreated} alerts`,
         results,
       });
     } catch (error) {
@@ -379,7 +220,7 @@ export default function Index() {
   const shopify = useAppBridge();
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [includeAlreadyChecked] = useState(false);
+  const includeAlreadyChecked = false;
 
   const isLoading = navigation.state === "loading";
   const isSubmitting = fetcher.state === "submitting";
@@ -420,11 +261,9 @@ export default function Index() {
         variant="primary"
         loading={isSubmitting || undefined}
         onClick={runBulkCheck}
-        disabled={stats.uncheckedProducts === 0 && !includeAlreadyChecked || undefined}
+        disabled={isSubmitting || undefined}
       >
-        {isSubmitting
-          ? t('actions.checking')
-          : t('actions.checkUnchecked', { count: stats.uncheckedProducts })}
+        {isSubmitting ? t("actions.checking") : t("actions.checkAll")}
       </s-button>
 
       <div className="admin-stack">
