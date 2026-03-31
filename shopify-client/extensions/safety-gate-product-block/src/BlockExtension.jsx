@@ -75,9 +75,7 @@ function Extension() {
 function StatusDetails({ status }) {
   return (
     <s-stack direction="block" gap="tight">
-      <s-text>
-        Current state: <strong>{labelForState(status.state)}</strong>
-      </s-text>
+      <s-text>{`Current state: ${labelForState(status.state)}`}</s-text>
       {status.checkedAt ? (
         <s-text>Last checked: {new Date(status.checkedAt).toLocaleString()}</s-text>
       ) : null}

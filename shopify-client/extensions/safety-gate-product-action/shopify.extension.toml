@@ -3,6 +3,7 @@ api_version = "2025-10"
 [[extensions]]
 name = "t:name"
 handle = "safety-gate-product-action"
+uid = "35c1780d-4d97-3777-bfbd-f3dfbe688334ab19e10b"
 type = "ui_extension"
 
 [[extensions.targeting]]

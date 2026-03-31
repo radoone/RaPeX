@@ -75,7 +75,9 @@ function ResultDetails({ result }) {
   return (
     <s-stack direction="block" gap="tight">
       <s-text>
-        Outcome: <strong>{status.state === "unsafe" ? "Warning detected" : "No likely match detected"}</strong>
+        {`Outcome: ${
+          status.state === "unsafe" ? "Warning detected" : "No likely match detected"
+        }`}
       </s-text>
       {status.checkedAt ? (
         <s-text>Checked at: {new Date(status.checkedAt).toLocaleString()}</s-text>
