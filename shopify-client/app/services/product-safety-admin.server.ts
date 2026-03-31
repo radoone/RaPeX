@@ -89,6 +89,10 @@ function getRiskLevel(result: SafetyCheckResult): string {
   );
 }
 
+function getRiskLevelFromResult(result: SafetyCheckResult | null): string | null {
+  return result ? getRiskLevel(result) : null;
+}
+
 function parseCheckResult(checkResult: string | null | undefined): SafetyCheckResult | null {
   if (!checkResult) {
     return null;
@@ -138,7 +142,7 @@ function buildStatusPayload(input: {
       alertId: activeAlert.id,
       alertStatus: activeAlert.status,
       alertType: getAlertType(activeResult),
-      riskLevel: activeAlert.riskLevel || getRiskLevel(activeResult as SafetyCheckResult),
+      riskLevel: activeAlert.riskLevel || getRiskLevelFromResult(activeResult),
       warningsCount: activeAlert.warningsCount,
       overallSimilarity: getOverallSimilarity(activeResult),
       recommendation: activeResult?.recommendation ?? null,

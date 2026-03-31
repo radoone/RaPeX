@@ -73,7 +73,7 @@ It:
 - allows user-triggered RAPEX delta monitoring runs
 - stores merchant-facing business data in Firestore
 - keeps Prisma/SQLite only for Shopify auth sessions
-- uses Prisma 7 config-based datasource setup, so the SQLite URL lives in `shopify-client/prisma.config.ts`, not in `shopify-client/prisma/schema.prisma`
+- uses Prisma config-based datasource setup through `shopify-client/prisma.config.ts`, but because `shopify-client` currently runs on Prisma `6.19.2`, `shopify-client/prisma/schema.prisma` must still keep an inline SQLite `url` for `prisma generate` compatibility
 
 Main files:
 - `shopify-client/app/services/safety-gate-checker.server.ts`
@@ -136,6 +136,7 @@ can be worked on without changing Shopify auth or app routes.
 - **UI Framework:** The `s-` prefix is mandatory for Polaris Web Components as they are registered as Custom Elements. Do not attempt to remove them.
 - **Error Handling:** In a Remix-based Shopify app, use `useRouteError` and `isRouteErrorResponse` in per-route `ErrorBoundary` components to handle API failures gracefully without breaking the entire Admin UI.
 - **i18n:** All merchant-facing strings, including error messages and bulk action labels, must be localized in `shopify-client/app/i18n.ts`.
+- **Prisma Compatibility:** In `shopify-client`, the installed Prisma version is currently `6.19.2`, so `prisma generate` still requires an inline `url` in `shopify-client/prisma/schema.prisma` even though `shopify-client/prisma.config.ts` also defines the datasource URL. The Better SQLite adapter export name is `PrismaBetterSQLite3`, not `PrismaBetterSqlite3`.
 
 ## Data source
 
@@ -163,7 +164,7 @@ When explaining or changing behavior, prefer these files as the source of truth:
 - Shopify-to-checker integration: `shopify-client/app/services/safety-gate-checker.server.ts`
 - Shopify Firestore business data adapter: `shopify-client/app/merchant-db.server.ts`
 - Shopify Firestore Admin init: `shopify-client/app/firestore.server.ts`
-- Prisma 7 datasource config and migrations path: `shopify-client/prisma.config.ts`
+- Prisma datasource config and migrations path: `shopify-client/prisma.config.ts`
 - Prisma runtime client and SQLite adapter wiring (sessions only): `shopify-client/app/db.server.ts`
 - product normalization: `shopify-client/app/services/safety-gate-checker.client.ts`
 - Prisma schema: `shopify-client/prisma/schema.prisma` (contains only `Session` in current architecture)
@@ -172,11 +173,14 @@ When explaining or changing behavior, prefer these files as the source of truth:
 
 When the project purpose, architecture, workflow, or important conventions change, update this `AGENTS.md` too.
 
+Also update `AGENTS.md` whenever you learn something project-specific that is both important and likely to be reused in future work, even if it came from debugging rather than planned feature work.
+
 Typical cases when `AGENTS.md` should be updated:
 - the main user-facing purpose of the repo changes
 - a new important workflow is added
 - a new integration becomes part of the core architecture
 - naming or terminology changes in a way that could confuse other LLMs or agents
+- a debugging session reveals a non-obvious project rule, compatibility constraint, or implementation detail that future agents are likely to hit again
 
 ## What to avoid misunderstanding
 
