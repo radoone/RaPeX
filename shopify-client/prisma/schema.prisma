@@ -10,6 +10,8 @@ generator client {
 // See https://www.prisma.io/docs/orm/reference/prisma-schema-reference#string for more information
 datasource db {
   provider = "sqlite"
+  // Prisma 6 still requires an inline datasource URL during generate.
+  url      = "file:./dev.sqlite"
 }
 
 model Session {

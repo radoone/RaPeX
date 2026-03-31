@@ -1,4 +1,4 @@
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import { PrismaBetterSQLite3 } from "@prisma/adapter-better-sqlite3";
 import { PrismaClient } from "@prisma/client";
 
 declare global {
@@ -8,7 +8,7 @@ declare global {
 const databaseUrl = process.env.DATABASE_URL ?? "file:./prisma/dev.sqlite";
 
 // Keep the legacy SQLite timestamp encoding so existing DateTime values remain readable.
-const adapter = new PrismaBetterSqlite3(
+const adapter = new PrismaBetterSQLite3(
   { url: databaseUrl },
   { timestampFormat: "unixepoch-ms" },
 );
