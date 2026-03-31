@@ -228,6 +228,7 @@ const resources = {
         "reviewAlerts": "Review alerts",
         "dashboard": "Dashboard",
         "tryAgain": "Try again",
+        "retry": "Retry",
         "previous": "Previous",
         "next": "Next",
         "view": "View",
@@ -368,7 +369,9 @@ const resources = {
             "actions": "Actions"
           },
           "empty": "No alerts matching your filters",
-          "thumbnailLabel": "{{title}} thumbnail"
+          "thumbnailLabel": "{{title}} thumbnail",
+          "selectedCount": "{{count}} selected",
+          "similarityTooltip": "Similarity score: {{score}}%"
         },
         "admin": {
           "actionNeeded": "Action needed",
@@ -470,6 +473,11 @@ const resources = {
         "searchDescription": "Search the EU Safety Gate for dangerous products",
         "home": "Safety Gate Home",
         "homeDescription": "Access the official European Commission portal"
+      },
+      "errors": {
+        "pageLoadFailed": "Page load failed",
+        "unknown": "Something went wrong",
+        "apiError": "External safety service is temporarily unavailable. Please try again later."
       },
       "news": {
         "title": "News",
@@ -737,6 +745,7 @@ const resources = {
         "reviewAlerts": "Skontrolovať upozornenia",
         "dashboard": "Nástenka",
         "tryAgain": "Skúsiť znova",
+        "retry": "Skúsiť znova",
         "previous": "Predchádzajúca",
         "next": "Ďalšia",
         "view": "Zobraziť",
@@ -877,7 +886,9 @@ const resources = {
             "actions": "Akcie"
           },
           "empty": "Žiadne upozornenia pre zvolené filtre",
-          "thumbnailLabel": "Náhľad {{title}}"
+          "thumbnailLabel": "Náhľad {{title}}",
+          "selectedCount": "Vybratých: {{count}}",
+          "similarityTooltip": "Miera podobnosti: {{score}}%"
         },
         "admin": {
           "actionNeeded": "Potrebná akcia",
@@ -979,6 +990,11 @@ const resources = {
         "searchDescription": "Vyhľadajte nebezpečné produkty v EU Safety Gate",
         "home": "Hlavná stránka Safety Gate",
         "homeDescription": "Prístup k oficiálnemu portálu Európskej komisie"
+      },
+      "errors": {
+        "pageLoadFailed": "Načítanie stránky zlyhalo",
+        "unknown": "Niekde nastala chyba",
+        "apiError": "Externá bezpečnostná služba je dočasne nedostupná. Skúste to prosím neskôr."
       },
       "news": {
         "title": "Novinky",

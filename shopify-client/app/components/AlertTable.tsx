@@ -31,6 +31,7 @@ interface AlertTableProps {
   onDismiss?: (alertId: string, resolutionType?: ResolutionType) => void;
   onResolve?: (alertId: string, resolutionType?: ResolutionType) => void;
   onReactivate?: (alertId: string) => void;
+  onBulkAction?: (alertIds: string[], action: 'resolve' | 'dismiss', resolutionType?: ResolutionType) => void;
   isLoading?: boolean;
   showProductLink?: boolean;
   modalIdPrefix?: string;
@@ -48,6 +49,7 @@ export function AlertTable({
   onDismiss,
   onResolve,
   onReactivate,
+  onBulkAction,
   isLoading = false,
   showProductLink = false,
   modalIdPrefix = "alert-modal",
@@ -60,45 +62,128 @@ export function AlertTable({
   const { t } = useTranslation();
   const [sortBy, setSortBy] = useState<string>("created");
   const [sortOrder, setSortOrder] = useState<string>("desc");
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   // Determine active tab
   const activeTab = statusFilter.length === 1 ? statusFilter[0] : "all";
+
+  const toggleSelectAll = () => {
+    if (selectedIds.length === alerts.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(alerts.map(a => a.id));
+    }
+  };
+
+  const toggleSelect = (id: string) => {
+    setSelectedIds(prev =>
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    );
+  };
+
+  const handleBulkResolve = (resolutionType?: ResolutionType) => {
+    if (onBulkAction && selectedIds.length > 0) {
+      onBulkAction(selectedIds, 'resolve', resolutionType);
+      setSelectedIds([]);
+    }
+  };
+
+  const handleBulkDismiss = (resolutionType?: ResolutionType) => {
+    if (onBulkAction && selectedIds.length > 0) {
+      onBulkAction(selectedIds, 'dismiss', resolutionType);
+      setSelectedIds([]);
+    }
+  };
 
   return (
     <s-section padding="none" accessibilityLabel={t('alerts.table.accessibilityLabel')}>
       {/* Filters above table */}
       <s-stack gap="small" style={{ paddingBottom: 'var(--s-space-base)' }}>
-        {/* Tabs for status */}
-        <s-stack direction="inline" gap="none">
-          <s-button
-            variant={activeTab === "all" ? "secondary" : "tertiary"}
-            size="small"
-            onClick={() => onStatusChange?.("")}
-          >
-            {t('alerts.table.tabs.all')} {stats ? `(${stats.total})` : ""}
-          </s-button>
-          <s-button
-            variant={activeTab === "active" ? "secondary" : "tertiary"}
-            size="small"
-            onClick={() => onStatusChange?.("active")}
-          >
-            {t('alerts.table.tabs.active')} {stats?.active ? `(${stats.active})` : ""}
-          </s-button>
-          <s-button
-            variant={activeTab === "resolved" ? "secondary" : "tertiary"}
-            size="small"
-            onClick={() => onStatusChange?.("resolved")}
-          >
-            {t('alerts.table.tabs.resolved')} {stats?.resolved ? `(${stats.resolved})` : ""}
-          </s-button>
-          <s-button
-            variant={activeTab === "dismissed" ? "secondary" : "tertiary"}
-            size="small"
-            onClick={() => onStatusChange?.("dismissed")}
-          >
-            {t('alerts.table.tabs.dismissed')} {stats?.dismissed ? `(${stats.dismissed})` : ""}
-          </s-button>
-        </s-stack>
+        {/* Selection Bar / Tabs */}
+        {selectedIds.length > 0 ? (
+          <s-box background="bg-surface-secondary" padding="small" borderRadius="base" style={{ animation: 'fade-in 0.2s' }}>
+            <s-stack direction="inline" gap="medium" alignItems="center" justifyContent="space-between">
+              <s-stack direction="inline" gap="small" alignItems="center">
+                <s-checkbox
+                  checked={selectedIds.length === alerts.length}
+                  indeterminate={selectedIds.length > 0 && selectedIds.length < alerts.length}
+                  onChange={toggleSelectAll}
+                />
+                <s-text fontWeight="semibold">{t('alerts.table.selectedCount', { count: selectedIds.length })}</s-text>
+              </s-stack>
+              <s-stack direction="inline" gap="small-200">
+                <s-button variant="secondary" size="small" commandFor="bulk-resolve-popover">
+                  {t('actions.resolve')}
+                </s-button>
+                <s-button variant="secondary" size="small" commandFor="bulk-dismiss-popover">
+                  {t('actions.dismiss')}
+                </s-button>
+                
+                <s-popover id="bulk-resolve-popover">
+                  <s-stack gap="none">
+                    <s-box padding="small">
+                      <s-text fontWeight="semibold" size="small">{t('resolveActions.menuLabel')}</s-text>
+                    </s-box>
+                    <s-divider />
+                    <s-box padding="small">
+                      <s-stack gap="small-100">
+                        <s-button variant="tertiary" size="small" onClick={() => handleBulkResolve('verified_safe')}>{t('resolveActions.verifiedSafe')}</s-button>
+                        <s-button variant="tertiary" size="small" onClick={() => handleBulkResolve('removed_from_sale')}>{t('resolveActions.removedFromSale')}</s-button>
+                        <s-button variant="tertiary" size="small" onClick={() => handleBulkResolve('modified_product')}>{t('resolveActions.modifiedProduct')}</s-button>
+                      </s-stack>
+                    </s-box>
+                  </s-stack>
+                </s-popover>
+
+                <s-popover id="bulk-dismiss-popover">
+                  <s-stack gap="none">
+                    <s-box padding="small">
+                      <s-text fontWeight="semibold" size="small">{t('resolveActions.menuLabel')}</s-text>
+                    </s-box>
+                    <s-divider />
+                    <s-box padding="small">
+                      <s-stack gap="small-100">
+                        <s-button variant="tertiary" size="small" onClick={() => handleBulkDismiss('false_positive')}>{t('resolveActions.falsePositive')}</s-button>
+                        <s-button variant="tertiary" size="small" onClick={() => handleBulkDismiss('not_my_product')}>{t('resolveActions.notMyProduct')}</s-button>
+                      </s-stack>
+                    </s-box>
+                  </s-stack>
+                </s-popover>
+              </s-stack>
+            </s-stack>
+          </s-box>
+        ) : (
+          <s-stack direction="inline" gap="none">
+            <s-button
+              variant={activeTab === "all" ? "secondary" : "tertiary"}
+              size="small"
+              onClick={() => onStatusChange?.("")}
+            >
+              {t('alerts.table.tabs.all')} {stats ? `(${stats.total})` : ""}
+            </s-button>
+            <s-button
+              variant={activeTab === "active" ? "secondary" : "tertiary"}
+              size="small"
+              onClick={() => onStatusChange?.("active")}
+            >
+              {t('alerts.table.tabs.active')} {stats?.active ? `(${stats.active})` : ""}
+            </s-button>
+            <s-button
+              variant={activeTab === "resolved" ? "secondary" : "tertiary"}
+              size="small"
+              onClick={() => onStatusChange?.("resolved")}
+            >
+              {t('alerts.table.tabs.resolved')} {stats?.resolved ? `(${stats.resolved})` : ""}
+            </s-button>
+            <s-button
+              variant={activeTab === "dismissed" ? "secondary" : "tertiary"}
+              size="small"
+              onClick={() => onStatusChange?.("dismissed")}
+            >
+              {t('alerts.table.tabs.dismissed')} {stats?.dismissed ? `(${stats.dismissed})` : ""}
+            </s-button>
+          </s-stack>
+        )}
 
         {/* Search and sort row */}
         <s-grid gap="small-200" gridTemplateColumns="1fr auto">
@@ -150,6 +235,13 @@ export function AlertTable({
 
       <s-table>
         <s-table-header-row>
+          <s-table-header>
+            <s-checkbox
+              checked={selectedIds.length === alerts.length && alerts.length > 0}
+              indeterminate={selectedIds.length > 0 && selectedIds.length < alerts.length}
+              onChange={toggleSelectAll}
+            />
+          </s-table-header>
           <s-table-header listSlot="primary">{t('alerts.table.headers.product')}</s-table-header>
           <s-table-header listSlot="inline">{t('alerts.table.headers.status')}</s-table-header>
           <s-table-header listSlot="labeled">{t('alerts.table.headers.risk')}</s-table-header>
@@ -159,7 +251,7 @@ export function AlertTable({
         <s-table-body>
           {alerts.length === 0 ? (
             <s-table-row>
-              <s-table-cell colSpan={5}>
+              <s-table-cell colSpan={6}>
                 <s-box padding="large">
                   <s-stack gap="small" align="center">
                     <s-text tone="subdued">{t('alerts.table.empty')}</s-text>
@@ -179,6 +271,8 @@ export function AlertTable({
                 isLoading={isLoading}
                 showProductLink={showProductLink}
                 modalId={`${modalIdPrefix}-${alert.id}`}
+                isSelected={selectedIds.includes(alert.id)}
+                onSelect={(id) => toggleSelect(id)}
               />
             ))
           )}
@@ -194,11 +288,15 @@ function AlertRow({
   onViewDetails,
   showProductLink,
   modalId,
+  isSelected,
+  onSelect,
 }: {
   alert: Alert;
   onViewDetails: (alert: Alert) => void;
   showProductLink: boolean;
   modalId: string;
+  isSelected: boolean;
+  onSelect: (id: string) => void;
 }) {
   const { t, i18n } = useTranslation();
   const viewBtnRef = useRef<HTMLElement>(null);
@@ -220,13 +318,22 @@ function AlertRow({
 
   // Badge tones
   const statusTone = alert.status === 'active' ? 'critical' : alert.status === 'resolved' ? 'success' : 'neutral';
-  const riskTone = alert.riskLevel?.toLowerCase().includes('serious') ? 'critical'
-    : alert.riskLevel?.toLowerCase().includes('high') ? 'warning' : 'info';
+  const isSerious = alert.riskLevel?.toLowerCase().includes('serious') || alert.riskLevel?.toLowerCase().includes('high');
+  const riskTone = isSerious ? 'critical' : 'info';
+
+  // Serious risk indicator style
+  const seriousRowStyle = isSerious && alert.status === 'active' 
+    ? { borderLeft: '4px solid var(--critical)', paddingLeft: '4px' } 
+    : {};
 
   return (
-    <s-table-row>
-      {/* Product Cell - Shopify style */}
+    <s-table-row selected={isSelected || undefined}>
       <s-table-cell>
+        <s-checkbox checked={isSelected} onChange={() => onSelect(alert.id)} />
+      </s-table-cell>
+
+      {/* Product Cell - Shopify style */}
+      <s-table-cell style={seriousRowStyle}>
         <s-stack direction="inline" gap="small" alignItems="center">
           {alert.productImage ? (
             <s-clickable
@@ -283,9 +390,16 @@ function AlertRow({
       {/* Risk Cell */}
       <s-table-cell>
         <s-stack gap="small-100">
-          <s-badge tone={riskTone}>
-            {alert.riskLevel || t('common.unknown')}
-          </s-badge>
+          <s-stack direction="inline" gap="small-100" alignItems="center">
+            <s-badge tone={riskTone}>
+              {alert.riskLevel || t('common.unknown')}
+            </s-badge>
+            {alert.overallSimilarity && (
+              <s-tooltip content={t('alerts.table.similarityTooltip', { score: alert.overallSimilarity })}>
+                <s-text tone="subdued" size="small">({alert.overallSimilarity}%)</s-text>
+              </s-tooltip>
+            )}
+          </s-stack>
           <s-text tone="subdued" size="small">{warningsLabel}</s-text>
         </s-stack>
       </s-table-cell>

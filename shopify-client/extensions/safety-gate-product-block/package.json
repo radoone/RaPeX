@@ -1,0 +1,10 @@
+{
+  "name": "safety-gate-product-block",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "@shopify/ui-extensions": "2026.1.1",
+    "preact": "^10.29.0"
+  }
+}

@@ -6,6 +6,29 @@ import { RiskMeter } from "./RiskMeter";
 import { StatusBadge } from "./StatusBadge";
 import type { ResolutionType } from "./AlertTable";
 
+// Helper to highlight matched words
+function HighlightedText({ text, query, tone = "info" }: { text: string; query?: string; tone?: string }) {
+  if (!query || !text) return <>{text}</>;
+  
+  const words = query.split(/\s+/).filter(w => w.length > 2);
+  if (words.length === 0) return <>{text}</>;
+  
+  const regex = new RegExp(`(${words.join('|')})`, 'gi');
+  const parts = text.split(regex);
+  
+  return (
+    <>
+      {parts.map((part, i) => 
+        regex.test(part) ? (
+          <s-text key={i} fontWeight="bold" tone={tone} style={{ backgroundColor: 'var(--s-surface-highlight)', padding: '0 2px', borderRadius: '2px' }}>
+            {part}
+          </s-text>
+        ) : part
+      )}
+    </>
+  );
+}
+
 interface AlertDetailModalProps {
   alert: any;
   modalId: string;
@@ -117,6 +140,13 @@ export function AlertDetailModal({
   const warningsCount = warnings.length || alert.warningsCount || 0;
   const primaryWarning = warnings[0];
   const primaryFields = primaryWarning?.alertDetails?.fields || {};
+
+  const matchKeywords = [
+    primaryFields.product_brand,
+    primaryFields.product_model,
+    primaryFields.product_name,
+  ].filter(Boolean).join(' ');
+
   const overallSimilarity = typeof primaryWarning?.overallSimilarity === "number"
     ? primaryWarning.overallSimilarity
     : null;
@@ -189,7 +219,9 @@ export function AlertDetailModal({
 
                 {/* Product Info */}
                 <s-stack gap="small" style={{ flex: 1, minWidth: 0 }}>
-                  <s-heading size="large">{alert.productTitle}</s-heading>
+                  <s-heading size="large">
+                    <HighlightedText text={alert.productTitle} query={matchKeywords} tone="critical" />
+                  </s-heading>
                   
                   <s-stack direction="inline" gap="small" wrap>
                     <StatusBadge status={alert.status} />
@@ -624,13 +656,13 @@ function WarningCard({
                 {fields.product_brand && (
                   <s-table-row>
                     <s-table-cell><s-text tone="subdued">Brand</s-text></s-table-cell>
-                    <s-table-cell>{fields.product_brand}</s-table-cell>
+                    <s-table-cell><s-text fontWeight="bold" tone="critical">{fields.product_brand}</s-text></s-table-cell>
                   </s-table-row>
                 )}
                 {productModel && (
                   <s-table-row>
                     <s-table-cell><s-text tone="subdued">Model</s-text></s-table-cell>
-                    <s-table-cell>{productModel}</s-table-cell>
+                    <s-table-cell><s-text fontWeight="bold" tone="critical">{productModel}</s-text></s-table-cell>
                   </s-table-row>
                 )}
                 {fields.product_category && (

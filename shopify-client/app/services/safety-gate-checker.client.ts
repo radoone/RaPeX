@@ -1,4 +1,4 @@
-import type { ProductVariant } from "@shopify/hydrogen/storefront-api-types";
+import type { ProductVariant } from "../types/product";
 
 export interface ProductData {
   name: string;

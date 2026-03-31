@@ -1,17 +1,13 @@
 import { useState, useCallback, useEffect } from "react";
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node";
-import { useLoaderData, useFetcher } from "@remix-run/react";
+import { useLoaderData, useFetcher, useRouteError, isRouteErrorResponse } from "@remix-run/react";
 import { json } from "@remix-run/node";
 import { useTranslation } from "react-i18next";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
 import { shopifyProductToProductData } from "../services/safety-gate-checker.client";
-import {
-  checkProductSafety,
-  getSimilarityThresholdForShop,
-  upsertMerchantProductForMonitoring,
-} from "../services/safety-gate-checker.server";
 import db from "../merchant-db.server";
+import { runProductSafetyCheck } from "../services/product-safety-admin.server";
 import { AlertDetailModal, SummaryCard } from "../components";
 import { type ResolutionType, formatRelativeDate } from "../components/AlertTable";
 
@@ -114,69 +110,20 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const productTitle = formData.get("productTitle") as string;
 
     try {
-      const threshold = await getSimilarityThresholdForShop(session.shop);
-      const safetyResult = await checkProductSafety(productData, threshold);
-      await upsertMerchantProductForMonitoring({
+      const runResult = await runProductSafetyCheck({
         shop: session.shop,
         productId,
         productTitle,
         productHandle: formData.get("productHandle") as string || undefined,
-        product: productData,
+        productData,
         sourceUpdatedAt: formData.get("productUpdatedAt") as string || undefined,
       });
-
-      let alertId: string | null = null;
-
-      if (!safetyResult.isSafe && safetyResult.warnings.length > 0) {
-        const existing = await db.safetyAlert.findFirst({ where: { productId, shop: session.shop, status: 'active' } });
-        if (!existing) {
-          // Risk level is stored in alertDetails.fields.alert_level from Safety Gate API
-          const firstWarning = safetyResult.warnings[0];
-          const riskLevel = firstWarning?.alertDetails?.fields?.alert_level ||
-            firstWarning?.alertDetails?.fields?.risk_level ||
-            firstWarning?.riskLevel ||
-            'unknown';
-          const newAlert = await db.safetyAlert.create({
-            data: { productId, productTitle, shop: session.shop, checkResult: JSON.stringify(safetyResult), status: 'active', riskLevel, warningsCount: safetyResult.warnings.length },
-          });
-          alertId = newAlert.id;
-        } else {
-          await db.safetyAlert.update({
-            where: { id: existing.id },
-            data: {
-              checkResult: JSON.stringify(safetyResult),
-              riskLevel,
-              warningsCount: safetyResult.warnings.length,
-              status: "active",
-              resolvedAt: null,
-              dismissedAt: null,
-              dismissedBy: null,
-              resolutionType: null,
-            },
-          });
-          alertId = existing.id;
-        }
-      } else {
-        const existingActive = await db.safetyAlert.findFirst({
-          where: { productId, shop: session.shop, status: "active" },
-        });
-        if (existingActive) {
-          await db.safetyAlert.update({
-            where: { id: existingActive.id },
-            data: {
-              status: "resolved",
-              resolvedAt: new Date(),
-              notes: "Manual re-check marked product as safe.",
-            },
-          });
-        }
-      }
-
-      await db.safetyCheck.create({
-        data: { productId, productTitle, shop: session.shop, isSafe: safetyResult.isSafe, checkedAt: new Date(safetyResult.checkedAt) },
+      return json({
+        success: true,
+        result: runResult.result,
+        alertCreated: runResult.alertCreated,
+        alertId: runResult.alertId,
       });
-
-      return json({ success: true, result: safetyResult, alertCreated: !safetyResult.isSafe && safetyResult.warnings.length > 0, alertId });
     } catch (error) {
       return json({ success: false, error: error instanceof Error ? error.message : 'Unknown error' });
     }
@@ -247,6 +194,33 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   return json({ success: false, error: "Invalid action" });
 };
 
+export function ErrorBoundary() {
+  const error = useRouteError();
+  const { t } = useTranslation();
+
+  const title = isRouteErrorResponse(error)
+    ? `${error.status} ${error.statusText}`
+    : error instanceof Error
+      ? error.message
+      : t("common.unknown");
+
+  return (
+    <s-page>
+      <s-heading slot="title" size="large">{t("manualCheck.title")}</s-heading>
+      <div className="admin-stack" style={{ marginTop: "var(--s-space-400)" }}>
+        <s-banner tone="critical" heading={t("errors.pageLoadFailed")}>
+          <s-text>{title}</s-text>
+          <div style={{ marginTop: "var(--s-space-200)" }}>
+            <s-button onClick={() => window.location.reload()}>
+              {t("actions.retry")}
+            </s-button>
+          </div>
+        </s-banner>
+      </div>
+    </s-page>
+  );
+}
+
 export default function ManualCheckPage() {
   const { products, checksByProduct, alertsByProduct } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
@@ -265,10 +239,8 @@ export default function ManualCheckPage() {
   const existingAlerts = Object.values(alertsByProduct || {}) as any[];
 
   const productCheckEntries = Object.values(checksByProduct || {});
-  const checkedProducts = productCheckEntries.filter((e: any) => e.totalChecks > 0).length;
   const unsafeProducts = productCheckEntries.filter((e: any) => e.isSafe === false).length;
   const totalChecks = productCheckEntries.reduce((sum: number, e: any) => sum + e.totalChecks, 0);
-  const coverageRate = products.length > 0 ? Math.round((checkedProducts / products.length) * 100) : 0;
 
   const handleProductCheck = useCallback((product: any) => {
     const productData = shopifyProductToProductData(product);
@@ -462,14 +434,25 @@ export default function ManualCheckPage() {
                     : t('manualCheck.catalogue.status.notChecked');
                   const existingAlert = alertsByProduct[productId];
                   const hasAlert = Boolean(existingAlert);
+                  const isProductLoading = isLoading && selectedProduct?.id === product.id;
 
                   return (
                     <s-table-row key={product.id}>
                       <s-table-cell>
                         <div className="admin-product-cell">
-                          <s-thumbnail src={product.featuredImage?.url} alt={product.title} size="small" />
+                          {isProductLoading ? (
+                            <s-box width="40px" height="40px" background="bg-surface-secondary" borderRadius="base">
+                              <s-spinner size="small" />
+                            </s-box>
+                          ) : (
+                            <s-thumbnail src={product.featuredImage?.url} alt={product.title} size="small" />
+                          )}
                           <div className="admin-product-cell__content">
-                            <strong>{product.title}</strong>
+                            {isProductLoading ? (
+                              <s-skeleton-text lines="1" width="120px" />
+                            ) : (
+                              <strong>{product.title}</strong>
+                            )}
                             <p>
                               {product.vendor || t('manualCheck.catalogue.unknownVendor')}
                               {product.productType ? ` • ${product.productType}` : ""}
@@ -480,18 +463,24 @@ export default function ManualCheckPage() {
 
                       <s-table-cell>
                         <div className="admin-status-stack">
-                          <s-badge tone={statusTone}>{statusLabel}</s-badge>
-                          {lastCheck && (
-                            <span className="admin-helper">
-                              {formatRelativeDate(lastCheck, t, dateLocale)}
-                            </span>
+                          {isProductLoading ? (
+                            <s-skeleton-text lines="1" width="60px" />
+                          ) : (
+                            <>
+                              <s-badge tone={statusTone}>{statusLabel}</s-badge>
+                              {lastCheck && (
+                                <span className="admin-helper">
+                                  {formatRelativeDate(lastCheck, t, dateLocale)}
+                                </span>
+                              )}
+                            </>
                           )}
                         </div>
                       </s-table-cell>
 
                       <s-table-cell>
                         <div className="admin-actions">
-                          {hasAlert && (
+                          {hasAlert && !isProductLoading && (
                             <s-button
                               size="small"
                               variant="secondary"
@@ -504,7 +493,8 @@ export default function ManualCheckPage() {
                           <s-button
                             size="small"
                             variant="primary"
-                            loading={isLoading && selectedProduct?.id === product.id || undefined}
+                            loading={isProductLoading || undefined}
+                            disabled={isLoading || undefined}
                             onClick={() => handleProductCheck(product)}
                           >
                             {checks.totalChecks > 0 ? t('manualCheck.catalogue.actions.checkAgain') : t('manualCheck.catalogue.actions.checkSafety')}

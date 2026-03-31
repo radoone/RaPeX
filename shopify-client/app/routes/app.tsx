@@ -42,6 +42,7 @@ export default function App() {
 // Shopify needs Remix to catch some thrown responses, so that their headers are included in the response.
 export function ErrorBoundary() {
   const error = useRouteError();
+  const { t } = useTranslation();
 
   const message = isRouteErrorResponse(error)
     ? typeof error.data === "string"
@@ -49,7 +50,7 @@ export function ErrorBoundary() {
       : error.statusText || "Request failed."
     : error instanceof Error
       ? error.message
-      : "Something went wrong while loading the app.";
+      : t("errors.unknown");
 
   return (
     <s-page>
@@ -61,9 +62,14 @@ export function ErrorBoundary() {
           borderWidth="base"
           borderColor="border"
         >
-          <s-stack gap="small">
-            <s-heading size="medium">Application error</s-heading>
+          <s-stack gap="medium">
+            <s-heading size="medium">{t("errors.pageLoadFailed")}</s-heading>
             <s-text tone="subdued">{message}</s-text>
+            <div style={{ marginTop: "var(--s-space-200)" }}>
+              <s-button onClick={() => window.location.reload()}>
+                {t("actions.retry")}
+              </s-button>
+            </div>
           </s-stack>
         </s-box>
       </s-section>
