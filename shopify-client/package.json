@@ -21,46 +21,44 @@
   },
   "type": "module",
   "engines": {
-    "node": "^18.20 || ^20.10 || >=21.0.0"
+    "node": ">=21.0.0"
   },
   "dependencies": {
-    "@prisma/adapter-better-sqlite3": "^7.4.2",
-    "@prisma/client": "^7.4.2",
-    "@remix-run/dev": "^2.17.4",
+    "@prisma/adapter-better-sqlite3": "^6.19.2",
+    "@prisma/client": "^6.19.2",
     "@remix-run/fs-routes": "^2.17.4",
     "@remix-run/node": "^2.17.4",
     "@remix-run/react": "^2.17.4",
     "@remix-run/serve": "^2.17.4",
     "@shopify/app-bridge-react": "^4.2.10",
     "@shopify/polaris": "^13.9.5",
-    "@shopify/shopify-app-remix": "^4.1.1",
-    "@shopify/shopify-app-session-storage-prisma": "^8.0.1",
-    "better-sqlite3": "^12.6.2",
+    "@shopify/shopify-app-remix": "^4.2.0",
+    "@shopify/shopify-app-session-storage-prisma": "^9.0.0",
     "firebase-admin": "^13.7.0",
-    "i18next": "^25.8.17",
+    "i18next": "^26.0.3",
     "i18next-browser-languagedetector": "^8.2.1",
-    "isbot": "^5.1.35",
-    "prisma": "^7.4.2",
+    "isbot": "^5.1.37",
+    "prisma": "^6.19.2",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "react-i18next": "^16.5.6",
-    "vite-tsconfig-paths": "^6.1.1"
+    "react-i18next": "^17.0.2"
   },
   "devDependencies": {
+    "@remix-run/dev": "^2.17.4",
     "@remix-run/eslint-config": "^2.17.4",
     "@remix-run/route-config": "^2.17.4",
-    "@shopify/api-codegen-preset": "^1.2.2",
+    "@shopify/api-codegen-preset": "^2.0.0",
     "@types/eslint": "^9.6.1",
-    "@types/node": "^25.4.0",
+    "@types/node": "^25.5.0",
     "@types/react": "18.3.12",
     "@types/react-dom": "18.3.1",
     "eslint": "^8.57.1",
-    "eslint-config-prettier": "^9.1.2",
-    "happy-dom": "^20.8.3",
+    "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.8.1",
     "typescript": "^5.9.3",
-    "vite": "^7.3.1",
-    "vitest": "^4.0.18"
+    "vite": "^6.4.1",
+    "vite-tsconfig-paths": "^6.1.1",
+    "vitest": "^4.1.2"
   },
   "workspaces": [
     "extensions/*"

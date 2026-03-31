@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node";
-import { useLoaderData, useFetcher, useNavigate } from "@remix-run/react";
+import { useLoaderData, useFetcher, useNavigate, useRouteError, isRouteErrorResponse } from "@remix-run/react";
 import { json } from "@remix-run/node";
 import { useTranslation } from "react-i18next";
 import { useAppBridge } from "@shopify/app-bridge-react";
@@ -68,12 +68,13 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   }
 
   const alerts = rawAlerts.map((alert: any) => {
-    let alertType = 'Unknown', riskDescription = '', alertDetails = null, riskLevelFromResult = null;
+    let alertType = 'Unknown', riskDescription = '', alertDetails = null, riskLevelFromResult = null, overallSimilarity = null;
     try {
       const checkResult = JSON.parse(alert.checkResult);
       const warnings = Array.isArray(checkResult?.warnings) ? checkResult.warnings : [];
       if (warnings.length > 0) {
         const first = warnings[0];
+        overallSimilarity = first.overallSimilarity || null;
         alertType = first.alertType || first.alertDetails?.fields?.alert_type || 'Unknown';
         riskDescription = first.riskLegalProvision || first.alertDetails?.fields?.risk_legal_provision || '';
         alertDetails = first.alertDetails || null;
@@ -89,7 +90,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     // Prefer riskLevel from checkResult, fallback to DB field
     const effectiveRiskLevel = riskLevelFromResult || (alert.riskLevel !== 'unknown' ? alert.riskLevel : null) || 'Unknown';
     return {
-      ...alert, alertType, riskDescription, alertDetails,
+      ...alert, alertType, riskDescription, alertDetails, overallSimilarity,
       riskLevel: effectiveRiskLevel,
       productImage: productImages[alert.productId] || productImages[`gid://shopify/Product/${alert.productId}`] || alertDetails?.fallbackImage || null,
     };
@@ -126,35 +127,39 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const action = formData.get("action") as string;
   const alertId = formData.get("alertId") as string;
+  const alertIdsJson = formData.get("alertIds") as string;
   const resolutionType = formData.get("resolutionType") as string | null;
+  const notes = formData.get("notes") as string || undefined;
+
+  const ids = alertIdsJson ? JSON.parse(alertIdsJson) as string[] : [alertId];
 
   switch (action) {
     case "dismiss":
-      await db.safetyAlert.update({
-        where: { id: alertId },
+      await db.safetyAlert.updateMany({
+        where: { id: { in: ids }, shop: session.shop },
         data: {
           status: 'dismissed',
           dismissedAt: new Date(),
           dismissedBy: session.id,
           resolutionType: resolutionType || undefined,
-          notes: formData.get("notes") as string || undefined
+          notes: notes
         }
       });
       break;
     case "resolve":
-      await db.safetyAlert.update({
-        where: { id: alertId },
+      await db.safetyAlert.updateMany({
+        where: { id: { in: ids }, shop: session.shop },
         data: {
           status: 'resolved',
           resolvedAt: new Date(),
           resolutionType: resolutionType || undefined,
-          notes: formData.get("notes") as string || undefined
+          notes: notes
         }
       });
       break;
     case "reactivate":
-      await db.safetyAlert.update({
-        where: { id: alertId },
+      await db.safetyAlert.updateMany({
+        where: { id: { in: ids }, shop: session.shop },
         data: {
           status: 'active',
           dismissedAt: null,
@@ -167,6 +172,33 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
   return json({ success: true });
 };
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+  const { t } = useTranslation();
+
+  const title = isRouteErrorResponse(error)
+    ? `${error.status} ${error.statusText}`
+    : error instanceof Error
+      ? error.message
+      : t("common.unknown");
+
+  return (
+    <s-page>
+      <s-heading slot="title" size="large">{t("alerts.title")}</s-heading>
+      <div className="admin-stack" style={{ marginTop: "var(--s-space-400)" }}>
+        <s-banner tone="critical" heading={t("errors.pageLoadFailed")}>
+          <s-text>{title}</s-text>
+          <div style={{ marginTop: "var(--s-space-200)" }}>
+            <s-button onClick={() => window.location.reload()}>
+              {t("actions.retry")}
+            </s-button>
+          </div>
+        </s-banner>
+      </div>
+    </s-page>
+  );
+}
 
 export default function AlertsPage() {
   const { alerts, pagination, filters, stats } = useLoaderData<typeof loader>();
@@ -191,6 +223,14 @@ export default function AlertsPage() {
 
   const handleAlertAction = useCallback((alertId: string, action: string, resolutionType?: string) => {
     fetcher.submit({ action, alertId, resolutionType: resolutionType || '' }, { method: 'POST' });
+  }, [fetcher]);
+
+  const handleBulkAction = useCallback((alertIds: string[], action: string, resolutionType?: string) => {
+    fetcher.submit({ 
+      action, 
+      alertIds: JSON.stringify(alertIds), 
+      resolutionType: resolutionType || '' 
+    }, { method: 'POST' });
   }, [fetcher]);
 
   const resolvedRate = stats.total > 0 ? Math.round((stats.resolved / stats.total) * 100) : 0;
@@ -267,6 +307,7 @@ export default function AlertsPage() {
             onDismiss={(id, resolutionType) => handleAlertAction(id, 'dismiss', resolutionType)}
             onResolve={(id, resolutionType) => handleAlertAction(id, 'resolve', resolutionType)}
             onReactivate={(id) => handleAlertAction(id, 'reactivate')}
+            onBulkAction={handleBulkAction}
             isLoading={fetcher.state === 'submitting'}
             showProductLink
             modalIdPrefix="alert-detail"

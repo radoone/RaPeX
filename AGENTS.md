@@ -69,6 +69,7 @@ The Shopify app is the merchant-facing UI and workflow layer.
 It:
 - listens to Shopify product create/update webhooks
 - allows manual checks from the UI
+- exposes Shopify Admin UI extensions on product details pages
 - allows user-triggered RAPEX delta monitoring runs
 - stores merchant-facing business data in Firestore
 - keeps Prisma/SQLite only for Shopify auth sessions
@@ -76,6 +77,7 @@ It:
 
 Main files:
 - `shopify-client/app/services/safety-gate-checker.server.ts`
+- `shopify-client/app/services/product-safety-admin.server.ts`
 - `shopify-client/app/merchant-db.server.ts`
 - `shopify-client/app/firestore.server.ts`
 - `shopify-client/app/db.server.ts`
@@ -83,8 +85,12 @@ Main files:
 - `shopify-client/app/routes/app._index.tsx`
 - `shopify-client/app/routes/app.manual-check.tsx`
 - `shopify-client/app/routes/app.alerts.tsx`
+- `shopify-client/app/routes/api.product-safety-status.ts`
+- `shopify-client/app/routes/api.product-safety-check.ts`
 - `shopify-client/app/routes/webhooks.products.create.tsx`
 - `shopify-client/app/routes/webhooks.products.update.tsx`
+- `shopify-client/extensions/safety-gate-product-block/shopify.extension.toml`
+- `shopify-client/extensions/safety-gate-product-action/shopify.extension.toml`
 
 ### 4. Marketing site
 
@@ -103,8 +109,9 @@ can be worked on without changing Shopify auth or app routes.
 5. The backend compares the product against recent/imported Safety Gate alerts, using AI plus Firestore retrieval/embeddings.
 6. The Shopify app upserts checked Shopify products to Firestore `merchant_products` through Firebase endpoint `upsertMerchantProductAPI`.
 7. Merchant-facing alerts/checks/settings are stored in Firestore (`merchant_alerts`, `merchant_checks`, `merchant_settings`).
-8. Daily and user-triggered monitoring compares persisted merchant products only against RAPEX records newer than each shop checkpoint in `merchant_monitor_state`.
-9. Prisma remains only for Shopify sessions.
+8. Shopify Admin product detail extensions show the latest Safety Gate state inline and can trigger a fresh check from the product page.
+9. Daily and user-triggered monitoring compares persisted merchant products only against RAPEX records newer than each shop checkpoint in `merchant_monitor_state`.
+10. Prisma remains only for Shopify sessions.
 
 ## Important product behavior
 
@@ -116,9 +123,19 @@ can be worked on without changing Shopify auth or app routes.
 - Safety check responses now distinguish between `overallSimilarity` (final review score) and `imageSimilarity` (visual packaging similarity).
 - The old single `similarity` score is no longer part of the current checker response contract; use `overallSimilarity` in backend and UI code.
 - There is a per-shop similarity threshold in Firestore collection `merchant_settings`.
-- If the external/API check fails, the current implementation fails open and returns a safe result so sales are not blocked.
-- Safety check responses now include `analysis` metadata showing whether the check ran `text-only` or `with-image`, plus counts for product and alert images used.
-- When images are available, the checker uses image-first weighting so visually near-identical packaging is not overly penalized by weaker text fields. The per-shop threshold still applies to `overallSimilarity`.
+- If the external/API check fails, the app now uses a robust **ErrorBoundary** system to inform the merchant and allow retry, rather than silently failing open with a "safe" result.
+- The UI uses **Shopify Polaris Web Components** (with `s-` prefix) to ensure a native look and feel within the Shopify Admin.
+- The **Alert Table** supports **Bulk Actions** (Resolve/Dismiss) for efficient management of multiple findings.
+- High-risk alerts ("Serious" or "High") are visually prioritized in the UI with critical color coding and borders.
+- The **Alert Detail Modal** uses intelligent **text highlighting** to show exactly which parts of the product title match the Safety Gate data.
+- Manual checks now include **Skeleton loading states** to provide better visual feedback during the analysis process.
+
+## Technical Standards & Lessons Learned
+
+- **Dependency Management:** Prefer internal types (e.g., `app/types/product.ts`) over heavy external libraries (like `@shopify/hydrogen`) just for type definitions to avoid version conflicts with Remix/Vite.
+- **UI Framework:** The `s-` prefix is mandatory for Polaris Web Components as they are registered as Custom Elements. Do not attempt to remove them.
+- **Error Handling:** In a Remix-based Shopify app, use `useRouteError` and `isRouteErrorResponse` in per-route `ErrorBoundary` components to handle API failures gracefully without breaking the entire Admin UI.
+- **i18n:** All merchant-facing strings, including error messages and bulk action labels, must be localized in `shopify-client/app/i18n.ts`.
 
 ## Data source
 

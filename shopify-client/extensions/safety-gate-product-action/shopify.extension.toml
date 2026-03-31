@@ -1,0 +1,10 @@
+api_version = "2025-10"
+
+[[extensions]]
+name = "t:name"
+handle = "safety-gate-product-action"
+type = "ui_extension"
+
+[[extensions.targeting]]
+module = "./src/ActionExtension.jsx"
+target = "admin.product-details.action.render"

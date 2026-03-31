@@ -143,20 +143,8 @@ export async function checkProductSafety(
     return result;
   } catch (error) {
     console.error("Error checking product safety:", error);
-    return {
-      isSafe: true,
-      warnings: [],
-      recommendation: `Unable to verify product safety against Safety Gate database. Error: ${error instanceof Error ? error.message : "Unknown error"}`,
-      checkedAt: new Date().toISOString(),
-      analysis: {
-        mode: "text-only",
-        scoringMode: "text-only",
-        productImagesProvided: productData.imageUrls?.length || (productData.imageUrl ? 1 : 0),
-        productImagesUsed: 0,
-        alertImagesUsed: 0,
-        candidateAlertsConsidered: 0,
-      },
-    };
+    // Throw error so UI can handle it via ErrorBoundary
+    throw new Error(error instanceof Error ? error.message : "Safety Gate service is unavailable");
   }
 }
 

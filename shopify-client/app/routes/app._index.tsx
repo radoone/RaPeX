@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { useFetcher, useLoaderData, useNavigation, useNavigate, json } from "@remix-run/react";
+import { useFetcher, useLoaderData, useNavigation, useNavigate, useRouteError, isRouteErrorResponse } from "@remix-run/react";
+import { json } from "@remix-run/node";
 import { useTranslation } from "react-i18next";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
@@ -212,6 +213,33 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   return json({ success: false, error: "Invalid action" }, { status: 400 });
 };
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+  const { t } = useTranslation();
+
+  const title = isRouteErrorResponse(error)
+    ? `${error.status} ${error.statusText}`
+    : error instanceof Error
+      ? error.message
+      : t("common.unknown");
+
+  return (
+    <s-page>
+      <s-heading slot="title" size="large">{t("nav.dashboard")}</s-heading>
+      <div className="admin-stack" style={{ marginTop: "var(--s-space-400)" }}>
+        <s-banner tone="critical" heading={t("errors.pageLoadFailed")}>
+          <s-text>{title}</s-text>
+          <div style={{ marginTop: "var(--s-space-200)" }}>
+            <s-button onClick={() => window.location.reload()}>
+              {t("actions.retry")}
+            </s-button>
+          </div>
+        </s-banner>
+      </div>
+    </s-page>
+  );
+}
 
 export default function Index() {
   const { stats, recentAlerts } = useLoaderData<typeof loader>();

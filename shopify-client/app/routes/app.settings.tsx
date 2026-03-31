@@ -1,6 +1,6 @@
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { useLoaderData, useNavigation, Form } from "@remix-run/react";
+import { useLoaderData, useNavigation, Form, useRouteError, isRouteErrorResponse } from "@remix-run/react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { authenticate } from "../shopify.server";
@@ -33,6 +33,33 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   return redirect("/app/settings");
 };
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+  const { t } = useTranslation();
+
+  const title = isRouteErrorResponse(error)
+    ? `${error.status} ${error.statusText}`
+    : error instanceof Error
+      ? error.message
+      : t("common.unknown");
+
+  return (
+    <s-page>
+      <s-heading slot="title" size="large">{t("settings.title")}</s-heading>
+      <div className="admin-stack" style={{ marginTop: "var(--s-space-400)" }}>
+        <s-banner tone="critical" heading={t("errors.pageLoadFailed")}>
+          <s-text>{title}</s-text>
+          <div style={{ marginTop: "var(--s-space-200)" }}>
+            <s-button onClick={() => window.location.reload()}>
+              {t("actions.retry")}
+            </s-button>
+          </div>
+        </s-banner>
+      </div>
+    </s-page>
+  );
+}
 
 export default function Settings() {
   const { similarityThreshold, envDefault } = useLoaderData<typeof loader>();
