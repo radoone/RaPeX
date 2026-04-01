@@ -36,7 +36,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     console.log(`Checking product safety for: ${productData.name}`);
 
     // Check product against Safety Gate database
-    const safetyResult = await checkProductSafety(productData, similarityThreshold);
+    const safetyResult = await checkProductSafety(productData, similarityThreshold, {
+      shop,
+      productId: product.id.toString(),
+      sourceUpdatedAt: product.updated_at || product.updatedAt || undefined,
+    });
 
     // If product is not safe, create alert record
     if (!safetyResult.isSafe && safetyResult.warnings.length > 0) {

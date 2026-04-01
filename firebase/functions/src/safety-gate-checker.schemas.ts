@@ -11,6 +11,9 @@ export const ProductInputSchema = functionsAi.defineSchema(
     imageUrls: z.array(z.string()).optional().describe("URLs to product images"),
     brand: z.string().optional().describe("Product brand"),
     model: z.string().optional().describe("Product model"),
+    shop: z.string().optional().describe("Shopify shop domain for merchant product cache reuse"),
+    productId: z.string().optional().describe("Shopify product ID for merchant product cache reuse"),
+    sourceUpdatedAt: z.string().optional().describe("Shopify source updated timestamp for cache validation"),
   }),
 );
 

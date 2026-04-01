@@ -3,6 +3,7 @@ import { vertexAI } from "@genkit-ai/google-genai";
 import { getFirestore, Timestamp } from "firebase-admin/firestore";
 import type { DocumentData, RetrieverAction } from "genkit/retriever";
 import { functionsAi } from "./firebase-admin.js";
+import { FIRESTORE_COLLECTIONS } from "./safety-gate-config.js";
 import type { ProductInput } from "./safety-gate-checker.schemas.js";
 import {
   getProductImageUrls,
@@ -24,6 +25,153 @@ const IMAGE_VECTOR_DIMENSIONS = 1408;
 
 let textRetriever: RetrieverAction | null = null;
 let imageRetriever: RetrieverAction | null = null;
+let legacyImageRetriever: RetrieverAction | null = null;
+
+function merchantProductDocId(shop: string, productId: string): string {
+  return `${encodeURIComponent(shop)}::${encodeURIComponent(productId)}`;
+}
+
+function asVectorArray(value: unknown): number[] | undefined {
+  if (!value || typeof value !== "object") {
+    return undefined;
+  }
+
+  const maybeVector = value as { toArray?: () => number[]; _values?: number[] };
+  if (typeof maybeVector.toArray === "function") {
+    return maybeVector.toArray();
+  }
+
+  if (Array.isArray(maybeVector._values)) {
+    return maybeVector._values;
+  }
+
+  return undefined;
+}
+
+async function getCachedMerchantProductVectors(product: ProductInput): Promise<{
+  textVector?: number[];
+  imageVector?: number[];
+} | null> {
+  const shop = product.shop?.trim();
+  const productId = product.productId?.trim();
+  if (!shop || !productId) {
+    return null;
+  }
+
+  const snapshot = await getFirestore()
+    .collection(FIRESTORE_COLLECTIONS.merchantProducts)
+    .doc(merchantProductDocId(shop, productId))
+    .get();
+
+  if (!snapshot.exists) {
+    return null;
+  }
+
+  const data = snapshot.data() as Record<string, unknown>;
+  const cachedSourceUpdatedAt =
+    typeof data.sourceUpdatedAt === "string" ? data.sourceUpdatedAt.trim() : undefined;
+  const requestedSourceUpdatedAt = product.sourceUpdatedAt?.trim();
+
+  if (requestedSourceUpdatedAt && cachedSourceUpdatedAt && cachedSourceUpdatedAt !== requestedSourceUpdatedAt) {
+    return null;
+  }
+
+  return {
+    textVector: asVectorArray(data.vector_text),
+    imageVector: asVectorArray(data.vector_image),
+  };
+}
+
+async function retrieveAlertsFromCachedVectors(product: ProductInput): Promise<NormalizedAlert[]> {
+  const cachedVectors = await getCachedMerchantProductVectors(product);
+  if (!cachedVectors?.textVector?.length && !cachedVectors?.imageVector?.length) {
+    return [];
+  }
+
+  const db = getFirestore();
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - ALERT_LOOKBACK_DAYS);
+  const candidates: NormalizedAlert[] = [];
+  const seen = new Set<string>();
+
+  if (cachedVectors.textVector?.length) {
+    try {
+      const snapshot = await db
+        .collection(FIRESTORE_COLLECTIONS.alerts)
+        .where("meta.alert_date", ">=", Timestamp.fromDate(cutoffDate))
+        .findNearest({
+          vectorField: VECTOR_TEXT_FIELD,
+          queryVector: cachedVectors.textVector,
+          limit: RAG_TEXT_LIMIT,
+          distanceMeasure: "COSINE",
+          distanceResultField: "distance",
+        })
+        .get();
+
+      for (const document of snapshot.docs) {
+        const normalized = normalizeRetrieverDocument({
+          content: [],
+          metadata: {
+            id: document.id,
+            ...document.data(),
+            distance: document.get("distance"),
+          },
+        } as DocumentData);
+        if (!normalized || seen.has(normalized.id)) {
+          continue;
+        }
+        seen.add(normalized.id);
+        candidates.push(normalized);
+      }
+    } catch (error) {
+      console.warn("Cached text vector query failed; falling back to live embedding query", error);
+    }
+  }
+
+  if (cachedVectors.imageVector?.length) {
+    try {
+      const snapshot = await db
+        .collection(FIRESTORE_COLLECTIONS.alertImages)
+        .where("meta.alert_date", ">=", Timestamp.fromDate(cutoffDate))
+        .findNearest({
+          vectorField: VECTOR_IMAGE_FIELD,
+          queryVector: cachedVectors.imageVector,
+          limit: RAG_IMAGE_LIMIT,
+          distanceMeasure: "COSINE",
+          distanceResultField: "distance",
+        })
+        .get();
+
+      for (const document of snapshot.docs) {
+        const normalized = normalizeRetrieverDocument({
+          content: [],
+          metadata: {
+            id: document.id,
+            ...document.data(),
+            distance: document.get("distance"),
+          },
+        } as DocumentData);
+        if (!normalized || seen.has(normalized.id)) {
+          continue;
+        }
+        seen.add(normalized.id);
+        candidates.push(normalized);
+      }
+    } catch (error) {
+      console.warn("Cached image vector query failed; falling back to live embedding query", error);
+    }
+  }
+
+  candidates.sort((left, right) => {
+    const leftDistance =
+      typeof left.distance === "number" ? left.distance : Number.POSITIVE_INFINITY;
+    const rightDistance =
+      typeof right.distance === "number" ? right.distance : Number.POSITIVE_INFINITY;
+    return leftDistance - rightDistance;
+  });
+
+  return candidates.slice(0, MAX_RAG_ALERTS);
+}
 
 function toVertexInlineMedia(encodedImage: { url: string; contentType?: string }) {
   const contentType = encodedImage.contentType ?? "application/octet-stream";
@@ -52,7 +200,7 @@ function ensureTextRetriever(): RetrieverAction | null {
     textRetriever = defineFirestoreRetriever(functionsAi, {
       name: "rapex-text-retriever",
       firestore: getFirestore(),
-      collection: "rapex_alerts",
+      collection: FIRESTORE_COLLECTIONS.alerts,
       embedder: vertexAI.embedder("gemini-embedding-001", {
         outputDimensionality: TEXT_VECTOR_DIMENSIONS,
       }),
@@ -75,9 +223,9 @@ function ensureImageRetriever(): RetrieverAction | null {
 
   try {
     imageRetriever = defineFirestoreRetriever(functionsAi, {
-      name: "rapex-image-retriever",
+      name: "rapex-alert-images-retriever",
       firestore: getFirestore(),
-      collection: "rapex_alerts",
+      collection: FIRESTORE_COLLECTIONS.alertImages,
       embedder: vertexAI.embedder("multimodalembedding@001", {
         outputDimensionality: IMAGE_VECTOR_DIMENSIONS,
       }),
@@ -91,6 +239,31 @@ function ensureImageRetriever(): RetrieverAction | null {
   }
 
   return imageRetriever;
+}
+
+function ensureLegacyImageRetriever(): RetrieverAction | null {
+  if (legacyImageRetriever) {
+    return legacyImageRetriever;
+  }
+
+  try {
+    legacyImageRetriever = defineFirestoreRetriever(functionsAi, {
+      name: "rapex-image-retriever-legacy",
+      firestore: getFirestore(),
+      collection: FIRESTORE_COLLECTIONS.alerts,
+      embedder: vertexAI.embedder("multimodalembedding@001", {
+        outputDimensionality: IMAGE_VECTOR_DIMENSIONS,
+      }),
+      vectorField: VECTOR_IMAGE_FIELD,
+      contentField: "fields.product_description",
+      distanceResultField: "distance",
+    });
+  } catch (error) {
+    console.warn("Unable to initialize legacy image retriever; continuing with alert-image collection only", error);
+    legacyImageRetriever = null;
+  }
+
+  return legacyImageRetriever;
 }
 
 function normalizeRetrieverDocument(doc: DocumentData): NormalizedAlert | null {
@@ -138,12 +311,18 @@ export async function retrieveAlertsWithRag(product: ProductInput): Promise<Norm
   const cutoffDate = new Date();
   cutoffDate.setDate(cutoffDate.getDate() - ALERT_LOOKBACK_DAYS);
 
+  const cachedCandidates = await retrieveAlertsFromCachedVectors(product);
+  if (cachedCandidates.length > 0) {
+    return cachedCandidates;
+  }
+
   const candidates: NormalizedAlert[] = [];
   const seen = new Set<string>();
   const activeTextRetriever = ensureTextRetriever();
   const activeImageRetriever = ensureImageRetriever();
+  const activeLegacyImageRetriever = ensureLegacyImageRetriever();
 
-  if (!activeTextRetriever && !activeImageRetriever) {
+  if (!activeTextRetriever && !activeImageRetriever && !activeLegacyImageRetriever) {
     return [];
   }
 
@@ -169,7 +348,12 @@ export async function retrieveAlertsWithRag(product: ProductInput): Promise<Norm
     }
   }
 
-  if (activeImageRetriever) {
+  const imageRetrievers = [
+    activeImageRetriever,
+    activeLegacyImageRetriever,
+  ].filter((retriever): retriever is RetrieverAction => Boolean(retriever));
+
+  if (imageRetrievers.length > 0) {
     for (const imageUrl of getProductImageUrls(product)) {
       const encodedImage = await prepareImageMedia(imageUrl);
       if (!encodedImage) {
@@ -177,24 +361,26 @@ export async function retrieveAlertsWithRag(product: ProductInput): Promise<Norm
       }
       const vertexInlineMedia = toVertexInlineMedia(encodedImage);
 
-      try {
-        const result = await functionsAi.retrieve({
-          retriever: activeImageRetriever,
-          query: { content: [{ media: vertexInlineMedia }] },
-          options: { limit: RAG_IMAGE_LIMIT },
-        });
+      for (const retriever of imageRetrievers) {
+        try {
+          const result = await functionsAi.retrieve({
+            retriever,
+            query: { content: [{ media: vertexInlineMedia }] },
+            options: { limit: RAG_IMAGE_LIMIT },
+          });
 
-        for (const document of result || []) {
-          const normalized = normalizeRetrieverDocument(document);
-          if (!normalized || seen.has(normalized.id) || !isWithinLookback(normalized.meta.alert_date, cutoffDate)) {
-            continue;
+          for (const document of result || []) {
+            const normalized = normalizeRetrieverDocument(document);
+            if (!normalized || seen.has(normalized.id) || !isWithinLookback(normalized.meta.alert_date, cutoffDate)) {
+              continue;
+            }
+
+            seen.add(normalized.id);
+            candidates.push(normalized);
           }
-
-          seen.add(normalized.id);
-          candidates.push(normalized);
+        } catch (error) {
+          console.warn("Image retriever query failed; continuing without image recall", error);
         }
-      } catch (error) {
-        console.warn("Image retriever query failed; continuing without image recall", error);
       }
     }
   }
@@ -218,7 +404,7 @@ export async function searchRecentRapexAlerts(days = ALERT_LOOKBACK_DAYS): Promi
   console.log(`Searching Safety Gate alerts from ${cutoffDate.toISOString()} to now...`);
 
   const alertsSnapshot = await db
-    .collection("rapex_alerts")
+    .collection(FIRESTORE_COLLECTIONS.alerts)
     .where("meta.alert_date", ">=", Timestamp.fromDate(cutoffDate))
     .orderBy("meta.alert_date", "desc")
     .limit(100)

@@ -182,12 +182,30 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const actionType = formData.get("action");
   const includeAlreadyChecked = formData.get("includeAlreadyChecked") === "true";
+  const monitoringModeValue = formData.get("monitoringMode");
+  const monitoringMode = typeof monitoringModeValue === "string" && monitoringModeValue.trim()
+    ? monitoringModeValue.trim()
+    : "since-last-check";
+  const monitoringDaysValue = formData.get("monitoringDays");
+  const monitoringDays = typeof monitoringDaysValue === "string" && monitoringDaysValue.trim()
+    ? Number(monitoringDaysValue)
+    : undefined;
 
   if (actionType === "bulkCheck") {
     try {
       const monitoring = await runMerchantDeltaMonitoring(session.shop, {
         forceFullScan: includeAlreadyChecked,
         limit: 300,
+        monitoringMode:
+          monitoringMode === "weekly" ||
+          monitoringMode === "last-days" ||
+          monitoringMode === "full-lookback" ||
+          monitoringMode === "since-last-check"
+            ? monitoringMode
+            : "since-last-check",
+        days: Number.isFinite(monitoringDays) && monitoringDays && monitoringDays > 0
+          ? monitoringDays
+          : undefined,
       });
 
       const results: BulkCheckResults = {
@@ -256,7 +274,11 @@ export default function Index() {
   const runBulkCheck = () => {
     if (isSubmitting) return;
     fetcher.submit(
-      { action: "bulkCheck", includeAlreadyChecked: includeAlreadyChecked.toString() },
+      {
+        action: "bulkCheck",
+        includeAlreadyChecked: includeAlreadyChecked.toString(),
+        monitoringMode: "since-last-check",
+      },
       { method: "POST" },
     );
   };

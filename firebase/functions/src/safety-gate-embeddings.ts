@@ -3,17 +3,21 @@ import * as logger from "firebase-functions/logger";
 import { embeddingsAi } from "./firebase-admin.js";
 import { SAFETY_GATE_CONFIG } from "./safety-gate-config.js";
 
-export function getFirstPicture(fields: Record<string, unknown> | null | undefined): string | null {
-  const pictures = [
+export function getPictureUrls(fields: Record<string, unknown> | null | undefined): string[] {
+  return [...new Set([
     ...(Array.isArray(fields?.pictures) ? fields.pictures : []),
     ...(fields?.product_image ? [fields.product_image] : []),
     ...(typeof fields?.product_other_images === "string"
       ? fields.product_other_images.split(",")
       : []),
-  ];
+  ]
+    .filter((picture): picture is string => typeof picture === "string")
+    .map((picture) => picture.trim())
+    .filter(Boolean))];
+}
 
-  const first = pictures.find((picture) => typeof picture === "string" && picture.trim());
-  return typeof first === "string" ? first.trim() : null;
+export function getFirstPicture(fields: Record<string, unknown> | null | undefined): string | null {
+  return getPictureUrls(fields)[0] ?? null;
 }
 
 async function fetchImageAsBase64(

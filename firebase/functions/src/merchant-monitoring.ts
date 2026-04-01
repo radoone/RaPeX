@@ -15,7 +15,12 @@ import type {
 
 type MerchantMonitoringSummary = {
   shop: string;
-  mode: "delta" | "bootstrap";
+  mode: "delta" | "bootstrap" | "windowed";
+  window: {
+    strategy: "since-last-check" | "last-days" | "full-lookback";
+    days: number | null;
+    checkpointDate: string;
+  };
   productsScanned: number;
   rapexAlertsScanned: number;
   matchesFound: number;
@@ -39,6 +44,28 @@ type ResponseShape = {
   json(payload: unknown): void;
   send(payload: string): void;
 };
+
+type AlertRetrievalCandidate = {
+  alert: NormalizedAlert;
+  textVector?: number[];
+  imageVector?: number[];
+};
+
+type MerchantProductCandidate = {
+  id: string;
+  data: Record<string, unknown>;
+};
+
+type MerchantMonitoringWindow = {
+  mode: MerchantMonitoringSummary["mode"];
+  strategy: MerchantMonitoringSummary["window"]["strategy"];
+  days: number | null;
+  checkpointDate: Date;
+};
+
+const MONITOR_TEXT_CANDIDATE_LIMIT = 8;
+const MONITOR_IMAGE_CANDIDATE_LIMIT = 5;
+const MAX_ALERTS_PER_PRODUCT = 12;
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -77,6 +104,23 @@ function merchantProductDocId(shop: string, productId: string): string {
   return `${encodeURIComponent(shop)}::${encodeURIComponent(productId)}`;
 }
 
+function asVectorArray(value: unknown): number[] | undefined {
+  if (!value || typeof value !== "object") {
+    return undefined;
+  }
+
+  const maybeVector = value as { toArray?: () => number[]; _values?: number[] };
+  if (typeof maybeVector.toArray === "function") {
+    return maybeVector.toArray();
+  }
+
+  if (Array.isArray(maybeVector._values)) {
+    return maybeVector._values;
+  }
+
+  return undefined;
+}
+
 function normalizeAlertDate(value: unknown): Date | null {
   if (!value) {
     return null;
@@ -98,6 +142,67 @@ function normalizeTimestampString(value: unknown): string | null {
     return value;
   }
   return null;
+}
+
+function coercePositiveInteger(value: unknown): number | undefined {
+  if (typeof value === "string" && !value.trim()) {
+    return undefined;
+  }
+
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed) || parsed <= 0) {
+    return undefined;
+  }
+
+  return Math.floor(parsed);
+}
+
+function resolveMonitoringWindow(params: {
+  currentState: MerchantMonitorStateDocument | null;
+  forceFullScan?: boolean;
+  days?: number;
+}): MerchantMonitoringWindow {
+  const now = new Date();
+  const fullLookbackDate = new Date(now);
+  fullLookbackDate.setDate(fullLookbackDate.getDate() - ALERT_LOOKBACK_DAYS);
+
+  if (params.forceFullScan) {
+    return {
+      mode: "bootstrap",
+      strategy: "full-lookback",
+      days: ALERT_LOOKBACK_DAYS,
+      checkpointDate: fullLookbackDate,
+    };
+  }
+
+  if (Number.isFinite(params.days) && (params.days as number) > 0) {
+    const boundedDays = Math.min(Math.floor(params.days as number), ALERT_LOOKBACK_DAYS);
+    const lastDaysDate = new Date(now);
+    lastDaysDate.setDate(lastDaysDate.getDate() - boundedDays);
+    return {
+      mode: "windowed",
+      strategy: "last-days",
+      days: boundedDays,
+      checkpointDate: lastDaysDate,
+    };
+  }
+
+  const persistedCheckpoint = normalizeAlertDate(params.currentState?.lastRapexAlertDate);
+  if (persistedCheckpoint) {
+    return {
+      mode: "delta",
+      strategy: "since-last-check",
+      days: null,
+      checkpointDate: persistedCheckpoint,
+    };
+  }
+
+  return {
+    mode: "bootstrap",
+    strategy: "full-lookback",
+    days: ALERT_LOOKBACK_DAYS,
+    checkpointDate: fullLookbackDate,
+  };
 }
 
 function toProductInput(document: Record<string, unknown>): ProductInput {
@@ -157,10 +262,10 @@ async function getMonitorState(shop: string): Promise<MerchantMonitorStateDocume
   return snapshot.data() as MerchantMonitorStateDocument;
 }
 
-async function loadRapexAlertsSince(
+async function loadRapexAlertCandidatesSince(
   checkpointDate: Date,
   limit: number,
-): Promise<NormalizedAlert[]> {
+): Promise<AlertRetrievalCandidate[]> {
   const snapshot = await db
     .collection(FIRESTORE_COLLECTIONS.alerts)
     .where("meta.alert_date", ">=", Timestamp.fromDate(checkpointDate))
@@ -168,7 +273,62 @@ async function loadRapexAlertsSince(
     .limit(limit)
     .get();
 
-  return snapshot.docs.map((doc) => normalizeRapexAlert(doc.id, doc.data() as Record<string, unknown>));
+  return snapshot.docs.map((doc) => {
+    const data = doc.data() as Record<string, unknown>;
+    return {
+      alert: normalizeRapexAlert(doc.id, data),
+      textVector: asVectorArray(data.vector_text),
+      imageVector: asVectorArray(data.vector_image),
+    };
+  });
+}
+
+async function findCandidateProductsForAlert(
+  shop: string,
+  alertCandidate: AlertRetrievalCandidate,
+): Promise<MerchantProductCandidate[]> {
+  const candidates = new Map<string, MerchantProductCandidate>();
+  const collection = db.collection(FIRESTORE_COLLECTIONS.merchantProducts).where("shop", "==", shop);
+
+  if (alertCandidate.textVector?.length) {
+    const textSnapshot = await collection
+      .findNearest({
+        vectorField: "vector_text",
+        queryVector: alertCandidate.textVector,
+        limit: MONITOR_TEXT_CANDIDATE_LIMIT,
+        distanceMeasure: "COSINE",
+        distanceResultField: "text_distance",
+      })
+      .get();
+
+    for (const doc of textSnapshot.docs) {
+      candidates.set(doc.id, {
+        id: doc.id,
+        data: doc.data() as Record<string, unknown>,
+      });
+    }
+  }
+
+  if (alertCandidate.imageVector?.length) {
+    const imageSnapshot = await collection
+      .findNearest({
+        vectorField: "vector_image",
+        queryVector: alertCandidate.imageVector,
+        limit: MONITOR_IMAGE_CANDIDATE_LIMIT,
+        distanceMeasure: "COSINE",
+        distanceResultField: "image_distance",
+      })
+      .get();
+
+    for (const doc of imageSnapshot.docs) {
+      candidates.set(doc.id, {
+        id: doc.id,
+        data: doc.data() as Record<string, unknown>,
+      });
+    }
+  }
+
+  return Array.from(candidates.values());
 }
 
 async function upsertAlertForProduct(params: {
@@ -227,30 +387,6 @@ async function upsertAlertForProduct(params: {
   return true;
 }
 
-async function resolveActiveAlertIfAny(shop: string, productId: string): Promise<void> {
-  const query = await db
-    .collection(FIRESTORE_COLLECTIONS.merchantAlerts)
-    .where("shop", "==", shop)
-    .where("productId", "==", productId)
-    .where("status", "==", "active")
-    .limit(1)
-    .get();
-
-  if (query.empty) {
-    return;
-  }
-
-  await query.docs[0].ref.set(
-    {
-      status: "resolved",
-      resolvedAt: FieldValue.serverTimestamp(),
-      updatedAt: FieldValue.serverTimestamp(),
-      notes: "Resolved by delta RAPEX monitoring run.",
-    },
-    { merge: true },
-  );
-}
-
 export async function upsertMerchantProduct(
   input: MerchantProductUpsertInput,
 ): Promise<{ shop: string; productId: string; vectorTextWritten: boolean; vectorImageWritten: boolean }> {
@@ -261,12 +397,30 @@ export async function upsertMerchantProduct(
   }
 
   const primaryImage = input.product.imageUrl || input.product.imageUrls?.[0];
+  const textContent = (input.product.description || input.product.name || "").trim();
+  const docId = merchantProductDocId(shop, productId);
+  const docRef = db.collection(FIRESTORE_COLLECTIONS.merchantProducts).doc(docId);
+  const existingSnapshot = await docRef.get();
+  const existingData = (existingSnapshot.data() as Record<string, unknown> | undefined) || {};
+  const existingSourceUpdatedAt =
+    typeof existingData.sourceUpdatedAt === "string" ? existingData.sourceUpdatedAt.trim() : undefined;
+  const incomingSourceUpdatedAt = input.sourceUpdatedAt?.trim();
+  const canReuseCachedVectors = Boolean(
+    existingSnapshot.exists &&
+      existingSourceUpdatedAt &&
+      incomingSourceUpdatedAt &&
+      existingSourceUpdatedAt === incomingSourceUpdatedAt,
+  );
+
   const [vectorText, vectorImage] = await Promise.all([
-    embedText(input.product.description || input.product.name),
-    primaryImage ? embedImage(primaryImage) : Promise.resolve(undefined),
+    canReuseCachedVectors || !textContent
+      ? Promise.resolve(undefined)
+      : embedText(textContent),
+    canReuseCachedVectors || !primaryImage
+      ? Promise.resolve(undefined)
+      : embedImage(primaryImage),
   ]);
 
-  const docId = merchantProductDocId(shop, productId);
   const payload: Record<string, unknown> = {
     shop,
     productId,
@@ -287,10 +441,7 @@ export async function upsertMerchantProduct(
     ...(vectorImage?.length ? { vector_image: FieldValue.vector(vectorImage) } : {}),
   };
 
-  await db
-    .collection(FIRESTORE_COLLECTIONS.merchantProducts)
-    .doc(docId)
-    .set(payload, { merge: true });
+  await docRef.set(payload, { merge: true });
 
   return {
     shop,
@@ -303,6 +454,7 @@ export async function upsertMerchantProduct(
 export async function runMerchantDeltaMonitoringForShop(params: {
   shop: string;
   forceFullScan?: boolean;
+  days?: number;
   limit?: number;
   triggerMode?: "manual" | "scheduled";
 }): Promise<MerchantMonitoringSummary> {
@@ -316,6 +468,11 @@ export async function runMerchantDeltaMonitoringForShop(params: {
     .doc(encodeURIComponent(shop));
   const currentState = await getMonitorState(shop);
   const forceFullScan = Boolean(params.forceFullScan);
+  const monitoringWindow = resolveMonitoringWindow({
+    currentState,
+    forceFullScan,
+    days: params.days,
+  });
   const limit = Number.isFinite(params.limit) && (params.limit as number) > 0
     ? Math.min(Math.floor(params.limit as number), 500)
     : 250;
@@ -327,57 +484,70 @@ export async function runMerchantDeltaMonitoringForShop(params: {
       createdAt: currentState?.createdAt || FieldValue.serverTimestamp(),
       lastMonitorRunStart: FieldValue.serverTimestamp(),
       lastMonitorStatus: "IN_PROGRESS",
-      lastRunMode: forceFullScan ? "bootstrap" : "delta",
+      lastRunMode: monitoringWindow.mode,
     } satisfies MerchantMonitorStateDocument,
     { merge: true },
   );
 
   try {
-    const merchantProductsSnapshot = await db
-      .collection(FIRESTORE_COLLECTIONS.merchantProducts)
-      .where("shop", "==", shop)
-      .get();
+    const rapexAlertCandidates = await loadRapexAlertCandidatesSince(
+      monitoringWindow.checkpointDate,
+      limit,
+    );
+    const rapexAlerts = rapexAlertCandidates.map((candidate) => candidate.alert);
+    const candidateProductsByDocId = new Map<
+      string,
+      { product: MerchantProductCandidate; alerts: Map<string, NormalizedAlert> }
+    >();
 
-    const products = merchantProductsSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      data: doc.data() as Record<string, unknown>,
-    }));
+    for (const alertCandidate of rapexAlertCandidates) {
+      const productCandidates = await findCandidateProductsForAlert(shop, alertCandidate);
+      for (const productCandidate of productCandidates) {
+        const existing = candidateProductsByDocId.get(productCandidate.id) ?? {
+          product: productCandidate,
+          alerts: new Map<string, NormalizedAlert>(),
+        };
 
-    const checkpointDate = (() => {
-      if (forceFullScan) {
-        const date = new Date();
-        date.setDate(date.getDate() - ALERT_LOOKBACK_DAYS);
-        return date;
+        if (existing.alerts.size < MAX_ALERTS_PER_PRODUCT) {
+          existing.alerts.set(alertCandidate.alert.id, alertCandidate.alert);
+        }
+
+        candidateProductsByDocId.set(productCandidate.id, existing);
       }
+    }
 
-      const persisted = normalizeAlertDate(currentState?.lastRapexAlertDate);
-      if (persisted) {
-        return persisted;
-      }
+    logger.info("Merchant delta monitoring shortlist prepared", {
+      shop,
+      rapexAlertsScanned: rapexAlerts.length,
+      candidateProducts: candidateProductsByDocId.size,
+      mode: monitoringWindow.mode,
+      windowStrategy: monitoringWindow.strategy,
+      windowDays: monitoringWindow.days,
+      checkpointDate: monitoringWindow.checkpointDate.toISOString(),
+    });
 
-      const date = new Date();
-      date.setDate(date.getDate() - ALERT_LOOKBACK_DAYS);
-      return date;
-    })();
-
-    const rapexAlerts = await loadRapexAlertsSince(checkpointDate, limit);
     let matchesFound = 0;
     let alertsCreated = 0;
+    let productsScanned = 0;
 
-    for (const product of products) {
-      const productInput = toProductInput(product.data);
-      const result = await checkProductAgainstAlerts(productInput, rapexAlerts);
+    for (const candidate of candidateProductsByDocId.values()) {
+      const productInput = toProductInput(candidate.product.data);
+      const result = await checkProductAgainstAlerts(
+        productInput,
+        Array.from(candidate.alerts.values()),
+      );
+      productsScanned += 1;
 
       await db.collection(FIRESTORE_COLLECTIONS.merchantChecks).add({
         shop,
-        productId: String(product.data.productId || ""),
-        productTitle: String(product.data.productTitle || product.data.name || ""),
+        productId: String(candidate.product.data.productId || ""),
+        productTitle: String(candidate.product.data.productTitle || candidate.product.data.name || ""),
         isSafe: result.isSafe,
         checkedAt: new Date(result.checkedAt),
         createdAt: FieldValue.serverTimestamp(),
       });
 
-      await db.collection(FIRESTORE_COLLECTIONS.merchantProducts).doc(product.id).set(
+      await db.collection(FIRESTORE_COLLECTIONS.merchantProducts).doc(candidate.product.id).set(
         {
           updatedAt: FieldValue.serverTimestamp(),
           lastDeltaCheckAt: FieldValue.serverTimestamp(),
@@ -390,9 +560,9 @@ export async function runMerchantDeltaMonitoringForShop(params: {
         matchesFound += result.warnings.length;
         const created = await upsertAlertForProduct({
           shop,
-          productId: String(product.data.productId || ""),
-          productTitle: String(product.data.productTitle || product.data.name || ""),
-          productHandle: coerceString(product.data.productHandle),
+          productId: String(candidate.product.data.productId || ""),
+          productTitle: String(candidate.product.data.productTitle || candidate.product.data.name || ""),
+          productHandle: coerceString(candidate.product.data.productHandle),
           resultJson: JSON.stringify(result),
           warningsCount: result.warnings.length,
           riskLevel:
@@ -404,16 +574,19 @@ export async function runMerchantDeltaMonitoringForShop(params: {
         if (created) {
           alertsCreated += 1;
         }
-      } else {
-        await resolveActiveAlertIfAny(shop, String(product.data.productId || ""));
       }
     }
 
     const latestAlert = rapexAlerts[0];
     const summary: MerchantMonitoringSummary = {
       shop,
-      mode: forceFullScan || !currentState?.lastRapexAlertDate ? "bootstrap" : "delta",
-      productsScanned: products.length,
+      mode: monitoringWindow.mode,
+      window: {
+        strategy: monitoringWindow.strategy,
+        days: monitoringWindow.days,
+        checkpointDate: monitoringWindow.checkpointDate.toISOString(),
+      },
+      productsScanned,
       rapexAlertsScanned: rapexAlerts.length,
       matchesFound,
       alertsCreated,
@@ -591,13 +764,29 @@ export async function handleRunMerchantDeltaMonitoringRequest(
       return;
     }
 
-    const forceFullScan = Boolean(request.body?.forceFullScan);
-    const parsedLimit = Number(request.body?.limit);
-    const limit = Number.isFinite(parsedLimit) && parsedLimit > 0 ? parsedLimit : undefined;
+    const monitoringMode = coerceString(request.body?.monitoringMode);
+    const requestedDays = coercePositiveInteger(request.body?.days);
+    if (monitoringMode === "last-days" && !requestedDays) {
+      response.status(400).json({
+        success: false,
+        error: "days is required when monitoringMode is last-days",
+      });
+      return;
+    }
+
+    const forceFullScan =
+      Boolean(request.body?.forceFullScan) || monitoringMode === "full-lookback";
+    const days = monitoringMode === "weekly"
+      ? 7
+      : monitoringMode === "since-last-check" || forceFullScan
+        ? undefined
+        : requestedDays;
+    const limit = coercePositiveInteger(request.body?.limit);
 
     const result = await runMerchantDeltaMonitoringForShop({
       shop,
       forceFullScan,
+      days,
       limit,
       triggerMode: "manual",
     });

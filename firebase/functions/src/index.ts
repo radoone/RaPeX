@@ -10,7 +10,7 @@ import {
   runDailyMerchantDeltaMonitoring,
 } from "./merchant-monitoring.js";
 import { handleCheckProductSafetyRequest } from "./safety-gate-http.js";
-import { runSafetyGateLoader } from "./safety-gate-loader.js";
+import { backfillRecentAlertEmbeddings, runSafetyGateLoader } from "./safety-gate-loader.js";
 
 // --- Scheduled Function ---
 export const dailyRapexDeltaLoader = onSchedule(
@@ -47,6 +47,46 @@ export const manualRapexLoader = onRequest(
       res.status(500).json({
         success: false,
         message: "Safety Gate loader failed",
+        error: error instanceof Error ? error.message : String(error),
+        timestamp: new Date().toISOString(),
+      });
+    }
+  },
+);
+
+export const backfillRecentRapexEmbeddings = onRequest(
+  {
+    region: "europe-west1",
+    memory: "1GiB",
+    timeoutSeconds: 540,
+    secrets: ["GOOGLE_API_KEY"],
+  },
+  async (req, res) => {
+    try {
+      const days = Number.parseInt(String(req.query.days || ""), 10);
+      const limit = Number.parseInt(String(req.query.limit || ""), 10);
+      logger.info("Manual recent Safety Gate embedding backfill triggered via HTTP", {
+        method: req.method,
+        url: req.url,
+        days: Number.isFinite(days) ? days : undefined,
+        limit: Number.isFinite(limit) ? limit : undefined,
+      });
+
+      const result = await backfillRecentAlertEmbeddings({
+        days: Number.isFinite(days) ? days : undefined,
+        limit: Number.isFinite(limit) ? limit : undefined,
+      });
+
+      res.status(200).json({
+        success: true,
+        ...result,
+        timestamp: new Date().toISOString(),
+      });
+    } catch (error) {
+      logger.error("Manual recent Safety Gate embedding backfill failed", { error });
+      res.status(500).json({
+        success: false,
+        message: "Recent Safety Gate embedding backfill failed",
         error: error instanceof Error ? error.message : String(error),
         timestamp: new Date().toISOString(),
       });

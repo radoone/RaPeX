@@ -1,4 +1,5 @@
 import axios from "axios";
+import { createHash } from "node:crypto";
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import * as logger from "firebase-functions/logger";
 import { db } from "./firebase-admin.js";
@@ -7,11 +8,12 @@ import {
   SAFETY_GATE_CONFIG,
   SAFETY_GATE_HEADERS,
 } from "./safety-gate-config.js";
-import { embedImage, embedText, getFirstPicture } from "./safety-gate-embeddings.js";
+import { embedImage, embedText, getPictureUrls } from "./safety-gate-embeddings.js";
 import type {
   LoaderState,
   OpenDataSoftResponse,
   RapexAlertDocument,
+  RapexAlertImageDocument,
   RapexRecord,
 } from "./safety-gate-types.js";
 
@@ -21,6 +23,18 @@ type LoaderProgress = {
   hasMore: boolean;
   newestAlertDate: Date;
   newestRecordTimestamp: string;
+};
+
+type ImageEmbeddingPayload = {
+  url: string;
+  imageIndex: number;
+  vector: number[];
+};
+
+type ExistingAlertEmbeddingState = {
+  hasTextVector: boolean;
+  hasPrimaryImageVector: boolean;
+  existingImageDocIds: Set<string>;
 };
 
 function getLoaderStateRef() {
@@ -87,6 +101,40 @@ async function fetchOpenDataSoftRecords(
   };
 }
 
+async function getExistingAlertEmbeddingState(alertId: string): Promise<ExistingAlertEmbeddingState> {
+  const alertDoc = await db.collection(FIRESTORE_COLLECTIONS.alerts).doc(alertId).get();
+  const alertData = (alertDoc.data() as Record<string, unknown> | undefined) || {};
+  const imageDocs = await db.collection(FIRESTORE_COLLECTIONS.alertImages).where("alertId", "==", alertId).get();
+
+  return {
+    hasTextVector: hasStoredVectorField(alertData, "vector_text"),
+    hasPrimaryImageVector: hasStoredVectorField(alertData, "vector_image"),
+    existingImageDocIds: new Set(imageDocs.docs.map((doc) => doc.id)),
+  };
+}
+
+async function loadRecentAlertImageDocIdsByAlertId(cutoffDate: Date): Promise<Map<string, Set<string>>> {
+  const snapshot = await db
+    .collection(FIRESTORE_COLLECTIONS.alertImages)
+    .where("meta.alert_date", ">=", Timestamp.fromDate(cutoffDate))
+    .select("alertId")
+    .get();
+
+  const imageDocIdsByAlertId = new Map<string, Set<string>>();
+  for (const doc of snapshot.docs) {
+    const alertId = String(doc.get("alertId") || "").trim();
+    if (!alertId) {
+      continue;
+    }
+
+    const current = imageDocIdsByAlertId.get(alertId) ?? new Set<string>();
+    current.add(doc.id);
+    imageDocIdsByAlertId.set(alertId, current);
+  }
+
+  return imageDocIdsByAlertId;
+}
+
 function validateRecords(records: RapexRecord[]): void {
   if (records.length > 0 && (!records[0].fields || !records[0].recordid)) {
     logger.error("Invalid record structure received from OpenDataSoft API", {
@@ -143,6 +191,46 @@ function buildAlertDocument(
   return document;
 }
 
+function isWithinRecentImageEmbeddingWindow(recordAlertDate: Date, now = new Date()): boolean {
+  const cutoffDate = new Date(now);
+  cutoffDate.setDate(cutoffDate.getDate() - SAFETY_GATE_CONFIG.recentImageEmbeddingDays);
+  return recordAlertDate >= cutoffDate;
+}
+
+function buildAlertImageDocId(alertId: string, imageUrl: string): string {
+  const suffix = createHash("sha1").update(imageUrl).digest("hex").slice(0, 24);
+  return `${alertId}__${suffix}`;
+}
+
+function buildAlertImageDocument(
+  record: RapexRecord,
+  recordAlertDate: Date,
+  imageEmbedding: ImageEmbeddingPayload,
+): RapexAlertImageDocument {
+  return {
+    alertId: record.recordid,
+    imageUrl: imageEmbedding.url,
+    imageIndex: imageEmbedding.imageIndex,
+    meta: {
+      datasetid: record.datasetid,
+      recordid: record.recordid,
+      record_timestamp: record.record_timestamp,
+      alert_date: Timestamp.fromDate(recordAlertDate),
+      ingested_at: FieldValue.serverTimestamp(),
+    },
+    fields: record.fields,
+    vector_image: FieldValue.vector(imageEmbedding.vector),
+    updatedAt: FieldValue.serverTimestamp(),
+  };
+}
+
+function hasStoredVectorField(
+  data: Record<string, unknown>,
+  fieldName: "vector_text" | "vector_image",
+): boolean {
+  return Object.prototype.hasOwnProperty.call(data, fieldName) && data[fieldName] != null;
+}
+
 function updateNewestCheckpoint(progress: LoaderProgress, recordAlertDate: Date, recordTimestamp: string) {
   if (recordAlertDate.getTime() > progress.newestAlertDate.getTime()) {
     progress.newestAlertDate = recordAlertDate;
@@ -158,17 +246,92 @@ function updateNewestCheckpoint(progress: LoaderProgress, recordAlertDate: Date,
   }
 }
 
-async function enrichRecord(record: RapexRecord): Promise<RapexAlertDocument> {
+async function createImageEmbeddingsForRecord(
+  record: RapexRecord,
+  recordAlertDate: Date,
+  existingImageDocIds: Set<string>,
+): Promise<ImageEmbeddingPayload[]> {
+  if (!isWithinRecentImageEmbeddingWindow(recordAlertDate)) {
+    return [];
+  }
+
+  const pictureUrls = getPictureUrls(record.fields);
+  if (pictureUrls.length === 0) {
+    return [];
+  }
+
+  const embeddedImages = await Promise.all(
+    pictureUrls.map(async (url, imageIndex) => {
+      const docId = buildAlertImageDocId(record.recordid, url);
+      if (existingImageDocIds.has(docId)) {
+        return null;
+      }
+
+      const vector = await embedImage(url);
+      if (!vector?.length) {
+        return null;
+      }
+
+      return {
+        url,
+        imageIndex,
+        vector,
+      } satisfies ImageEmbeddingPayload;
+    }),
+  );
+
+  return embeddedImages.filter((image): image is ImageEmbeddingPayload => image !== null);
+}
+
+async function enrichRecord(record: RapexRecord): Promise<{
+  document: RapexAlertDocument;
+  recordAlertDate: Date;
+  imageEmbeddings: ImageEmbeddingPayload[];
+  existingState: ExistingAlertEmbeddingState;
+}> {
   const recordAlertDate = new Date(record.fields.alert_date);
-  const [vectorText, vectorImage] = await Promise.all([
-    embedText(record.fields?.product_description || ""),
-    (async () => {
-      const primaryImageUrl = getFirstPicture(record.fields);
-      return primaryImageUrl ? embedImage(primaryImageUrl) : undefined;
-    })(),
+  const existingState = await getExistingAlertEmbeddingState(record.recordid);
+  const [vectorText, imageEmbeddings] = await Promise.all([
+    existingState.hasTextVector ? Promise.resolve(undefined) : embedText(record.fields?.product_description || ""),
+    createImageEmbeddingsForRecord(record, recordAlertDate, existingState.existingImageDocIds),
   ]);
 
-  return buildAlertDocument(record, recordAlertDate, vectorText, vectorImage);
+  return {
+    document: buildAlertDocument(
+      record,
+      recordAlertDate,
+      vectorText,
+      existingState.hasPrimaryImageVector ? undefined : imageEmbeddings[0]?.vector,
+    ),
+    recordAlertDate,
+    imageEmbeddings,
+    existingState,
+  };
+}
+
+async function writeMissingAlertImageEmbeddings(
+  record: RapexRecord,
+  recordAlertDate: Date,
+  imageEmbeddings: ImageEmbeddingPayload[],
+  bulkWriter: ReturnType<typeof db.bulkWriter>,
+): Promise<{ written: number }> {
+  if (!isWithinRecentImageEmbeddingWindow(recordAlertDate)) {
+    return { written: 0 };
+  }
+
+  const imageCollection = db.collection(FIRESTORE_COLLECTIONS.alertImages);
+  let written = 0;
+  for (const imageEmbedding of imageEmbeddings) {
+    const docId = buildAlertImageDocId(record.recordid, imageEmbedding.url);
+    bulkWriter.set(
+      imageCollection.doc(docId),
+      buildAlertImageDocument(record, recordAlertDate, imageEmbedding),
+      { merge: true },
+    );
+    written += 1;
+  }
+
+  return { written };
 }
 
 async function processRecordsPage(
@@ -189,13 +352,28 @@ async function processRecordsPage(
       continue;
     }
 
-    const recordAlertDate = new Date(record.fields.alert_date);
-    const document = await enrichRecord(record);
+    const { document, recordAlertDate, imageEmbeddings, existingState } = await enrichRecord(record);
     const documentRef = db.collection(FIRESTORE_COLLECTIONS.alerts).doc(record.recordid);
 
     bulkWriter.set(documentRef, document, { merge: true });
+    const imageSync = await writeMissingAlertImageEmbeddings(record, recordAlertDate, imageEmbeddings, bulkWriter);
     progress.totalProcessed += 1;
     updateNewestCheckpoint(progress, recordAlertDate, record.record_timestamp);
+
+    logger.debug("Processed Safety Gate alert embeddings", {
+      alertId: record.recordid,
+      textEmbedded: !existingState.hasTextVector && Boolean(document.vector_text),
+      primaryImageEmbedded: !existingState.hasPrimaryImageVector && Boolean(document.vector_image),
+      imageEmbeddingsWritten: imageSync.written,
+    });
+
+    if (progress.totalProcessed % 25 === 0) {
+      logger.info("Safety Gate delta loader progress", {
+        processed: progress.totalProcessed,
+        currentPage: progress.currentPage + 1,
+        lastAlertId: record.recordid,
+      });
+    }
   }
 }
 
@@ -309,4 +487,136 @@ export async function runSafetyGateLoader(): Promise<void> {
     await markRunFailed();
     throw error;
   }
+}
+
+export async function backfillRecentAlertEmbeddings(params?: {
+  days?: number;
+  limit?: number;
+}): Promise<{
+  days: number;
+  alertsScanned: number;
+  alertsUpdated: number;
+  textEmbeddingsWritten: number;
+  imageDocumentsWritten: number;
+}> {
+  const days = Number.isFinite(params?.days) && (params?.days as number) > 0
+    ? Math.floor(params?.days as number)
+    : SAFETY_GATE_CONFIG.recentImageEmbeddingDays;
+  const limit = Number.isFinite(params?.limit) && (params?.limit as number) > 0
+    ? Math.floor(params?.limit as number)
+    : undefined;
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - days);
+
+  let query = db
+    .collection(FIRESTORE_COLLECTIONS.alerts)
+    .where("meta.alert_date", ">=", Timestamp.fromDate(cutoffDate))
+    .orderBy("meta.alert_date", "desc");
+
+  if (limit) {
+    query = query.limit(limit);
+  }
+
+  const snapshot = await query.get();
+  const recentImageDocIdsByAlertId = await loadRecentAlertImageDocIdsByAlertId(cutoffDate);
+  logger.info("Starting recent Safety Gate embedding backfill", {
+    days,
+    totalAlertsInScope: snapshot.size,
+    recentAlertImageDocsTracked: Array.from(recentImageDocIdsByAlertId.values()).reduce(
+      (count, docIds) => count + docIds.size,
+      0,
+    ),
+    limit: limit || null,
+  });
+  const bulkWriter = db.bulkWriter();
+  let alertsUpdated = 0;
+  let textEmbeddingsWritten = 0;
+  let imageDocumentsWritten = 0;
+  let processed = 0;
+
+  for (const doc of snapshot.docs) {
+    processed += 1;
+    const data = doc.data() as Record<string, unknown> & Partial<RapexAlertDocument> & {
+      meta?: Partial<RapexAlertDocument["meta"]>;
+      fields?: RapexRecord["fields"];
+    };
+    const meta: Partial<RapexAlertDocument["meta"]> = data.meta || {};
+    const alertDate =
+      meta.alert_date && typeof (meta.alert_date as Timestamp).toDate === "function"
+        ? (meta.alert_date as Timestamp).toDate()
+        : new Date(String(meta.alert_date || ""));
+
+    if (Number.isNaN(alertDate.getTime())) {
+      continue;
+    }
+
+    const record: RapexRecord = {
+      datasetid: String(meta.datasetid || SAFETY_GATE_CONFIG.dataset),
+      recordid: String(meta.recordid || doc.id),
+      record_timestamp: String(meta.record_timestamp || ""),
+      fields: (data.fields || {}) as RapexRecord["fields"],
+    };
+    const existingImageDocIds = recentImageDocIdsByAlertId.get(record.recordid) ?? new Set<string>();
+    const needsTextVector = !hasStoredVectorField(data, "vector_text");
+    const textEmbedding = needsTextVector
+      ? await embedText(record.fields?.product_description || "")
+      : undefined;
+    const imageEmbeddings = await createImageEmbeddingsForRecord(
+      record,
+      alertDate,
+      existingImageDocIds,
+    );
+    const imageSync = await writeMissingAlertImageEmbeddings(record, alertDate, imageEmbeddings, bulkWriter);
+    const hasPrimaryImageVector = hasStoredVectorField(data, "vector_image");
+    const updatePayload: Record<string, unknown> = {};
+
+    if (textEmbedding?.length) {
+      updatePayload.vector_text = FieldValue.vector(textEmbedding);
+      textEmbeddingsWritten += 1;
+    }
+
+    if (!hasPrimaryImageVector && imageEmbeddings[0]?.vector?.length) {
+      updatePayload.vector_image = FieldValue.vector(imageEmbeddings[0].vector);
+    }
+
+    if (Object.keys(updatePayload).length > 0) {
+      bulkWriter.set(doc.ref, updatePayload, { merge: true });
+    }
+
+    if (imageSync.written > 0 || Object.keys(updatePayload).length > 0) {
+      alertsUpdated += 1;
+      imageDocumentsWritten += imageSync.written;
+      if (imageSync.written > 0) {
+        const tracked = recentImageDocIdsByAlertId.get(record.recordid) ?? new Set<string>();
+        for (const imageEmbedding of imageEmbeddings) {
+          tracked.add(buildAlertImageDocId(record.recordid, imageEmbedding.url));
+        }
+        recentImageDocIdsByAlertId.set(record.recordid, tracked);
+      }
+    }
+
+    if (processed % 25 === 0) {
+      logger.info("Recent Safety Gate embedding backfill progress", {
+        processed,
+        total: snapshot.size,
+        alertsUpdated,
+        textEmbeddingsWritten,
+        imageDocumentsWritten,
+        lastAlertId: record.recordid,
+      });
+    }
+  }
+
+  await bulkWriter.close();
+
+  const summary = {
+    days,
+    alertsScanned: snapshot.size,
+    alertsUpdated,
+    textEmbeddingsWritten,
+    imageDocumentsWritten,
+  };
+
+  logger.info("Recent Safety Gate embedding backfill completed.", summary);
+  return summary;
 }

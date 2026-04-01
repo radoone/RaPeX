@@ -36,7 +36,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     console.log(`Re-checking updated product: ${productData.name}`);
 
     // Check product against Safety Gate database
-    const safetyResult = await checkProductSafety(productData, similarityThreshold);
+    const safetyResult = await checkProductSafety(productData, similarityThreshold, {
+      shop,
+      productId: product.id.toString(),
+      sourceUpdatedAt: product.updated_at || product.updatedAt || undefined,
+    });
 
     // Look for existing alerts for this product
     const existingAlert = await db.safetyAlert.findFirst({

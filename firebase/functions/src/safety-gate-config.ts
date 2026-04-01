@@ -25,12 +25,14 @@ export const SAFETY_GATE_CONFIG = {
   filterRiskLevel: process.env.SAFETY_GATE_FILTER_RISK_LEVEL,
   textEmbedder: "vertexai/gemini-embedding-001",
   imageEmbedder: "vertexai/multimodalembedding@001",
+  recentImageEmbeddingDays: parseInt(process.env.RECENT_IMAGE_EMBEDDING_DAYS || "183", 10),
   imageFetchTimeoutMs: 10000,
   requestTimeoutMs: 30000,
 } as const;
 
 export const FIRESTORE_COLLECTIONS = {
   alerts: "rapex_alerts",
+  alertImages: "rapex_alert_images",
   meta: "rapex_meta",
   loaderStateDoc: "loader_state",
   merchantProducts: "merchant_products",

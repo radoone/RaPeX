@@ -262,7 +262,6 @@ export async function runProductSafetyCheck(input: {
 }): Promise<RunProductSafetyCheckResult> {
   const productId = normalizeProductId(input.productId);
   const threshold = await getSimilarityThresholdForShop(input.shop);
-  const safetyResult = await checkProductSafety(input.productData, threshold);
 
   await upsertMerchantProductForMonitoring({
     shop: input.shop,
@@ -270,6 +269,12 @@ export async function runProductSafetyCheck(input: {
     productTitle: input.productTitle,
     productHandle: input.productHandle,
     product: input.productData,
+    sourceUpdatedAt: input.sourceUpdatedAt,
+  });
+
+  const safetyResult = await checkProductSafety(input.productData, threshold, {
+    shop: input.shop,
+    productId,
     sourceUpdatedAt: input.sourceUpdatedAt,
   });
 
