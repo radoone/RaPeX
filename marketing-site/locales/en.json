@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Safety Gate Monitor for Shopify",
-    "description": "Safety Gate Monitor helps Shopify merchants catch risky products by comparing catalog items against the EU Safety Gate / RAPEX database."
+    "description": "Safety Gate Monitor checks Shopify products against EU Safety Gate / RAPEX, shows status inside Shopify Admin, and monitors new alerts against your catalog."
   },
   "nav": {
     "howItWorks": "How it works",
@@ -14,78 +14,78 @@
   },
   "hero": {
     "eyebrow": "Shopify product safety monitoring",
-    "title": "Catch risky products before they go live.",
-    "lede": "Safety Gate Monitor checks your Shopify catalog against the EU Safety Gate / RAPEX database and flags products that may match reported dangerous items.",
+    "title": "Check Shopify products against EU Safety Gate inside Shopify Admin.",
+    "lede": "Safety Gate Monitor compares your catalog with EU Safety Gate / RAPEX records using product text, brand, model, category, and available images, then surfaces the result where your team already works.",
     "ctaPrimary": "Install on Shopify",
     "ctaSecondary": "How it works",
     "pointsLabel": "Key selling points",
     "points": [
-      "Checks product text, brand, category, and images",
-      "Fits manual checks, bulk reviews, and product updates",
-      "Helps reduce complaints, returns, and trust issues"
+      "Shows product safety status directly on Shopify product detail pages",
+      "Runs on product create, update, manual checks, and monitoring runs",
+      "Uses per-shop thresholds and keeps alerts actionable with resolve and dismiss flows"
     ]
   },
   "preview": {
     "aria": "Product safety summary preview",
-    "label": "Merchant view",
-    "live": "Live check",
+    "label": "Shopify Admin",
+    "live": "Product status",
     "productTitle": "Kids balance scooter",
-    "productSubtitle": "Incoming product update from supplier",
+    "productSubtitle": "Safety Gate status visible on the product page",
     "overall": "Overall similarity",
     "image": "Image similarity",
-    "alert": "Matched against a recalled toy listing in EU Safety Gate.",
-    "action": "Suggested action: review supplier docs before publishing.",
+    "alert": "Potential match with a recalled toy alert in EU Safety Gate.",
+    "action": "Suggested action: review the match, contact the supplier, or keep the product blocked.",
     "chips": [
-      "Image-first matching",
+      "Admin product extension",
       "Per-shop threshold",
-      "Shopify-ready alerts"
+      "Resolve or dismiss alerts"
     ]
   },
   "signals": {
     "aria": "Main advantages",
     "items": [
       {
-        "title": "Catch risky products early",
-        "body": "Flag products that look too close to dangerous items already reported in EU Safety Gate."
+        "title": "See status on the product page",
+        "body": "Your team gets the latest Safety Gate status, risk context, and recommendation directly inside Shopify Admin product details."
       },
       {
-        "title": "Reduce manual review time",
-        "body": "Run checks inside normal Shopify product workflows instead of relying on slow spreadsheet reviews."
+        "title": "Monitor new alerts against saved products",
+        "body": "The app stores checked products and compares them against newly imported Safety Gate alerts, so monitoring can focus on what changed."
       },
       {
-        "title": "Protect trust and revenue",
-        "body": "Get earlier warnings before risky products trigger complaints, returns, or brand damage."
+        "title": "Keep the alert queue usable",
+        "body": "Set a similarity threshold per shop and review matches with resolve and dismiss actions instead of leaving alerts as raw noise."
       }
     ],
-    "eyebrow": "Why merchants use it",
-    "title": "A simple product safety check for Shopify stores."
+    "eyebrow": "What the app actually does",
+    "title": "Built for a real Shopify admin workflow, not a generic alert browser."
   },
   "workflow": {
     "eyebrow": "How it works",
-    "title": "Three steps, clear output.",
+    "title": "Three steps, tied to the current product workflow.",
     "steps": [
       {
-        "title": "Import alert data",
-        "body": "The backend keeps Safety Gate records up to date and ready for matching."
+        "title": "Import fresh Safety Gate alerts",
+        "body": "The backend regularly imports new EU Safety Gate records and keeps them ready for retrieval and matching."
       },
       {
-        "title": "Check Shopify products",
-        "body": "New, updated, manual, and bulk checks all send product data into the matcher."
+        "title": "Check products when work happens",
+        "body": "Checks run from product create and update webhooks, manual checks, and Shopify Admin product actions, with image-aware matching when images are available."
       },
       {
-        "title": "Review the alert",
-        "body": "Merchants see the match context and can review, pause, or remove the product."
+        "title": "Review, resolve, dismiss, and rerun monitoring",
+        "body": "Merchants see match context in admin screens, can triage alerts, and can run monitoring against newer Safety Gate records without starting from zero each time."
       }
     ]
   },
   "footer": {
     "eyebrow": "Safety Gate Monitor",
-    "title": "Turn product safety into a repeatable Shopify workflow.",
+    "title": "Turn Safety Gate checks into an operational Shopify workflow.",
     "backToTop": "Back to top"
   },
   "cta": {
     "eyebrow": "Install",
-    "title": "Install the app in your Shopify store.",
+    "title": "Install the app and start checking products in Shopify Admin.",
     "body": "Enter your myshopify.com domain to start the install flow.",
     "label": "Shop domain",
     "placeholder": "your-store.myshopify.com",

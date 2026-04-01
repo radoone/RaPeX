@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Safety Gate Monitor pre Shopify",
-    "description": "Safety Gate Monitor pomáha Shopify obchodom zachytiť rizikové produkty porovnaním katalógu s databázou EU Safety Gate / RAPEX."
+    "description": "Safety Gate Monitor kontroluje Shopify produkty voči EU Safety Gate / RAPEX, zobrazuje stav priamo v Shopify Admin a sleduje nové alerty voči vášmu katalógu."
   },
   "nav": {
     "howItWorks": "Ako to funguje",
@@ -14,78 +14,78 @@
   },
   "hero": {
     "eyebrow": "Monitoring bezpečnosti produktov pre Shopify",
-    "title": "Zachyťte rizikové produkty skôr, než pôjdu do predaja.",
-    "lede": "Safety Gate Monitor kontroluje váš Shopify katalóg voči databáze EU Safety Gate / RAPEX a upozorní na produkty, ktoré sa môžu zhodovať s nahlásenými nebezpečnými výrobkami.",
+    "title": "Kontrolujte Shopify produkty voči EU Safety Gate priamo v Shopify Admin.",
+    "lede": "Safety Gate Monitor porovnáva váš katalóg so záznamami EU Safety Gate / RAPEX podľa textu produktu, značky, modelu, kategórie a dostupných obrázkov a výsledok zobrazuje tam, kde váš tím už pracuje.",
     "ctaPrimary": "Inštalovať na Shopify",
     "ctaSecondary": "Ako to funguje",
     "pointsLabel": "Hlavné dôvody",
     "points": [
-      "Kontroluje text produktu, značku, kategóriu aj obrázky",
-      "Zapadne do manuálnych kontrol, bulk review aj aktualizácií produktov",
-      "Pomáha znížiť sťažnosti, vratky a problémy s dôverou"
+      "Zobrazuje stav bezpečnosti priamo na detailnej stránke produktu v Shopify",
+      "Beží pri vytvorení produktu, jeho úprave, manuálnej kontrole aj monitoringu nových alertov",
+      "Má vlastný prah podobnosti pre každý obchod a alerty sa dajú rovno vyriešiť alebo zamietnuť"
     ]
   },
   "preview": {
     "aria": "Náhľad bezpečnostnej kontroly produktu",
-    "label": "Pohľad obchodníka",
-    "live": "Živá kontrola",
+    "label": "Shopify Admin",
+    "live": "Stav produktu",
     "productTitle": "Detská balančná kolobežka",
-    "productSubtitle": "Prichádza úprava produktu od dodávateľa",
+    "productSubtitle": "Stav Safety Gate viditeľný na stránke produktu",
     "overall": "Celková podobnosť",
     "image": "Vizuálna podobnosť",
-    "alert": "Zhoda s varovaním na stiahnutú hračku v EU Safety Gate.",
-    "action": "Odporúčanie: skontrolujte podklady od dodávateľa pred zverejnením.",
+    "alert": "Možná zhoda s alertom na stiahnutú hračku v EU Safety Gate.",
+    "action": "Odporúčanie: skontrolujte zhodu, kontaktujte dodávateľa alebo produkt ponechajte zablokovaný.",
     "chips": [
-      "Priorita vizuálnej zhody",
+      "Rozšírenie na stránke produktu",
       "Prahy pre každý obchod",
-      "Alerty pripravené pre Shopify"
+      "Vyriešiť alebo zamietnuť alert"
     ]
   },
   "signals": {
     "aria": "Hlavné výhody",
     "items": [
       {
-        "title": "Zachyťte rizikové produkty včas",
-        "body": "Označí produkty, ktoré sa príliš podobajú na nebezpečné položky už nahlásené v EU Safety Gate."
+        "title": "Vidíte stav na stránke produktu",
+        "body": "Tím má na detaile produktu v Shopify Admin posledný stav Safety Gate, kontext rizika aj odporúčanie na ďalší krok."
       },
       {
-        "title": "Znížte čas ručnej kontroly",
-        "body": "Kontroly bežia v bežnom Shopify workflow namiesto pomalého preverovania v tabuľkách."
+        "title": "Sledujte nové alerty voči uloženým produktom",
+        "body": "Aplikácia si ukladá skontrolované produkty a porovnáva ich s novo importovanými Safety Gate alertmi, takže monitoring rieši len to, čo sa zmenilo."
       },
       {
-        "title": "Chráňte dôveru a tržby",
-        "body": "Získate skorší signál predtým, než rizikové produkty spôsobia sťažnosti, vratky alebo škodu značke."
+        "title": "Udržte alerty pod kontrolou",
+        "body": "Nastavíte si prah podobnosti pre obchod a zhody viete triediť cez vyriešiť a zamietnuť namiesto zahltenia falošnými pozitívami."
       }
     ],
-    "eyebrow": "Prečo to merchanti používajú",
-    "title": "Jednoduchá produktová safety kontrola pre Shopify obchody."
+    "eyebrow": "Čo appka naozaj robí",
+    "title": "Postavené pre reálny Shopify admin workflow, nie pre generický prehliadač alertov."
   },
   "workflow": {
     "eyebrow": "Ako to funguje",
-    "title": "Tri kroky, jasný výstup.",
+    "title": "Tri kroky napojené na aktuálny produktový workflow.",
     "steps": [
       {
-        "title": "Import alert dát",
-        "body": "Backend drží Safety Gate záznamy aktuálne a pripravené na porovnávanie."
+        "title": "Import čerstvých Safety Gate alertov",
+        "body": "Backend pravidelne importuje nové EU Safety Gate záznamy a drží ich pripravené na vyhľadanie a porovnanie."
       },
       {
-        "title": "Kontrola Shopify produktov",
-        "body": "Nové, upravené, manuálne aj bulk kontroly posielajú produktové dáta do matcheru."
+        "title": "Kontrola produktov v momente práce",
+        "body": "Kontroly bežia cez webhooky pri vytvorení a úprave produktu, manuálne kontroly aj akcie na stránke produktu v Shopify Admin, vrátane porovnania podľa obrázkov, keď sú dostupné."
       },
       {
-        "title": "Vyhodnotenie alertu",
-        "body": "Merchant vidí kontext zhody a vie produkt preveriť, pozastaviť alebo odstrániť."
+        "title": "Kontrola, vyriešenie, zamietnutie a nový monitoring",
+        "body": "Merchant vidí kontext zhody v admin rozhraní, vie alerty triagovať a spustiť monitoring voči novším Safety Gate záznamom bez toho, aby zakaždým začínal od nuly."
       }
     ]
   },
   "footer": {
     "eyebrow": "Safety Gate Monitor",
-    "title": "Spravte z produktovej bezpečnosti opakovateľný Shopify workflow.",
+    "title": "Spravte zo Safety Gate kontrol opakovateľný Shopify workflow.",
     "backToTop": "Späť hore"
   },
   "cta": {
     "eyebrow": "Inštalácia",
-    "title": "Nainštalujte aplikáciu do svojho Shopify obchodu.",
+    "title": "Nainštalujte appku a začnite kontrolovať produkty v Shopify Admin.",
     "body": "Zadajte svoju myshopify.com doménu a spustite inštaláciu.",
     "label": "Doména obchodu",
     "placeholder": "vas-obchod.myshopify.com",
