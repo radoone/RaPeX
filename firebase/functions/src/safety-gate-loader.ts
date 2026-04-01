@@ -518,15 +518,55 @@ export async function backfillRecentAlertEmbeddings(params?: {
   }
 
   const snapshot = await query.get();
+  const orderedDocs = [...snapshot.docs].sort((leftDoc, rightDoc) => {
+    const leftData = leftDoc.data() as {
+      meta?: Partial<RapexAlertDocument["meta"]>;
+    };
+    const rightData = rightDoc.data() as {
+      meta?: Partial<RapexAlertDocument["meta"]>;
+    };
+    const leftMeta: Partial<RapexAlertDocument["meta"]> = leftData.meta || {};
+    const rightMeta: Partial<RapexAlertDocument["meta"]> = rightData.meta || {};
+    const leftAlertDate =
+      leftMeta.alert_date && typeof (leftMeta.alert_date as Timestamp).toDate === "function"
+        ? (leftMeta.alert_date as Timestamp).toDate().getTime()
+        : new Date(String(leftMeta.alert_date || 0)).getTime();
+    const rightAlertDate =
+      rightMeta.alert_date && typeof (rightMeta.alert_date as Timestamp).toDate === "function"
+        ? (rightMeta.alert_date as Timestamp).toDate().getTime()
+        : new Date(String(rightMeta.alert_date || 0)).getTime();
+
+    if (leftAlertDate !== rightAlertDate) {
+      return rightAlertDate - leftAlertDate;
+    }
+
+    const leftRecordTimestamp = String(leftMeta.record_timestamp || "");
+    const rightRecordTimestamp = String(rightMeta.record_timestamp || "");
+    if (leftRecordTimestamp !== rightRecordTimestamp) {
+      return rightRecordTimestamp.localeCompare(leftRecordTimestamp);
+    }
+
+    const leftRecordId = String(leftMeta.recordid || leftDoc.id);
+    const rightRecordId = String(rightMeta.recordid || rightDoc.id);
+    return rightRecordId.localeCompare(leftRecordId);
+  });
   const recentImageDocIdsByAlertId = await loadRecentAlertImageDocIdsByAlertId(cutoffDate);
   logger.info("Starting recent Safety Gate embedding backfill", {
     days,
-    totalAlertsInScope: snapshot.size,
+    totalAlertsInScope: orderedDocs.length,
     recentAlertImageDocsTracked: Array.from(recentImageDocIdsByAlertId.values()).reduce(
       (count, docIds) => count + docIds.size,
       0,
     ),
     limit: limit || null,
+    newestAlertId: (() => {
+      const firstData = orderedDocs[0]?.data() as { meta?: Partial<RapexAlertDocument["meta"]> } | undefined;
+      return String(firstData?.meta?.recordid || orderedDocs[0]?.id || "");
+    })(),
+    oldestAlertId: (() => {
+      const lastData = orderedDocs.at(-1)?.data() as { meta?: Partial<RapexAlertDocument["meta"]> } | undefined;
+      return String(lastData?.meta?.recordid || orderedDocs.at(-1)?.id || "");
+    })(),
   });
   const bulkWriter = db.bulkWriter();
   let alertsUpdated = 0;
@@ -534,7 +574,7 @@ export async function backfillRecentAlertEmbeddings(params?: {
   let imageDocumentsWritten = 0;
   let processed = 0;
 
-  for (const doc of snapshot.docs) {
+  for (const doc of orderedDocs) {
     processed += 1;
     const data = doc.data() as Record<string, unknown> & Partial<RapexAlertDocument> & {
       meta?: Partial<RapexAlertDocument["meta"]>;
@@ -598,7 +638,7 @@ export async function backfillRecentAlertEmbeddings(params?: {
     if (processed % 25 === 0) {
       logger.info("Recent Safety Gate embedding backfill progress", {
         processed,
-        total: snapshot.size,
+        total: orderedDocs.length,
         alertsUpdated,
         textEmbeddingsWritten,
         imageDocumentsWritten,
@@ -611,7 +651,7 @@ export async function backfillRecentAlertEmbeddings(params?: {
 
   const summary = {
     days,
-    alertsScanned: snapshot.size,
+    alertsScanned: orderedDocs.length,
     alertsUpdated,
     textEmbeddingsWritten,
     imageDocumentsWritten,
