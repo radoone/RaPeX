@@ -56,7 +56,12 @@ export interface SafetyCheckResult {
 
 export interface MerchantDeltaMonitoringResult {
   shop: string;
-  mode: "delta" | "bootstrap";
+  mode: "delta" | "bootstrap" | "windowed";
+  window: {
+    strategy: "since-last-check" | "last-days" | "full-lookback";
+    days: number | null;
+    checkpointDate: string;
+  };
   productsScanned: number;
   rapexAlertsScanned: number;
   matchesFound: number;
@@ -111,6 +116,11 @@ export async function getSimilarityThresholdForShop(shop: string): Promise<numbe
 export async function checkProductSafety(
   productData: ProductData,
   similarityThreshold?: number,
+  cacheMetadata?: {
+    shop?: string;
+    productId?: string;
+    sourceUpdatedAt?: string;
+  },
 ): Promise<SafetyCheckResult> {
   try {
     const envDefault = Number(process.env.SAFETY_GATE_SIMILARITY_THRESHOLD || "0");
@@ -124,7 +134,12 @@ export async function checkProductSafety(
         "Content-Type": "application/json",
         "X-API-Key": requireApiKey(),
       },
-      body: JSON.stringify(productData),
+      body: JSON.stringify({
+        ...productData,
+        ...(cacheMetadata?.shop ? { shop: cacheMetadata.shop } : {}),
+        ...(cacheMetadata?.productId ? { productId: cacheMetadata.productId } : {}),
+        ...(cacheMetadata?.sourceUpdatedAt ? { sourceUpdatedAt: cacheMetadata.sourceUpdatedAt } : {}),
+      }),
     });
 
     if (!response.ok) {
@@ -173,7 +188,12 @@ export async function upsertMerchantProductForMonitoring(input: {
 
 export async function runMerchantDeltaMonitoring(
   shop: string,
-  options?: { forceFullScan?: boolean; limit?: number },
+  options?: {
+    forceFullScan?: boolean;
+    limit?: number;
+    monitoringMode?: "since-last-check" | "weekly" | "last-days" | "full-lookback";
+    days?: number;
+  },
 ): Promise<MerchantDeltaMonitoringResult> {
   const response = await fetch(`${FIREBASE_FUNCTIONS_BASE_URL}/runMerchantDeltaMonitoringAPI`, {
     method: "POST",
@@ -185,6 +205,8 @@ export async function runMerchantDeltaMonitoring(
       shop,
       forceFullScan: Boolean(options?.forceFullScan),
       limit: options?.limit,
+      monitoringMode: options?.monitoringMode,
+      days: options?.days,
     }),
   });
 

@@ -69,6 +69,9 @@ function readProductData(request: RequestShape): Partial<ProductCheckInput> | nu
       imageUrls: coerceStringArray(request.body.imageUrls),
       brand: coerceString(request.body.brand),
       model: coerceString(request.body.model),
+      shop: coerceString(request.body.shop),
+      productId: coerceString(request.body.productId),
+      sourceUpdatedAt: coerceString(request.body.sourceUpdatedAt),
     };
   }
 
@@ -81,6 +84,9 @@ function readProductData(request: RequestShape): Partial<ProductCheckInput> | nu
       imageUrls: coerceStringArray(request.query.imageUrls),
       brand: coerceString(request.query.brand),
       model: coerceString(request.query.model),
+      shop: coerceString(request.query.shop),
+      productId: coerceString(request.query.productId),
+      sourceUpdatedAt: coerceString(request.query.sourceUpdatedAt),
     };
   }
 

@@ -67,6 +67,57 @@
       ]
     },
     {
+      "collectionGroup": "rapex_alerts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "meta.alert_date",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "vector_text",
+          "vectorConfig": {
+            "dimension": 1536,
+            "flat": {}
+          }
+        }
+      ]
+    },
+    {
+      "collectionGroup": "rapex_alert_images",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "vector_image",
+          "vectorConfig": {
+            "dimension": 1408,
+            "flat": {}
+          }
+        }
+      ]
+    },
+    {
+      "collectionGroup": "rapex_alert_images",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "meta.alert_date",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "vector_image",
+          "vectorConfig": {
+            "dimension": 1408,
+            "flat": {}
+          }
+        }
+      ]
+    },
+    {
       "collectionGroup": "merchant_products",
       "queryScope": "COLLECTION",
       "fields": [
@@ -88,7 +139,41 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
+          "fieldPath": "shop",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "vector_text",
+          "vectorConfig": {
+            "dimension": 1536,
+            "flat": {}
+          }
+        }
+      ]
+    },
+    {
+      "collectionGroup": "merchant_products",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
           "fieldPath": "__name__",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "vector_image",
+          "vectorConfig": {
+            "dimension": 1408,
+            "flat": {}
+          }
+        }
+      ]
+    },
+    {
+      "collectionGroup": "merchant_products",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "shop",
           "order": "ASCENDING"
         },
         {

@@ -49,6 +49,7 @@ Firestore is both the RAPEX knowledge base and the merchant app datastore.
 
 Main collections:
 - `rapex_alerts`: imported Safety Gate records
+- `rapex_alert_images`: per-image embedding documents for recent Safety Gate alerts, used for visual retrieval across all alert pictures
 - `rapex_meta/loader_state`: loader checkpoint and run status
 - `merchant_products`: per-shop Shopify product snapshots with vectors
 - `merchant_alerts`: per-shop alert records for matched Shopify products
@@ -61,6 +62,7 @@ Imported alert documents store:
 - raw Safety Gate fields
 - metadata such as `recordid`, `alert_date`, `record_timestamp`
 - text embeddings and sometimes image embeddings for similarity search
+- recent alerts also fan out their image embeddings into `rapex_alert_images`, so vector image recall is not limited to a single primary picture
 
 ### 3. Shopify app
 
@@ -104,14 +106,16 @@ can be worked on without changing Shopify auth or app routes.
 
 1. A scheduled Firebase function fetches new Safety Gate data from the OpenDataSoft dataset `healthref-europe-rapex-en`.
 2. Records are upserted into Firestore collection `rapex_alerts`.
-3. The loader stores a checkpoint in `rapex_meta/loader_state` so later runs can do delta loading.
-4. When a Shopify product is created, updated, manually checked, or bulk-checked, the Shopify app sends normalized product data to Firebase endpoint `checkProductSafetyAPI`.
-5. The backend compares the product against recent/imported Safety Gate alerts, using AI plus Firestore retrieval/embeddings.
-6. The Shopify app upserts checked Shopify products to Firestore `merchant_products` through Firebase endpoint `upsertMerchantProductAPI`.
-7. Merchant-facing alerts/checks/settings are stored in Firestore (`merchant_alerts`, `merchant_checks`, `merchant_settings`).
-8. Shopify Admin product detail extensions show the latest Safety Gate state inline and can trigger a fresh check from the product page.
-9. Daily and user-triggered monitoring compares persisted merchant products only against RAPEX records newer than each shop checkpoint in `merchant_monitor_state`.
-10. Prisma remains only for Shopify sessions.
+3. For alerts within the recent embedding window (currently 6 months), the loader also writes per-image vector docs into `rapex_alert_images` so every alert picture can participate in image similarity retrieval.
+4. The loader stores a checkpoint in `rapex_meta/loader_state` so later runs can do delta loading.
+5. When a Shopify product is created, updated, manually checked, or bulk-checked, the Shopify app sends normalized product data to Firebase endpoint `checkProductSafetyAPI`.
+6. The backend compares the product against recent/imported Safety Gate alerts, using AI plus Firestore retrieval/embeddings.
+7. The Shopify app upserts checked Shopify products to Firestore `merchant_products` through Firebase endpoint `upsertMerchantProductAPI`.
+8. Merchant-facing alerts/checks/settings are stored in Firestore (`merchant_alerts`, `merchant_checks`, `merchant_settings`).
+9. Shopify Admin product detail extensions show the latest Safety Gate state inline and can trigger a fresh check from the product page.
+10. Daily monitoring defaults to "since last check", while manual/user-triggered monitoring can also run against explicit recent windows such as the last 7 days by passing `monitoringMode` / `days` to the Firebase monitoring API.
+11. Monitoring compares only RAPEX records newer than the chosen checkpoint/window in `merchant_monitor_state`, then uses vector retrieval over `merchant_products` to shortlist likely merchant products before running the expensive final matcher.
+12. Prisma remains only for Shopify sessions.
 
 ## Important product behavior
 
@@ -120,6 +124,8 @@ can be worked on without changing Shopify auth or app routes.
 - Matching is similarity-based, not exact-ID matching only.
 - Similarity can use product title, description, brand, model, category, and sometimes image data.
 - Similarity can use product title, description, brand, model, category, and multiple product images when available.
+- Merchant product checks now persist per-shop Shopify products into `merchant_products` early enough that repeated checks can reuse cached `vector_text` / `vector_image` instead of always re-embedding the product, as long as the same `shop`, `productId`, and `sourceUpdatedAt` are provided.
+- Recent alert image retrieval now uses `rapex_alert_images` so all alert pictures can be embedded and searched; legacy `rapex_alerts.vector_image` remains a fallback during rollout/backfill.
 - Safety check responses now distinguish between `overallSimilarity` (final review score) and `imageSimilarity` (visual packaging similarity).
 - The old single `similarity` score is no longer part of the current checker response contract; use `overallSimilarity` in backend and UI code.
 - There is a per-shop similarity threshold in Firestore collection `merchant_settings`.
@@ -153,6 +159,7 @@ When explaining or changing behavior, prefer these files as the source of truth:
 
 - ingestion and API surface: `firebase/functions/src/index.ts`
 - loader internals and OpenDataSoft fetch flow: `firebase/functions/src/safety-gate-loader.ts`
+- recent embedding backfill trigger: `firebase/functions/src/index.ts`
 - HTTP parsing/auth/CORS for product checks: `firebase/functions/src/safety-gate-http.ts`
 - merchant product upsert + delta monitoring: `firebase/functions/src/merchant-monitoring.ts`
 - shared Firebase config/constants: `firebase/functions/src/safety-gate-config.ts`

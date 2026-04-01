@@ -36,6 +36,22 @@ export interface RapexAlertDocument {
   vector_image?: FirestoreVectorValue;
 }
 
+export interface RapexAlertImageDocument {
+  alertId: string;
+  imageUrl: string;
+  imageIndex: number;
+  meta: {
+    datasetid: string;
+    recordid: string;
+    record_timestamp: string;
+    alert_date: Timestamp;
+    ingested_at: FieldValue;
+  };
+  fields: RapexRecordFields;
+  vector_image: FirestoreVectorValue;
+  updatedAt: FieldValue;
+}
+
 export interface OpenDataSoftResponse {
   records: RapexRecord[];
   nhits?: number;
@@ -50,6 +66,9 @@ export interface ProductCheckInput {
   imageUrls?: string[];
   brand?: string;
   model?: string;
+  shop?: string;
+  productId?: string;
+  sourceUpdatedAt?: string;
 }
 
 export interface MerchantProductUpsertInput {
@@ -95,6 +114,6 @@ export interface MerchantMonitorStateDocument {
   lastProductsScanned?: number;
   lastAlertsCreated?: number;
   lastMatchesFound?: number;
-  lastRunMode?: "delta" | "bootstrap" | "manual";
+  lastRunMode?: "delta" | "bootstrap" | "windowed";
   lastError?: string;
 }
