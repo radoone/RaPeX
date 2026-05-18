@@ -34,7 +34,8 @@ async function fetchImageAsBase64(
     });
 
     const base64 = Buffer.from(response.data, "binary").toString("base64");
-    let contentType = response.headers["content-type"] || "application/octet-stream";
+    let contentType =
+      normalizeHeaderValue(response.headers["content-type"]) || "application/octet-stream";
     if (contentType.startsWith("image/")) {
       contentType = contentType.split(";")[0].trim();
     }
@@ -47,6 +48,18 @@ async function fetchImageAsBase64(
     });
     return null;
   }
+}
+
+function normalizeHeaderValue(value: unknown): string | undefined {
+  if (typeof value === "string") {
+    return value;
+  }
+
+  if (Array.isArray(value)) {
+    return value.find((item): item is string => typeof item === "string");
+  }
+
+  return undefined;
 }
 
 export async function embedText(content: string): Promise<number[] | undefined> {

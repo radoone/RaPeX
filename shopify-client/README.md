@@ -101,7 +101,7 @@ Prisma is used for Shopify auth sessions only:
 - `app/db.server.ts`
 - `prisma/schema.prisma`
 
-Because this app currently runs Prisma `6.19.2`, `prisma/schema.prisma` still needs an inline SQLite `url` even though `prisma.config.ts` also defines the datasource URL.
+Because this app currently runs Prisma `6.19.3`, `prisma/schema.prisma` still needs an inline SQLite `url` even though `prisma.config.ts` also defines the datasource URL.
 
 ## Checker Integration
 

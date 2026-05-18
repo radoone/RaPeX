@@ -1,5 +1,12 @@
 # Safety Gate / RAPEX Shopify Checker
 
+[![Repository](https://img.shields.io/badge/GitHub-radoone%2FRaPeX-181717?style=for-the-badge&logo=github)](https://github.com/radoone/RaPeX)
+[![Firebase](https://img.shields.io/badge/Firebase-Backend-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com/)
+[![Shopify](https://img.shields.io/badge/Shopify-Admin%20App-7AB55C?style=for-the-badge&logo=shopify&logoColor=white)](https://www.shopify.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Monorepo-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-Functions%20%2B%20Remix-5FA04E?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![AI](https://img.shields.io/badge/AI-Safety%20Gate%20Matching-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
+
 This monorepo contains a Firebase backend and a Shopify app for checking merchant products against the EU Safety Gate database, formerly known as RAPEX.
 
 The product goal is:
@@ -245,7 +252,7 @@ npm run build
 - Recent Safety Gate image search uses `rapex_alert_images`; legacy `rapex_alerts.vector_image` remains a fallback.
 - Shopify merchant data lives in Firestore collections, not in Prisma business tables.
 - Prisma in `shopify-client` is for Shopify session storage only.
-- `shopify-client/prisma/schema.prisma` must keep an inline SQLite `url` while the app is on Prisma `6.19.2`.
+- `shopify-client/prisma/schema.prisma` must keep an inline SQLite `url` while the app is on Prisma `6.19.3`.
 - The Better SQLite adapter export is `PrismaBetterSQLite3`.
 - Shopify webhook registration uses `DeliveryMethod.Http`.
 - Polaris Web Components use the `s-` prefix and should not be replaced with non-prefixed elements.

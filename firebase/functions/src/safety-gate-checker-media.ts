@@ -75,7 +75,9 @@ export async function prepareImageMedia(imageUrl: string): Promise<EncodedImage 
 
     const base64 = Buffer.from(response.data, "binary").toString("base64");
     let contentType =
-      response.headers["content-type"] || guessContentType(trimmed) || "application/octet-stream";
+      normalizeHeaderValue(response.headers["content-type"]) ||
+      guessContentType(trimmed) ||
+      "application/octet-stream";
 
     if (contentType.startsWith("image/")) {
       contentType = contentType.split(";")[0].trim();
@@ -92,6 +94,18 @@ export async function prepareImageMedia(imageUrl: string): Promise<EncodedImage 
     );
     return null;
   }
+}
+
+function normalizeHeaderValue(value: unknown): string | undefined {
+  if (typeof value === "string") {
+    return value;
+  }
+
+  if (Array.isArray(value)) {
+    return value.find((item): item is string => typeof item === "string");
+  }
+
+  return undefined;
 }
 
 export function isUnsupportedMimeError(error: unknown): boolean {
