@@ -188,6 +188,27 @@ When explaining or changing behavior, prefer these files as the source of truth:
 
 When the project purpose, architecture, workflow, or important conventions change, update this `AGENTS.md` too.
 
+## Commit convention
+
+Use Conventional Commits for all repository commits. The format is:
+
+```text
+type(scope): short imperative summary
+```
+
+Preferred types:
+- `feat`: user-visible feature or workflow addition
+- `fix`: bug fix or behavioral correction
+- `docs`: documentation-only change
+- `chore`: dependency, tooling, lockfile, or repository maintenance
+- `refactor`: internal code change without intended behavior change
+- `test`: test-only change
+
+Use a concrete scope such as `shopify-client`, `firebase`, `i18n`, `deps`, `ui`, `marketing`, `repo`, or `agents`. Examples:
+- `feat(shopify-client): improve alert review workflow`
+- `fix(firebase): normalize axios content type headers`
+- `chore(deps): update project dependencies`
+
 Also update `AGENTS.md` whenever you learn something project-specific that is both important and likely to be reused in future work, even if it came from debugging rather than planned feature work.
 
 Typical cases when `AGENTS.md` should be updated:
