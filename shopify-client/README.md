@@ -1,100 +1,140 @@
 # Shopify Safety Gate App
 
-This app is the merchant-facing part of the monorepo. It checks Shopify products against the EU Safety Gate database and shows alerts when a store product appears to match a dangerous non-food product reported by European authorities.
+This is the merchant-facing Shopify app for the Safety Gate / RAPEX checker. It helps Shopify merchants find products in their own catalog that may match dangerous non-food products reported in the EU Safety Gate database.
 
-The Firebase backend imports and indexes Safety Gate records. This Shopify app uses that backend to:
+The Firebase backend imports and indexes Safety Gate records. This app turns that backend into Shopify Admin workflows:
 
-- automatically check products on create and update webhooks
-- manually check selected products from the admin UI
-- bulk check the full catalog
-- store alert history and check history per shop
-- let each shop configure a similarity threshold
+- automatic checks on product create/update webhooks
+- manual checks for selected products
+- bulk catalog checks
+- alert queue review, resolve, and dismiss actions
+- per-shop similarity threshold settings
+- product detail Admin extensions for inline safety status and check actions
 
-## What this app is for
+## Product Scope
 
-This is not a generic Shopify template anymore.
+The app is built around one merchant question:
 
-Its real job is:
+> Does this Shopify product look like a product that has already been flagged in EU Safety Gate?
 
-> Compare products sold in Shopify with the Safety Gate / RAPEX dataset and warn the merchant when a product looks similar to a dangerous product alert.
+It is not a generic Safety Gate search UI, marketplace scraper, or full compliance rules engine.
 
-## Main app flows
+## User Workflow
 
-### Automatic monitoring
+The Shopify Admin flow should stay close to familiar merchant behavior:
 
-When Shopify sends `products/create` or `products/update` webhooks, the app:
+1. Review the alert queue.
+2. Open the alert detail.
+3. Compare the Shopify product against the Safety Gate alert.
+4. Decide whether to resolve, dismiss, or re-check.
+5. Keep history and status visible for auditability.
 
-1. normalizes the Shopify product into checker input
-2. calls Firebase endpoint `checkProductSafetyAPI`
-3. stores the result in Prisma
-4. creates or updates `SafetyAlert` records when warnings are found
+UI should be clear for merchants who already understand Shopify Admin menus. Prefer direct operational labels such as "Alerts", "Manual check", "Settings", "Resolve", and "Dismiss" over internal terminology.
 
-Relevant files:
-- `app/routes/webhooks.products.create.tsx`
-- `app/routes/webhooks.products.update.tsx`
+## Main Routes
 
-### Manual product checks
+- `app/routes/app._index.tsx`: dashboard summary, monitoring actions, bulk checks
+- `app/routes/app.manual-check.tsx`: Shopify product search and on-demand checks
+- `app/routes/app.alerts.tsx`: alert list, filters, sorting, detail review, bulk actions
+- `app/routes/app.settings.tsx`: per-shop similarity threshold
+- `app/routes/api.product-safety-status.ts`: product extension status API
+- `app/routes/api.product-safety-check.ts`: product extension check API
+- `app/routes/webhooks.products.create.tsx`: product create webhook
+- `app/routes/webhooks.products.update.tsx`: product update webhook
 
-The manual check page loads recent products from Shopify and lets the merchant run an on-demand check.
+## Components
 
-Relevant file:
-- `app/routes/app.manual-check.tsx`
+Important reusable UI pieces:
 
-### Bulk catalog checks
+- `app/components/AlertTable.tsx`
+- `app/components/AlertDetailModal.tsx`
+- `app/components/AlertFilters.tsx`
+- `app/components/AlertActions.tsx`
+- `app/components/StatusBadge.tsx`
+- `app/components/RiskMeter.tsx`
+- `app/components/LanguageSwitcher.tsx`
 
-The dashboard can iterate through the catalog and check products in batches.
+The UI uses Shopify Polaris Web Components. Their custom elements use the `s-` prefix, for example `s-page`, `s-section`, `s-button`, and `s-badge`.
 
-Relevant file:
-- `app/routes/app._index.tsx`
+## Localization
 
-### Alert management
+Localization is initialized in:
 
-The app stores merchant-facing status for alerts:
-- `active`
-- `dismissed`
-- `resolved`
+- `app/i18n.ts`
 
-Relevant file:
-- `app/routes/app.alerts.tsx`
+Translation resources live in:
 
-## Local data model
+- `app/locales/`
 
-Prisma models used by the app:
+Current structure:
 
-- `Session`: Shopify session storage
-- `SafetyAlert`: active/resolved/dismissed merchant alerts
-- `SafetyCheck`: history of product checks
-- `SafetySetting`: per-shop similarity threshold
-- `WebhookError`: failed webhook processing logs
+- `en.ts`: full English translation
+- `sk.ts`: full Slovak translation
+- `core-locale.ts`: shared locale builder for additional EU languages
+- `languages.ts`: supported language list
+- one file per additional EU official language, for example `de.ts`, `fr.ts`, `pl.ts`, `it.ts`, `ro.ts`
 
-See:
+Additional EU locale files include:
+
+- short labels for navigation, actions, badges, and table states
+- longer merchant-facing guidance under the `long` block
+
+Do not hardcode merchant-facing strings in routes, components, loaders, or actions. Add translation keys to the locale files and use `useTranslation()`.
+
+## Data Layer
+
+Merchant-facing business data is stored in Firestore through:
+
+- `app/merchant-db.server.ts`
+- `app/firestore.server.ts`
+
+Important Firestore-backed data:
+
+- merchant alerts
+- merchant check history
+- merchant settings
+- merchant product snapshots
+- webhook error logs
+
+Prisma is used for Shopify auth sessions only:
+
+- `app/db.server.ts`
 - `prisma/schema.prisma`
 
-## Important implementation details
+Because this app currently runs Prisma `6.19.2`, `prisma/schema.prisma` still needs an inline SQLite `url` even though `prisma.config.ts` also defines the datasource URL.
 
-- Product matching is similarity-based, not exact-match-only.
-- The Shopify app delegates matching to Firebase Functions.
-- The backend can use text similarity, product metadata, and image-aware retrieval if images are available.
-- The similarity threshold can be overridden per shop in settings.
-- If the backend check fails, the current server-side behavior returns a safe result to avoid blocking catalog operations.
+## Checker Integration
 
-## Required environment variables
+Shopify-to-Firebase integration lives in:
 
-The app expects at least:
+- `app/services/safety-gate-checker.server.ts`
+- `app/services/safety-gate-checker.client.ts`
+- `app/services/product-safety-admin.server.ts`
+
+Important behavior:
+
+- Matching is similarity-based, not exact ID matching.
+- Product input includes title, description, vendor/brand, product type/category, tags, variants, and images where available.
+- Current checker responses distinguish `overallSimilarity` from `imageSimilarity`.
+- UI code should use `overallSimilarity` for final match scoring.
+- Each shop can configure its own similarity threshold.
+- Failed checks should surface clear retryable errors through route `ErrorBoundary` components.
+
+## Required Environment Variables
+
+Typical app variables:
 
 ```bash
 SHOPIFY_API_KEY=...
 SHOPIFY_API_SECRET=...
 SCOPES=...
 SHOPIFY_APP_URL=...
-
 FIREBASE_FUNCTIONS_BASE_URL=https://europe-west1-<project-id>.cloudfunctions.net
 SAFETY_GATE_API_KEY=...
 SAFETY_GATE_SIMILARITY_THRESHOLD=0
 ```
 
-If you are setting up the Firebase API key link, also read:
-- `SAFETY_GATE_SETUP.md`
+For local Firebase Admin credentials, use the project-specific setup expected by `app/firestore.server.ts`.
 
 ## Development
 
@@ -104,7 +144,7 @@ Install dependencies from the monorepo root:
 npm install
 ```
 
-Run the Shopify app workspace:
+Run the Shopify app from the root:
 
 ```bash
 npm run shopify:dev
@@ -116,10 +156,35 @@ Or from this directory:
 npm run dev
 ```
 
-## Where the real project context lives
+## Validation
 
-If you are an agent or another LLM, start here:
+Before pushing changes in this app, run:
 
-- root `AGENTS.md` for the project purpose
-- `app/services/safety-gate-checker.server.ts` for Shopify-to-backend integration
-- `prisma/schema.prisma` for merchant-side persistence
+```bash
+npx tsc --noEmit
+npm run lint
+npm run build
+```
+
+The lint command may print a Remix ESLint deprecation warning. Treat TypeScript errors, lint errors, and build failures as blockers.
+
+## Deployment
+
+Use the Shopify CLI commands from this directory:
+
+```bash
+npm run config:link
+npm run deploy
+```
+
+## Files To Check First
+
+For future maintainers and agents:
+
+- `../AGENTS.md`: project memory and conventions
+- `app/routes/app.alerts.tsx`: alert workflow
+- `app/routes/app.manual-check.tsx`: manual product check workflow
+- `app/services/safety-gate-checker.server.ts`: Firebase checker calls
+- `app/merchant-db.server.ts`: Firestore merchant data adapter
+- `app/locales/index.ts`: locale resource assembly
+- `app/locales/en.ts`: complete translation key reference
