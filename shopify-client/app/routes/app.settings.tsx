@@ -23,7 +23,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const { session } = await authenticate.admin(request);
   const formData = await request.formData();
   const threshold = Number(formData.get("similarityThreshold"));
-  const safeValue = Number.isFinite(threshold) && threshold >= 0 ? Math.round(threshold) : 0;
+  const safeValue = Number.isFinite(threshold)
+    ? Math.min(Math.max(Math.round(threshold), 0), 100)
+    : 0;
 
   await db.safetySetting.upsert({
     where: { shop: session.shop },

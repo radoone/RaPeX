@@ -91,6 +91,14 @@ body {
   flex-wrap: wrap;
 }
 
+.admin-toolbar {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) auto;
+  gap: 12px;
+  align-items: end;
+  margin-top: 16px;
+}
+
 .admin-inline-meta {
   display: flex;
   align-items: center;
@@ -863,6 +871,10 @@ s-divider[direction="vertical"] {
 @media (max-width: 720px) {
   .admin-card {
     padding: 16px;
+  }
+
+  .admin-toolbar {
+    grid-template-columns: 1fr;
   }
 
   .page-header__top {

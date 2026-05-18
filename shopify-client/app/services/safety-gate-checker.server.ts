@@ -124,7 +124,7 @@ export async function checkProductSafety(
 ): Promise<SafetyCheckResult> {
   try {
     const envDefault = Number(process.env.SAFETY_GATE_SIMILARITY_THRESHOLD || "0");
-    const effectiveThreshold = Number.isFinite(similarityThreshold)
+    const effectiveThreshold = typeof similarityThreshold === "number" && Number.isFinite(similarityThreshold)
       ? similarityThreshold
       : (Number.isFinite(envDefault) ? envDefault : 0);
 

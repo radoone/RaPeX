@@ -23,6 +23,15 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const statusFilters = url.searchParams.getAll("status");
   const riskLevelFilters = url.searchParams.getAll("riskLevel");
   const search = url.searchParams.get("search") || undefined;
+  const sortByParam = url.searchParams.get("sortBy") || "created";
+  const sortOrderParam: "asc" | "desc" = url.searchParams.get("sortOrder") === "asc" ? "asc" : "desc";
+  const sortField =
+    sortByParam === "name"
+      ? "productTitle"
+      : sortByParam === "risk"
+        ? "riskLevel"
+        : "createdAt";
+  const orderBy = { [sortField]: sortOrderParam };
 
   const whereClause: any = { shop: session.shop };
   if (statusFilters.length > 0) whereClause.status = statusFilters.length === 1 ? statusFilters[0] : { in: statusFilters };
@@ -31,7 +40,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   if (search) whereClause.productTitle = { contains: search };
 
   const [rawAlerts, totalCount, activeCount, resolvedCount, dismissedCount, activeAlertRiskSample] = await Promise.all([
-    db.safetyAlert.findMany({ where: whereClause, orderBy: { createdAt: 'desc' }, skip: offset, take: pageSize }),
+    db.safetyAlert.findMany({ where: whereClause, orderBy, skip: offset, take: pageSize }),
     db.safetyAlert.count({ where: whereClause }),
     db.safetyAlert.count({ where: { shop: session.shop, status: 'active' } }),
     db.safetyAlert.count({ where: { shop: session.shop, status: 'resolved' } }),
@@ -117,7 +126,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return json({
     alerts,
     pagination: { currentPage: page, totalPages: Math.ceil(totalCount / pageSize), totalCount, hasNext: page < Math.ceil(totalCount / pageSize), hasPrevious: page > 1 },
-    filters: { status: statusFilters, riskLevel: riskLevelFilters, search },
+    filters: { status: statusFilters, riskLevel: riskLevelFilters, search, sortBy: sortByParam, sortOrder: sortOrderParam },
     stats: { active: activeCount, resolved: resolvedCount, dismissed: dismissedCount, total: activeCount + resolvedCount + dismissedCount, criticalActive: criticalActiveAlerts },
   });
 };
@@ -132,11 +141,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const notes = formData.get("notes") as string || undefined;
 
   const ids = alertIdsJson ? JSON.parse(alertIdsJson) as string[] : [alertId];
+  const scopedWhere = { id: { in: ids.filter(Boolean) }, shop: session.shop };
 
   switch (action) {
     case "dismiss":
       await db.safetyAlert.updateMany({
-        where: { id: { in: ids }, shop: session.shop },
+        where: scopedWhere,
         data: {
           status: 'dismissed',
           dismissedAt: new Date(),
@@ -148,7 +158,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       break;
     case "resolve":
       await db.safetyAlert.updateMany({
-        where: { id: { in: ids }, shop: session.shop },
+        where: scopedWhere,
         data: {
           status: 'resolved',
           resolvedAt: new Date(),
@@ -159,7 +169,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       break;
     case "reactivate":
       await db.safetyAlert.updateMany({
-        where: { id: { in: ids }, shop: session.shop },
+        where: scopedWhere,
         data: {
           status: 'active',
           dismissedAt: null,
@@ -169,6 +179,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         }
       });
       break;
+    default:
+      return json({ success: false, error: "Invalid action" }, { status: 400 });
   }
   return json({ success: true });
 };
@@ -210,16 +222,20 @@ export default function AlertsPage() {
   const [searchValue, setSearchValue] = useState(filters.search || '');
   const [statusFilter, setStatusFilter] = useState<string[]>(filters.status || []);
 
-  const applyFilters = useCallback((overrides?: { search?: string; status?: string[]; page?: number }) => {
+  const applyFilters = useCallback((overrides?: { search?: string; status?: string[]; page?: number; sortBy?: string; sortOrder?: string }) => {
     const params = new URLSearchParams();
     const s = (overrides?.search ?? searchValue).trim();
     if (s) params.set('search', s);
     (overrides?.status ?? statusFilter).forEach(v => params.append('status', v));
+    const sortBy = overrides?.sortBy ?? filters.sortBy;
+    const sortOrder = overrides?.sortOrder ?? filters.sortOrder;
+    if (sortBy && sortBy !== "created") params.set("sortBy", sortBy);
+    if (sortOrder && sortOrder !== "desc") params.set("sortOrder", sortOrder);
     const p = overrides?.page ?? 1;
     if (p > 1) params.set('page', p.toString());
     const queryString = params.toString();
     navigate(queryString ? `/app/alerts?${queryString}` : '/app/alerts');
-  }, [searchValue, statusFilter, navigate]);
+  }, [filters.sortBy, filters.sortOrder, searchValue, statusFilter, navigate]);
 
   const handleAlertAction = useCallback((alertId: string, action: string, resolutionType?: string) => {
     fetcher.submit({ action, alertId, resolutionType: resolutionType || '' }, { method: 'POST' });
@@ -322,6 +338,9 @@ export default function AlertsPage() {
               setStatusFilter(newFilter);
               applyFilters({ status: newFilter });
             }}
+            sortBy={filters.sortBy}
+            sortOrder={filters.sortOrder}
+            onSortChange={(sortBy, sortOrder) => applyFilters({ sortBy, sortOrder })}
             stats={stats}
           />
         </section>

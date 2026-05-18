@@ -38,6 +38,11 @@ type UpdateOptions<T> = {
   data: Partial<T>;
 };
 
+type UpdateManyOptions<T> = {
+  where?: WhereClause;
+  data: Partial<T>;
+};
+
 type DeleteManyOptions = {
   where?: WhereClause;
 };
@@ -311,7 +316,7 @@ async function loadCollectionByShop(
     return [];
   }
 
-  return snapshot.docs.map((doc) => ({
+  return snapshot.docs.map((doc: any) => ({
     id: doc.id,
     data: doc.data() as Record<string, unknown>,
   }));
@@ -417,6 +422,17 @@ const safetyAlert = {
       return convertSafetyAlert(options.where.id, payload);
     }
     return convertSafetyAlert(snapshot.id, (snapshot.data() || {}) as Record<string, unknown>);
+  },
+
+  async updateMany(options: UpdateManyOptions<SafetyAlertRecord>): Promise<{ count: number }> {
+    const rows = await safetyAlert.findMany({ where: options.where });
+    for (const row of rows) {
+      await safetyAlert.update({
+        where: { id: row.id },
+        data: options.data,
+      });
+    }
+    return { count: rows.length };
   },
 
   async deleteMany(options: DeleteManyOptions = {}): Promise<{ count: number }> {

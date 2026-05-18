@@ -116,7 +116,7 @@ function getAlertType(result: SafetyCheckResult | null): string | null {
 
 function getOverallSimilarity(result: SafetyCheckResult | null): number | null {
   const value = result?.warnings?.[0]?.overallSimilarity;
-  return Number.isFinite(value) ? value : null;
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
 }
 
 function isoOrNull(value: Date | null | undefined): string | null {

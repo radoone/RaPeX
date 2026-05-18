@@ -40,28 +40,28 @@ interface AlertTableProps {
   onSearchChange?: (value: string) => void;
   statusFilter?: string[];
   onStatusChange?: (status: string) => void;
+  sortBy?: string;
+  sortOrder?: string;
+  onSortChange?: (sortBy: string, sortOrder: string) => void;
   stats?: { active: number; resolved: number; dismissed: number; total: number };
 }
 
 export function AlertTable({
   alerts,
   onViewDetails,
-  onDismiss,
-  onResolve,
-  onReactivate,
   onBulkAction,
-  isLoading = false,
   showProductLink = false,
   modalIdPrefix = "alert-modal",
   searchValue = "",
   onSearchChange,
   statusFilter = [],
   onStatusChange,
+  sortBy = "created",
+  sortOrder = "desc",
+  onSortChange,
   stats,
 }: AlertTableProps) {
   const { t } = useTranslation();
-  const [sortBy, setSortBy] = useState<string>("created");
-  const [sortOrder, setSortOrder] = useState<string>("desc");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   // Determine active tab
@@ -206,13 +206,13 @@ export function AlertTable({
             <s-stack gap="none">
               <s-box padding="small">
                 <s-choice-list label={t('alerts.table.sortBy')} name="sortBy">
-                  <s-choice value="created" selected={sortBy === "created"} onClick={() => setSortBy("created")}>
+                  <s-choice value="created" selected={sortBy === "created"} onClick={() => onSortChange?.("created", sortOrder)}>
                     {t('alerts.table.sortOptions.created')}
                   </s-choice>
-                  <s-choice value="risk" selected={sortBy === "risk"} onClick={() => setSortBy("risk")}>
+                  <s-choice value="risk" selected={sortBy === "risk"} onClick={() => onSortChange?.("risk", sortOrder)}>
                     {t('alerts.table.sortOptions.risk')}
                   </s-choice>
-                  <s-choice value="name" selected={sortBy === "name"} onClick={() => setSortBy("name")}>
+                  <s-choice value="name" selected={sortBy === "name"} onClick={() => onSortChange?.("name", sortOrder)}>
                     {t('alerts.table.sortOptions.name')}
                   </s-choice>
                 </s-choice-list>
@@ -220,10 +220,10 @@ export function AlertTable({
               <s-divider />
               <s-box padding="small">
                 <s-choice-list label={t('alerts.table.order')} name="sortOrder">
-                  <s-choice value="desc" selected={sortOrder === "desc"} onClick={() => setSortOrder("desc")}>
+                  <s-choice value="desc" selected={sortOrder === "desc"} onClick={() => onSortChange?.(sortBy, "desc")}>
                     {t('alerts.table.orderOptions.desc')}
                   </s-choice>
-                  <s-choice value="asc" selected={sortOrder === "asc"} onClick={() => setSortOrder("asc")}>
+                  <s-choice value="asc" selected={sortOrder === "asc"} onClick={() => onSortChange?.(sortBy, "asc")}>
                     {t('alerts.table.orderOptions.asc')}
                   </s-choice>
                 </s-choice-list>
@@ -265,10 +265,6 @@ export function AlertTable({
                 key={alert.id}
                 alert={alert}
                 onViewDetails={onViewDetails}
-                onDismiss={onDismiss}
-                onResolve={onResolve}
-                onReactivate={onReactivate}
-                isLoading={isLoading}
                 showProductLink={showProductLink}
                 modalId={`${modalIdPrefix}-${alert.id}`}
                 isSelected={selectedIds.includes(alert.id)}
