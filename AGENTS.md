@@ -131,18 +131,25 @@ can be worked on without changing Shopify auth or app routes.
 - There is a per-shop similarity threshold in Firestore collection `merchant_settings`.
 - If the external/API check fails, the app now uses a robust **ErrorBoundary** system to inform the merchant and allow retry, rather than silently failing open with a "safe" result.
 - The UI uses **Shopify Polaris Web Components** (with `s-` prefix) to ensure a native look and feel within the Shopify Admin.
+- The Shopify app UI should follow a Shopify Admin merchant workflow: **review match → compare product → choose action → keep an audit trail**. Prefer clear merchant actions such as "Needs review", "Check one product", "Review alerts", "Resolve", and "Dismiss" over internal implementation language such as "active", "unsafe", "candidate alerts", or raw monitoring modes.
 - The **Alert Table** supports **Bulk Actions** (Resolve/Dismiss) for efficient management of multiple findings.
 - High-risk alerts ("Serious" or "High") are visually prioritized in the UI with critical color coding and borders.
-- The **Alert Detail Modal** uses intelligent **text highlighting** to show exactly which parts of the product title match the Safety Gate data.
-- Manual checks now include **Skeleton loading states** to provide better visual feedback during the analysis process.
+- The **Alert Detail Modal** should prioritize merchant decision-making first: show the Shopify product, the likely Safety Gate match, why it matched, and the recommended action before exposing deeper technical scoring/debug details.
+- Manual checks now include **Skeleton loading states** and product search so merchants can find a specific Shopify product instead of scanning a fixed recent-products list.
+- The dashboard primary action should describe the actual monitoring behavior. "Check all products" implies a full catalog scan; use clearer wording when the action checks new Safety Gate alerts or runs delta monitoring.
+- The merchant UI exposes language selection for the 24 official EU languages: English, Bulgarian, Czech, Danish, German, Greek, Spanish, Estonian, Finnish, French, Irish, Croatian, Hungarian, Italian, Lithuanian, Latvian, Maltese, Dutch, Polish, Portuguese, Romanian, Slovak, Slovenian, and Swedish.
 
 ## Technical Standards & Lessons Learned
 
 - **Dependency Management:** Prefer internal types (e.g., `app/types/product.ts`) over heavy external libraries (like `@shopify/hydrogen`) just for type definitions to avoid version conflicts with Remix/Vite.
 - **UI Framework:** The `s-` prefix is mandatory for Polaris Web Components as they are registered as Custom Elements. Do not attempt to remove them.
 - **Error Handling:** In a Remix-based Shopify app, use `useRouteError` and `isRouteErrorResponse` in per-route `ErrorBoundary` components to handle API failures gracefully without breaking the entire Admin UI.
-- **i18n:** All merchant-facing strings, including error messages and bulk action labels, must be localized in `shopify-client/app/i18n.ts`.
+- **i18n:** All merchant-facing strings, including error messages, status labels, modal headings, table labels, and bulk action labels, must be localized through `shopify-client/app/locales/`. `shopify-client/app/i18n.ts` should stay as the small i18next initialization file. The language selector exposes the 24 official EU languages via `EU_LANGUAGES` in `shopify-client/app/locales/languages.ts`; English and Slovak are the most complete locales, while other EU languages may provide core workflow translations with English fallback for longer explanatory text.
+- **Translation coverage:** When adding or changing primary merchant workflow text, update at least `shopify-client/app/locales/en.ts` and `shopify-client/app/locales/sk.ts` fully, then add/update the per-language core workflow locale files for the other EU languages in `shopify-client/app/locales/{bg,cs,da,de,el,es,et,fi,fr,ga,hr,hu,it,lt,lv,mt,nl,pl,pt,ro,sl,sv}.ts`. Those per-language files include both short UI labels and a `long` block for longer merchant-facing explanatory copy used by dashboard cards, alert queues, manual checks, settings, and match analysis. Do not hardcode merchant-facing English in React components or Shopify UI extensions unless the string is developer-only/debug-only.
+- **Validation:** Before handing off Shopify client changes, run `npx tsc --noEmit`, `npm run lint`, and `npm run build` from `shopify-client/`. ESLint intentionally ignores generated `extensions/*/dist/**` bundles.
+- **Firestore adapter:** `shopify-client/app/merchant-db.server.ts` is a Firestore-backed Prisma-like adapter, not Prisma itself. If app routes use Prisma-style methods such as `updateMany`, they must exist on this adapter. Always scope merchant alert mutations by `shop` as well as alert/product id.
 - **Prisma Compatibility:** In `shopify-client`, the installed Prisma version is currently `6.19.2`, so `prisma generate` still requires an inline `url` in `shopify-client/prisma/schema.prisma` even though `shopify-client/prisma.config.ts` also defines the datasource URL. The Better SQLite adapter export name is `PrismaBetterSQLite3`, not `PrismaBetterSqlite3`.
+- **Shopify app config:** Webhook definitions in `shopify-client/app/shopify.server.ts` should use `DeliveryMethod.Http` from `@shopify/shopify-app-remix/server`; do not use the string `"http"`. Do not add unsupported future flags such as `removeRest`.
 
 ## Data source
 

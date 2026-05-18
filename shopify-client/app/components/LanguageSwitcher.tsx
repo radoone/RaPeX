@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { EU_LANGUAGES } from "../i18n";
 
 export function LanguageSwitcher() {
-    const { i18n } = useTranslation();
+    const { i18n, t } = useTranslation();
     const [mounted, setMounted] = useState(false);
     const [currentLang, setCurrentLang] = useState('en');
 
@@ -17,29 +18,17 @@ export function LanguageSwitcher() {
         setCurrentLang(lng);
     };
 
-    const buttonVariant = (lng: string) =>
-        mounted && currentLang === lng ? "primary" : "tertiary";
-
     return (
-        <s-stack direction="inline" gap="small" blockAlign="center">
-            <s-button
-                type="button"
-                variant={buttonVariant('en')}
-                size="small"
-                aria-pressed={mounted && currentLang === 'en'}
-                onClick={() => changeLanguage('en')}
-            >
-                EN
-            </s-button>
-            <s-button
-                type="button"
-                variant={buttonVariant('sk')}
-                size="small"
-                aria-pressed={mounted && currentLang === 'sk'}
-                onClick={() => changeLanguage('sk')}
-            >
-                SK
-            </s-button>
-        </s-stack>
+        <s-select
+            label={t("common.language")}
+            value={mounted ? currentLang : "en"}
+            onChange={(event: any) => changeLanguage(event.currentTarget.value)}
+        >
+            {EU_LANGUAGES.map((language) => (
+                <s-option key={language.code} value={language.code}>
+                    {language.label}
+                </s-option>
+            ))}
+        </s-select>
     );
 }

@@ -34,12 +34,13 @@ function getRiskScore(
   }
 
   const normalized = riskLevel?.toLowerCase() || "";
-  if (normalized.includes("serious")) return { score: 92, tone: "critical", title: formatLabel(riskLevel) };
-  if (normalized.includes("high")) return { score: 78, tone: "warning", title: formatLabel(riskLevel) };
-  if (normalized.includes("other")) return { score: 64, tone: "warning", title: formatLabel(riskLevel) };
-  if (normalized.includes("low")) return { score: 36, tone: "success", title: formatLabel(riskLevel) };
+  const title = formatLabel(riskLevel || "Unknown risk");
+  if (normalized.includes("serious")) return { score: 92, tone: "critical", title };
+  if (normalized.includes("high")) return { score: 78, tone: "warning", title };
+  if (normalized.includes("other")) return { score: 64, tone: "warning", title };
+  if (normalized.includes("low")) return { score: 36, tone: "success", title };
 
-  return { score: 50, tone: "info", title: formatLabel(riskLevel || "Unknown risk") };
+  return { score: 50, tone: "info", title };
 }
 
 function clamp(value: number) {

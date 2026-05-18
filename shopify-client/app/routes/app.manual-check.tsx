@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node";
-import { useLoaderData, useFetcher, useRouteError, isRouteErrorResponse } from "@remix-run/react";
+import { useLoaderData, useFetcher, useNavigate, useRouteError, isRouteErrorResponse } from "@remix-run/react";
 import { json } from "@remix-run/node";
 import { useTranslation } from "react-i18next";
 import { useAppBridge } from "@shopify/app-bridge-react";
@@ -13,10 +13,12 @@ import { type ResolutionType, formatRelativeDate } from "../components/AlertTabl
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { admin, session } = await authenticate.admin(request);
+  const url = new URL(request.url);
+  const search = url.searchParams.get("search")?.trim() || "";
 
   const productsResponse = await admin.graphql(`
-    query getProducts($first: Int!) {
-      products(first: $first, sortKey: UPDATED_AT, reverse: true) {
+    query getProducts($first: Int!, $query: String) {
+      products(first: $first, sortKey: UPDATED_AT, reverse: true, query: $query) {
         edges {
           node {
             id title handle vendor productType tags description
@@ -28,7 +30,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         }
       }
     }
-  `, { variables: { first: 50 } });
+  `, { variables: { first: 50, query: search || null } });
 
   const productsJson = await productsResponse.json();
   const products = productsJson.data?.products?.edges?.map((e: any) => e.node) || [];
@@ -96,13 +98,30 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     return acc;
   }, {});
 
-  return json({ products, checksByProduct, alertsByProduct });
+  return json({ products, checksByProduct, alertsByProduct, search });
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const { session } = await authenticate.admin(request);
   const formData = await request.formData();
   const action = formData.get("action") as string;
+  const updateOwnedAlert = async (
+    alertId: string,
+    data: Parameters<typeof db.safetyAlert.update>[0]["data"],
+  ) => {
+    const alert = await db.safetyAlert.findFirst({
+      where: { id: alertId, shop: session.shop },
+    });
+
+    if (!alert) {
+      throw new Error("Alert not found");
+    }
+
+    return db.safetyAlert.update({
+      where: { id: alert.id },
+      data,
+    });
+  };
 
   if (action === "checkProduct") {
     const productData = JSON.parse(formData.get("productData") as string);
@@ -135,13 +154,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const resolutionType = formData.get("resolutionType") as string | null;
 
     try {
-      await db.safetyAlert.update({
-        where: { id: alertId },
-        data: {
-          status: "resolved",
-          resolvedAt: new Date(),
-          resolutionType: resolutionType || null,
-        },
+      await updateOwnedAlert(alertId, {
+        status: "resolved",
+        resolvedAt: new Date(),
+        resolutionType: resolutionType || null,
       });
       return json({ success: true, action: "resolved" });
     } catch (error) {
@@ -155,14 +171,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const resolutionType = formData.get("resolutionType") as string | null;
 
     try {
-      await db.safetyAlert.update({
-        where: { id: alertId },
-        data: {
-          status: "dismissed",
-          dismissedAt: new Date(),
-          dismissedBy: session.shop,
-          resolutionType: resolutionType || null,
-        },
+      await updateOwnedAlert(alertId, {
+        status: "dismissed",
+        dismissedAt: new Date(),
+        dismissedBy: session.shop,
+        resolutionType: resolutionType || null,
       });
       return json({ success: true, action: "dismissed" });
     } catch (error) {
@@ -175,15 +188,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const alertId = formData.get("alertId") as string;
 
     try {
-      await db.safetyAlert.update({
-        where: { id: alertId },
-        data: {
-          status: "active",
-          dismissedAt: null,
-          dismissedBy: null,
-          resolvedAt: null,
-          resolutionType: null,
-        },
+      await updateOwnedAlert(alertId, {
+        status: "active",
+        dismissedAt: null,
+        dismissedBy: null,
+        resolvedAt: null,
+        resolutionType: null,
       });
       return json({ success: true, action: "reactivated" });
     } catch (error) {
@@ -222,9 +232,10 @@ export function ErrorBoundary() {
 }
 
 export default function ManualCheckPage() {
-  const { products, checksByProduct, alertsByProduct } = useLoaderData<typeof loader>();
+  const { products, checksByProduct, alertsByProduct, search } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
   const resolveFetcher = useFetcher<typeof action>();
+  const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const shopify = useAppBridge();
 
@@ -233,6 +244,7 @@ export default function ManualCheckPage() {
   const [currentAlertId, setCurrentAlertId] = useState<string | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [hasProcessedResult, setHasProcessedResult] = useState(false);
+  const [searchValue, setSearchValue] = useState(search);
   const dateLocale = i18n.language === 'sk' ? 'sk-SK' : 'en-GB';
 
   // Get all alerts from alertsByProduct for modals
@@ -241,6 +253,13 @@ export default function ManualCheckPage() {
   const productCheckEntries = Object.values(checksByProduct || {});
   const unsafeProducts = productCheckEntries.filter((e: any) => e.isSafe === false).length;
   const totalChecks = productCheckEntries.reduce((sum: number, e: any) => sum + e.totalChecks, 0);
+  const applySearch = useCallback(() => {
+    const params = new URLSearchParams();
+    const value = searchValue.trim();
+    if (value) params.set("search", value);
+    const query = params.toString();
+    navigate(query ? `/app/manual-check?${query}` : "/app/manual-check");
+  }, [navigate, searchValue]);
 
   const handleProductCheck = useCallback((product: any) => {
     const productData = shopifyProductToProductData(product);
@@ -408,6 +427,30 @@ export default function ManualCheckPage() {
               <p className="admin-card__description">
                 {t("manualCheck.admin.catalogDescription")}
               </p>
+            </div>
+          </div>
+          <div className="admin-toolbar">
+            <s-text-field
+              label={t("manualCheck.catalogue.searchLabel")}
+              placeholder={t("manualCheck.catalogue.searchPlaceholder")}
+              value={searchValue}
+              onInput={(event: any) => setSearchValue(event.currentTarget.value || "")}
+            />
+            <div className="admin-actions">
+              <s-button variant="primary" onClick={applySearch}>
+                {t("actions.search")}
+              </s-button>
+              {search && (
+                <s-button
+                  variant="secondary"
+                  onClick={() => {
+                    setSearchValue("");
+                    navigate("/app/manual-check");
+                  }}
+                >
+                  {t("actions.clear")}
+                </s-button>
+              )}
             </div>
           </div>
 

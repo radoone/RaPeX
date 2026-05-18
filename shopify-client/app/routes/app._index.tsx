@@ -313,7 +313,7 @@ export default function Index() {
         onClick={runBulkCheck}
         disabled={isSubmitting || undefined}
       >
-        {isSubmitting ? t("actions.checking") : t("actions.checkAll")}
+        {isSubmitting ? t("actions.checking") : t("actions.checkNewSafetyGateAlerts")}
       </s-button>
 
       <div className="admin-stack">
@@ -369,9 +369,14 @@ export default function Index() {
                 {t("dashboard.admin.recentAlertsDescription")}
               </p>
             </div>
-            <s-button variant="secondary" onClick={() => navigate("/app/alerts")}>
-              {t("actions.viewAlerts")}
-            </s-button>
+            <div className="admin-actions">
+              <s-button variant="secondary" onClick={() => navigate("/app/manual-check")}>
+                {t("actions.checkOneProduct")}
+              </s-button>
+              <s-button variant="secondary" onClick={() => navigate("/app/alerts")}>
+                {t("actions.viewAlerts")}
+              </s-button>
+            </div>
           </div>
 
           {recentAlerts.length === 0 ? (

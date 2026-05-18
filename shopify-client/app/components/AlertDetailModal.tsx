@@ -181,7 +181,7 @@ export function AlertDetailModal({
 
   return (
     <>
-      <s-modal id={modalId} heading="Safety Alert Details" size="large">
+      <s-modal id={modalId} heading={t("analysis.modalHeading")} size="large">
         <s-stack gap="large">
           
           {/* ═══════════════════════════════════════════════════════════════
@@ -189,8 +189,7 @@ export function AlertDetailModal({
           ═══════════════════════════════════════════════════════════════ */}
           <s-box padding="large" borderRadius="large" background="bg-surface-secondary">
             <s-stack gap="base">
-              {/* Section Label */}
-              <s-text tone="subdued" fontWeight="bold" size="small">YOUR PRODUCT</s-text>
+              <s-text tone="subdued" fontWeight="bold" size="small">{t("analysis.yourProduct")}</s-text>
               
               <s-stack direction="inline" gap="large" blockAlign="start" wrap>
                 {/* Product Image */}
@@ -273,7 +272,7 @@ export function AlertDetailModal({
               {/* Header */}
               <s-stack direction="inline" gap="small" blockAlign="center">
                 <s-text size="large" fontWeight="bold">
-                  {isSafe ? "✅" : "⚠️"} {isSafe ? t("analysis.noIssuesFound") : t("analysis.potentialRisk")}
+                  {isSafe ? t("analysis.noIssuesFound") : t("analysis.potentialRisk")}
                 </s-text>
               </s-stack>
 
@@ -317,7 +316,7 @@ export function AlertDetailModal({
               {/* Stats Row */}
               <s-stack direction="inline" gap="large" wrap>
                 <s-stack gap="small-100">
-                  <s-text tone="subdued" size="small">Safety Gate Matches</s-text>
+                  <s-text tone="subdued" size="small">{t("analysis.safetyGateMatches")}</s-text>
                   <s-text size="large" fontWeight="bold">{warningsCount}</s-text>
                 </s-stack>
                 
@@ -343,7 +342,7 @@ export function AlertDetailModal({
                 )}
                 
                 <s-stack gap="small-100">
-                  <s-text tone="subdued" size="small">Risk Level</s-text>
+                  <s-text tone="subdued" size="small">{t("analysis.riskLevel")}</s-text>
                   <AlertBadge
                     alertLevel={alert.riskLevel}
                     alertType={alert.alertType}
@@ -390,7 +389,7 @@ export function AlertDetailModal({
           {warnings.length > 0 && (
             <s-stack gap="base">
               <s-text tone="subdued" fontWeight="bold" size="small">
-                SAFETY GATE MATCHES ({warnings.length})
+                {t("analysis.safetyGateMatches")} ({warnings.length})
               </s-text>
               <s-text tone="subdued" size="small">
                 {t("analysis.matchesHint")}
@@ -489,14 +488,14 @@ export function AlertDetailModal({
               <button
                 className="image-lightbox-close"
                 onClick={closeLightbox}
-                aria-label="Close"
+                aria-label={t("common.close")}
                 type="button"
               >
-                ×
+                {t("common.close")}
               </button>
               <img
                 src={selectedImage}
-                alt="Enlarged safety alert"
+                alt={t("analysis.enlargedSafetyAlert")}
                 className="image-lightbox-image"
               />
             </div>
@@ -578,7 +577,7 @@ function WarningCard({
           
           {fields.rapex_url && (
             <s-link href={fields.rapex_url} target="_blank">
-              View on Safety Gate ↗
+              {t("analysis.viewOnSafetyGate")}
             </s-link>
           )}
         </s-stack>
@@ -586,7 +585,7 @@ function WarningCard({
         {/* Alert number */}
         {fields.alert_number && (
           <s-text tone="subdued" size="small">
-            Alert: {fields.alert_number} • {formattedDate}
+            {t("analysis.alertNumber", { number: fields.alert_number })} • {formattedDate}
           </s-text>
         )}
 
@@ -643,53 +642,53 @@ function WarningCard({
           <s-box style={{ flex: 1 }}>
             <s-table>
               <s-table-header-row>
-                <s-table-header listSlot="primary">Field</s-table-header>
-                <s-table-header listSlot="secondary">Value</s-table-header>
+                <s-table-header listSlot="primary">{t("analysis.fields.field")}</s-table-header>
+                <s-table-header listSlot="secondary">{t("analysis.fields.value")}</s-table-header>
               </s-table-header-row>
               <s-table-body>
                 {productName && (
                   <s-table-row>
-                    <s-table-cell><s-text tone="subdued">Product Name</s-text></s-table-cell>
+                    <s-table-cell><s-text tone="subdued">{t("analysis.fields.productName")}</s-text></s-table-cell>
                     <s-table-cell><s-text fontWeight="semibold">{productName}</s-text></s-table-cell>
                   </s-table-row>
                 )}
                 {fields.product_brand && (
                   <s-table-row>
-                    <s-table-cell><s-text tone="subdued">Brand</s-text></s-table-cell>
+                    <s-table-cell><s-text tone="subdued">{t("analysis.fields.brand")}</s-text></s-table-cell>
                     <s-table-cell><s-text fontWeight="bold" tone="critical">{fields.product_brand}</s-text></s-table-cell>
                   </s-table-row>
                 )}
                 {productModel && (
                   <s-table-row>
-                    <s-table-cell><s-text tone="subdued">Model</s-text></s-table-cell>
+                    <s-table-cell><s-text tone="subdued">{t("analysis.fields.model")}</s-text></s-table-cell>
                     <s-table-cell><s-text fontWeight="bold" tone="critical">{productModel}</s-text></s-table-cell>
                   </s-table-row>
                 )}
                 {fields.product_category && (
                   <s-table-row>
-                    <s-table-cell><s-text tone="subdued">Category</s-text></s-table-cell>
+                    <s-table-cell><s-text tone="subdued">{t("analysis.fields.category")}</s-text></s-table-cell>
                     <s-table-cell>{fields.product_category}</s-table-cell>
                   </s-table-row>
                 )}
                 {notifyingCountry && (
                   <s-table-row>
-                    <s-table-cell><s-text tone="subdued">Notifying Country</s-text></s-table-cell>
+                    <s-table-cell><s-text tone="subdued">{t("analysis.fields.notifyingCountry")}</s-text></s-table-cell>
                     <s-table-cell>{notifyingCountry}</s-table-cell>
                   </s-table-row>
                 )}
                 {originCountry && (
                   <s-table-row>
-                    <s-table-cell><s-text tone="subdued">Origin</s-text></s-table-cell>
+                    <s-table-cell><s-text tone="subdued">{t("analysis.fields.origin")}</s-text></s-table-cell>
                     <s-table-cell>{originCountry}</s-table-cell>
                   </s-table-row>
                 )}
                 <s-table-row>
-                  <s-table-cell><s-text tone="subdued">Alert Date</s-text></s-table-cell>
+                  <s-table-cell><s-text tone="subdued">{t("analysis.fields.alertDate")}</s-text></s-table-cell>
                   <s-table-cell>{formattedDate}</s-table-cell>
                 </s-table-row>
                 {fields.alert_level && (
                   <s-table-row>
-                    <s-table-cell><s-text tone="subdued">Risk Level</s-text></s-table-cell>
+                    <s-table-cell><s-text tone="subdued">{t("analysis.riskLevel")}</s-text></s-table-cell>
                     <s-table-cell>
                       <AlertBadge alertLevel={fields.alert_level} alertType={fields.alert_type} />
                     </s-table-cell>
@@ -710,7 +709,7 @@ function WarningCard({
             background="bg-surface-critical"
           >
             <s-stack gap="small-100">
-              <s-text fontWeight="bold" tone="critical" size="small">⚠️ RISK DESCRIPTION</s-text>
+              <s-text fontWeight="bold" tone="critical" size="small">{t("analysis.riskDescription")}</s-text>
               <s-text>{fields.alert_description}</s-text>
             </s-stack>
           </s-box>
@@ -720,7 +719,7 @@ function WarningCard({
         {fields.product_description && (
           <s-box padding="base" borderRadius="base" background="bg-surface-secondary">
             <s-stack gap="small-100">
-              <s-text tone="subdued" size="small">Product Description</s-text>
+              <s-text tone="subdued" size="small">{t("analysis.fields.productDescription")}</s-text>
               <s-text size="small">{fields.product_description}</s-text>
             </s-stack>
           </s-box>
@@ -730,7 +729,7 @@ function WarningCard({
         {fields.risk_legal_provision && (
           <s-box padding="base" borderRadius="base" background="bg-surface-warning">
             <s-stack gap="small-100">
-              <s-text fontWeight="bold" tone="warning" size="small">📋 LEGAL PROVISION</s-text>
+              <s-text fontWeight="bold" tone="warning" size="small">{t("analysis.legalProvision")}</s-text>
               <s-text size="small">{fields.risk_legal_provision}</s-text>
             </s-stack>
           </s-box>
