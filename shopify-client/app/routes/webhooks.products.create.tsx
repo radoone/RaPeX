@@ -7,6 +7,7 @@ import {
   shopifyProductToProductData,
   upsertMerchantProductForMonitoring,
 } from "../services/safety-gate-checker.server";
+import { handleAutoDraftAndNotifications } from "../services/safety-gate-notifications.server";
 
 /**
  * Webhook handler for product creation
@@ -74,7 +75,21 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         },
       });
 
-      // TODO: Send notification to admin (email, Slack, etc.)
+      // Log webhook automatic quarantine/unsafe event
+      await db.activityLog.create({
+        data: {
+          shop,
+          type: "automatic",
+          action: "quarantine",
+          details: `Webhook detected unsafe product "${product.title}" (${safetyResult.warnings.length} matches).`
+        }
+      });
+
+      // Run auto-draft and notification flow asynchronously
+      handleAutoDraftAndNotifications(shop, product.id.toString(), safetyResult).catch(err => {
+        console.error("Failed executing webhook notifications:", err);
+      });
+
       console.log(`🚨 Alert created for unsafe product: ${product.title}`);
 
     } else {
@@ -89,6 +104,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           isSafe: true,
           checkedAt: new Date(safetyResult.checkedAt),
         },
+      });
+
+      // Log webhook check success
+      await db.activityLog.create({
+        data: {
+          shop,
+          type: "automatic",
+          action: "check",
+          details: `Webhook successfully verified product "${product.title}" as safe.`
+        }
       });
     }
 

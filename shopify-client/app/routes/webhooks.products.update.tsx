@@ -7,6 +7,7 @@ import {
   shopifyProductToProductData,
   upsertMerchantProductForMonitoring,
 } from "../services/safety-gate-checker.server";
+import { handleAutoDraftAndNotifications } from "../services/safety-gate-notifications.server";
 
 /**
  * Webhook handler for product updates
@@ -71,6 +72,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           },
         });
 
+        // Log webhook automatic update event
+        await db.activityLog.create({
+          data: {
+            shop,
+            type: "automatic",
+            action: "quarantine",
+            details: `Webhook re-evaluated updated product "${product.title}" and updated active alert (${safetyResult.warnings.length} matches).`
+          }
+        });
+
         console.log(`🔄 Updated existing alert for: ${product.title}`);
       } else {
         // Create new alert
@@ -87,8 +98,23 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           },
         });
 
+        // Log webhook automatic alert creation
+        await db.activityLog.create({
+          data: {
+            shop,
+            type: "automatic",
+            action: "quarantine",
+            details: `Webhook detected unsafe modified product "${product.title}" (${safetyResult.warnings.length} matches).`
+          }
+        });
+
         console.log(`🚨 New alert created for updated product: ${product.title}`);
       }
+
+      // Run auto-draft and notification flow asynchronously
+      handleAutoDraftAndNotifications(shop, product.id.toString(), safetyResult).catch(err => {
+        console.error("Failed executing webhook notifications:", err);
+      });
     } else {
       // Product is now safe
       if (existingAlert) {
@@ -100,6 +126,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             resolvedAt: new Date(),
             notes: 'Product update resolved safety concerns',
           },
+        });
+
+        // Log automatic resolution
+        await db.activityLog.create({
+          data: {
+            shop,
+            type: "automatic",
+            action: "resolve",
+            details: `Webhook resolved safety alert for updated product "${product.title}" as it is now marked safe.`
+          }
         });
 
         console.log(`✅ Alert resolved for updated product: ${product.title}`);
@@ -114,6 +150,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           isSafe: true,
           checkedAt: new Date(safetyResult.checkedAt),
         },
+      });
+
+      // Log webhook success check
+      await db.activityLog.create({
+        data: {
+          shop,
+          type: "automatic",
+          action: "check",
+          details: `Webhook successfully verified modified product "${product.title}" as safe.`
+        }
       });
     }
 

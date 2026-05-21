@@ -39,6 +39,7 @@ export interface SafetyCheckResult {
         product_brand?: string;
         product_model?: string;
         pictures?: string[];
+        [key: string]: any;
       };
     };
   }>;
@@ -113,6 +114,30 @@ export async function getSimilarityThresholdForShop(shop: string): Promise<numbe
   return Number.isFinite(envDefault) ? envDefault : 0;
 }
 
+export async function checkExclusions(shop: string, productData: ProductData): Promise<{ shouldSkip: boolean; reason?: string }> {
+  try {
+    const settings = await merchantDb.safetySetting.findUnique({ where: { shop } });
+    if (!settings) return { shouldSkip: false };
+
+    if (settings.excludeVendors && productData.brand) {
+      const excludedVendors = settings.excludeVendors.split(",").map(v => v.trim().toLowerCase()).filter(Boolean);
+      if (excludedVendors.includes(productData.brand.trim().toLowerCase())) {
+        return { shouldSkip: true, reason: `Excluded vendor: ${productData.brand}` };
+      }
+    }
+
+    if (settings.excludeTypes && productData.category) {
+      const excludedTypes = settings.excludeTypes.split(",").map(t => t.trim().toLowerCase()).filter(Boolean);
+      if (excludedTypes.includes(productData.category.trim().toLowerCase())) {
+        return { shouldSkip: true, reason: `Excluded product type: ${productData.category}` };
+      }
+    }
+  } catch (error) {
+    console.error("Error checking exclusions:", error);
+  }
+  return { shouldSkip: false };
+}
+
 export async function checkProductSafety(
   productData: ProductData,
   similarityThreshold?: number,
@@ -122,6 +147,27 @@ export async function checkProductSafety(
     sourceUpdatedAt?: string;
   },
 ): Promise<SafetyCheckResult> {
+  if (cacheMetadata?.shop) {
+    const exclusion = await checkExclusions(cacheMetadata.shop, productData);
+    if (exclusion.shouldSkip) {
+      console.info(`Skipping Safety Gate check for ${productData.name} on shop ${cacheMetadata.shop}: ${exclusion.reason}`);
+      return {
+        isSafe: true,
+        warnings: [],
+        recommendation: exclusion.reason || "Skipped by merchant settings",
+        checkedAt: new Date().toISOString(),
+        analysis: {
+          mode: "text-only",
+          scoringMode: "text-only",
+          productImagesProvided: 0,
+          productImagesUsed: 0,
+          alertImagesUsed: 0,
+          candidateAlertsConsidered: 0
+        }
+      };
+    }
+  }
+
   try {
     const envDefault = Number(process.env.SAFETY_GATE_SIMILARITY_THRESHOLD || "0");
     const effectiveThreshold = typeof similarityThreshold === "number" && Number.isFinite(similarityThreshold)

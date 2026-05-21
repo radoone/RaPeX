@@ -98,7 +98,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     return acc;
   }, {});
 
-  return json({ products, checksByProduct, alertsByProduct, search });
+  return json({ products, checksByProduct, alertsByProduct, search, shop: session.shop });
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -215,13 +215,13 @@ export function ErrorBoundary() {
       : t("common.unknown");
 
   return (
-    <s-page>
-      <s-heading slot="title" size="large">{t("manualCheck.title")}</s-heading>
+    <s-page suppressHydrationWarning>
+      <s-heading slot="title" size="large" suppressHydrationWarning>{t("manualCheck.title")}</s-heading>
       <div className="admin-stack" style={{ marginTop: "var(--s-space-400)" }}>
         <s-banner tone="critical" heading={t("errors.pageLoadFailed")}>
           <s-text>{title}</s-text>
           <div style={{ marginTop: "var(--s-space-200)" }}>
-            <s-button onClick={() => window.location.reload()}>
+            <s-button onClick={() => window.location.reload()} suppressHydrationWarning>
               {t("actions.retry")}
             </s-button>
           </div>
@@ -232,7 +232,7 @@ export function ErrorBoundary() {
 }
 
 export default function ManualCheckPage() {
-  const { products, checksByProduct, alertsByProduct, search } = useLoaderData<typeof loader>();
+  const { products, checksByProduct, alertsByProduct, search, shop } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
   const resolveFetcher = useFetcher<typeof action>();
   const navigate = useNavigate();
@@ -246,6 +246,29 @@ export default function ManualCheckPage() {
   const [hasProcessedResult, setHasProcessedResult] = useState(false);
   const [searchValue, setSearchValue] = useState(search);
   const dateLocale = i18n.language === 'sk' ? 'sk-SK' : 'en-GB';
+
+  // Synchronize searchValue with URL parameter when it changes (e.g., cleared/updated externally)
+  useEffect(() => {
+    setSearchValue(search);
+  }, [search]);
+
+  // Debounced search effect (400ms delay)
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      const trimmedSearch = searchValue.trim();
+      const currentSearch = search.trim();
+      if (trimmedSearch !== currentSearch) {
+        const params = new URLSearchParams();
+        if (trimmedSearch) params.set("search", trimmedSearch);
+        const query = params.toString();
+        navigate(query ? `/app/manual-check?${query}` : "/app/manual-check");
+      }
+    }, 400);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchValue, search, navigate]);
 
   // Get all alerts from alertsByProduct for modals
   const existingAlerts = Object.values(alertsByProduct || {}) as any[];
@@ -349,9 +372,9 @@ export default function ManualCheckPage() {
   }, [showResult, checkResult]);
 
   return (
-    <s-page size="large" className="page-shell">
-      <s-heading slot="title" size="large">{t('manualCheck.title')}</s-heading>
-      <s-button slot="primary-action" variant="primary" href="/app/alerts">
+    <s-page size="large" className="page-shell" suppressHydrationWarning>
+      <s-heading slot="title" size="large" suppressHydrationWarning>{t('manualCheck.title')}</s-heading>
+      <s-button slot="primary-action" variant="primary" href="/app/alerts" suppressHydrationWarning>
         {t('actions.viewAlerts')}
       </s-button>
 
@@ -432,6 +455,7 @@ export default function ManualCheckPage() {
           <div className="admin-toolbar">
             <s-text-field
               label={t("manualCheck.catalogue.searchLabel")}
+              labelAccessibilityVisibility="exclusive"
               placeholder={t("manualCheck.catalogue.searchPlaceholder")}
               value={searchValue}
               onInput={(event: any) => setSearchValue(event.currentTarget.value || "")}
@@ -460,7 +484,7 @@ export default function ManualCheckPage() {
               <p>{t('manualCheck.catalogue.emptyBody')}</p>
             </div>
           ) : (
-            <s-table>
+            <s-table accessibilityLabel={t('manualCheck.catalogue.accessibilityLabel')}>
               <s-table-header-row>
                 <s-table-header listSlot="primary">{t('manualCheck.catalogue.columns.product')}</s-table-header>
                 <s-table-header listSlot="inline">{t('manualCheck.catalogue.columns.status')}</s-table-header>
@@ -484,22 +508,25 @@ export default function ManualCheckPage() {
                       <s-table-cell>
                         <div className="admin-product-cell">
                           {isProductLoading ? (
-                            <s-box width="40px" height="40px" background="bg-surface-secondary" borderRadius="base">
-                              <s-spinner size="small" />
-                            </s-box>
+                            <div className="pulsing-skeleton" style={{ width: '40px', height: '40px', borderRadius: 'var(--s-radius-100, 4px)' }} />
                           ) : (
                             <s-thumbnail src={product.featuredImage?.url} alt={product.title} size="small" />
                           )}
                           <div className="admin-product-cell__content">
                             {isProductLoading ? (
-                              <s-skeleton-text lines="1" width="120px" />
+                              <>
+                                <div className="pulsing-skeleton skeleton-row-bar" style={{ width: '150px' }} />
+                                <div className="pulsing-skeleton skeleton-row-bar" style={{ width: '100px', height: '10px' }} />
+                              </>
                             ) : (
-                              <strong>{product.title}</strong>
+                              <>
+                                <strong>{product.title}</strong>
+                                <p>
+                                  {product.vendor || t('manualCheck.catalogue.unknownVendor')}
+                                  {product.productType ? ` • ${product.productType}` : ""}
+                                </p>
+                              </>
                             )}
-                            <p>
-                              {product.vendor || t('manualCheck.catalogue.unknownVendor')}
-                              {product.productType ? ` • ${product.productType}` : ""}
-                            </p>
                           </div>
                         </div>
                       </s-table-cell>
@@ -507,7 +534,7 @@ export default function ManualCheckPage() {
                       <s-table-cell>
                         <div className="admin-status-stack">
                           {isProductLoading ? (
-                            <s-skeleton-text lines="1" width="60px" />
+                            <div className="pulsing-skeleton skeleton-row-bar" style={{ width: '80px', height: '24px', borderRadius: '12px' }} />
                           ) : (
                             <>
                               <s-badge tone={statusTone}>{statusLabel}</s-badge>
@@ -585,6 +612,7 @@ export default function ManualCheckPage() {
 
         const newAlert = {
           id: currentAlertId,
+          shop,
           productId: selectedProduct?.id?.replace('gid://shopify/Product/', '') || '',
           productTitle: selectedProduct?.title || t('manualCheck.modal.unknownProduct'),
           productImage: selectedProduct?.featuredImage?.url || selectedProduct?.images?.nodes?.[0]?.url || fallbackImage || null,

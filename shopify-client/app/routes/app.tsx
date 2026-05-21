@@ -53,7 +53,7 @@ export function ErrorBoundary() {
       : t("errors.unknown");
 
   return (
-    <s-page>
+    <s-page suppressHydrationWarning>
       <s-section padding="base">
         <s-box
           padding="large"
@@ -66,7 +66,7 @@ export function ErrorBoundary() {
             <s-heading size="medium">{t("errors.pageLoadFailed")}</s-heading>
             <s-text tone="subdued">{message}</s-text>
             <div style={{ marginTop: "var(--s-space-200)" }}>
-              <s-button onClick={() => window.location.reload()}>
+              <s-button onClick={() => window.location.reload()} suppressHydrationWarning>
                 {t("actions.retry")}
               </s-button>
             </div>

@@ -181,234 +181,242 @@ export function AlertDetailModal({
 
   return (
     <>
-      <s-modal id={modalId} heading={t("analysis.modalHeading")} size="large">
-        <s-stack gap="large">
+      <s-modal id={modalId} heading={t("analysis.modalHeading")} size="large" suppressHydrationWarning>
+        <div className="alert-detail-layout">
           
-          {/* ═══════════════════════════════════════════════════════════════
-              SECTION 1: YOUR PRODUCT
-          ═══════════════════════════════════════════════════════════════ */}
-          <s-box padding="large" borderRadius="large" background="bg-surface-secondary">
-            <s-stack gap="base">
-              <s-text tone="subdued" fontWeight="bold" size="small">{t("analysis.yourProduct")}</s-text>
-              
-              <s-stack direction="inline" gap="large" blockAlign="start" wrap>
-                {/* Product Image */}
-                {alert.productImage && (
-                  <div
-                    onClick={() => setSelectedImage(alert.productImage)}
-                    className="alert-image-clickable alert-image-clickable--product"
-                    role="button"
-                    tabIndex={0}
-                    aria-label={`Open image for ${alert.productTitle}`}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        setSelectedImage(alert.productImage);
-                      }
-                    }}
-                    style={{ flexShrink: 0 }}
-                  >
-                    <img
-                      src={alert.productImage}
-                      alt={alert.productTitle}
-                      className="alert-product-image"
-                    />
-                  </div>
-                )}
+          {/* COLUMN 1: YOUR PRODUCT & RISK ASSESSMENT */}
+          <div className="alert-detail-column alert-detail-column--product">
+            
+            {/* Your Product */}
+            <s-box padding="large" borderRadius="large" background="bg-surface-secondary">
+              <s-stack gap="base">
+                <s-text tone="subdued" fontWeight="bold" size="small">{t("analysis.yourProduct")}</s-text>
+                
+                <s-stack direction="inline" gap="large" blockAlign="start" wrap>
+                  {/* Product Image */}
+                  {alert.productImage && (
+                    <div
+                      onClick={() => setSelectedImage(alert.productImage)}
+                      className="alert-image-clickable alert-image-clickable--product"
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Open image for ${alert.productTitle}`}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          setSelectedImage(alert.productImage);
+                        }
+                      }}
+                      style={{ flexShrink: 0 }}
+                    >
+                      <img
+                        src={alert.productImage}
+                        alt={alert.productTitle}
+                        className="alert-product-image"
+                      />
+                    </div>
+                  )}
 
-                {/* Product Info */}
-                <s-stack gap="small" style={{ flex: 1, minWidth: 0 }}>
-                  <s-heading size="large">
-                    <HighlightedText text={alert.productTitle} query={matchKeywords} tone="critical" />
-                  </s-heading>
+                  {/* Product Info */}
+                  <s-stack gap="small" style={{ flex: 1, minWidth: 0 }}>
+                    <s-heading size="large">
+                      <HighlightedText text={alert.productTitle} query={matchKeywords} tone="critical" />
+                    </s-heading>
+                    
+                    <s-stack direction="inline" gap="small" wrap>
+                      <StatusBadge status={alert.status} />
+                      <AlertBadge
+                        alertLevel={alert.riskLevel}
+                        alertType={alert.alertType}
+                        riskDescription={alert.riskDescription}
+                      />
+                    </s-stack>
+
+                    {/* Direct link to Edit Product in Shopify Admin */}
+                    <div style={{ marginTop: "6px" }}>
+                      <s-link href={`https://${alert.shop}/admin/products/${alert.productId}`} target="_blank">
+                        ✏️ {t("analysis.editInShopify")}
+                      </s-link>
+                    </div>
+                    
+                    {checkedAt && (
+                      <s-text tone="subdued" size="small">
+                        {t("analysis.checkedAt", { date: checkedAt.toLocaleString("en-GB") })}
+                      </s-text>
+                    )}
+
+                    {analysis && (
+                      <s-stack direction="inline" gap="small" wrap>
+                        <s-badge tone={analysis.mode === "with-image" ? "info" : "neutral"}>
+                          {analysis.mode === "with-image" ? t("analysis.withImage") : t("analysis.textOnly")}
+                        </s-badge>
+                        <s-badge tone="info">
+                          {t("analysis.productImagesUsed", {
+                            used: analysis.productImagesUsed || 0,
+                            provided: analysis.productImagesProvided || 0,
+                          })}
+                        </s-badge>
+                        <s-badge tone="info">
+                          {t("analysis.alertImagesUsed", { count: analysis.alertImagesUsed || 0 })}
+                        </s-badge>
+                      </s-stack>
+                    )}
+                  </s-stack>
+                </s-stack>
+              </s-stack>
+            </s-box>
+
+            {/* Risk Assessment Summary */}
+            <s-box
+              padding="large"
+              borderRadius="large"
+              borderWidth="base"
+              borderColor={isSafe ? "border-success" : "border-critical"}
+              background={isSafe ? "bg-surface-success" : "bg-surface-critical"}
+            >
+              <s-stack gap="base">
+                {/* Header */}
+                <s-stack direction="inline" gap="small" blockAlign="center">
+                  <s-text size="large" fontWeight="bold">
+                    {isSafe ? t("analysis.noIssuesFound") : t("analysis.potentialRisk")}
+                  </s-text>
+                </s-stack>
+
+                <div className={`alert-focus-card alert-focus-card--${focusVariant}`}>
+                  <p className="alert-focus-card__title">
+                    {hasActiveRisk
+                      ? t("analysis.focus.criticalTitle")
+                      : hasActiveSafeState
+                        ? t("analysis.focus.safeTitle")
+                        : t("analysis.focus.reviewedTitle")}
+                  </p>
+                  <p className="alert-focus-card__lead">
+                    {hasActiveRisk
+                      ? t("analysis.focus.criticalLead")
+                      : hasActiveSafeState
+                        ? t("analysis.focus.safeLead")
+                        : t("analysis.focus.reviewedLead")}
+                  </p>
+                  <ol className="alert-focus-card__steps">
+                    {hasActiveRisk ? (
+                      <>
+                        <li>{t("analysis.focus.criticalStepCompare")}</li>
+                        <li>{t("analysis.focus.criticalStepDecide")}</li>
+                        <li>{t("analysis.focus.criticalStepDocument")}</li>
+                      </>
+                    ) : hasActiveSafeState ? (
+                      <>
+                        <li>{t("analysis.focus.safeStepMonitor")}</li>
+                        <li>{t("analysis.focus.safeStepRecheck")}</li>
+                        <li>{t("analysis.focus.safeStepClose")}</li>
+                      </>
+                    ) : (
+                      <>
+                        <li>{t("analysis.focus.reviewedStepAudit")}</li>
+                        <li>{t("analysis.focus.reviewedStepReactivate")}</li>
+                      </>
+                    )}
+                  </ol>
+                </div>
+                
+                {/* Stats Row */}
+                <s-stack direction="inline" gap="large" wrap>
+                  <s-stack gap="small-100">
+                    <s-text tone="subdued" size="small">{t("analysis.safetyGateMatches")}</s-text>
+                    <s-text size="large" fontWeight="bold">{warningsCount}</s-text>
+                  </s-stack>
                   
-                  <s-stack direction="inline" gap="small" wrap>
-                    <StatusBadge status={alert.status} />
+                  {overallSimilarity !== null && (
+                    <s-stack gap="small-100">
+                      <s-text tone="subdued" size="small">{t("analysis.overallMatch")}</s-text>
+                      <s-text size="large" fontWeight="bold">{overallSimilarity}%</s-text>
+                    </s-stack>
+                  )}
+
+                  {imageSimilarity !== null && (
+                    <s-stack gap="small-100">
+                      <s-text tone="subdued" size="small">{t("analysis.imageMatch")}</s-text>
+                      <s-text size="large" fontWeight="bold">{imageSimilarity}%</s-text>
+                    </s-stack>
+                  )}
+
+                  {analysis && (
+                    <s-stack gap="small-100">
+                      <s-text tone="subdued" size="small">{t("analysis.candidateAlerts")}</s-text>
+                      <s-text size="large" fontWeight="bold">{analysis.candidateAlertsConsidered || 0}</s-text>
+                    </s-stack>
+                  )}
+                  
+                  <s-stack gap="small-100">
+                    <s-text tone="subdued" size="small">{t("analysis.riskLevel")}</s-text>
                     <AlertBadge
                       alertLevel={alert.riskLevel}
                       alertType={alert.alertType}
                       riskDescription={alert.riskDescription}
                     />
                   </s-stack>
-                  
-                  {checkedAt && (
-                    <s-text tone="subdued" size="small">
-                      {t("analysis.checkedAt", { date: checkedAt.toLocaleString("en-GB") })}
-                    </s-text>
-                  )}
-
-                  {analysis && (
-                    <s-stack direction="inline" gap="small" wrap>
-                      <s-badge tone={analysis.mode === "with-image" ? "info" : "neutral"}>
-                        {analysis.mode === "with-image" ? t("analysis.withImage") : t("analysis.textOnly")}
-                      </s-badge>
-                      <s-badge tone="info">
-                        {t("analysis.productImagesUsed", {
-                          used: analysis.productImagesUsed || 0,
-                          provided: analysis.productImagesProvided || 0,
-                        })}
-                      </s-badge>
-                      <s-badge tone="info">
-                        {t("analysis.alertImagesUsed", { count: analysis.alertImagesUsed || 0 })}
-                      </s-badge>
-                    </s-stack>
-                  )}
-                </s-stack>
-              </s-stack>
-            </s-stack>
-          </s-box>
-
-          {/* ═══════════════════════════════════════════════════════════════
-              SECTION 2: RISK ASSESSMENT SUMMARY
-          ═══════════════════════════════════════════════════════════════ */}
-          <s-box
-            padding="large"
-            borderRadius="large"
-            borderWidth="base"
-            borderColor={isSafe ? "border-success" : "border-critical"}
-            background={isSafe ? "bg-surface-success" : "bg-surface-critical"}
-          >
-            <s-stack gap="base">
-              {/* Header */}
-              <s-stack direction="inline" gap="small" blockAlign="center">
-                <s-text size="large" fontWeight="bold">
-                  {isSafe ? t("analysis.noIssuesFound") : t("analysis.potentialRisk")}
-                </s-text>
-              </s-stack>
-
-              <div className={`alert-focus-card alert-focus-card--${focusVariant}`}>
-                <p className="alert-focus-card__title">
-                  {hasActiveRisk
-                    ? t("analysis.focus.criticalTitle")
-                    : hasActiveSafeState
-                      ? t("analysis.focus.safeTitle")
-                      : t("analysis.focus.reviewedTitle")}
-                </p>
-                <p className="alert-focus-card__lead">
-                  {hasActiveRisk
-                    ? t("analysis.focus.criticalLead")
-                    : hasActiveSafeState
-                      ? t("analysis.focus.safeLead")
-                      : t("analysis.focus.reviewedLead")}
-                </p>
-                <ol className="alert-focus-card__steps">
-                  {hasActiveRisk ? (
-                    <>
-                      <li>{t("analysis.focus.criticalStepCompare")}</li>
-                      <li>{t("analysis.focus.criticalStepDecide")}</li>
-                      <li>{t("analysis.focus.criticalStepDocument")}</li>
-                    </>
-                  ) : hasActiveSafeState ? (
-                    <>
-                      <li>{t("analysis.focus.safeStepMonitor")}</li>
-                      <li>{t("analysis.focus.safeStepRecheck")}</li>
-                      <li>{t("analysis.focus.safeStepClose")}</li>
-                    </>
-                  ) : (
-                    <>
-                      <li>{t("analysis.focus.reviewedStepAudit")}</li>
-                      <li>{t("analysis.focus.reviewedStepReactivate")}</li>
-                    </>
-                  )}
-                </ol>
-              </div>
-              
-              {/* Stats Row */}
-              <s-stack direction="inline" gap="large" wrap>
-                <s-stack gap="small-100">
-                  <s-text tone="subdued" size="small">{t("analysis.safetyGateMatches")}</s-text>
-                  <s-text size="large" fontWeight="bold">{warningsCount}</s-text>
                 </s-stack>
                 
+                {/* Risk Meter */}
+                <RiskMeter riskLevel={alert.riskLevel} overallSimilarity={overallSimilarity} />
+
                 {overallSimilarity !== null && (
-                  <s-stack gap="small-100">
-                    <s-text tone="subdued" size="small">{t("analysis.overallMatch")}</s-text>
-                    <s-text size="large" fontWeight="bold">{overallSimilarity}%</s-text>
-                  </s-stack>
-                )}
-
-                {imageSimilarity !== null && (
-                  <s-stack gap="small-100">
-                    <s-text tone="subdued" size="small">{t("analysis.imageMatch")}</s-text>
-                    <s-text size="large" fontWeight="bold">{imageSimilarity}%</s-text>
-                  </s-stack>
-                )}
-
-                {analysis && (
-                  <s-stack gap="small-100">
-                    <s-text tone="subdued" size="small">{t("analysis.candidateAlerts")}</s-text>
-                    <s-text size="large" fontWeight="bold">{analysis.candidateAlertsConsidered || 0}</s-text>
-                  </s-stack>
+                  <s-text tone="subdued" size="small">
+                    {imageSimilarity !== null
+                      ? t("analysis.scoreHelper")
+                      : t("analysis.scoreHelper")}
+                  </s-text>
                 )}
                 
-                <s-stack gap="small-100">
-                  <s-text tone="subdued" size="small">{t("analysis.riskLevel")}</s-text>
-                  <AlertBadge
-                    alertLevel={alert.riskLevel}
-                    alertType={alert.alertType}
-                    riskDescription={alert.riskDescription}
-                  />
+                {/* Recommendation */}
+                <s-text>{recommendation}</s-text>
+
+                {hasActiveRisk && (
+                  <s-text tone="subdued" size="small">
+                    {t("analysis.primaryRiskFocus", {
+                      category: primaryFields.alert_type || alert.alertType || t("common.unknown"),
+                      level: primaryFields.alert_level || primaryFields.risk_level || alert.riskLevel || t("common.unknown"),
+                    })}
+                  </s-text>
+                )}
+              </s-stack>
+            </s-box>
+
+            {/* Notes Section */}
+            {alert.notes && (
+              <s-banner tone="info" heading="Internal Notes">
+                <s-text>{alert.notes}</s-text>
+              </s-banner>
+            )}
+          </div>
+
+          {/* COLUMN 2: SAFETY GATE MATCHES */}
+          <div className="alert-detail-column">
+            {warnings.length > 0 && (
+              <s-stack gap="base">
+                <s-text tone="subdued" fontWeight="bold" size="small">
+                  {t("analysis.safetyGateMatches")} ({warnings.length})
+                </s-text>
+                <s-text tone="subdued" size="small">
+                  {t("analysis.matchesHint")}
+                </s-text>
+                
+                <s-stack gap="base">
+                  {warnings.map((warning: any, index: number) => (
+                    <WarningCard
+                      key={`warning-${index}`}
+                      warning={warning}
+                      index={index}
+                      onImageClick={setSelectedImage}
+                      getWarningImages={getWarningImages}
+                      merchantProduct={alert}
+                    />
+                  ))}
                 </s-stack>
               </s-stack>
-              
-              {/* Risk Meter */}
-              <RiskMeter riskLevel={alert.riskLevel} overallSimilarity={overallSimilarity} />
-
-              {overallSimilarity !== null && (
-                <s-text tone="subdued" size="small">
-                  {imageSimilarity !== null
-                    ? t("analysis.scoreHelper")
-                    : t("analysis.scoreHelper")}
-                </s-text>
-              )}
-              
-              {/* Recommendation */}
-              <s-text>{recommendation}</s-text>
-
-              {hasActiveRisk && (
-                <s-text tone="subdued" size="small">
-                  {t("analysis.primaryRiskFocus", {
-                    category: primaryFields.alert_type || alert.alertType || t("common.unknown"),
-                    level: primaryFields.alert_level || primaryFields.risk_level || alert.riskLevel || t("common.unknown"),
-                  })}
-                </s-text>
-              )}
-            </s-stack>
-          </s-box>
-
-          {/* Notes Section */}
-          {alert.notes && (
-            <s-banner tone="info" heading="Internal Notes">
-              <s-text>{alert.notes}</s-text>
-            </s-banner>
-          )}
-
-          {/* ═══════════════════════════════════════════════════════════════
-              SECTION 3: SAFETY GATE MATCHES
-          ═══════════════════════════════════════════════════════════════ */}
-          {warnings.length > 0 && (
-            <s-stack gap="base">
-              <s-text tone="subdued" fontWeight="bold" size="small">
-                {t("analysis.safetyGateMatches")} ({warnings.length})
-              </s-text>
-              <s-text tone="subdued" size="small">
-                {t("analysis.matchesHint")}
-              </s-text>
-              
-              <s-stack gap="base">
-                {warnings.map((warning: any, index: number) => (
-                  <WarningCard
-                    key={`warning-${index}`}
-                    warning={warning}
-                    index={index}
-                    onImageClick={setSelectedImage}
-                    getWarningImages={getWarningImages}
-                  />
-                ))}
-              </s-stack>
-            </s-stack>
-          )}
-        </s-stack>
+            )}
+          </div>
+        </div>
 
         {/* Footer Actions */}
         {alert.status === "active" && (
@@ -419,6 +427,7 @@ export function AlertDetailModal({
               icon="caret-down"
               commandFor={resolveMenuId}
               loading={isLoading || undefined}
+              suppressHydrationWarning
             >
               {t('actions.resolve')}
             </s-button>
@@ -457,6 +466,7 @@ export function AlertDetailModal({
             commandFor={modalId}
             command="--hide"
             loading={isLoading || undefined}
+            suppressHydrationWarning
           >
             {t('actions.reactivate')}
           </s-button>
@@ -466,6 +476,7 @@ export function AlertDetailModal({
           variant="secondary"
           commandFor={modalId}
           command="--hide"
+          suppressHydrationWarning
         >
           {t('common.cancel')}
         </s-button>
@@ -515,11 +526,13 @@ function WarningCard({
   index,
   onImageClick,
   getWarningImages,
+  merchantProduct,
 }: {
   warning: any;
   index: number;
   onImageClick: (src: string) => void;
   getWarningImages: (warning: any) => any[];
+  merchantProduct: any;
 }) {
   const { t } = useTranslation();
   const fields = warning.alertDetails?.fields || {};
@@ -545,6 +558,17 @@ function WarningCard({
   const matchTone = warningOverallSimilarity >= 80 ? "critical" : warningOverallSimilarity >= 60 ? "warning" : "info";
   const isImageFirst = warning.scoreBreakdown?.scoringMode === "image-first";
 
+  // Check matching fields with merchant product details for highlighting
+  const merchantTitle = String(merchantProduct?.productTitle || "").toLowerCase();
+  const isBrandMatched = fields.product_brand && merchantTitle.includes(fields.product_brand.trim().toLowerCase());
+  const isModelMatched = productModel && merchantTitle.includes(productModel.trim().toLowerCase());
+  const isCategoryMatched = fields.product_category && merchantProduct?.productType && merchantTitle.includes(fields.product_category.trim().toLowerCase());
+
+  const highlightRowStyle = {
+    backgroundColor: 'rgba(0, 128, 96, 0.08)',
+    borderLeft: '4px solid var(--primary)',
+  };
+
   return (
     <s-box
       padding="large"
@@ -555,9 +579,7 @@ function WarningCard({
     >
       <s-stack gap="base">
         
-        {/* ─────────────────────────────────────────────────────────────
-            HEADER: Match percentage + badges + link
-        ───────────────────────────────────────────────────────────── */}
+        {/* HEADER: Match percentage + badges + link */}
         <s-stack direction="inline" align="space-between" blockAlign="center" wrap>
           <s-stack direction="inline" gap="small" wrap blockAlign="center">
             <s-badge tone={matchTone} size="large">
@@ -589,9 +611,7 @@ function WarningCard({
           </s-text>
         )}
 
-        {/* ─────────────────────────────────────────────────────────────
-            WHY THIS MATCHED (highlighted box)
-        ───────────────────────────────────────────────────────────── */}
+        {/* WHY THIS MATCHED (highlighted box) */}
         {warning.reason && (
           <s-box
             padding="base"
@@ -610,9 +630,7 @@ function WarningCard({
           </s-box>
         )}
 
-        {/* ─────────────────────────────────────────────────────────────
-            MAIN CONTENT: Images + Details side by side
-        ───────────────────────────────────────────────────────────── */}
+        {/* MAIN CONTENT: Images + Details side by side */}
         <s-grid gap="large" gridTemplateColumns="auto 1fr">
           {/* Images Column */}
           {pictures.length > 0 && (
@@ -640,7 +658,7 @@ function WarningCard({
 
           {/* Details Table */}
           <s-box style={{ flex: 1 }}>
-            <s-table>
+            <s-table accessibilityLabel={t("analysis.fields.accessibilityLabel")}>
               <s-table-header-row>
                 <s-table-header listSlot="primary">{t("analysis.fields.field")}</s-table-header>
                 <s-table-header listSlot="secondary">{t("analysis.fields.value")}</s-table-header>
@@ -653,19 +671,28 @@ function WarningCard({
                   </s-table-row>
                 )}
                 {fields.product_brand && (
-                  <s-table-row>
+                  <s-table-row
+                    className={isBrandMatched ? "highlight-match-row" : undefined}
+                    style={isBrandMatched ? highlightRowStyle : undefined}
+                  >
                     <s-table-cell><s-text tone="subdued">{t("analysis.fields.brand")}</s-text></s-table-cell>
                     <s-table-cell><s-text fontWeight="bold" tone="critical">{fields.product_brand}</s-text></s-table-cell>
                   </s-table-row>
                 )}
                 {productModel && (
-                  <s-table-row>
+                  <s-table-row
+                    className={isModelMatched ? "highlight-match-row" : undefined}
+                    style={isModelMatched ? highlightRowStyle : undefined}
+                  >
                     <s-table-cell><s-text tone="subdued">{t("analysis.fields.model")}</s-text></s-table-cell>
                     <s-table-cell><s-text fontWeight="bold" tone="critical">{productModel}</s-text></s-table-cell>
                   </s-table-row>
                 )}
                 {fields.product_category && (
-                  <s-table-row>
+                  <s-table-row
+                    className={isCategoryMatched ? "highlight-match-row" : undefined}
+                    style={isCategoryMatched ? highlightRowStyle : undefined}
+                  >
                     <s-table-cell><s-text tone="subdued">{t("analysis.fields.category")}</s-text></s-table-cell>
                     <s-table-cell>{fields.product_category}</s-table-cell>
                   </s-table-row>
@@ -699,9 +726,7 @@ function WarningCard({
           </s-box>
         </s-grid>
 
-        {/* ─────────────────────────────────────────────────────────────
-            RISK DESCRIPTION (if present)
-        ───────────────────────────────────────────────────────────── */}
+        {/* RISK DESCRIPTION (if present) */}
         {fields.alert_description && (
           <s-box
             padding="base"
@@ -715,7 +740,7 @@ function WarningCard({
           </s-box>
         )}
 
-        {/* Product Description (collapsible feel) */}
+        {/* Product Description */}
         {fields.product_description && (
           <s-box padding="base" borderRadius="base" background="bg-surface-secondary">
             <s-stack gap="small-100">

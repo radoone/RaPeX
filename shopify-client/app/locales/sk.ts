@@ -270,6 +270,7 @@ const sk = {
       "analysis": {
         "modalHeading": "Skontrolovať zhodu zo Safety Gate",
         "yourProduct": "Váš produkt v Shopify",
+        "editInShopify": "Upraviť produkt v Shopify",
         "safetyGateMatches": "Zhody v Safety Gate",
         "riskLevel": "Úroveň rizika",
         "riskDescription": "Popis rizika",
@@ -278,6 +279,7 @@ const sk = {
         "alertNumber": "Alert {{number}}",
         "enlargedSafetyAlert": "Zväčšený obrázok bezpečnostného upozornenia",
         "fields": {
+          "accessibilityLabel": "Tabuľka podrobností o zhode alertu",
           "field": "Pole",
           "value": "Hodnota",
           "productName": "Názov produktu",
@@ -443,6 +445,7 @@ const sk = {
           "prioritise": "Uprednostnite tieto produkty na akciu."
         },
         "catalogue": {
+          "accessibilityLabel": "Tabuľka katalógu produktov",
           "heading": "Katalóg produktov ({{count}})",
           "emptyHeading": "Žiadne produkty",
           "emptyBody": "Nie sú dostupné žiadne produkty na kontrolu.",
@@ -540,6 +543,117 @@ const sk = {
         },
         "workspace": "Pracovné prostredie",
         "onDemand": "Na požiadanie"
+      },
+      "onboarding": {
+        "title": "Vitajte v Safety Gate EU",
+        "subtitle": "Zabezpečte súlad svojho obchodu Shopify s legislatívou EÚ v 3 jednoduchých krokoch.",
+        "stepIndicator": "Krok {{current}} z {{total}}",
+        "back": "Späť",
+        "nextStep": "Ďalší krok",
+        "finishButton": "Dokončiť nastavenie a prejsť na prehľad",
+        "steps": {
+          "sensitivity": {
+            "title": "Krok 1: Nastavenie citlivosti AI porovnávania",
+            "description": "Určite, ako tesne sa musí produkt zhodovať so záznamom v Safety Gate, aby sa spustilo upozornenie.",
+            "label": "Nastavenia citlivosti",
+            "thresholdLabel": "Prah citlivosti: {{value}}%",
+            "broad": "40% (Voľný - Viac varovaní)",
+            "balanced": "70% (Odporúčaný - Vyvážený)",
+            "strict": "90% (Prísny - Menej varovaní)",
+            "calibration": {
+              "broadTitle": "Režim širokej detekcie",
+              "broadDesc": "Vysoká citlivosť. Zachytí aj vzdialenejšie podobnosti. Odporúča sa, ak predávate rizikové kategórie (hračky, elektronika) a chcete maximálne pokrytie, no očakávate viac falošných upozornení.",
+              "balancedTitle": "Režim vyváženej detekcie",
+              "balancedDesc": "Štandardná citlivosť. Optimalizovaný pomer medzi presnosťou a počtom upozornení. Skenuje názvy, popisy a overuje kľúčové značky a modelové štruktúry.",
+              "strictTitle": "Režim prísnej detekcie",
+              "strictDesc": "Vysoká presnosť. Filtruje drobné podobnosti. Varovania sa spustia len pri veľmi jasných zhodách názvov značiek/modelov. Minimálna miera falošných upozornení."
+            }
+          },
+          "scan": {
+            "title": "Krok 2: Spustenie prvého skenovania katalógu",
+            "description": "Naskenujte svoj aktívny katalóg produktov v Shopify proti databáze Safety Gate na identifikáciu existujúcich rizík.",
+            "label": "Prvé skenovanie",
+            "toScan": "Produkty na skenovanie: {{count}}",
+            "scanning": "Porovnávam produkty s databázou Safety Gate...",
+            "complete": "Skenovanie katalógu dokončené!",
+            "scanned": "Naskenované produkty: {{count}}",
+            "alerts": "Vytvorené varovania: {{count}}",
+            "startButton": "Spustiť skenovanie katalógu"
+          },
+          "automation": {
+            "title": "Krok 3: Automatický monitoring a upozornenia",
+            "description": "Nakonfigurujte si automatickú karanténu rizikových produktov a notifikácie v reálnom čase.",
+            "label": "Bezpečnostná automatizácia",
+            "webhooks": {
+              "title": "Skenovanie v reálnom čase",
+              "desc": "Produkty sa automaticky skontrolujú voči EÚ databáze pri každom vytvorení alebo aktualizácii."
+            },
+            "quarantine": {
+              "title": "Automatická karanténa vážnych rizík",
+              "desc": "Automaticky zmeniť stav produktov v Shopify na Koncept (Draft), ak vykazujú vážnu zhodu s nebezpečným produktom (skóre >= 95%).",
+              "label": "Zapnúť automatickú karanténu (Draft)"
+            },
+            "notify": {
+              "title": "Nastavenia upozornení",
+              "label": "Posielať e-mailové reporty o rizikových zhodách"
+            },
+            "slack": {
+              "title": "Slack integrácia (Voliteľné)",
+              "desc": "Vložte URL adresu prichádzajúceho webhooku Slack pre okamžité odosielanie upozornení.",
+              "placeholder": "https://hooks.slack.com/services/..."
+            }
+          }
+        }
+      },
+      "uxEnhancements": {
+        "complianceRing": {
+          "title": "Miera Súladu",
+          "subtitle": "Percento produktov obchodu overených ako bezpečné",
+          "scoreLabel": "Súlad"
+        },
+        "activityTimeline": {
+          "title": "Záznam Nedávnej Aktivity",
+          "description": "Historický prehľad bezpečnostných skenov a správy upozornení.",
+          "noActivity": "Žiadne nedávne udalosti. Udržujte produkty aktualizované.",
+          "actions": {
+            "check": "Kontrola produktu dokončená",
+            "quarantine": "Produkt automaticky stiahnutý (karanténa)",
+            "resolve": "Upozornenie vyriešené",
+            "dismiss": "Upozornenie zamietnuté"
+          },
+          "details": {
+            "checkSafe": "Produkt bol skontrolovaný a označený ako bezpečný.",
+            "checkUnsafe": "Bolo zistené bezpečnostné riziko! Vytvorené upozornenie.",
+            "bulkScanned": "Hromadný sken katalógu bol dokončený.",
+            "autoDrafted": "Stav produktu bol v Shopify zmenený na Koncept.",
+            "reason": "Dôvod: {{reason}}",
+            "noReason": "Dôvod nebol špecifikovaný."
+          },
+          "types": {
+            "automatic": "Systémová udalosť",
+            "manual": "Akcia obchodníka",
+            "bulk": "Hromadný sken"
+          }
+        },
+        "alerts": {
+          "floating": {
+            "selectedCount": "{{count}} vybrané upozornenie",
+            "selectedCount_plural": "{{count}} vybraných upozornení",
+            "resolveSelected": "Vyriešiť vybrané",
+            "dismissSelected": "Zamietnuť vybrané"
+          },
+          "quickFilters": {
+            "title": "Rýchle filtre",
+            "allAlerts": "Všetky upozornenia",
+            "allAlertsDesc": "Zobraziť všetky bezpečnostné varovania.",
+            "needsReview": "Vyžaduje kontrolu",
+            "needsReviewDesc": "Nevyriešené bezpečnostné upozornenia.",
+            "highRisk": "Iba vysoké riziko",
+            "highRiskDesc": "Závažné úrovne rizika vyžadujúce akciu.",
+            "resolved": "Vyriešené / Zamietnuté",
+            "resolvedDesc": "Historické upozornenia uchované pre audit."
+          }
+        }
       }
     }
   } as const;

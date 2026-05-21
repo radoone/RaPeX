@@ -270,6 +270,7 @@ const en = {
       "analysis": {
         "modalHeading": "Review Safety Gate match",
         "yourProduct": "Your Shopify product",
+        "editInShopify": "Edit Product in Shopify",
         "safetyGateMatches": "Safety Gate matches",
         "riskLevel": "Risk level",
         "riskDescription": "Risk description",
@@ -278,6 +279,7 @@ const en = {
         "alertNumber": "Alert {{number}}",
         "enlargedSafetyAlert": "Enlarged safety alert image",
         "fields": {
+          "accessibilityLabel": "Alert matching details table",
           "field": "Field",
           "value": "Value",
           "productName": "Product name",
@@ -443,6 +445,7 @@ const en = {
           "prioritise": "Prioritise these products for action."
         },
         "catalogue": {
+          "accessibilityLabel": "Product catalogue table",
           "heading": "Product Catalogue ({{count}})",
           "emptyHeading": "No products found",
           "emptyBody": "No products are available for checking.",
@@ -540,6 +543,117 @@ const en = {
         },
         "workspace": "Workspace",
         "onDemand": "On demand"
+      },
+      "onboarding": {
+        "title": "Welcome to Safety Gate EU",
+        "subtitle": "Let's get your Shopify store compliant in 3 simple steps.",
+        "stepIndicator": "Step {{current}} of {{total}}",
+        "back": "Back",
+        "nextStep": "Next Step",
+        "finishButton": "Finish Setup & Go to Dashboard",
+        "steps": {
+          "sensitivity": {
+            "title": "Step 1: Set AI Similarity Sensitivity",
+            "description": "Determine how closely a product needs to match a Safety Gate record to trigger an alert.",
+            "label": "Sensitivity Settings",
+            "thresholdLabel": "Sensitivity Threshold: {{value}}%",
+            "broad": "40% (Broad - More warnings)",
+            "balanced": "70% (Recommended - Balanced)",
+            "strict": "90% (Strict - Fewer warnings)",
+            "calibration": {
+              "broadTitle": "Broad Detection Mode",
+              "broadDesc": "High sensitivity. Catches loosely related matches. Recommended if you sell high-risk product categories (toys, electronics) and want complete coverage, but expect some false positives.",
+              "balancedTitle": "Balanced Detection Mode",
+              "balancedDesc": "Standard sensitivity. Optimized balance between precision and alert volume. Scans titles, descriptions, and matches key brands and model structures.",
+              "strictTitle": "Strict Detection Mode",
+              "strictDesc": "High precision. Filters out minor similarities. Alerts will trigger only for very clear brand/model name matches. Low rate of false alerts."
+            }
+          },
+          "scan": {
+            "title": "Step 2: Run Initial Catalog Scan",
+            "description": "Scan your active Shopify catalog against the Safety Gate database to identify any existing product risks.",
+            "label": "First Scan",
+            "toScan": "Products to scan: {{count}}",
+            "scanning": "Comparing products with Safety Gate database...",
+            "complete": "Catalog scan complete!",
+            "scanned": "Products Scanned: {{count}}",
+            "alerts": "Risk Alerts Created: {{count}}",
+            "startButton": "Start Catalog Scan"
+          },
+          "automation": {
+            "title": "Step 3: Auto-Monitoring & Alerts",
+            "description": "Configure real-time safety automation and notifications for your store.",
+            "label": "Safety Automation",
+            "webhooks": {
+              "title": "Real-time Webhook Scanning",
+              "desc": "Products are automatically checked against the EU database whenever created or updated."
+            },
+            "quarantine": {
+              "title": "Auto-Quarantine Serious Risks",
+              "desc": "Automatically draft products in Shopify that match Safety Gate alerts with serious risk (threshold >= 95%).",
+              "label": "Enable Auto-Quarantine (Auto-Draft)"
+            },
+            "notify": {
+              "title": "Notification Preferences",
+              "label": "Send email reports for unsafe matches"
+            },
+            "slack": {
+              "title": "Slack Alert Integration (Optional)",
+              "desc": "Paste your Slack Incoming Webhook URL to get instant Slack alerts.",
+              "placeholder": "https://hooks.slack.com/services/..."
+            }
+          }
+        }
+      },
+      "uxEnhancements": {
+        "complianceRing": {
+          "title": "Compliance Rating",
+          "subtitle": "Percentage of store products verified as safe",
+          "scoreLabel": "Compliant"
+        },
+        "activityTimeline": {
+          "title": "Recent Activity Timeline",
+          "description": "Historical record of safety scans and alert management.",
+          "noActivity": "No recent actions. Keep your products updated.",
+          "actions": {
+            "check": "Product check completed",
+            "quarantine": "Product auto-quarantined",
+            "resolve": "Alert marked as resolved",
+            "dismiss": "Alert marked as dismissed"
+          },
+          "details": {
+            "checkSafe": "Product checked and verified as safe.",
+            "checkUnsafe": "Safety risk detected! Alert created.",
+            "bulkScanned": "Bulk catalog scan completed.",
+            "autoDrafted": "Product status changed to draft in Shopify.",
+            "reason": "Reason: {{reason}}",
+            "noReason": "No reason specified."
+          },
+          "types": {
+            "automatic": "System Event",
+            "manual": "Merchant Event",
+            "bulk": "Bulk Event"
+          }
+        },
+        "alerts": {
+          "floating": {
+            "selectedCount": "{{count}} selected alert",
+            "selectedCount_plural": "{{count}} selected alerts",
+            "resolveSelected": "Resolve Selected",
+            "dismissSelected": "Dismiss Selected"
+          },
+          "quickFilters": {
+            "title": "Quick Filters",
+            "allAlerts": "All Alerts",
+            "allAlertsDesc": "Show all safety warnings in catalog.",
+            "needsReview": "Needs Review",
+            "needsReviewDesc": "Pending safety alerts.",
+            "highRisk": "High Risk Only",
+            "highRiskDesc": "Serious risk levels requiring action.",
+            "resolved": "Resolved / Dismissed",
+            "resolvedDesc": "Past alerts kept for auditing."
+          }
+        }
       }
     }
   } as const;

@@ -7,3 +7,4 @@ export * from "./AlertBadge";
 export * from "./PageHeader";
 export * from "./SummaryCard";
 export * from "./RiskMeter";
+export * from "./OnboardingWizard";

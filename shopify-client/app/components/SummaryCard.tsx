@@ -8,6 +8,8 @@ interface SummaryCardProps {
   footer?: ReactNode;
   progress?: number;
   progressTone?: "primary" | "critical" | "success" | "warning" | "info";
+  onClick?: () => void;
+  isActive?: boolean;
 }
 
 export function SummaryCard({
@@ -18,12 +20,31 @@ export function SummaryCard({
   footer,
   progress,
   progressTone = "primary",
+  onClick,
+  isActive,
 }: SummaryCardProps) {
   const hasProgress = typeof progress === "number" && progress >= 0;
   const clampedProgress = hasProgress ? Math.min(Math.max(progress ?? 0, 0), 100) : null;
 
+  const cardClassName = [
+    "metric-card",
+    onClick ? "metric-card--interactive" : "",
+    isActive ? "metric-card--active" : "",
+  ].filter(Boolean).join(" ");
+
   return (
-    <div className="metric-card">
+    <div
+      className={cardClassName}
+      onClick={onClick}
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={onClick ? (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onClick();
+        }
+      } : undefined}
+    >
       <s-stack gap="small">
         <span className="metric-card__title">{title}</span>
         <s-stack direction="inline" gap="small" blockAlign="center" wrap>

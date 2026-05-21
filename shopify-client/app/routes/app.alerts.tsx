@@ -128,6 +128,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     pagination: { currentPage: page, totalPages: Math.ceil(totalCount / pageSize), totalCount, hasNext: page < Math.ceil(totalCount / pageSize), hasPrevious: page > 1 },
     filters: { status: statusFilters, riskLevel: riskLevelFilters, search, sortBy: sortByParam, sortOrder: sortOrderParam },
     stats: { active: activeCount, resolved: resolvedCount, dismissed: dismissedCount, total: activeCount + resolvedCount + dismissedCount, criticalActive: criticalActiveAlerts },
+    shop: session.shop,
   });
 };
 
@@ -196,13 +197,13 @@ export function ErrorBoundary() {
       : t("common.unknown");
 
   return (
-    <s-page>
-      <s-heading slot="title" size="large">{t("alerts.title")}</s-heading>
+    <s-page suppressHydrationWarning>
+      <s-heading slot="title" size="large" suppressHydrationWarning>{t("alerts.title")}</s-heading>
       <div className="admin-stack" style={{ marginTop: "var(--s-space-400)" }}>
         <s-banner tone="critical" heading={t("errors.pageLoadFailed")}>
           <s-text>{title}</s-text>
           <div style={{ marginTop: "var(--s-space-200)" }}>
-            <s-button onClick={() => window.location.reload()}>
+            <s-button onClick={() => window.location.reload()} suppressHydrationWarning>
               {t("actions.retry")}
             </s-button>
           </div>
@@ -213,7 +214,7 @@ export function ErrorBoundary() {
 }
 
 export default function AlertsPage() {
-  const { alerts, pagination, filters, stats } = useLoaderData<typeof loader>();
+  const { alerts, pagination, filters, stats, shop } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -221,12 +222,21 @@ export default function AlertsPage() {
 
   const [searchValue, setSearchValue] = useState(filters.search || '');
   const [statusFilter, setStatusFilter] = useState<string[]>(filters.status || []);
+  const [riskLevelFilter, setRiskLevelFilter] = useState<string[]>(filters.riskLevel || []);
 
-  const applyFilters = useCallback((overrides?: { search?: string; status?: string[]; page?: number; sortBy?: string; sortOrder?: string }) => {
+  const applyFilters = useCallback((overrides?: { search?: string; status?: string[]; riskLevel?: string[]; page?: number; sortBy?: string; sortOrder?: string }) => {
     const params = new URLSearchParams();
     const s = (overrides?.search ?? searchValue).trim();
     if (s) params.set('search', s);
-    (overrides?.status ?? statusFilter).forEach(v => params.append('status', v));
+    
+    // Status filters
+    const statusVal = overrides && overrides.hasOwnProperty('status') ? overrides.status : statusFilter;
+    statusVal?.forEach(v => params.append('status', v));
+
+    // Risk level filters
+    const riskVal = overrides && overrides.hasOwnProperty('riskLevel') ? overrides.riskLevel : riskLevelFilter;
+    riskVal?.forEach(v => params.append('riskLevel', v));
+
     const sortBy = overrides?.sortBy ?? filters.sortBy;
     const sortOrder = overrides?.sortOrder ?? filters.sortOrder;
     if (sortBy && sortBy !== "created") params.set("sortBy", sortBy);
@@ -235,7 +245,7 @@ export default function AlertsPage() {
     if (p > 1) params.set('page', p.toString());
     const queryString = params.toString();
     navigate(queryString ? `/app/alerts?${queryString}` : '/app/alerts');
-  }, [filters.sortBy, filters.sortOrder, searchValue, statusFilter, navigate]);
+  }, [filters.sortBy, filters.sortOrder, searchValue, statusFilter, riskLevelFilter, navigate]);
 
   const handleAlertAction = useCallback((alertId: string, action: string, resolutionType?: string) => {
     fetcher.submit({ action, alertId, resolutionType: resolutionType || '' }, { method: 'POST' });
@@ -249,7 +259,11 @@ export default function AlertsPage() {
     }, { method: 'POST' });
   }, [fetcher]);
 
-  const resolvedRate = stats.total > 0 ? Math.round((stats.resolved / stats.total) * 100) : 0;
+  useEffect(() => {
+    setSearchValue(filters.search || '');
+    setStatusFilter(filters.status || []);
+    setRiskLevelFilter(filters.riskLevel || []);
+  }, [filters]);
 
   useEffect(() => {
     if (fetcher.data?.success) {
@@ -258,9 +272,9 @@ export default function AlertsPage() {
   }, [fetcher.data, shopify, t]);
 
   return (
-    <s-page size="large" className="page-shell">
-      <s-heading slot="title" size="large">{t('alerts.title')}</s-heading>
-      <s-button slot="primary-action" variant="primary" href="/app/manual-check">
+    <s-page size="large" className="page-shell" suppressHydrationWarning>
+      <s-heading slot="title" size="large" suppressHydrationWarning>{t('alerts.title')}</s-heading>
+      <s-button slot="primary-action" variant="primary" href="/app/manual-check" suppressHydrationWarning>
         {t('actions.manualCheck')}
       </s-button>
 
@@ -287,18 +301,47 @@ export default function AlertsPage() {
 
         <section className="metric-grid">
           <SummaryCard
-            title={t('alerts.metrics.activeHeading')}
-            value={stats.active}
-            badge={<s-badge tone={stats.active > 0 ? "critical" : "success"}>{stats.active > 0 ? t('status.needsReview') : t('status.allClear')}</s-badge>}
-            description={t('alerts.metrics.totalRecorded', { count: stats.total })}
+            title={t('uxEnhancements.alerts.quickFilters.allAlerts')}
+            value={stats.total}
+            description={t('uxEnhancements.alerts.quickFilters.allAlertsDesc')}
+            onClick={() => applyFilters({ status: [], riskLevel: [] })}
+            isActive={statusFilter.length === 0 && riskLevelFilter.length === 0}
           />
           <SummaryCard
-            title={t('alerts.metrics.resolutionHeading')}
-            value={`${resolvedRate}%`}
-            badge={<s-badge tone={resolvedRate >= 50 ? "success" : "warning"}>{t('alerts.metrics.resolved', { count: stats.resolved })}</s-badge>}
-            description={t('alerts.metrics.resolvedAndDismissed', { resolved: stats.resolved, dismissed: stats.dismissed })}
-            progress={resolvedRate}
-            progressTone={resolvedRate >= 50 ? "success" : "warning"}
+            title={t('uxEnhancements.alerts.quickFilters.needsReview')}
+            value={stats.active}
+            badge={
+              <s-badge tone={stats.active > 0 ? "critical" : "success"}>
+                {stats.active > 0 ? t('status.needsReview') : t('status.allClear')}
+              </s-badge>
+            }
+            description={t('uxEnhancements.alerts.quickFilters.needsReviewDesc')}
+            onClick={() => applyFilters({ status: ['active'], riskLevel: [] })}
+            isActive={statusFilter.length === 1 && statusFilter.includes('active') && riskLevelFilter.length === 0}
+          />
+          <SummaryCard
+            title={t('uxEnhancements.alerts.quickFilters.highRisk')}
+            value={stats.criticalActive}
+            badge={
+              <s-badge tone={stats.criticalActive > 0 ? "critical" : "success"}>
+                {stats.criticalActive > 0 ? t('status.needsReview') : t('status.allClear')}
+              </s-badge>
+            }
+            description={t('uxEnhancements.alerts.quickFilters.highRiskDesc')}
+            onClick={() => applyFilters({ status: ['active'], riskLevel: ['serious', 'high'] })}
+            isActive={statusFilter.includes('active') && riskLevelFilter.includes('serious') && riskLevelFilter.includes('high')}
+          />
+          <SummaryCard
+            title={t('uxEnhancements.alerts.quickFilters.resolved')}
+            value={stats.resolved + stats.dismissed}
+            badge={
+              <s-badge tone="success">
+                {t('alerts.metrics.resolved', { count: stats.resolved })}
+              </s-badge>
+            }
+            description={t('uxEnhancements.alerts.quickFilters.resolvedDesc')}
+            onClick={() => applyFilters({ status: ['resolved', 'dismissed'], riskLevel: [] })}
+            isActive={statusFilter.includes('resolved') && statusFilter.includes('dismissed') && riskLevelFilter.length === 0}
           />
         </section>
 
@@ -336,7 +379,8 @@ export default function AlertsPage() {
             onStatusChange={(status) => {
               const newFilter = status ? [status] : [];
               setStatusFilter(newFilter);
-              applyFilters({ status: newFilter });
+              setRiskLevelFilter([]);
+              applyFilters({ status: newFilter, riskLevel: [] });
             }}
             sortBy={filters.sortBy}
             sortOrder={filters.sortOrder}
@@ -380,7 +424,7 @@ export default function AlertsPage() {
       {alerts.map((alert) => (
         <AlertDetailModal
           key={alert.id}
-          alert={alert}
+          alert={{ ...alert, shop: alert.shop || shop }}
           modalId={`alert-detail-${alert.id}`}
           onDismiss={(id, resolutionType) => handleAlertAction(id, 'dismiss', resolutionType)}
           onResolve={(id, resolutionType) => handleAlertAction(id, 'resolve', resolutionType)}

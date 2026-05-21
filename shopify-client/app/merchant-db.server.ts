@@ -95,12 +95,27 @@ type WebhookErrorRecord = {
   createdAt: Date;
 };
 
-type SafetySettingRecord = {
+export type SafetySettingRecord = {
   id: string;
   shop: string;
   similarityThreshold: number;
+  onboardingCompleted?: boolean;
+  autoDraftHighRisk?: boolean;
+  excludeVendors?: string | null;
+  excludeTypes?: string | null;
+  emailNotifications?: boolean;
+  slackWebhookUrl?: string | null;
   createdAt: Date;
   updatedAt: Date;
+};
+
+type ActivityLogRecord = {
+  id: string;
+  shop: string;
+  type: "automatic" | "manual" | "bulk";
+  action: "check" | "quarantine" | "resolve" | "dismiss";
+  details: string;
+  createdAt: Date;
 };
 
 const COLLECTIONS = {
@@ -110,6 +125,7 @@ const COLLECTIONS = {
   safetySetting: "merchant_settings",
   merchantProduct: "merchant_products",
   merchantMonitorState: "merchant_monitor_state",
+  activityLog: "merchant_activity_logs",
 } as const;
 
 let credentialWarningShown = false;
@@ -542,6 +558,12 @@ const safetySetting = {
       id: snapshot.id,
       shop: String(data.shop || options.where.shop),
       similarityThreshold: Number(data.similarityThreshold || 0),
+      onboardingCompleted: data.onboardingCompleted !== undefined ? Boolean(data.onboardingCompleted) : undefined,
+      autoDraftHighRisk: data.autoDraftHighRisk !== undefined ? Boolean(data.autoDraftHighRisk) : undefined,
+      excludeVendors: data.excludeVendors !== undefined ? String(data.excludeVendors || "") : undefined,
+      excludeTypes: data.excludeTypes !== undefined ? String(data.excludeTypes || "") : undefined,
+      emailNotifications: data.emailNotifications !== undefined ? Boolean(data.emailNotifications) : undefined,
+      slackWebhookUrl: data.slackWebhookUrl !== undefined ? String(data.slackWebhookUrl || "") : undefined,
       createdAt: normalizeDate(data.createdAt) || new Date(0),
       updatedAt: normalizeDate(data.updatedAt) || new Date(0),
     };
@@ -556,6 +578,12 @@ const safetySetting = {
         id: encodeShopKey(options.where.shop),
         shop: options.where.shop,
         similarityThreshold: Number(options.update.similarityThreshold ?? options.create.similarityThreshold ?? 0),
+        onboardingCompleted: options.update.onboardingCompleted ?? options.create.onboardingCompleted ?? false,
+        autoDraftHighRisk: options.update.autoDraftHighRisk ?? options.create.autoDraftHighRisk ?? false,
+        excludeVendors: options.update.excludeVendors ?? options.create.excludeVendors ?? null,
+        excludeTypes: options.update.excludeTypes ?? options.create.excludeTypes ?? null,
+        emailNotifications: options.update.emailNotifications ?? options.create.emailNotifications ?? false,
+        slackWebhookUrl: options.update.slackWebhookUrl ?? options.create.slackWebhookUrl ?? null,
         createdAt: now,
         updatedAt: now,
       };
@@ -576,6 +604,12 @@ const safetySetting = {
         id: encodeShopKey(options.where.shop),
         shop: options.where.shop,
         similarityThreshold: Number(payload.similarityThreshold || 0),
+        onboardingCompleted: payload.onboardingCompleted !== undefined ? Boolean(payload.onboardingCompleted) : undefined,
+        autoDraftHighRisk: payload.autoDraftHighRisk !== undefined ? Boolean(payload.autoDraftHighRisk) : undefined,
+        excludeVendors: payload.excludeVendors !== undefined ? String(payload.excludeVendors || "") : undefined,
+        excludeTypes: payload.excludeTypes !== undefined ? String(payload.excludeTypes || "") : undefined,
+        emailNotifications: payload.emailNotifications !== undefined ? Boolean(payload.emailNotifications) : undefined,
+        slackWebhookUrl: payload.slackWebhookUrl !== undefined ? String(payload.slackWebhookUrl || "") : undefined,
         createdAt: normalizeDate(payload.createdAt) || now,
         updatedAt: normalizeDate(payload.updatedAt) || now,
       };
@@ -585,6 +619,12 @@ const safetySetting = {
       id: stored.id,
       shop: String(data.shop || options.where.shop),
       similarityThreshold: Number(data.similarityThreshold || 0),
+      onboardingCompleted: data.onboardingCompleted !== undefined ? Boolean(data.onboardingCompleted) : undefined,
+      autoDraftHighRisk: data.autoDraftHighRisk !== undefined ? Boolean(data.autoDraftHighRisk) : undefined,
+      excludeVendors: data.excludeVendors !== undefined ? String(data.excludeVendors || "") : undefined,
+      excludeTypes: data.excludeTypes !== undefined ? String(data.excludeTypes || "") : undefined,
+      emailNotifications: data.emailNotifications !== undefined ? Boolean(data.emailNotifications) : undefined,
+      slackWebhookUrl: data.slackWebhookUrl !== undefined ? String(data.slackWebhookUrl || "") : undefined,
       createdAt: normalizeDate(data.createdAt) || now,
       updatedAt: normalizeDate(data.updatedAt) || now,
     };
@@ -608,6 +648,63 @@ const safetySetting = {
   },
 };
 
+function convertActivityLog(id: string, data: Record<string, unknown>): ActivityLogRecord {
+  return {
+    id,
+    shop: String(data.shop || ""),
+    type: (data.type || "automatic") as ActivityLogRecord["type"],
+    action: (data.action || "check") as ActivityLogRecord["action"],
+    details: String(data.details || ""),
+    createdAt: normalizeDate(data.createdAt) || new Date(0),
+  };
+}
+
+const activityLog = {
+  async findMany(options: FindManyOptions = {}): Promise<ActivityLogRecord[]> {
+    const loaded = await loadCollectionByShop(COLLECTIONS.activityLog, options.where);
+    let records = loaded
+      .map((entry) => convertActivityLog(entry.id, entry.data))
+      .filter((record) => matchesWhere(record as unknown as Record<string, unknown>, options.where));
+
+    records = sortRecords(records, options.orderBy);
+
+    const skip = options.skip || 0;
+    const take = typeof options.take === "number" ? options.take : records.length;
+    const sliced = records.slice(skip, skip + take);
+    return sliced.map((record) => applySelect(record as unknown as Record<string, unknown>, options.select));
+  },
+
+  async create(options: CreateOptions<Omit<ActivityLogRecord, "id" | "createdAt">>): Promise<ActivityLogRecord> {
+    const now = new Date();
+    const payload = sanitizeForFirestore({
+      ...options.data,
+      createdAt: now,
+    }) as Record<string, unknown>;
+    const ref = await withCredentialFallback(
+      () => firestore.collection(COLLECTIONS.activityLog).add(payload),
+      null as any,
+    );
+    if (!ref) {
+      return convertActivityLog(`local-${Date.now()}`, payload);
+    }
+    return convertActivityLog(ref.id, payload);
+  },
+
+  async deleteMany(options: DeleteManyOptions = {}): Promise<{ count: number }> {
+    const loaded = await loadCollectionByShop(COLLECTIONS.activityLog, options.where);
+    const records = loaded
+      .map((entry) => convertActivityLog(entry.id, entry.data))
+      .filter((record) => matchesWhere(record as unknown as Record<string, unknown>, options.where));
+    for (const record of records) {
+      await withCredentialFallback(
+        () => firestore.collection(COLLECTIONS.activityLog).doc(record.id).delete(),
+        undefined,
+      );
+    }
+    return { count: records.length };
+  },
+};
+
 export async function purgeMerchantShopData(shop: string): Promise<{
   alerts: number;
   checks: number;
@@ -615,12 +712,14 @@ export async function purgeMerchantShopData(shop: string): Promise<{
   settings: number;
   products: number;
   monitorState: number;
+  activityLogs: number;
 }> {
-  const [alerts, checks, webhookErrors, settings] = await Promise.all([
+  const [alerts, checks, webhookErrors, settings, activityLogs] = await Promise.all([
     safetyAlert.deleteMany({ where: { shop } }),
     safetyCheck.deleteMany({ where: { shop } }),
     webhookError.deleteMany({ where: { shop } }),
     safetySetting.deleteMany({ where: { shop } }),
+    activityLog.deleteMany({ where: { shop } }),
   ]);
 
   const productSnapshot = await withCredentialFallback(
@@ -639,6 +738,7 @@ export async function purgeMerchantShopData(shop: string): Promise<{
       settings: settings.count,
       products: 0,
       monitorState: 0,
+      activityLogs: activityLogs.count,
     };
   }
   for (const doc of productSnapshot.docs) {
@@ -655,6 +755,7 @@ export async function purgeMerchantShopData(shop: string): Promise<{
       settings: settings.count,
       products: productSnapshot.size,
       monitorState: 0,
+      activityLogs: activityLogs.count,
     };
   }
   if (monitorSnapshot.exists) {
@@ -668,6 +769,7 @@ export async function purgeMerchantShopData(shop: string): Promise<{
     settings: settings.count,
     products: productSnapshot.size,
     monitorState: monitorSnapshot.exists ? 1 : 0,
+    activityLogs: activityLogs.count,
   };
 }
 
@@ -676,6 +778,7 @@ const merchantDb = {
   safetyCheck,
   webhookError,
   safetySetting,
+  activityLog,
 };
 
 export default merchantDb;

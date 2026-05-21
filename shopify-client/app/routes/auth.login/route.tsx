@@ -64,6 +64,7 @@ export default function Auth() {
                 <s-text-field
                   name="shop"
                   label="Shop domain"
+                  labelAccessibilityVisibility="visible"
                   placeholder="example.myshopify.com"
                   value={shop}
                   onInput={(event: any) => {

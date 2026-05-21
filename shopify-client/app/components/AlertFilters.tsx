@@ -68,7 +68,7 @@ export function AlertFilters({
         <div style={{ minWidth: '200px', flex: 1, maxWidth: '280px' }}>
           <s-search-field
             label="Search"
-            labelHidden
+            labelAccessibilityVisibility="exclusive"
             placeholder="Search alerts..."
             value={searchValue}
             onInput={(e: any) => onSearchChange(e.currentTarget.value || '')}

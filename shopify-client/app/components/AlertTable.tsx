@@ -99,91 +99,37 @@ export function AlertTable({
     <s-section padding="none" accessibilityLabel={t('alerts.table.accessibilityLabel')}>
       {/* Filters above table */}
       <s-stack gap="small" style={{ paddingBottom: 'var(--s-space-base)' }}>
-        {/* Selection Bar / Tabs */}
-        {selectedIds.length > 0 ? (
-          <s-box background="bg-surface-secondary" padding="small" borderRadius="base" style={{ animation: 'fade-in 0.2s' }}>
-            <s-stack direction="inline" gap="medium" alignItems="center" justifyContent="space-between">
-              <s-stack direction="inline" gap="small" alignItems="center">
-                <s-checkbox
-                  checked={selectedIds.length === alerts.length}
-                  indeterminate={selectedIds.length > 0 && selectedIds.length < alerts.length}
-                  onChange={toggleSelectAll}
-                />
-                <s-text fontWeight="semibold">{t('alerts.table.selectedCount', { count: selectedIds.length })}</s-text>
-              </s-stack>
-              <s-stack direction="inline" gap="small-200">
-                <s-button variant="secondary" size="small" commandFor="bulk-resolve-popover">
-                  {t('actions.resolve')}
-                </s-button>
-                <s-button variant="secondary" size="small" commandFor="bulk-dismiss-popover">
-                  {t('actions.dismiss')}
-                </s-button>
-                
-                <s-popover id="bulk-resolve-popover">
-                  <s-stack gap="none">
-                    <s-box padding="small">
-                      <s-text fontWeight="semibold" size="small">{t('resolveActions.menuLabel')}</s-text>
-                    </s-box>
-                    <s-divider />
-                    <s-box padding="small">
-                      <s-stack gap="small-100">
-                        <s-button variant="tertiary" size="small" onClick={() => handleBulkResolve('verified_safe')}>{t('resolveActions.verifiedSafe')}</s-button>
-                        <s-button variant="tertiary" size="small" onClick={() => handleBulkResolve('removed_from_sale')}>{t('resolveActions.removedFromSale')}</s-button>
-                        <s-button variant="tertiary" size="small" onClick={() => handleBulkResolve('modified_product')}>{t('resolveActions.modifiedProduct')}</s-button>
-                      </s-stack>
-                    </s-box>
-                  </s-stack>
-                </s-popover>
-
-                <s-popover id="bulk-dismiss-popover">
-                  <s-stack gap="none">
-                    <s-box padding="small">
-                      <s-text fontWeight="semibold" size="small">{t('resolveActions.menuLabel')}</s-text>
-                    </s-box>
-                    <s-divider />
-                    <s-box padding="small">
-                      <s-stack gap="small-100">
-                        <s-button variant="tertiary" size="small" onClick={() => handleBulkDismiss('false_positive')}>{t('resolveActions.falsePositive')}</s-button>
-                        <s-button variant="tertiary" size="small" onClick={() => handleBulkDismiss('not_my_product')}>{t('resolveActions.notMyProduct')}</s-button>
-                      </s-stack>
-                    </s-box>
-                  </s-stack>
-                </s-popover>
-              </s-stack>
-            </s-stack>
-          </s-box>
-        ) : (
-          <s-stack direction="inline" gap="none">
-            <s-button
-              variant={activeTab === "all" ? "secondary" : "tertiary"}
-              size="small"
-              onClick={() => onStatusChange?.("")}
-            >
-              {t('alerts.table.tabs.all')} {stats ? `(${stats.total})` : ""}
-            </s-button>
-            <s-button
-              variant={activeTab === "active" ? "secondary" : "tertiary"}
-              size="small"
-              onClick={() => onStatusChange?.("active")}
-            >
-              {t('alerts.table.tabs.active')} {stats?.active ? `(${stats.active})` : ""}
-            </s-button>
-            <s-button
-              variant={activeTab === "resolved" ? "secondary" : "tertiary"}
-              size="small"
-              onClick={() => onStatusChange?.("resolved")}
-            >
-              {t('alerts.table.tabs.resolved')} {stats?.resolved ? `(${stats.resolved})` : ""}
-            </s-button>
-            <s-button
-              variant={activeTab === "dismissed" ? "secondary" : "tertiary"}
-              size="small"
-              onClick={() => onStatusChange?.("dismissed")}
-            >
-              {t('alerts.table.tabs.dismissed')} {stats?.dismissed ? `(${stats.dismissed})` : ""}
-            </s-button>
-          </s-stack>
-        )}
+        {/* Tabs */}
+        <s-stack direction="inline" gap="none">
+          <s-button
+            variant={activeTab === "all" ? "secondary" : "tertiary"}
+            size="small"
+            onClick={() => onStatusChange?.("")}
+          >
+            {t('alerts.table.tabs.all')} {stats ? `(${stats.total})` : ""}
+          </s-button>
+          <s-button
+            variant={activeTab === "active" ? "secondary" : "tertiary"}
+            size="small"
+            onClick={() => onStatusChange?.("active")}
+          >
+            {t('alerts.table.tabs.active')} {stats?.active ? `(${stats.active})` : ""}
+          </s-button>
+          <s-button
+            variant={activeTab === "resolved" ? "secondary" : "tertiary"}
+            size="small"
+            onClick={() => onStatusChange?.("resolved")}
+          >
+            {t('alerts.table.tabs.resolved')} {stats?.resolved ? `(${stats.resolved})` : ""}
+          </s-button>
+          <s-button
+            variant={activeTab === "dismissed" ? "secondary" : "tertiary"}
+            size="small"
+            onClick={() => onStatusChange?.("dismissed")}
+          >
+            {t('alerts.table.tabs.dismissed')} {stats?.dismissed ? `(${stats.dismissed})` : ""}
+          </s-button>
+        </s-stack>
 
         {/* Search and sort row */}
         <s-grid gap="small-200" gridTemplateColumns="1fr auto">
@@ -205,7 +151,11 @@ export function AlertTable({
           <s-popover id="sort-actions-popover">
             <s-stack gap="none">
               <s-box padding="small">
-                <s-choice-list label={t('alerts.table.sortBy')} name="sortBy">
+                <s-choice-list
+                  label={t('alerts.table.sortBy')}
+                  labelAccessibilityVisibility="visible"
+                  name="sortBy"
+                >
                   <s-choice value="created" selected={sortBy === "created"} onClick={() => onSortChange?.("created", sortOrder)}>
                     {t('alerts.table.sortOptions.created')}
                   </s-choice>
@@ -219,7 +169,11 @@ export function AlertTable({
               </s-box>
               <s-divider />
               <s-box padding="small">
-                <s-choice-list label={t('alerts.table.order')} name="sortOrder">
+                <s-choice-list
+                  label={t('alerts.table.order')}
+                  labelAccessibilityVisibility="visible"
+                  name="sortOrder"
+                >
                   <s-choice value="desc" selected={sortOrder === "desc"} onClick={() => onSortChange?.(sortBy, "desc")}>
                     {t('alerts.table.orderOptions.desc')}
                   </s-choice>
@@ -233,7 +187,7 @@ export function AlertTable({
         </s-grid>
       </s-stack>
 
-      <s-table>
+      <s-table accessibilityLabel={t('alerts.table.accessibilityLabel')}>
         <s-table-header-row>
           <s-table-header>
             <s-checkbox
@@ -274,6 +228,50 @@ export function AlertTable({
           )}
         </s-table-body>
       </s-table>
+
+      {/* Floating Bulk Action Bar */}
+      <div className={`floating-bulk-actions ${selectedIds.length > 0 ? "is-visible" : ""}`}>
+        <span>
+          {t("uxEnhancements.alerts.floating.selectedCount", { count: selectedIds.length })}
+        </span>
+        <s-button variant="secondary" size="small" commandFor="floating-bulk-resolve-popover" style={{ backgroundColor: "#2c2c2e", borderColor: "#3a3a3c", color: "#ffffff" }}>
+          {t("uxEnhancements.alerts.floating.resolveSelected")}
+        </s-button>
+        <s-button variant="secondary" size="small" commandFor="floating-bulk-dismiss-popover" style={{ backgroundColor: "#2c2c2e", borderColor: "#3a3a3c", color: "#ffffff" }}>
+          {t("uxEnhancements.alerts.floating.dismissSelected")}
+        </s-button>
+        
+        <s-popover id="floating-bulk-resolve-popover">
+          <s-stack gap="none">
+            <s-box padding="small">
+              <s-text fontWeight="semibold" size="small">{t('resolveActions.menuLabel')}</s-text>
+            </s-box>
+            <s-divider />
+            <s-box padding="small">
+              <s-stack gap="small-100">
+                <s-button variant="tertiary" size="small" onClick={() => handleBulkResolve('verified_safe')}>{t('resolveActions.verifiedSafe')}</s-button>
+                <s-button variant="tertiary" size="small" onClick={() => handleBulkResolve('removed_from_sale')}>{t('resolveActions.removedFromSale')}</s-button>
+                <s-button variant="tertiary" size="small" onClick={() => handleBulkResolve('modified_product')}>{t('resolveActions.modifiedProduct')}</s-button>
+              </s-stack>
+            </s-box>
+          </s-stack>
+        </s-popover>
+
+        <s-popover id="floating-bulk-dismiss-popover">
+          <s-stack gap="none">
+            <s-box padding="small">
+              <s-text fontWeight="semibold" size="small">{t('resolveActions.menuLabel')}</s-text>
+            </s-box>
+            <s-divider />
+            <s-box padding="small">
+              <s-stack gap="small-100">
+                <s-button variant="tertiary" size="small" onClick={() => handleBulkDismiss('false_positive')}>{t('resolveActions.falsePositive')}</s-button>
+                <s-button variant="tertiary" size="small" onClick={() => handleBulkDismiss('not_my_product')}>{t('resolveActions.notMyProduct')}</s-button>
+              </s-stack>
+            </s-box>
+          </s-stack>
+        </s-popover>
+      </div>
     </s-section>
   );
 }
@@ -427,16 +425,20 @@ function AlertRow({
 
 // Format date as relative (Today, Yesterday, etc.)
 export function formatRelativeDate(
-  date: Date,
+  date: Date | string | number,
   t: (key: string, options?: Record<string, any>) => string,
   locale: string
 ): string {
+  const parsedDate = date instanceof Date ? date : new Date(date);
+  if (isNaN(parsedDate.getTime())) {
+    return '';
+  }
   const now = new Date();
-  const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+  const diffDays = Math.floor((now.getTime() - parsedDate.getTime()) / (1000 * 60 * 60 * 24));
 
   if (diffDays === 0) return t('dates.today');
   if (diffDays === 1) return t('dates.yesterday');
   if (diffDays < 7) return t('dates.daysAgo', { count: diffDays });
   if (diffDays < 30) return t('dates.weeksAgo', { count: Math.floor(diffDays / 7) });
-  return date.toLocaleDateString(locale);
+  return parsedDate.toLocaleDateString(locale);
 }

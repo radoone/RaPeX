@@ -7,6 +7,7 @@ import {
   shopifyProductToProductData,
   upsertMerchantProductForMonitoring,
 } from "./safety-gate-checker.server";
+import { handleAutoDraftAndNotifications } from "./safety-gate-notifications.server";
 
 type AdminGraphqlContext = {
   graphql: (query: string, options?: { variables?: Record<string, unknown> }) => Promise<Response>;
@@ -346,6 +347,23 @@ export async function runProductSafetyCheck(input: {
       checkedAt: new Date(safetyResult.checkedAt),
     },
   });
+
+  // Log manual verification activity
+  await db.activityLog.create({
+    data: {
+      shop: input.shop,
+      type: "manual",
+      action: safetyResult.isSafe ? "check" : "quarantine",
+      details: `Checked product "${input.productTitle}". Status: ${safetyResult.isSafe ? "Safe" : "Match Found (" + safetyResult.warnings.length + " warnings)"}`
+    }
+  });
+
+  if (!safetyResult.isSafe) {
+    // Run notification & auto-draft logic asynchronously
+    handleAutoDraftAndNotifications(input.shop, productId, safetyResult).catch(err => {
+      console.error("Failed handling notifications/quarantine:", err);
+    });
+  }
 
   const status = await getProductSafetyStatus(input.shop, productId);
 
