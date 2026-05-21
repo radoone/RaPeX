@@ -58,3 +58,9 @@ export const PRODUCT_SAFETY_API_USAGE = {
   GET: "/checkProductSafetyAPI?name=Product&category=toys&description=Description",
   POST: "/checkProductSafetyAPI with JSON body: {name, category, description, imageUrl?, imageUrls?, brand?, model?}",
 } as const;
+
+export const MATCHING_THRESHOLDS = {
+  textDistance: 0.38,   // Cosine distance <= 0.38 (similarity >= 62%)
+  imageDistance: 0.35,  // Cosine distance <= 0.35 (similarity >= 65%)
+} as const;
+

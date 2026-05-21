@@ -3,7 +3,7 @@ import { vertexAI } from "@genkit-ai/google-genai";
 import { getFirestore, Timestamp } from "firebase-admin/firestore";
 import type { DocumentData, RetrieverAction } from "genkit/retriever";
 import { functionsAi } from "./firebase-admin.js";
-import { FIRESTORE_COLLECTIONS } from "./safety-gate-config.js";
+import { FIRESTORE_COLLECTIONS, MATCHING_THRESHOLDS } from "./safety-gate-config.js";
 import type { ProductInput } from "./safety-gate-checker.schemas.js";
 import {
   getProductImageUrls,
@@ -118,7 +118,7 @@ async function retrieveAlertsFromCachedVectors(product: ProductInput): Promise<N
             distance: document.get("distance"),
           },
         } as DocumentData);
-        if (!normalized || seen.has(normalized.id)) {
+        if (!normalized || seen.has(normalized.id) || (normalized.distance != null && normalized.distance > MATCHING_THRESHOLDS.textDistance)) {
           continue;
         }
         seen.add(normalized.id);
@@ -152,7 +152,7 @@ async function retrieveAlertsFromCachedVectors(product: ProductInput): Promise<N
             distance: document.get("distance"),
           },
         } as DocumentData);
-        if (!normalized || seen.has(normalized.id)) {
+        if (!normalized || seen.has(normalized.id) || (normalized.distance != null && normalized.distance > MATCHING_THRESHOLDS.imageDistance)) {
           continue;
         }
         seen.add(normalized.id);
@@ -345,7 +345,7 @@ export async function retrieveAlertsWithRag(product: ProductInput): Promise<Norm
 
       for (const document of result || []) {
         const normalized = normalizeRetrieverDocument(document);
-        if (!normalized || seen.has(normalized.id) || !isWithinLookback(normalized.meta.alert_date, cutoffDate)) {
+        if (!normalized || seen.has(normalized.id) || !isWithinLookback(normalized.meta.alert_date, cutoffDate) || (normalized.distance != null && normalized.distance > MATCHING_THRESHOLDS.textDistance)) {
           continue;
         }
 
@@ -380,7 +380,7 @@ export async function retrieveAlertsWithRag(product: ProductInput): Promise<Norm
 
           for (const document of result || []) {
             const normalized = normalizeRetrieverDocument(document);
-            if (!normalized || seen.has(normalized.id) || !isWithinLookback(normalized.meta.alert_date, cutoffDate)) {
+            if (!normalized || seen.has(normalized.id) || !isWithinLookback(normalized.meta.alert_date, cutoffDate) || (normalized.distance != null && normalized.distance > MATCHING_THRESHOLDS.imageDistance)) {
               continue;
             }
 

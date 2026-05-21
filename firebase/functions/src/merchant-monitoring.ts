@@ -1,7 +1,7 @@
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import * as logger from "firebase-functions/logger";
 import { db } from "./firebase-admin.js";
-import { FIRESTORE_COLLECTIONS } from "./safety-gate-config.js";
+import { FIRESTORE_COLLECTIONS, MATCHING_THRESHOLDS } from "./safety-gate-config.js";
 import { checkProductAgainstAlerts } from "./safety-gate-checker.js";
 import type { ProductInput } from "./safety-gate-checker.schemas.js";
 import { normalizePictures } from "./safety-gate-checker-media.js";
@@ -302,6 +302,10 @@ async function findCandidateProductsForAlert(
       .get();
 
     for (const doc of textSnapshot.docs) {
+      const distance = doc.get("text_distance");
+      if (distance != null && distance > MATCHING_THRESHOLDS.textDistance) {
+        continue;
+      }
       candidates.set(doc.id, {
         id: doc.id,
         data: doc.data() as Record<string, unknown>,
@@ -321,6 +325,10 @@ async function findCandidateProductsForAlert(
       .get();
 
     for (const doc of imageSnapshot.docs) {
+      const distance = doc.get("image_distance");
+      if (distance != null && distance > MATCHING_THRESHOLDS.imageDistance) {
+        continue;
+      }
       candidates.set(doc.id, {
         id: doc.id,
         data: doc.data() as Record<string, unknown>,
