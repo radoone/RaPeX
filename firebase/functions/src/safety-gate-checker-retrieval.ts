@@ -12,6 +12,7 @@ import {
   prepareImageMedia,
 } from "./safety-gate-checker-media.js";
 import type { NormalizedAlert } from "./safety-gate-checker.types.js";
+import { buildEmbeddingText } from "./safety-gate-embeddings.js";
 
 export const ALERT_LOOKBACK_DAYS = 365;
 
@@ -328,9 +329,17 @@ export async function retrieveAlertsWithRag(product: ProductInput): Promise<Norm
 
   if (activeTextRetriever) {
     try {
+      const textQuery = buildEmbeddingText({
+        brand: product.brand,
+        model: product.model,
+        category: product.category,
+        title: product.name,
+        description: product.description,
+      });
+
       const result = await functionsAi.retrieve({
         retriever: activeTextRetriever,
-        query: product.description,
+        query: textQuery,
         options: { limit: RAG_TEXT_LIMIT },
       });
 

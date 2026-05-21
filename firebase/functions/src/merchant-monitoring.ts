@@ -7,7 +7,7 @@ import type { ProductInput } from "./safety-gate-checker.schemas.js";
 import { normalizePictures } from "./safety-gate-checker-media.js";
 import type { NormalizedAlert } from "./safety-gate-checker.types.js";
 import { ALERT_LOOKBACK_DAYS } from "./safety-gate-checker-retrieval.js";
-import { embedImage, embedText } from "./safety-gate-embeddings.js";
+import { buildEmbeddingText, embedImage, embedText } from "./safety-gate-embeddings.js";
 import type {
   MerchantMonitorStateDocument,
   MerchantProductUpsertInput,
@@ -397,7 +397,13 @@ export async function upsertMerchantProduct(
   }
 
   const primaryImage = input.product.imageUrl || input.product.imageUrls?.[0];
-  const textContent = (input.product.description || input.product.name || "").trim();
+  const textContent = buildEmbeddingText({
+    brand: input.product.brand,
+    model: input.product.model,
+    category: input.product.category,
+    title: input.product.name,
+    description: input.product.description,
+  });
   const docId = merchantProductDocId(shop, productId);
   const docRef = db.collection(FIRESTORE_COLLECTIONS.merchantProducts).doc(docId);
   const existingSnapshot = await docRef.get();

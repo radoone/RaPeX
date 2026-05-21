@@ -62,6 +62,36 @@ function normalizeHeaderValue(value: unknown): string | undefined {
   return undefined;
 }
 
+function cleanString(val: unknown): string {
+  if (val === null || val === undefined) {
+    return "";
+  }
+  return String(val).trim();
+}
+
+export function buildEmbeddingText(params: {
+  brand?: unknown;
+  model?: unknown;
+  category?: unknown;
+  title?: unknown;
+  description?: unknown;
+}): string {
+  const brand = cleanString(params.brand);
+  const model = cleanString(params.model);
+  const category = cleanString(params.category);
+  const title = cleanString(params.title);
+  const description = cleanString(params.description);
+
+  const parts = [
+    brand ? `Brand: ${brand}` : "",
+    model ? `Model: ${model}` : "",
+    category ? `Category: ${category}` : "",
+    title ? `Title: ${title}` : "",
+    description ? `Description: ${description}` : "",
+  ].filter(Boolean);
+  return parts.join("\n");
+}
+
 export async function embedText(content: string): Promise<number[] | undefined> {
   if (!content.trim()) {
     return undefined;

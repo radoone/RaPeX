@@ -65,16 +65,19 @@ export const backfillRecentRapexEmbeddings = onRequest(
     try {
       const days = Number.parseInt(String(req.query.days || ""), 10);
       const limit = Number.parseInt(String(req.query.limit || ""), 10);
+      const force = req.query.force === "true" || req.query.force === "1";
       logger.info("Manual recent Safety Gate embedding backfill triggered via HTTP", {
         method: req.method,
         url: req.url,
         days: Number.isFinite(days) ? days : undefined,
         limit: Number.isFinite(limit) ? limit : undefined,
+        force,
       });
 
       const result = await backfillRecentAlertEmbeddings({
         days: Number.isFinite(days) ? days : undefined,
         limit: Number.isFinite(limit) ? limit : undefined,
+        force,
       });
 
       res.status(200).json({

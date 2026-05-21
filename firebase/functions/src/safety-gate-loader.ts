@@ -8,7 +8,7 @@ import {
   SAFETY_GATE_CONFIG,
   SAFETY_GATE_HEADERS,
 } from "./safety-gate-config.js";
-import { embedImage, embedText, getPictureUrls } from "./safety-gate-embeddings.js";
+import { buildEmbeddingText, embedImage, embedText, getPictureUrls } from "./safety-gate-embeddings.js";
 import type {
   LoaderState,
   OpenDataSoftResponse,
@@ -291,8 +291,16 @@ async function enrichRecord(record: RapexRecord): Promise<{
 }> {
   const recordAlertDate = new Date(record.fields.alert_date);
   const existingState = await getExistingAlertEmbeddingState(record.recordid);
+  const textToEmbed = buildEmbeddingText({
+    brand: record.fields?.product_brand,
+    model: record.fields?.product_model,
+    category: record.fields?.product_category,
+    title: record.fields?.product_type,
+    description: record.fields?.product_description,
+  });
+
   const [vectorText, imageEmbeddings] = await Promise.all([
-    existingState.hasTextVector ? Promise.resolve(undefined) : embedText(record.fields?.product_description || ""),
+    existingState.hasTextVector ? Promise.resolve(undefined) : embedText(textToEmbed),
     createImageEmbeddingsForRecord(record, recordAlertDate, existingState.existingImageDocIds),
   ]);
 
@@ -492,6 +500,7 @@ export async function runSafetyGateLoader(): Promise<void> {
 export async function backfillRecentAlertEmbeddings(params?: {
   days?: number;
   limit?: number;
+  force?: boolean;
 }): Promise<{
   days: number;
   alertsScanned: number;
@@ -597,9 +606,16 @@ export async function backfillRecentAlertEmbeddings(params?: {
       fields: (data.fields || {}) as RapexRecord["fields"],
     };
     const existingImageDocIds = recentImageDocIdsByAlertId.get(record.recordid) ?? new Set<string>();
-    const needsTextVector = !hasStoredVectorField(data, "vector_text");
+    const needsTextVector = params?.force || !hasStoredVectorField(data, "vector_text");
+    const textToEmbed = buildEmbeddingText({
+      brand: record.fields?.product_brand,
+      model: record.fields?.product_model,
+      category: record.fields?.product_category,
+      title: record.fields?.product_type,
+      description: record.fields?.product_description,
+    });
     const textEmbedding = needsTextVector
-      ? await embedText(record.fields?.product_description || "")
+      ? await embedText(textToEmbed)
       : undefined;
     const imageEmbeddings = await createImageEmbeddingsForRecord(
       record,
