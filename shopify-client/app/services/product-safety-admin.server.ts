@@ -57,6 +57,7 @@ export interface ProductSafetyStatusPayload {
   overallSimilarity: number | null;
   recommendation: string | null;
   resolutionType: string | null;
+  topReason: string | null;
 }
 
 export interface RunProductSafetyCheckResult {
@@ -120,6 +121,11 @@ function getOverallSimilarity(result: SafetyCheckResult | null): number | null {
   return typeof value === "number" && Number.isFinite(value) ? value : null;
 }
 
+function getTopReason(result: SafetyCheckResult | null): string | null {
+  const reason = result?.warnings?.[0]?.reason;
+  return typeof reason === "string" && reason.trim() ? reason.trim() : null;
+}
+
 function isoOrNull(value: Date | null | undefined): string | null {
   return value instanceof Date ? value.toISOString() : null;
 }
@@ -148,6 +154,7 @@ function buildStatusPayload(input: {
       overallSimilarity: getOverallSimilarity(activeResult),
       recommendation: activeResult?.recommendation ?? null,
       resolutionType: activeAlert.resolutionType ?? null,
+      topReason: getTopReason(activeResult),
     };
   }
 
@@ -165,6 +172,7 @@ function buildStatusPayload(input: {
       overallSimilarity: null,
       recommendation: null,
       resolutionType: null,
+      topReason: null,
     };
   }
 
@@ -185,6 +193,7 @@ function buildStatusPayload(input: {
       overallSimilarity: getOverallSimilarity(latestAlertResult),
       recommendation: latestAlertResult?.recommendation ?? null,
       resolutionType: latestAlert.resolutionType ?? null,
+      topReason: getTopReason(latestAlertResult),
     };
   }
 
@@ -202,6 +211,7 @@ function buildStatusPayload(input: {
       overallSimilarity: null,
       recommendation: null,
       resolutionType: null,
+      topReason: null,
     };
   }
 
@@ -218,6 +228,7 @@ function buildStatusPayload(input: {
     overallSimilarity: null,
     recommendation: null,
     resolutionType: null,
+    topReason: null,
   };
 }
 

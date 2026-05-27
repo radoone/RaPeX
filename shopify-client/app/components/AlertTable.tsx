@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { cleanRiskLabel } from "./AlertBadge";
 
 interface Alert {
   id: string;
@@ -313,7 +314,7 @@ function AlertRow({
   // Badge tones
   const statusTone = alert.status === 'active' ? 'critical' : alert.status === 'resolved' ? 'success' : 'neutral';
   const isSerious = alert.riskLevel?.toLowerCase().includes('serious') || alert.riskLevel?.toLowerCase().includes('high');
-  const riskTone = isSerious ? 'critical' : 'info';
+  const riskTone = isSerious && alert.status === 'active' ? 'critical' : 'info';
 
   // Serious risk indicator style
   const seriousRowStyle = isSerious && alert.status === 'active' 
@@ -364,7 +365,7 @@ function AlertRow({
               <s-text fontWeight="semibold">{alert.productTitle}</s-text>
             )}
             {alert.alertType && (
-              <s-text tone="subdued" size="small">{alert.alertType}</s-text>
+              <s-text tone="subdued" size="small">{cleanRiskLabel(alert.alertType)}</s-text>
             )}
           </s-stack>
         </s-stack>
@@ -386,7 +387,7 @@ function AlertRow({
         <s-stack gap="small-100">
           <s-stack direction="inline" gap="small-100" alignItems="center">
             <s-badge tone={riskTone}>
-              {alert.riskLevel || t('common.unknown')}
+              {cleanRiskLabel(alert.riskLevel || t('common.unknown'))}
             </s-badge>
             {alert.overallSimilarity && (
               <s-tooltip content={t('alerts.table.similarityTooltip', { score: alert.overallSimilarity })}>
@@ -415,7 +416,7 @@ function AlertRow({
             commandFor={modalId}
             command="--show"
           >
-            {alert.status === 'active' ? t('actions.viewDetails') : t('actions.view')}
+            {alert.status === 'active' ? t('actions.reviewDecision') : t('actions.view')}
           </s-button>
         </s-stack>
       </s-table-cell>

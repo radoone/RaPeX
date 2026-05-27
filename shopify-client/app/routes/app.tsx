@@ -32,6 +32,7 @@ export default function App() {
           {t('nav.safetyAlerts')} {activeAlertsCount > 0 ? `(${activeAlertsCount})` : ''}
         </Link>
         <Link to="/app/manual-check">{t('nav.manualCheck')}</Link>
+        <Link to="/app/evidence">{t('nav.evidence')}</Link>
         <Link to="/app/settings">{t('nav.settings')}</Link>
       </NavMenu>
       <Outlet />

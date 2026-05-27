@@ -9,12 +9,17 @@ import {
 import { useEffect } from "react";
 import { AppProvider } from "@shopify/shopify-app-remix/react";
 import { authenticate } from "./shopify.server";
-import i18n from "./i18n";
+import i18n, { EU_LANGUAGES } from "./i18n";
 import themeStyles from "./styles/theme.css?url";
 
 // Note: Polaris styles are loaded via CDN polaris.js - no need for duplicate import
 // Empty links array - all stylesheets loaded inline to prevent hydration mismatch
 export const links = () => [];
+
+const LANGUAGE_STORAGE_KEY = "safety-gate-language";
+const SUPPORTED_LANGUAGE_CODES: ReadonlySet<string> = new Set(
+  EU_LANGUAGES.map((language) => language.code),
+);
 
 export const loader = async ({ request }: { request: Request }) => {
   const url = new URL(request.url);
@@ -33,11 +38,24 @@ export default function App() {
   // Sync document language so Polaris web components render localized copy.
   useEffect(() => {
     const syncLang = () => {
-      const lang = i18n.language || "en";
+      const lang = i18n.resolvedLanguage || i18n.language || "en";
       document.documentElement.setAttribute("lang", lang);
     };
 
-    syncLang();
+    const savedLanguage =
+      window.localStorage.getItem(LANGUAGE_STORAGE_KEY) ||
+      window.localStorage.getItem("i18nextLng");
+
+    if (
+      savedLanguage &&
+      SUPPORTED_LANGUAGE_CODES.has(savedLanguage) &&
+      savedLanguage !== i18n.language
+    ) {
+      void i18n.changeLanguage(savedLanguage);
+    } else {
+      syncLang();
+    }
+
     i18n.on("languageChanged", syncLang);
     return () => {
       i18n.off("languageChanged", syncLang);

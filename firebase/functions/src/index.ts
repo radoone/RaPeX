@@ -16,6 +16,8 @@ import { backfillRecentAlertEmbeddings, runSafetyGateLoader } from "./safety-gat
 export const dailyRapexDeltaLoader = onSchedule(
   {
     ...SCHEDULER_CONFIG,
+    timeoutSeconds: 540,
+    memory: "512MiB",
     secrets: ["GOOGLE_API_KEY"],
   },
   async (event) => {

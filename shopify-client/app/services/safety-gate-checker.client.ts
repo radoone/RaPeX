@@ -42,20 +42,47 @@ function collectImageUrls(product: any, selectedVariant?: ProductVariant): strin
   return [...new Set(candidates.filter((url): url is string => Boolean(url)))].slice(0, 4);
 }
 
+function normalizeTags(tags: unknown): string[] {
+  if (Array.isArray(tags)) {
+    return tags.filter((tag): tag is string => typeof tag === "string");
+  }
+
+  if (typeof tags === "string") {
+    return tags
+      .split(",")
+      .map((tag) => tag.trim())
+      .filter(Boolean);
+  }
+
+  return [];
+}
+
+function stripHtml(value: unknown): string | undefined {
+  return typeof value === "string" ? value.replace(/<[^>]*>/g, "").trim() : undefined;
+}
+
 /**
  * Convert Shopify Product to ProductData for Safety Gate checking
  * This function can run on both client and server
  */
 export function shopifyProductToProductData(product: any, selectedVariant?: ProductVariant): ProductData {
+  const tags = normalizeTags(product?.tags);
+
   // Extract category from product type or tags
   const category = product.productType ||
-    product.tags?.find((tag: string) =>
+    product.product_type ||
+    tags.find((tag) =>
       ['toys', 'electronics', 'clothing', 'cosmetics', 'food', 'jewelry'].includes(tag.toLowerCase())
     ) ||
     'general';
 
   // Build description from product description and variant info
-  let description = product.description || product.descriptionHtml?.replace(/<[^>]*>/g, '') || product.title;
+  let description =
+    stripHtml(product.description) ||
+    stripHtml(product.descriptionHtml) ||
+    stripHtml(product.body_html) ||
+    product.title ||
+    "";
 
   if (selectedVariant) {
     const variantInfo = selectedVariant.selectedOptions
@@ -69,12 +96,12 @@ export function shopifyProductToProductData(product: any, selectedVariant?: Prod
 
   // Try to extract brand from vendor, title, or tags
   const brand = product.vendor ||
-    product.tags?.find((tag: string) => tag.toLowerCase().includes('brand:'))?.replace(/brand:\s*/i, '');
+    tags.find((tag) => tag.toLowerCase().includes('brand:'))?.replace(/brand:\s*/i, '');
 
   const imageUrls = collectImageUrls(product, selectedVariant);
 
   return {
-    name: product.title,
+    name: product.title || "Untitled product",
     category: category.toLowerCase(),
     description,
     imageUrl: imageUrls[0],

@@ -61,6 +61,7 @@ type MerchantMonitoringWindow = {
   strategy: MerchantMonitoringSummary["window"]["strategy"];
   days: number | null;
   checkpointDate: Date;
+  checkpointRecordTimestamp: string | null;
 };
 
 const MONITOR_TEXT_CANDIDATE_LIMIT = 8;
@@ -121,6 +122,15 @@ function asVectorArray(value: unknown): number[] | undefined {
   return undefined;
 }
 
+function isMissingVectorIndexError(error: unknown): boolean {
+  if (!(error instanceof Error)) {
+    return false;
+  }
+
+  const message = error.message || "";
+  return message.includes("FAILED_PRECONDITION") && message.includes("Missing vector index configuration");
+}
+
 function normalizeAlertDate(value: unknown): Date | null {
   if (!value) {
     return null;
@@ -172,6 +182,7 @@ function resolveMonitoringWindow(params: {
       strategy: "full-lookback",
       days: ALERT_LOOKBACK_DAYS,
       checkpointDate: fullLookbackDate,
+      checkpointRecordTimestamp: null,
     };
   }
 
@@ -184,6 +195,7 @@ function resolveMonitoringWindow(params: {
       strategy: "last-days",
       days: boundedDays,
       checkpointDate: lastDaysDate,
+      checkpointRecordTimestamp: null,
     };
   }
 
@@ -194,6 +206,7 @@ function resolveMonitoringWindow(params: {
       strategy: "since-last-check",
       days: null,
       checkpointDate: persistedCheckpoint,
+      checkpointRecordTimestamp: params.currentState?.lastRapexRecordTimestamp || null,
     };
   }
 
@@ -202,6 +215,7 @@ function resolveMonitoringWindow(params: {
     strategy: "full-lookback",
     days: ALERT_LOOKBACK_DAYS,
     checkpointDate: fullLookbackDate,
+    checkpointRecordTimestamp: null,
   };
 }
 
@@ -218,6 +232,9 @@ function toProductInput(document: Record<string, unknown>): ProductInput {
     imageUrls,
     brand: coerceString(document.brand),
     model: coerceString(document.model),
+    shop: coerceString(document.shop),
+    productId: coerceString(document.productId),
+    sourceUpdatedAt: coerceString(document.sourceUpdatedAt),
   };
 }
 
@@ -265,6 +282,7 @@ async function getMonitorState(shop: string): Promise<MerchantMonitorStateDocume
 async function loadRapexAlertCandidatesSince(
   checkpointDate: Date,
   limit: number,
+  checkpointRecordTimestamp?: string | null,
 ): Promise<AlertRetrievalCandidate[]> {
   const snapshot = await db
     .collection(FIRESTORE_COLLECTIONS.alerts)
@@ -273,14 +291,49 @@ async function loadRapexAlertCandidatesSince(
     .limit(limit)
     .get();
 
-  return snapshot.docs.map((doc) => {
-    const data = doc.data() as Record<string, unknown>;
-    return {
-      alert: normalizeRapexAlert(doc.id, data),
-      textVector: asVectorArray(data.vector_text),
-      imageVector: asVectorArray(data.vector_image),
-    };
-  });
+  return snapshot.docs
+    .map((doc) => {
+      const data = doc.data() as Record<string, unknown>;
+      return {
+        alert: normalizeRapexAlert(doc.id, data),
+        textVector: asVectorArray(data.vector_text),
+        imageVector: asVectorArray(data.vector_image),
+      };
+    })
+    .filter((candidate) => {
+      if (!checkpointRecordTimestamp) {
+        return true;
+      }
+
+      const alertDate = normalizeAlertDate(candidate.alert.meta.alert_date);
+      if (!alertDate) {
+        return false;
+      }
+
+      const alertTime = alertDate.getTime();
+      const checkpointTime = checkpointDate.getTime();
+      if (alertTime > checkpointTime) {
+        return true;
+      }
+
+      if (alertTime < checkpointTime) {
+        return false;
+      }
+
+      const recordTimestamp = candidate.alert.meta.record_timestamp || "";
+      return Boolean(recordTimestamp && recordTimestamp > checkpointRecordTimestamp);
+    })
+    .sort((left, right) => {
+      const leftDate = normalizeAlertDate(left.alert.meta.alert_date)?.getTime() || 0;
+      const rightDate = normalizeAlertDate(right.alert.meta.alert_date)?.getTime() || 0;
+      if (leftDate !== rightDate) {
+        return rightDate - leftDate;
+      }
+
+      return String(right.alert.meta.record_timestamp || "").localeCompare(
+        String(left.alert.meta.record_timestamp || ""),
+      );
+    });
 }
 
 async function findCandidateProductsForAlert(
@@ -291,47 +344,69 @@ async function findCandidateProductsForAlert(
   const collection = db.collection(FIRESTORE_COLLECTIONS.merchantProducts).where("shop", "==", shop);
 
   if (alertCandidate.textVector?.length) {
-    const textSnapshot = await collection
-      .findNearest({
-        vectorField: "vector_text",
-        queryVector: alertCandidate.textVector,
-        limit: MONITOR_TEXT_CANDIDATE_LIMIT,
-        distanceMeasure: "COSINE",
-        distanceResultField: "text_distance",
-      })
-      .get();
+    try {
+      const textSnapshot = await collection
+        .findNearest({
+          vectorField: "vector_text",
+          queryVector: alertCandidate.textVector,
+          limit: MONITOR_TEXT_CANDIDATE_LIMIT,
+          distanceMeasure: "COSINE",
+          distanceResultField: "text_distance",
+        })
+        .get();
 
-    for (const doc of textSnapshot.docs) {
-      const distance = doc.get("text_distance");
-      if (distance != null && distance > MATCHING_THRESHOLDS.textDistance) {
-        continue;
+      for (const doc of textSnapshot.docs) {
+        const distance = doc.get("text_distance");
+        if (distance != null && distance > MATCHING_THRESHOLDS.textDistance) {
+          continue;
+        }
+        candidates.set(doc.id, {
+          id: doc.id,
+          data: doc.data() as Record<string, unknown>,
+        });
       }
-      candidates.set(doc.id, {
-        id: doc.id,
-        data: doc.data() as Record<string, unknown>,
+    } catch (error) {
+      if (!isMissingVectorIndexError(error)) {
+        throw error;
+      }
+      logger.warn("Skipping merchant text vector retrieval because Firestore index is not ready", {
+        shop,
+        alertId: alertCandidate.alert.id,
+        vectorField: "vector_text",
       });
     }
   }
 
   if (alertCandidate.imageVector?.length) {
-    const imageSnapshot = await collection
-      .findNearest({
-        vectorField: "vector_image",
-        queryVector: alertCandidate.imageVector,
-        limit: MONITOR_IMAGE_CANDIDATE_LIMIT,
-        distanceMeasure: "COSINE",
-        distanceResultField: "image_distance",
-      })
-      .get();
+    try {
+      const imageSnapshot = await collection
+        .findNearest({
+          vectorField: "vector_image",
+          queryVector: alertCandidate.imageVector,
+          limit: MONITOR_IMAGE_CANDIDATE_LIMIT,
+          distanceMeasure: "COSINE",
+          distanceResultField: "image_distance",
+        })
+        .get();
 
-    for (const doc of imageSnapshot.docs) {
-      const distance = doc.get("image_distance");
-      if (distance != null && distance > MATCHING_THRESHOLDS.imageDistance) {
-        continue;
+      for (const doc of imageSnapshot.docs) {
+        const distance = doc.get("image_distance");
+        if (distance != null && distance > MATCHING_THRESHOLDS.imageDistance) {
+          continue;
+        }
+        candidates.set(doc.id, {
+          id: doc.id,
+          data: doc.data() as Record<string, unknown>,
+        });
       }
-      candidates.set(doc.id, {
-        id: doc.id,
-        data: doc.data() as Record<string, unknown>,
+    } catch (error) {
+      if (!isMissingVectorIndexError(error)) {
+        throw error;
+      }
+      logger.warn("Skipping merchant image vector retrieval because Firestore index is not ready", {
+        shop,
+        alertId: alertCandidate.alert.id,
+        vectorField: "vector_image",
       });
     }
   }
@@ -507,6 +582,9 @@ export async function runMerchantDeltaMonitoringForShop(params: {
     const rapexAlertCandidates = await loadRapexAlertCandidatesSince(
       monitoringWindow.checkpointDate,
       limit,
+      monitoringWindow.strategy === "since-last-check"
+        ? monitoringWindow.checkpointRecordTimestamp
+        : null,
     );
     const rapexAlerts = rapexAlertCandidates.map((candidate) => candidate.alert);
     const candidateProductsByDocId = new Map<

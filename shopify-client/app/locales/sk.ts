@@ -125,19 +125,39 @@ const sk = {
           "storeStatus": "Stav obchodu",
           "noActiveAlertsTitle": "Žiadne aktívne bezpečnostné upozornenia",
           "noActiveAlertsDescription": "Posledné kontroly momentálne nevyžadujú zásah. Pokračujte v skenovaní novo pridaných produktov, aby ste udržali pokrytie.",
-          "activeAlertsDescription": "Produkty, pri ktorých ešte treba rozhodnúť.",
+          "needsReviewTitle": "Produkty na kontrolu",
+          "activeAlertsDescription": "Produkty, pri ktorých ešte treba rozhodnutie obchodníka, aby bol zoznam čistý.",
+          "highRiskMatchesTitle": "Vysokorizikové zhody",
+          "highRiskMatchesDescription": "Vážne alebo vysokorizikové zhody v Safety Gate, ktoré treba skontrolovať ako prvé.",
           "catalogCoverageTitle": "Pokrytie katalógu",
           "catalogCoverageDescription": "Podiel katalógu, ktorý už bol skontrolovaný voči Safety Gate.",
           "checksCompletedTitle": "Dokončené kontroly",
-          "checksCompletedDescription": "Zahŕňa automatické aj manuálne kontroly.",
+          "monitoringRunsTitle": "Monitoringové kontroly",
+          "checksCompletedDescription": "Automatické a manuálne kontroly, ktoré znižujú ručnú kontrolu katalógu.",
+          "lastMonitoringRunTitle": "Posledný monitoring",
+          "lastMonitoringRunDescription": "Najnovšia automatická, manuálna alebo hromadná kontrola Safety Gate.",
+          "auditRecordsTitle": "Auditné záznamy",
+          "auditRecordsDescription": "Vyriešené a zamietnuté rozhodnutia s dôvodmi a internými poznámkami.",
+          "auditReady": "Report pripravený",
+          "monitoringStatusEyebrow": "Stav monitoringu",
+          "monitoringStatusNeedsReview": "{{count}} produkt potrebuje rozhodnutie merchanta",
+          "monitoringStatusNeedsReview_plural": "{{count}} produkty potrebujú rozhodnutie merchanta",
+          "monitoringStatusAllClear": "Monitoring katalógu beží",
+          "monitoringStatusDescription": "Safety Gate Monitor kontroluje katalóg voči novým aktualizáciám EÚ Safety Gate, zvýrazní produkty na kontrolu a uchováva dôkazy pre auditné reporty.",
+          "productsMonitored": "Monitorovaný katalóg",
+          "lastSafetyGateUpdateChecked": "Posledná kontrola Safety Gate aktualizácie",
+          "nextAutomaticCheck": "Ďalšia automatická kontrola",
+          "dailyAtTime": "Denne o 03:47",
+          "auditReport": "Audit report",
           "resolvedRateTitle": "Miera uzavretia",
           "resolvedRateDescription": "Aká časť zaznamenaných upozornení už bola uzavretá.",
-          "priorityQueue": "Prioritný zoznam",
-          "recentAlertsTitle": "Nedávne bezpečnostné upozornenia",
-          "recentAlertsDescription": "Najnovšie označené produkty z vášho obchodu, zoradené tak, aby na ne merchant vedel rýchlo reagovať.",
-          "noAlertsTitle": "Zatiaľ žiadne upozornenia",
-          "noAlertsDescription": "Zoznam upozornení sa zobrazí po prvej zistenej nebezpečnej zhode produktu.",
+          "priorityQueue": "Zoznam rozhodnutí",
+          "recentAlertsTitle": "Produkty čakajúce na rozhodnutie merchanta",
+          "recentAlertsDescription": "Skontrolujte pravdepodobné zhody so Safety Gate, zaznamenajte rozhodnutie a uchovajte dôkazy pre audit.",
+          "noAlertsTitle": "Žiadne produkty nevyžadujú kontrolu",
+          "noAlertsDescription": "Momentálne nie sú otvorené žiadne kontroly produktov. Pokračujte v monitorovaní nových Safety Gate aktualizácií.",
           "fallbackAlertDescription": "Zhoda s upozornením v databáze Safety Gate.",
+          "recommendedAction": "Odporúčaná akcia: skontrolovať zhodu a zaznamenať rozhodnutie.",
           "coverage": "Pokrytie",
           "bulkCheckTitle": "Hromadná kontrola katalógu",
           "bulkCheckDescription": "Najprv skontrolujte nekontrolované produkty alebo zahrňte celý katalóg, ak chcete spustiť nový úplný prechod.",
@@ -168,19 +188,20 @@ const sk = {
       },
       "nav": {
         "dashboard": "Nástenka",
-        "safetyAlerts": "Bezpečnostné upozornenia",
-        "manualCheck": "Manuálna kontrola",
-        "settings": "Nastavenia"
+        "safetyAlerts": "Zoznam na kontrolu",
+        "manualCheck": "Skontrolovať produkt",
+        "evidence": "Auditná stopa",
+        "settings": "Nastavenia monitoringu"
       },
       "settings": {
-        "title": "Nastavenia",
-        "subtitle": "Nakonfigurujte prahy a preferencie pre monitorovanie Safety Gate.",
+        "title": "Nastavenia monitoringu",
+        "subtitle": "Nastavte, ako Safety Gate Monitor sleduje váš Shopify katalóg.",
         "threshold": {
-          "title": "Prah podobnosti",
+          "title": "Režim monitoringu",
           "howItWorks": "Ako to funguje",
-          "description": "Prah podobnosti určuje, ako presne musí produkt zodpovedať upozorneniu Safety Gate. Vyššie hodnoty (napr. 80%) znamenajú prísnejšie porovnávanie s menším počtom falošných zhôd. Nižšie hodnoty (napr. 40%) zachytia viac potenciálnych zhôd, ale môžu zahŕňať falošné zhody.",
+          "description": "Vyberte, koľko možných zhôd zo Safety Gate má tím kontrolovať. Vyvážený monitoring je odporúčaný pre väčšinu Shopify katalógov.",
           "currentDefault": "Aktuálne predvolené prostredie",
-          "label": "Prah podobnosti (%)",
+          "label": "Pokročilý prah zhody (%)",
           "save": "Uložiť",
           "resetToDefault": "Obnoviť predvolené"
         },
@@ -218,9 +239,13 @@ const sk = {
         "checkNewSafetyGateAlerts": "Skontrolovať nové Safety Gate alerty",
         "checkOneProduct": "Skontrolovať jeden produkt",
         "checking": "Kontrolujem...",
+        "downloadAuditReport": "Stiahnuť audit report",
+        "viewEvidence": "Zobraziť históriu rozhodnutí",
+        "reviewProductsNeedingAction": "Skontrolovať {{count}} produkt vyžadujúci akciu",
+        "reviewProductsNeedingAction_plural": "Skontrolovať {{count}} produkty vyžadujúce akciu",
         "checkAllProducts": "Skontrolovať všetkých {{count}} produktov",
         "checkUnchecked": "Skontrolovať {{count}} nekontrolovaných",
-        "manualCheck": "Manuálna kontrola",
+        "manualCheck": "Skontrolovať produkt",
         "settings": "Nastavenia",
         "viewAlerts": "Zobraziť upozornenia",
         "reviewAlerts": "Skontrolovať upozornenia",
@@ -233,7 +258,9 @@ const sk = {
         "clear": "Vymazať",
         "view": "Zobraziť",
         "viewDetails": "Zobraziť detaily",
+        "reviewDecision": "Skontrolovať rozhodnutie",
         "resolve": "Vyriešiť",
+        "recordDecision": "Zaznamenať rozhodnutie",
         "reactivate": "Reaktivovať"
       },
       "resolveActions": {
@@ -263,7 +290,7 @@ const sk = {
         "dismissed": "zamietnuté",
         "notChecked": "Nekontrolované",
         "safe": "Bezpečné",
-        "unsafe": "Nebezpečné",
+        "unsafe": "Vyžaduje kontrolu",
         "updated": "Aktualizované",
         "flagged": "označené"
       },
@@ -295,10 +322,11 @@ const sk = {
         "textOnly": "Len textová kontrola",
         "noIssuesFound": "Neboli nájdené bezpečnostné problémy",
         "potentialRisk": "Potenciálne bezpečnostné riziko",
+        "decisionRecorded": "Rozhodnutie zaznamenané",
         "checkedAt": "Skontrolované: {{date}}",
         "productImagesUsed": "Obrázky produktu: {{used}} / {{provided}}",
         "alertImagesUsed": "Porovnané obrázky alertov: {{count}}",
-        "candidateAlerts": "Kandidátne alerty",
+        "candidateAlerts": "Kandidátne alerty: {{count}}",
         "overallMatch": "Celková zhoda",
         "imageMatch": "Zhoda obrázka",
         "overallMatchShort": "{{count}}% celkom",
@@ -308,11 +336,48 @@ const sk = {
         "imageDominated": "Táto zhoda bola skórovaná image-first vážením, takže vizuálna podobnosť obalu mala vyššiu váhu než textové rozdiely.",
         "matchesHint": "Začnite prvou kartou zhody nižšie. Najprv potvrďte podobnosť obalu, potom model a značku.",
         "primaryRiskFocus": "Hlavné riziko na kontrolu: {{category}} na úrovni {{level}}. Toto overte ako prvé.",
+        "summary": {
+          "matchType": "Typ zhody",
+          "likelySafetyGateMatch": "Pravdepodobná zhoda v Safety Gate",
+          "noLikelyMatch": "Bez pravdepodobnej zhody",
+          "overallMatch": "Celkové skóre",
+          "confidence": "Istota",
+          "confidenceUnknown": "Istota neznáma",
+          "highConfidence": "Vysoká istota",
+          "likelyMatch": "Pravdepodobná zhoda",
+          "reviewRecommended": "Odporúčaná kontrola",
+          "nextStep": "Ďalší krok",
+          "decisionRequired": "Potrebné rozhodnutie",
+          "decisionRecorded": "Rozhodnutie zaznamenané"
+        },
+        "sections": {
+          "whatHappened": "Čo sa stalo?",
+          "whatHappenedRisk": "Tento Shopify produkt vyzerá ako produkt už nahlásený v Safety Gate.",
+          "whatHappenedSafe": "Posledná kontrola nenašla pravdepodobnú zhodu v Safety Gate.",
+          "whatHappenedReviewed": "Táto zhoda už bola skontrolovaná a zaznamenaná.",
+          "whyMatched": "Prečo vznikla zhoda",
+          "whatToDo": "Čo mám spraviť?"
+        },
+        "supplierFollowUp": {
+          "copy": "Kopírovať správu dodávateľovi",
+          "template": "Dobrý deň, kontrolujeme produkt {{product}}, pretože sa môže zhodovať so Safety Gate alertom {{alert}} (riziko: {{risk}}). Prosíme potvrďte, či ide o rovnaký model/šaržu, pošlite dokumentáciu k bezpečnosti produktu a vysvetlite prípadné rozdiely. Dôvod zhody: {{reason}}"
+        },
+        "technicalDetails": {
+          "title": "Technické detaily zhody",
+          "description": "Skóre a počty nájdených kandidátov sú tu pre hlbšiu kontrolu. Najprv riešte fotky produktu, značku, model a odporúčanú akciu vyššie.",
+          "show": "Zobraziť detaily",
+          "hide": "Skryť detaily"
+        },
+        "audit": {
+          "noteLabel": "Auditná poznámka",
+          "notePlaceholder": "Doplňte, čo ste overili, dôkaz od dodávateľa alebo prečo bola zhoda zamietnutá.",
+          "existingNotes": "Auditné poznámky"
+        },
         "focus": {
           "criticalTitle": "Potrebná okamžitá akcia",
-          "criticalLead": "Produkt má zhodu s vysokou istotou. Vyriešte ho až po kontrole.",
+          "criticalLead": "Produkt má zhodu s vysokou istotou. Rozhodnutie zaznamenajte až po kontrole.",
           "criticalStepCompare": "Porovnajte fotku produktu s prvou zhodou zo Safety Gate nižšie.",
-          "criticalStepDecide": "Vyberte riešenie v menu Vyriešiť podľa výsledku kontroly.",
+          "criticalStepDecide": "Vyberte výsledok v menu Zaznamenať rozhodnutie podľa kontroly.",
           "criticalStepDocument": "Doplňte internú poznámku kvôli dohľadateľnosti a komunikácii s dodávateľom.",
           "safeTitle": "Nie je potrebná urgentná akcia",
           "safeLead": "Aktuálny výsledok je bezpečný. Pokračujte v monitorovaní zmien produktu.",
@@ -329,11 +394,11 @@ const sk = {
         "pageOf": "Strana {{current}} z {{total}} ({{count}} upozornení)"
       },
       "alerts": {
-        "title": "Bezpečnostné upozornenia",
-        "subtitle": "Filtrovať a spracovať zhody zo Safety Gate.",
+        "title": "Zoznam na kontrolu",
+        "subtitle": "Skontrolujte produkty čakajúce na rozhodnutie.",
         "breadcrumbs": {
           "dashboard": "Nástenka",
-          "current": "Bezpečnostné upozornenia"
+          "current": "Zoznam na kontrolu"
         },
         "meta": {
           "active": "{{count}} aktívne",
@@ -408,19 +473,19 @@ const sk = {
           "warningBannerTitle": "{{count}} aktívne upozornenie stále čaká na kontrolu",
           "warningBannerTitle_plural": "{{count}} aktívne upozornenia stále čakajú na kontrolu",
           "warningBannerDescription": "Tento zoznam používajte len na reálne rozhodnutia: potvrdené riziká vyriešte a falošné zhody rýchlo zamietnite.",
-          "queue": "Zoznam upozornení",
-          "queueDescription": "Tabuľka je zameraná na rozhodnutia: filtrujte podľa stavu, hľadajte podľa názvu produktu a spracujte zhody na jednom mieste."
+          "queue": "Zoznam produktových rozhodnutí",
+          "queueDescription": "Potvrďte pravdepodobné zhody, zamietnite falošné poplachy alebo zaznamenajte vykonanú akciu."
         },
         "toasts": {
           "updated": "Upozornenie bolo aktualizované"
         }
       },
       "manualCheck": {
-        "title": "Manuálna bezpečnostná kontrola",
-        "subtitle": "Spustite cielenú kontrolu Safety Gate pre konkrétny produkt.",
+        "title": "Skontrolovať produkt",
+        "subtitle": "Spustite Safety Gate kontrolu na požiadanie pre jeden produkt.",
         "breadcrumbs": {
           "dashboard": "Nástenka",
-          "current": "Manuálna kontrola"
+          "current": "Skontrolovať produkt"
         },
         "badges": {
           "flagged": "{{count}} označených",
@@ -444,6 +509,12 @@ const sk = {
           "noRisks": "Zatiaľ neboli zistené žiadne riziká.",
           "prioritise": "Uprednostnite tieto produkty na akciu."
         },
+        "bulk": {
+          "title": "Manuálna kontrola celého katalógu",
+          "description": "Skontroluje {{count}} produktov s Firebase cache: nezmenené produkty preskočí, nové alebo zmenené produkty skontroluje raz a nové Safety Gate alerty porovná voči uloženému katalógu.",
+          "checkAllProducts": "Skontrolovať všetky produkty",
+          "checkingAll": "Kontrolujem všetky produkty..."
+        },
         "catalogue": {
           "accessibilityLabel": "Tabuľka katalógu produktov",
           "heading": "Katalóg produktov ({{count}})",
@@ -464,7 +535,7 @@ const sk = {
           "firstCheck": "Spustite prvú kontrolu",
           "status": {
             "safe": "Bezpečné",
-            "unsafe": "Nebezpečné",
+            "unsafe": "Vyžaduje kontrolu",
             "notChecked": "Nekontrolované"
           },
           "actions": {
@@ -480,8 +551,8 @@ const sk = {
           "unknown": "Neznáme"
         },
         "admin": {
-          "manualReview": "Manuálna kontrola",
-          "manualReviewDescription": "Vyberte produkt z posledných aktualizácií katalógu a spustite cielenú kontrolu Safety Gate na požiadanie.",
+          "manualReview": "Kontrola na požiadanie",
+          "manualReviewDescription": "Vyberte produkt z katalógu a spustite cielenú kontrolu Safety Gate, keď potrebujete okamžitú odpoveď.",
           "checkFailed": "Kontrola zlyhala",
           "productFlagged": "Produkt označený",
           "catalog": "Katalóg",
@@ -504,6 +575,24 @@ const sk = {
         "pageLoadFailed": "Načítanie stránky zlyhalo",
         "unknown": "Niekde nastala chyba",
         "apiError": "Externá bezpečnostná služba je dočasne nedostupná. Skúste to prosím neskôr."
+      },
+      "evidence": {
+        "title": "Auditná stopa",
+        "eyebrow": "Auditná stopa",
+        "heading": "História rozhodnutí a dôkazov",
+        "description": "Skontrolujte zaznamenané rozhodnutia o bezpečnosti produktov, poznámky, rizikový kontext a dôkazy z komunikácie s dodávateľom.",
+        "records": "{{count}} záznamov",
+        "empty": "Zatiaľ neboli zaznamenané žiadne rozhodnutia o bezpečnosti produktov.",
+        "alertNumber": "Safety Gate alert {{number}}",
+        "noNotes": "Bez poznámky",
+        "table": {
+          "accessibilityLabel": "Tabuľka dôkazov bezpečnosti produktov",
+          "product": "Produkt",
+          "status": "Stav",
+          "decision": "Rozhodnutie",
+          "notes": "Poznámky / dôkazy",
+          "updated": "Aktualizované"
+        }
       },
       "news": {
         "title": "Novinky",
@@ -530,6 +619,29 @@ const sk = {
         "fallback": "Záloha",
         "environmentDefaultDescription": "Použije sa vtedy, keď obchod ešte nemá uložený vlastný prah.",
         "matchingStrictness": "Prísnosť porovnávania",
+        "monitoringModeEyebrow": "Režim monitoringu",
+        "advancedMatchingSettings": "Pokročilé nastavenia zhody",
+        "automationStatusEyebrow": "Automatický monitoring",
+        "automationStatusTitle": "Safety Gate monitoring pracuje pre tento obchod",
+        "automationStatusDescription": "Denné aktualizácie EÚ Safety Gate, zmeny produktov v Shopify a auditné záznamy sa spracúvajú automaticky. Tieto nastavenia slúžia hlavne na doladenie počtu kontrol a notifikácií.",
+        "valueEyebrow": "Hodnota predplatného",
+        "valueTitle": "Čo ostáva pokryté",
+        "valueDescription": "Toto sú hlavné možnosti, ktoré merchant získava, keď ostane predplatiteľom.",
+        "mode": {
+          "broad": "Viac zhôd",
+          "balanced": "Vyvážený",
+          "strict": "Menej zhôd"
+        },
+        "status": {
+          "running": "Beží",
+          "on": "Zapnuté",
+          "off": "Vypnuté",
+          "dailySafetyGateUpdates": "Denné Safety Gate aktualizácie",
+          "shopifyProductUpdates": "Nové/upravené Shopify produkty",
+          "auditTrail": "Auditná stopa",
+          "emailDigest": "E-mailový digest",
+          "autoQuarantine": "Auto-karanténa"
+        },
         "strictnessHint": "40-60% znamená širšie skenovanie. 70-85% je prísnejšie a zvyčajne vytvára menej falošných zhôd.",
         "guidance": "Odporúčania",
         "recommendedSetup": "Odporúčané nastavenie",
@@ -541,6 +653,48 @@ const sk = {
           "strictTitle": "Prísne porovnávanie",
           "strictDescription": "Použite 80%+ ak je váš katalóg stabilný a chcete menej manuálnych kontrol."
         },
+        "automation": {
+          "eyebrow": "Prevádzka v reálnom čase",
+          "title": "Bezpečnostná automatizácia a upozornenia",
+          "description": "Nastavte automatickú karanténu pre vysokorizikové zhody a spôsob upozornenia tímu.",
+          "autoDraftTitle": "Automatická karanténa vážnych rizík",
+          "autoDraftDescription": "Automaticky zmeniť produkty v Shopify na koncept, ak sa zhodujú so Safety Gate alertmi s vážnym rizikom (prah >= 95%).",
+          "emailTitle": "E-mailové upozornenia",
+          "emailDescription": "Posielať e-mailové súhrny, keď nové produkty vyžadujú kontrolu.",
+          "slackTitle": "Slack webhook URL",
+          "slackDescription": "Dostávajte okamžité Slack upozornenia pri vytvorení alertov."
+        },
+        "exclusions": {
+          "eyebrow": "Pravidlá filtrovania",
+          "title": "Pravidlá vylúčenia",
+          "description": "Vylúčte konkrétnych dodávateľov alebo typy produktov z kontrol Safety Gate, aby ste znížili falošné zhody.",
+          "vendorsTitle": "Vylúčení dodávatelia",
+          "vendorsDescription": "Zadajte názov dodávateľa a stlačte Enter alebo čiarku.",
+          "vendorsPlaceholder": "Dodávateľ A, Dodávateľ B, ...",
+          "typesTitle": "Vylúčené typy produktov",
+          "typesDescription": "Zadajte kategóriu alebo typ produktu a stlačte Enter alebo čiarku.",
+          "typesPlaceholder": "Darčeková karta, Služba, ..."
+        },
+        "plans": {
+          "eyebrow": "Hodnota predplatného",
+          "title": "Možnosti plánov",
+          "description": "Tieto úrovne pomáhajú vysvetliť hodnotu pred zapojením Shopify Billing.",
+          "manualTitle": "Free: manuálne kontroly",
+          "manualDescription": "Spúšťajte kontroly po jednom produkte a sledujte posledný stav produktu.",
+          "monitorTitle": "Paid: denný monitoring a reporty",
+          "monitorDescription": "Porovnávajte nové Safety Gate alerty s katalógom, exportujte CSV audit reporty a udržiavajte históriu rozhodnutí.",
+          "advancedTitle": "Advanced: automatizácia a viacjazyčné workflow",
+          "advancedDescription": "Pridajte automatickú karanténu, e-mailové digesty, Slack upozornenia, správu dodávateľovi a workflow v jazykoch EÚ."
+        },
+        "valueItems": {
+          "dailyTitle": "Denný monitoring katalógu",
+          "dailyDescription": "Nové Safety Gate upozornenia sa kontrolujú voči monitorovaným produktom bez manuálneho skenu.",
+          "auditTitle": "Dôkazy pripravené na audit",
+          "auditDescription": "Vyriešené a zamietnuté rozhodnutia uchovávajú poznámky, dôvody a históriu kontroly pre exportovateľné reporty.",
+          "workflowTitle": "Workflow priamo v Shopify",
+          "workflowDescription": "Merchant rieši iba produkty čakajúce na rozhodnutie a potom ich vyrieši, zamietne alebo kontaktuje dodávateľa."
+        },
+        "saveAll": "Uložiť všetky nastavenia",
         "workspace": "Pracovné prostredie",
         "onDemand": "Na požiadanie"
       },
@@ -553,10 +707,10 @@ const sk = {
         "finishButton": "Dokončiť nastavenie a prejsť na prehľad",
         "steps": {
           "sensitivity": {
-            "title": "Krok 1: Nastavenie citlivosti AI porovnávania",
-            "description": "Určite, ako tesne sa musí produkt zhodovať so záznamom v Safety Gate, aby sa spustilo upozornenie.",
-            "label": "Nastavenia citlivosti",
-            "thresholdLabel": "Prah citlivosti: {{value}}%",
+            "title": "Krok 1: Nastavenie prísnosti zhody",
+            "description": "Vyberte, ako tesne sa má produkt zhodovať so záznamom v Safety Gate, aby vyžadoval kontrolu.",
+            "label": "Prísnosť zhody",
+            "thresholdLabel": "Prah zhody: {{value}}%",
             "broad": "40% (Voľný - Viac varovaní)",
             "balanced": "70% (Odporúčaný - Vyvážený)",
             "strict": "90% (Prísny - Menej varovaní)",
@@ -570,15 +724,17 @@ const sk = {
             }
           },
           "scan": {
-            "title": "Krok 2: Spustenie prvého skenovania katalógu",
-            "description": "Naskenujte svoj aktívny katalóg produktov v Shopify proti databáze Safety Gate na identifikáciu existujúcich rizík.",
-            "label": "Prvé skenovanie",
-            "toScan": "Produkty na skenovanie: {{count}}",
-            "scanning": "Porovnávam produkty s databázou Safety Gate...",
-            "complete": "Skenovanie katalógu dokončené!",
+            "title": "Krok 2: Importovať a monitorovať aktuálny katalóg",
+            "description": "Importujte aktuálne produkty zo Shopify do Safety Gate monitoringu a potom ich porovnajte s nedávnymi Safety Gate upozorneniami.",
+            "label": "Import katalógu",
+            "toScan": "Produkty na import do monitoringu: {{count}}",
+            "scanning": "Importujem katalóg a porovnávam produkty so Safety Gate upozorneniami...",
+            "complete": "Katalóg je teraz monitorovaný",
             "scanned": "Naskenované produkty: {{count}}",
+            "imported": "Produkty importované do monitoringu: {{count}}",
+            "monitored": "Produkty porovnané so Safety Gate upozorneniami: {{count}}",
             "alerts": "Vytvorené varovania: {{count}}",
-            "startButton": "Spustiť skenovanie katalógu"
+            "startButton": "Importovať a monitorovať aktuálny katalóg"
           },
           "automation": {
             "title": "Krok 3: Automatický monitoring a upozornenia",
@@ -607,23 +763,24 @@ const sk = {
       },
       "uxEnhancements": {
         "complianceRing": {
-          "title": "Miera Súladu",
-          "subtitle": "Percento produktov obchodu overených ako bezpečné",
-          "scoreLabel": "Súlad"
+          "title": "Stav monitorovaného katalógu",
+          "subtitle": "Podiel skontrolovaných produktov bez otvorených rozhodnutí",
+          "scoreLabel": "Čisté"
         },
         "activityTimeline": {
-          "title": "Záznam Nedávnej Aktivity",
-          "description": "Historický prehľad bezpečnostných skenov a správy upozornení.",
-          "noActivity": "Žiadne nedávne udalosti. Udržujte produkty aktualizované.",
+          "eyebrow": "Auditná stopa",
+          "title": "História rozhodnutí a dôkazov",
+          "description": "Zaznamenané bezpečnostné kontroly, rozhodnutia k produktom a dôkazy uchované pre auditné reporty.",
+          "noActivity": "Zatiaľ žiadne auditné udalosti. Spustite monitoring a začnite budovať dôkazy.",
           "actions": {
-            "check": "Kontrola produktu dokončená",
-            "quarantine": "Produkt automaticky stiahnutý (karanténa)",
-            "resolve": "Upozornenie vyriešené",
-            "dismiss": "Upozornenie zamietnuté"
+            "check": "Produkt skontrolovaný",
+            "quarantine": "Produkt označený na kontrolu",
+            "resolve": "Rozhodnutie zaznamenané: vyriešené",
+            "dismiss": "Rozhodnutie zaznamenané: zamietnuté"
           },
           "details": {
             "checkSafe": "Produkt bol skontrolovaný a označený ako bezpečný.",
-            "checkUnsafe": "Bolo zistené bezpečnostné riziko! Vytvorené upozornenie.",
+            "checkUnsafe": "Produkt vyžaduje kontrolu. Záznam rozhodnutia bol vytvorený.",
             "bulkScanned": "Hromadný sken katalógu bol dokončený.",
             "autoDrafted": "Stav produktu bol v Shopify zmenený na Koncept.",
             "reason": "Dôvod: {{reason}}",
@@ -644,7 +801,7 @@ const sk = {
           },
           "quickFilters": {
             "title": "Rýchle filtre",
-            "allAlerts": "Všetky upozornenia",
+            "allAlerts": "Všetky záznamy",
             "allAlertsDesc": "Zobraziť všetky bezpečnostné varovania.",
             "needsReview": "Vyžaduje kontrolu",
             "needsReviewDesc": "Nevyriešené bezpečnostné upozornenia.",

@@ -12,6 +12,7 @@ export interface OnboardingWizardProps {
     message?: string;
     results?: {
       processed: number;
+      checked: number;
       alertsCreated: number;
     };
   };
@@ -36,6 +37,7 @@ export function OnboardingWizard({
   const [autoDraft, setAutoDraft] = useState(false);
   const [emailNotify, setEmailNotify] = useState(false);
   const [slackUrl, setSlackUrl] = useState("");
+  const catalogImported = Boolean(scanResults?.success);
 
   const calibration = (() => {
     if (threshold < 60) {
@@ -200,7 +202,8 @@ export function OnboardingWizard({
                     <div style={{ width: "100%", marginTop: "12px" }}>
                       <s-banner tone="success" heading={t("onboarding.steps.scan.complete")}>
                         <s-stack gap="small" style={{ marginTop: "8px" }}>
-                          <s-text>• {t("onboarding.steps.scan.scanned", { count: scanResults.results.processed })}</s-text>
+                          <s-text>• {t("onboarding.steps.scan.imported", { count: scanResults.results.processed })}</s-text>
+                          <s-text>• {t("onboarding.steps.scan.monitored", { count: scanResults.results.checked })}</s-text>
                           <s-text>• {t("onboarding.steps.scan.alerts", { count: scanResults.results.alertsCreated })}</s-text>
                         </s-stack>
                       </s-banner>
@@ -219,7 +222,11 @@ export function OnboardingWizard({
                 <s-button variant="secondary" onClick={() => setCurrentStep(1)}>
                   {t("onboarding.back")}
                 </s-button>
-                <s-button variant="primary" onClick={() => setCurrentStep(3)}>
+                <s-button
+                  variant="primary"
+                  disabled={!catalogImported && stats.totalProducts > 0 || undefined}
+                  onClick={() => setCurrentStep(3)}
+                >
                   {t("onboarding.nextStep")}
                 </s-button>
               </s-stack>

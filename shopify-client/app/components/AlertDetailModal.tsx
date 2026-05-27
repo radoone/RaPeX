@@ -1,8 +1,7 @@
 import { useMemo, useState, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
-import { AlertBadge } from "./AlertBadge";
-import { RiskMeter } from "./RiskMeter";
+import { AlertBadge, cleanRiskLabel } from "./AlertBadge";
 import { StatusBadge } from "./StatusBadge";
 import type { ResolutionType } from "./AlertTable";
 
@@ -32,8 +31,8 @@ function HighlightedText({ text, query, tone = "info" }: { text: string; query?:
 interface AlertDetailModalProps {
   alert: any;
   modalId: string;
-  onDismiss?: (alertId: string, resolutionType?: ResolutionType) => void;
-  onResolve?: (alertId: string, resolutionType?: ResolutionType) => void;
+  onDismiss?: (alertId: string, resolutionType?: ResolutionType, notes?: string) => void;
+  onResolve?: (alertId: string, resolutionType?: ResolutionType, notes?: string) => void;
   onReactivate?: (alertId: string) => void;
   isLoading?: boolean;
 }
@@ -48,6 +47,8 @@ export function AlertDetailModal({
 }: AlertDetailModalProps) {
   const { t } = useTranslation();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [auditNote, setAuditNote] = useState("");
+  const [showTechnicalDetails, setShowTechnicalDetails] = useState(false);
   const lightboxDialogRef = useRef<HTMLDialogElement>(null);
   const reactivateBtnRef = useRef<HTMLElement>(null);
   
@@ -112,13 +113,13 @@ export function AlertDetailModal({
     handlers.forEach(({ ref, type, action }) => {
       const btn = ref.current;
       if (!btn) return;
-      const handleClick = () => action?.(alert.id, type);
+      const handleClick = () => action?.(alert.id, type, auditNote.trim() || undefined);
       btn.addEventListener('click', handleClick);
       cleanups.push(() => btn.removeEventListener('click', handleClick));
     });
     
     return () => cleanups.forEach(cleanup => cleanup());
-  }, [alert, onResolve, onDismiss]);
+  }, [alert, onResolve, onDismiss, auditNote]);
 
   // Handle reactivate button click
   useEffect(() => {
@@ -140,6 +141,12 @@ export function AlertDetailModal({
   const warningsCount = warnings.length || alert.warningsCount || 0;
   const primaryWarning = warnings[0];
   const primaryFields = primaryWarning?.alertDetails?.fields || {};
+  const supplierFollowUp = t("analysis.supplierFollowUp.template", {
+    product: alert.productTitle,
+    alert: primaryFields.alert_number || primaryWarning?.alertId || t("common.unknown"),
+    risk: primaryFields.alert_level || primaryFields.risk_level || alert.riskLevel || t("common.unknown"),
+    reason: primaryWarning?.reason || recommendation,
+  });
 
   const matchKeywords = [
     primaryFields.product_brand,
@@ -155,6 +162,13 @@ export function AlertDetailModal({
     : null;
   const hasActiveRisk = alert.status === "active" && !isSafe;
   const hasActiveSafeState = alert.status === "active" && isSafe;
+  const confidenceLabel = overallSimilarity == null
+    ? t("analysis.summary.confidenceUnknown")
+    : overallSimilarity >= 90
+      ? t("analysis.summary.highConfidence")
+      : overallSimilarity >= 70
+        ? t("analysis.summary.likelyMatch")
+        : t("analysis.summary.reviewRecommended");
   const focusVariant = hasActiveRisk
     ? "critical"
     : hasActiveSafeState
@@ -246,40 +260,87 @@ export function AlertDetailModal({
                     )}
 
                     {analysis && (
-                      <s-stack direction="inline" gap="small" wrap>
-                        <s-badge tone={analysis.mode === "with-image" ? "info" : "neutral"}>
-                          {analysis.mode === "with-image" ? t("analysis.withImage") : t("analysis.textOnly")}
-                        </s-badge>
-                        <s-badge tone="info">
-                          {t("analysis.productImagesUsed", {
-                            used: analysis.productImagesUsed || 0,
-                            provided: analysis.productImagesProvided || 0,
-                          })}
-                        </s-badge>
-                        <s-badge tone="info">
-                          {t("analysis.alertImagesUsed", { count: analysis.alertImagesUsed || 0 })}
-                        </s-badge>
-                      </s-stack>
+                      <s-badge tone={analysis.mode === "with-image" ? "info" : "neutral"}>
+                        {analysis.mode === "with-image" ? t("analysis.withImage") : t("analysis.textOnly")}
+                      </s-badge>
                     )}
                   </s-stack>
                 </s-stack>
               </s-stack>
             </s-box>
 
+            {/* Decision Summary */}
+            <div className="alert-decision-summary">
+              <div className="alert-decision-summary__item">
+                <span>{t("analysis.summary.matchType")}</span>
+                <strong>{warningsCount > 0 ? t("analysis.summary.likelySafetyGateMatch") : t("analysis.summary.noLikelyMatch")}</strong>
+              </div>
+              <div className="alert-decision-summary__item">
+                <span>{t("analysis.summary.overallMatch")}</span>
+                <strong>{overallSimilarity !== null ? t("analysis.overallMatchShort", { count: overallSimilarity }) : t("common.unknown")}</strong>
+              </div>
+              <div className="alert-decision-summary__item">
+                <span>{t("analysis.summary.confidence")}</span>
+                <strong>{confidenceLabel}</strong>
+              </div>
+              <div className={`alert-decision-summary__item${hasActiveRisk ? " alert-decision-summary__item--critical" : ""}`}>
+                <span>{t("analysis.summary.nextStep")}</span>
+                <strong>{hasActiveRisk ? t("analysis.summary.decisionRequired") : t("analysis.summary.decisionRecorded")}</strong>
+              </div>
+            </div>
+
             {/* Risk Assessment Summary */}
             <s-box
               padding="large"
               borderRadius="large"
               borderWidth="base"
-              borderColor={isSafe ? "border-success" : "border-critical"}
-              background={isSafe ? "bg-surface-success" : "bg-surface-critical"}
+              borderColor={hasActiveRisk ? "border-critical" : hasActiveSafeState ? "border-success" : "border"}
+              background={hasActiveRisk ? "bg-surface-critical" : hasActiveSafeState ? "bg-surface-success" : "bg-surface-secondary"}
             >
               <s-stack gap="base">
-                {/* Header */}
-                <s-stack direction="inline" gap="small" blockAlign="center">
-                  <s-text size="large" fontWeight="bold">
-                    {isSafe ? t("analysis.noIssuesFound") : t("analysis.potentialRisk")}
+                <s-stack gap="small-100">
+                  <s-text tone="subdued" fontWeight="bold" size="small">
+                    {t("analysis.sections.whatHappened")}
                   </s-text>
+                  <s-text size="large" fontWeight="bold">
+                    {hasActiveRisk
+                      ? t("analysis.potentialRisk")
+                      : hasActiveSafeState
+                        ? t("analysis.noIssuesFound")
+                        : t("analysis.decisionRecorded")}
+                  </s-text>
+                  <s-text>
+                    {hasActiveRisk
+                      ? t("analysis.sections.whatHappenedRisk")
+                      : hasActiveSafeState
+                        ? t("analysis.sections.whatHappenedSafe")
+                        : t("analysis.sections.whatHappenedReviewed")}
+                  </s-text>
+                </s-stack>
+
+                <s-stack gap="small-100">
+                  <s-text tone="subdued" fontWeight="bold" size="small">
+                    {t("analysis.sections.whyMatched")}
+                  </s-text>
+                  <s-text>
+                    {primaryWarning?.reason || t("analysis.matchesHint")}
+                  </s-text>
+                </s-stack>
+
+                <s-stack gap="small-100">
+                  <s-text tone="subdued" fontWeight="bold" size="small">
+                    {t("analysis.sections.whatToDo")}
+                  </s-text>
+                  <s-text>{recommendation}</s-text>
+                  {hasActiveRisk && (
+                    <s-button
+                      variant="secondary"
+                      size="small"
+                      onClick={() => navigator.clipboard?.writeText(supplierFollowUp)}
+                    >
+                      {t("analysis.supplierFollowUp.copy")}
+                    </s-button>
+                  )}
                 </s-stack>
 
                 <div className={`alert-focus-card alert-focus-card--${focusVariant}`}>
@@ -326,27 +387,6 @@ export function AlertDetailModal({
                     <s-text size="large" fontWeight="bold">{warningsCount}</s-text>
                   </s-stack>
                   
-                  {overallSimilarity !== null && (
-                    <s-stack gap="small-100">
-                      <s-text tone="subdued" size="small">{t("analysis.overallMatch")}</s-text>
-                      <s-text size="large" fontWeight="bold">{overallSimilarity}%</s-text>
-                    </s-stack>
-                  )}
-
-                  {imageSimilarity !== null && (
-                    <s-stack gap="small-100">
-                      <s-text tone="subdued" size="small">{t("analysis.imageMatch")}</s-text>
-                      <s-text size="large" fontWeight="bold">{imageSimilarity}%</s-text>
-                    </s-stack>
-                  )}
-
-                  {analysis && (
-                    <s-stack gap="small-100">
-                      <s-text tone="subdued" size="small">{t("analysis.candidateAlerts")}</s-text>
-                      <s-text size="large" fontWeight="bold">{analysis.candidateAlertsConsidered || 0}</s-text>
-                    </s-stack>
-                  )}
-                  
                   <s-stack gap="small-100">
                     <s-text tone="subdued" size="small">{t("analysis.riskLevel")}</s-text>
                     <AlertBadge
@@ -357,34 +397,70 @@ export function AlertDetailModal({
                   </s-stack>
                 </s-stack>
                 
-                {/* Risk Meter */}
-                <RiskMeter riskLevel={alert.riskLevel} overallSimilarity={overallSimilarity} />
-
-                {overallSimilarity !== null && (
-                  <s-text tone="subdued" size="small">
-                    {imageSimilarity !== null
-                      ? t("analysis.scoreHelper")
-                      : t("analysis.scoreHelper")}
-                  </s-text>
-                )}
-                
-                {/* Recommendation */}
-                <s-text>{recommendation}</s-text>
-
                 {hasActiveRisk && (
                   <s-text tone="subdued" size="small">
                     {t("analysis.primaryRiskFocus", {
-                      category: primaryFields.alert_type || alert.alertType || t("common.unknown"),
-                      level: primaryFields.alert_level || primaryFields.risk_level || alert.riskLevel || t("common.unknown"),
+                      category: cleanRiskLabel(primaryFields.alert_type || alert.alertType || t("common.unknown")),
+                      level: cleanRiskLabel(primaryFields.alert_level || primaryFields.risk_level || alert.riskLevel || t("common.unknown")),
                     })}
                   </s-text>
+                )}
+
+                {analysis && (
+                  <s-box padding="base" borderRadius="base" background="bg-surface-secondary">
+                    <s-stack gap="small">
+                      <s-stack direction="inline" align="space-between" blockAlign="center" wrap>
+                        <s-text fontWeight="bold">{t("analysis.technicalDetails.title")}</s-text>
+                        <s-button
+                          variant="tertiary"
+                          size="small"
+                          onClick={() => setShowTechnicalDetails((visible) => !visible)}
+                        >
+                          {showTechnicalDetails
+                            ? t("analysis.technicalDetails.hide")
+                            : t("analysis.technicalDetails.show")}
+                        </s-button>
+                      </s-stack>
+                      <s-text tone="subdued" size="small">
+                        {t("analysis.technicalDetails.description")}
+                      </s-text>
+                      {showTechnicalDetails && (
+                        <s-stack direction="inline" gap="small" wrap>
+                          {overallSimilarity !== null && (
+                            <s-badge tone="info">
+                              {t("analysis.overallMatchShort", { count: overallSimilarity })}
+                            </s-badge>
+                          )}
+                          {imageSimilarity !== null && (
+                            <s-badge tone="info">
+                              {t("analysis.imageMatchShort", { count: imageSimilarity })}
+                            </s-badge>
+                          )}
+                          <s-badge tone="info">
+                            {t("analysis.productImagesUsed", {
+                              used: analysis.productImagesUsed || 0,
+                              provided: analysis.productImagesProvided || 0,
+                            })}
+                          </s-badge>
+                          <s-badge tone="info">
+                            {t("analysis.alertImagesUsed", { count: analysis.alertImagesUsed || 0 })}
+                          </s-badge>
+                          <s-badge tone="info">
+                            {t("analysis.candidateAlerts", {
+                              count: analysis.candidateAlertsConsidered || 0,
+                            })}
+                          </s-badge>
+                        </s-stack>
+                      )}
+                    </s-stack>
+                  </s-box>
                 )}
               </s-stack>
             </s-box>
 
             {/* Notes Section */}
             {alert.notes && (
-              <s-banner tone="info" heading="Internal Notes">
+              <s-banner tone="info" heading={t("analysis.audit.existingNotes")}>
                 <s-text>{alert.notes}</s-text>
               </s-banner>
             )}
@@ -421,6 +497,14 @@ export function AlertDetailModal({
         {/* Footer Actions */}
         {alert.status === "active" && (
           <>
+            <div slot="secondary-actions" className="alert-audit-note">
+              <s-text-area
+                label={t("analysis.audit.noteLabel")}
+                placeholder={t("analysis.audit.notePlaceholder")}
+                value={auditNote}
+                onInput={(event: any) => setAuditNote(event.currentTarget.value || "")}
+              />
+            </div>
             <s-button
               slot="primary-action"
               variant="primary"
@@ -429,7 +513,7 @@ export function AlertDetailModal({
               loading={isLoading || undefined}
               suppressHydrationWarning
             >
-              {t('actions.resolve')}
+              {t('actions.recordDecision')}
             </s-button>
             <s-menu id={resolveMenuId} accessibilityLabel={t('resolveActions.menuLabel')}>
               <s-section heading={t('resolveActions.actionTaken')}>
@@ -543,8 +627,6 @@ function WarningCard({
     : "—";
   const warningOverallSimilarity =
     typeof warning.overallSimilarity === "number" ? warning.overallSimilarity : 0;
-  const warningImageSimilarity =
-    typeof warning.imageSimilarity === "number" ? warning.imageSimilarity : null;
   const pictures = getWarningImages(warning);
 
   // Get correct field names from Safety Gate database
@@ -555,7 +637,6 @@ function WarningCard({
 
   // Determine card border color based on similarity
   const borderColor = warningOverallSimilarity >= 80 ? "border-critical" : warningOverallSimilarity >= 60 ? "border-warning" : "border";
-  const matchTone = warningOverallSimilarity >= 80 ? "critical" : warningOverallSimilarity >= 60 ? "warning" : "info";
   const isImageFirst = warning.scoreBreakdown?.scoringMode === "image-first";
 
   // Check matching fields with merchant product details for highlighting
@@ -563,11 +644,6 @@ function WarningCard({
   const isBrandMatched = fields.product_brand && merchantTitle.includes(fields.product_brand.trim().toLowerCase());
   const isModelMatched = productModel && merchantTitle.includes(productModel.trim().toLowerCase());
   const isCategoryMatched = fields.product_category && merchantProduct?.productType && merchantTitle.includes(fields.product_category.trim().toLowerCase());
-
-  const highlightRowStyle = {
-    backgroundColor: 'rgba(0, 128, 96, 0.08)',
-    borderLeft: '4px solid var(--primary)',
-  };
 
   return (
     <s-box
@@ -579,17 +655,9 @@ function WarningCard({
     >
       <s-stack gap="base">
         
-        {/* HEADER: Match percentage + badges + link */}
+        {/* HEADER: Risk badges + source link */}
         <s-stack direction="inline" align="space-between" blockAlign="center" wrap>
           <s-stack direction="inline" gap="small" wrap blockAlign="center">
-            <s-badge tone={matchTone} size="large">
-              {t("analysis.overallMatchShort", { count: warningOverallSimilarity })}
-            </s-badge>
-            {warningImageSimilarity !== null && (
-              <s-badge tone="info" size="large">
-                {t("analysis.imageMatchShort", { count: warningImageSimilarity })}
-              </s-badge>
-            )}
             <AlertBadge
               alertLevel={fields.alert_level}
               alertType={fields.alert_type}
@@ -656,74 +724,27 @@ function WarningCard({
             </s-stack>
           )}
 
-          {/* Details Table */}
-          <s-box style={{ flex: 1 }}>
-            <s-table accessibilityLabel={t("analysis.fields.accessibilityLabel")}>
-              <s-table-header-row>
-                <s-table-header listSlot="primary">{t("analysis.fields.field")}</s-table-header>
-                <s-table-header listSlot="secondary">{t("analysis.fields.value")}</s-table-header>
-              </s-table-header-row>
-              <s-table-body>
-                {productName && (
-                  <s-table-row>
-                    <s-table-cell><s-text tone="subdued">{t("analysis.fields.productName")}</s-text></s-table-cell>
-                    <s-table-cell><s-text fontWeight="semibold">{productName}</s-text></s-table-cell>
-                  </s-table-row>
-                )}
-                {fields.product_brand && (
-                  <s-table-row
-                    className={isBrandMatched ? "highlight-match-row" : undefined}
-                    style={isBrandMatched ? highlightRowStyle : undefined}
-                  >
-                    <s-table-cell><s-text tone="subdued">{t("analysis.fields.brand")}</s-text></s-table-cell>
-                    <s-table-cell><s-text fontWeight="bold" tone="critical">{fields.product_brand}</s-text></s-table-cell>
-                  </s-table-row>
-                )}
-                {productModel && (
-                  <s-table-row
-                    className={isModelMatched ? "highlight-match-row" : undefined}
-                    style={isModelMatched ? highlightRowStyle : undefined}
-                  >
-                    <s-table-cell><s-text tone="subdued">{t("analysis.fields.model")}</s-text></s-table-cell>
-                    <s-table-cell><s-text fontWeight="bold" tone="critical">{productModel}</s-text></s-table-cell>
-                  </s-table-row>
-                )}
-                {fields.product_category && (
-                  <s-table-row
-                    className={isCategoryMatched ? "highlight-match-row" : undefined}
-                    style={isCategoryMatched ? highlightRowStyle : undefined}
-                  >
-                    <s-table-cell><s-text tone="subdued">{t("analysis.fields.category")}</s-text></s-table-cell>
-                    <s-table-cell>{fields.product_category}</s-table-cell>
-                  </s-table-row>
-                )}
-                {notifyingCountry && (
-                  <s-table-row>
-                    <s-table-cell><s-text tone="subdued">{t("analysis.fields.notifyingCountry")}</s-text></s-table-cell>
-                    <s-table-cell>{notifyingCountry}</s-table-cell>
-                  </s-table-row>
-                )}
-                {originCountry && (
-                  <s-table-row>
-                    <s-table-cell><s-text tone="subdued">{t("analysis.fields.origin")}</s-text></s-table-cell>
-                    <s-table-cell>{originCountry}</s-table-cell>
-                  </s-table-row>
-                )}
-                <s-table-row>
-                  <s-table-cell><s-text tone="subdued">{t("analysis.fields.alertDate")}</s-text></s-table-cell>
-                  <s-table-cell>{formattedDate}</s-table-cell>
-                </s-table-row>
-                {fields.alert_level && (
-                  <s-table-row>
-                    <s-table-cell><s-text tone="subdued">{t("analysis.riskLevel")}</s-text></s-table-cell>
-                    <s-table-cell>
-                      <AlertBadge alertLevel={fields.alert_level} alertType={fields.alert_type} />
-                    </s-table-cell>
-                  </s-table-row>
-                )}
-              </s-table-body>
-            </s-table>
-          </s-box>
+          <div className="match-detail-list">
+            {productName && <DetailItem label={t("analysis.fields.productName")} value={productName} />}
+            {fields.product_brand && (
+              <DetailItem label={t("analysis.fields.brand")} value={fields.product_brand} highlight={Boolean(isBrandMatched)} />
+            )}
+            {productModel && (
+              <DetailItem label={t("analysis.fields.model")} value={productModel} highlight={Boolean(isModelMatched)} />
+            )}
+            {fields.product_category && (
+              <DetailItem label={t("analysis.fields.category")} value={fields.product_category} highlight={Boolean(isCategoryMatched)} />
+            )}
+            {notifyingCountry && <DetailItem label={t("analysis.fields.notifyingCountry")} value={notifyingCountry} />}
+            {originCountry && <DetailItem label={t("analysis.fields.origin")} value={originCountry} />}
+            <DetailItem label={t("analysis.fields.alertDate")} value={formattedDate} />
+            {fields.alert_level && (
+              <div className="match-detail-list__item">
+                <span>{t("analysis.riskLevel")}</span>
+                <AlertBadge alertLevel={fields.alert_level} alertType={fields.alert_type} />
+              </div>
+            )}
+          </div>
         </s-grid>
 
         {/* RISK DESCRIPTION (if present) */}
@@ -761,5 +782,14 @@ function WarningCard({
         )}
       </s-stack>
     </s-box>
+  );
+}
+
+function DetailItem({ label, value, highlight = false }: { label: string; value: string; highlight?: boolean }) {
+  return (
+    <div className={`match-detail-list__item ${highlight ? "match-detail-list__item--highlight" : ""}`}>
+      <span>{label}</span>
+      <strong>{value}</strong>
+    </div>
   );
 }

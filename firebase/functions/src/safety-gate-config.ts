@@ -17,7 +17,7 @@ const ODS_FACETS = [
 export const SAFETY_GATE_CONFIG = {
   dataset: "healthref-europe-rapex-en",
   baseUrl: "https://public.opendatasoft.com/api/records/1.0/search",
-  defaultSort: "-alert_date,-record_timestamp",
+  defaultSort: "alert_date,-record_timestamp",
   facets: [...ODS_FACETS],
   rowsPerPage: parseInt(process.env.ROWS_PER_PAGE || "500", 10),
   maxPages: parseInt(process.env.MAX_PAGES || "20", 10),
@@ -41,6 +41,7 @@ export const FIRESTORE_COLLECTIONS = {
   merchantSettings: "merchant_settings",
   merchantWebhookErrors: "merchant_webhook_errors",
   merchantMonitorState: "merchant_monitor_state",
+  merchantMatchCache: "merchant_match_cache",
 } as const;
 
 export const SAFETY_GATE_HEADERS = {
@@ -63,4 +64,3 @@ export const MATCHING_THRESHOLDS = {
   textDistance: 0.38,   // Cosine distance <= 0.38 (similarity >= 62%)
   imageDistance: 0.35,  // Cosine distance <= 0.35 (similarity >= 65%)
 } as const;
-

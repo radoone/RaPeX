@@ -29,19 +29,19 @@ function Extension() {
       const payload = await response.json();
 
       if (!response.ok) {
-        throw new Error(payload.error || "Safety Gate check failed");
+        throw new Error(payload.error || "Product safety check failed");
       }
 
       setResult(payload);
     } catch (runError) {
-      setError(runError instanceof Error ? runError.message : "Safety Gate check failed");
+      setError(runError instanceof Error ? runError.message : "Product safety check failed");
     } finally {
       setRunning(false);
     }
   }, [productId]);
 
   return (
-    <s-admin-action heading="Run Safety Gate check">
+    <s-admin-action heading="Run product safety check">
       <s-button
         slot="primaryAction"
         variant="primary"
@@ -58,7 +58,7 @@ function Extension() {
       <s-box padding="base">
         <s-stack direction="block" gap="base">
           <s-text>
-            Run the Safety Gate checker against the current Shopify product and store the latest result.
+            Check this Shopify product against recent EU Safety Gate records and store the decision history.
           </s-text>
           {error ? <s-text tone="critical">{error}</s-text> : null}
           {result ? <ResultDetails result={result} /> : null}
@@ -75,19 +75,31 @@ function ResultDetails({ result }) {
   return (
     <s-stack direction="block" gap="tight">
       <s-text>
-        {`Outcome: ${
-          status.state === "unsafe" ? "Warning detected" : "No likely match detected"
-        }`}
+        {`Outcome: ${labelForState(status.state)}`}
       </s-text>
       {status.checkedAt ? (
         <s-text>Checked at: {new Date(status.checkedAt).toLocaleString()}</s-text>
       ) : null}
-      {firstWarning?.alertType ? <s-text>Alert type: {firstWarning.alertType}</s-text> : null}
-      {firstWarning?.riskLevel ? <s-text>Risk level: {firstWarning.riskLevel}</s-text> : null}
-      {typeof firstWarning?.overallSimilarity === "number" ? (
-        <s-text>Similarity: {Math.round(firstWarning.overallSimilarity)}%</s-text>
+      {status.topReason || firstWarning?.reason ? (
+        <s-text>Top reason: {status.topReason || firstWarning.reason}</s-text>
       ) : null}
+      {firstWarning?.riskLevel ? <s-text>Risk level: {firstWarning.riskLevel}</s-text> : null}
       {result.result?.recommendation ? <s-text>{result.result.recommendation}</s-text> : null}
     </s-stack>
   );
+}
+
+function labelForState(state) {
+  switch (state) {
+    case "unsafe":
+      return "Needs review";
+    case "safe":
+      return "No likely match detected";
+    case "resolved":
+      return "Decision recorded";
+    case "needs-review":
+      return "Needs review";
+    default:
+      return "Not checked";
+  }
 }

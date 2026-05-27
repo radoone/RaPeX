@@ -7,9 +7,124 @@ import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
 import { shopifyProductToProductData } from "../services/safety-gate-checker.client";
 import db from "../merchant-db.server";
+import { firestore } from "../firestore.server";
 import { runProductSafetyCheck } from "../services/product-safety-admin.server";
+import { runMerchantDeltaMonitoring } from "../services/safety-gate-checker.server";
 import { AlertDetailModal, SummaryCard } from "../components";
 import { type ResolutionType, formatRelativeDate } from "../components/AlertTable";
+
+type ShopifyCatalogProduct = {
+  id: string;
+  title: string;
+  handle?: string;
+  updatedAt?: string;
+  [key: string]: unknown;
+};
+
+type CatalogCachePlan = {
+  products: ShopifyCatalogProduct[];
+  productsToCheck: ShopifyCatalogProduct[];
+  cachedUnchanged: number;
+  totalFetched: number;
+};
+
+function merchantProductDocId(shop: string, productId: string): string {
+  return `${encodeURIComponent(shop)}::${encodeURIComponent(productId)}`;
+}
+
+async function fetchCatalogProductsForManualCheck(admin: any, limit = 300): Promise<ShopifyCatalogProduct[]> {
+  const products: ShopifyCatalogProduct[] = [];
+  let after: string | null = null;
+  let hasNextPage = true;
+
+  while (hasNextPage && products.length < limit) {
+    const first = Math.min(100, limit - products.length);
+    const response: { json: () => Promise<any> } = await admin.graphql(`#graphql
+      query manualCheckCatalogProducts($first: Int!, $after: String) {
+        products(first: $first, after: $after, sortKey: UPDATED_AT, reverse: true) {
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+          edges {
+            node {
+              id
+              title
+              handle
+              vendor
+              productType
+              tags
+              description
+              descriptionHtml
+              featuredImage { url altText }
+              images(first: 4) { nodes { url altText } }
+              variants(first: 5) { edges { node { id title image { url altText } } } }
+              updatedAt
+              createdAt
+            }
+          }
+        }
+      }
+    `, { variables: { first, after } });
+
+    const jsonResponse: any = await response.json();
+    const connection: any = jsonResponse.data?.products;
+    const edges = connection?.edges || [];
+    products.push(...edges.map((edge: any) => edge.node));
+    hasNextPage = Boolean(connection?.pageInfo?.hasNextPage) && products.length < limit;
+    after = connection?.pageInfo?.endCursor || null;
+  }
+
+  return products;
+}
+
+async function planCatalogChecksForManualCheck(params: {
+  admin: any;
+  shop: string;
+  limit?: number;
+}): Promise<CatalogCachePlan> {
+  const products = await fetchCatalogProductsForManualCheck(params.admin, params.limit ?? 300);
+  const refs = products.map((product) => {
+    const productId = product.id.replace("gid://shopify/Product/", "");
+    return firestore.collection("merchant_products").doc(merchantProductDocId(params.shop, productId));
+  });
+  const snapshots = refs.length > 0 ? await firestore.getAll(...refs) : [];
+  const productsToCheck: ShopifyCatalogProduct[] = [];
+  let cachedUnchanged = 0;
+
+  products.forEach((product, index) => {
+    const cached = snapshots[index];
+    const cachedData = cached?.exists ? cached.data() : null;
+    const cachedSourceUpdatedAt = typeof cachedData?.sourceUpdatedAt === "string"
+      ? cachedData.sourceUpdatedAt.trim()
+      : "";
+    const incomingSourceUpdatedAt = typeof product.updatedAt === "string"
+      ? product.updatedAt.trim()
+      : "";
+    const hasCachedVectors = Boolean(cachedData?.vector_text || cachedData?.vector_image);
+    const unchanged = Boolean(
+      cached?.exists &&
+      hasCachedVectors &&
+      cachedSourceUpdatedAt &&
+      incomingSourceUpdatedAt &&
+      cachedSourceUpdatedAt === incomingSourceUpdatedAt,
+    );
+
+    if (unchanged) {
+      cachedUnchanged += 1;
+      return;
+    }
+
+    productsToCheck.push(product);
+  });
+
+  return {
+    products,
+    productsToCheck,
+    cachedUnchanged,
+    totalFetched: products.length,
+  };
+}
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { admin, session } = await authenticate.admin(request);
@@ -34,6 +149,19 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   const productsJson = await productsResponse.json();
   const products = productsJson.data?.products?.edges?.map((e: any) => e.node) || [];
+  let totalProducts = products.length;
+
+  try {
+    const countResponse = await admin.graphql(`#graphql
+      query manualCheckProductsCount {
+        productsCount { count }
+      }
+    `);
+    const countJson = await countResponse.json();
+    totalProducts = countJson.data?.productsCount?.count || products.length;
+  } catch (error) {
+    console.error("Error loading product count for manual check page", error);
+  }
 
   const productIds = products.map((p: any) => p.id.replace('gid://shopify/Product/', ''));
 
@@ -98,11 +226,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     return acc;
   }, {});
 
-  return json({ products, checksByProduct, alertsByProduct, search, shop: session.shop });
+  return json({ products, checksByProduct, alertsByProduct, search, shop: session.shop, totalProducts });
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const { session } = await authenticate.admin(request);
+  const { admin, session } = await authenticate.admin(request);
   const formData = await request.formData();
   const action = formData.get("action") as string;
   const updateOwnedAlert = async (
@@ -148,16 +276,87 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
   }
 
+  if (action === "checkAllProducts") {
+    try {
+      const checkPlan = await planCatalogChecksForManualCheck({
+        admin,
+        shop: session.shop,
+        limit: 300,
+      });
+      let changedChecked = 0;
+      let changedAlertsCreated = 0;
+      let changedErrors = 0;
+
+      for (const product of checkPlan.productsToCheck) {
+        try {
+          const result = await runProductSafetyCheck({
+            shop: session.shop,
+            productId: product.id.replace("gid://shopify/Product/", ""),
+            productTitle: product.title,
+            productHandle: product.handle,
+            productData: shopifyProductToProductData(product),
+            sourceUpdatedAt: product.updatedAt,
+          });
+          changedChecked += 1;
+          if (result.alertCreated) {
+            changedAlertsCreated += 1;
+          }
+        } catch (error) {
+          changedErrors += 1;
+          console.error("Manual cached catalog product check failed", {
+            shop: session.shop,
+            productId: product.id,
+            error,
+          });
+        }
+      }
+
+      const monitoring = await runMerchantDeltaMonitoring(session.shop, {
+        forceFullScan: false,
+        limit: 300,
+        monitoringMode: "since-last-check",
+      });
+
+      await db.activityLog.create({
+        data: {
+          shop: session.shop,
+          type: "bulk",
+          action: "check",
+          details: `Manual cached catalog check skipped ${checkPlan.cachedUnchanged} unchanged products, checked ${changedChecked} new or changed products, and scanned ${monitoring.productsScanned} cached products against new Safety Gate alerts.`
+        }
+      });
+
+      return json({
+        success: true,
+        action: "checkAllProducts",
+        message: `Checked ${changedChecked} new or changed products, skipped ${checkPlan.cachedUnchanged} unchanged cached products, and created ${changedAlertsCreated + monitoring.alertsCreated} review items`,
+        results: {
+          changedChecked,
+          cachedSkipped: checkPlan.cachedUnchanged,
+          deltaChecked: monitoring.productsScanned,
+          errors: changedErrors,
+          alertsCreated: changedAlertsCreated + monitoring.alertsCreated,
+          totalProducts: checkPlan.totalFetched,
+        },
+      });
+    } catch (error) {
+      console.error("Manual full-catalog check failed:", error);
+      return json({ success: false, error: error instanceof Error ? error.message : "Full catalog check failed" }, { status: 500 });
+    }
+  }
+
   // Handle resolve action
   if (action === "resolve") {
     const alertId = formData.get("alertId") as string;
     const resolutionType = formData.get("resolutionType") as string | null;
+    const notes = formData.get("notes") as string | null;
 
     try {
       await updateOwnedAlert(alertId, {
         status: "resolved",
         resolvedAt: new Date(),
         resolutionType: resolutionType || null,
+        notes: notes?.trim() || null,
       });
       return json({ success: true, action: "resolved" });
     } catch (error) {
@@ -169,6 +368,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   if (action === "dismiss") {
     const alertId = formData.get("alertId") as string;
     const resolutionType = formData.get("resolutionType") as string | null;
+    const notes = formData.get("notes") as string | null;
 
     try {
       await updateOwnedAlert(alertId, {
@@ -176,6 +376,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         dismissedAt: new Date(),
         dismissedBy: session.shop,
         resolutionType: resolutionType || null,
+        notes: notes?.trim() || null,
       });
       return json({ success: true, action: "dismissed" });
     } catch (error) {
@@ -232,7 +433,7 @@ export function ErrorBoundary() {
 }
 
 export default function ManualCheckPage() {
-  const { products, checksByProduct, alertsByProduct, search, shop } = useLoaderData<typeof loader>();
+  const { products, checksByProduct, alertsByProduct, search, shop, totalProducts } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
   const resolveFetcher = useFetcher<typeof action>();
   const navigate = useNavigate();
@@ -298,10 +499,27 @@ export default function ManualCheckPage() {
     setHasProcessedResult(false);
   }, [fetcher]);
 
+  const activeFetcherAction = fetcher.formData?.get("action");
   const isLoading = fetcher.state === 'submitting';
+  const isCheckingAllProducts = fetcher.state !== "idle" && activeFetcherAction === "checkAllProducts";
+  const isCheckingOneProduct = fetcher.state !== "idle" && activeFetcherAction === "checkProduct";
+
+  const handleCheckAllProducts = useCallback(() => {
+    if (isLoading) return;
+    fetcher.submit({
+      action: "checkAllProducts",
+    }, { method: "POST" });
+  }, [fetcher, isLoading]);
 
   useEffect(() => {
-    if (fetcher.data && 'success' in fetcher.data && fetcher.data.success && !showResult && !hasProcessedResult) {
+    if (
+      fetcher.data &&
+      'success' in fetcher.data &&
+      fetcher.data.success &&
+      'result' in fetcher.data &&
+      !showResult &&
+      !hasProcessedResult
+    ) {
       setCheckResult((fetcher.data as any).result);
       setCurrentAlertId((fetcher.data as any).alertId || null);
       setShowResult(true);
@@ -311,6 +529,11 @@ export default function ManualCheckPage() {
 
   useEffect(() => {
     if (!fetcher.data || !('success' in fetcher.data) || !fetcher.data.success) {
+      return;
+    }
+
+    if ('message' in fetcher.data && fetcher.data.message) {
+      shopify.toast.show((fetcher.data as any).message);
       return;
     }
 
@@ -335,20 +558,22 @@ export default function ManualCheckPage() {
   }, [resolveFetcher.data]);
 
   // Handle resolve action
-  const handleResolve = useCallback((alertId: string, resolutionType?: ResolutionType) => {
+  const handleResolve = useCallback((alertId: string, resolutionType?: ResolutionType, notes?: string) => {
     resolveFetcher.submit({
       action: "resolve",
       alertId,
       resolutionType: resolutionType || "",
+      notes: notes || "",
     }, { method: "POST" });
   }, [resolveFetcher]);
 
   // Handle dismiss action
-  const handleDismiss = useCallback((alertId: string, resolutionType?: ResolutionType) => {
+  const handleDismiss = useCallback((alertId: string, resolutionType?: ResolutionType, notes?: string) => {
     resolveFetcher.submit({
       action: "dismiss",
       alertId,
       resolutionType: resolutionType || "",
+      notes: notes || "",
     }, { method: "POST" });
   }, [resolveFetcher]);
 
@@ -374,7 +599,17 @@ export default function ManualCheckPage() {
   return (
     <s-page size="large" className="page-shell" suppressHydrationWarning>
       <s-heading slot="title" size="large" suppressHydrationWarning>{t('manualCheck.title')}</s-heading>
-      <s-button slot="primary-action" variant="primary" href="/app/alerts" suppressHydrationWarning>
+      <s-button
+        slot="primary-action"
+        variant="primary"
+        loading={isCheckingAllProducts || undefined}
+        disabled={isLoading || undefined}
+        onClick={handleCheckAllProducts}
+        suppressHydrationWarning
+      >
+        {isCheckingAllProducts ? t("manualCheck.bulk.checkingAll") : t("manualCheck.bulk.checkAllProducts")}
+      </s-button>
+      <s-button slot="secondary-actions" variant="secondary" href="/app/alerts" suppressHydrationWarning>
         {t('actions.viewAlerts')}
       </s-button>
 
@@ -388,6 +623,22 @@ export default function ManualCheckPage() {
                 {t("manualCheck.admin.manualReviewDescription")}
               </p>
             </div>
+            <div className="admin-actions">
+              <s-button
+                variant="primary"
+                loading={isCheckingAllProducts || undefined}
+                disabled={isLoading || undefined}
+                onClick={handleCheckAllProducts}
+              >
+                {isCheckingAllProducts ? t("manualCheck.bulk.checkingAll") : t("manualCheck.bulk.checkAllProducts")}
+              </s-button>
+            </div>
+          </div>
+          <div className="admin-note">
+            <strong>{t("manualCheck.bulk.title")}</strong>
+            <span>{t("manualCheck.bulk.description", { count: totalProducts || products.length })}</span>
+          </div>
+          <div className="admin-card__header admin-card__header--compact">
             <div className="admin-inline-meta">
               <s-badge tone={unsafeProducts > 0 ? "critical" : "success"}>
                 {unsafeProducts === 0 ? t('status.allClear') : t('manualCheck.badges.flagged', { count: unsafeProducts })}
@@ -430,7 +681,7 @@ export default function ManualCheckPage() {
         <section className="metric-grid">
           <SummaryCard
             title={t('manualCheck.overview.productsInScope')}
-            value={products.length}
+            value={totalProducts || products.length}
             badge={<s-badge tone="info">{t('status.updated')}</s-badge>}
             description={t('manualCheck.overview.productsDescription')}
           />
@@ -501,7 +752,7 @@ export default function ManualCheckPage() {
                     : t('manualCheck.catalogue.status.notChecked');
                   const existingAlert = alertsByProduct[productId];
                   const hasAlert = Boolean(existingAlert);
-                  const isProductLoading = isLoading && selectedProduct?.id === product.id;
+                  const isProductLoading = isCheckingOneProduct && selectedProduct?.id === product.id;
 
                   return (
                     <s-table-row key={product.id}>
@@ -562,7 +813,7 @@ export default function ManualCheckPage() {
                           )}
                           <s-button
                             size="small"
-                            variant="primary"
+                            variant={checks.totalChecks > 0 ? "secondary" : "primary"}
                             loading={isProductLoading || undefined}
                             disabled={isLoading || undefined}
                             onClick={() => handleProductCheck(product)}
@@ -586,8 +837,8 @@ export default function ManualCheckPage() {
           key={alert.id}
           modalId={`manual-alert-${alert.id}`}
           alert={alert}
-          onResolve={(id, resolutionType) => handleResolve(id, resolutionType)}
-          onDismiss={(id, resolutionType) => handleDismiss(id, resolutionType)}
+          onResolve={(id, resolutionType, notes) => handleResolve(id, resolutionType, notes)}
+          onDismiss={(id, resolutionType, notes) => handleDismiss(id, resolutionType, notes)}
           onReactivate={(id) => handleReactivate(id)}
           isLoading={resolveFetcher.state === 'submitting'}
         />

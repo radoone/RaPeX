@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { authenticate } from "../shopify.server";
 import db from "../merchant-db.server";
-import { LanguageSwitcher, SummaryCard } from "../components";
+import { LanguageSwitcher } from "../components";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { session } = await authenticate.admin(request);
@@ -170,32 +170,53 @@ export default function Settings() {
   };
 
   const isSubmitting = navigation.state === "submitting" || navigation.state === "loading";
+  const thresholdNumber = Number(value);
+  const monitoringMode =
+    thresholdNumber < 60 ? "broad" : thresholdNumber <= 75 ? "balanced" : "strict";
 
   return (
     <s-page size="large" className="page-shell" suppressHydrationWarning>
       <s-heading slot="title" size="large" suppressHydrationWarning>{t('settings.title')}</s-heading>
 
       <div className="admin-stack">
-        <section className="metric-grid">
-          <SummaryCard
-            title={t("settingsAdmin.currentThreshold")}
-            value={`${value}%`}
-            badge={<s-badge tone="info">{t("settingsAdmin.storeSetting")}</s-badge>}
-            description={t("settingsAdmin.currentThresholdDescription")}
-          />
-          <SummaryCard
-            title={t("settingsAdmin.environmentDefault")}
-            value={`${envDefault}%`}
-            badge={<s-badge tone="warning">{t("settingsAdmin.fallback")}</s-badge>}
-            description={t("settingsAdmin.environmentDefaultDescription")}
-          />
-        </section>
-
         <Form method="post">
           <input type="hidden" name="autoDraftHighRisk" value={autoDraft ? "true" : "false"} />
           <input type="hidden" name="emailNotifications" value={emailNotify ? "true" : "false"} />
           <input type="hidden" name="excludeVendors" value={vendorsList.join(', ')} />
           <input type="hidden" name="excludeTypes" value={typesList.join(', ')} />
+
+          <section className="admin-card monitoring-settings-overview">
+            <div className="admin-card__header">
+              <div>
+                <p className="admin-eyebrow">{t("settingsAdmin.automationStatusEyebrow")}</p>
+                <h2 className="admin-card__title">{t("settingsAdmin.automationStatusTitle")}</h2>
+                <p className="admin-card__description">{t("settingsAdmin.automationStatusDescription")}</p>
+              </div>
+              <s-badge tone="success">{t("settingsAdmin.status.running")}</s-badge>
+            </div>
+            <div className="settings-status-grid">
+              <div className="settings-status-item">
+                <span>{t("settingsAdmin.status.dailySafetyGateUpdates")}</span>
+                <strong>{t("settingsAdmin.status.on")}</strong>
+              </div>
+              <div className="settings-status-item">
+                <span>{t("settingsAdmin.status.shopifyProductUpdates")}</span>
+                <strong>{t("settingsAdmin.status.on")}</strong>
+              </div>
+              <div className="settings-status-item">
+                <span>{t("settingsAdmin.status.auditTrail")}</span>
+                <strong>{t("settingsAdmin.status.on")}</strong>
+              </div>
+              <div className="settings-status-item">
+                <span>{t("settingsAdmin.status.emailDigest")}</span>
+                <strong>{emailNotify ? t("settingsAdmin.status.on") : t("settingsAdmin.status.off")}</strong>
+              </div>
+              <div className="settings-status-item">
+                <span>{t("settingsAdmin.status.autoQuarantine")}</span>
+                <strong>{autoDraft ? t("settingsAdmin.status.on") : t("settingsAdmin.status.off")}</strong>
+              </div>
+            </div>
+          </section>
 
           <section className="admin-section-grid admin-section-grid--wide">
             {/* COLUMN 1: Settings Form */}
@@ -204,37 +225,67 @@ export default function Settings() {
               <div className="admin-card">
                 <div className="admin-card__header">
                   <div>
-                    <p className="admin-eyebrow">{t("settingsAdmin.matchingStrictness")}</p>
+                    <p className="admin-eyebrow">{t("settingsAdmin.monitoringModeEyebrow")}</p>
                     <h2 className="admin-card__title">{t('settings.threshold.title')}</h2>
                     <p className="admin-card__description">{t('settings.threshold.description')}</p>
                   </div>
+                  <s-badge tone="info">{t(`settingsAdmin.mode.${monitoringMode}`)}</s-badge>
                 </div>
 
-                <div className="admin-note">
-                  <strong>{t('settings.threshold.howItWorks')}</strong>
-                  <span>{t("settingsAdmin.strictnessHint")}</span>
+                <div className="monitoring-mode-grid">
+                  <button
+                    type="button"
+                    className={`monitoring-mode-option ${monitoringMode === "broad" ? "monitoring-mode-option--active" : ""}`}
+                    onClick={() => setValue("50")}
+                  >
+                    <strong>{t("settingsAdmin.guidanceItems.broadTitle")}</strong>
+                    <span>{t("settingsAdmin.guidanceItems.broadDescription")}</span>
+                  </button>
+                  <button
+                    type="button"
+                    className={`monitoring-mode-option ${monitoringMode === "balanced" ? "monitoring-mode-option--active" : ""}`}
+                    onClick={() => setValue("70")}
+                  >
+                    <strong>{t("settingsAdmin.guidanceItems.balancedTitle")}</strong>
+                    <span>{t("settingsAdmin.guidanceItems.balancedDescription")}</span>
+                  </button>
+                  <button
+                    type="button"
+                    className={`monitoring-mode-option ${monitoringMode === "strict" ? "monitoring-mode-option--active" : ""}`}
+                    onClick={() => setValue("85")}
+                  >
+                    <strong>{t("settingsAdmin.guidanceItems.strictTitle")}</strong>
+                    <span>{t("settingsAdmin.guidanceItems.strictDescription")}</span>
+                  </button>
                 </div>
 
-                <div className="admin-form-block">
-                  <s-number-field
-                    label={t('settings.threshold.label')}
-                    labelAccessibilityVisibility="visible"
-                    name="similarityThreshold"
-                    min="0"
-                    max="100"
-                    value={value}
-                    onChange={(e: any) => setValue(e.currentTarget.value)}
-                  />
-                </div>
+                <details className="advanced-settings-disclosure">
+                  <summary>{t("settingsAdmin.advancedMatchingSettings")}</summary>
+                  <div className="admin-note">
+                    <strong>{t('settings.threshold.howItWorks')}</strong>
+                    <span>{t("settingsAdmin.strictnessHint")}</span>
+                  </div>
+                  <div className="admin-form-block">
+                    <s-number-field
+                      label={t('settings.threshold.label')}
+                      labelAccessibilityVisibility="visible"
+                      name="similarityThreshold"
+                      min="0"
+                      max="100"
+                      value={value}
+                      onChange={(e: any) => setValue(e.currentTarget.value)}
+                    />
+                  </div>
+                </details>
               </div>
 
               {/* Automation & Notifications settings */}
               <div className="admin-card">
                 <div className="admin-card__header">
                   <div>
-                    <p className="admin-eyebrow">Real-time Operations</p>
-                    <h2 className="admin-card__title">Safety Automation & Alerts</h2>
-                    <p className="admin-card__description">Configure automatic quarantine for high-risk matches and how you want to be alerted.</p>
+                    <p className="admin-eyebrow">{t("settingsAdmin.automation.eyebrow")}</p>
+                    <h2 className="admin-card__title">{t("settingsAdmin.automation.title")}</h2>
+                    <p className="admin-card__description">{t("settingsAdmin.automation.description")}</p>
                   </div>
                 </div>
 
@@ -248,9 +299,9 @@ export default function Settings() {
                         style={{ marginTop: '3px', transform: 'scale(1.15)' }}
                       />
                       <div>
-                        <s-text fontWeight="bold">Auto-Quarantine Serious Risks</s-text>
+                        <s-text fontWeight="bold">{t("settingsAdmin.automation.autoDraftTitle")}</s-text>
                         <br />
-                        <s-text tone="subdued" size="small">Automatically draft products in Shopify that match Safety Gate alerts with serious risk (threshold &gt;= 95%).</s-text>
+                        <s-text tone="subdued" size="small">{t("settingsAdmin.automation.autoDraftDescription")}</s-text>
                       </div>
                     </label>
                   </div>
@@ -264,16 +315,16 @@ export default function Settings() {
                         style={{ marginTop: '3px', transform: 'scale(1.15)' }}
                       />
                       <div>
-                        <s-text fontWeight="bold">Email Alert Notifications</s-text>
+                        <s-text fontWeight="bold">{t("settingsAdmin.automation.emailTitle")}</s-text>
                         <br />
-                        <s-text tone="subdued" size="small">Send alert summaries via email when new unsafe products are found.</s-text>
+                        <s-text tone="subdued" size="small">{t("settingsAdmin.automation.emailDescription")}</s-text>
                       </div>
                     </label>
                   </div>
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    <s-text fontWeight="bold">Slack Webhook URL</s-text>
-                    <s-text tone="subdued" size="small">Receive instant slack notifications on this webhook when alerts are generated.</s-text>
+                    <s-text fontWeight="bold">{t("settingsAdmin.automation.slackTitle")}</s-text>
+                    <s-text tone="subdued" size="small">{t("settingsAdmin.automation.slackDescription")}</s-text>
                     <input
                       type="text"
                       name="slackWebhookUrl"
@@ -297,16 +348,16 @@ export default function Settings() {
               <div className="admin-card">
                 <div className="admin-card__header">
                   <div>
-                    <p className="admin-eyebrow">Filtering Rules</p>
-                    <h2 className="admin-card__title">Exclusion Rules</h2>
-                    <p className="admin-card__description">Exclude specific vendors or product categories from Safety Gate checks to reduce false positives.</p>
+                    <p className="admin-eyebrow">{t("settingsAdmin.exclusions.eyebrow")}</p>
+                    <h2 className="admin-card__title">{t("settingsAdmin.exclusions.title")}</h2>
+                    <p className="admin-card__description">{t("settingsAdmin.exclusions.description")}</p>
                   </div>
                 </div>
 
                 <div className="admin-form-block" style={{ gap: '20px', display: 'flex', flexDirection: 'column' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    <s-text fontWeight="bold">Excluded Vendors</s-text>
-                    <s-text tone="subdued" size="small">Type a vendor name and press Enter or comma to add (e.g., Apple, Samsung).</s-text>
+                    <s-text fontWeight="bold">{t("settingsAdmin.exclusions.vendorsTitle")}</s-text>
+                    <s-text tone="subdued" size="small">{t("settingsAdmin.exclusions.vendorsDescription")}</s-text>
                     <div className="chip-container">
                       {vendorsList.map((vendor, idx) => (
                         <s-chip key={vendor} onDismiss={() => {
@@ -318,7 +369,7 @@ export default function Settings() {
                       ))}
                       <input
                         type="text"
-                        placeholder={vendorsList.length === 0 ? "Vendor A, Vendor B, ..." : ""}
+                        placeholder={vendorsList.length === 0 ? t("settingsAdmin.exclusions.vendorsPlaceholder") : ""}
                         value={vendorInput}
                         onChange={(e) => setVendorInput(e.target.value)}
                         onKeyDown={handleVendorKeyDown}
@@ -329,8 +380,8 @@ export default function Settings() {
                   </div>
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    <s-text fontWeight="bold">Excluded Product Types</s-text>
-                    <s-text tone="subdued" size="small">Type a product category/type and press Enter or comma to add (e.g., Books, Gift Cards).</s-text>
+                    <s-text fontWeight="bold">{t("settingsAdmin.exclusions.typesTitle")}</s-text>
+                    <s-text tone="subdued" size="small">{t("settingsAdmin.exclusions.typesDescription")}</s-text>
                     <div className="chip-container">
                       {typesList.map((type, idx) => (
                         <s-chip key={type} onDismiss={() => {
@@ -342,7 +393,7 @@ export default function Settings() {
                       ))}
                       <input
                         type="text"
-                        placeholder={typesList.length === 0 ? "Gift Card, Service, ..." : ""}
+                        placeholder={typesList.length === 0 ? t("settingsAdmin.exclusions.typesPlaceholder") : ""}
                         value={typeInput}
                         onChange={(e) => setTypeInput(e.target.value)}
                         onKeyDown={handleTypeKeyDown}
@@ -357,7 +408,7 @@ export default function Settings() {
               {/* Save actions */}
               <div className="admin-actions" style={{ padding: '16px 0' }}>
                 <s-button type="submit" variant="primary" loading={isSubmitting || undefined}>
-                  Save All Settings
+                  {t("settingsAdmin.saveAll")}
                 </s-button>
                 <s-button type="button" variant="secondary" onClick={() => {
                   setValue(envDefault.toString());
@@ -379,23 +430,24 @@ export default function Settings() {
               <div className="admin-card">
                 <div className="admin-card__header">
                   <div>
-                    <p className="admin-eyebrow">{t("settingsAdmin.guidance")}</p>
-                    <h2 className="admin-card__title">{t("settingsAdmin.recommendedSetup")}</h2>
+                    <p className="admin-eyebrow">{t("settingsAdmin.valueEyebrow")}</p>
+                    <h2 className="admin-card__title">{t("settingsAdmin.valueTitle")}</h2>
+                    <p className="admin-card__description">{t("settingsAdmin.valueDescription")}</p>
                   </div>
                 </div>
 
                 <div className="admin-guidance-list">
                   <div className="admin-guidance-item">
-                    <strong>{t("settingsAdmin.guidanceItems.broadTitle")}</strong>
-                    <p>{t("settingsAdmin.guidanceItems.broadDescription")}</p>
+                    <strong>{t("settingsAdmin.valueItems.dailyTitle")}</strong>
+                    <p>{t("settingsAdmin.valueItems.dailyDescription")}</p>
                   </div>
                   <div className="admin-guidance-item">
-                    <strong>{t("settingsAdmin.guidanceItems.balancedTitle")}</strong>
-                    <p>{t("settingsAdmin.guidanceItems.balancedDescription")}</p>
+                    <strong>{t("settingsAdmin.valueItems.auditTitle")}</strong>
+                    <p>{t("settingsAdmin.valueItems.auditDescription")}</p>
                   </div>
                   <div className="admin-guidance-item">
-                    <strong>{t("settingsAdmin.guidanceItems.strictTitle")}</strong>
-                    <p>{t("settingsAdmin.guidanceItems.strictDescription")}</p>
+                    <strong>{t("settingsAdmin.valueItems.workflowTitle")}</strong>
+                    <p>{t("settingsAdmin.valueItems.workflowDescription")}</p>
                   </div>
                 </div>
               </div>
@@ -410,6 +462,7 @@ export default function Settings() {
                   <LanguageSwitcher />
                 </div>
               </div>
+
             </div>
           </section>
         </Form>

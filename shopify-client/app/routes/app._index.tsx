@@ -6,9 +6,11 @@ import { useTranslation } from "react-i18next";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
 import db, { type SafetySettingRecord } from "../merchant-db.server";
-import { SummaryCard, OnboardingWizard, formatRelativeDate } from "../components";
+import { OnboardingWizard, formatRelativeDate } from "../components";
 import {
   runMerchantDeltaMonitoring,
+  shopifyProductToProductData,
+  upsertMerchantProductForMonitoring,
 } from "../services/safety-gate-checker.server";
 
 type BulkCheckResults = {
@@ -38,10 +40,104 @@ type ActionResponse = {
   };
 };
 
+type ShopifyCatalogProduct = {
+  id: string;
+  title: string;
+  handle?: string;
+  updatedAt?: string;
+  [key: string]: unknown;
+};
+
+async function fetchCurrentCatalogProducts(admin: any, limit = 300): Promise<ShopifyCatalogProduct[]> {
+  const products: ShopifyCatalogProduct[] = [];
+  let after: string | null = null;
+  let hasNextPage = true;
+
+  while (hasNextPage && products.length < limit) {
+    const first = Math.min(100, limit - products.length);
+    const response: { json: () => Promise<any> } = await admin.graphql(`#graphql
+      query monitorCatalogProducts($first: Int!, $after: String) {
+        products(first: $first, after: $after, sortKey: UPDATED_AT, reverse: true) {
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+          edges {
+            node {
+              id
+              title
+              handle
+              vendor
+              productType
+              tags
+              description
+              descriptionHtml
+              featuredImage { url altText }
+              images(first: 4) { nodes { url altText } }
+              variants(first: 5) { edges { node { id title image { url altText } } } }
+              updatedAt
+              createdAt
+            }
+          }
+        }
+      }
+    `, { variables: { first, after } });
+    const payload: any = await response.json();
+    if (payload.errors?.length) {
+      throw new Error(payload.errors[0]?.message || "Could not load Shopify catalog");
+    }
+
+    const connection: any = payload.data?.products;
+    const nodes = connection?.edges?.map((edge: any) => edge.node).filter(Boolean) || [];
+    products.push(...nodes);
+    hasNextPage = Boolean(connection?.pageInfo?.hasNextPage) && products.length < limit;
+    after = connection?.pageInfo?.endCursor || null;
+  }
+
+  return products;
+}
+
+async function importCurrentCatalogForMonitoring(params: {
+  admin: any;
+  shop: string;
+  limit?: number;
+}): Promise<{ imported: number; failed: number; totalFetched: number }> {
+  const products = await fetchCurrentCatalogProducts(params.admin, params.limit);
+  let imported = 0;
+  let failed = 0;
+
+  for (const product of products) {
+    try {
+      const productId = product.id.replace("gid://shopify/Product/", "");
+      const productData = shopifyProductToProductData(product);
+
+      await upsertMerchantProductForMonitoring({
+        shop: params.shop,
+        productId,
+        productTitle: product.title,
+        productHandle: product.handle,
+        product: productData,
+        sourceUpdatedAt: product.updatedAt,
+      });
+
+      imported += 1;
+    } catch (error) {
+      failed += 1;
+      console.error("Failed importing product for Safety Gate monitoring", {
+        shop: params.shop,
+        productId: product.id,
+        error,
+      });
+    }
+  }
+
+  return { imported, failed, totalFetched: products.length };
+}
+
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { session, admin } = await authenticate.admin(request);
 
-  const [activeAlerts, totalAlerts, resolvedAlerts, dismissedAlerts, totalChecks, recentAlerts, checkedProductIds, activeAlertRiskSample, settings, recentActivities] = await Promise.all([
+  const [activeAlerts, totalAlerts, resolvedAlerts, dismissedAlerts, totalChecks, recentAlerts, checkedProductIds, activeAlertRiskSample, settings, recentActivities, lastMonitoringActivityRows] = await Promise.all([
     db.safetyAlert.count({
       where: { shop: session.shop, status: 'active' },
     }),
@@ -58,7 +154,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       where: { shop: session.shop },
     }),
     db.safetyAlert.findMany({
-      where: { shop: session.shop },
+      where: { shop: session.shop, status: 'active' },
       orderBy: { createdAt: 'desc' },
       take: 5,
     }),
@@ -80,6 +176,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       where: { shop: session.shop },
       orderBy: { createdAt: 'desc' },
       take: 5,
+    }),
+    db.activityLog.findMany({
+      where: { shop: session.shop },
+      orderBy: { createdAt: 'desc' },
+      take: 25,
     }),
   ]);
 
@@ -192,11 +293,14 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     recentAlerts: processedRecentAlerts,
     settings: (settings || defaultSettings) as SafetySettingRecord,
     recentActivities,
+    lastMonitoringAt: lastMonitoringActivityRows.find((activity: any) =>
+      activity.type === "bulk" || activity.type === "automatic" || activity.action === "check"
+    )?.createdAt ?? null,
   });
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const { session } = await authenticate.admin(request);
+  const { session, admin } = await authenticate.admin(request);
   const formData = await request.formData();
   const actionType = formData.get("action");
   const includeAlreadyChecked = formData.get("includeAlreadyChecked") === "true";
@@ -244,6 +348,49 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     } catch (error) {
       console.error('Bulk check failed:', error);
       return json({ success: false, error: error instanceof Error ? error.message : 'Bulk check failed' }, { status: 500 });
+    }
+  }
+
+  if (actionType === "importCatalogAndMonitor") {
+    try {
+      const importedCatalog = await importCurrentCatalogForMonitoring({
+        admin,
+        shop: session.shop,
+        limit: 300,
+      });
+      const monitoring = await runMerchantDeltaMonitoring(session.shop, {
+        forceFullScan: true,
+        limit: 300,
+        monitoringMode: "full-lookback",
+      });
+
+      await db.activityLog.create({
+        data: {
+          shop: session.shop,
+          type: "bulk",
+          action: "check",
+          details: `Imported ${importedCatalog.imported} current catalog products for monitoring and checked them against recent Safety Gate alerts.`
+        }
+      });
+
+      const results: BulkCheckResults = {
+        processed: importedCatalog.imported,
+        checked: monitoring.productsScanned,
+        skipped: importedCatalog.failed,
+        alertsCreated: monitoring.alertsCreated,
+        errors: importedCatalog.failed,
+        totalProducts: importedCatalog.totalFetched,
+        products: [],
+      };
+
+      return json({
+        success: true,
+        message: `Imported ${importedCatalog.imported} products for monitoring and created ${monitoring.alertsCreated} Safety Gate review items`,
+        results,
+      });
+    } catch (error) {
+      console.error('Catalog import and monitoring failed:', error);
+      return json({ success: false, error: error instanceof Error ? error.message : 'Catalog import and monitoring failed' }, { status: 500 });
     }
   }
 
@@ -315,7 +462,7 @@ export function ErrorBoundary() {
 }
 
 export default function Index() {
-  const { stats, recentAlerts, settings, recentActivities } = useLoaderData<typeof loader>();
+  const { stats, recentAlerts, settings, recentActivities, lastMonitoringAt } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<ActionResponse>();
   const navigation = useNavigation();
   const shopify = useAppBridge();
@@ -325,12 +472,9 @@ export default function Index() {
 
   const isLoading = navigation.state === "loading";
   const isSubmitting = fetcher.state === "submitting";
-  const coverageRate = stats.totalProducts > 0 ? Math.round((stats.checkedProducts / stats.totalProducts) * 100) : 0;
-  
-  const complianceRate = stats.checkedProducts > 0
-    ? Math.round(((stats.checkedProducts - stats.activeAlerts) / stats.checkedProducts) * 100)
-    : 100;
-  const safeComplianceRate = Math.min(100, Math.max(0, complianceRate));
+  const monitoredProductLabel = `${stats.checkedProducts}/${stats.totalProducts || 0}`;
+  const cleanRiskLabel = (value?: string | null) =>
+    value ? value.replace(/\s*\/\s*other\b/gi, "").trim() : "";
 
   const runBulkCheck = () => {
     if (isSubmitting) return;
@@ -371,9 +515,7 @@ export default function Index() {
     const triggerInitialScan = () => {
       fetcher.submit(
         {
-          action: "bulkCheck",
-          includeAlreadyChecked: "true", // Force full catalog scan!
-          monitoringMode: "full-lookback",
+          action: "importCatalogAndMonitor",
         },
         { method: "POST" }
       );
@@ -419,14 +561,62 @@ export default function Index() {
         slot="primary-action"
         variant="primary"
         loading={isSubmitting || undefined}
-        onClick={runBulkCheck}
+        onClick={() => {
+          if (stats.activeAlerts > 0) {
+            navigate("/app/alerts?status=active");
+            return;
+          }
+          runBulkCheck();
+        }}
         disabled={isSubmitting || undefined}
         suppressHydrationWarning
       >
-        {isSubmitting ? t("actions.checking") : t("actions.checkNewSafetyGateAlerts")}
+        {isSubmitting
+          ? t("actions.checking")
+          : stats.activeAlerts > 0
+            ? t("actions.reviewProductsNeedingAction", { count: stats.activeAlerts })
+            : t("actions.checkNewSafetyGateAlerts")}
+      </s-button>
+      <s-button slot="secondary-actions" variant="secondary" href="/app/audit-report" suppressHydrationWarning>
+        {t("actions.downloadAuditReport")}
+      </s-button>
+      <s-button slot="secondary-actions" variant="secondary" href="/app/evidence" suppressHydrationWarning>
+        {t("actions.viewEvidence")}
       </s-button>
 
       <div className="admin-stack">
+        <section className="monitoring-status-panel">
+          <div className="monitoring-status-panel__header">
+            <p className="admin-eyebrow">{t("dashboard.admin.monitoringStatusEyebrow")}</p>
+            <h2 className="monitoring-status-panel__title">
+              {stats.activeAlerts > 0
+                ? t("dashboard.admin.monitoringStatusNeedsReview", { count: stats.activeAlerts })
+                : t("dashboard.admin.monitoringStatusAllClear")}
+            </h2>
+            <p className="monitoring-status-panel__description">
+              {t("dashboard.admin.monitoringStatusDescription")}
+            </p>
+          </div>
+          <div className="monitoring-status-panel__facts">
+            <div className="monitoring-status-panel__fact">
+              <span>{t("dashboard.admin.productsMonitored")}</span>
+              <strong>{monitoredProductLabel}</strong>
+            </div>
+            <div className="monitoring-status-panel__fact">
+              <span>{t("dashboard.admin.lastSafetyGateUpdateChecked")}</span>
+              <strong>{lastMonitoringAt ? formatRelativeDate(new Date(lastMonitoringAt), t, i18n.language) : t("status.notChecked")}</strong>
+            </div>
+            <div className="monitoring-status-panel__fact">
+              <span>{t("dashboard.admin.nextAutomaticCheck")}</span>
+              <strong>{t("dashboard.admin.dailyAtTime")}</strong>
+            </div>
+            <div className="monitoring-status-panel__fact">
+              <span>{t("dashboard.admin.auditReport")}</span>
+              <strong>{t("dashboard.admin.auditReady")}</strong>
+            </div>
+          </div>
+        </section>
+
         {stats.activeAlerts > 0 && (
           <s-banner
             tone={stats.criticalActiveAlerts > 0 ? "critical" : "warning"}
@@ -447,63 +637,8 @@ export default function Index() {
           </s-banner>
         )}
 
-        <section className="metric-grid">
-          <SummaryCard
-            title={t("dashboard.stats.activeAlerts")}
-            value={stats.activeAlerts}
-            badge={<s-badge tone={stats.activeAlerts > 0 ? "critical" : "success"}>{stats.activeAlerts > 0 ? t("status.needsReview") : t("status.allClear")}</s-badge>}
-            description={t("dashboard.admin.activeAlertsDescription")}
-          />
-          <SummaryCard
-            title={t("dashboard.admin.catalogCoverageTitle")}
-            value={`${coverageRate}%`}
-            badge={<s-badge tone="info">{stats.checkedProducts}/{stats.totalProducts || 0} {t("dashboard.admin.stats.totalProducts").toLowerCase()}</s-badge>}
-            description={t("dashboard.admin.catalogCoverageDescription")}
-            progress={coverageRate}
-            progressTone="primary"
-          />
-          <SummaryCard
-            title={t("dashboard.admin.checksCompletedTitle")}
-            value={stats.totalChecks}
-            badge={<s-badge tone="success">{t("dashboard.stats.autoMonitoring")}</s-badge>}
-            description={t("dashboard.admin.checksCompletedDescription")}
-          />
-          <div className="compliance-ring-container">
-            <div className="compliance-ring">
-              <svg viewBox="0 0 90 90">
-                <circle className="compliance-ring__bg" cx="45" cy="45" r="40" />
-                <circle
-                  className={`compliance-ring__fill ${
-                    safeComplianceRate >= 80
-                      ? "compliance-ring__fill--success"
-                      : safeComplianceRate >= 50
-                      ? "compliance-ring__fill--warning"
-                      : "compliance-ring__fill--critical"
-                  }`}
-                  cx="45"
-                  cy="45"
-                  r="40"
-                  strokeDashoffset={251.2 - (251.2 * safeComplianceRate) / 100}
-                />
-              </svg>
-              <div className="compliance-ring__text">
-                <div className="compliance-ring__score">{safeComplianceRate}%</div>
-                <div className="compliance-ring__label">{t("uxEnhancements.complianceRing.scoreLabel")}</div>
-              </div>
-            </div>
-            <div className="compliance-ring__info">
-              <h3 style={{ margin: 0, fontSize: "16px", fontWeight: "600" }}>
-                {t("uxEnhancements.complianceRing.title")}
-              </h3>
-              <p style={{ margin: "4px 0 0 0", fontSize: "13px", color: "var(--text-subdued)" }}>
-                {t("uxEnhancements.complianceRing.subtitle")}
-              </p>
-            </div>
-          </div>
-        </section>
-
         <div className="admin-section-grid">
-          {/* Left Column: Recent Alerts */}
+          {/* Left Column: Merchant decision queue */}
           <section className="admin-card">
             <div className="admin-card__header">
               <div>
@@ -543,6 +678,9 @@ export default function Index() {
                       <div className="admin-alert-row__meta">
                         <h3>{alert.productTitle}</h3>
                         <p>{alert.riskDescription || t("dashboard.admin.fallbackAlertDescription")}</p>
+                        <p className="admin-alert-row__next-action">
+                          {t("dashboard.admin.recommendedAction")}
+                        </p>
                       </div>
                       <div className="admin-inline-meta">
                         <s-badge tone={alert.status === "active" ? "critical" : alert.status === "resolved" ? "success" : "info"}>
@@ -552,12 +690,12 @@ export default function Index() {
                               ? t("status.resolved")
                               : t("status.dismissed")}
                         </s-badge>
-                        {alert.alertType && <s-badge tone="warning">{alert.alertType}</s-badge>}
+                        {alert.alertType && <s-badge tone="warning">{cleanRiskLabel(alert.alertType)}</s-badge>}
                       </div>
                     </div>
                     <div className="admin-alert-row__actions">
                       <s-button variant="secondary" onClick={() => navigate("/app/alerts")}>
-                        {t("actions.view")}
+                        {t("actions.reviewDecision")}
                       </s-button>
                     </div>
                   </div>
@@ -566,11 +704,11 @@ export default function Index() {
             )}
           </section>
 
-          {/* Right Column: Activity Timeline */}
+          {/* Right Column: Audit trail */}
           <section className="admin-card">
             <div className="admin-card__header">
               <div>
-                <p className="admin-eyebrow">{t("uxEnhancements.activityTimeline.title")}</p>
+                <p className="admin-eyebrow">{t("uxEnhancements.activityTimeline.eyebrow")}</p>
                 <h2 className="admin-card__title">{t("uxEnhancements.activityTimeline.title")}</h2>
                 <p className="admin-card__description">
                   {t("uxEnhancements.activityTimeline.description")}

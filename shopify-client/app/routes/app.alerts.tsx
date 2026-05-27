@@ -247,8 +247,8 @@ export default function AlertsPage() {
     navigate(queryString ? `/app/alerts?${queryString}` : '/app/alerts');
   }, [filters.sortBy, filters.sortOrder, searchValue, statusFilter, riskLevelFilter, navigate]);
 
-  const handleAlertAction = useCallback((alertId: string, action: string, resolutionType?: string) => {
-    fetcher.submit({ action, alertId, resolutionType: resolutionType || '' }, { method: 'POST' });
+  const handleAlertAction = useCallback((alertId: string, action: string, resolutionType?: string, notes?: string) => {
+    fetcher.submit({ action, alertId, resolutionType: resolutionType || '', notes: notes || '' }, { method: 'POST' });
   }, [fetcher]);
 
   const handleBulkAction = useCallback((alertIds: string[], action: string, resolutionType?: string) => {
@@ -276,6 +276,12 @@ export default function AlertsPage() {
       <s-heading slot="title" size="large" suppressHydrationWarning>{t('alerts.title')}</s-heading>
       <s-button slot="primary-action" variant="primary" href="/app/manual-check" suppressHydrationWarning>
         {t('actions.manualCheck')}
+      </s-button>
+      <s-button slot="secondary-actions" variant="secondary" href="/app/audit-report" suppressHydrationWarning>
+        {t("actions.downloadAuditReport")}
+      </s-button>
+      <s-button slot="secondary-actions" variant="secondary" href="/app/evidence" suppressHydrationWarning>
+        {t("actions.viewEvidence")}
       </s-button>
 
       <div className="admin-stack">
@@ -426,8 +432,8 @@ export default function AlertsPage() {
           key={alert.id}
           alert={{ ...alert, shop: alert.shop || shop }}
           modalId={`alert-detail-${alert.id}`}
-          onDismiss={(id, resolutionType) => handleAlertAction(id, 'dismiss', resolutionType)}
-          onResolve={(id, resolutionType) => handleAlertAction(id, 'resolve', resolutionType)}
+          onDismiss={(id, resolutionType, notes) => handleAlertAction(id, 'dismiss', resolutionType, notes)}
+          onResolve={(id, resolutionType, notes) => handleAlertAction(id, 'resolve', resolutionType, notes)}
           onReactivate={(id) => handleAlertAction(id, 'reactivate')}
           isLoading={fetcher.state === 'submitting'}
         />

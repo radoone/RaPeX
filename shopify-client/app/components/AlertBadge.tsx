@@ -5,7 +5,7 @@ interface AlertBadgeProps {
 }
 
 export function AlertBadge({ alertLevel, alertType, riskDescription }: AlertBadgeProps) {
-  let displayText = alertType || alertLevel || 'Unknown';
+  let displayText = cleanRiskLabel(alertType || alertLevel || 'Unknown');
 
   if (!alertType && alertLevel && alertLevel !== 'Unknown') {
     const normalized = alertLevel.toLowerCase();
@@ -18,7 +18,7 @@ export function AlertBadge({ alertLevel, alertType, riskDescription }: AlertBadg
     } else if (normalized.includes('electric')) {
       displayText = 'Electric shock';
     } else {
-      displayText = alertLevel;
+      displayText = cleanRiskLabel(alertLevel);
     }
   }
 
@@ -29,6 +29,15 @@ export function AlertBadge({ alertLevel, alertType, riskDescription }: AlertBadg
       {displayText}
     </s-badge>
   );
+}
+
+export function cleanRiskLabel(value?: string | null): string {
+  const cleaned = (value || 'Unknown')
+    .replace(/\s*\/\s*other\b/gi, '')
+    .replace(/\bother risk\b/gi, 'Safety risk')
+    .trim();
+
+  return cleaned || 'Safety risk';
 }
 
 function getAlertTone(alertLevel?: string): "critical" | "warning" | "success" | "info" | undefined {

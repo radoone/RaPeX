@@ -125,19 +125,39 @@ const en = {
           "storeStatus": "Store status",
           "noActiveAlertsTitle": "No active safety alerts",
           "noActiveAlertsDescription": "Your latest checks do not currently require action. Keep scanning newly added products to maintain coverage.",
-          "activeAlertsDescription": "Products that still need a decision.",
+          "needsReviewTitle": "Products needing review",
+          "activeAlertsDescription": "Products that still need a merchant decision before the queue is clear.",
+          "highRiskMatchesTitle": "High-risk matches",
+          "highRiskMatchesDescription": "Serious or high-risk Safety Gate matches to review first.",
           "catalogCoverageTitle": "Catalog coverage",
           "catalogCoverageDescription": "Share of catalog already checked against Safety Gate.",
           "checksCompletedTitle": "Checks completed",
-          "checksCompletedDescription": "Includes automatic and manual checks.",
+          "monitoringRunsTitle": "Monitoring checks",
+          "checksCompletedDescription": "Automatic and manual checks that reduce manual catalog review work.",
+          "lastMonitoringRunTitle": "Last monitoring run",
+          "lastMonitoringRunDescription": "Most recent automatic, manual, or bulk Safety Gate check.",
+          "auditRecordsTitle": "Audit records",
+          "auditRecordsDescription": "Resolved and dismissed decisions with reasons and internal notes.",
+          "auditReady": "Report ready",
+          "monitoringStatusEyebrow": "Monitoring status",
+          "monitoringStatusNeedsReview": "{{count}} product needs a merchant decision",
+          "monitoringStatusNeedsReview_plural": "{{count}} products need merchant decisions",
+          "monitoringStatusAllClear": "Catalog monitoring is running",
+          "monitoringStatusDescription": "Safety Gate Monitor checks your catalog against new EU Safety Gate updates, highlights products needing review, and keeps evidence for audit reports.",
+          "productsMonitored": "Catalog monitored",
+          "lastSafetyGateUpdateChecked": "Last Safety Gate update checked",
+          "nextAutomaticCheck": "Next automatic check",
+          "dailyAtTime": "Daily at 03:47",
+          "auditReport": "Audit report",
           "resolvedRateTitle": "Resolved rate",
           "resolvedRateDescription": "How much of logged alert activity has already been closed.",
-          "priorityQueue": "Priority queue",
-          "recentAlertsTitle": "Recent safety alerts",
-          "recentAlertsDescription": "Most recent flagged products from your store, ordered so merchants can act quickly.",
-          "noAlertsTitle": "No alerts yet",
-          "noAlertsDescription": "Your alerts list will appear here after the first unsafe product match is detected.",
+          "priorityQueue": "Decision queue",
+          "recentAlertsTitle": "Products needing merchant decision",
+          "recentAlertsDescription": "Review likely Safety Gate matches, record a decision, and keep evidence for audits.",
+          "noAlertsTitle": "No products need review",
+          "noAlertsDescription": "There are no open product reviews right now. Keep monitoring new Safety Gate updates to maintain coverage.",
           "fallbackAlertDescription": "Matched against a Safety Gate alert.",
+          "recommendedAction": "Recommended action: review the match and record a decision.",
           "coverage": "Coverage",
           "bulkCheckTitle": "Bulk catalog check",
           "bulkCheckDescription": "Scan unchecked products first, or include the whole catalog when you want a fresh pass.",
@@ -168,19 +188,20 @@ const en = {
       },
       "nav": {
         "dashboard": "Dashboard",
-        "safetyAlerts": "Safety Alerts",
-        "manualCheck": "Manual Check",
-        "settings": "Settings"
+        "safetyAlerts": "Review Queue",
+        "manualCheck": "Check Product",
+        "evidence": "Audit Trail",
+        "settings": "Monitoring Settings"
       },
       "settings": {
-        "title": "Settings",
-        "subtitle": "Configure thresholds and preferences for Safety Gate monitoring.",
+        "title": "Monitoring Settings",
+        "subtitle": "Control how Safety Gate Monitor watches your Shopify catalog.",
         "threshold": {
-          "title": "Similarity Threshold",
+          "title": "Monitoring mode",
           "howItWorks": "How this works",
-          "description": "The similarity threshold determines how closely a product must match a Safety Gate alert. Higher values (e.g., 80%) mean stricter matching with fewer false positives. Lower values (e.g., 40%) catch more potential matches but may include false positives.",
+          "description": "Choose how many possible Safety Gate matches your team wants to review. Balanced monitoring is recommended for most Shopify catalogs.",
           "currentDefault": "Current environment default",
-          "label": "Similarity threshold (%)",
+          "label": "Advanced match threshold (%)",
           "save": "Save",
           "resetToDefault": "Reset to default"
         },
@@ -218,9 +239,13 @@ const en = {
         "checkNewSafetyGateAlerts": "Check new Safety Gate alerts",
         "checkOneProduct": "Check one product",
         "checking": "Checking...",
+        "downloadAuditReport": "Download audit report",
+        "viewEvidence": "View decision history",
+        "reviewProductsNeedingAction": "Review {{count}} product needing action",
+        "reviewProductsNeedingAction_plural": "Review {{count}} products needing action",
         "checkAllProducts": "Check all {{count}} products",
         "checkUnchecked": "Check {{count}} unchecked products",
-        "manualCheck": "Manual check",
+        "manualCheck": "Check product",
         "settings": "Settings",
         "viewAlerts": "View alerts",
         "reviewAlerts": "Review alerts",
@@ -233,7 +258,9 @@ const en = {
         "clear": "Clear",
         "view": "View",
         "viewDetails": "View details",
+        "reviewDecision": "Review decision",
         "resolve": "Resolve",
+        "recordDecision": "Record decision",
         "reactivate": "Reactivate"
       },
       "resolveActions": {
@@ -263,7 +290,7 @@ const en = {
         "dismissed": "dismissed",
         "notChecked": "Not checked",
         "safe": "Safe",
-        "unsafe": "Unsafe",
+        "unsafe": "Needs review",
         "updated": "Updated",
         "flagged": "flagged"
       },
@@ -295,10 +322,11 @@ const en = {
         "textOnly": "Text-only check",
         "noIssuesFound": "No Safety Issues Found",
         "potentialRisk": "Potential Safety Risk",
+        "decisionRecorded": "Decision recorded",
         "checkedAt": "Checked: {{date}}",
         "productImagesUsed": "Product images: {{used}} / {{provided}}",
         "alertImagesUsed": "Alert images compared: {{count}}",
-        "candidateAlerts": "Candidate alerts",
+        "candidateAlerts": "Candidate alerts: {{count}}",
         "overallMatch": "Overall match",
         "imageMatch": "Image match",
         "overallMatchShort": "{{count}}% overall",
@@ -308,11 +336,48 @@ const en = {
         "imageDominated": "This match was scored with image-first weighting, so visual packaging similarity carried more weight than text mismatch.",
         "matchesHint": "Start with the top match card below and confirm visual packaging first, then model and brand details.",
         "primaryRiskFocus": "Primary risk focus: {{category}} at {{level}} level. Confirm this first before deciding.",
+        "summary": {
+          "matchType": "Match type",
+          "likelySafetyGateMatch": "Likely Safety Gate match",
+          "noLikelyMatch": "No likely match",
+          "overallMatch": "Overall score",
+          "confidence": "Confidence",
+          "confidenceUnknown": "Confidence unknown",
+          "highConfidence": "High confidence",
+          "likelyMatch": "Likely match",
+          "reviewRecommended": "Review recommended",
+          "nextStep": "Next step",
+          "decisionRequired": "Decision required",
+          "decisionRecorded": "Decision recorded"
+        },
+        "sections": {
+          "whatHappened": "What happened?",
+          "whatHappenedRisk": "This Shopify product looks like a product already reported in Safety Gate.",
+          "whatHappenedSafe": "The latest check did not find a likely Safety Gate match.",
+          "whatHappenedReviewed": "This match has already been reviewed and recorded.",
+          "whyMatched": "Why it matched",
+          "whatToDo": "What should I do?"
+        },
+        "supplierFollowUp": {
+          "copy": "Copy supplier follow-up",
+          "template": "Hi, we are reviewing {{product}} because it may match Safety Gate alert {{alert}} (risk: {{risk}}). Please confirm whether this is the same model/batch, provide product safety documentation, and explain any differences. Match reason: {{reason}}"
+        },
+        "technicalDetails": {
+          "title": "Technical match details",
+          "description": "Scores and retrieval counts are kept here for deeper review. Start with product photos, brand, model, and the recommended action above.",
+          "show": "Show details",
+          "hide": "Hide details"
+        },
+        "audit": {
+          "noteLabel": "Audit note",
+          "notePlaceholder": "Add what you checked, supplier evidence, or why this was dismissed.",
+          "existingNotes": "Audit notes"
+        },
         "focus": {
           "criticalTitle": "Action required now",
-          "criticalLead": "This product has a high-confidence match. Resolve only after review.",
+          "criticalLead": "This product has a high-confidence match. Record a decision only after review.",
           "criticalStepCompare": "Compare your product photo with the first Safety Gate match below.",
-          "criticalStepDecide": "Choose a resolution in the Resolve menu based on your review.",
+          "criticalStepDecide": "Choose an outcome in the Record decision menu based on your review.",
           "criticalStepDocument": "Add internal notes for traceability and supplier follow-up.",
           "safeTitle": "No urgent action needed",
           "safeLead": "Current result is safe. Keep monitoring product updates.",
@@ -329,11 +394,11 @@ const en = {
         "pageOf": "Page {{current}} of {{total}} ({{count}} alerts)"
       },
       "alerts": {
-        "title": "Safety alerts",
-        "subtitle": "Filter and action matches from Safety Gate.",
+        "title": "Review Queue",
+        "subtitle": "Review products needing a decision.",
         "breadcrumbs": {
           "dashboard": "Dashboard",
-          "current": "Safety alerts"
+          "current": "Review queue"
         },
         "meta": {
           "active": "{{count}} active",
@@ -408,19 +473,19 @@ const en = {
           "warningBannerTitle": "{{count}} active alert still needs review",
           "warningBannerTitle_plural": "{{count}} active alerts still need review",
           "warningBannerDescription": "Use this queue for real decisions only: resolve confirmed risks and dismiss false positives quickly.",
-          "queue": "Alert queue",
-          "queueDescription": "Keep the table focused on decisions: filter by status, search product names, and resolve matches directly from one place."
+          "queue": "Product decision queue",
+          "queueDescription": "Confirm likely matches, dismiss false positives, or record what action was taken."
         },
         "toasts": {
           "updated": "Alert updated"
         }
       },
       "manualCheck": {
-        "title": "Manual safety check",
-        "subtitle": "Run a targeted Safety Gate check for a specific product.",
+        "title": "Check Product",
+        "subtitle": "Run an on-demand Safety Gate check for one product.",
         "breadcrumbs": {
           "dashboard": "Dashboard",
-          "current": "Manual check"
+          "current": "Check product"
         },
         "badges": {
           "flagged": "{{count}} flagged",
@@ -444,6 +509,12 @@ const en = {
           "noRisks": "No risks detected yet.",
           "prioritise": "Prioritise these products for action."
         },
+        "bulk": {
+          "title": "Manual full-catalog check",
+          "description": "Checks {{count}} products with Firebase caching: unchanged products are skipped, new or changed products are checked once, and new Safety Gate alerts are compared against the cached catalog.",
+          "checkAllProducts": "Check all products",
+          "checkingAll": "Checking all products..."
+        },
         "catalogue": {
           "accessibilityLabel": "Product catalogue table",
           "heading": "Product Catalogue ({{count}})",
@@ -464,7 +535,7 @@ const en = {
           "firstCheck": "Run your first check",
           "status": {
             "safe": "Safe",
-            "unsafe": "Unsafe",
+            "unsafe": "Needs review",
             "notChecked": "Not checked"
           },
           "actions": {
@@ -480,8 +551,8 @@ const en = {
           "unknown": "Unknown"
         },
         "admin": {
-          "manualReview": "Manual review",
-          "manualReviewDescription": "Pick any product from your latest catalog updates and run a targeted Safety Gate check on demand.",
+          "manualReview": "On-demand review",
+          "manualReviewDescription": "Pick any product from your catalog and run a targeted Safety Gate check when you need an immediate answer.",
           "checkFailed": "Check failed",
           "productFlagged": "Product flagged",
           "catalog": "Catalog",
@@ -504,6 +575,24 @@ const en = {
         "pageLoadFailed": "Page load failed",
         "unknown": "Something went wrong",
         "apiError": "External safety service is temporarily unavailable. Please try again later."
+      },
+      "evidence": {
+        "title": "Audit Trail",
+        "eyebrow": "Audit trail",
+        "heading": "Decision and evidence history",
+        "description": "Review recorded product safety decisions, notes, risk context, and supplier follow-up evidence.",
+        "records": "{{count}} records",
+        "empty": "No product safety decisions have been recorded yet.",
+        "alertNumber": "Safety Gate alert {{number}}",
+        "noNotes": "No note recorded",
+        "table": {
+          "accessibilityLabel": "Product safety evidence table",
+          "product": "Product",
+          "status": "Status",
+          "decision": "Decision",
+          "notes": "Notes / evidence",
+          "updated": "Updated"
+        }
       },
       "news": {
         "title": "News",
@@ -530,6 +619,29 @@ const en = {
         "fallback": "Fallback",
         "environmentDefaultDescription": "Used when the shop has no custom threshold saved yet.",
         "matchingStrictness": "Matching strictness",
+        "monitoringModeEyebrow": "Monitoring mode",
+        "advancedMatchingSettings": "Advanced matching settings",
+        "automationStatusEyebrow": "Automatic monitoring",
+        "automationStatusTitle": "Safety Gate monitoring is working for this store",
+        "automationStatusDescription": "Daily EU Safety Gate updates, Shopify product changes, and audit records are handled automatically. Use these settings only to tune review volume and notifications.",
+        "valueEyebrow": "Subscription value",
+        "valueTitle": "What stays covered",
+        "valueDescription": "These capabilities are the core value merchants keep when they stay subscribed.",
+        "mode": {
+          "broad": "More matches",
+          "balanced": "Balanced",
+          "strict": "Fewer matches"
+        },
+        "status": {
+          "running": "Running",
+          "on": "On",
+          "off": "Off",
+          "dailySafetyGateUpdates": "Daily Safety Gate updates",
+          "shopifyProductUpdates": "New/updated Shopify products",
+          "auditTrail": "Audit trail",
+          "emailDigest": "Email digest",
+          "autoQuarantine": "Auto-quarantine"
+        },
         "strictnessHint": "40-60% is broader scanning. 70-85% is stricter and usually produces fewer false positives.",
         "guidance": "Guidance",
         "recommendedSetup": "Recommended setup",
@@ -541,6 +653,48 @@ const en = {
           "strictTitle": "Strict matching",
           "strictDescription": "Use 80%+ when your catalog is stable and you want fewer manual reviews."
         },
+        "automation": {
+          "eyebrow": "Real-time operations",
+          "title": "Safety automation and alerts",
+          "description": "Configure automatic quarantine for high-risk matches and how your team should be alerted.",
+          "autoDraftTitle": "Auto-quarantine serious risks",
+          "autoDraftDescription": "Automatically draft products in Shopify that match Safety Gate alerts with serious risk (threshold >= 95%).",
+          "emailTitle": "Email alert notifications",
+          "emailDescription": "Send alert summaries via email when new products need review.",
+          "slackTitle": "Slack webhook URL",
+          "slackDescription": "Receive instant Slack notifications when alerts are generated."
+        },
+        "exclusions": {
+          "eyebrow": "Filtering rules",
+          "title": "Exclusion rules",
+          "description": "Exclude specific vendors or product categories from Safety Gate checks to reduce false positives.",
+          "vendorsTitle": "Excluded vendors",
+          "vendorsDescription": "Type a vendor name and press Enter or comma to add it.",
+          "vendorsPlaceholder": "Vendor A, Vendor B, ...",
+          "typesTitle": "Excluded product types",
+          "typesDescription": "Type a product category or type and press Enter or comma to add it.",
+          "typesPlaceholder": "Gift Card, Service, ..."
+        },
+        "plans": {
+          "eyebrow": "Subscription value",
+          "title": "Plan capabilities",
+          "description": "Use these tiers to explain value before enabling Shopify Billing.",
+          "manualTitle": "Free: manual checks",
+          "manualDescription": "Run checks one product at a time and see the latest product status.",
+          "monitorTitle": "Paid: daily monitoring and reports",
+          "monitorDescription": "Monitor new Safety Gate alerts against the catalog, export CSV audit reports, and keep a decision trail.",
+          "advancedTitle": "Advanced: automation and multilingual workflows",
+          "advancedDescription": "Add auto-quarantine, email digests, Slack alerts, supplier follow-up, and EU language workflows."
+        },
+        "valueItems": {
+          "dailyTitle": "Daily catalog monitoring",
+          "dailyDescription": "New Safety Gate alerts are checked against monitored products without the merchant starting a manual scan.",
+          "auditTitle": "Audit-ready evidence",
+          "auditDescription": "Resolved and dismissed decisions keep notes, reasons, and review history for exportable reports.",
+          "workflowTitle": "Shopify-native review workflow",
+          "workflowDescription": "Merchants review only products needing a decision, then resolve, dismiss, or follow up with suppliers."
+        },
+        "saveAll": "Save all settings",
         "workspace": "Workspace",
         "onDemand": "On demand"
       },
@@ -553,10 +707,10 @@ const en = {
         "finishButton": "Finish Setup & Go to Dashboard",
         "steps": {
           "sensitivity": {
-            "title": "Step 1: Set AI Similarity Sensitivity",
-            "description": "Determine how closely a product needs to match a Safety Gate record to trigger an alert.",
-            "label": "Sensitivity Settings",
-            "thresholdLabel": "Sensitivity Threshold: {{value}}%",
+            "title": "Step 1: Set match strictness",
+            "description": "Choose how closely a product should match a Safety Gate record before it needs review.",
+            "label": "Match strictness",
+            "thresholdLabel": "Match threshold: {{value}}%",
             "broad": "40% (Broad - More warnings)",
             "balanced": "70% (Recommended - Balanced)",
             "strict": "90% (Strict - Fewer warnings)",
@@ -570,15 +724,17 @@ const en = {
             }
           },
           "scan": {
-            "title": "Step 2: Run Initial Catalog Scan",
-            "description": "Scan your active Shopify catalog against the Safety Gate database to identify any existing product risks.",
-            "label": "First Scan",
-            "toScan": "Products to scan: {{count}}",
-            "scanning": "Comparing products with Safety Gate database...",
-            "complete": "Catalog scan complete!",
+            "title": "Step 2: Import and monitor current catalog",
+            "description": "Import your current Shopify products into Safety Gate monitoring, then compare the catalog with recent Safety Gate alerts.",
+            "label": "Catalog import",
+            "toScan": "Products to import for monitoring: {{count}}",
+            "scanning": "Importing catalog and comparing products with Safety Gate alerts...",
+            "complete": "Catalog is now monitored",
             "scanned": "Products Scanned: {{count}}",
+            "imported": "Products imported for monitoring: {{count}}",
+            "monitored": "Products compared with Safety Gate alerts: {{count}}",
             "alerts": "Risk Alerts Created: {{count}}",
-            "startButton": "Start Catalog Scan"
+            "startButton": "Import and monitor current catalog"
           },
           "automation": {
             "title": "Step 3: Auto-Monitoring & Alerts",
@@ -607,23 +763,24 @@ const en = {
       },
       "uxEnhancements": {
         "complianceRing": {
-          "title": "Compliance Rating",
-          "subtitle": "Percentage of store products verified as safe",
-          "scoreLabel": "Compliant"
+          "title": "Monitored catalog health",
+          "subtitle": "Share of checked products without open review items",
+          "scoreLabel": "Clear"
         },
         "activityTimeline": {
-          "title": "Recent Activity Timeline",
-          "description": "Historical record of safety scans and alert management.",
-          "noActivity": "No recent actions. Keep your products updated.",
+          "eyebrow": "Audit trail",
+          "title": "Decision and evidence history",
+          "description": "Recorded safety checks, product decisions, and evidence kept for audit reports.",
+          "noActivity": "No audit events yet. Run monitoring to start building evidence.",
           "actions": {
-            "check": "Product check completed",
-            "quarantine": "Product auto-quarantined",
-            "resolve": "Alert marked as resolved",
-            "dismiss": "Alert marked as dismissed"
+            "check": "Product checked",
+            "quarantine": "Product marked for review",
+            "resolve": "Decision recorded: resolved",
+            "dismiss": "Decision recorded: dismissed"
           },
           "details": {
             "checkSafe": "Product checked and verified as safe.",
-            "checkUnsafe": "Safety risk detected! Alert created.",
+            "checkUnsafe": "Product needs review. Decision record created.",
             "bulkScanned": "Bulk catalog scan completed.",
             "autoDrafted": "Product status changed to draft in Shopify.",
             "reason": "Reason: {{reason}}",
@@ -644,7 +801,7 @@ const en = {
           },
           "quickFilters": {
             "title": "Quick Filters",
-            "allAlerts": "All Alerts",
+            "allAlerts": "All records",
             "allAlertsDesc": "Show all safety warnings in catalog.",
             "needsReview": "Needs Review",
             "needsReviewDesc": "Pending safety alerts.",

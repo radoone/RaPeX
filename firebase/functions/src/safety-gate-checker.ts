@@ -1,11 +1,15 @@
+import { createHash } from "node:crypto";
+import { FieldValue } from "firebase-admin/firestore";
 import { googleAI } from "@genkit-ai/google-genai";
 import { type Part } from "genkit";
-import { functionsAi } from "./firebase-admin.js";
+import { db, functionsAi } from "./firebase-admin.js";
+import { FIRESTORE_COLLECTIONS } from "./safety-gate-config.js";
 import {
   AnalysisPromptInputSchema,
   ProductInputSchema,
   type AnalysisPromptInput,
   type ProductInput,
+  type SafetyCheckResult,
   SafetyCheckResultSchema,
 } from "./safety-gate-checker.schemas.js";
 import {
@@ -33,6 +37,151 @@ const productMatchAnalysisPrompt = functionsAi.prompt<
   typeof AnalysisPromptInputSchema,
   typeof SafetyCheckResultSchema
 >("productMatchAnalysis");
+
+type CachedMatchDocument = {
+  shop: string;
+  productId: string;
+  sourceUpdatedAt?: string;
+  productFingerprint: string;
+  alertSignature: string;
+  alertCount: number;
+  result: SafetyCheckResult;
+  createdAt: FieldValue;
+  updatedAt: FieldValue;
+  lastUsedAt: FieldValue;
+  hitCount: number;
+};
+
+function hashValue(value: unknown): string {
+  return createHash("sha256").update(JSON.stringify(value)).digest("hex");
+}
+
+function buildProductFingerprint(product: ProductInput): string {
+  return hashValue({
+    name: product.name,
+    category: product.category,
+    description: product.description,
+    imageUrl: product.imageUrl,
+    imageUrls: product.imageUrls,
+    brand: product.brand,
+    model: product.model,
+    sourceUpdatedAt: product.sourceUpdatedAt,
+  });
+}
+
+function buildAlertSignature(alerts: NormalizedAlert[]): string {
+  return alerts
+    .map((alert) => ({
+      id: alert.id,
+      recordid: alert.meta?.recordid,
+      alertDate: alert.meta?.alert_date,
+      recordTimestamp: alert.meta?.record_timestamp,
+    }))
+    .sort((left, right) => `${left.id}:${left.recordTimestamp || left.alertDate}`.localeCompare(
+      `${right.id}:${right.recordTimestamp || right.alertDate}`,
+    ))
+    .map((alert) => `${alert.id}:${alert.recordTimestamp || alert.alertDate || ""}`)
+    .join("|");
+}
+
+function buildMatchCacheKey(product: ProductInput, alerts: NormalizedAlert[]): {
+  docId: string;
+  productFingerprint: string;
+  alertSignature: string;
+} | null {
+  const shop = product.shop?.trim();
+  const productId = product.productId?.trim();
+  if (!shop || !productId || alerts.length === 0) {
+    return null;
+  }
+
+  const productFingerprint = buildProductFingerprint(product);
+  const alertSignature = buildAlertSignature(alerts);
+  const docId = hashValue({
+    shop,
+    productId,
+    productFingerprint,
+    alertSignature,
+  });
+
+  return { docId, productFingerprint, alertSignature };
+}
+
+async function readCachedMatchResult(
+  product: ProductInput,
+  alerts: NormalizedAlert[],
+): Promise<SafetyCheckResult | null> {
+  const key = buildMatchCacheKey(product, alerts);
+  if (!key) {
+    return null;
+  }
+
+  const snapshot = await db
+    .collection(FIRESTORE_COLLECTIONS.merchantMatchCache)
+    .doc(key.docId)
+    .get();
+
+  if (!snapshot.exists) {
+    return null;
+  }
+
+  const data = snapshot.data() as Partial<CachedMatchDocument> | undefined;
+  if (!data?.result) {
+    return null;
+  }
+
+  await snapshot.ref.set(
+    {
+      lastUsedAt: FieldValue.serverTimestamp(),
+      hitCount: FieldValue.increment(1),
+    },
+    { merge: true },
+  );
+
+  console.log("Using cached Safety Gate AI match result", {
+    shop: product.shop,
+    productId: product.productId,
+    alertCount: alerts.length,
+    cacheDocId: key.docId,
+  });
+
+  return {
+    ...data.result,
+    checkedAt: new Date().toISOString(),
+  };
+}
+
+async function writeCachedMatchResult(
+  product: ProductInput,
+  alerts: NormalizedAlert[],
+  result: SafetyCheckResult,
+): Promise<void> {
+  const key = buildMatchCacheKey(product, alerts);
+  const shop = product.shop?.trim();
+  const productId = product.productId?.trim();
+  if (!key || !shop || !productId) {
+    return;
+  }
+
+  const payload: CachedMatchDocument = {
+    shop,
+    productId,
+    productFingerprint: key.productFingerprint,
+    alertSignature: key.alertSignature,
+    alertCount: alerts.length,
+    result: JSON.parse(JSON.stringify(result)) as SafetyCheckResult,
+    createdAt: FieldValue.serverTimestamp(),
+    updatedAt: FieldValue.serverTimestamp(),
+    lastUsedAt: FieldValue.serverTimestamp(),
+    hitCount: 0,
+    ...(product.sourceUpdatedAt ? { sourceUpdatedAt: product.sourceUpdatedAt } : {}),
+  };
+
+  await db
+    .collection(FIRESTORE_COLLECTIONS.merchantMatchCache)
+    .doc(key.docId)
+    .set(payload, { merge: true });
+}
 
 function appendMediaMessages(
   messages: Array<{ role: "model" | "user" | "system" | "tool"; content: Part[] }>,
@@ -182,6 +331,11 @@ export async function checkProductAgainstAlerts(
     return createNoAlertsResult(productImageCount);
   }
 
+  const cachedResult = await readCachedMatchResult(product, candidateAlerts);
+  if (cachedResult) {
+    return cachedResult;
+  }
+
   const comparisonPrompt = buildComparisonPrompt(product, candidateAlerts);
   const analysisResult = await analyzeProductMatches(product, candidateAlerts, comparisonPrompt);
 
@@ -199,7 +353,9 @@ export async function checkProductAgainstAlerts(
   console.log("Gemini analysis response:", analysisResult.response.text);
   console.log("Safety check analysis mode:", analysisResult.analysis);
   const matches = parseAnalysisMatches(analysisResult.response);
-  return buildSafetyCheckResult(matches, candidateAlerts, analysisResult.analysis);
+  const result = buildSafetyCheckResult(matches, candidateAlerts, analysisResult.analysis);
+  await writeCachedMatchResult(product, candidateAlerts, result);
+  return result;
 }
 
 export const checkProductSafety = functionsAi.defineFlow(
