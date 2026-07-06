@@ -6,9 +6,12 @@ import { useTranslation } from "react-i18next";
 import { authenticate } from "../shopify.server";
 import db from "../merchant-db.server";
 import { LanguageSwitcher } from "../components";
+import { requireActiveBilling } from "../services/billing.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { session } = await authenticate.admin(request);
+  const { billing, session } = await authenticate.admin(request);
+  const billingRedirect = await requireActiveBilling(billing, session.shop);
+  if (billingRedirect) return billingRedirect as never;
   const settings = await db.safetySetting.findUnique({
     where: { shop: session.shop },
   });
@@ -30,7 +33,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const { session } = await authenticate.admin(request);
+  const { billing, session } = await authenticate.admin(request);
+  const billingRedirect = await requireActiveBilling(billing, session.shop);
+  if (billingRedirect) return billingRedirect as never;
   const formData = await request.formData();
   
   const threshold = Number(formData.get("similarityThreshold"));
@@ -39,7 +44,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     : 70;
 
   const autoDraftHighRisk = formData.get("autoDraftHighRisk") === "true";
-  const emailNotifications = formData.get("emailNotifications") === "true";
   const slackWebhookUrl = (formData.get("slackWebhookUrl") as string) || null;
   const excludeVendors = (formData.get("excludeVendors") as string) || null;
   const excludeTypes = (formData.get("excludeTypes") as string) || null;
@@ -49,7 +53,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     update: {
       similarityThreshold,
       autoDraftHighRisk,
-      emailNotifications,
+      emailNotifications: false,
       slackWebhookUrl,
       excludeVendors,
       excludeTypes,
@@ -58,7 +62,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       shop: session.shop,
       similarityThreshold,
       autoDraftHighRisk,
-      emailNotifications,
+      emailNotifications: false,
       slackWebhookUrl,
       excludeVendors,
       excludeTypes,
@@ -102,7 +106,6 @@ export default function Settings() {
   
   const [value, setValue] = useState((settings?.similarityThreshold ?? 70).toString());
   const [autoDraft, setAutoDraft] = useState(settings?.autoDraftHighRisk ?? false);
-  const [emailNotify, setEmailNotify] = useState(settings?.emailNotifications ?? false);
   const [slackUrl, setSlackUrl] = useState(settings?.slackWebhookUrl ?? "");
 
   const [vendorsList, setVendorsList] = useState<string[]>([]);
@@ -114,7 +117,6 @@ export default function Settings() {
     if (settings) {
       setValue((settings.similarityThreshold ?? 70).toString());
       setAutoDraft(settings.autoDraftHighRisk ?? false);
-      setEmailNotify(settings.emailNotifications ?? false);
       setSlackUrl(settings.slackWebhookUrl ?? "");
       setVendorsList(settings.excludeVendors ? settings.excludeVendors.split(',').map(s => s.trim()).filter(Boolean) : []);
       setTypesList(settings.excludeTypes ? settings.excludeTypes.split(',').map(s => s.trim()).filter(Boolean) : []);
@@ -181,7 +183,7 @@ export default function Settings() {
       <div className="admin-stack">
         <Form method="post">
           <input type="hidden" name="autoDraftHighRisk" value={autoDraft ? "true" : "false"} />
-          <input type="hidden" name="emailNotifications" value={emailNotify ? "true" : "false"} />
+          <input type="hidden" name="emailNotifications" value="false" />
           <input type="hidden" name="excludeVendors" value={vendorsList.join(', ')} />
           <input type="hidden" name="excludeTypes" value={typesList.join(', ')} />
 
@@ -206,10 +208,6 @@ export default function Settings() {
               <div className="settings-status-item">
                 <span>{t("settingsAdmin.status.auditTrail")}</span>
                 <strong>{t("settingsAdmin.status.on")}</strong>
-              </div>
-              <div className="settings-status-item">
-                <span>{t("settingsAdmin.status.emailDigest")}</span>
-                <strong>{emailNotify ? t("settingsAdmin.status.on") : t("settingsAdmin.status.off")}</strong>
               </div>
               <div className="settings-status-item">
                 <span>{t("settingsAdmin.status.autoQuarantine")}</span>
@@ -306,22 +304,6 @@ export default function Settings() {
                     </label>
                   </div>
 
-                  <div className="admin-checkbox-group">
-                    <label style={{ display: 'flex', alignItems: 'flex-start', cursor: 'pointer', gap: '10px' }}>
-                      <input
-                        type="checkbox"
-                        checked={emailNotify}
-                        onChange={(e) => setEmailNotify(e.target.checked)}
-                        style={{ marginTop: '3px', transform: 'scale(1.15)' }}
-                      />
-                      <div>
-                        <s-text fontWeight="bold">{t("settingsAdmin.automation.emailTitle")}</s-text>
-                        <br />
-                        <s-text tone="subdued" size="small">{t("settingsAdmin.automation.emailDescription")}</s-text>
-                      </div>
-                    </label>
-                  </div>
-
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                     <s-text fontWeight="bold">{t("settingsAdmin.automation.slackTitle")}</s-text>
                     <s-text tone="subdued" size="small">{t("settingsAdmin.automation.slackDescription")}</s-text>
@@ -413,7 +395,6 @@ export default function Settings() {
                 <s-button type="button" variant="secondary" onClick={() => {
                   setValue(envDefault.toString());
                   setAutoDraft(false);
-                  setEmailNotify(false);
                   setSlackUrl("");
                   setVendorInput("");
                   setTypeInput("");

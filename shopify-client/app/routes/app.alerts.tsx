@@ -9,18 +9,24 @@ import db from "../merchant-db.server";
 import {
   AlertTable,
   AlertDetailModal,
-  SummaryCard,
 } from "../components";
+import { requireActiveBilling } from "../services/billing.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { session, admin } = await authenticate.admin(request);
+  const { billing, session, admin } = await authenticate.admin(request);
+  const billingRedirect = await requireActiveBilling(billing, session.shop);
+  if (billingRedirect) return billingRedirect as never;
 
   const url = new URL(request.url);
   const page = parseInt(url.searchParams.get("page") || "1");
   const pageSize = 25;
   const offset = (page - 1) * pageSize;
 
-  const statusFilters = url.searchParams.getAll("status");
+  const showAllRecords = url.searchParams.get("view") === "all";
+  const statusFilters = showAllRecords ? [] : url.searchParams.getAll("status");
+  if (!showAllRecords && statusFilters.length === 0) {
+    statusFilters.push("active");
+  }
   const riskLevelFilters = url.searchParams.getAll("riskLevel");
   const search = url.searchParams.get("search") || undefined;
   const sortByParam = url.searchParams.get("sortBy") || "created";
@@ -126,14 +132,16 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return json({
     alerts,
     pagination: { currentPage: page, totalPages: Math.ceil(totalCount / pageSize), totalCount, hasNext: page < Math.ceil(totalCount / pageSize), hasPrevious: page > 1 },
-    filters: { status: statusFilters, riskLevel: riskLevelFilters, search, sortBy: sortByParam, sortOrder: sortOrderParam },
+    filters: { status: statusFilters, riskLevel: riskLevelFilters, search, sortBy: sortByParam, sortOrder: sortOrderParam, showAllRecords },
     stats: { active: activeCount, resolved: resolvedCount, dismissed: dismissedCount, total: activeCount + resolvedCount + dismissedCount, criticalActive: criticalActiveAlerts },
     shop: session.shop,
   });
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const { session } = await authenticate.admin(request);
+  const { billing, session } = await authenticate.admin(request);
+  const billingRedirect = await requireActiveBilling(billing, session.shop);
+  if (billingRedirect) return billingRedirect as never;
   const formData = await request.formData();
   const action = formData.get("action") as string;
   const alertId = formData.get("alertId") as string;
@@ -232,6 +240,7 @@ export default function AlertsPage() {
     // Status filters
     const statusVal = overrides && overrides.hasOwnProperty('status') ? overrides.status : statusFilter;
     statusVal?.forEach(v => params.append('status', v));
+    if (statusVal?.length === 0) params.set('view', 'all');
 
     // Risk level filters
     const riskVal = overrides && overrides.hasOwnProperty('riskLevel') ? overrides.riskLevel : riskLevelFilter;
@@ -304,52 +313,6 @@ export default function AlertsPage() {
             </div>
           </s-banner>
         )}
-
-        <section className="metric-grid">
-          <SummaryCard
-            title={t('uxEnhancements.alerts.quickFilters.allAlerts')}
-            value={stats.total}
-            description={t('uxEnhancements.alerts.quickFilters.allAlertsDesc')}
-            onClick={() => applyFilters({ status: [], riskLevel: [] })}
-            isActive={statusFilter.length === 0 && riskLevelFilter.length === 0}
-          />
-          <SummaryCard
-            title={t('uxEnhancements.alerts.quickFilters.needsReview')}
-            value={stats.active}
-            badge={
-              <s-badge tone={stats.active > 0 ? "critical" : "success"}>
-                {stats.active > 0 ? t('status.needsReview') : t('status.allClear')}
-              </s-badge>
-            }
-            description={t('uxEnhancements.alerts.quickFilters.needsReviewDesc')}
-            onClick={() => applyFilters({ status: ['active'], riskLevel: [] })}
-            isActive={statusFilter.length === 1 && statusFilter.includes('active') && riskLevelFilter.length === 0}
-          />
-          <SummaryCard
-            title={t('uxEnhancements.alerts.quickFilters.highRisk')}
-            value={stats.criticalActive}
-            badge={
-              <s-badge tone={stats.criticalActive > 0 ? "critical" : "success"}>
-                {stats.criticalActive > 0 ? t('status.needsReview') : t('status.allClear')}
-              </s-badge>
-            }
-            description={t('uxEnhancements.alerts.quickFilters.highRiskDesc')}
-            onClick={() => applyFilters({ status: ['active'], riskLevel: ['serious', 'high'] })}
-            isActive={statusFilter.includes('active') && riskLevelFilter.includes('serious') && riskLevelFilter.includes('high')}
-          />
-          <SummaryCard
-            title={t('uxEnhancements.alerts.quickFilters.resolved')}
-            value={stats.resolved + stats.dismissed}
-            badge={
-              <s-badge tone="success">
-                {t('alerts.metrics.resolved', { count: stats.resolved })}
-              </s-badge>
-            }
-            description={t('uxEnhancements.alerts.quickFilters.resolvedDesc')}
-            onClick={() => applyFilters({ status: ['resolved', 'dismissed'], riskLevel: [] })}
-            isActive={statusFilter.includes('resolved') && statusFilter.includes('dismissed') && riskLevelFilter.length === 0}
-          />
-        </section>
 
         <section className="admin-card">
           <div className="admin-card__header">

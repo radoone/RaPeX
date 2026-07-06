@@ -2,9 +2,11 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData, useNavigate } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
+import { useMemo, useState } from "react";
 import { authenticate } from "../shopify.server";
 import db from "../merchant-db.server";
 import { formatRelativeDate } from "../components/AlertTable";
+import { requireActiveBilling } from "../services/billing.server";
 
 function parseAlertSummary(checkResult: string | null | undefined) {
   try {
@@ -44,7 +46,9 @@ function resolutionLabelKey(resolutionType: string | null) {
 }
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { session } = await authenticate.admin(request);
+  const { billing, session } = await authenticate.admin(request);
+  const billingRedirect = await requireActiveBilling(billing, session.shop);
+  if (billingRedirect) return billingRedirect as never;
   const alerts = await db.safetyAlert.findMany({
     where: { shop: session.shop },
     orderBy: { updatedAt: "desc" },
@@ -72,6 +76,20 @@ export default function EvidencePage() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const dateLocale = i18n.language === "sk" ? "sk-SK" : "en-GB";
+  const [searchValue, setSearchValue] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [expandedRecords, setExpandedRecords] = useState<string[]>([]);
+  const filteredRecords = useMemo(() => {
+    const query = searchValue.trim().toLocaleLowerCase();
+    return records.filter((record: any) => {
+      const matchesStatus = statusFilter === "all" || record.status === statusFilter;
+      const searchable = [record.productTitle, record.alertNumber, record.notes, record.reason]
+        .filter(Boolean)
+        .join(" ")
+        .toLocaleLowerCase();
+      return matchesStatus && (!query || searchable.includes(query));
+    });
+  }, [records, searchValue, statusFilter]);
 
   return (
     <s-page size="large" className="page-shell" suppressHydrationWarning>
@@ -88,11 +106,35 @@ export default function EvidencePage() {
               <h2 className="admin-card__title">{t("evidence.heading")}</h2>
               <p className="admin-card__description">{t("evidence.description")}</p>
             </div>
-            <s-badge tone="info">{t("evidence.records", { count: records.length })}</s-badge>
+            <s-badge tone="info">
+              {filteredRecords.length === records.length
+                ? t("evidence.records", { count: records.length })
+                : t("evidence.filteredRecords", { visible: filteredRecords.length, total: records.length })}
+            </s-badge>
           </div>
         </section>
 
         <section className="admin-card">
+          <div className="admin-toolbar evidence-toolbar">
+            <s-text-field
+              label={t("evidence.filters.searchLabel")}
+              labelAccessibilityVisibility="exclusive"
+              icon="search"
+              placeholder={t("evidence.filters.searchPlaceholder")}
+              value={searchValue}
+              onInput={(event: any) => setSearchValue(event.currentTarget.value || "")}
+            />
+            <s-select
+              label={t("evidence.filters.statusLabel")}
+              value={statusFilter}
+              onChange={(event: any) => setStatusFilter(event.currentTarget.value || "all")}
+            >
+              <s-option value="all">{t("common.all")}</s-option>
+              <s-option value="active">{t("status.needsReview")}</s-option>
+              <s-option value="resolved">{t("status.resolved")}</s-option>
+              <s-option value="dismissed">{t("status.dismissed")}</s-option>
+            </s-select>
+          </div>
           <s-table accessibilityLabel={t("evidence.table.accessibilityLabel")}>
             <s-table-header-row>
               <s-table-header listSlot="primary">{t("evidence.table.product")}</s-table-header>
@@ -102,15 +144,17 @@ export default function EvidencePage() {
               <s-table-header>{t("evidence.table.updated")}</s-table-header>
             </s-table-header-row>
             <s-table-body>
-              {records.length === 0 ? (
+              {filteredRecords.length === 0 ? (
                 <s-table-row>
                   <s-table-cell colSpan={5}>
                     <s-box padding="large">
-                      <s-text tone="subdued">{t("evidence.empty")}</s-text>
+                      <s-text tone="subdued">
+                        {records.length === 0 ? t("evidence.empty") : t("evidence.filters.noResults")}
+                      </s-text>
                     </s-box>
                   </s-table-cell>
                 </s-table-row>
-              ) : records.map((record: any) => (
+              ) : filteredRecords.map((record: any) => (
                 <s-table-row key={record.id}>
                   <s-table-cell>
                     <s-stack gap="small-100">
@@ -138,9 +182,23 @@ export default function EvidencePage() {
                     </s-stack>
                   </s-table-cell>
                   <s-table-cell>
-                    <div className="evidence-note">
+                    <div className={`evidence-note${expandedRecords.includes(record.id) ? " evidence-note--expanded" : ""}`}>
                       <s-text>{record.notes || record.reason || t("evidence.noNotes")}</s-text>
                     </div>
+                    {(record.notes || record.reason) ? (
+                      <s-button
+                        variant="tertiary"
+                        size="small"
+                        accessibilityLabel={expandedRecords.includes(record.id)
+                          ? t("evidence.filters.collapseForProduct", { title: record.productTitle })
+                          : t("evidence.filters.expandForProduct", { title: record.productTitle })}
+                        onClick={() => setExpandedRecords((current) => current.includes(record.id)
+                          ? current.filter((id) => id !== record.id)
+                          : [...current, record.id])}
+                      >
+                        {expandedRecords.includes(record.id) ? t("evidence.filters.showLess") : t("evidence.filters.showMore")}
+                      </s-button>
+                    ) : null}
                   </s-table-cell>
                   <s-table-cell>
                     <s-text>{formatRelativeDate(new Date(record.updatedAt), t, dateLocale)}</s-text>

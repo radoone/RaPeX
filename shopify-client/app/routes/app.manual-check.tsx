@@ -12,6 +12,7 @@ import { runProductSafetyCheck } from "../services/product-safety-admin.server";
 import { runMerchantDeltaMonitoring } from "../services/safety-gate-checker.server";
 import { AlertDetailModal, SummaryCard } from "../components";
 import { type ResolutionType, formatRelativeDate } from "../components/AlertTable";
+import { requireActiveBilling } from "../services/billing.server";
 
 type ShopifyCatalogProduct = {
   id: string;
@@ -127,7 +128,9 @@ async function planCatalogChecksForManualCheck(params: {
 }
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { admin, session } = await authenticate.admin(request);
+  const { admin, billing, session } = await authenticate.admin(request);
+  const billingRedirect = await requireActiveBilling(billing, session.shop);
+  if (billingRedirect) return billingRedirect as never;
   const url = new URL(request.url);
   const search = url.searchParams.get("search")?.trim() || "";
 
@@ -230,7 +233,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const { admin, session } = await authenticate.admin(request);
+  const { admin, billing, session } = await authenticate.admin(request);
+  const billingRedirect = await requireActiveBilling(billing, session.shop);
+  if (billingRedirect) return billingRedirect as never;
   const formData = await request.formData();
   const action = formData.get("action") as string;
   const updateOwnedAlert = async (
@@ -475,7 +480,7 @@ export default function ManualCheckPage() {
   const existingAlerts = Object.values(alertsByProduct || {}) as any[];
 
   const productCheckEntries = Object.values(checksByProduct || {});
-  const unsafeProducts = productCheckEntries.filter((e: any) => e.isSafe === false).length;
+  const activeReviewProducts = Object.values(alertsByProduct || {}).filter((alert: any) => alert.status === "active").length;
   const totalChecks = productCheckEntries.reduce((sum: number, e: any) => sum + e.totalChecks, 0);
   const applySearch = useCallback(() => {
     const params = new URLSearchParams();
@@ -599,16 +604,6 @@ export default function ManualCheckPage() {
   return (
     <s-page size="large" className="page-shell" suppressHydrationWarning>
       <s-heading slot="title" size="large" suppressHydrationWarning>{t('manualCheck.title')}</s-heading>
-      <s-button
-        slot="primary-action"
-        variant="primary"
-        loading={isCheckingAllProducts || undefined}
-        disabled={isLoading || undefined}
-        onClick={handleCheckAllProducts}
-        suppressHydrationWarning
-      >
-        {isCheckingAllProducts ? t("manualCheck.bulk.checkingAll") : t("manualCheck.bulk.checkAllProducts")}
-      </s-button>
       <s-button slot="secondary-actions" variant="secondary" href="/app/alerts" suppressHydrationWarning>
         {t('actions.viewAlerts')}
       </s-button>
@@ -640,8 +635,8 @@ export default function ManualCheckPage() {
           </div>
           <div className="admin-card__header admin-card__header--compact">
             <div className="admin-inline-meta">
-              <s-badge tone={unsafeProducts > 0 ? "critical" : "success"}>
-                {unsafeProducts === 0 ? t('status.allClear') : t('manualCheck.badges.flagged', { count: unsafeProducts })}
+              <s-badge tone={activeReviewProducts > 0 ? "critical" : "success"}>
+                {activeReviewProducts === 0 ? t('status.allClear') : t('manualCheck.badges.needsReview', { count: activeReviewProducts })}
               </s-badge>
               <s-badge tone="info">{t('manualCheck.badges.checks', { count: totalChecks })}</s-badge>
             </div>
@@ -686,10 +681,10 @@ export default function ManualCheckPage() {
             description={t('manualCheck.overview.productsDescription')}
           />
           <SummaryCard
-            title={t('manualCheck.overview.productsFlagged')}
-            value={unsafeProducts}
-            badge={<s-badge tone={unsafeProducts === 0 ? "success" : "critical"}>{unsafeProducts === 0 ? t('status.allClear') : t('status.needsReview')}</s-badge>}
-            description={unsafeProducts === 0 ? t('manualCheck.overview.noRisks') : t('manualCheck.overview.prioritise')}
+            title={t('manualCheck.overview.productsNeedingReview')}
+            value={activeReviewProducts}
+            badge={<s-badge tone={activeReviewProducts === 0 ? "success" : "critical"}>{activeReviewProducts === 0 ? t('status.allClear') : t('status.needsReview')}</s-badge>}
+            description={activeReviewProducts === 0 ? t('manualCheck.overview.noOpenReviews') : t('manualCheck.overview.prioritise')}
           />
         </section>
 
@@ -752,7 +747,14 @@ export default function ManualCheckPage() {
                     : t('manualCheck.catalogue.status.notChecked');
                   const existingAlert = alertsByProduct[productId];
                   const hasAlert = Boolean(existingAlert);
+                  const hasActiveAlert = existingAlert?.status === "active";
                   const isProductLoading = isCheckingOneProduct && selectedProduct?.id === product.id;
+                  const currentStatusTone = hasActiveAlert ? "critical" : hasAlert ? "success" : statusTone;
+                  const currentStatusLabel = hasActiveAlert
+                    ? t('manualCheck.catalogue.status.unsafe')
+                    : hasAlert
+                      ? t('manualCheck.catalogue.status.reviewed')
+                      : statusLabel;
 
                   return (
                     <s-table-row key={product.id}>
@@ -788,7 +790,7 @@ export default function ManualCheckPage() {
                             <div className="pulsing-skeleton skeleton-row-bar" style={{ width: '80px', height: '24px', borderRadius: '12px' }} />
                           ) : (
                             <>
-                              <s-badge tone={statusTone}>{statusLabel}</s-badge>
+                              <s-badge tone={currentStatusTone}>{currentStatusLabel}</s-badge>
                               {lastCheck && (
                                 <span className="admin-helper">
                                   {formatRelativeDate(lastCheck, t, dateLocale)}
@@ -805,6 +807,7 @@ export default function ManualCheckPage() {
                             <s-button
                               size="small"
                               variant="secondary"
+                              accessibilityLabel={t('manualCheck.catalogue.actions.viewForProduct', { title: product.title })}
                               commandFor={`manual-alert-${existingAlert.id}`}
                               command="--show"
                             >
@@ -814,6 +817,9 @@ export default function ManualCheckPage() {
                           <s-button
                             size="small"
                             variant={checks.totalChecks > 0 ? "secondary" : "primary"}
+                            accessibilityLabel={checks.totalChecks > 0
+                              ? t('manualCheck.catalogue.actions.checkAgainForProduct', { title: product.title })
+                              : t('manualCheck.catalogue.actions.checkSafetyForProduct', { title: product.title })}
                             loading={isProductLoading || undefined}
                             disabled={isLoading || undefined}
                             onClick={() => handleProductCheck(product)}

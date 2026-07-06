@@ -1,6 +1,7 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { authenticate } from "../shopify.server";
 import db from "../merchant-db.server";
+import { requireActiveBilling } from "../services/billing.server";
 
 function csvCell(value: unknown) {
   const text = value === null || value === undefined ? "" : String(value);
@@ -38,7 +39,9 @@ function parsePrimaryWarning(checkResult: string | null | undefined) {
 }
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { session } = await authenticate.admin(request);
+  const { billing, session } = await authenticate.admin(request);
+  const billingRedirect = await requireActiveBilling(billing, session.shop);
+  if (billingRedirect) return billingRedirect as never;
   const alerts = await db.safetyAlert.findMany({
     where: { shop: session.shop },
     orderBy: { createdAt: "desc" },

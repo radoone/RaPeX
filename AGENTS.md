@@ -113,9 +113,11 @@ can be worked on without changing Shopify auth or app routes.
 7. The Shopify app upserts checked Shopify products to Firestore `merchant_products` through Firebase endpoint `upsertMerchantProductAPI`.
 8. Merchant-facing alerts/checks/settings are stored in Firestore (`merchant_alerts`, `merchant_checks`, `merchant_settings`).
 9. Shopify Admin product detail extensions show the latest Safety Gate state inline and can trigger a fresh check from the product page.
-10. Daily monitoring defaults to "since last check", while manual/user-triggered monitoring can also run against explicit recent windows such as the last 7 days by passing `monitoringMode` / `days` to the Firebase monitoring API.
-11. Monitoring compares only RAPEX records newer than the chosen checkpoint/window in `merchant_monitor_state`, then uses vector retrieval over `merchant_products` to shortlist likely merchant products before running the expensive final matcher.
-12. Prisma remains only for Shopify sessions.
+10. The public Shopify app configuration currently uses `read_products`; high-risk automation creates merchant alerts and priority-review activity entries, but does not mutate Shopify product status. Do not reintroduce `write_products` unless product status updates are intentionally restored and justified for Shopify App Store review.
+11. Shopify App Pricing is mandatory in the Shopify app UI: pricing, trial days, public/private plans, and test plans are configured in the Shopify Partner Dashboard. The app checks active payment status with managed pricing support and redirects unpaid merchants to `https://admin.shopify.com/store/:store_handle/charges/:app_handle/pricing_plans`; set `SHOPIFY_APP_HANDLE` to match the Shopify app handle and keep `SHOPIFY_BILLING_TEST=true` only for development/private test plans. For local UI/UX testing only, the billing guard is bypassed when `NODE_ENV !== "production"` unless `SHOPIFY_BILLING_BYPASS=false`; never rely on the bypass for production or App Store review.
+12. Daily monitoring defaults to "since last check", while manual/user-triggered monitoring can also run against explicit recent windows such as the last 7 days by passing `monitoringMode` / `days` to the Firebase monitoring API.
+13. Monitoring compares only RAPEX records newer than the chosen checkpoint/window in `merchant_monitor_state`, then uses vector retrieval over `merchant_products` to shortlist likely merchant products before running the expensive final matcher.
+14. Prisma remains only for Shopify sessions.
 
 ## Important product behavior
 
@@ -134,11 +136,14 @@ can be worked on without changing Shopify auth or app routes.
 - If the external/API check fails, the app now uses a robust **ErrorBoundary** system to inform the merchant and allow retry, rather than silently failing open with a "safe" result.
 - The UI uses **Shopify Polaris Web Components** (with `s-` prefix) to ensure a native look and feel within the Shopify Admin.
 - The Shopify app UI should follow a Shopify Admin merchant workflow: **review match → compare product → choose action → keep an audit trail**. Prefer clear merchant actions such as "Needs review", "Check one product", "Review alerts", "Resolve", and "Dismiss" over internal implementation language such as "active", "unsafe", "candidate alerts", or raw monitoring modes.
+- "Needs review" is reserved for active unresolved merchant decisions across the dashboard, Review Queue, and manual product checks. Historical resolved/dismissed matches must be labelled as reviewed history, not counted as current flagged products. Cached catalog refresh actions should describe the merchant outcome (for example, "Refresh catalog coverage") instead of implying every unchanged product is rechecked from scratch.
 - The **Alert Table** supports **Bulk Actions** (Resolve/Dismiss) for efficient management of multiple findings.
 - High-risk alerts ("Serious" or "High") are visually prioritized in the UI with critical color coding and borders.
 - The **Alert Detail Modal** should prioritize merchant decision-making first: show the Shopify product, the likely Safety Gate match, why it matched, and the recommended action before exposing deeper technical scoring/debug details.
 - Manual checks now include **Skeleton loading states** and product search so merchants can find a specific Shopify product instead of scanning a fixed recent-products list.
 - The dashboard primary action should describe the actual monitoring behavior. "Check all products" implies a full catalog scan; use clearer wording when the action checks new Safety Gate alerts or runs delta monitoring.
+- The Shopify app should sell its value inside the product UI: onboarding is value-first, dashboard shows subscription proof metrics, and empty alert queues show a demo Safety Gate match workflow so new merchants understand the paid outcome before real alerts exist.
+- Email notifications are not exposed in the merchant UI until real email delivery exists. Slack webhook alerts may remain visible because the app sends Slack payloads when configured.
 - The merchant UI exposes language selection for the 24 official EU languages: English, Bulgarian, Czech, Danish, German, Greek, Spanish, Estonian, Finnish, French, Irish, Croatian, Hungarian, Italian, Lithuanian, Latvian, Maltese, Dutch, Polish, Portuguese, Romanian, Slovak, Slovenian, and Swedish.
 
 ## Technical Standards & Lessons Learned

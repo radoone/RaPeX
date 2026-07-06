@@ -7,6 +7,7 @@ import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
 import db, { type SafetySettingRecord } from "../merchant-db.server";
 import { OnboardingWizard, formatRelativeDate } from "../components";
+import { requireActiveBilling } from "../services/billing.server";
 import {
   runMerchantDeltaMonitoring,
   shopifyProductToProductData,
@@ -135,7 +136,9 @@ async function importCurrentCatalogForMonitoring(params: {
 }
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { session, admin } = await authenticate.admin(request);
+  const { billing, session, admin } = await authenticate.admin(request);
+  const billingRedirect = await requireActiveBilling(billing, session.shop);
+  if (billingRedirect) return billingRedirect as never;
 
   const [activeAlerts, totalAlerts, resolvedAlerts, dismissedAlerts, totalChecks, recentAlerts, checkedProductIds, activeAlertRiskSample, settings, recentActivities, lastMonitoringActivityRows] = await Promise.all([
     db.safetyAlert.count({
@@ -300,7 +303,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const { session, admin } = await authenticate.admin(request);
+  const { billing, session, admin } = await authenticate.admin(request);
+  const billingRedirect = await requireActiveBilling(billing, session.shop);
+  if (billingRedirect) return billingRedirect as never;
   const formData = await request.formData();
   const actionType = formData.get("action");
   const includeAlreadyChecked = formData.get("includeAlreadyChecked") === "true";
@@ -398,7 +403,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const similarityThreshold = Number(formData.get("similarityThreshold") || 70);
     const onboardingCompleted = formData.get("onboardingCompleted") === "true";
     const autoDraftHighRisk = formData.get("autoDraftHighRisk") === "true";
-    const emailNotifications = formData.get("emailNotifications") === "true";
     const slackWebhookUrl = (formData.get("slackWebhookUrl") as string) || null;
 
     try {
@@ -408,7 +412,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           similarityThreshold,
           onboardingCompleted,
           autoDraftHighRisk,
-          emailNotifications,
+          emailNotifications: false,
           slackWebhookUrl,
         },
         create: {
@@ -416,7 +420,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           similarityThreshold,
           onboardingCompleted,
           autoDraftHighRisk,
-          emailNotifications,
+          emailNotifications: false,
           slackWebhookUrl,
         },
       });
@@ -473,6 +477,7 @@ export default function Index() {
   const isLoading = navigation.state === "loading";
   const isSubmitting = fetcher.state === "submitting";
   const monitoredProductLabel = `${stats.checkedProducts}/${stats.totalProducts || 0}`;
+  const hasCompleteCoverage = stats.totalProducts > 0 && stats.checkedProducts >= stats.totalProducts;
   const cleanRiskLabel = (value?: string | null) =>
     value ? value.replace(/\s*\/\s*other\b/gi, "").trim() : "";
 
@@ -524,7 +529,6 @@ export default function Index() {
     const finishOnboarding = (payload: {
       similarityThreshold: number;
       autoDraftHighRisk: boolean;
-      emailNotifications: boolean;
       slackWebhookUrl: string;
     }) => {
       fetcher.submit(
@@ -533,7 +537,6 @@ export default function Index() {
           similarityThreshold: payload.similarityThreshold.toString(),
           onboardingCompleted: "true",
           autoDraftHighRisk: payload.autoDraftHighRisk.toString(),
-          emailNotifications: payload.emailNotifications.toString(),
           slackWebhookUrl: payload.slackWebhookUrl,
         },
         { method: "POST" }
@@ -617,6 +620,43 @@ export default function Index() {
           </div>
         </section>
 
+        <section className="subscription-value-panel">
+          <div className="subscription-value-panel__header">
+            <p className="admin-eyebrow">{t("dashboard.admin.valueProofEyebrow")}</p>
+            <h2 className="admin-card__title">
+              {hasCompleteCoverage
+                ? t("dashboard.admin.valueProofTitleComplete")
+                : t("dashboard.admin.valueProofTitleIncomplete", { count: stats.uncheckedProducts })}
+            </h2>
+            <p className="admin-card__description">
+              {hasCompleteCoverage
+                ? t("dashboard.admin.valueProofDescriptionComplete")
+                : t("dashboard.admin.valueProofDescriptionIncomplete")}
+            </p>
+            {!hasCompleteCoverage && (
+              <div className="subscription-value-panel__action">
+                <s-button variant="primary" href="/app/manual-check">
+                  {t("dashboard.admin.finishCoverage")}
+                </s-button>
+              </div>
+            )}
+          </div>
+          <div className="subscription-value-grid">
+            <div className={`subscription-value-item${hasCompleteCoverage ? " subscription-value-item--trust" : " subscription-value-item--attention"}`}>
+              <span>{t("dashboard.admin.valueMetrics.productsCovered")}</span>
+              <strong>{monitoredProductLabel}</strong>
+            </div>
+            <div className="subscription-value-item">
+              <span>{t("dashboard.admin.valueMetrics.openDecisions")}</span>
+              <strong>{stats.activeAlerts}</strong>
+            </div>
+            <div className="subscription-value-item">
+              <span>{t("dashboard.admin.valueMetrics.evidenceRetained")}</span>
+              <strong>{stats.resolvedAlerts + stats.dismissedAlerts}</strong>
+            </div>
+          </div>
+        </section>
+
         {stats.activeAlerts > 0 && (
           <s-banner
             tone={stats.criticalActiveAlerts > 0 ? "critical" : "warning"}
@@ -659,9 +699,24 @@ export default function Index() {
             </div>
 
             {recentAlerts.length === 0 ? (
-              <div className="admin-empty-state">
-                <h3>{t("dashboard.admin.noAlertsTitle")}</h3>
-                <p>{t("dashboard.admin.noAlertsDescription")}</p>
+              <div className="dashboard-demo-state">
+                <div className="admin-empty-state">
+                  <h3>{t("dashboard.admin.noAlertsTitle")}</h3>
+                  <p>{t("dashboard.admin.noAlertsDescription")}</p>
+                </div>
+                <div className="demo-alert-preview">
+                  <div className="demo-alert-preview__header">
+                    <s-badge tone="critical">{t("dashboard.admin.demoAlert.badge")}</s-badge>
+                    <span>{t("dashboard.admin.demoAlert.sample")}</span>
+                  </div>
+                  <h3>{t("dashboard.admin.demoAlert.title")}</h3>
+                  <p>{t("dashboard.admin.demoAlert.description")}</p>
+                  <div className="demo-alert-preview__facts">
+                    <span>{t("dashboard.admin.demoAlert.reason")}</span>
+                    <span>{t("dashboard.admin.demoAlert.action")}</span>
+                    <span>{t("dashboard.admin.demoAlert.evidence")}</span>
+                  </div>
+                </div>
               </div>
             ) : (
               <div className="admin-alert-list">
@@ -742,7 +797,11 @@ export default function Index() {
                     detailsText = t("uxEnhancements.activityTimeline.details.checkUnsafe");
                   } else if (detailsText.startsWith("Bulk catalog scan completed") || detailsText.startsWith("Bulk scan")) {
                     detailsText = t("uxEnhancements.activityTimeline.details.bulkScanned");
-                  } else if (detailsText === "Product status changed to draft in Shopify." || detailsText === "Product status changed to draft") {
+                  } else if (
+                    detailsText === "Product status changed to draft in Shopify." ||
+                    detailsText === "Product status changed to draft" ||
+                    detailsText.startsWith("Marked high-risk product for priority review.")
+                  ) {
                     detailsText = t("uxEnhancements.activityTimeline.details.autoDrafted");
                   } else if (detailsText.startsWith("Reason: ")) {
                     const reasonStr = detailsText.substring("Reason: ".length);

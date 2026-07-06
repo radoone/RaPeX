@@ -174,6 +174,21 @@ export function AlertDetailModal({
     : hasActiveSafeState
       ? "safe"
       : "reviewed";
+  const merchantRecommendation = hasActiveRisk
+    ? t("analysis.merchantRecommendation.active")
+    : hasActiveSafeState
+      ? t("analysis.merchantRecommendation.safe")
+      : t("analysis.merchantRecommendation.reviewed");
+  const recordedResolution = alert.resolutionType
+    ? t(`resolveActions.${{
+        verified_safe: "verifiedSafe",
+        removed_from_sale: "removedFromSale",
+        modified_product: "modifiedProduct",
+        contacted_supplier: "contactedSupplier",
+        false_positive: "falsePositive",
+        not_my_product: "notMyProduct",
+      }[alert.resolutionType as string] || "menuLabel"}`)
+    : t("analysis.summary.decisionRecorded");
 
   // Helper to get images from warning
   const getWarningImages = (warning: any) => {
@@ -214,7 +229,7 @@ export function AlertDetailModal({
                       className="alert-image-clickable alert-image-clickable--product"
                       role="button"
                       tabIndex={0}
-                      aria-label={`Open image for ${alert.productTitle}`}
+                      aria-label={t("analysis.openProductImage", { title: alert.productTitle })}
                       onKeyDown={(e) => {
                         if (e.key === "Enter" || e.key === " ") {
                           e.preventDefault();
@@ -249,7 +264,7 @@ export function AlertDetailModal({
                     {/* Direct link to Edit Product in Shopify Admin */}
                     <div style={{ marginTop: "6px" }}>
                       <s-link href={`https://${alert.shop}/admin/products/${alert.productId}`} target="_blank">
-                        ✏️ {t("analysis.editInShopify")}
+                        {t("analysis.editInShopify")}
                       </s-link>
                     </div>
                     
@@ -271,10 +286,6 @@ export function AlertDetailModal({
 
             {/* Decision Summary */}
             <div className="alert-decision-summary">
-              <div className="alert-decision-summary__item">
-                <span>{t("analysis.summary.matchType")}</span>
-                <strong>{warningsCount > 0 ? t("analysis.summary.likelySafetyGateMatch") : t("analysis.summary.noLikelyMatch")}</strong>
-              </div>
               <div className="alert-decision-summary__item">
                 <span>{t("analysis.summary.overallMatch")}</span>
                 <strong>{overallSimilarity !== null ? t("analysis.overallMatchShort", { count: overallSimilarity }) : t("common.unknown")}</strong>
@@ -320,18 +331,9 @@ export function AlertDetailModal({
 
                 <s-stack gap="small-100">
                   <s-text tone="subdued" fontWeight="bold" size="small">
-                    {t("analysis.sections.whyMatched")}
-                  </s-text>
-                  <s-text>
-                    {primaryWarning?.reason || t("analysis.matchesHint")}
-                  </s-text>
-                </s-stack>
-
-                <s-stack gap="small-100">
-                  <s-text tone="subdued" fontWeight="bold" size="small">
                     {t("analysis.sections.whatToDo")}
                   </s-text>
-                  <s-text>{recommendation}</s-text>
+                  <s-text>{merchantRecommendation}</s-text>
                   {hasActiveRisk && (
                     <s-button
                       variant="secondary"
@@ -358,6 +360,11 @@ export function AlertDetailModal({
                         ? t("analysis.focus.safeLead")
                         : t("analysis.focus.reviewedLead")}
                   </p>
+                  {!hasActiveRisk && !hasActiveSafeState && (
+                    <p className="alert-focus-card__resolution">
+                      {t("analysis.focus.recordedOutcome", { outcome: recordedResolution })}
+                    </p>
+                  )}
                   <ol className="alert-focus-card__steps">
                     {hasActiveRisk ? (
                       <>

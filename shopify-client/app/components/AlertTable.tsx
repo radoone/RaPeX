@@ -191,7 +191,8 @@ export function AlertTable({
       <s-table accessibilityLabel={t('alerts.table.accessibilityLabel')}>
         <s-table-header-row>
           <s-table-header>
-            <s-checkbox
+          <s-checkbox
+              accessibilityLabel={t('alerts.table.selectAll')}
               checked={selectedIds.length === alerts.length && alerts.length > 0}
               indeterminate={selectedIds.length > 0 && selectedIds.length < alerts.length}
               onChange={toggleSelectAll}
@@ -324,7 +325,11 @@ function AlertRow({
   return (
     <s-table-row selected={isSelected || undefined}>
       <s-table-cell>
-        <s-checkbox checked={isSelected} onChange={() => onSelect(alert.id)} />
+        <s-checkbox
+          accessibilityLabel={t('alerts.table.selectProduct', { title: alert.productTitle })}
+          checked={isSelected}
+          onChange={() => onSelect(alert.id)}
+        />
       </s-table-cell>
 
       {/* Product Cell - Shopify style */}
@@ -413,6 +418,9 @@ function AlertRow({
             ref={viewBtnRef}
             size="small"
             variant={alert.status === 'active' ? "primary" : "secondary"}
+            accessibilityLabel={alert.status === 'active'
+              ? t('alerts.table.reviewProduct', { title: alert.productTitle })
+              : t('alerts.table.viewProduct', { title: alert.productTitle })}
             commandFor={modalId}
             command="--show"
           >

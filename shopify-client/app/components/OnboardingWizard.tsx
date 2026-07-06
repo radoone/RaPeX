@@ -19,7 +19,6 @@ export interface OnboardingWizardProps {
   onComplete: (payload: {
     similarityThreshold: number;
     autoDraftHighRisk: boolean;
-    emailNotifications: boolean;
     slackWebhookUrl: string;
   }) => void;
 }
@@ -35,7 +34,6 @@ export function OnboardingWizard({
   const [currentStep, setCurrentStep] = useState(1);
   const [threshold, setThreshold] = useState(70);
   const [autoDraft, setAutoDraft] = useState(false);
-  const [emailNotify, setEmailNotify] = useState(false);
   const [slackUrl, setSlackUrl] = useState("");
   const catalogImported = Boolean(scanResults?.success);
 
@@ -65,7 +63,6 @@ export function OnboardingWizard({
     onComplete({
       similarityThreshold: threshold,
       autoDraftHighRisk: autoDraft,
-      emailNotifications: emailNotify,
       slackWebhookUrl: slackUrl
     });
   };
@@ -89,6 +86,21 @@ export function OnboardingWizard({
             <s-heading size="large" suppressHydrationWarning>{t("onboarding.title")}</s-heading>
             <s-text tone="subdued">{t("onboarding.subtitle")}</s-text>
           </s-stack>
+
+          <div className="onboarding-value-grid">
+            <div className="onboarding-value-item">
+              <strong>{t("onboarding.value.monitor.title")}</strong>
+              <span>{t("onboarding.value.monitor.description")}</span>
+            </div>
+            <div className="onboarding-value-item">
+              <strong>{t("onboarding.value.review.title")}</strong>
+              <span>{t("onboarding.value.review.description")}</span>
+            </div>
+            <div className="onboarding-value-item">
+              <strong>{t("onboarding.value.audit.title")}</strong>
+              <span>{t("onboarding.value.audit.description")}</span>
+            </div>
+          </div>
 
           <div className="onboarding-stepper">
             <div className="onboarding-stepper__progress-line" style={progressLineStyle} />
@@ -251,7 +263,7 @@ export function OnboardingWizard({
                     </s-text>
                   </s-stack>
 
-                  {/* Auto-Draft Toggle (Premium Styled Switch) */}
+                  {/* Priority review toggle */}
                   <s-stack gap="small-100">
                     <s-text fontWeight="bold">{t("onboarding.steps.automation.quarantine.title")}</s-text>
                     <s-text tone="subdued" size="small" style={{ marginBottom: "8px" }}>
@@ -269,25 +281,6 @@ export function OnboardingWizard({
                           <div className="onboarding-switch__thumb" />
                         </div>
                         <s-text size="small">{t("onboarding.steps.automation.quarantine.label")}</s-text>
-                      </label>
-                    </div>
-                  </s-stack>
-
-                  {/* Email Alert Toggle (Premium Styled Switch) */}
-                  <s-stack gap="small-100">
-                    <s-text fontWeight="bold">{t("onboarding.steps.automation.notify.title")}</s-text>
-                    <div style={{ marginTop: "6px" }}>
-                      <label className="onboarding-switch">
-                        <input
-                          type="checkbox"
-                          className="onboarding-switch__input"
-                          checked={emailNotify}
-                          onChange={(e) => setEmailNotify(e.target.checked)}
-                        />
-                        <div className="onboarding-switch__track">
-                          <div className="onboarding-switch__thumb" />
-                        </div>
-                        <s-text size="small">{t("onboarding.steps.automation.notify.label")}</s-text>
                       </label>
                     </div>
                   </s-stack>

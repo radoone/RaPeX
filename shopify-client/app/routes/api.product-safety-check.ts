@@ -2,9 +2,12 @@ import type { ActionFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { runProductSafetyCheckForAdminProduct } from "../services/product-safety-admin.server";
 import { authenticate } from "../shopify.server";
+import { requireActiveBilling } from "../services/billing.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const { admin, session, cors } = await authenticate.admin(request);
+  const { admin, billing, session, cors } = await authenticate.admin(request);
+  const billingRedirect = await requireActiveBilling(billing, session.shop);
+  if (billingRedirect) return billingRedirect as never;
 
   try {
     const payload = await request.json();

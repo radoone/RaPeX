@@ -11,6 +11,8 @@ The Firebase backend imports and indexes Safety Gate records. This app turns tha
 - per-shop similarity threshold settings
 - product detail Admin extensions for inline safety status and check actions
 
+The public Shopify configuration currently uses `read_products`. High-risk automation creates alerts and priority-review activity entries, but it does not mutate Shopify product status. Reintroduce `write_products` only if product status changes are restored and reviewed for App Store scope justification.
+
 ## Product Scope
 
 The app is built around one merchant question:
@@ -129,10 +131,14 @@ SHOPIFY_API_KEY=...
 SHOPIFY_API_SECRET=...
 SCOPES=...
 SHOPIFY_APP_URL=...
+SHOPIFY_BILLING_TEST=true
+SHOPIFY_APP_HANDLE=safety-gate-monitor-eu
 FIREBASE_FUNCTIONS_BASE_URL=https://europe-west1-<project-id>.cloudfunctions.net
 SAFETY_GATE_API_KEY=...
 SAFETY_GATE_SIMILARITY_THRESHOLD=0
 ```
+
+The app requires an active Shopify App Pricing subscription before merchants can use the embedded app UI. Pricing, trial days, public/private plans, and the test plan are configured in the Shopify Partner Dashboard, not in this codebase. Keep `SHOPIFY_BILLING_TEST=true` for development stores and private test plans; set it to `false` before real App Store billing. `SHOPIFY_APP_HANDLE` must match the app handle in Shopify.
 
 For local Firebase Admin credentials, use the project-specific setup expected by `app/firestore.server.ts`.
 

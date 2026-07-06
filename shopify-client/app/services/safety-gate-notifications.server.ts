@@ -1,4 +1,3 @@
-import { unauthenticated } from "../shopify.server";
 import db from "../merchant-db.server";
 import { type SafetyCheckResult } from "./safety-gate-checker.server";
 
@@ -24,44 +23,17 @@ export async function handleAutoDraftAndNotifications(
                         criticalWarning.alertDetails?.fields?.product_brand ||
                         "unknown product";
 
-      // 1. Auto-Quarantine (Auto-Draft)
+      // 1. Priority review marker. This intentionally avoids product mutations so the app only needs read_products.
       if (settings.autoDraftHighRisk) {
-        console.log(`Auto-drafting product ${productId} on shop ${shop}`);
-        try {
-          const { admin } = await unauthenticated.admin(shop);
-          const productGid = productId.startsWith("gid://") ? productId : `gid://shopify/Product/${productId}`;
-          
-          const response = await admin.graphql(`#graphql
-            mutation productUpdate($input: ProductInput!) {
-              productUpdate(input: $input) {
-                product { id status }
-                userErrors { field message }
-              }
-            }
-          `, {
-            variables: {
-              input: {
-                id: productGid,
-                status: "DRAFT"
-              }
-            }
-          });
-
-          const responseJson = await response.json();
-          console.log(`Draft response:`, JSON.stringify(responseJson));
-
-          // Log to Activity Logs
-          await db.activityLog.create({
-            data: {
-              shop,
-              type: "automatic",
-              action: "quarantine",
-              details: `Automatically drafted high-risk product. Matched warning: "${alertName}" (${criticalWarning.overallSimilarity}% similarity).`
-            }
-          });
-        } catch (gqlErr) {
-          console.error("Failed to execute product auto-draft GraphQL mutation:", gqlErr);
-        }
+        console.log(`Marked product ${productId} for priority safety review on shop ${shop}`);
+        await db.activityLog.create({
+          data: {
+            shop,
+            type: "automatic",
+            action: "quarantine",
+            details: `Marked high-risk product for priority review. Matched warning: "${alertName}" (${criticalWarning.overallSimilarity}% similarity).`
+          }
+        });
       }
 
       // 2. Email Notifications
@@ -91,7 +63,7 @@ export async function handleAutoDraftAndNotifications(
                     `*Matched Safety Gate Alert:* ${alertName}\n` +
                     `*Similarity Score:* ${criticalWarning.overallSimilarity}%\n` +
                     `*Risk Level:* ${criticalWarning.riskLevel || 'High/Serious'}\n` +
-                    `*Status:* ${settings.autoDraftHighRisk ? "Automatically set to DRAFT" : "Needs Review"}`
+                    `*Status:* ${settings.autoDraftHighRisk ? "Priority review" : "Needs Review"}`
             })
           });
           

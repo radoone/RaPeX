@@ -8,6 +8,11 @@ import {
 import { PrismaSessionStorage } from "@shopify/shopify-app-session-storage-prisma";
 import prisma from "./db.server";
 
+export const SHOPIFY_BILLING_TEST = process.env.SHOPIFY_BILLING_TEST !== "false";
+export const SHOPIFY_APP_HANDLE = process.env.SHOPIFY_APP_HANDLE || "";
+export const SHOPIFY_BILLING_BYPASS =
+  process.env.NODE_ENV !== "production" && process.env.SHOPIFY_BILLING_BYPASS !== "false";
+
 const shopify = shopifyApp({
   apiKey: process.env.SHOPIFY_API_KEY,
   apiSecretKey: process.env.SHOPIFY_API_SECRET || "",
