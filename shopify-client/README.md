@@ -172,7 +172,7 @@ npm run lint
 npm run build
 ```
 
-The lint command may print a Remix ESLint deprecation warning. Treat TypeScript errors, lint errors, and build failures as blockers.
+Treat TypeScript errors, lint errors, and build failures as blockers.
 
 ## Deployment
 

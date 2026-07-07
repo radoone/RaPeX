@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
-import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node";
-import { useLoaderData, useFetcher, useNavigate, useRouteError, isRouteErrorResponse } from "@remix-run/react";
-import { json } from "@remix-run/node";
+import type { LoaderFunctionArgs, ActionFunctionArgs } from "react-router";
+import { useLoaderData, useFetcher, useNavigate, useRouteError, isRouteErrorResponse } from "react-router";
+import { data as json } from "react-router";
 import { useTranslation } from "react-i18next";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
@@ -101,7 +101,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         const pics = [...(fields.pictures || []), fields.product_image].filter(Boolean);
         if (pics[0]) alertDetails = { ...alertDetails, fallbackImage: typeof pics[0] === 'string' ? pics[0] : pics[0].url };
       }
-    } catch { }
+    } catch {
+      // Ignore malformed legacy check payloads and fall back to stored alert fields.
+    }
     // Prefer riskLevel from checkResult, fallback to DB field
     const effectiveRiskLevel = riskLevelFromResult || (alert.riskLevel !== 'unknown' ? alert.riskLevel : null) || 'Unknown';
     return {
@@ -238,12 +240,12 @@ export default function AlertsPage() {
     if (s) params.set('search', s);
     
     // Status filters
-    const statusVal = overrides && overrides.hasOwnProperty('status') ? overrides.status : statusFilter;
+    const statusVal = overrides && Object.prototype.hasOwnProperty.call(overrides, 'status') ? overrides.status : statusFilter;
     statusVal?.forEach(v => params.append('status', v));
     if (statusVal?.length === 0) params.set('view', 'all');
 
     // Risk level filters
-    const riskVal = overrides && overrides.hasOwnProperty('riskLevel') ? overrides.riskLevel : riskLevelFilter;
+    const riskVal = overrides && Object.prototype.hasOwnProperty.call(overrides, 'riskLevel') ? overrides.riskLevel : riskLevelFilter;
     riskVal?.forEach(v => params.append('riskLevel', v));
 
     const sortBy = overrides?.sortBy ?? filters.sortBy;

@@ -5,9 +5,9 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
-} from "@remix-run/react";
+} from "react-router";
 import { useEffect } from "react";
-import { AppProvider } from "@shopify/shopify-app-remix/react";
+import { AppProvider } from "@shopify/shopify-app-react-router/react";
 import { authenticate } from "./shopify.server";
 import i18n, { EU_LANGUAGES } from "./i18n";
 import themeStyles from "./styles/theme.css?url";
@@ -77,7 +77,7 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <AppProvider isEmbeddedApp apiKey={apiKey}>
+        <AppProvider embedded apiKey={apiKey}>
           <Outlet />
         </AppProvider>
         <ScrollRestoration />

@@ -1,4 +1,4 @@
-import type { ActionFunctionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs } from "react-router";
 import { authenticate } from "../shopify.server";
 import sessionDb from "../db.server";
 import { purgeMerchantShopData } from "../merchant-db.server";

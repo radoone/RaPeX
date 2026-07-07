@@ -614,7 +614,7 @@ export function AlertDetailModal({
 // ═══════════════════════════════════════════════════════════════════════════
 function WarningCard({
   warning,
-  index,
+  index: _index,
   onImageClick,
   getWarningImages,
   merchantProduct,

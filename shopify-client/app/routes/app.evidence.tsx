@@ -1,6 +1,6 @@
-import type { LoaderFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { useLoaderData, useNavigate } from "@remix-run/react";
+import type { LoaderFunctionArgs } from "react-router";
+import { data as json } from "react-router";
+import { useLoaderData, useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
 import { useMemo, useState } from "react";
 import { authenticate } from "../shopify.server";

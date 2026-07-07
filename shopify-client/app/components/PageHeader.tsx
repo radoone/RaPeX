@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { useNavigate } from "@remix-run/react";
+import { useNavigate } from "react-router";
 
 type HeaderAction = {
   label: string;
@@ -35,7 +35,7 @@ export function PageHeader({
   const navigate = useNavigate();
   const hasActions = Boolean(primaryAction) || Boolean(secondaryActions?.length);
 
-  // Handle action click - use Remix navigate for internal links
+  // Handle action click - use React Router navigate for internal links
   const handleActionClick = (action: HeaderAction) => {
     if (action.onClick) {
       action.onClick();

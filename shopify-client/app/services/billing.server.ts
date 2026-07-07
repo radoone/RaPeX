@@ -1,4 +1,4 @@
-import { redirect } from "@remix-run/node";
+import { redirect } from "react-router";
 import {
   SHOPIFY_APP_HANDLE,
   SHOPIFY_BILLING_BYPASS,

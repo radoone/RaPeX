@@ -1,6 +1,6 @@
-import { Link, Outlet, isRouteErrorResponse, useLoaderData, useRouteError } from "@remix-run/react";
+import { Link, Outlet, isRouteErrorResponse, useLoaderData, useRouteError } from "react-router";
 import { NavMenu } from "@shopify/app-bridge-react";
-import { json } from "@remix-run/node";
+import { data as json } from "react-router";
 import { useTranslation } from "react-i18next";
 import { authenticate } from "../shopify.server";
 import db from "../merchant-db.server";
@@ -43,7 +43,7 @@ export default function App() {
   );
 }
 
-// Shopify needs Remix to catch some thrown responses, so that their headers are included in the response.
+// Shopify needs React Router to catch some thrown responses, so that their headers are included in the response.
 export function ErrorBoundary() {
   const error = useRouteError();
   const { t } = useTranslation();

@@ -1,6 +1,6 @@
-import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
-import { useLoaderData, useNavigation, Form, useRouteError, isRouteErrorResponse } from "@remix-run/react";
+import type { LoaderFunctionArgs, ActionFunctionArgs } from "react-router";
+import { data as json, redirect } from "react-router";
+import { useLoaderData, useNavigation, Form, useRouteError, isRouteErrorResponse } from "react-router";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { authenticate } from "../shopify.server";

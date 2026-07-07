@@ -75,6 +75,7 @@ It:
 - allows user-triggered RAPEX delta monitoring runs
 - stores merchant-facing business data in Firestore
 - keeps Prisma/SQLite only for Shopify auth sessions
+- runs on React Router 7 through `@shopify/shopify-app-react-router`
 - uses Prisma config-based datasource setup through `shopify-client/prisma.config.ts`, but because `shopify-client` currently runs on Prisma `6.19.2`, `shopify-client/prisma/schema.prisma` must still keep an inline SQLite `url` for `prisma generate` compatibility
 
 Main files:
@@ -148,17 +149,17 @@ can be worked on without changing Shopify auth or app routes.
 
 ## Technical Standards & Lessons Learned
 
-- **Dependency Management:** Prefer internal types (e.g., `app/types/product.ts`) over heavy external libraries (like `@shopify/hydrogen`) just for type definitions to avoid version conflicts with Remix/Vite.
+- **Dependency Management:** Prefer internal types (e.g., `app/types/product.ts`) over heavy external libraries (like `@shopify/hydrogen`) just for type definitions to avoid version conflicts with React Router/Vite.
 - **UI Framework:** The `s-` prefix is mandatory for Polaris Web Components as they are registered as Custom Elements. Do not attempt to remove them.
-- **Error Handling:** In a Remix-based Shopify app, use `useRouteError` and `isRouteErrorResponse` in per-route `ErrorBoundary` components to handle API failures gracefully without breaking the entire Admin UI.
+- **Error Handling:** In the React Router-based Shopify app, use `useRouteError` and `isRouteErrorResponse` in per-route `ErrorBoundary` components to handle API failures gracefully without breaking the entire Admin UI.
 - **i18n:** All merchant-facing strings, including error messages, status labels, modal headings, table labels, and bulk action labels, must be localized through `shopify-client/app/locales/`. `shopify-client/app/i18n.ts` should stay as the small i18next initialization file. The language selector exposes the 24 official EU languages via `EU_LANGUAGES` in `shopify-client/app/locales/languages.ts`; English and Slovak are the most complete locales, while other EU languages may provide core workflow translations with English fallback for longer explanatory text.
 - **Translation coverage:** When adding or changing primary merchant workflow text, update at least `shopify-client/app/locales/en.ts` and `shopify-client/app/locales/sk.ts` fully, then add/update the per-language core workflow locale files for the other EU languages in `shopify-client/app/locales/{bg,cs,da,de,el,es,et,fi,fr,ga,hr,hu,it,lt,lv,mt,nl,pl,pt,ro,sl,sv}.ts`. Those per-language files include both short UI labels and a `long` block for longer merchant-facing explanatory copy used by dashboard cards, alert queues, manual checks, settings, and match analysis. Do not hardcode merchant-facing English in React components or Shopify UI extensions unless the string is developer-only/debug-only.
 - **Validation:** Before handing off Shopify client changes, run `npx tsc --noEmit`, `npm run lint`, and `npm run build` from `shopify-client/`. ESLint intentionally ignores generated `extensions/*/dist/**` bundles.
 - **Firestore adapter:** `shopify-client/app/merchant-db.server.ts` is a Firestore-backed Prisma-like adapter, not Prisma itself. If app routes use Prisma-style methods such as `updateMany`, they must exist on this adapter. Always scope merchant alert mutations by `shop` as well as alert/product id.
-- **Package compatibility:** Do not blindly upgrade the Shopify client to React 19, Prisma 7, Vite 8, TypeScript 6, or ESLint 10 until the Shopify/Remix peer dependencies allow it. As of the latest package update, Remix 2.17.x and Polaris 13.x expect React 18, Remix dev supports Vite 5/6 and TypeScript 5, `@shopify/shopify-app-session-storage-prisma@9` expects Prisma `^6.19`, and `@remix-run/eslint-config` expects ESLint 8. Firebase Functions can use TypeScript 6, but `eslint-plugin-import@2.32.0` still limits Functions ESLint to 9.x.
+- **Package compatibility:** The Shopify client is on `@shopify/shopify-app-react-router` with React Router 7.x and React 18. Do not blindly upgrade to React Router 8 or React 19 until Shopify's React Router package supports that peer set. `@shopify/shopify-app-session-storage-prisma@9` expects Prisma `^6.19`, so keep `shopify-client` on Prisma 6.x unless that peer changes. Shopify client ESLint uses flat config with ESLint 9.x because `eslint-plugin-import@2.32.0` does not support ESLint 10.
 - **Node/native modules:** Use the repo `.nvmrc` Node version for installs and Shopify development. `better-sqlite3` is a native dependency used by Prisma SQLite sessions; if it is installed under a different Node ABI than the `shopify app dev` process, Shopify auth fails with a `NODE_MODULE_VERSION` mismatch. Fix locally with `PATH=/Users/radoone/.nvm/versions/node/v24.14.1/bin:$PATH npm rebuild better-sqlite3` from `shopify-client/`, then run `npm run setup`.
 - **Prisma Compatibility:** In `shopify-client`, the installed Prisma version is currently `6.19.3`, so `prisma generate` still requires an inline `url` in `shopify-client/prisma/schema.prisma` even though `shopify-client/prisma.config.ts` also defines the datasource URL. The Better SQLite adapter export name is `PrismaBetterSQLite3`, not `PrismaBetterSqlite3`.
-- **Shopify app config:** Webhook definitions in `shopify-client/app/shopify.server.ts` should use `DeliveryMethod.Http` from `@shopify/shopify-app-remix/server`; do not use the string `"http"`. Do not add unsupported future flags such as `removeRest`.
+- **Shopify app config:** Webhook definitions in `shopify-client/app/shopify.server.ts` should use `DeliveryMethod.Http` from `@shopify/shopify-app-react-router/server`; do not use the string `"http"`. Do not add unsupported future flags such as `removeRest` or old Remix-only embedded auth flags.
 
 ## Data source
 

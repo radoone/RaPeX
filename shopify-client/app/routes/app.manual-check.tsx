@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
-import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node";
-import { useLoaderData, useFetcher, useNavigate, useRouteError, isRouteErrorResponse } from "@remix-run/react";
-import { json } from "@remix-run/node";
+import type { LoaderFunctionArgs, ActionFunctionArgs } from "react-router";
+import { useLoaderData, useFetcher, useNavigate, useRouteError, isRouteErrorResponse } from "react-router";
+import { data as json } from "react-router";
 import { useTranslation } from "react-i18next";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
@@ -199,7 +199,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         const pics = [...(fields.pictures || []), fields.product_image].filter(Boolean);
         if (pics[0]) alertDetails = { ...alertDetails, fallbackImage: typeof pics[0] === 'string' ? pics[0] : pics[0].url };
       }
-    } catch { }
+    } catch {
+      // Ignore malformed legacy check payloads and fall back to stored alert fields.
+    }
     const effectiveRiskLevel = riskLevelFromResult || (alert.riskLevel !== 'unknown' ? alert.riskLevel : null) || 'Unknown';
 
     // Get product image from products array
@@ -225,7 +227,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       acc[check.productId].lastCheck = check;
       acc[check.productId].isSafe = check.isSafe;
     }
-    check.isSafe ? acc[check.productId].safeCount++ : acc[check.productId].unsafeCount++;
+    if (check.isSafe) {
+      acc[check.productId].safeCount++;
+    } else {
+      acc[check.productId].unsafeCount++;
+    }
     return acc;
   }, {});
 

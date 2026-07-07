@@ -1,5 +1,4 @@
-import type { ActionFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import type { ActionFunctionArgs } from "react-router";
 import { runProductSafetyCheckForAdminProduct } from "../services/product-safety-admin.server";
 import { authenticate } from "../shopify.server";
 import { requireActiveBilling } from "../services/billing.server";
@@ -14,7 +13,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const productId = typeof payload?.productId === "string" ? payload.productId : "";
 
     if (!productId) {
-      return cors(json({ error: "Missing productId in request body" }, { status: 400 }));
+      return cors(Response.json({ error: "Missing productId in request body" }, { status: 400 }));
     }
 
     const result = await runProductSafetyCheckForAdminProduct({
@@ -23,9 +22,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       productId,
     });
 
-    return cors(json(result));
+    return cors(Response.json(result));
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
-    return cors(json({ error: message }, { status: 500 }));
+    return cors(Response.json({ error: message }, { status: 500 }));
   }
 };

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { useFetcher, useLoaderData, useNavigation, useNavigate, useRouteError, isRouteErrorResponse } from "@remix-run/react";
-import { json } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
+import { useFetcher, useLoaderData, useNavigation, useNavigate, useRouteError, isRouteErrorResponse } from "react-router";
+import { data as json } from "react-router";
 import { useTranslation } from "react-i18next";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
