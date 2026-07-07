@@ -216,6 +216,28 @@ export default function Settings() {
             </div>
           </section>
 
+          <section className="subscription-included-panel">
+            <div>
+              <p className="admin-eyebrow">{t("settingsAdmin.included.eyebrow")}</p>
+              <h2 className="admin-card__title">{t("settingsAdmin.included.title")}</h2>
+              <p className="admin-card__description">{t("settingsAdmin.included.description")}</p>
+            </div>
+            <div className="subscription-included-grid">
+              <div className="subscription-included-item">
+                <strong>{t("settingsAdmin.included.monitoringTitle")}</strong>
+                <span>{t("settingsAdmin.included.monitoringDescription")}</span>
+              </div>
+              <div className="subscription-included-item">
+                <strong>{t("settingsAdmin.included.evidenceTitle")}</strong>
+                <span>{t("settingsAdmin.included.evidenceDescription")}</span>
+              </div>
+              <div className="subscription-included-item">
+                <strong>{t("settingsAdmin.included.teamTitle")}</strong>
+                <span>{t("settingsAdmin.included.teamDescription")}</span>
+              </div>
+            </div>
+          </section>
+
           <section className="admin-section-grid admin-section-grid--wide">
             {/* COLUMN 1: Settings Form */}
             <div className="admin-stack">

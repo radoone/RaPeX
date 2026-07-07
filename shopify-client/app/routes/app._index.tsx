@@ -478,6 +478,10 @@ export default function Index() {
   const isSubmitting = fetcher.state === "submitting";
   const monitoredProductLabel = `${stats.checkedProducts}/${stats.totalProducts || 0}`;
   const hasCompleteCoverage = stats.totalProducts > 0 && stats.checkedProducts >= stats.totalProducts;
+  const coveragePercent = stats.totalProducts > 0
+    ? Math.min(100, Math.round((stats.checkedProducts / stats.totalProducts) * 100))
+    : 0;
+  const closedDecisions = stats.resolvedAlerts + stats.dismissedAlerts;
   const cleanRiskLabel = (value?: string | null) =>
     value ? value.replace(/\s*\/\s*other\b/gi, "").trim() : "";
 
@@ -588,6 +592,45 @@ export default function Index() {
       </s-button>
 
       <div className="admin-stack">
+        <section className="protection-value-panel">
+          <div className="protection-value-panel__content">
+            <p className="admin-eyebrow">{t("dashboard.admin.protectionEyebrow")}</p>
+            <h2 className="protection-value-panel__title">
+              {t("dashboard.admin.protectionTitle")}
+            </h2>
+            <p className="protection-value-panel__description">
+              {t("dashboard.admin.protectionDescription")}
+            </p>
+            <div className="protection-value-panel__actions">
+              <s-button variant="primary" href="/app/manual-check">
+                {hasCompleteCoverage
+                  ? t("dashboard.admin.checkChangedProducts")
+                  : t("dashboard.admin.finishCoverage")}
+              </s-button>
+              <s-button variant="secondary" href="/app/audit-report">
+                {t("dashboard.admin.exportProof")}
+              </s-button>
+            </div>
+          </div>
+          <div className="protection-proof-grid" aria-label={t("dashboard.admin.proofGridLabel")}>
+            <div className="protection-proof-item protection-proof-item--primary">
+              <span>{t("dashboard.admin.coveragePercent")}</span>
+              <strong>{coveragePercent}%</strong>
+              <small>{monitoredProductLabel} {t("dashboard.admin.productsCoveredShort")}</small>
+            </div>
+            <div className="protection-proof-item">
+              <span>{t("dashboard.admin.decisionsClosed")}</span>
+              <strong>{closedDecisions}</strong>
+              <small>{t("dashboard.admin.auditHistoryKept")}</small>
+            </div>
+            <div className="protection-proof-item">
+              <span>{t("dashboard.admin.automaticChecks")}</span>
+              <strong>{t("dashboard.admin.daily")}</strong>
+              <small>{t("dashboard.admin.withReadOnlyShopifyAccess")}</small>
+            </div>
+          </div>
+        </section>
+
         <section className="monitoring-status-panel">
           <div className="monitoring-status-panel__header">
             <p className="admin-eyebrow">{t("dashboard.admin.monitoringStatusEyebrow")}</p>
@@ -626,7 +669,7 @@ export default function Index() {
             <h2 className="admin-card__title">
               {hasCompleteCoverage
                 ? t("dashboard.admin.valueProofTitleComplete")
-                : t("dashboard.admin.valueProofTitleIncomplete", { count: stats.uncheckedProducts })}
+                : t("dashboard.admin.valueProofTitleIncomplete", { count: stats.checkedProducts })}
             </h2>
             <p className="admin-card__description">
               {hasCompleteCoverage
@@ -703,6 +746,11 @@ export default function Index() {
                 <div className="admin-empty-state">
                   <h3>{t("dashboard.admin.noAlertsTitle")}</h3>
                   <p>{t("dashboard.admin.noAlertsDescription")}</p>
+                  <div className="empty-value-proof">
+                    <span>{t("dashboard.admin.emptyProofMonitoring")}</span>
+                    <span>{t("dashboard.admin.emptyProofEvidence", { count: closedDecisions })}</span>
+                    <span>{t("dashboard.admin.emptyProofCoverage", { count: stats.checkedProducts })}</span>
+                  </div>
                 </div>
                 <div className="demo-alert-preview">
                   <div className="demo-alert-preview__header">
