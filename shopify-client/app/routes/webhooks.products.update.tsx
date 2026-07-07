@@ -43,6 +43,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       sourceUpdatedAt: product.updated_at || product.updatedAt || undefined,
     });
 
+    await db.safetyCheck.create({
+      data: {
+        productId: product.id.toString(),
+        productTitle: product.title,
+        shop: shop,
+        isSafe: safetyResult.isSafe,
+        checkedAt: new Date(safetyResult.checkedAt),
+      },
+    });
+
     // Look for existing alerts for this product
     const existingAlert = await db.safetyAlert.findFirst({
       where: {
@@ -140,17 +150,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
         console.log(`✅ Alert resolved for updated product: ${product.title}`);
       }
-
-      // Log successful check
-      await db.safetyCheck.create({
-        data: {
-          productId: product.id.toString(),
-          productTitle: product.title,
-          shop: shop,
-          isSafe: true,
-          checkedAt: new Date(safetyResult.checkedAt),
-        },
-      });
 
       // Log webhook success check
       await db.activityLog.create({

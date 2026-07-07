@@ -20,9 +20,7 @@ import {
   prepareImageMedia,
 } from "./safety-gate-checker-media.js";
 import {
-  ALERT_LOOKBACK_DAYS,
   retrieveAlertsWithRag,
-  searchRecentRapexAlerts,
 } from "./safety-gate-checker-retrieval.js";
 import {
   buildComparisonPrompt,
@@ -366,9 +364,7 @@ export const checkProductSafety = functionsAi.defineFlow(
   },
   async (product) => {
     console.log("Checking product safety:", product.name);
-    const ragAlerts = await retrieveAlertsWithRag(product);
-    const candidateAlerts =
-      ragAlerts.length > 0 ? ragAlerts : await searchRecentRapexAlerts(ALERT_LOOKBACK_DAYS);
+    const candidateAlerts = await retrieveAlertsWithRag(product);
     return checkProductAgainstAlerts(product, candidateAlerts);
   },
 );

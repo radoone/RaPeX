@@ -43,6 +43,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       sourceUpdatedAt: product.updated_at || product.updatedAt || undefined,
     });
 
+    await db.safetyCheck.create({
+      data: {
+        productId: product.id.toString(),
+        productTitle: product.title,
+        shop: shop,
+        isSafe: safetyResult.isSafe,
+        checkedAt: new Date(safetyResult.checkedAt),
+      },
+    });
+
     // If product is not safe, create alert record
     if (!safetyResult.isSafe && safetyResult.warnings.length > 0) {
       console.log(`⚠️ UNSAFE PRODUCT DETECTED: ${productData.name}`, {
@@ -94,17 +104,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
     } else {
       console.log(`✅ Product is safe: ${productData.name}`);
-
-      // Store successful check record for reporting
-      await db.safetyCheck.create({
-        data: {
-          productId: product.id.toString(),
-          productTitle: product.title,
-          shop: shop,
-          isSafe: true,
-          checkedAt: new Date(safetyResult.checkedAt),
-        },
-      });
 
       // Log webhook check success
       await db.activityLog.create({

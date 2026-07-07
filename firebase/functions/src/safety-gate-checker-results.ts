@@ -269,14 +269,37 @@ function buildRecommendation(warnings: MatchResult[]): string {
   return "⚡ CAUTION: Found alerts for similar products. Review safety concerns before purchase.";
 }
 
+function findMatchedAlert(
+  alerts: NormalizedAlert[],
+  alertId: string | undefined,
+): NormalizedAlert | undefined {
+  const normalizedAlertId = alertId?.trim();
+  if (!normalizedAlertId) {
+    return undefined;
+  }
+
+  return alerts.find(
+    (candidate) =>
+      candidate.id === normalizedAlertId ||
+      candidate.meta?.recordid === normalizedAlertId,
+  );
+}
+
 export function buildSafetyCheckResult(
   matches: AnalysisMatchCandidate[],
   alerts: NormalizedAlert[],
   analysis: SafetyCheckAnalysis,
 ): SafetyCheckResult {
   const warnings = matches
-    .map((match): MatchResult => {
-      const alert = alerts.find((candidate) => candidate.id === match.alertId);
+    .map((match): MatchResult | null => {
+      const alert = findMatchedAlert(alerts, match.alertId);
+      if (!alert) {
+        console.warn("Ignoring Safety Gate match for unknown alert candidate", {
+          alertId: match.alertId,
+        });
+        return null;
+      }
+
       const alertDetails = buildAlertDetails(alert);
       const alertType = alertDetails.fields.alert_type;
       const alertLevel = alertDetails.fields.alert_level;
@@ -294,7 +317,7 @@ export function buildSafetyCheckResult(
       );
 
       return {
-        alertId: match.alertId || "",
+        alertId: alert.id,
         overallSimilarity,
         imageSimilarity,
         textSimilarity,
@@ -306,6 +329,7 @@ export function buildSafetyCheckResult(
         alertDetails,
       };
     })
+    .filter((warning): warning is MatchResult => Boolean(warning))
     .filter((warning) => warning.overallSimilarity >= MIN_OVERALL_MATCH_SCORE);
 
   return {

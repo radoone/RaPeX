@@ -96,7 +96,24 @@ function applySimilarityThreshold<T extends SafetyCheckResult>(result: T, thresh
     ...result,
     warnings: filteredWarnings,
     isSafe: filteredWarnings.length === 0 ? true : result.isSafe,
+    recommendation: buildRecommendationForWarnings(filteredWarnings),
   };
+}
+
+function buildRecommendationForWarnings(warnings: SafetyCheckResult["warnings"]): string {
+  if (warnings.length === 0) {
+    return "Product appears safe based on Safety Gate database analysis. No significant matches met the configured similarity threshold.";
+  }
+
+  const hasHighRiskWarning = warnings.some(
+    (warning) => warning.riskLevel === "serious" || warning.riskLevel === "high",
+  );
+
+  if (hasHighRiskWarning) {
+    return "HIGH RISK: Found serious safety alerts for similar products. Review before selling.";
+  }
+
+  return "CAUTION: Found alerts for similar products. Review safety concerns before selling.";
 }
 
 export async function getSimilarityThresholdForShop(shop: string): Promise<number> {
