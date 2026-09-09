@@ -2,9 +2,30 @@ interface AlertBadgeProps {
   alertLevel?: string;
   alertType?: string;
   riskDescription?: string;
+  showSeverity?: boolean;
 }
 
-export function AlertBadge({ alertLevel, alertType, riskDescription }: AlertBadgeProps) {
+export function cleanSeverityLabel(value?: string | null): string {
+  if (!value) return "Safety alert";
+  const normalized = value.toLowerCase();
+  if (normalized.includes("serious")) return "Serious risk";
+  if (normalized.includes("high")) return "High risk";
+  if (normalized.includes("medium")) return "Medium risk";
+  if (normalized.includes("low")) return "Low risk";
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+export function AlertBadge({ alertLevel, alertType, riskDescription, showSeverity = false }: AlertBadgeProps) {
+  const tone = getAlertTone(alertLevel);
+
+  if (showSeverity) {
+    return (
+      <s-badge tone={tone} title={riskDescription || undefined}>
+        {cleanSeverityLabel(alertLevel)}
+      </s-badge>
+    );
+  }
+
   let displayText = cleanRiskLabel(alertType || alertLevel || 'Unknown');
 
   if (!alertType && alertLevel && alertLevel !== 'Unknown') {
@@ -21,8 +42,6 @@ export function AlertBadge({ alertLevel, alertType, riskDescription }: AlertBadg
       displayText = cleanRiskLabel(alertLevel);
     }
   }
-
-  const tone = getAlertTone(alertLevel);
 
   return (
     <s-badge tone={tone} title={riskDescription || undefined}>

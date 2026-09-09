@@ -35,6 +35,7 @@ interface AlertDetailModalProps {
   onResolve?: (alertId: string, resolutionType?: ResolutionType, notes?: string) => void;
   onReactivate?: (alertId: string) => void;
   isLoading?: boolean;
+  openOnMount?: boolean;
 }
 
 export function AlertDetailModal({
@@ -44,8 +45,10 @@ export function AlertDetailModal({
   onResolve,
   onReactivate,
   isLoading = false,
+  openOnMount = false,
 }: AlertDetailModalProps) {
   const { t } = useTranslation();
+  const [isHydrated, setIsHydrated] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [auditNote, setAuditNote] = useState("");
   const [showTechnicalDetails, setShowTechnicalDetails] = useState(false);
@@ -63,6 +66,29 @@ export function AlertDetailModal({
   const notMyProductBtnRef = useRef<HTMLElement>(null);
   
   const resolveMenuId = `modal-resolve-menu-${modalId}`;
+
+  // Polaris upgrades modal custom elements in the browser. Keeping this client-only
+  // gives React identical server and first-client markup instead of hiding a mismatch.
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isHydrated || !openOnMount || !alert) return;
+    const triggerOpen = () => {
+      const modal = document.getElementById(modalId) as HTMLElement & { showOverlay?: () => void; show?: () => void };
+      if (modal?.showOverlay) {
+        modal.showOverlay();
+      } else if (modal?.show) {
+        modal.show();
+      }
+      const triggerBtn = document.querySelector(`[commandFor="${modalId}"]`) as HTMLElement;
+      triggerBtn?.click();
+    };
+    triggerOpen();
+    const timer = setTimeout(triggerOpen, 150);
+    return () => clearTimeout(timer);
+  }, [alert, isHydrated, modalId, openOnMount]);
 
   // Close lightbox
   const closeLightbox = useCallback(() => {
@@ -131,7 +157,7 @@ export function AlertDetailModal({
     return () => btn.removeEventListener('click', handleClick);
   }, [alert, onReactivate]);
 
-  if (!alert) return null;
+  if (!alert || !isHydrated) return null;
 
   const warnings: any[] = Array.isArray(parsed?.warnings) ? parsed.warnings : [];
   const recommendation = parsed?.recommendation ?? "Review this product before continuing to sell it.";
@@ -210,7 +236,12 @@ export function AlertDetailModal({
 
   return (
     <>
-      <s-modal id={modalId} heading={t("analysis.modalHeading")} size="large" suppressHydrationWarning>
+      <s-modal
+        id={modalId}
+        heading={t("analysis.modalHeading")}
+        accessibilityLabel={t("analysis.modalAccessibilityLabel", { title: alert.productTitle })}
+        size="large"
+      >
         <div className="alert-detail-layout">
           
           {/* COLUMN 1: YOUR PRODUCT & RISK ASSESSMENT */}
@@ -256,9 +287,15 @@ export function AlertDetailModal({
                       <StatusBadge status={alert.status} />
                       <AlertBadge
                         alertLevel={alert.riskLevel}
-                        alertType={alert.alertType}
-                        riskDescription={alert.riskDescription}
+                        showSeverity={true}
                       />
+                      {alert.alertType && (
+                        <AlertBadge
+                          alertLevel={alert.riskLevel}
+                          alertType={alert.alertType}
+                          riskDescription={alert.riskDescription}
+                        />
+                      )}
                     </s-stack>
 
                     {/* Direct link to Edit Product in Shopify Admin */}
@@ -315,7 +352,7 @@ export function AlertDetailModal({
                   </s-text>
                   <s-text size="large" fontWeight="bold">
                     {hasActiveRisk
-                      ? t("analysis.potentialRisk")
+                      ? t("analysis.seriousRisk", { category: alert.alertType || t("common.unknown") })
                       : hasActiveSafeState
                         ? t("analysis.noIssuesFound")
                         : t("analysis.decisionRecorded")}
@@ -501,24 +538,33 @@ export function AlertDetailModal({
           </div>
         </div>
 
+        {alert.status === "active" && (
+          <div className="admin-note" style={{ margin: "16px 0 8px 0" }}>
+            <strong>{t("analysis.decisionContextTitle")}</strong>
+            <span>{t("analysis.decisionContextDesc")}</span>
+          </div>
+        )}
+
+        {alert.status === "active" && (
+          <div className="alert-audit-note">
+            <s-text-area
+              label={t("analysis.audit.noteLabel")}
+              placeholder={t("analysis.audit.notePlaceholder")}
+              value={auditNote}
+              onInput={(event: any) => setAuditNote(event.currentTarget.value || "")}
+            />
+          </div>
+        )}
+
         {/* Footer Actions */}
         {alert.status === "active" && (
           <>
-            <div slot="secondary-actions" className="alert-audit-note">
-              <s-text-area
-                label={t("analysis.audit.noteLabel")}
-                placeholder={t("analysis.audit.notePlaceholder")}
-                value={auditNote}
-                onInput={(event: any) => setAuditNote(event.currentTarget.value || "")}
-              />
-            </div>
             <s-button
               slot="primary-action"
               variant="primary"
               icon="caret-down"
               commandFor={resolveMenuId}
               loading={isLoading || undefined}
-              suppressHydrationWarning
             >
               {t('actions.recordDecision')}
             </s-button>
@@ -557,7 +603,6 @@ export function AlertDetailModal({
             commandFor={modalId}
             command="--hide"
             loading={isLoading || undefined}
-            suppressHydrationWarning
           >
             {t('actions.reactivate')}
           </s-button>
@@ -567,7 +612,6 @@ export function AlertDetailModal({
           variant="secondary"
           commandFor={modalId}
           command="--hide"
-          suppressHydrationWarning
         >
           {t('common.cancel')}
         </s-button>
@@ -667,9 +711,15 @@ function WarningCard({
           <s-stack direction="inline" gap="small" wrap blockAlign="center">
             <AlertBadge
               alertLevel={fields.alert_level}
-              alertType={fields.alert_type}
-              riskDescription={warning.riskLegalProvision}
+              showSeverity={true}
             />
+            {fields.alert_type && (
+              <AlertBadge
+                alertLevel={fields.alert_level}
+                alertType={fields.alert_type}
+                riskDescription={warning.riskLegalProvision}
+              />
+            )}
           </s-stack>
           
           {fields.rapex_url && (
@@ -686,49 +736,51 @@ function WarningCard({
           </s-text>
         )}
 
-        {/* WHY THIS MATCHED (highlighted box) */}
-        {warning.reason && (
-          <s-box
-            padding="base"
-            borderRadius="base"
-            background="bg-surface-info"
-          >
-            <s-stack gap="small-100">
-              <s-text fontWeight="bold" tone="info" size="small">{t("analysis.whyThisMatched")}</s-text>
-              <s-text>{warning.reason}</s-text>
-              {isImageFirst && (
-                <s-text tone="subdued" size="small">
-                  {t("analysis.imageDominated")}
-                </s-text>
-              )}
-            </s-stack>
-          </s-box>
-        )}
-
-        {/* MAIN CONTENT: Images + Details side by side */}
+        {/* Start comparison with the visual evidence and identifying details. */}
         <s-grid gap="large" gridTemplateColumns="auto 1fr">
           {/* Images Column */}
           {pictures.length > 0 && (
-            <s-stack direction="inline" gap="small" wrap style={{ maxWidth: '200px' }}>
-              {pictures.slice(0, 4).map((pic: any, idx: number) => {
-                const src = typeof pic === "string" ? pic : pic?.url || pic?.src;
-                if (!src) return null;
+            <div className="alert-reference-images">
+              {(() => {
+                const primarySrc = typeof pictures[0] === "string" ? pictures[0] : pictures[0]?.url || pictures[0]?.src;
+                if (!primarySrc) return null;
                 return (
                   <div
-                    key={`${src}-${idx}`}
-                    onClick={() => onImageClick(src)}
+                    onClick={() => onImageClick(primarySrc)}
                     className="alert-image-clickable"
                     role="button"
                     tabIndex={0}
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter') onImageClick(src);
+                      if (e.key === "Enter") onImageClick(primarySrc);
                     }}
                   >
-                    <s-thumbnail src={src} alt={`Reference ${idx + 1}`} size="large" />
+                    <img src={primarySrc} alt="Safety Gate Reference 1" className="alert-reference-image-primary" />
                   </div>
                 );
-              })}
-            </s-stack>
+              })()}
+              {pictures.length > 1 && (
+                <div className="alert-reference-thumbnails">
+                  {pictures.slice(1, 5).map((pic: any, idx: number) => {
+                    const src = typeof pic === "string" ? pic : pic?.url || pic?.src;
+                    if (!src) return null;
+                    return (
+                      <div
+                        key={`${src}-${idx}`}
+                        onClick={() => onImageClick(src)}
+                        className="alert-image-clickable"
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") onImageClick(src);
+                        }}
+                      >
+                        <img src={src} alt={`Thumbnail ${idx + 2}`} className="alert-reference-image-thumb" />
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           )}
 
           <div className="match-detail-list">
@@ -747,12 +799,30 @@ function WarningCard({
             <DetailItem label={t("analysis.fields.alertDate")} value={formattedDate} />
             {fields.alert_level && (
               <div className="match-detail-list__item">
-                <span>{t("analysis.riskLevel")}</span>
+                <span>{t("analysis.riskSeverity")}</span>
+                <AlertBadge alertLevel={fields.alert_level} showSeverity={true} />
+              </div>
+            )}
+            {fields.alert_type && (
+              <div className="match-detail-list__item">
+                <span>{t("analysis.hazardType")}</span>
                 <AlertBadge alertLevel={fields.alert_level} alertType={fields.alert_type} />
               </div>
             )}
           </div>
         </s-grid>
+
+        {warning.reason && (
+          <s-box padding="base" borderRadius="base" background="bg-surface-info">
+            <s-stack gap="small-100">
+              <s-text fontWeight="bold" tone="info" size="small">{t("analysis.whyThisMatched")}</s-text>
+              <s-text>{warning.reason}</s-text>
+              {isImageFirst && !warning.reason.toLowerCase().includes("exact") && (
+                <s-text tone="subdued" size="small">{t("analysis.imageDominated")}</s-text>
+              )}
+            </s-stack>
+          </s-box>
+        )}
 
         {/* RISK DESCRIPTION (if present) */}
         {fields.alert_description && (

@@ -1,10 +1,12 @@
 import axios from "axios";
+import { AI_CONFIG } from "./safety-gate-config.js";
 import type { ProductInput } from "./safety-gate-checker.schemas.js";
 import type { EncodedImage } from "./safety-gate-checker.types.js";
 
 const IMAGE_TIMEOUT_MS = 10000;
-const MAX_PRODUCT_IMAGES = 4;
-const MAX_ALERT_IMAGES = 8;
+const MAX_PRODUCT_IMAGES = AI_CONFIG.maxProductImages;
+const MAX_ALERT_IMAGES = AI_CONFIG.maxAlertImages;
+const MAX_IMAGE_BYTES = 5 * 1024 * 1024; // 5 MB max
 
 function guessContentType(url: string): string | undefined {
   const lower = url.toLowerCase();
@@ -47,7 +49,7 @@ export function normalizePictures(fields: any): string[] {
     .filter(Boolean);
 }
 
-export function getProductImageUrls(product: ProductInput, maxImages = MAX_PRODUCT_IMAGES): string[] {
+export function getProductImageUrls(product: ProductInput, maxImages: number = MAX_PRODUCT_IMAGES): string[] {
   const candidates = [
     ...(Array.isArray(product.imageUrls) ? product.imageUrls : []),
     ...(product.imageUrl ? [product.imageUrl] : []),
@@ -56,7 +58,7 @@ export function getProductImageUrls(product: ProductInput, maxImages = MAX_PRODU
   return [...new Set(candidates.map((image) => image.trim()).filter(Boolean))].slice(0, maxImages);
 }
 
-export function limitImageUrls(urls: string[], maxImages = MAX_ALERT_IMAGES): string[] {
+export function limitImageUrls(urls: string[], maxImages: number = MAX_ALERT_IMAGES): string[] {
   return [...new Set(urls.map((image) => image.trim()).filter(Boolean))].slice(0, maxImages);
 }
 
@@ -72,6 +74,11 @@ export async function prepareImageMedia(imageUrl: string): Promise<EncodedImage 
       responseType: "arraybuffer",
       timeout: IMAGE_TIMEOUT_MS,
     });
+
+    if (response.data && response.data.byteLength > MAX_IMAGE_BYTES) {
+      console.warn(`Skipping image exceeding 5MB: ${trimmed}`);
+      return null;
+    }
 
     const base64 = Buffer.from(response.data, "binary").toString("base64");
     let contentType =

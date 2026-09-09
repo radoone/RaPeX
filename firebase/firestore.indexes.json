@@ -15,13 +15,125 @@
       ]
     },
     {
-      "collectionGroup": "merchant_alerts",
+      "collectionGroup": "rapex_alerts",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "shop",
+          "fieldPath": "__name__",
           "order": "ASCENDING"
         },
+        {
+          "fieldPath": "vector_text",
+          "vectorConfig": {
+            "dimension": 1536,
+            "flat": {}
+          }
+        }
+      ]
+    },
+    {
+      "collectionGroup": "rapex_alerts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "meta.alert_date",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "vector_text",
+          "vectorConfig": {
+            "dimension": 1536,
+            "flat": {}
+          }
+        }
+      ]
+    },
+    {
+      "collectionGroup": "rapex_alert_images",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "vector_image",
+          "vectorConfig": {
+            "dimension": 1408,
+            "flat": {}
+          }
+        }
+      ]
+    },
+    {
+      "collectionGroup": "rapex_alert_images",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "meta.alert_date",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "vector_image",
+          "vectorConfig": {
+            "dimension": 1408,
+            "flat": {}
+          }
+        }
+      ]
+    },
+    {
+      "collectionGroup": "products",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "vector_text",
+          "vectorConfig": {
+            "dimension": 1536,
+            "flat": {}
+          }
+        }
+      ]
+    },
+    {
+      "collectionGroup": "products",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "vector_image",
+          "vectorConfig": {
+            "dimension": 1408,
+            "flat": {}
+          }
+        }
+      ]
+    },
+    {
+      "collectionGroup": "alerts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "alerts",
+      "queryScope": "COLLECTION",
+      "fields": [
         {
           "fieldPath": "productId",
           "order": "ASCENDING"
@@ -33,155 +145,16 @@
       ]
     },
     {
-      "collectionGroup": "rapex_alerts",
+      "collectionGroup": "checks",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "__name__",
+          "fieldPath": "productId",
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "vector_text",
-          "vectorConfig": {
-            "dimension": 1536,
-            "flat": {}
-          }
-        }
-      ]
-    },
-    {
-      "collectionGroup": "rapex_alerts",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "__name__",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "vector_image",
-          "vectorConfig": {
-            "dimension": 1408,
-            "flat": {}
-          }
-        }
-      ]
-    },
-    {
-      "collectionGroup": "rapex_alerts",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "meta.alert_date",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "vector_text",
-          "vectorConfig": {
-            "dimension": 1536,
-            "flat": {}
-          }
-        }
-      ]
-    },
-    {
-      "collectionGroup": "rapex_alert_images",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "__name__",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "vector_image",
-          "vectorConfig": {
-            "dimension": 1408,
-            "flat": {}
-          }
-        }
-      ]
-    },
-    {
-      "collectionGroup": "rapex_alert_images",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "meta.alert_date",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "vector_image",
-          "vectorConfig": {
-            "dimension": 1408,
-            "flat": {}
-          }
-        }
-      ]
-    },
-    {
-      "collectionGroup": "merchant_products",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "__name__",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "vector_text",
-          "vectorConfig": {
-            "dimension": 1536,
-            "flat": {}
-          }
-        }
-      ]
-    },
-    {
-      "collectionGroup": "merchant_products",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "shop",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "vector_text",
-          "vectorConfig": {
-            "dimension": 1536,
-            "flat": {}
-          }
-        }
-      ]
-    },
-    {
-      "collectionGroup": "merchant_products",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "__name__",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "vector_image",
-          "vectorConfig": {
-            "dimension": 1408,
-            "flat": {}
-          }
-        }
-      ]
-    },
-    {
-      "collectionGroup": "merchant_products",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "shop",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "vector_image",
-          "vectorConfig": {
-            "dimension": 1408,
-            "flat": {}
-          }
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
         }
       ]
     }

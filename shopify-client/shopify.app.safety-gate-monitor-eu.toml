@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "0f8c446d88af9f13ac49947a87c47207"
-name = "safety-gate-monitor-eu"
+name = "Safety Gate Monitor"
 application_url = "https://harbor-celebrate-postage-asin.trycloudflare.com"
 embedded = true
 handle = "safety-gate-monitor-eu"

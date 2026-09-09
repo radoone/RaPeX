@@ -1,7 +1,7 @@
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import * as logger from "firebase-functions/logger";
 import { db } from "./firebase-admin.js";
-import { FIRESTORE_COLLECTIONS, MATCHING_THRESHOLDS } from "./safety-gate-config.js";
+import { AI_CONFIG, FIRESTORE_COLLECTIONS, MATCHING_THRESHOLDS } from "./safety-gate-config.js";
 import { checkProductAgainstAlerts } from "./safety-gate-checker.js";
 import type { ProductInput } from "./safety-gate-checker.schemas.js";
 import { normalizePictures } from "./safety-gate-checker-media.js";
@@ -101,9 +101,7 @@ function requireAuthorizedRequest(request: RequestShape): boolean {
   return Boolean(expectedKey && providedKey && expectedKey === providedKey);
 }
 
-function merchantProductDocId(shop: string, productId: string): string {
-  return `${encodeURIComponent(shop)}::${encodeURIComponent(productId)}`;
-}
+
 
 function asVectorArray(value: unknown): number[] | undefined {
   if (!value || typeof value !== "object") {
@@ -270,7 +268,7 @@ function normalizeRapexAlert(docId: string, data: Record<string, unknown>): Norm
 
 async function getMonitorState(shop: string): Promise<MerchantMonitorStateDocument | null> {
   const snapshot = await db
-    .collection(FIRESTORE_COLLECTIONS.merchantMonitorState)
+    .collection(FIRESTORE_COLLECTIONS.merchants)
     .doc(encodeURIComponent(shop))
     .get();
   if (!snapshot.exists) {
@@ -341,7 +339,10 @@ async function findCandidateProductsForAlert(
   alertCandidate: AlertRetrievalCandidate,
 ): Promise<MerchantProductCandidate[]> {
   const candidates = new Map<string, MerchantProductCandidate>();
-  const collection = db.collection(FIRESTORE_COLLECTIONS.merchantProducts).where("shop", "==", shop);
+  const collection = db
+    .collection(FIRESTORE_COLLECTIONS.merchants)
+    .doc(encodeURIComponent(shop))
+    .collection(FIRESTORE_COLLECTIONS.subProducts);
 
   if (alertCandidate.textVector?.length) {
     try {
@@ -423,9 +424,12 @@ async function upsertAlertForProduct(params: {
   warningsCount: number;
   riskLevel: string;
 }): Promise<boolean> {
-  const query = await db
-    .collection(FIRESTORE_COLLECTIONS.merchantAlerts)
-    .where("shop", "==", params.shop)
+  const alertsCollection = db
+    .collection(FIRESTORE_COLLECTIONS.merchants)
+    .doc(encodeURIComponent(params.shop))
+    .collection(FIRESTORE_COLLECTIONS.subAlerts);
+
+  const query = await alertsCollection
     .where("productId", "==", params.productId)
     .where("status", "==", "active")
     .limit(1)
@@ -450,7 +454,7 @@ async function upsertAlertForProduct(params: {
     return false;
   }
 
-  await db.collection(FIRESTORE_COLLECTIONS.merchantAlerts).add({
+  await alertsCollection.add({
     shop: params.shop,
     productId: params.productId,
     productTitle: params.productTitle,
@@ -487,8 +491,12 @@ export async function upsertMerchantProduct(
     title: input.product.name,
     description: input.product.description,
   });
-  const docId = merchantProductDocId(shop, productId);
-  const docRef = db.collection(FIRESTORE_COLLECTIONS.merchantProducts).doc(docId);
+
+  const merchantRef = db.collection(FIRESTORE_COLLECTIONS.merchants).doc(encodeURIComponent(shop));
+  const docRef = merchantRef
+    .collection(FIRESTORE_COLLECTIONS.subProducts)
+    .doc(encodeURIComponent(productId));
+
   const existingSnapshot = await docRef.get();
   const existingData = (existingSnapshot.data() as Record<string, unknown> | undefined) || {};
   const existingSourceUpdatedAt =
@@ -530,7 +538,16 @@ export async function upsertMerchantProduct(
     ...(vectorImage?.length ? { vector_image: FieldValue.vector(vectorImage) } : {}),
   };
 
-  await docRef.set(payload, { merge: true });
+  await Promise.all([
+    docRef.set(payload, { merge: true }),
+    merchantRef.set(
+      {
+        shop,
+        updatedAt: FieldValue.serverTimestamp(),
+      },
+      { merge: true },
+    ),
+  ]);
 
   return {
     shop,
@@ -553,7 +570,7 @@ export async function runMerchantDeltaMonitoringForShop(params: {
   }
 
   const monitorRef = db
-    .collection(FIRESTORE_COLLECTIONS.merchantMonitorState)
+    .collection(FIRESTORE_COLLECTIONS.merchants)
     .doc(encodeURIComponent(shop));
   const currentState = await getMonitorState(shop);
   const forceFullScan = Boolean(params.forceFullScan);
@@ -630,23 +647,36 @@ export async function runMerchantDeltaMonitoringForShop(params: {
       );
       productsScanned += 1;
 
-      await db.collection(FIRESTORE_COLLECTIONS.merchantChecks).add({
-        shop,
-        productId: String(candidate.product.data.productId || ""),
-        productTitle: String(candidate.product.data.productTitle || candidate.product.data.name || ""),
-        isSafe: result.isSafe,
-        checkedAt: new Date(result.checkedAt),
-        createdAt: FieldValue.serverTimestamp(),
-      });
+      const expireDate = new Date();
+      expireDate.setDate(expireDate.getDate() + AI_CONFIG.checkHistoryTtlDays);
 
-      await db.collection(FIRESTORE_COLLECTIONS.merchantProducts).doc(candidate.product.id).set(
-        {
-          updatedAt: FieldValue.serverTimestamp(),
-          lastDeltaCheckAt: FieldValue.serverTimestamp(),
-          lastCheckedAt: FieldValue.serverTimestamp(),
-        },
-        { merge: true },
-      );
+      await db
+        .collection(FIRESTORE_COLLECTIONS.merchants)
+        .doc(encodeURIComponent(shop))
+        .collection(FIRESTORE_COLLECTIONS.subChecks)
+        .add({
+          shop,
+          productId: String(candidate.product.data.productId || ""),
+          productTitle: String(candidate.product.data.productTitle || candidate.product.data.name || ""),
+          isSafe: result.isSafe,
+          checkedAt: new Date(result.checkedAt),
+          createdAt: FieldValue.serverTimestamp(),
+          expireAt: Timestamp.fromDate(expireDate),
+        });
+
+      await db
+        .collection(FIRESTORE_COLLECTIONS.merchants)
+        .doc(encodeURIComponent(shop))
+        .collection(FIRESTORE_COLLECTIONS.subProducts)
+        .doc(candidate.product.id)
+        .set(
+          {
+            updatedAt: FieldValue.serverTimestamp(),
+            lastDeltaCheckAt: FieldValue.serverTimestamp(),
+            lastCheckedAt: FieldValue.serverTimestamp(),
+          },
+          { merge: true },
+        );
 
       if (!result.isSafe && result.warnings.length > 0) {
         matchesFound += result.warnings.length;
@@ -725,26 +755,18 @@ export async function runDailyMerchantDeltaMonitoring(): Promise<{
   shopsProcessed: number;
   failures: Array<{ shop: string; error: string }>;
 }> {
-  const [stateSnapshot, productSnapshot] = await Promise.all([
-    db.collection(FIRESTORE_COLLECTIONS.merchantMonitorState).get(),
-    db.collection(FIRESTORE_COLLECTIONS.merchantProducts).get(),
-  ]);
+  const merchantsSnapshot = await db
+    .collection(FIRESTORE_COLLECTIONS.merchants)
+    .select("shop")
+    .get();
 
-  const shopsFromState = stateSnapshot.docs
+  const uniqueShops = merchantsSnapshot.docs
     .map((doc) => {
       const data = doc.data() as Record<string, unknown>;
       return coerceString(data.shop) || decodeURIComponent(doc.id);
     })
     .filter((shop): shop is string => Boolean(shop));
 
-  const shopsFromProducts = productSnapshot.docs
-    .map((doc) => {
-      const data = doc.data() as Record<string, unknown>;
-      return coerceString(data.shop);
-    })
-    .filter((shop): shop is string => Boolean(shop));
-
-  const uniqueShops = [...new Set([...shopsFromState, ...shopsFromProducts])];
   const failures: Array<{ shop: string; error: string }> = [];
 
   for (const shop of uniqueShops) {

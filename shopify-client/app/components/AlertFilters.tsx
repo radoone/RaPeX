@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface AppliedFilter {
   key: string;
@@ -17,19 +18,6 @@ interface AlertFiltersProps {
   onClearFilters: () => void;
 }
 
-const STATUS_OPTIONS = [
-  { value: 'active', label: 'Active' },
-  { value: 'resolved', label: 'Resolved' },
-  { value: 'dismissed', label: 'Dismissed' },
-] as const;
-
-const RISK_OPTIONS = [
-  { value: 'serious', label: 'Serious' },
-  { value: 'high', label: 'High' },
-  { value: 'other risk', label: 'Other' },
-  { value: 'low', label: 'Low' },
-] as const;
-
 export function AlertFilters({
   searchValue,
   statusFilter,
@@ -40,7 +28,21 @@ export function AlertFilters({
   onRiskLevelFilterChange,
   onClearFilters,
 }: AlertFiltersProps) {
+  const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
+
+  const statusOptions = [
+    { value: 'active', label: t('status.needsReview') },
+    { value: 'resolved', label: t('status.resolved') },
+    { value: 'dismissed', label: t('status.dismissed') },
+  ];
+
+  const riskOptions = [
+    { value: 'serious', label: t('riskLevels.serious') },
+    { value: 'high', label: t('riskLevels.high') },
+    { value: 'other risk', label: t('riskLevels.medium') },
+    { value: 'low', label: t('riskLevels.low') },
+  ];
 
   const toggleStatus = (status: string) => {
     onStatusFilterChange(
@@ -102,8 +104,8 @@ export function AlertFilters({
           <s-stack direction="inline" gap="large" blockAlign="center" wrap>
             {/* Status chips */}
             <s-stack direction="inline" gap="small" blockAlign="center">
-              <s-text tone="subdued" size="small">Status:</s-text>
-              {STATUS_OPTIONS.map((status) => (
+              <s-text tone="subdued" size="small">{t("filters.status")}:</s-text>
+              {statusOptions.map((status) => (
                 <s-clickable-chip
                   key={status.value}
                   selected={statusFilter.includes(status.value) || undefined}
@@ -116,8 +118,8 @@ export function AlertFilters({
 
             {/* Risk chips */}
             <s-stack direction="inline" gap="small" blockAlign="center">
-              <s-text tone="subdued" size="small">Risk:</s-text>
-              {RISK_OPTIONS.map((risk) => (
+              <s-text tone="subdued" size="small">{t("filters.risk")}:</s-text>
+              {riskOptions.map((risk) => (
                 <s-clickable-chip
                   key={risk.value}
                   selected={riskLevelFilter.includes(risk.value) || undefined}

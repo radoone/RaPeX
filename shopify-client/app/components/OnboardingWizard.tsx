@@ -19,7 +19,6 @@ export interface OnboardingWizardProps {
   onComplete: (payload: {
     similarityThreshold: number;
     autoDraftHighRisk: boolean;
-    slackWebhookUrl: string;
   }) => void;
 }
 
@@ -34,7 +33,6 @@ export function OnboardingWizard({
   const [currentStep, setCurrentStep] = useState(1);
   const [threshold, setThreshold] = useState(70);
   const [autoDraft, setAutoDraft] = useState(false);
-  const [slackUrl, setSlackUrl] = useState("");
   const catalogImported = Boolean(scanResults?.success);
 
   const calibration = (() => {
@@ -63,7 +61,6 @@ export function OnboardingWizard({
     onComplete({
       similarityThreshold: threshold,
       autoDraftHighRisk: autoDraft,
-      slackWebhookUrl: slackUrl
     });
   };
 
@@ -283,30 +280,6 @@ export function OnboardingWizard({
                         <s-text size="small">{t("onboarding.steps.automation.quarantine.label")}</s-text>
                       </label>
                     </div>
-                  </s-stack>
-
-                  {/* Slack URL Field */}
-                  <s-stack gap="small-100">
-                    <s-text fontWeight="bold">{t("onboarding.steps.automation.slack.title")}</s-text>
-                    <s-text tone="subdued" size="small">
-                      {t("onboarding.steps.automation.slack.desc")}
-                    </s-text>
-                    <input
-                      type="text"
-                      placeholder={t("onboarding.steps.automation.slack.placeholder")}
-                      value={slackUrl}
-                      onChange={(e) => setSlackUrl(e.target.value)}
-                      style={{
-                        width: "100%",
-                        padding: "10px 14px",
-                        borderRadius: "8px",
-                        border: "1px solid var(--border)",
-                        marginTop: "8px",
-                        fontSize: "14px",
-                        background: "var(--surface)",
-                        color: "var(--text)"
-                      }}
-                    />
                   </s-stack>
                 </s-stack>
               </s-box>

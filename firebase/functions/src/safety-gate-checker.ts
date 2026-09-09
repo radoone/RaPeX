@@ -1,9 +1,9 @@
 import { createHash } from "node:crypto";
-import { FieldValue } from "firebase-admin/firestore";
+import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import { googleAI } from "@genkit-ai/google-genai";
 import { type Part } from "genkit";
 import { db, functionsAi } from "./firebase-admin.js";
-import { FIRESTORE_COLLECTIONS } from "./safety-gate-config.js";
+import { AI_CONFIG, FIRESTORE_COLLECTIONS } from "./safety-gate-config.js";
 import {
   AnalysisPromptInputSchema,
   ProductInputSchema,
@@ -47,6 +47,7 @@ type CachedMatchDocument = {
   createdAt: FieldValue;
   updatedAt: FieldValue;
   lastUsedAt: FieldValue;
+  expireAt: Timestamp;
   hitCount: number;
 };
 
@@ -161,6 +162,9 @@ async function writeCachedMatchResult(
     return;
   }
 
+  const expireDate = new Date();
+  expireDate.setDate(expireDate.getDate() + AI_CONFIG.matchCacheTtlDays);
+
   const payload: CachedMatchDocument = {
     shop,
     productId,
@@ -171,6 +175,7 @@ async function writeCachedMatchResult(
     createdAt: FieldValue.serverTimestamp(),
     updatedAt: FieldValue.serverTimestamp(),
     lastUsedAt: FieldValue.serverTimestamp(),
+    expireAt: Timestamp.fromDate(expireDate),
     hitCount: 0,
     ...(product.sourceUpdatedAt ? { sourceUpdatedAt: product.sourceUpdatedAt } : {}),
   };
@@ -244,12 +249,12 @@ async function buildPromptParts(
         alertImages.push({ alertId: alert.id, media: encoded });
       }
 
-      if (alertImages.length >= 8) {
+      if (alertImages.length >= AI_CONFIG.maxAlertImages) {
         break;
       }
     }
 
-    if (alertImages.length >= 8) {
+    if (alertImages.length >= AI_CONFIG.maxAlertImages) {
       break;
     }
   }
@@ -270,10 +275,10 @@ async function analyzeProductMatches(product: ProductInput, alerts: NormalizedAl
   const promptInput = await buildPromptParts(product, alerts);
   promptInput.comparisonPrompt = comparisonPrompt;
   const attempts = [
-    { model: "gemini-2.5-flash-lite", promptType: "multimodal", label: "2.5-lite multimodal" },
-    { model: "gemini-2.5-flash-lite", promptType: "text", label: "2.5-lite text-only" },
-    { model: "gemini-1.5-flash-002", promptType: "multimodal", label: "1.5 multimodal" },
-    { model: "gemini-1.5-flash-002", promptType: "text", label: "1.5 text-only" },
+    { model: AI_CONFIG.primaryModel, promptType: "multimodal", label: "2.5-flash multimodal" },
+    { model: AI_CONFIG.primaryModel, promptType: "text", label: "2.5-flash text-only" },
+    { model: AI_CONFIG.fallbackModel, promptType: "multimodal", label: "2.5-flash-lite multimodal" },
+    { model: AI_CONFIG.fallbackModel, promptType: "text", label: "2.5-flash-lite text-only" },
   ] as const;
 
   for (const attempt of attempts) {

@@ -109,3 +109,4 @@ ui-debug.log
 
 # PgLite debug logs
 pglite-debug.log
+/artifacts

@@ -41,13 +41,12 @@ export interface RapexAlertImageDocument {
   imageUrl: string;
   imageIndex: number;
   meta: {
-    datasetid: string;
+    datasetid?: string;
     recordid: string;
-    record_timestamp: string;
+    record_timestamp?: string;
     alert_date: Timestamp;
     ingested_at: FieldValue;
   };
-  fields: RapexRecordFields;
   vector_image: FirestoreVectorValue;
   updatedAt: FieldValue;
 }
@@ -102,8 +101,14 @@ export interface MerchantProductDocument {
   vector_image?: FirestoreVectorValue;
 }
 
-export interface MerchantMonitorStateDocument {
+export interface MerchantDocument {
   shop: string;
+  similarityThreshold?: number;
+  onboardingCompleted?: boolean;
+  autoDraftHighRisk?: boolean;
+  excludeVendors?: string | null;
+  excludeTypes?: string | null;
+  emailNotifications?: boolean;
   createdAt: FieldValue;
   updatedAt: FieldValue;
   lastMonitorRunStart?: FieldValue;
@@ -117,3 +122,5 @@ export interface MerchantMonitorStateDocument {
   lastRunMode?: "delta" | "bootstrap" | "windowed";
   lastError?: string;
 }
+
+export type MerchantMonitorStateDocument = MerchantDocument;

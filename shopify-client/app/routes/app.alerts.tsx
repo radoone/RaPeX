@@ -18,6 +18,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   if (billingRedirect) return billingRedirect as never;
 
   const url = new URL(request.url);
+  const openAlertId = url.searchParams.get("open") || null;
   const page = parseInt(url.searchParams.get("page") || "1");
   const pageSize = 25;
   const offset = (page - 1) * pageSize;
@@ -134,7 +135,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return json({
     alerts,
     pagination: { currentPage: page, totalPages: Math.ceil(totalCount / pageSize), totalCount, hasNext: page < Math.ceil(totalCount / pageSize), hasPrevious: page > 1 },
-    filters: { status: statusFilters, riskLevel: riskLevelFilters, search, sortBy: sortByParam, sortOrder: sortOrderParam, showAllRecords },
+    filters: { status: statusFilters, riskLevel: riskLevelFilters, search, sortBy: sortByParam, sortOrder: sortOrderParam, showAllRecords, openAlertId },
     stats: { active: activeCount, resolved: resolvedCount, dismissed: dismissedCount, total: activeCount + resolvedCount + dismissedCount, criticalActive: criticalActiveAlerts },
     shop: session.shop,
   });
@@ -285,13 +286,29 @@ export default function AlertsPage() {
   return (
     <s-page size="large" className="page-shell" suppressHydrationWarning>
       <s-heading slot="title" size="large" suppressHydrationWarning>{t('alerts.title')}</s-heading>
-      <s-button slot="primary-action" variant="primary" href="/app/manual-check" suppressHydrationWarning>
-        {t('actions.manualCheck')}
+      {stats.active > 0 && alerts.length > 0 ? (
+        <s-button
+          slot="primary-action"
+          variant="primary"
+          commandFor={`alert-detail-${(alerts.find((a: any) => a.status === 'active') || alerts[0]).id}`}
+          suppressHydrationWarning
+        >
+          {t("actions.reviewDecision")}
+        </s-button>
+      ) : (
+        <s-button
+          slot="primary-action"
+          variant="primary"
+          onClick={() => navigate("/app/manual-check")}
+          suppressHydrationWarning
+        >
+          {t("actions.checkOneProduct")}
+        </s-button>
+      )}
+      <s-button slot="secondary-actions" variant="secondary" onClick={() => navigate("/app/audit-report")} suppressHydrationWarning>
+        {t("actions.auditReport")}
       </s-button>
-      <s-button slot="secondary-actions" variant="secondary" href="/app/audit-report" suppressHydrationWarning>
-        {t("actions.downloadAuditReport")}
-      </s-button>
-      <s-button slot="secondary-actions" variant="secondary" href="/app/evidence" suppressHydrationWarning>
+      <s-button slot="secondary-actions" variant="secondary" onClick={() => navigate("/app/evidence")} suppressHydrationWarning>
         {t("actions.viewEvidence")}
       </s-button>
 
@@ -308,8 +325,16 @@ export default function AlertsPage() {
                 ? t("alerts.admin.criticalBannerDescription", { count: stats.criticalActive })
                 : t("alerts.admin.warningBannerDescription")}
             </s-text>
-            <div style={{ marginTop: "var(--s-space-200)" }}>
-              <s-button variant="primary" onClick={() => applyFilters({ status: ["active"] })}>
+            <div style={{ marginTop: "var(--s-space-200)", display: "flex", gap: "var(--s-space-200)", alignItems: "center" }}>
+              {alerts.length > 0 && (
+                <s-button
+                  variant="primary"
+                  commandFor={`alert-detail-${(alerts.find((a: any) => a.status === 'active') || alerts[0]).id}`}
+                >
+                  {t("actions.reviewDecision")}
+                </s-button>
+              )}
+              <s-button variant={alerts.length > 0 ? "secondary" : "primary"} onClick={() => applyFilters({ status: ["active"] })}>
                 {t("actions.reviewAlerts")}
               </s-button>
             </div>
@@ -397,6 +422,7 @@ export default function AlertsPage() {
           key={alert.id}
           alert={{ ...alert, shop: alert.shop || shop }}
           modalId={`alert-detail-${alert.id}`}
+          openOnMount={alert.id === filters.openAlertId}
           onDismiss={(id, resolutionType, notes) => handleAlertAction(id, 'dismiss', resolutionType, notes)}
           onResolve={(id, resolutionType, notes) => handleAlertAction(id, 'resolve', resolutionType, notes)}
           onReactivate={(id) => handleAlertAction(id, 'reactivate')}

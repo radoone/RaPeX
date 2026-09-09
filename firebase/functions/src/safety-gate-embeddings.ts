@@ -92,26 +92,36 @@ export function buildEmbeddingText(params: {
   return parts.join("\n");
 }
 
-export async function embedText(content: string): Promise<number[] | undefined> {
+export async function embedText(content: string, maxRetries = 3): Promise<number[] | undefined> {
   if (!content.trim()) {
     return undefined;
   }
 
-  try {
-    const [result] = await embeddingsAi.embed({
-      embedder: SAFETY_GATE_CONFIG.textEmbedder,
-      content,
-      options: {
-        outputDimensionality: 1536,
-      },
-    });
-    return result?.embedding;
-  } catch (error) {
-    logger.warn("Text embedding failed", {
-      error: error instanceof Error ? error.message : String(error),
-    });
-    return undefined;
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const [result] = await embeddingsAi.embed({
+        embedder: SAFETY_GATE_CONFIG.textEmbedder,
+        content,
+        options: {
+          outputDimensionality: 1536,
+        },
+      });
+      return result?.embedding;
+    } catch (error) {
+      const isRateLimit = String(error).includes("429") || String(error).includes("RESOURCE_EXHAUSTED");
+      if (isRateLimit && attempt < maxRetries) {
+        const delayMs = attempt * 1500;
+        logger.warn(`Vertex AI rate limit hit, retrying in ${delayMs}ms (attempt ${attempt}/${maxRetries})`);
+        await new Promise((resolve) => globalThis.setTimeout(resolve, delayMs));
+        continue;
+      }
+      logger.warn("Text embedding failed", {
+        error: error instanceof Error ? error.message : String(error),
+      });
+      return undefined;
+    }
   }
+  return undefined;
 }
 
 export async function embedImage(url: string): Promise<number[] | undefined> {

@@ -49,41 +49,6 @@ export async function handleAutoDraftAndNotifications(
           }
         });
       }
-
-      // 3. Slack Notifications
-      if (settings.slackWebhookUrl) {
-        console.log(`[Slack Alert] Send slack payload to ${settings.slackWebhookUrl}`);
-        try {
-          const res = await fetch(settings.slackWebhookUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              text: `🚨 *Safety Gate (RAPEX) Critical Alert* for shop *${shop}*!\n\n` +
-                    `*Product in catalog:* ID ${productId}\n` +
-                    `*Matched Safety Gate Alert:* ${alertName}\n` +
-                    `*Similarity Score:* ${criticalWarning.overallSimilarity}%\n` +
-                    `*Risk Level:* ${criticalWarning.riskLevel || 'High/Serious'}\n` +
-                    `*Status:* ${settings.autoDraftHighRisk ? "Priority review" : "Needs Review"}`
-            })
-          });
-          
-          if (!res.ok) {
-            console.error(`Slack webhook returned status ${res.status}`);
-          } else {
-            // Log Slack trigger to activity log
-            await db.activityLog.create({
-              data: {
-                shop,
-                type: "automatic",
-                action: "check",
-                details: `Sent Slack webhook notification for unsafe product match "${alertName}".`
-              }
-            });
-          }
-        } catch (slackErr) {
-          console.error("Failed to send Slack alert:", slackErr);
-        }
-      }
     }
   } catch (error) {
     console.error("Error in handleAutoDraftAndNotifications:", error);

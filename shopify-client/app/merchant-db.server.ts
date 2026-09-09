@@ -1,4 +1,4 @@
-import { FieldValue, Timestamp } from "firebase-admin/firestore";
+import { FieldPath, FieldValue, Timestamp } from "firebase-admin/firestore";
 import { firestore } from "./firestore.server";
 
 type SortOrder = "asc" | "desc";
@@ -34,7 +34,7 @@ type CreateOptions<T> = {
 };
 
 type UpdateOptions<T> = {
-  where: { id: string };
+  where: { id: string; shop?: string };
   data: Partial<T>;
 };
 
@@ -118,14 +118,12 @@ type ActivityLogRecord = {
   createdAt: Date;
 };
 
-const COLLECTIONS = {
-  safetyAlert: "merchant_alerts",
-  safetyCheck: "merchant_checks",
-  webhookError: "merchant_webhook_errors",
-  safetySetting: "merchant_settings",
-  merchantProduct: "merchant_products",
-  merchantMonitorState: "merchant_monitor_state",
-  activityLog: "merchant_activity_logs",
+const SUBCOLLECTIONS = {
+  alerts: "alerts",
+  checks: "checks",
+  activityLogs: "activity_logs",
+  webhookErrors: "webhook_errors",
+  products: "products",
 } as const;
 
 let credentialWarningShown = false;
@@ -134,7 +132,6 @@ function isFirestoreCredentialError(error: unknown): boolean {
   if (!(error instanceof Error)) {
     return false;
   }
-
   const message = error.message || "";
   return message.includes("Could not load the default credentials");
 }
@@ -143,7 +140,6 @@ function logCredentialWarningOnce(): void {
   if (credentialWarningShown) {
     return;
   }
-
   credentialWarningShown = true;
   console.warn(
     "[merchant-db] Firestore ADC credentials are missing. Running in degraded local mode (reads empty, writes no-op).",
@@ -162,27 +158,27 @@ async function withCredentialFallback<T>(operation: () => Promise<T>, fallback: 
   }
 }
 
-function encodeShopKey(shop: string): string {
-  return encodeURIComponent(shop);
+export function encodeShopKey(shop: string): string {
+  return encodeURIComponent(shop.trim());
+}
+
+function getMerchantDocRef(shop: string) {
+  return firestore.collection("merchants").doc(encodeShopKey(shop));
 }
 
 function normalizeDate(value: unknown): Date | undefined {
   if (value instanceof Date) {
     return value;
   }
-
   if (value && typeof value === "object" && "toDate" in (value as any)) {
-    const result = (value as Timestamp).toDate();
-    return result;
+    return (value as Timestamp).toDate();
   }
-
   if (typeof value === "string" || typeof value === "number") {
     const parsed = new Date(value);
     if (!Number.isNaN(parsed.getTime())) {
       return parsed;
     }
   }
-
   return undefined;
 }
 
@@ -190,21 +186,17 @@ function sanitizeForFirestore(value: unknown): unknown {
   if (value === undefined) {
     return undefined;
   }
-
   if (value === null) {
     return null;
   }
-
   if (value instanceof Date || value instanceof Timestamp || value instanceof FieldValue) {
     return value;
   }
-
   if (Array.isArray(value)) {
     return value
       .map((entry) => sanitizeForFirestore(entry))
       .filter((entry) => entry !== undefined);
   }
-
   if (typeof value === "object") {
     const output: Record<string, unknown> = {};
     for (const [key, nestedValue] of Object.entries(value as Record<string, unknown>)) {
@@ -215,7 +207,6 @@ function sanitizeForFirestore(value: unknown): unknown {
     }
     return output;
   }
-
   return value;
 }
 
@@ -223,7 +214,6 @@ function applySelect<T extends Record<string, unknown>>(record: T, select?: Sele
   if (!select) {
     return record;
   }
-
   const selected: Record<string, unknown> = {};
   for (const [key, enabled] of Object.entries(select)) {
     if (enabled) {
@@ -233,80 +223,12 @@ function applySelect<T extends Record<string, unknown>>(record: T, select?: Sele
   return selected;
 }
 
-function matchesWhere(record: Record<string, unknown>, where?: WhereClause): boolean {
-  if (!where) {
-    return true;
-  }
-
-  for (const [field, condition] of Object.entries(where)) {
-    if (condition === undefined) {
-      continue;
-    }
-
-    const value = record[field];
-
-    if (condition && typeof condition === "object" && !Array.isArray(condition)) {
-      if (Array.isArray((condition as any).in)) {
-        const allowed = (condition as any).in as unknown[];
-        if (!allowed.includes(value)) {
-          return false;
-        }
-        continue;
-      }
-
-      if (typeof (condition as any).contains === "string") {
-        const source = String(value ?? "");
-        if (!source.includes((condition as any).contains)) {
-          return false;
-        }
-        continue;
-      }
-    }
-
-    if (value !== condition) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-function sortRecords<T extends Record<string, unknown>>(records: T[], orderBy?: Record<string, SortOrder>): T[] {
-  if (!orderBy) {
-    return records;
-  }
-
-  const [field, direction] = Object.entries(orderBy)[0] || [];
-  if (!field || !direction) {
-    return records;
-  }
-
-  return [...records].sort((left, right) => {
-    const leftDate = normalizeDate(left[field]);
-    const rightDate = normalizeDate(right[field]);
-    const leftValue = leftDate ? leftDate.getTime() : (left[field] as any);
-    const rightValue = rightDate ? rightDate.getTime() : (right[field] as any);
-
-    if (leftValue === rightValue) {
-      return 0;
-    }
-
-    if (direction === "desc") {
-      return leftValue > rightValue ? -1 : 1;
-    }
-
-    return leftValue > rightValue ? 1 : -1;
-  });
-}
-
 function applyDistinct<T extends Record<string, unknown>>(records: T[], fields?: string[]): T[] {
   if (!fields || fields.length === 0) {
     return records;
   }
-
   const seen = new Set<string>();
   const distinctRecords: T[] = [];
-
   for (const record of records) {
     const key = fields.map((field) => String(record[field] ?? "")).join("::");
     if (seen.has(key)) {
@@ -315,36 +237,16 @@ function applyDistinct<T extends Record<string, unknown>>(records: T[], fields?:
     seen.add(key);
     distinctRecords.push(record);
   }
-
   return distinctRecords;
 }
 
-async function loadCollectionByShop(
-  collectionName: string,
-  where?: WhereClause,
-): Promise<Array<{ id: string; data: Record<string, unknown> }>> {
-  const shop = typeof where?.shop === "string" ? where.shop : undefined;
-  const query = shop
-    ? firestore.collection(collectionName).where("shop", "==", shop)
-    : firestore.collection(collectionName);
-  const snapshot = await withCredentialFallback(() => query.get(), null as any);
-  if (!snapshot) {
-    return [];
-  }
-
-  return snapshot.docs.map((doc: any) => ({
-    id: doc.id,
-    data: doc.data() as Record<string, unknown>,
-  }));
-}
-
-function convertSafetyAlert(id: string, data: Record<string, unknown>): SafetyAlertRecord {
+function convertSafetyAlert(id: string, data: Record<string, unknown>, fallbackShop = ""): SafetyAlertRecord {
   return {
     id,
     productId: String(data.productId || ""),
     productTitle: String(data.productTitle || ""),
     productHandle: data.productHandle ? String(data.productHandle) : undefined,
-    shop: String(data.shop || ""),
+    shop: String(data.shop || fallbackShop),
     checkResult: String(data.checkResult || ""),
     status: String(data.status || "active"),
     riskLevel: String(data.riskLevel || "Unknown"),
@@ -359,22 +261,22 @@ function convertSafetyAlert(id: string, data: Record<string, unknown>): SafetyAl
   };
 }
 
-function convertSafetyCheck(id: string, data: Record<string, unknown>): SafetyCheckRecord {
+function convertSafetyCheck(id: string, data: Record<string, unknown>, fallbackShop = ""): SafetyCheckRecord {
   return {
     id,
     productId: String(data.productId || ""),
     productTitle: String(data.productTitle || ""),
-    shop: String(data.shop || ""),
+    shop: String(data.shop || fallbackShop),
     isSafe: Boolean(data.isSafe),
     checkedAt: normalizeDate(data.checkedAt) || new Date(0),
     createdAt: normalizeDate(data.createdAt) || new Date(0),
   };
 }
 
-function convertWebhookError(id: string, data: Record<string, unknown>): WebhookErrorRecord {
+function convertWebhookError(id: string, data: Record<string, unknown>, fallbackShop = ""): WebhookErrorRecord {
   return {
     id,
-    shop: String(data.shop || ""),
+    shop: String(data.shop || fallbackShop),
     topic: String(data.topic || ""),
     error: String(data.error || ""),
     payload: String(data.payload || ""),
@@ -382,21 +284,115 @@ function convertWebhookError(id: string, data: Record<string, unknown>): Webhook
   };
 }
 
+function convertActivityLog(id: string, data: Record<string, unknown>, fallbackShop = ""): ActivityLogRecord {
+  return {
+    id,
+    shop: String(data.shop || fallbackShop),
+    type: (data.type || "automatic") as ActivityLogRecord["type"],
+    action: (data.action || "check") as ActivityLogRecord["action"],
+    details: String(data.details || ""),
+    createdAt: normalizeDate(data.createdAt) || new Date(0),
+  };
+}
+
+function buildBaseQuery(
+  subcollectionName: string,
+  where?: WhereClause,
+): { query: FirebaseFirestore.Query; shop?: string; inMemoryContains?: { field: string; value: string } } {
+  const shop = typeof where?.shop === "string" ? where.shop.trim() : undefined;
+  let baseQuery: FirebaseFirestore.Query = shop
+    ? getMerchantDocRef(shop).collection(subcollectionName)
+    : firestore.collectionGroup(subcollectionName);
+
+  let inMemoryContains: { field: string; value: string } | undefined;
+
+  if (where) {
+    for (const [field, condition] of Object.entries(where)) {
+      if (condition === undefined || (field === "shop" && shop)) {
+        continue;
+      }
+
+      if (field === "id") {
+        if (typeof condition === "string") {
+          baseQuery = baseQuery.where(FieldPath.documentId(), "==", condition);
+        } else if (condition && typeof condition === "object" && Array.isArray((condition as any).in)) {
+          const ids = (condition as any).in as string[];
+          if (ids.length > 0) {
+            baseQuery = baseQuery.where(FieldPath.documentId(), "in", ids.slice(0, 30));
+          }
+        }
+        continue;
+      }
+
+      if (condition && typeof condition === "object" && !Array.isArray(condition)) {
+        if (Array.isArray((condition as any).in)) {
+          const list = (condition as any).in as unknown[];
+          if (list.length > 0) {
+            baseQuery = baseQuery.where(field, "in", list.slice(0, 30));
+          }
+          continue;
+        }
+        if (typeof (condition as any).contains === "string") {
+          inMemoryContains = { field, value: (condition as any).contains.toLowerCase() };
+          continue;
+        }
+      }
+
+      baseQuery = baseQuery.where(field, "==", condition);
+    }
+  }
+
+  return { query: baseQuery, shop, inMemoryContains };
+}
+
+// ============================================================================
+// 1. Safety Alerts (merchants/{shop}/alerts)
+// ============================================================================
 const safetyAlert = {
   async findMany(options: FindManyOptions = {}): Promise<any[]> {
-    const loaded = await loadCollectionByShop(COLLECTIONS.safetyAlert, options.where);
-    let records = loaded
-      .map((entry) => convertSafetyAlert(entry.id, entry.data))
-      .filter((record) => matchesWhere(record as unknown as Record<string, unknown>, options.where));
+    const { query: baseQuery, shop, inMemoryContains } = buildBaseQuery(SUBCOLLECTIONS.alerts, options.where);
+    let firestoreQuery = baseQuery;
 
-    records = sortRecords(records, options.orderBy);
-    records = applyDistinct(records, options.distinct);
+    if (options.orderBy) {
+      const [field, dir] = Object.entries(options.orderBy)[0] || [];
+      if (field && dir) {
+        firestoreQuery = firestoreQuery.orderBy(field, dir);
+      }
+    }
 
-    const skip = options.skip || 0;
-    const take = typeof options.take === "number" ? options.take : records.length;
-    const sliced = records.slice(skip, skip + take);
+    if (!inMemoryContains && !options.distinct?.length) {
+      if (typeof options.skip === "number" && options.skip > 0) {
+        firestoreQuery = firestoreQuery.offset(options.skip);
+      }
+      if (typeof options.take === "number" && options.take > 0) {
+        firestoreQuery = firestoreQuery.limit(options.take);
+      }
+    }
 
-    return sliced.map((record) => applySelect(record as unknown as Record<string, unknown>, options.select));
+    const snapshot = await withCredentialFallback(() => firestoreQuery.get(), null as any);
+    if (!snapshot || snapshot.empty) {
+      return [];
+    }
+
+    let records = snapshot.docs.map((doc: any) => convertSafetyAlert(doc.id, doc.data(), shop));
+
+    if (inMemoryContains) {
+      records = records.filter((r: any) =>
+        String(r[inMemoryContains.field] || "").toLowerCase().includes(inMemoryContains.value),
+      );
+    }
+
+    if (options.distinct?.length) {
+      records = applyDistinct(records, options.distinct);
+    }
+
+    if (inMemoryContains || options.distinct?.length) {
+      const skip = options.skip || 0;
+      const take = typeof options.take === "number" ? options.take : records.length;
+      records = records.slice(skip, skip + take);
+    }
+
+    return records.map((record: any) => applySelect(record as unknown as Record<string, unknown>, options.select));
   },
 
   async findFirst(options: FindManyOptions = {}): Promise<any | null> {
@@ -405,152 +401,253 @@ const safetyAlert = {
   },
 
   async count(options: CountOptions = {}): Promise<number> {
-    const rows = await safetyAlert.findMany({ where: options.where });
-    return rows.length;
+    const { query: baseQuery, inMemoryContains } = buildBaseQuery(SUBCOLLECTIONS.alerts, options.where);
+
+    if (inMemoryContains) {
+      const snapshot = await withCredentialFallback(() => baseQuery.select(inMemoryContains.field).get(), null as any);
+      if (!snapshot) return 0;
+      return snapshot.docs.filter((doc: any) =>
+        String(doc.get(inMemoryContains.field) || "").toLowerCase().includes(inMemoryContains.value),
+      ).length;
+    }
+
+    const countSnapshot = await withCredentialFallback(() => baseQuery.count().get(), null as any);
+    return countSnapshot?.data()?.count ?? 0;
   },
 
   async create(options: CreateOptions<Omit<SafetyAlertRecord, "id" | "createdAt" | "updatedAt">>): Promise<SafetyAlertRecord> {
+    const shop = options.data.shop?.trim();
+    if (!shop) {
+      throw new Error("shop is required to create a safety alert");
+    }
+
     const now = new Date();
     const payload = sanitizeForFirestore({
       ...options.data,
       createdAt: now,
       updatedAt: now,
     }) as Record<string, unknown>;
+
     const ref = await withCredentialFallback(
-      () => firestore.collection(COLLECTIONS.safetyAlert).add(payload),
+      () => getMerchantDocRef(shop).collection(SUBCOLLECTIONS.alerts).add(payload),
       null as any,
     );
+
     if (!ref) {
-      return convertSafetyAlert(`local-${Date.now()}`, payload);
+      return convertSafetyAlert(`local-${Date.now()}`, payload, shop);
     }
-    return convertSafetyAlert(ref.id, payload);
+    return convertSafetyAlert(ref.id, payload, shop);
   },
 
   async update(options: UpdateOptions<SafetyAlertRecord>): Promise<SafetyAlertRecord> {
-    const ref = firestore.collection(COLLECTIONS.safetyAlert).doc(options.where.id);
+    const shop = options.where.shop?.trim();
+    let docRef: FirebaseFirestore.DocumentReference | null = null;
+
+    if (shop) {
+      docRef = getMerchantDocRef(shop).collection(SUBCOLLECTIONS.alerts).doc(options.where.id);
+    } else {
+      const groupSnap = await withCredentialFallback(
+        () => firestore.collectionGroup(SUBCOLLECTIONS.alerts).where(FieldPath.documentId(), "==", options.where.id).limit(1).get(),
+        null as any,
+      );
+      if (groupSnap && !groupSnap.empty) {
+        docRef = groupSnap.docs[0].ref;
+      }
+    }
+
     const payload = sanitizeForFirestore({
       ...options.data,
       updatedAt: new Date(),
     }) as Record<string, unknown>;
-    await withCredentialFallback(() => ref.set(payload, { merge: true }), undefined);
-    const snapshot = await withCredentialFallback(() => ref.get(), null as any);
-    if (!snapshot) {
-      return convertSafetyAlert(options.where.id, payload);
+
+    if (docRef) {
+      await withCredentialFallback(() => docRef!.set(payload, { merge: true }), undefined);
+      const snapshot = await withCredentialFallback(() => docRef!.get(), null as any);
+      if (snapshot?.exists) {
+        return convertSafetyAlert(snapshot.id, snapshot.data() || {}, shop);
+      }
     }
-    return convertSafetyAlert(snapshot.id, (snapshot.data() || {}) as Record<string, unknown>);
+
+    return convertSafetyAlert(options.where.id, payload, shop);
   },
 
   async updateMany(options: UpdateManyOptions<SafetyAlertRecord>): Promise<{ count: number }> {
-    const rows = await safetyAlert.findMany({ where: options.where });
-    for (const row of rows) {
-      await safetyAlert.update({
-        where: { id: row.id },
-        data: options.data,
-      });
+    const { query: baseQuery } = buildBaseQuery(SUBCOLLECTIONS.alerts, options.where);
+    const snapshot = await withCredentialFallback(() => baseQuery.get(), null as any);
+    if (!snapshot || snapshot.empty) {
+      return { count: 0 };
     }
-    return { count: rows.length };
+
+    const batch = firestore.batch();
+    const payload = sanitizeForFirestore({
+      ...options.data,
+      updatedAt: new Date(),
+    }) as Record<string, unknown>;
+
+    for (const doc of snapshot.docs) {
+      batch.set(doc.ref, payload, { merge: true });
+    }
+
+    await withCredentialFallback(() => batch.commit(), undefined);
+    return { count: snapshot.size };
   },
 
   async deleteMany(options: DeleteManyOptions = {}): Promise<{ count: number }> {
-    const rows = await safetyAlert.findMany({ where: options.where });
-    for (const row of rows) {
-      await withCredentialFallback(
-        () => firestore.collection(COLLECTIONS.safetyAlert).doc(row.id).delete(),
-        undefined,
-      );
+    const { query: baseQuery } = buildBaseQuery(SUBCOLLECTIONS.alerts, options.where);
+    const snapshot = await withCredentialFallback(() => baseQuery.get(), null as any);
+    if (!snapshot || snapshot.empty) {
+      return { count: 0 };
     }
-    return { count: rows.length };
+
+    const batch = firestore.batch();
+    for (const doc of snapshot.docs) {
+      batch.delete(doc.ref);
+    }
+    await withCredentialFallback(() => batch.commit(), undefined);
+    return { count: snapshot.size };
   },
 };
 
+// ============================================================================
+// 2. Safety Checks (merchants/{shop}/checks)
+// ============================================================================
 const safetyCheck = {
   async findMany(options: FindManyOptions = {}): Promise<any[]> {
-    const loaded = await loadCollectionByShop(COLLECTIONS.safetyCheck, options.where);
-    let records = loaded
-      .map((entry) => convertSafetyCheck(entry.id, entry.data))
-      .filter((record) => matchesWhere(record as unknown as Record<string, unknown>, options.where));
+    const { query: baseQuery, shop } = buildBaseQuery(SUBCOLLECTIONS.checks, options.where);
+    let firestoreQuery = baseQuery;
 
-    records = sortRecords(records, options.orderBy);
-    records = applyDistinct(records, options.distinct);
+    if (options.orderBy) {
+      const [field, dir] = Object.entries(options.orderBy)[0] || [];
+      if (field && dir) {
+        firestoreQuery = firestoreQuery.orderBy(field, dir);
+      }
+    }
 
-    const skip = options.skip || 0;
-    const take = typeof options.take === "number" ? options.take : records.length;
-    const sliced = records.slice(skip, skip + take);
-    return sliced.map((record) => applySelect(record as unknown as Record<string, unknown>, options.select));
+    if (!options.distinct?.length) {
+      if (typeof options.skip === "number" && options.skip > 0) {
+        firestoreQuery = firestoreQuery.offset(options.skip);
+      }
+      if (typeof options.take === "number" && options.take > 0) {
+        firestoreQuery = firestoreQuery.limit(options.take);
+      }
+    }
+
+    const snapshot = await withCredentialFallback(() => firestoreQuery.get(), null as any);
+    if (!snapshot || snapshot.empty) {
+      return [];
+    }
+
+    let records = snapshot.docs.map((doc: any) => convertSafetyCheck(doc.id, doc.data(), shop));
+
+    if (options.distinct?.length) {
+      records = applyDistinct(records, options.distinct);
+      const skip = options.skip || 0;
+      const take = typeof options.take === "number" ? options.take : records.length;
+      records = records.slice(skip, skip + take);
+    }
+
+    return records.map((record: any) => applySelect(record as unknown as Record<string, unknown>, options.select));
   },
 
   async count(options: CountOptions = {}): Promise<number> {
-    const rows = await safetyCheck.findMany({ where: options.where });
-    return rows.length;
+    const { query: baseQuery } = buildBaseQuery(SUBCOLLECTIONS.checks, options.where);
+    const countSnapshot = await withCredentialFallback(() => baseQuery.count().get(), null as any);
+    return countSnapshot?.data()?.count ?? 0;
   },
 
   async create(options: CreateOptions<Omit<SafetyCheckRecord, "id" | "createdAt">>): Promise<SafetyCheckRecord> {
+    const shop = options.data.shop?.trim();
+    if (!shop) {
+      throw new Error("shop is required to create a safety check");
+    }
+
     const now = new Date();
+    const expireDate = new Date(now);
+    expireDate.setDate(expireDate.getDate() + 90);
+
     const payload = sanitizeForFirestore({
       ...options.data,
       createdAt: now,
+      expireAt: Timestamp.fromDate(expireDate),
     }) as Record<string, unknown>;
+
     const ref = await withCredentialFallback(
-      () => firestore.collection(COLLECTIONS.safetyCheck).add(payload),
+      () => getMerchantDocRef(shop).collection(SUBCOLLECTIONS.checks).add(payload),
       null as any,
     );
+
     if (!ref) {
-      return convertSafetyCheck(`local-${Date.now()}`, payload);
+      return convertSafetyCheck(`local-${Date.now()}`, payload, shop);
     }
-    return convertSafetyCheck(ref.id, payload);
+    return convertSafetyCheck(ref.id, payload, shop);
   },
 
   async deleteMany(options: DeleteManyOptions = {}): Promise<{ count: number }> {
-    const rows = await safetyCheck.findMany({ where: options.where });
-    for (const row of rows) {
-      await withCredentialFallback(
-        () => firestore.collection(COLLECTIONS.safetyCheck).doc(row.id).delete(),
-        undefined,
-      );
+    const { query: baseQuery } = buildBaseQuery(SUBCOLLECTIONS.checks, options.where);
+    const snapshot = await withCredentialFallback(() => baseQuery.get(), null as any);
+    if (!snapshot || snapshot.empty) {
+      return { count: 0 };
     }
-    return { count: rows.length };
+
+    const batch = firestore.batch();
+    for (const doc of snapshot.docs) {
+      batch.delete(doc.ref);
+    }
+    await withCredentialFallback(() => batch.commit(), undefined);
+    return { count: snapshot.size };
   },
 };
 
+// ============================================================================
+// 3. Webhook Errors (merchants/{shop}/webhook_errors)
+// ============================================================================
 const webhookError = {
   async create(options: CreateOptions<Omit<WebhookErrorRecord, "id" | "createdAt">>): Promise<WebhookErrorRecord> {
+    const shop = options.data.shop?.trim();
+    if (!shop) {
+      throw new Error("shop is required to create a webhook error");
+    }
+
     const payload = sanitizeForFirestore({
       ...options.data,
       createdAt: new Date(),
     }) as Record<string, unknown>;
+
     const ref = await withCredentialFallback(
-      () => firestore.collection(COLLECTIONS.webhookError).add(payload),
+      () => getMerchantDocRef(shop).collection(SUBCOLLECTIONS.webhookErrors).add(payload),
       null as any,
     );
+
     if (!ref) {
-      return convertWebhookError(`local-${Date.now()}`, payload);
+      return convertWebhookError(`local-${Date.now()}`, payload, shop);
     }
-    return convertWebhookError(ref.id, payload);
+    return convertWebhookError(ref.id, payload, shop);
   },
 
   async deleteMany(options: DeleteManyOptions = {}): Promise<{ count: number }> {
-    const loaded = await loadCollectionByShop(COLLECTIONS.webhookError, options.where);
-    const records = loaded
-      .map((entry) => convertWebhookError(entry.id, entry.data))
-      .filter((record) => matchesWhere(record as unknown as Record<string, unknown>, options.where));
-    for (const record of records) {
-      await withCredentialFallback(
-        () => firestore.collection(COLLECTIONS.webhookError).doc(record.id).delete(),
-        undefined,
-      );
+    const { query: baseQuery } = buildBaseQuery(SUBCOLLECTIONS.webhookErrors, options.where);
+    const snapshot = await withCredentialFallback(() => baseQuery.get(), null as any);
+    if (!snapshot || snapshot.empty) {
+      return { count: 0 };
     }
-    return { count: records.length };
+
+    const batch = firestore.batch();
+    for (const doc of snapshot.docs) {
+      batch.delete(doc.ref);
+    }
+    await withCredentialFallback(() => batch.commit(), undefined);
+    return { count: snapshot.size };
   },
 };
 
+// ============================================================================
+// 4. Safety Settings (merchants/{shop} document)
+// ============================================================================
 const safetySetting = {
   async findUnique(options: FindUniqueOptions): Promise<SafetySettingRecord | null> {
-    const ref = firestore.collection(COLLECTIONS.safetySetting).doc(encodeShopKey(options.where.shop));
+    const ref = getMerchantDocRef(options.where.shop);
     const snapshot = await withCredentialFallback(() => ref.get(), null as any);
-    if (!snapshot) {
-      return null;
-    }
-    if (!snapshot.exists) {
+    if (!snapshot || !snapshot.exists) {
       return null;
     }
     const data = (snapshot.data() || {}) as Record<string, unknown>;
@@ -570,63 +667,32 @@ const safetySetting = {
   },
 
   async upsert(options: UpsertOptions<Omit<SafetySettingRecord, "id" | "createdAt" | "updatedAt">>): Promise<SafetySettingRecord> {
-    const ref = firestore.collection(COLLECTIONS.safetySetting).doc(encodeShopKey(options.where.shop));
+    const ref = getMerchantDocRef(options.where.shop);
     const snapshot = await withCredentialFallback(() => ref.get(), null as any);
-    if (!snapshot) {
-      const now = new Date();
-      return {
-        id: encodeShopKey(options.where.shop),
-        shop: options.where.shop,
-        similarityThreshold: Number(options.update.similarityThreshold ?? options.create.similarityThreshold ?? 0),
-        onboardingCompleted: options.update.onboardingCompleted ?? options.create.onboardingCompleted ?? false,
-        autoDraftHighRisk: options.update.autoDraftHighRisk ?? options.create.autoDraftHighRisk ?? false,
-        excludeVendors: options.update.excludeVendors ?? options.create.excludeVendors ?? null,
-        excludeTypes: options.update.excludeTypes ?? options.create.excludeTypes ?? null,
-        emailNotifications: options.update.emailNotifications ?? options.create.emailNotifications ?? false,
-        slackWebhookUrl: options.update.slackWebhookUrl ?? options.create.slackWebhookUrl ?? null,
-        createdAt: now,
-        updatedAt: now,
-      };
-    }
     const now = new Date();
-    const base = snapshot.exists ? options.update : options.create;
+    const base = snapshot?.exists ? options.update : options.create;
+
     const payload = sanitizeForFirestore({
       ...base,
       shop: options.where.shop,
       updatedAt: now,
-      createdAt: snapshot.exists ? (snapshot.data() as any)?.createdAt || now : now,
+      createdAt: snapshot?.exists ? (snapshot.data() as any)?.createdAt || now : now,
     }) as Record<string, unknown>;
 
     await withCredentialFallback(() => ref.set(payload, { merge: true }), undefined);
-    const stored = await withCredentialFallback(() => ref.get(), null as any);
-    if (!stored) {
-      return {
-        id: encodeShopKey(options.where.shop),
-        shop: options.where.shop,
-        similarityThreshold: Number(payload.similarityThreshold || 0),
-        onboardingCompleted: payload.onboardingCompleted !== undefined ? Boolean(payload.onboardingCompleted) : undefined,
-        autoDraftHighRisk: payload.autoDraftHighRisk !== undefined ? Boolean(payload.autoDraftHighRisk) : undefined,
-        excludeVendors: payload.excludeVendors !== undefined ? String(payload.excludeVendors || "") : undefined,
-        excludeTypes: payload.excludeTypes !== undefined ? String(payload.excludeTypes || "") : undefined,
-        emailNotifications: payload.emailNotifications !== undefined ? Boolean(payload.emailNotifications) : undefined,
-        slackWebhookUrl: payload.slackWebhookUrl !== undefined ? String(payload.slackWebhookUrl || "") : undefined,
-        createdAt: normalizeDate(payload.createdAt) || now,
-        updatedAt: normalizeDate(payload.updatedAt) || now,
-      };
-    }
-    const data = (stored.data() || {}) as Record<string, unknown>;
+
     return {
-      id: stored.id,
-      shop: String(data.shop || options.where.shop),
-      similarityThreshold: Number(data.similarityThreshold || 0),
-      onboardingCompleted: data.onboardingCompleted !== undefined ? Boolean(data.onboardingCompleted) : undefined,
-      autoDraftHighRisk: data.autoDraftHighRisk !== undefined ? Boolean(data.autoDraftHighRisk) : undefined,
-      excludeVendors: data.excludeVendors !== undefined ? String(data.excludeVendors || "") : undefined,
-      excludeTypes: data.excludeTypes !== undefined ? String(data.excludeTypes || "") : undefined,
-      emailNotifications: data.emailNotifications !== undefined ? Boolean(data.emailNotifications) : undefined,
-      slackWebhookUrl: data.slackWebhookUrl !== undefined ? String(data.slackWebhookUrl || "") : undefined,
-      createdAt: normalizeDate(data.createdAt) || now,
-      updatedAt: normalizeDate(data.updatedAt) || now,
+      id: encodeShopKey(options.where.shop),
+      shop: options.where.shop,
+      similarityThreshold: Number(payload.similarityThreshold || 0),
+      onboardingCompleted: payload.onboardingCompleted !== undefined ? Boolean(payload.onboardingCompleted) : undefined,
+      autoDraftHighRisk: payload.autoDraftHighRisk !== undefined ? Boolean(payload.autoDraftHighRisk) : undefined,
+      excludeVendors: payload.excludeVendors !== undefined ? String(payload.excludeVendors || "") : undefined,
+      excludeTypes: payload.excludeTypes !== undefined ? String(payload.excludeTypes || "") : undefined,
+      emailNotifications: payload.emailNotifications !== undefined ? Boolean(payload.emailNotifications) : undefined,
+      slackWebhookUrl: payload.slackWebhookUrl !== undefined ? String(payload.slackWebhookUrl || "") : undefined,
+      createdAt: normalizeDate(payload.createdAt) || now,
+      updatedAt: normalizeDate(payload.updatedAt) || now,
     };
   },
 
@@ -635,76 +701,86 @@ const safetySetting = {
     if (!shop) {
       return { count: 0 };
     }
-    const ref = firestore.collection(COLLECTIONS.safetySetting).doc(encodeShopKey(shop));
-    const snapshot = await withCredentialFallback(() => ref.get(), null as any);
-    if (!snapshot) {
-      return { count: 0 };
-    }
-    if (!snapshot.exists) {
-      return { count: 0 };
-    }
+    const ref = getMerchantDocRef(shop);
     await withCredentialFallback(() => ref.delete(), undefined);
     return { count: 1 };
   },
 };
 
-function convertActivityLog(id: string, data: Record<string, unknown>): ActivityLogRecord {
-  return {
-    id,
-    shop: String(data.shop || ""),
-    type: (data.type || "automatic") as ActivityLogRecord["type"],
-    action: (data.action || "check") as ActivityLogRecord["action"],
-    details: String(data.details || ""),
-    createdAt: normalizeDate(data.createdAt) || new Date(0),
-  };
-}
-
+// ============================================================================
+// 5. Activity Logs (merchants/{shop}/activity_logs)
+// ============================================================================
 const activityLog = {
   async findMany(options: FindManyOptions = {}): Promise<ActivityLogRecord[]> {
-    const loaded = await loadCollectionByShop(COLLECTIONS.activityLog, options.where);
-    let records = loaded
-      .map((entry) => convertActivityLog(entry.id, entry.data))
-      .filter((record) => matchesWhere(record as unknown as Record<string, unknown>, options.where));
+    const { query: baseQuery, shop } = buildBaseQuery(SUBCOLLECTIONS.activityLogs, options.where);
+    let firestoreQuery = baseQuery;
 
-    records = sortRecords(records, options.orderBy);
+    if (options.orderBy) {
+      const [field, dir] = Object.entries(options.orderBy)[0] || [];
+      if (field && dir) {
+        firestoreQuery = firestoreQuery.orderBy(field, dir);
+      }
+    }
 
-    const skip = options.skip || 0;
-    const take = typeof options.take === "number" ? options.take : records.length;
-    const sliced = records.slice(skip, skip + take);
-    return sliced.map((record) => applySelect(record as unknown as Record<string, unknown>, options.select));
+    if (typeof options.skip === "number" && options.skip > 0) {
+      firestoreQuery = firestoreQuery.offset(options.skip);
+    }
+    if (typeof options.take === "number" && options.take > 0) {
+      firestoreQuery = firestoreQuery.limit(options.take);
+    }
+
+    const snapshot = await withCredentialFallback(() => firestoreQuery.get(), null as any);
+    if (!snapshot || snapshot.empty) {
+      return [];
+    }
+
+    return snapshot.docs.map((doc: any) =>
+      applySelect(convertActivityLog(doc.id, doc.data(), shop) as unknown as Record<string, unknown>, options.select),
+    );
   },
 
   async create(options: CreateOptions<Omit<ActivityLogRecord, "id" | "createdAt">>): Promise<ActivityLogRecord> {
+    const shop = options.data.shop?.trim();
+    if (!shop) {
+      throw new Error("shop is required to create an activity log");
+    }
+
     const now = new Date();
     const payload = sanitizeForFirestore({
       ...options.data,
       createdAt: now,
     }) as Record<string, unknown>;
+
     const ref = await withCredentialFallback(
-      () => firestore.collection(COLLECTIONS.activityLog).add(payload),
+      () => getMerchantDocRef(shop).collection(SUBCOLLECTIONS.activityLogs).add(payload),
       null as any,
     );
+
     if (!ref) {
-      return convertActivityLog(`local-${Date.now()}`, payload);
+      return convertActivityLog(`local-${Date.now()}`, payload, shop);
     }
-    return convertActivityLog(ref.id, payload);
+    return convertActivityLog(ref.id, payload, shop);
   },
 
   async deleteMany(options: DeleteManyOptions = {}): Promise<{ count: number }> {
-    const loaded = await loadCollectionByShop(COLLECTIONS.activityLog, options.where);
-    const records = loaded
-      .map((entry) => convertActivityLog(entry.id, entry.data))
-      .filter((record) => matchesWhere(record as unknown as Record<string, unknown>, options.where));
-    for (const record of records) {
-      await withCredentialFallback(
-        () => firestore.collection(COLLECTIONS.activityLog).doc(record.id).delete(),
-        undefined,
-      );
+    const { query: baseQuery } = buildBaseQuery(SUBCOLLECTIONS.activityLogs, options.where);
+    const snapshot = await withCredentialFallback(() => baseQuery.get(), null as any);
+    if (!snapshot || snapshot.empty) {
+      return { count: 0 };
     }
-    return { count: records.length };
+
+    const batch = firestore.batch();
+    for (const doc of snapshot.docs) {
+      batch.delete(doc.ref);
+    }
+    await withCredentialFallback(() => batch.commit(), undefined);
+    return { count: snapshot.size };
   },
 };
 
+// ============================================================================
+// 6. Purge Merchant Shop Data (Atomic recursive deletion)
+// ============================================================================
 export async function purgeMerchantShopData(shop: string): Promise<{
   alerts: number;
   checks: number;
@@ -714,62 +790,17 @@ export async function purgeMerchantShopData(shop: string): Promise<{
   monitorState: number;
   activityLogs: number;
 }> {
-  const [alerts, checks, webhookErrors, settings, activityLogs] = await Promise.all([
-    safetyAlert.deleteMany({ where: { shop } }),
-    safetyCheck.deleteMany({ where: { shop } }),
-    webhookError.deleteMany({ where: { shop } }),
-    safetySetting.deleteMany({ where: { shop } }),
-    activityLog.deleteMany({ where: { shop } }),
-  ]);
-
-  const productSnapshot = await withCredentialFallback(
-    () =>
-      firestore
-        .collection(COLLECTIONS.merchantProduct)
-        .where("shop", "==", shop)
-        .get(),
-    null as any,
-  );
-  if (!productSnapshot) {
-    return {
-      alerts: alerts.count,
-      checks: checks.count,
-      webhookErrors: webhookErrors.count,
-      settings: settings.count,
-      products: 0,
-      monitorState: 0,
-      activityLogs: activityLogs.count,
-    };
-  }
-  for (const doc of productSnapshot.docs) {
-    await withCredentialFallback(() => doc.ref.delete(), undefined);
-  }
-
-  const monitorRef = firestore.collection(COLLECTIONS.merchantMonitorState).doc(encodeShopKey(shop));
-  const monitorSnapshot = await withCredentialFallback(() => monitorRef.get(), null as any);
-  if (!monitorSnapshot) {
-    return {
-      alerts: alerts.count,
-      checks: checks.count,
-      webhookErrors: webhookErrors.count,
-      settings: settings.count,
-      products: productSnapshot.size,
-      monitorState: 0,
-      activityLogs: activityLogs.count,
-    };
-  }
-  if (monitorSnapshot.exists) {
-    await withCredentialFallback(() => monitorRef.delete(), undefined);
-  }
+  const shopRef = getMerchantDocRef(shop);
+  await withCredentialFallback(() => firestore.recursiveDelete(shopRef), undefined);
 
   return {
-    alerts: alerts.count,
-    checks: checks.count,
-    webhookErrors: webhookErrors.count,
-    settings: settings.count,
-    products: productSnapshot.size,
-    monitorState: monitorSnapshot.exists ? 1 : 0,
-    activityLogs: activityLogs.count,
+    alerts: 0,
+    checks: 0,
+    webhookErrors: 0,
+    settings: 1,
+    products: 0,
+    monitorState: 1,
+    activityLogs: 0,
   };
 }
 

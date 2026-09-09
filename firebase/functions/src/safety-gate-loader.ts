@@ -63,7 +63,7 @@ function buildQueryFilter(lastAlertDate: Timestamp | null): string {
   return `alert_date >= '${filterDate}'`;
 }
 
-function buildLoaderRequestParams(start: number, queryFilter: string) {
+function buildLoaderRequestParams(start: number, queryFilter: string, extraParams?: Record<string, unknown>) {
   const params: Record<string, unknown> = {
     dataset: SAFETY_GATE_CONFIG.dataset,
     sort: SAFETY_GATE_CONFIG.defaultSort,
@@ -72,6 +72,7 @@ function buildLoaderRequestParams(start: number, queryFilter: string) {
     facet: SAFETY_GATE_CONFIG.facets,
     timezone: "Europe/Bratislava",
     q: queryFilter,
+    ...extraParams,
   };
 
   if (SAFETY_GATE_CONFIG.filterRiskLevel) {
@@ -218,7 +219,6 @@ function buildAlertImageDocument(
       alert_date: Timestamp.fromDate(recordAlertDate),
       ingested_at: FieldValue.serverTimestamp(),
     },
-    fields: record.fields,
     vector_image: FieldValue.vector(imageEmbedding.vector),
     updatedAt: FieldValue.serverTimestamp(),
   };
@@ -674,5 +674,122 @@ export async function backfillRecentAlertEmbeddings(params?: {
   };
 
   logger.info("Recent Safety Gate embedding backfill completed.", summary);
+  return summary;
+}
+
+export async function runHistoricalSafetyGateBackfill(params?: {
+  year?: number;
+  fromYear?: number;
+  toYear?: number;
+  years?: number[];
+  descending?: boolean;
+  maxPagesPerYear?: number;
+}): Promise<{
+  yearsProcessed: number[];
+  totalRecordsFetched: number;
+  totalAlertsCreated: number;
+  totalTextEmbeddingsWritten: number;
+  totalImageDocumentsWritten: number;
+}> {
+  const startYear = params?.year ?? params?.fromYear ?? 2015;
+  const endYear = params?.year ?? params?.toYear ?? new Date().getFullYear();
+  const maxPages = params?.maxPagesPerYear ?? 20;
+
+  const years: number[] = [];
+  if (params?.years && Array.isArray(params.years)) {
+    years.push(...params.years);
+  } else if (params?.descending || (params?.fromYear && params?.toYear && params.fromYear > params.toYear)) {
+    const high = Math.max(startYear, endYear);
+    const low = Math.min(startYear, endYear);
+    for (let y = high; y >= low; y--) {
+      years.push(y);
+    }
+  } else {
+    for (let y = startYear; y <= endYear; y++) {
+      years.push(y);
+    }
+  }
+
+  logger.info("Starting historical Safety Gate backfill across years", {
+    startYear,
+    endYear,
+    yearsToProcess: years,
+  });
+
+  let totalRecordsFetched = 0;
+  let totalAlertsCreated = 0;
+  let totalTextEmbeddingsWritten = 0;
+  let totalImageDocumentsWritten = 0;
+
+  const bulkWriter = db.bulkWriter();
+
+  for (const year of years) {
+    logger.info(`Fetching historical records for year ${year}...`);
+    let page = 0;
+    let hasMore = true;
+
+    while (hasMore && page < maxPages) {
+      const start = page * SAFETY_GATE_CONFIG.rowsPerPage;
+      const requestParams = buildLoaderRequestParams(start, "", {
+        "refine.alert_date": String(year),
+      });
+
+      const { data } = await fetchOpenDataSoftRecords(
+        requestParams,
+        SAFETY_GATE_HEADERS.loaderUserAgent,
+        SAFETY_GATE_CONFIG.requestTimeoutMs,
+      );
+
+      const records = data.records || [];
+      totalRecordsFetched += records.length;
+
+      if (records.length === 0) {
+        hasMore = false;
+        continue;
+      }
+
+      for (const record of records) {
+        if (!record?.recordid || !record?.fields) {
+          continue;
+        }
+
+        const { document, recordAlertDate, imageEmbeddings, existingState } = await enrichRecord(record);
+        const documentRef = db.collection(FIRESTORE_COLLECTIONS.alerts).doc(record.recordid);
+
+        bulkWriter.set(documentRef, document, { merge: true });
+        const imageSync = await writeMissingAlertImageEmbeddings(record, recordAlertDate, imageEmbeddings, bulkWriter);
+
+        if (!existingState.hasTextVector && document.vector_text) {
+          totalTextEmbeddingsWritten += 1;
+        }
+        totalImageDocumentsWritten += imageSync.written;
+        totalAlertsCreated += 1;
+      }
+
+      logger.info(`Processed page ${page + 1} for year ${year}`, {
+        recordsCount: records.length,
+        totalFetchedYear: start + records.length,
+      });
+
+      const nhits = typeof data.nhits === "number" ? data.nhits : 0;
+      if (records.length === 0 || (nhits > 0 && start + records.length >= nhits)) {
+        hasMore = false;
+      } else {
+        page += 1;
+      }
+    }
+  }
+
+  await bulkWriter.close();
+
+  const summary = {
+    yearsProcessed: years,
+    totalRecordsFetched,
+    totalAlertsCreated,
+    totalTextEmbeddingsWritten,
+    totalImageDocumentsWritten,
+  };
+
+  logger.info("Historical Safety Gate backfill completed", summary);
   return summary;
 }

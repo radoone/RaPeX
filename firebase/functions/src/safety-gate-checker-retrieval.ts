@@ -26,11 +26,6 @@ const IMAGE_VECTOR_DIMENSIONS = 1408;
 
 let textRetriever: RetrieverAction | null = null;
 let imageRetriever: RetrieverAction | null = null;
-let legacyImageRetriever: RetrieverAction | null = null;
-
-function merchantProductDocId(shop: string, productId: string): string {
-  return `${encodeURIComponent(shop)}::${encodeURIComponent(productId)}`;
-}
 
 function asVectorArray(value: unknown): number[] | undefined {
   if (!value || typeof value !== "object") {
@@ -60,8 +55,10 @@ async function getCachedMerchantProductVectors(product: ProductInput): Promise<{
   }
 
   const snapshot = await getFirestore()
-    .collection(FIRESTORE_COLLECTIONS.merchantProducts)
-    .doc(merchantProductDocId(shop, productId))
+    .collection(FIRESTORE_COLLECTIONS.merchants)
+    .doc(encodeURIComponent(shop))
+    .collection(FIRESTORE_COLLECTIONS.subProducts)
+    .doc(encodeURIComponent(productId))
     .get();
 
   if (!snapshot.exists) {
@@ -90,8 +87,6 @@ async function retrieveAlertsFromCachedVectors(product: ProductInput): Promise<N
   }
 
   const db = getFirestore();
-  const cutoffDate = new Date();
-  cutoffDate.setDate(cutoffDate.getDate() - ALERT_LOOKBACK_DAYS);
   const candidates: NormalizedAlert[] = [];
   const seen = new Set<string>();
 
@@ -99,7 +94,6 @@ async function retrieveAlertsFromCachedVectors(product: ProductInput): Promise<N
     try {
       const snapshot = await db
         .collection(FIRESTORE_COLLECTIONS.alerts)
-        .where("meta.alert_date", ">=", Timestamp.fromDate(cutoffDate))
         .findNearest({
           vectorField: VECTOR_TEXT_FIELD,
           queryVector: cachedVectors.textVector,
@@ -133,7 +127,6 @@ async function retrieveAlertsFromCachedVectors(product: ProductInput): Promise<N
     try {
       const snapshot = await db
         .collection(FIRESTORE_COLLECTIONS.alertImages)
-        .where("meta.alert_date", ">=", Timestamp.fromDate(cutoffDate))
         .findNearest({
           vectorField: VECTOR_IMAGE_FIELD,
           queryVector: cachedVectors.imageVector,
@@ -242,37 +235,14 @@ function ensureImageRetriever(): RetrieverAction | null {
   return imageRetriever;
 }
 
-function ensureLegacyImageRetriever(): RetrieverAction | null {
-  if (legacyImageRetriever) {
-    return legacyImageRetriever;
-  }
-
-  try {
-    legacyImageRetriever = defineFirestoreRetriever(functionsAi, {
-      name: "rapex-image-retriever-legacy",
-      firestore: getFirestore(),
-      collection: FIRESTORE_COLLECTIONS.alerts,
-      embedder: vertexAI.embedder("multimodalembedding@001", {
-        outputDimensionality: IMAGE_VECTOR_DIMENSIONS,
-      }),
-      vectorField: VECTOR_IMAGE_FIELD,
-      contentField: "fields.product_description",
-      distanceResultField: "distance",
-    });
-  } catch (error) {
-    console.warn("Unable to initialize legacy image retriever; continuing with alert-image collection only", error);
-    legacyImageRetriever = null;
-  }
-
-  return legacyImageRetriever;
-}
-
 function normalizeRetrieverDocument(doc: DocumentData): NormalizedAlert | null {
   const metadata: any = (doc as any)?.metadata || {};
   const metaSection: any = metadata.meta || metadata;
   const fieldsSection: any = metadata.fields || {};
 
-  const recordId = String(metaSection.recordid ?? metadata.recordid ?? metadata.id ?? metaSection.id ?? "");
+  const recordId = String(
+    metadata.alertId ?? metaSection.recordid ?? metadata.recordid ?? metadata.id ?? metaSection.id ?? "",
+  );
   const alertId = recordId || String(metadata.id || "");
 
   if (!alertId) {
@@ -303,15 +273,61 @@ function normalizeRetrieverDocument(doc: DocumentData): NormalizedAlert | null {
   };
 }
 
-function isWithinLookback(alertDateRaw: string, cutoffDate: Date): boolean {
-  const alertDate = alertDateRaw ? new Date(alertDateRaw) : null;
-  return !alertDate || Number.isNaN(alertDate.getTime()) || alertDate >= cutoffDate;
+async function hydrateAlertsIfMissing(candidates: NormalizedAlert[]): Promise<NormalizedAlert[]> {
+  const missingAlertIds = candidates
+    .filter((c) => !c.fields.product_category && !c.fields.product_description)
+    .map((c) => c.id);
+
+  if (missingAlertIds.length === 0) {
+    return candidates;
+  }
+
+  const db = getFirestore();
+  const alertDocs = await Promise.all(
+    missingAlertIds.map((id) => db.collection(FIRESTORE_COLLECTIONS.alerts).doc(id).get()),
+  );
+
+  const alertMap = new Map<string, Record<string, unknown>>();
+  for (const doc of alertDocs) {
+    if (doc.exists) {
+      alertMap.set(doc.id, doc.data() as Record<string, unknown>);
+    }
+  }
+
+  return candidates.map((candidate) => {
+    if (candidate.fields.product_category || candidate.fields.product_description) {
+      return candidate;
+    }
+    const data = alertMap.get(candidate.id);
+    if (!data) {
+      return candidate;
+    }
+    const fields = (data.fields || {}) as Record<string, unknown>;
+    const meta = (data.meta || {}) as Record<string, unknown>;
+    return {
+      ...candidate,
+      meta: {
+        ...candidate.meta,
+        alert_date: normalizeTimestamp(meta.alert_date || candidate.meta.alert_date),
+        ingested_at: normalizeTimestamp(meta.ingested_at || candidate.meta.ingested_at),
+      },
+      fields: {
+        product_category: String(fields.product_category || ""),
+        product_description: String(fields.product_description || ""),
+        risk_level: String(fields.risk_level || ""),
+        alert_level: String(fields.alert_level || ""),
+        alert_type: String(fields.alert_type || ""),
+        risk_legal_provision: String(fields.risk_legal_provision || ""),
+        notifying_country: String(fields.notifying_country || ""),
+        product_brand: fields.product_brand != null ? String(fields.product_brand) : undefined,
+        product_model: fields.product_model != null ? String(fields.product_model) : undefined,
+        pictures: normalizePictures(fields),
+      },
+    };
+  });
 }
 
 export async function retrieveAlertsWithRag(product: ProductInput): Promise<NormalizedAlert[]> {
-  const cutoffDate = new Date();
-  cutoffDate.setDate(cutoffDate.getDate() - ALERT_LOOKBACK_DAYS);
-
   const cachedCandidates = await retrieveAlertsFromCachedVectors(product);
   if (cachedCandidates.length > 0) {
     return cachedCandidates;
@@ -321,9 +337,8 @@ export async function retrieveAlertsWithRag(product: ProductInput): Promise<Norm
   const seen = new Set<string>();
   const activeTextRetriever = ensureTextRetriever();
   const activeImageRetriever = ensureImageRetriever();
-  const activeLegacyImageRetriever = ensureLegacyImageRetriever();
 
-  if (!activeTextRetriever && !activeImageRetriever && !activeLegacyImageRetriever) {
+  if (!activeTextRetriever && !activeImageRetriever) {
     return [];
   }
 
@@ -345,7 +360,7 @@ export async function retrieveAlertsWithRag(product: ProductInput): Promise<Norm
 
       for (const document of result || []) {
         const normalized = normalizeRetrieverDocument(document);
-        if (!normalized || seen.has(normalized.id) || !isWithinLookback(normalized.meta.alert_date, cutoffDate) || (normalized.distance != null && normalized.distance > MATCHING_THRESHOLDS.textDistance)) {
+        if (!normalized || seen.has(normalized.id) || (normalized.distance != null && normalized.distance > MATCHING_THRESHOLDS.textDistance)) {
           continue;
         }
 
@@ -357,12 +372,7 @@ export async function retrieveAlertsWithRag(product: ProductInput): Promise<Norm
     }
   }
 
-  const imageRetrievers = [
-    activeImageRetriever,
-    activeLegacyImageRetriever,
-  ].filter((retriever): retriever is RetrieverAction => Boolean(retriever));
-
-  if (imageRetrievers.length > 0) {
+  if (activeImageRetriever) {
     for (const imageUrl of getProductImageUrls(product)) {
       const encodedImage = await prepareImageMedia(imageUrl);
       if (!encodedImage) {
@@ -370,26 +380,24 @@ export async function retrieveAlertsWithRag(product: ProductInput): Promise<Norm
       }
       const vertexInlineMedia = toVertexInlineMedia(encodedImage);
 
-      for (const retriever of imageRetrievers) {
-        try {
-          const result = await functionsAi.retrieve({
-            retriever,
-            query: { content: [{ media: vertexInlineMedia }] },
-            options: { limit: RAG_IMAGE_LIMIT },
-          });
+      try {
+        const result = await functionsAi.retrieve({
+          retriever: activeImageRetriever,
+          query: { content: [{ media: vertexInlineMedia }] },
+          options: { limit: RAG_IMAGE_LIMIT },
+        });
 
-          for (const document of result || []) {
-            const normalized = normalizeRetrieverDocument(document);
-            if (!normalized || seen.has(normalized.id) || !isWithinLookback(normalized.meta.alert_date, cutoffDate) || (normalized.distance != null && normalized.distance > MATCHING_THRESHOLDS.imageDistance)) {
-              continue;
-            }
-
-            seen.add(normalized.id);
-            candidates.push(normalized);
+        for (const document of result || []) {
+          const normalized = normalizeRetrieverDocument(document);
+          if (!normalized || seen.has(normalized.id) || (normalized.distance != null && normalized.distance > MATCHING_THRESHOLDS.imageDistance)) {
+            continue;
           }
-        } catch (error) {
-          console.warn("Image retriever query failed; continuing without image recall", error);
+
+          seen.add(normalized.id);
+          candidates.push(normalized);
         }
+      } catch (error) {
+        console.warn("Image retriever query failed; continuing without image recall", error);
       }
     }
   }
@@ -402,7 +410,8 @@ export async function retrieveAlertsWithRag(product: ProductInput): Promise<Norm
     return leftDistance - rightDistance;
   });
 
-  return candidates.slice(0, MAX_RAG_ALERTS);
+  const hydrated = await hydrateAlertsIfMissing(candidates.slice(0, MAX_RAG_ALERTS));
+  return hydrated;
 }
 
 export async function searchRecentRapexAlerts(days = ALERT_LOOKBACK_DAYS): Promise<NormalizedAlert[]> {

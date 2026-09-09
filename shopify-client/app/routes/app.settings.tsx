@@ -24,7 +24,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       similarityThreshold: fallbackDefault,
       autoDraftHighRisk: false,
       emailNotifications: false,
-      slackWebhookUrl: null,
       excludeVendors: null,
       excludeTypes: null,
     },
@@ -44,7 +43,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     : 70;
 
   const autoDraftHighRisk = formData.get("autoDraftHighRisk") === "true";
-  const slackWebhookUrl = (formData.get("slackWebhookUrl") as string) || null;
   const excludeVendors = (formData.get("excludeVendors") as string) || null;
   const excludeTypes = (formData.get("excludeTypes") as string) || null;
 
@@ -54,7 +52,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       similarityThreshold,
       autoDraftHighRisk,
       emailNotifications: false,
-      slackWebhookUrl,
       excludeVendors,
       excludeTypes,
     },
@@ -63,7 +60,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       similarityThreshold,
       autoDraftHighRisk,
       emailNotifications: false,
-      slackWebhookUrl,
       excludeVendors,
       excludeTypes,
     },
@@ -106,7 +102,6 @@ export default function Settings() {
   
   const [value, setValue] = useState((settings?.similarityThreshold ?? 70).toString());
   const [autoDraft, setAutoDraft] = useState(settings?.autoDraftHighRisk ?? false);
-  const [slackUrl, setSlackUrl] = useState(settings?.slackWebhookUrl ?? "");
 
   const [vendorsList, setVendorsList] = useState<string[]>([]);
   const [typesList, setTypesList] = useState<string[]>([]);
@@ -117,7 +112,6 @@ export default function Settings() {
     if (settings) {
       setValue((settings.similarityThreshold ?? 70).toString());
       setAutoDraft(settings.autoDraftHighRisk ?? false);
-      setSlackUrl(settings.slackWebhookUrl ?? "");
       setVendorsList(settings.excludeVendors ? settings.excludeVendors.split(',').map(s => s.trim()).filter(Boolean) : []);
       setTypesList(settings.excludeTypes ? settings.excludeTypes.split(',').map(s => s.trim()).filter(Boolean) : []);
     }
@@ -216,28 +210,6 @@ export default function Settings() {
             </div>
           </section>
 
-          <section className="subscription-included-panel">
-            <div>
-              <p className="admin-eyebrow">{t("settingsAdmin.included.eyebrow")}</p>
-              <h2 className="admin-card__title">{t("settingsAdmin.included.title")}</h2>
-              <p className="admin-card__description">{t("settingsAdmin.included.description")}</p>
-            </div>
-            <div className="subscription-included-grid">
-              <div className="subscription-included-item">
-                <strong>{t("settingsAdmin.included.monitoringTitle")}</strong>
-                <span>{t("settingsAdmin.included.monitoringDescription")}</span>
-              </div>
-              <div className="subscription-included-item">
-                <strong>{t("settingsAdmin.included.evidenceTitle")}</strong>
-                <span>{t("settingsAdmin.included.evidenceDescription")}</span>
-              </div>
-              <div className="subscription-included-item">
-                <strong>{t("settingsAdmin.included.teamTitle")}</strong>
-                <span>{t("settingsAdmin.included.teamDescription")}</span>
-              </div>
-            </div>
-          </section>
-
           <section className="admin-section-grid admin-section-grid--wide">
             {/* COLUMN 1: Settings Form */}
             <div className="admin-stack">
@@ -325,26 +297,6 @@ export default function Settings() {
                       </div>
                     </label>
                   </div>
-
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    <s-text fontWeight="bold">{t("settingsAdmin.automation.slackTitle")}</s-text>
-                    <s-text tone="subdued" size="small">{t("settingsAdmin.automation.slackDescription")}</s-text>
-                    <input
-                      type="text"
-                      name="slackWebhookUrl"
-                      placeholder="https://hooks.slack.com/services/..."
-                      value={slackUrl}
-                      onChange={(e) => setSlackUrl(e.target.value)}
-                      style={{
-                        width: '100%',
-                        padding: '10px 12px',
-                        borderRadius: '6px',
-                        border: '1px solid var(--border)',
-                        fontSize: '14px',
-                        marginTop: '4px'
-                      }}
-                    />
-                  </div>
                 </div>
               </div>
 
@@ -360,7 +312,7 @@ export default function Settings() {
 
                 <div className="admin-form-block" style={{ gap: '20px', display: 'flex', flexDirection: 'column' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    <s-text fontWeight="bold">{t("settingsAdmin.exclusions.vendorsTitle")}</s-text>
+                    <label htmlFor="excluded-vendors"><s-text fontWeight="bold">{t("settingsAdmin.exclusions.vendorsTitle")}</s-text></label>
                     <s-text tone="subdued" size="small">{t("settingsAdmin.exclusions.vendorsDescription")}</s-text>
                     <div className="chip-container">
                       {vendorsList.map((vendor, idx) => (
@@ -373,6 +325,8 @@ export default function Settings() {
                       ))}
                       <input
                         type="text"
+                        id="excluded-vendors"
+                        aria-label={t("settingsAdmin.exclusions.vendorsTitle")}
                         placeholder={vendorsList.length === 0 ? t("settingsAdmin.exclusions.vendorsPlaceholder") : ""}
                         value={vendorInput}
                         onChange={(e) => setVendorInput(e.target.value)}
@@ -384,7 +338,7 @@ export default function Settings() {
                   </div>
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    <s-text fontWeight="bold">{t("settingsAdmin.exclusions.typesTitle")}</s-text>
+                    <label htmlFor="excluded-product-types"><s-text fontWeight="bold">{t("settingsAdmin.exclusions.typesTitle")}</s-text></label>
                     <s-text tone="subdued" size="small">{t("settingsAdmin.exclusions.typesDescription")}</s-text>
                     <div className="chip-container">
                       {typesList.map((type, idx) => (
@@ -397,6 +351,8 @@ export default function Settings() {
                       ))}
                       <input
                         type="text"
+                        id="excluded-product-types"
+                        aria-label={t("settingsAdmin.exclusions.typesTitle")}
                         placeholder={typesList.length === 0 ? t("settingsAdmin.exclusions.typesPlaceholder") : ""}
                         value={typeInput}
                         onChange={(e) => setTypeInput(e.target.value)}
@@ -417,7 +373,6 @@ export default function Settings() {
                 <s-button type="button" variant="secondary" onClick={() => {
                   setValue(envDefault.toString());
                   setAutoDraft(false);
-                  setSlackUrl("");
                   setVendorInput("");
                   setTypeInput("");
                   setVendorsList([]);
@@ -430,7 +385,7 @@ export default function Settings() {
 
             {/* COLUMN 2: Guidance info */}
             <div className="admin-stack">
-              <div className="admin-card">
+              <div className="admin-card settings-value-card">
                 <div className="admin-card__header">
                   <div>
                     <p className="admin-eyebrow">{t("settingsAdmin.valueEyebrow")}</p>
@@ -454,6 +409,22 @@ export default function Settings() {
                   </div>
                 </div>
               </div>
+
+              <details className="advanced-settings-disclosure settings-subscription-disclosure">
+                <summary>{t("settingsAdmin.included.title")}</summary>
+                <div className="admin-note">
+                  <strong>{t("settingsAdmin.included.monitoringTitle")}</strong>
+                  <span>{t("settingsAdmin.included.monitoringDescription")}</span>
+                </div>
+                <div className="admin-note">
+                  <strong>{t("settingsAdmin.included.evidenceTitle")}</strong>
+                  <span>{t("settingsAdmin.included.evidenceDescription")}</span>
+                </div>
+                <div className="admin-note">
+                  <strong>{t("settingsAdmin.included.teamTitle")}</strong>
+                  <span>{t("settingsAdmin.included.teamDescription")}</span>
+                </div>
+              </details>
 
               <div className="admin-card">
                 <div className="admin-card__header">

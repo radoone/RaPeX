@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
 import db, { type SafetySettingRecord } from "../merchant-db.server";
+import { firestore } from "../firestore.server";
 import { OnboardingWizard, formatRelativeDate } from "../components";
 import { requireActiveBilling } from "../services/billing.server";
 import {
@@ -48,6 +49,33 @@ type ShopifyCatalogProduct = {
   updatedAt?: string;
   [key: string]: unknown;
 };
+
+async function fetchCurrentCatalogProductIds(admin: any, limit = 300): Promise<string[]> {
+  const productIds: string[] = [];
+  let after: string | null = null;
+  let hasNextPage = true;
+
+  while (hasNextPage && productIds.length < limit) {
+    const first = Math.min(100, limit - productIds.length);
+    const response: { json: () => Promise<any> } = await admin.graphql(`#graphql
+      query dashboardCatalogProductIds($first: Int!, $after: String) {
+        products(first: $first, after: $after) {
+          pageInfo { hasNextPage endCursor }
+          nodes { id }
+        }
+      }
+    `, { variables: { first, after } });
+    const payload = await response.json();
+    const connection = payload.data?.products;
+    productIds.push(...(connection?.nodes || []).map((product: { id: string }) =>
+      product.id.replace("gid://shopify/Product/", ""),
+    ));
+    hasNextPage = Boolean(connection?.pageInfo?.hasNextPage) && productIds.length < limit;
+    after = connection?.pageInfo?.endCursor || null;
+  }
+
+  return productIds;
+}
 
 async function fetchCurrentCatalogProducts(admin: any, limit = 300): Promise<ShopifyCatalogProduct[]> {
   const products: ShopifyCatalogProduct[] = [];
@@ -140,7 +168,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const billingRedirect = await requireActiveBilling(billing, session.shop);
   if (billingRedirect) return billingRedirect as never;
 
-  const [activeAlerts, totalAlerts, resolvedAlerts, dismissedAlerts, totalChecks, recentAlerts, checkedProductIds, activeAlertRiskSample, settings, recentActivities, lastMonitoringActivityRows] = await Promise.all([
+  const [activeAlerts, totalAlerts, resolvedAlerts, dismissedAlerts, totalChecks, recentAlerts, checkedProductIds, activeAlertRiskSample, settings, recentActivities, lastMonitoringActivityRows, currentCatalogProductIds] = await Promise.all([
     db.safetyAlert.count({
       where: { shop: session.shop, status: 'active' },
     }),
@@ -185,6 +213,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       orderBy: { createdAt: 'desc' },
       take: 25,
     }),
+    fetchCurrentCatalogProductIds(admin),
   ]);
 
   // Fetch product images from Shopify
@@ -253,7 +282,24 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     console.error("Error getting products count:", e);
   }
 
-  const checkedProductCount = checkedProductIds.length;
+  const checkedProductIdSet = new Set(checkedProductIds.map((check: any) => check.productId).filter(Boolean));
+  const coveredProductIds = new Set(checkedProductIdSet);
+  const currentCatalogProductIdSet = new Set(currentCatalogProductIds);
+  const monitoredProducts = currentCatalogProductIds.length > 0
+    ? await firestore.collection("merchants").doc(encodeURIComponent(session.shop)).collection("products").get()
+    : null;
+  monitoredProducts?.forEach((snapshot: any) => {
+    const product = snapshot.data();
+    if (
+      currentCatalogProductIdSet.has(product?.productId) &&
+      (product?.vector_text || product?.vector_image || product?.sourceUpdatedAt)
+    ) {
+      coveredProductIds.add(product.productId);
+    }
+  });
+  const checkedProductCount = currentCatalogProductIds.length > 0
+    ? currentCatalogProductIds.filter((productId) => coveredProductIds.has(productId)).length
+    : 0;
   const uncheckedProductCount = Math.max(0, totalProductsCount - checkedProductCount);
   const criticalActiveAlerts = activeAlertRiskSample.filter((alert: any) => {
     try {
@@ -278,7 +324,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     similarityThreshold: 70,
     autoDraftHighRisk: false,
     emailNotifications: false,
-    slackWebhookUrl: null,
   };
 
   return json({
@@ -403,8 +448,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const similarityThreshold = Number(formData.get("similarityThreshold") || 70);
     const onboardingCompleted = formData.get("onboardingCompleted") === "true";
     const autoDraftHighRisk = formData.get("autoDraftHighRisk") === "true";
-    const slackWebhookUrl = (formData.get("slackWebhookUrl") as string) || null;
-
     try {
       await db.safetySetting.upsert({
         where: { shop: session.shop },
@@ -413,7 +456,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           onboardingCompleted,
           autoDraftHighRisk,
           emailNotifications: false,
-          slackWebhookUrl,
         },
         create: {
           shop: session.shop,
@@ -421,7 +463,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           onboardingCompleted,
           autoDraftHighRisk,
           emailNotifications: false,
-          slackWebhookUrl,
         },
       });
 
@@ -482,20 +523,66 @@ export default function Index() {
     ? Math.min(100, Math.round((stats.checkedProducts / stats.totalProducts) * 100))
     : 0;
   const closedDecisions = stats.resolvedAlerts + stats.dismissedAlerts;
+  const dashboardState = stats.activeAlerts > 0
+    ? "review-needed"
+    : stats.totalProducts === 0
+      ? "no-action-needed"
+      : !hasCompleteCoverage
+        ? "coverage-incomplete"
+        : !lastMonitoringAt
+          ? "monitoring-problem"
+          : "no-action-needed";
+  const dashboardStatus = {
+    "review-needed": {
+      tone: stats.criticalActiveAlerts > 0 ? "critical" : "warning",
+      eyebrow: stats.criticalActiveAlerts > 0
+        ? t("dashboard.admin.status.reviewNeeded.criticalEyebrow")
+        : t("dashboard.admin.status.reviewNeeded.eyebrow"),
+      title: stats.criticalActiveAlerts > 0
+        ? t("dashboard.admin.status.reviewNeeded.criticalTitle", { count: stats.criticalActiveAlerts })
+        : t("dashboard.admin.status.reviewNeeded.title", { count: stats.activeAlerts }),
+      description: stats.criticalActiveAlerts > 0
+        ? t("dashboard.admin.status.reviewNeeded.criticalDescription")
+        : t("dashboard.admin.status.reviewNeeded.description"),
+      actionHref: recentAlerts[0]?.id
+        ? `/app/alerts?status=active&open=${encodeURIComponent(recentAlerts[0].id)}`
+        : "/app/alerts?status=active",
+      actionLabel: t("actions.reviewAlerts"),
+    },
+    "coverage-incomplete": {
+      tone: "warning",
+      eyebrow: t("dashboard.admin.status.coverageIncomplete.eyebrow"),
+      title: t("dashboard.admin.status.coverageIncomplete.title", { count: stats.uncheckedProducts }),
+      description: t("dashboard.admin.status.coverageIncomplete.description", {
+        checked: stats.checkedProducts,
+        total: stats.totalProducts,
+      }),
+      actionHref: "/app/manual-check#product-catalogue",
+      actionLabel: t("dashboard.admin.finishCoverage"),
+    },
+    "monitoring-problem": {
+      tone: "critical",
+      eyebrow: t("dashboard.admin.status.monitoringProblem.eyebrow"),
+      title: t("dashboard.admin.status.monitoringProblem.title"),
+      description: t("dashboard.admin.status.monitoringProblem.description"),
+      actionHref: "/app/manual-check#product-catalogue",
+      actionLabel: t("dashboard.admin.status.monitoringProblem.action"),
+    },
+    "no-action-needed": {
+      tone: "success",
+      eyebrow: t("dashboard.admin.status.noActionNeeded.eyebrow"),
+      title: stats.totalProducts === 0
+        ? t("dashboard.admin.status.noActionNeeded.emptyCatalogTitle")
+        : t("dashboard.admin.status.noActionNeeded.title"),
+      description: stats.totalProducts === 0
+        ? t("dashboard.admin.status.noActionNeeded.emptyCatalogDescription")
+        : t("dashboard.admin.status.noActionNeeded.description", { count: stats.checkedProducts }),
+      actionHref: "/app/manual-check#product-catalogue",
+      actionLabel: t("dashboard.admin.status.noActionNeeded.action"),
+    },
+  }[dashboardState];
   const cleanRiskLabel = (value?: string | null) =>
     value ? value.replace(/\s*\/\s*other\b/gi, "").trim() : "";
-
-  const runBulkCheck = () => {
-    if (isSubmitting) return;
-    fetcher.submit(
-      {
-        action: "bulkCheck",
-        includeAlreadyChecked: "false",
-        monitoringMode: "since-last-check",
-      },
-      { method: "POST" },
-    );
-  };
 
   useEffect(() => {
     if (fetcher.data) {
@@ -533,7 +620,6 @@ export default function Index() {
     const finishOnboarding = (payload: {
       similarityThreshold: number;
       autoDraftHighRisk: boolean;
-      slackWebhookUrl: string;
     }) => {
       fetcher.submit(
         {
@@ -541,7 +627,6 @@ export default function Index() {
           similarityThreshold: payload.similarityThreshold.toString(),
           onboardingCompleted: "true",
           autoDraftHighRisk: payload.autoDraftHighRisk.toString(),
-          slackWebhookUrl: payload.slackWebhookUrl,
         },
         { method: "POST" }
       );
@@ -563,162 +648,90 @@ export default function Index() {
   // ═══════════════════════════════════════════════════════════════════════════
   return (
     <s-page size="large" className="page-shell" suppressHydrationWarning>
-      <s-heading slot="title" size="large" suppressHydrationWarning>{t('nav.dashboard')}</s-heading>
+      <s-heading slot="title" size="large" suppressHydrationWarning>{t('dashboard.title')}</s-heading>
       <s-button
         slot="primary-action"
         variant="primary"
-        loading={isSubmitting || undefined}
-        onClick={() => {
-          if (stats.activeAlerts > 0) {
-            navigate("/app/alerts?status=active");
-            return;
-          }
-          runBulkCheck();
-        }}
-        disabled={isSubmitting || undefined}
+        onClick={() => navigate(dashboardStatus.actionHref)}
         suppressHydrationWarning
       >
-        {isSubmitting
-          ? t("actions.checking")
-          : stats.activeAlerts > 0
-            ? t("actions.reviewProductsNeedingAction", { count: stats.activeAlerts })
-            : t("actions.checkNewSafetyGateAlerts")}
+        {dashboardStatus.actionLabel}
       </s-button>
-      <s-button slot="secondary-actions" variant="secondary" href="/app/audit-report" suppressHydrationWarning>
-        {t("actions.downloadAuditReport")}
+      <s-button slot="secondary-actions" variant="secondary" onClick={() => navigate("/app/audit-report")} suppressHydrationWarning>
+        {t("actions.auditReport")}
       </s-button>
-      <s-button slot="secondary-actions" variant="secondary" href="/app/evidence" suppressHydrationWarning>
+      <s-button slot="secondary-actions" variant="secondary" onClick={() => navigate("/app/evidence")} suppressHydrationWarning>
         {t("actions.viewEvidence")}
       </s-button>
 
       <div className="admin-stack">
-        <section className="protection-value-panel">
-          <div className="protection-value-panel__content">
-            <p className="admin-eyebrow">{t("dashboard.admin.protectionEyebrow")}</p>
-            <h2 className="protection-value-panel__title">
-              {t("dashboard.admin.protectionTitle")}
-            </h2>
-            <p className="protection-value-panel__description">
-              {t("dashboard.admin.protectionDescription")}
-            </p>
-            <div className="protection-value-panel__actions">
-              <s-button variant="primary" href="/app/manual-check">
-                {hasCompleteCoverage
-                  ? t("dashboard.admin.checkChangedProducts")
-                  : t("dashboard.admin.finishCoverage")}
+        <section className={`dashboard-status-panel dashboard-status-panel--${dashboardStatus.tone}`}>
+          <div className="dashboard-status-panel__content">
+            <p className="admin-eyebrow">{dashboardStatus.eyebrow}</p>
+            <h2 className="dashboard-status-panel__title">{dashboardStatus.title}</h2>
+            <p className="dashboard-status-panel__description">{dashboardStatus.description}</p>
+            <div className="dashboard-status-panel__actions">
+              <s-button variant="primary" onClick={() => navigate(dashboardStatus.actionHref)}>
+                {dashboardStatus.actionLabel}
               </s-button>
-              <s-button variant="secondary" href="/app/audit-report">
-                {t("dashboard.admin.exportProof")}
+              {stats.uncheckedProducts > 0 && (
+                <s-button variant="secondary" onClick={() => navigate("/app/manual-check")}>
+                  {t("dashboard.admin.protectRemainingProducts", { count: stats.uncheckedProducts })}
+                </s-button>
+              )}
+              <s-button variant="secondary" onClick={() => navigate("/app/evidence")}>
+                {t("actions.viewEvidence")}
               </s-button>
             </div>
           </div>
-          <div className="protection-proof-grid" aria-label={t("dashboard.admin.proofGridLabel")}>
+          <div className="dashboard-status-panel__facts" aria-label={t("dashboard.admin.status.factsLabel")}>
+            <div className="dashboard-status-panel__fact">
+              <span>{t("dashboard.admin.productsMonitored")}</span>
+              <strong>{monitoredProductLabel}</strong>
+              <small>{coveragePercent}% {t("dashboard.admin.coveragePercent").toLowerCase()}</small>
+            </div>
+            <div className="dashboard-status-panel__fact">
+              <span>{t("dashboard.admin.status.matchesNeedingReview")}</span>
+              <strong>{stats.activeAlerts}</strong>
+              <small>{stats.activeAlerts > 0 ? t("status.needsReview") : t("dashboard.admin.status.none")}</small>
+            </div>
+            <div className="dashboard-status-panel__fact">
+              <span>{t("dashboard.admin.lastSafetyGateUpdateChecked")}</span>
+              <strong>{lastMonitoringAt ? formatRelativeDate(new Date(lastMonitoringAt), t, i18n.language) : t("status.notChecked")}</strong>
+              <small>{t("dashboard.admin.status.cachedEvidence")}</small>
+            </div>
+            <div className="dashboard-status-panel__fact">
+              <span>{t("dashboard.admin.nextAutomaticCheck")}</span>
+              <strong>{t("dashboard.admin.dailyAtTime")}</strong>
+              <small>{t("dashboard.admin.status.deltaMonitoring")}</small>
+            </div>
+          </div>
+        </section>
+
+        <section className="protection-value-panel" aria-label={t("dashboard.admin.proofGridLabel")}>
+          <div className="protection-value-panel__content">
+            <p className="admin-eyebrow">{t("dashboard.admin.protectionEyebrow")}</p>
+            <h2 className="protection-value-panel__title">{t("dashboard.admin.protectionTitle")}</h2>
+            <p className="protection-value-panel__description">{t("dashboard.admin.protectionDescription")}</p>
+          </div>
+          <div className="protection-proof-grid">
             <div className="protection-proof-item protection-proof-item--primary">
-              <span>{t("dashboard.admin.coveragePercent")}</span>
-              <strong>{coveragePercent}%</strong>
-              <small>{monitoredProductLabel} {t("dashboard.admin.productsCoveredShort")}</small>
+              <span>{t("dashboard.admin.valueMetrics.productsCovered")}</span>
+              <strong>{stats.checkedProducts}/{stats.totalProducts || 0}</strong>
+              <small>{t("dashboard.admin.productsCoveredShort")}</small>
             </div>
             <div className="protection-proof-item">
-              <span>{t("dashboard.admin.decisionsClosed")}</span>
+              <span>{t("dashboard.admin.valueMetrics.checksRun")}</span>
+              <strong>{stats.totalChecks}</strong>
+              <small>{t("dashboard.admin.allTimeChecksDescription")}</small>
+            </div>
+            <div className="protection-proof-item">
+              <span>{t("dashboard.admin.valueMetrics.decisionsRecorded")}</span>
               <strong>{closedDecisions}</strong>
               <small>{t("dashboard.admin.auditHistoryKept")}</small>
             </div>
-            <div className="protection-proof-item">
-              <span>{t("dashboard.admin.automaticChecks")}</span>
-              <strong>{t("dashboard.admin.daily")}</strong>
-              <small>{t("dashboard.admin.withReadOnlyShopifyAccess")}</small>
-            </div>
           </div>
         </section>
-
-        <section className="monitoring-status-panel">
-          <div className="monitoring-status-panel__header">
-            <p className="admin-eyebrow">{t("dashboard.admin.monitoringStatusEyebrow")}</p>
-            <h2 className="monitoring-status-panel__title">
-              {stats.activeAlerts > 0
-                ? t("dashboard.admin.monitoringStatusNeedsReview", { count: stats.activeAlerts })
-                : t("dashboard.admin.monitoringStatusAllClear")}
-            </h2>
-            <p className="monitoring-status-panel__description">
-              {t("dashboard.admin.monitoringStatusDescription")}
-            </p>
-          </div>
-          <div className="monitoring-status-panel__facts">
-            <div className="monitoring-status-panel__fact">
-              <span>{t("dashboard.admin.productsMonitored")}</span>
-              <strong>{monitoredProductLabel}</strong>
-            </div>
-            <div className="monitoring-status-panel__fact">
-              <span>{t("dashboard.admin.lastSafetyGateUpdateChecked")}</span>
-              <strong>{lastMonitoringAt ? formatRelativeDate(new Date(lastMonitoringAt), t, i18n.language) : t("status.notChecked")}</strong>
-            </div>
-            <div className="monitoring-status-panel__fact">
-              <span>{t("dashboard.admin.nextAutomaticCheck")}</span>
-              <strong>{t("dashboard.admin.dailyAtTime")}</strong>
-            </div>
-            <div className="monitoring-status-panel__fact">
-              <span>{t("dashboard.admin.auditReport")}</span>
-              <strong>{t("dashboard.admin.auditReady")}</strong>
-            </div>
-          </div>
-        </section>
-
-        <section className="subscription-value-panel">
-          <div className="subscription-value-panel__header">
-            <p className="admin-eyebrow">{t("dashboard.admin.valueProofEyebrow")}</p>
-            <h2 className="admin-card__title">
-              {hasCompleteCoverage
-                ? t("dashboard.admin.valueProofTitleComplete")
-                : t("dashboard.admin.valueProofTitleIncomplete", { count: stats.checkedProducts })}
-            </h2>
-            <p className="admin-card__description">
-              {hasCompleteCoverage
-                ? t("dashboard.admin.valueProofDescriptionComplete")
-                : t("dashboard.admin.valueProofDescriptionIncomplete")}
-            </p>
-            {!hasCompleteCoverage && (
-              <div className="subscription-value-panel__action">
-                <s-button variant="primary" href="/app/manual-check">
-                  {t("dashboard.admin.finishCoverage")}
-                </s-button>
-              </div>
-            )}
-          </div>
-          <div className="subscription-value-grid">
-            <div className={`subscription-value-item${hasCompleteCoverage ? " subscription-value-item--trust" : " subscription-value-item--attention"}`}>
-              <span>{t("dashboard.admin.valueMetrics.productsCovered")}</span>
-              <strong>{monitoredProductLabel}</strong>
-            </div>
-            <div className="subscription-value-item">
-              <span>{t("dashboard.admin.valueMetrics.openDecisions")}</span>
-              <strong>{stats.activeAlerts}</strong>
-            </div>
-            <div className="subscription-value-item">
-              <span>{t("dashboard.admin.valueMetrics.evidenceRetained")}</span>
-              <strong>{stats.resolvedAlerts + stats.dismissedAlerts}</strong>
-            </div>
-          </div>
-        </section>
-
-        {stats.activeAlerts > 0 && (
-          <s-banner
-            tone={stats.criticalActiveAlerts > 0 ? "critical" : "warning"}
-            heading={stats.criticalActiveAlerts > 0
-              ? t("dashboard.admin.criticalBannerTitle", { count: stats.activeAlerts })
-              : t("dashboard.admin.warningBannerTitle", { count: stats.activeAlerts })}
-          >
-            <s-text>
-              {stats.criticalActiveAlerts > 0
-                ? t("dashboard.admin.criticalBannerDescription", { count: stats.criticalActiveAlerts })
-                : t("dashboard.admin.warningBannerDescription")}
-            </s-text>
-            <div style={{ marginTop: "var(--s-space-200)" }}>
-              <s-button variant="primary" onClick={() => navigate("/app/alerts?status=active")}>
-                {t("actions.reviewAlerts")}
-              </s-button>
-            </div>
-          </s-banner>
-        )}
 
         <div className="admin-section-grid">
           {/* Left Column: Merchant decision queue */}
@@ -732,7 +745,7 @@ export default function Index() {
                 </p>
               </div>
               <div className="admin-actions">
-                <s-button variant="secondary" onClick={() => navigate("/app/manual-check")}>
+                <s-button variant="secondary" onClick={() => navigate("/app/manual-check#product-catalogue")}>
                   {t("actions.checkOneProduct")}
                 </s-button>
                 <s-button variant="secondary" onClick={() => navigate("/app/alerts")}>
@@ -742,28 +755,13 @@ export default function Index() {
             </div>
 
             {recentAlerts.length === 0 ? (
-              <div className="dashboard-demo-state">
-                <div className="admin-empty-state">
-                  <h3>{t("dashboard.admin.noAlertsTitle")}</h3>
-                  <p>{t("dashboard.admin.noAlertsDescription")}</p>
-                  <div className="empty-value-proof">
-                    <span>{t("dashboard.admin.emptyProofMonitoring")}</span>
-                    <span>{t("dashboard.admin.emptyProofEvidence", { count: closedDecisions })}</span>
-                    <span>{t("dashboard.admin.emptyProofCoverage", { count: stats.checkedProducts })}</span>
-                  </div>
-                </div>
-                <div className="demo-alert-preview">
-                  <div className="demo-alert-preview__header">
-                    <s-badge tone="critical">{t("dashboard.admin.demoAlert.badge")}</s-badge>
-                    <span>{t("dashboard.admin.demoAlert.sample")}</span>
-                  </div>
-                  <h3>{t("dashboard.admin.demoAlert.title")}</h3>
-                  <p>{t("dashboard.admin.demoAlert.description")}</p>
-                  <div className="demo-alert-preview__facts">
-                    <span>{t("dashboard.admin.demoAlert.reason")}</span>
-                    <span>{t("dashboard.admin.demoAlert.action")}</span>
-                    <span>{t("dashboard.admin.demoAlert.evidence")}</span>
-                  </div>
+              <div className="admin-empty-state">
+                <h3>{t("dashboard.admin.noAlertsTitle")}</h3>
+                <p>{t("dashboard.admin.noAlertsDescription")}</p>
+                <div className="empty-value-proof">
+                  <span>{t("dashboard.admin.emptyProofMonitoring")}</span>
+                  <span>{t("dashboard.admin.emptyProofEvidence", { count: closedDecisions })}</span>
+                  <span>{t("dashboard.admin.emptyProofCoverage", { count: stats.checkedProducts })}</span>
                 </div>
               </div>
             ) : (
@@ -797,7 +795,7 @@ export default function Index() {
                       </div>
                     </div>
                     <div className="admin-alert-row__actions">
-                      <s-button variant="secondary" onClick={() => navigate("/app/alerts")}>
+                      <s-button variant="secondary" onClick={() => navigate(`/app/alerts?status=active&open=${encodeURIComponent(alert.id)}`)}>
                         {t("actions.reviewDecision")}
                       </s-button>
                     </div>

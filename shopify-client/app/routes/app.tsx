@@ -2,9 +2,14 @@ import { Link, Outlet, isRouteErrorResponse, useLoaderData, useRouteError } from
 import { NavMenu } from "@shopify/app-bridge-react";
 import { data as json } from "react-router";
 import { useTranslation } from "react-i18next";
+import { boundary } from "@shopify/shopify-app-react-router/server";
 import { authenticate } from "../shopify.server";
 import db from "../merchant-db.server";
 import { requireActiveBilling } from "../services/billing.server";
+
+export const headers = (headersArgs: any) => {
+  return boundary.headers(headersArgs);
+};
 
 export const loader = async ({ request }: { request: Request }) => {
   const { billing, session } = await authenticate.admin(request);
@@ -28,14 +33,10 @@ export default function App() {
   return (
     <>
       <NavMenu>
-        <Link to="/app" rel="home">
-          {t('nav.dashboard')}
-        </Link>
         <Link to="/app/alerts">
           {t('nav.safetyAlerts')} {activeAlertsCount > 0 ? `(${activeAlertsCount})` : ''}
         </Link>
-        <Link to="/app/manual-check">{t('nav.manualCheck')}</Link>
-        <Link to="/app/evidence">{t('nav.evidence')}</Link>
+        <Link to="/app/manual-check" rel="home">{t('nav.catalogCoverage')}</Link>
         <Link to="/app/settings">{t('nav.settings')}</Link>
       </NavMenu>
       <Outlet />
@@ -47,6 +48,10 @@ export default function App() {
 export function ErrorBoundary() {
   const error = useRouteError();
   const { t } = useTranslation();
+
+  if (isRouteErrorResponse(error) && (error.status === 200 || !error.statusText)) {
+    return boundary.error(error);
+  }
 
   const message = isRouteErrorResponse(error)
     ? typeof error.data === "string"

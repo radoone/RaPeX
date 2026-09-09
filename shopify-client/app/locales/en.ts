@@ -148,18 +148,55 @@ const en = {
           "monitoringStatusNeedsReview_plural": "{{count}} products need merchant decisions",
           "monitoringStatusAllClear": "Catalog monitoring is running",
           "monitoringStatusDescription": "Safety Gate Monitor checks your catalog against new EU Safety Gate updates, highlights products needing review, and keeps evidence for audit reports.",
-          "productsMonitored": "Catalog monitored",
+          "productsMonitored": "Products protected",
           "lastSafetyGateUpdateChecked": "Last Safety Gate update checked",
           "nextAutomaticCheck": "Next automatic check",
           "dailyAtTime": "Daily at 03:47",
           "auditReport": "Audit report",
+          "status": {
+            "factsLabel": "Current monitoring facts",
+            "matchesNeedingReview": "Matches needing review",
+            "none": "None",
+            "cachedEvidence": "Cached evidence is reused",
+            "deltaMonitoring": "Only new Safety Gate alerts are checked",
+            "reviewNeeded": {
+              "eyebrow": "Review needed",
+              "title": "{{count}} product needs review",
+              "title_plural": "{{count}} products need review",
+              "description": "Potential Safety Gate matches need a merchant decision. Review the matches first; the rest of the catalog remains protected in the background.",
+              "criticalEyebrow": "Urgent review",
+              "criticalTitle": "{{count}} serious-risk product needs review",
+              "criticalTitle_plural": "{{count}} serious-risk products need review",
+              "criticalDescription": "Review these products before continuing sales. Compare the product and Safety Gate evidence, then record your decision."
+            },
+            "coverageIncomplete": {
+              "eyebrow": "Coverage incomplete",
+              "title": "{{count}} product still needs coverage",
+              "title_plural": "{{count}} products still need coverage",
+              "description": "No Safety Gate matches need review in the {{checked}} monitored products. Finish coverage for all {{total}} current products before confirming the whole catalog."
+            },
+            "monitoringProblem": {
+              "eyebrow": "Monitoring needs attention",
+              "title": "Catalog coverage has no recorded monitoring run",
+              "description": "Your current products have coverage evidence, but the app cannot confirm when Safety Gate monitoring last completed. Refresh catalog coverage to restore a reliable status.",
+              "action": "Refresh catalog coverage"
+            },
+            "noActionNeeded": {
+              "eyebrow": "Current Safety Gate status",
+              "title": "No action needed",
+              "description": "No products in your monitored catalog currently match EU Safety Gate alerts. Monitoring continues in the background and only new alerts or changed products need work.",
+              "emptyCatalogTitle": "No products to monitor yet",
+              "emptyCatalogDescription": "Add products to your Shopify catalog and Safety Gate Monitor will be ready to cover them.",
+              "action": "View catalog coverage"
+            }
+          },
           "protectionEyebrow": "Current protection",
-          "protectionTitle": "Keep EU Safety Gate monitoring active for this catalog",
-          "protectionDescription": "The subscription value is ongoing protection: daily Safety Gate updates are compared with monitored Shopify products, decisions are kept for audits, and your team only reviews products that need action.",
+          "protectionTitle": "Your catalog is monitored against new EU Safety Gate alerts every day.",
+          "protectionDescription": "See the protection already delivered to your catalog and keep a clear record of every product decision.",
           "checkChangedProducts": "Check changed products",
           "exportProof": "Export proof",
           "proofGridLabel": "Subscription value proof",
-          "coveragePercent": "Catalog coverage",
+          "coveragePercent": "Catalog protected",
           "productsCoveredShort": "products covered",
           "decisionsClosed": "Decisions closed",
           "auditHistoryKept": "Audit history kept",
@@ -175,7 +212,7 @@ const en = {
           "valueProofDescriptionIncomplete": "Finish the remaining catalog coverage so every future Safety Gate update is compared against the full store, not only checked products.",
           "finishCoverage": "Finish catalog coverage",
           "valueMetrics": {
-            "productsCovered": "Products covered",
+            "productsCovered": "Products protected",
             "checksRun": "Checks run",
             "decisionsRecorded": "Decisions recorded",
             "openDecisions": "Open decisions",
@@ -233,9 +270,10 @@ const en = {
       "nav": {
         "dashboard": "Dashboard",
         "safetyAlerts": "Review Queue",
-        "manualCheck": "Check Product",
+        "manualCheck": "Catalog Coverage",
+        "catalogCoverage": "Catalog Coverage",
         "evidence": "Audit Trail",
-        "settings": "Monitoring Settings"
+        "settings": "Settings"
       },
       "settings": {
         "title": "Monitoring Settings",
@@ -282,8 +320,13 @@ const en = {
         "checkAll": "Check all products",
         "checkNewSafetyGateAlerts": "Check new Safety Gate alerts",
         "checkOneProduct": "Check one product",
+        "checkSelectedProduct": "Check selected product",
+        "reviewActiveProducts": "Review active products",
         "checking": "Checking...",
         "downloadAuditReport": "Download audit report",
+        "auditReport": "Audit report",
+        "protectRemainingProducts": "Protect {{count}} remaining products",
+        "refreshCoverage": "Refresh catalog coverage",
         "viewEvidence": "View decision history",
         "reviewProductsNeedingAction": "Review {{count}} product needing action",
         "reviewProductsNeedingAction_plural": "Review {{count}} products needing action",
@@ -314,7 +357,7 @@ const en = {
         "verifiedSafe": "Product verified safe",
         "removedFromSale": "Removed from sale",
         "modifiedProduct": "Product modified",
-        "contactedSupplier": "Contacted supplier",
+        "contactedSupplier": "Contacted supplier (Pending response)",
         "falsePositive": "False positive",
         "notMyProduct": "Not my product"
       },
@@ -330,8 +373,8 @@ const en = {
         "monitored": "Monitored",
         "runCheck": "Run check",
         "archived": "Archived",
-        "resolved": "resolved",
-        "dismissed": "dismissed",
+        "resolved": "Resolved",
+        "dismissed": "Dismissed",
         "notChecked": "Not checked",
         "safe": "Safe",
         "unsafe": "Needs review",
@@ -340,11 +383,16 @@ const en = {
       },
       "analysis": {
         "modalHeading": "Review Safety Gate match",
+        "modalAccessibilityLabel": "Safety Gate match details for {{title}}",
         "yourProduct": "Your Shopify product",
         "editInShopify": "Edit Product in Shopify",
         "openProductImage": "Open image for {{title}}",
         "safetyGateMatches": "Safety Gate matches",
         "riskLevel": "Risk level",
+        "riskSeverity": "Risk severity",
+        "hazardType": "Hazard type",
+        "decisionContextTitle": "Recording compliance decisions",
+        "decisionContextDesc": "Recording a decision documents that this safety match was reviewed and preserves your audit trail. It does not automatically modify your Shopify product or unpublish it from your store.",
         "riskDescription": "Risk description",
         "legalProvision": "Legal provision",
         "viewOnSafetyGate": "View on Safety Gate",
@@ -367,6 +415,7 @@ const en = {
         "textOnly": "Text-only check",
         "noIssuesFound": "No Safety Issues Found",
         "potentialRisk": "Potential Safety Risk",
+        "seriousRisk": "Serious {{category}} risk",
         "decisionRecorded": "Decision recorded",
         "checkedAt": "Checked: {{date}}",
         "productImagesUsed": "Product images: {{used}} / {{provided}}",
@@ -482,7 +531,7 @@ const en = {
           "accessibilityLabel": "Safety alerts table",
           "tabs": {
             "all": "All",
-            "active": "Active",
+            "active": "Needs review",
             "resolved": "Resolved",
             "dismissed": "Dismissed"
           },
@@ -508,6 +557,10 @@ const en = {
             "actions": "Actions"
           },
           "empty": "No alerts matching your filters",
+          "emptyAllClearTitle": "All active product reviews are handled",
+          "emptyAllClearBody": "There are no open merchant decisions right now. Daily monitoring is still running and closed decisions stay in the audit trail.",
+          "emptyFilteredTitle": "No review items match these filters",
+          "emptyFilteredBody": "Adjust the filters or search another product. Your active queue may still be clear.",
           "thumbnailLabel": "{{title}} thumbnail",
           "selectedCount": "{{count}} selected",
           "similarityTooltip": "Similarity score: {{score}}%",
@@ -536,11 +589,11 @@ const en = {
         }
       },
       "manualCheck": {
-        "title": "Check Product",
-        "subtitle": "Run an on-demand Safety Gate check for one product.",
+        "title": "Catalog protection",
+        "subtitle": "Protect the rest of your catalog, refresh monitoring, or check one selected product.",
         "breadcrumbs": {
           "dashboard": "Dashboard",
-          "current": "Check product"
+          "current": "Catalog coverage"
         },
         "badges": {
           "flagged": "{{count}} flagged",
@@ -567,11 +620,35 @@ const en = {
           "noOpenReviews": "No open product decisions.",
           "prioritise": "Prioritise these products for action."
         },
+        "coverage": {
+          "eyebrow": "Catalog protection status",
+          "completeTitle": "All current products are protected",
+          "incompleteTitle": "{{count}} products are not protected yet",
+          "completeDescription": "Every current Shopify product is protected by Safety Gate monitoring. Future checks focus on changed products and new Safety Gate alerts.",
+          "incompleteDescription": "Protect the remaining products so every current item is monitored against future Safety Gate alerts.",
+          "percent": "{{percent}}% protected",
+          "productsCovered": "Products protected",
+          "productsCoveredDescription": "Products with an active Safety Gate check or ongoing monitoring.",
+          "lastRun": "Last check",
+          "lastRunResultWithCounts": "Checked {{checked}}, skipped {{skipped}} unchanged, created {{alerts}} review items, {{errors}} errors.",
+          "lastProductSafe": "Latest product check found no likely Safety Gate match.",
+          "lastProductNeedsReview": "Latest product check created or updated a review item.",
+          "noRunYet": "No catalog or product check has run yet.",
+          "remaining": "Not protected yet",
+          "remainingDescription": "Protect these products so they are included in ongoing Safety Gate monitoring.",
+          "noneRemaining": "Every current product is protected."
+        },
         "bulk": {
-          "title": "Catalog coverage refresh",
-          "description": "Updates monitoring for {{count}} products: new or changed products get a fresh check, while unchanged products keep their evidence and are compared with new Safety Gate alerts.",
-          "checkAllProducts": "Refresh catalog coverage",
-          "checkingAll": "Refreshing catalog coverage..."
+          "title": "Protect your catalog",
+          "description": "Protects your store catalog: checks new or updated products and compares existing items against Safety Gate alerts.",
+          "checkAllProducts": "Protect remaining products",
+          "checkingAll": "Protecting catalog..."
+        },
+        "filters": {
+          "all": "All ({{count}})",
+          "unprotected": "Not protected ({{count}})",
+          "needsReview": "Needs review ({{count}})",
+          "safe": "Safe ({{count}})"
         },
         "catalogue": {
           "accessibilityLabel": "Product catalogue table",
@@ -664,8 +741,33 @@ const en = {
           "status": "Status",
           "decision": "Decision",
           "notes": "Notes / evidence",
-          "updated": "Updated"
-        }
+          "summary": "Evidence summary",
+          "updated": "Updated",
+          "details": "Details"
+        },
+        "fullEvidence": "Full evidence"
+      },
+      "auditReport": {
+        "title": "Safety audit report",
+        "open": "Open audit report",
+        "download": "Download CSV",
+        "viewHistory": "View audit trail",
+        "eyebrow": "Export-ready record",
+        "heading": "Your product safety decisions",
+        "description": "Review the complete record before exporting a CSV for your team, supplier, or audit.",
+        "summaryLabel": "Audit report summary",
+        "total": "Recorded findings",
+        "needsReview": "Need review",
+        "documented": "Decisions documented",
+        "generated": "Generated {{date}}",
+        "empty": "No product safety findings have been recorded yet.",
+        "tableLabel": "Safety audit report",
+        "product": "Product",
+        "status": "Status",
+        "risk": "Risk severity",
+        "decision": "Decision",
+        "detected": "Detected",
+        "notRecorded": "Not recorded"
       },
       "news": {
         "title": "News",
@@ -697,19 +799,19 @@ const en = {
         "automationStatusEyebrow": "Automatic monitoring",
         "automationStatusTitle": "Safety Gate monitoring is working for this store",
         "automationStatusDescription": "Daily EU Safety Gate updates, Shopify product changes, and audit records are handled automatically. Use these settings only to tune review volume and notifications.",
-        "valueEyebrow": "Subscription value",
+        "valueEyebrow": "Catalog protection",
         "valueTitle": "What stays covered",
-        "valueDescription": "These capabilities are the core value merchants keep when they stay subscribed.",
+        "valueDescription": "Continuous protection keeps your catalog monitored against Safety Gate alerts automatically.",
         "included": {
-          "eyebrow": "Included in subscription",
-          "title": "What your store keeps getting every month",
-          "description": "Use this page to tune monitoring, but keep the value clear: the app keeps watching the catalog, preserves evidence, and helps the team act only when a product needs review.",
+          "eyebrow": "Continuous protection",
+          "title": "What your store keeps covered",
+          "description": "The app continuously monitors your catalog against Safety Gate alerts, preserves compliance evidence, and alerts you when products need review.",
           "monitoringTitle": "Ongoing EU monitoring",
           "monitoringDescription": "New Safety Gate records are compared with monitored Shopify products without a manual scan.",
           "evidenceTitle": "Exportable proof",
           "evidenceDescription": "Resolved and dismissed decisions keep notes, reasons, risk context, and timestamps.",
           "teamTitle": "Review workflow",
-          "teamDescription": "Slack alerts, priority review, and filters help the team handle real decisions faster."
+          "teamDescription": "Priority review, supplier documentation, and filters help your team handle real decisions faster."
         },
         "mode": {
           "broad": "More matches",
@@ -733,18 +835,16 @@ const en = {
           "broadTitle": "Broad monitoring",
           "broadDescription": "Use around 50% when you prefer catching more possible matches and are comfortable reviewing more alerts.",
           "balancedTitle": "Balanced default",
-          "balancedDescription": "Use around 65-70% for a practical mix of recall and precision for most Shopify catalogs.",
+          "balancedDescription": "Recommended for most catalogs (65-70%). Catches likely risks while keeping false alerts low.",
           "strictTitle": "Strict matching",
           "strictDescription": "Use 80%+ when your catalog is stable and you want fewer manual reviews."
         },
         "automation": {
           "eyebrow": "Real-time operations",
-          "title": "Safety automation and alerts",
-          "description": "Configure priority review for high-risk matches and optional Slack alerts for your team.",
+          "title": "Safety automation",
+          "description": "Configure priority review for high-risk matches.",
           "autoDraftTitle": "Prioritize serious risks",
-          "autoDraftDescription": "Automatically mark products for priority review when they match Safety Gate alerts with serious risk (threshold >= 95%).",
-          "slackTitle": "Slack webhook URL",
-          "slackDescription": "Receive instant Slack notifications when alerts are generated."
+          "autoDraftDescription": "Automatically mark products for priority review when they match Safety Gate alerts with serious risk (threshold >= 95%)."
         },
         "exclusions": {
           "eyebrow": "Filtering rules",
@@ -760,13 +860,13 @@ const en = {
         "plans": {
           "eyebrow": "Subscription value",
           "title": "Plan capabilities",
-          "description": "Use these tiers to explain value before enabling Shopify Billing.",
+          "description": "Features and capabilities included in your store protection.",
           "manualTitle": "Free: manual checks",
           "manualDescription": "Run checks one product at a time and see the latest product status.",
           "monitorTitle": "Paid: daily monitoring and reports",
           "monitorDescription": "Monitor new Safety Gate alerts against the catalog, export CSV audit reports, and keep a decision trail.",
           "advancedTitle": "Advanced: automation and multilingual workflows",
-          "advancedDescription": "Add priority review, Slack alerts, supplier follow-up, and EU language workflows."
+          "advancedDescription": "Add priority review, supplier follow-up, and EU language workflows."
         },
         "valueItems": {
           "dailyTitle": "Daily catalog monitoring",
@@ -834,7 +934,7 @@ const en = {
           },
           "automation": {
             "title": "Step 3: Auto-Monitoring & Alerts",
-            "description": "Configure priority review and optional Slack alerts for your store.",
+            "description": "Configure priority review and automatic safety rules for your store.",
             "label": "Safety Automation",
             "webhooks": {
               "title": "Real-time Webhook Scanning",
@@ -844,11 +944,6 @@ const en = {
             "title": "Prioritize Serious Risks",
             "desc": "Automatically mark products for priority review when they match Safety Gate alerts with serious risk (threshold >= 95%).",
             "label": "Enable priority review"
-            },
-            "slack": {
-              "title": "Slack Alert Integration (Optional)",
-              "desc": "Paste your Slack Incoming Webhook URL to get instant Slack alerts.",
-              "placeholder": "https://hooks.slack.com/services/..."
             }
           }
         }

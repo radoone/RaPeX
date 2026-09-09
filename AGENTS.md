@@ -49,14 +49,15 @@ Firestore is both the RAPEX knowledge base and the merchant app datastore.
 
 Main collections:
 - `rapex_alerts`: imported Safety Gate records
-- `rapex_alert_images`: per-image embedding documents for recent Safety Gate alerts, used for visual retrieval across all alert pictures
+- `rapex_alert_images`: per-image embedding documents for recent Safety Gate alerts (lightweight, stores only image metadata + vector without duplicated alert fields)
 - `rapex_meta/loader_state`: loader checkpoint and run status
-- `merchant_products`: per-shop Shopify product snapshots with vectors
-- `merchant_alerts`: per-shop alert records for matched Shopify products
-- `merchant_checks`: per-shop check history
-- `merchant_settings`: per-shop settings (including similarity threshold)
-- `merchant_webhook_errors`: per-shop webhook error log
-- `merchant_monitor_state`: per-shop RAPEX delta monitoring checkpoint/state
+- `rapex_match_cache`: short-lived cache for AI match determinations with 30-day Firestore TTL (`expireAt`)
+- `merchants`: tenant root documents storing per-shop settings and monitor state
+- `merchants/{shop}/products`: per-shop Shopify product snapshots with vector embeddings
+- `merchants/{shop}/alerts`: per-shop alert records for matched Shopify products
+- `merchants/{shop}/checks`: per-shop check history
+- `merchants/{shop}/activity_logs`: per-shop activity audit trail
+- `merchants/{shop}/webhook_errors`: per-shop webhook error log
 
 Imported alert documents store:
 - raw Safety Gate fields
@@ -111,13 +112,13 @@ can be worked on without changing Shopify auth or app routes.
 4. The loader stores a checkpoint in `rapex_meta/loader_state` so later runs can do delta loading.
 5. When a Shopify product is created, updated, manually checked, or bulk-checked, the Shopify app sends normalized product data to Firebase endpoint `checkProductSafetyAPI`.
 6. The backend compares the product against recent/imported Safety Gate alerts, using AI plus Firestore retrieval/embeddings.
-7. The Shopify app upserts checked Shopify products to Firestore `merchant_products` through Firebase endpoint `upsertMerchantProductAPI`.
-8. Merchant-facing alerts/checks/settings are stored in Firestore (`merchant_alerts`, `merchant_checks`, `merchant_settings`).
+7. The Shopify app upserts checked Shopify products to Firestore `merchants/{shop}/products` through Firebase endpoint `upsertMerchantProductAPI`.
+8. Merchant-facing alerts/checks/settings are stored in Firestore under tenant documents (`merchants/{shop}` and subcollections `alerts`, `checks`, `activity_logs`, `webhook_errors`).
 9. Shopify Admin product detail extensions show the latest Safety Gate state inline and can trigger a fresh check from the product page.
 10. The public Shopify app configuration currently uses `read_products`; high-risk automation creates merchant alerts and priority-review activity entries, but does not mutate Shopify product status. Do not reintroduce `write_products` unless product status updates are intentionally restored and justified for Shopify App Store review.
 11. Shopify App Pricing is mandatory in the Shopify app UI: pricing, trial days, public/private plans, and test plans are configured in the Shopify Partner Dashboard. The app checks active payment status with managed pricing support and redirects unpaid merchants to `https://admin.shopify.com/store/:store_handle/charges/:app_handle/pricing_plans`; set `SHOPIFY_APP_HANDLE` to match the Shopify app handle and keep `SHOPIFY_BILLING_TEST=true` only for development/private test plans. For local UI/UX testing only, the billing guard is bypassed when `NODE_ENV !== "production"` unless `SHOPIFY_BILLING_BYPASS=false`; never rely on the bypass for production or App Store review.
 12. Daily monitoring defaults to "since last check", while manual/user-triggered monitoring can also run against explicit recent windows such as the last 7 days by passing `monitoringMode` / `days` to the Firebase monitoring API.
-13. Monitoring compares only RAPEX records newer than the chosen checkpoint/window in `merchant_monitor_state`, then uses vector retrieval over `merchant_products` to shortlist likely merchant products before running the expensive final matcher.
+13. Monitoring compares only RAPEX records newer than the chosen checkpoint/window in `merchants/{shop}.monitorState`, queries registered tenants directly from `merchants`, then uses vector retrieval over `merchants/{shop}/products` to shortlist likely merchant products before running the Gemini 2.5 Flash matcher.
 14. Prisma remains only for Shopify sessions.
 
 ## Important product behavior
@@ -144,7 +145,7 @@ can be worked on without changing Shopify auth or app routes.
 - Manual checks now include **Skeleton loading states** and product search so merchants can find a specific Shopify product instead of scanning a fixed recent-products list.
 - The dashboard primary action should describe the actual monitoring behavior. "Check all products" implies a full catalog scan; use clearer wording when the action checks new Safety Gate alerts or runs delta monitoring.
 - The Shopify app should sell its value inside the product UI: onboarding is value-first, dashboard shows subscription proof metrics, and empty alert queues show a demo Safety Gate match workflow so new merchants understand the paid outcome before real alerts exist.
-- Email notifications are not exposed in the merchant UI until real email delivery exists. Slack webhook alerts may remain visible because the app sends Slack payloads when configured.
+- Slack notifications and webhook inputs are completely removed from the app and backend (without backward compatibility shims) to keep the app focused exclusively on Shopify-native review workflows and compliance audit trails.
 - The merchant UI exposes language selection for the 24 official EU languages: English, Bulgarian, Czech, Danish, German, Greek, Spanish, Estonian, Finnish, French, Irish, Croatian, Hungarian, Italian, Lithuanian, Latvian, Maltese, Dutch, Polish, Portuguese, Romanian, Slovak, Slovenian, and Swedish.
 
 ## Technical Standards & Lessons Learned
@@ -156,8 +157,10 @@ can be worked on without changing Shopify auth or app routes.
 - **Translation coverage:** When adding or changing primary merchant workflow text, update at least `shopify-client/app/locales/en.ts` and `shopify-client/app/locales/sk.ts` fully, then add/update the per-language core workflow locale files for the other EU languages in `shopify-client/app/locales/{bg,cs,da,de,el,es,et,fi,fr,ga,hr,hu,it,lt,lv,mt,nl,pl,pt,ro,sl,sv}.ts`. Those per-language files include both short UI labels and a `long` block for longer merchant-facing explanatory copy used by dashboard cards, alert queues, manual checks, settings, and match analysis. Do not hardcode merchant-facing English in React components or Shopify UI extensions unless the string is developer-only/debug-only.
 - **Validation:** Before handing off Shopify client changes, run `npx tsc --noEmit`, `npm run lint`, and `npm run build` from `shopify-client/`. ESLint intentionally ignores generated `extensions/*/dist/**` bundles.
 - **Firestore adapter:** `shopify-client/app/merchant-db.server.ts` is a Firestore-backed Prisma-like adapter, not Prisma itself. If app routes use Prisma-style methods such as `updateMany`, they must exist on this adapter. Always scope merchant alert mutations by `shop` as well as alert/product id.
-- **Package compatibility:** The Shopify client is on `@shopify/shopify-app-react-router` with React Router 7.x and React 18. Do not blindly upgrade to React Router 8 or React 19 until Shopify's React Router package supports that peer set. `@shopify/shopify-app-session-storage-prisma@9` expects Prisma `^6.19`, so keep `shopify-client` on Prisma 6.x unless that peer changes. Shopify client ESLint uses flat config with ESLint 9.x because `eslint-plugin-import@2.32.0` does not support ESLint 10.
+- **Package compatibility:** The Shopify client is on `@shopify/shopify-app-react-router@2` with React Router 7.x and React 18. Do not blindly upgrade to React Router 8 or React 19 until Shopify's React Router package supports that peer set. `@shopify/shopify-app-session-storage-prisma@10` expects Prisma `^6.19`, so keep `shopify-client` on Prisma 6.x unless that peer changes. Shopify client ESLint uses flat config with ESLint 9.x because `eslint-plugin-import@2.32.0` does not support ESLint 10.
+- **Firebase TypeScript library:** Firebase Functions targets Node 20 and uses `Array.at`; keep the `ES2022` TypeScript library enabled even while emitted JavaScript targets ES2021.
 - **Node/native modules:** Use the repo `.nvmrc` Node version for installs and Shopify development. `better-sqlite3` is a native dependency used by Prisma SQLite sessions; if it is installed under a different Node ABI than the `shopify app dev` process, Shopify auth fails with a `NODE_MODULE_VERSION` mismatch. Fix locally with `PATH=/Users/radoone/.nvm/versions/node/v24.14.1/bin:$PATH npm rebuild better-sqlite3` from `shopify-client/`, then run `npm run setup`.
+- **macOS native rebuilds:** If rebuilding `better-sqlite3` fails with `fatal error: 'climits' file not found` even though Command Line Tools are installed, the SDK C++ headers may not be on clang's default include path. Use `SDK=$(xcrun --show-sdk-path); CPLUS_INCLUDE_PATH="$SDK/usr/include/c++/v1:$SDK/usr/include" LIBRARY_PATH="$SDK/usr/lib" PATH=/Users/radoone/.nvm/versions/node/v24.14.1/bin:$PATH npm rebuild better-sqlite3` from `shopify-client/`, then run `npm run setup`.
 - **Prisma Compatibility:** In `shopify-client`, the installed Prisma version is currently `6.19.3`, so `prisma generate` still requires an inline `url` in `shopify-client/prisma/schema.prisma` even though `shopify-client/prisma.config.ts` also defines the datasource URL. The Better SQLite adapter export name is `PrismaBetterSQLite3`, not `PrismaBetterSqlite3`.
 - **Shopify app config:** Webhook definitions in `shopify-client/app/shopify.server.ts` should use `DeliveryMethod.Http` from `@shopify/shopify-app-react-router/server`; do not use the string `"http"`. Do not add unsupported future flags such as `removeRest` or old Remix-only embedded auth flags.
 

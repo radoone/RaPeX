@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "react-router";
 import { useLoaderData, useFetcher, useNavigate, useRouteError, isRouteErrorResponse } from "react-router";
 import { data as json } from "react-router";
@@ -29,8 +29,12 @@ type CatalogCachePlan = {
   totalFetched: number;
 };
 
-function merchantProductDocId(shop: string, productId: string): string {
-  return `${encodeURIComponent(shop)}::${encodeURIComponent(productId)}`;
+function merchantProductDocRef(shop: string, productId: string) {
+  return firestore
+    .collection("merchants")
+    .doc(encodeURIComponent(shop))
+    .collection("products")
+    .doc(encodeURIComponent(productId));
 }
 
 async function fetchCatalogProductsForManualCheck(admin: any, limit = 300): Promise<ShopifyCatalogProduct[]> {
@@ -87,7 +91,7 @@ async function planCatalogChecksForManualCheck(params: {
   const products = await fetchCatalogProductsForManualCheck(params.admin, params.limit ?? 300);
   const refs = products.map((product) => {
     const productId = product.id.replace("gid://shopify/Product/", "");
-    return firestore.collection("merchant_products").doc(merchantProductDocId(params.shop, productId));
+    return merchantProductDocRef(params.shop, productId);
   });
   const snapshots = refs.length > 0 ? await firestore.getAll(...refs) : [];
   const productsToCheck: ShopifyCatalogProduct[] = [];
@@ -165,6 +169,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   } catch (error) {
     console.error("Error loading product count for manual check page", error);
   }
+  let coverageCatalogProducts: ShopifyCatalogProduct[] = products;
+  try {
+    coverageCatalogProducts = await fetchCatalogProductsForManualCheck(admin, 300);
+  } catch (error) {
+    console.error("Error loading catalog coverage products for manual check page", error);
+  }
 
   const productIds = products.map((p: any) => p.id.replace('gid://shopify/Product/', ''));
 
@@ -172,6 +182,15 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const productChecks = await db.safetyCheck.findMany({
     where: { shop: session.shop, productId: { in: productIds } },
     orderBy: { checkedAt: 'desc' },
+  });
+  const allProductChecks = await db.safetyCheck.findMany({
+    where: { shop: session.shop },
+    orderBy: { checkedAt: 'desc' },
+  });
+  const lastCoverageActivity = await db.activityLog.findMany({
+    where: { shop: session.shop },
+    orderBy: { createdAt: 'desc' },
+    take: 25,
   });
 
   // Load existing alerts for products (same transformation as Alerts page)
@@ -234,8 +253,68 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     }
     return acc;
   }, {});
+  const checkedProductIds = new Set(allProductChecks.map((check: any) => check.productId).filter(Boolean));
+  const currentCatalogProductIds = new Set(
+    coverageCatalogProducts.map((product) => product.id.replace("gid://shopify/Product/", "")),
+  );
+  const merchantProductRefs = coverageCatalogProducts.map((product) => {
+    const productId = product.id.replace("gid://shopify/Product/", "");
+    return merchantProductDocRef(session.shop, productId);
+  });
+  const merchantProductSnapshots = merchantProductRefs.length > 0
+    ? await firestore.getAll(...merchantProductRefs)
+    : [];
+  const monitoredProductIds = new Set<string>();
 
-  return json({ products, checksByProduct, alertsByProduct, search, shop: session.shop, totalProducts });
+  coverageCatalogProducts.forEach((product, index) => {
+    const productId = product.id.replace("gid://shopify/Product/", "");
+    const snapshot = merchantProductSnapshots[index];
+    const data = snapshot?.exists ? snapshot.data() : null;
+    const hasMonitoringEvidence = Boolean(data?.vector_text || data?.vector_image || data?.sourceUpdatedAt);
+    if (hasMonitoringEvidence) {
+      monitoredProductIds.add(productId);
+    }
+  });
+  const latestCheck = allProductChecks[0] || null;
+  const latestActivity = lastCoverageActivity.find((activity: any) =>
+    activity.type === "bulk" || activity.type === "automatic" || activity.action === "check"
+  ) || null;
+  const coveredProductIds = new Set([...checkedProductIds, ...monitoredProductIds]);
+  const checkedProductCount = currentCatalogProductIds.size > 0
+    ? Array.from(currentCatalogProductIds).filter((productId) => coveredProductIds.has(productId)).length
+    : coveredProductIds.size;
+  const uncheckedProductCount = Math.max(0, totalProducts - checkedProductCount);
+  const coveragePercent = totalProducts > 0
+    ? Math.min(100, Math.round((checkedProductCount / totalProducts) * 100))
+    : 0;
+  const totalActiveAlerts = await db.safetyAlert.count({
+    where: { shop: session.shop, status: "active" },
+  });
+
+  return json({
+    products,
+    checksByProduct,
+    alertsByProduct,
+    search,
+    shop: session.shop,
+    totalProducts,
+    monitoredProductIds: Array.from(monitoredProductIds),
+    storeStats: {
+      activeAlerts: totalActiveAlerts,
+      totalChecks: allProductChecks.length,
+    },
+    coverage: {
+      checkedProductCount,
+      uncheckedProductCount,
+      coveragePercent,
+      isComplete: totalProducts > 0 && checkedProductCount >= totalProducts,
+      lastCheckedAt: latestCheck?.checkedAt || null,
+      lastResultSafe: typeof latestCheck?.isSafe === "boolean" ? latestCheck.isSafe : null,
+      lastActivityAt: latestActivity?.createdAt || null,
+      lastActivityDetails: latestActivity?.details || null,
+      totalChecks: allProductChecks.length,
+    },
+  });
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -444,7 +523,17 @@ export function ErrorBoundary() {
 }
 
 export default function ManualCheckPage() {
-  const { products, checksByProduct, alertsByProduct, search, shop, totalProducts } = useLoaderData<typeof loader>();
+  const {
+    products,
+    checksByProduct,
+    alertsByProduct,
+    search,
+    shop,
+    totalProducts,
+    coverage,
+    storeStats,
+    monitoredProductIds,
+  } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
   const resolveFetcher = useFetcher<typeof action>();
   const navigate = useNavigate();
@@ -457,7 +546,49 @@ export default function ManualCheckPage() {
   const [showResult, setShowResult] = useState(false);
   const [hasProcessedResult, setHasProcessedResult] = useState(false);
   const [searchValue, setSearchValue] = useState(search);
+  const [tabFilter, setTabFilter] = useState<'all' | 'unprotected' | 'needs_review' | 'safe'>('all');
   const dateLocale = i18n.language === 'sk' ? 'sk-SK' : 'en-GB';
+
+  const monitoredSet = useMemo(() => new Set(monitoredProductIds || []), [monitoredProductIds]);
+
+  const filterCounts = useMemo(() => {
+    let unprotected = 0;
+    let needsReview = 0;
+    let safe = 0;
+    products.forEach((product: any) => {
+      const productId = product.id.replace('gid://shopify/Product/', '');
+      const checks = checksByProduct[productId];
+      const existingAlert = alertsByProduct[productId];
+      const hasActiveAlert = existingAlert?.status === 'active';
+      const isProtected = monitoredSet.has(productId) || Boolean(checks?.lastCheck);
+
+      if (!isProtected) unprotected++;
+      if (hasActiveAlert) needsReview++;
+      if (checks?.lastCheck && checks.isSafe && !hasActiveAlert) safe++;
+    });
+    return { all: products.length, unprotected, needsReview, safe };
+  }, [products, checksByProduct, alertsByProduct, monitoredSet]);
+
+  const filteredProducts = useMemo(() => {
+    return products.filter((product: any) => {
+      const productId = product.id.replace('gid://shopify/Product/', '');
+      const checks = checksByProduct[productId];
+      const existingAlert = alertsByProduct[productId];
+      const hasActiveAlert = existingAlert?.status === 'active';
+      const isProtected = monitoredSet.has(productId) || Boolean(checks?.lastCheck);
+
+      if (tabFilter === 'unprotected') {
+        return !isProtected;
+      }
+      if (tabFilter === 'needs_review') {
+        return hasActiveAlert;
+      }
+      if (tabFilter === 'safe') {
+        return Boolean(checks?.lastCheck && checks.isSafe && !hasActiveAlert);
+      }
+      return true;
+    });
+  }, [products, checksByProduct, alertsByProduct, monitoredSet, tabFilter]);
 
   // Synchronize searchValue with URL parameter when it changes (e.g., cleared/updated externally)
   useEffect(() => {
@@ -485,9 +616,20 @@ export default function ManualCheckPage() {
   // Get all alerts from alertsByProduct for modals
   const existingAlerts = Object.values(alertsByProduct || {}) as any[];
 
-  const productCheckEntries = Object.values(checksByProduct || {});
-  const activeReviewProducts = Object.values(alertsByProduct || {}).filter((alert: any) => alert.status === "active").length;
-  const totalChecks = productCheckEntries.reduce((sum: number, e: any) => sum + e.totalChecks, 0);
+  const lastRunAt = coverage.lastActivityAt || coverage.lastCheckedAt;
+  const lastRunResult = fetcher.data && "success" in fetcher.data && fetcher.data.success && "results" in fetcher.data
+    ? t("manualCheck.coverage.lastRunResultWithCounts", {
+        checked: (fetcher.data as any).results.changedChecked + (fetcher.data as any).results.deltaChecked,
+        skipped: (fetcher.data as any).results.cachedSkipped,
+        alerts: (fetcher.data as any).results.alertsCreated,
+        errors: (fetcher.data as any).results.errors,
+      })
+    : coverage.lastActivityDetails ||
+      (coverage.lastResultSafe === null
+        ? t("manualCheck.coverage.noRunYet")
+        : coverage.lastResultSafe
+          ? t("manualCheck.coverage.lastProductSafe")
+          : t("manualCheck.coverage.lastProductNeedsReview"));
   const applySearch = useCallback(() => {
     const params = new URLSearchParams();
     const value = searchValue.trim();
@@ -610,6 +752,20 @@ export default function ManualCheckPage() {
   return (
     <s-page size="large" className="page-shell" suppressHydrationWarning>
       <s-heading slot="title" size="large" suppressHydrationWarning>{t('manualCheck.title')}</s-heading>
+      <s-button
+        slot="primary-action"
+        variant="primary"
+        onClick={handleCheckAllProducts}
+        loading={isCheckingAllProducts || undefined}
+        disabled={isLoading || undefined}
+        suppressHydrationWarning
+      >
+        {isCheckingAllProducts
+          ? t("manualCheck.bulk.checkingAll")
+          : coverage.uncheckedProductCount > 0
+            ? t("actions.protectRemainingProducts", { count: coverage.uncheckedProductCount })
+            : t("actions.refreshCoverage")}
+      </s-button>
       <s-button slot="secondary-actions" variant="secondary" href="/app/alerts" suppressHydrationWarning>
         {t('actions.viewAlerts')}
       </s-button>
@@ -618,33 +774,64 @@ export default function ManualCheckPage() {
         <section className="admin-card">
           <div className="admin-card__header">
             <div>
-              <p className="admin-eyebrow">{t("manualCheck.admin.manualReview")}</p>
-              <h2 className="admin-card__title">{t('manualCheck.subtitle')}</h2>
+              <p className="admin-eyebrow">{t("manualCheck.coverage.eyebrow")}</p>
+              <h2 className="admin-card__title">
+                {coverage.isComplete
+                  ? t("manualCheck.coverage.completeTitle")
+                  : t("manualCheck.coverage.incompleteTitle", { count: coverage.uncheckedProductCount })}
+              </h2>
               <p className="admin-card__description">
-                {t("manualCheck.admin.manualReviewDescription")}
+                {coverage.isComplete
+                  ? t("manualCheck.coverage.completeDescription")
+                  : t("manualCheck.coverage.incompleteDescription")}
               </p>
             </div>
             <div className="admin-actions">
+              <s-badge tone={coverage.isComplete ? "success" : "warning"}>
+                {t("manualCheck.coverage.percent", { percent: coverage.coveragePercent })}
+              </s-badge>
               <s-button
-                variant="primary"
+                variant="secondary"
                 loading={isCheckingAllProducts || undefined}
                 disabled={isLoading || undefined}
                 onClick={handleCheckAllProducts}
               >
-                {isCheckingAllProducts ? t("manualCheck.bulk.checkingAll") : t("manualCheck.bulk.checkAllProducts")}
+                {isCheckingAllProducts
+                  ? t("manualCheck.bulk.checkingAll")
+                  : coverage.uncheckedProductCount > 0
+                    ? t("manualCheck.bulk.checkAllProducts")
+                    : t("actions.refreshCoverage")}
               </s-button>
             </div>
           </div>
-          <div className="admin-note">
-            <strong>{t("manualCheck.bulk.title")}</strong>
-            <span>{t("manualCheck.bulk.description", { count: totalProducts || products.length })}</span>
+          <div className="metric-grid">
+            <SummaryCard
+              title={t("manualCheck.coverage.productsCovered")}
+              value={`${coverage.checkedProductCount}/${totalProducts || products.length}`}
+              description={t("manualCheck.coverage.productsCoveredDescription")}
+              progress={coverage.coveragePercent}
+              progressTone={coverage.isComplete ? "success" : "warning"}
+            />
+            <SummaryCard
+              title={t("manualCheck.coverage.lastRun")}
+              value={lastRunAt ? formatRelativeDate(new Date(lastRunAt), t, dateLocale) : t("status.notChecked")}
+              description={lastRunResult}
+              badge={<s-badge tone={storeStats.activeAlerts > 0 ? "critical" : "success"}>{storeStats.activeAlerts > 0 ? t("status.needsReview") : t("status.allClear")}</s-badge>}
+            />
+            <SummaryCard
+              title={t("manualCheck.coverage.remaining")}
+              value={coverage.uncheckedProductCount}
+              description={coverage.uncheckedProductCount === 0
+                ? t("manualCheck.coverage.noneRemaining")
+                : t("manualCheck.coverage.remainingDescription")}
+            />
           </div>
-          <div className="admin-card__header admin-card__header--compact">
+          <div className="admin-card__header admin-card__header--compact" style={{ marginTop: "var(--s-space-300)" }}>
             <div className="admin-inline-meta">
-              <s-badge tone={activeReviewProducts > 0 ? "critical" : "success"}>
-                {activeReviewProducts === 0 ? t('status.allClear') : t('manualCheck.badges.needsReview', { count: activeReviewProducts })}
+              <s-badge tone={storeStats.activeAlerts > 0 ? "critical" : "success"}>
+                {storeStats.activeAlerts === 0 ? t('status.allClear') : t('manualCheck.badges.needsReview', { count: storeStats.activeAlerts })}
               </s-badge>
-              <s-badge tone="info">{t('manualCheck.badges.checks', { count: totalChecks })}</s-badge>
+              <s-badge tone="info">{t('manualCheck.badges.checks', { count: storeStats.totalChecks })}</s-badge>
             </div>
           </div>
         </section>
@@ -679,22 +866,7 @@ export default function ManualCheckPage() {
           </s-banner>
         )}
 
-        <section className="metric-grid">
-          <SummaryCard
-            title={t('manualCheck.overview.productsInScope')}
-            value={totalProducts || products.length}
-            badge={<s-badge tone="info">{t('status.updated')}</s-badge>}
-            description={t('manualCheck.overview.productsDescription')}
-          />
-          <SummaryCard
-            title={t('manualCheck.overview.productsNeedingReview')}
-            value={activeReviewProducts}
-            badge={<s-badge tone={activeReviewProducts === 0 ? "success" : "critical"}>{activeReviewProducts === 0 ? t('status.allClear') : t('status.needsReview')}</s-badge>}
-            description={activeReviewProducts === 0 ? t('manualCheck.overview.noOpenReviews') : t('manualCheck.overview.prioritise')}
-          />
-        </section>
-
-        <section className="admin-card">
+        <section className="admin-card" id="product-catalogue">
           <div className="admin-card__header">
             <div>
               <p className="admin-eyebrow">{t("manualCheck.admin.catalog")}</p>
@@ -704,33 +876,67 @@ export default function ManualCheckPage() {
               </p>
             </div>
           </div>
-          <div className="admin-toolbar">
-            <s-text-field
-              label={t("manualCheck.catalogue.searchLabel")}
-              labelAccessibilityVisibility="exclusive"
-              placeholder={t("manualCheck.catalogue.searchPlaceholder")}
-              value={searchValue}
-              onInput={(event: any) => setSearchValue(event.currentTarget.value || "")}
-            />
-            <div className="admin-actions">
-              <s-button variant="primary" onClick={applySearch}>
-                {t("actions.search")}
-              </s-button>
-              {search && (
-                <s-button
-                  variant="secondary"
-                  onClick={() => {
-                    setSearchValue("");
-                    navigate("/app/manual-check");
-                  }}
-                >
-                  {t("actions.clear")}
+          <div className="admin-toolbar" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--s-space-300)' }}>
+            <div style={{ display: 'flex', gap: 'var(--s-space-200)', width: '100%' }}>
+              <div style={{ flex: 1 }}>
+                <s-text-field
+                  label={t("manualCheck.catalogue.searchLabel")}
+                  labelAccessibilityVisibility="exclusive"
+                  placeholder={t("manualCheck.catalogue.searchPlaceholder")}
+                  value={searchValue}
+                  onInput={(event: any) => setSearchValue(event.currentTarget.value || "")}
+                />
+              </div>
+              <div className="admin-actions">
+                <s-button variant="primary" onClick={applySearch}>
+                  {t("actions.search")}
                 </s-button>
-              )}
+                {search && (
+                  <s-button
+                    variant="secondary"
+                    onClick={() => {
+                      setSearchValue("");
+                      navigate("/app/manual-check");
+                    }}
+                  >
+                    {t("actions.clear")}
+                  </s-button>
+                )}
+              </div>
             </div>
+
+            {/* Quick filter chips */}
+            <s-stack direction="inline" gap="small" blockAlign="center" wrap>
+              <s-clickable-chip
+                selected={tabFilter === 'all' || undefined}
+                onClick={() => setTabFilter('all')}
+              >
+                {t('manualCheck.filters.all', { count: filterCounts.all })}
+              </s-clickable-chip>
+              <s-clickable-chip
+                selected={tabFilter === 'unprotected' || undefined}
+                onClick={() => setTabFilter('unprotected')}
+              >
+                {t('manualCheck.filters.unprotected', { count: filterCounts.unprotected })}
+              </s-clickable-chip>
+              {filterCounts.needsReview > 0 && (
+                <s-clickable-chip
+                  selected={tabFilter === 'needs_review' || undefined}
+                  onClick={() => setTabFilter('needs_review')}
+                >
+                  {t('manualCheck.filters.needsReview', { count: filterCounts.needsReview })}
+                </s-clickable-chip>
+              )}
+              <s-clickable-chip
+                selected={tabFilter === 'safe' || undefined}
+                onClick={() => setTabFilter('safe')}
+              >
+                {t('manualCheck.filters.safe', { count: filterCounts.safe })}
+              </s-clickable-chip>
+            </s-stack>
           </div>
 
-          {products.length === 0 ? (
+          {filteredProducts.length === 0 ? (
             <div className="admin-empty-state">
               <h3>{t('manualCheck.catalogue.emptyHeading')}</h3>
               <p>{t('manualCheck.catalogue.emptyBody')}</p>
@@ -743,24 +949,33 @@ export default function ManualCheckPage() {
                 <s-table-header>{t('manualCheck.catalogue.columns.action')}</s-table-header>
               </s-table-header-row>
               <s-table-body>
-                {products.map((product: any) => {
+                {filteredProducts.map((product: any) => {
                   const productId = product.id.replace('gid://shopify/Product/', '');
                   const checks = checksByProduct[productId] || { totalChecks: 0, lastCheck: null, isSafe: null };
                   const lastCheck = checks.lastCheck ? new Date(checks.lastCheck.checkedAt) : null;
-                  const statusTone = checks.lastCheck ? (checks.isSafe ? 'success' : 'critical') : 'info';
-                  const statusLabel = checks.lastCheck
-                    ? (checks.isSafe ? t('manualCheck.catalogue.status.safe') : t('manualCheck.catalogue.status.unsafe'))
-                    : t('manualCheck.catalogue.status.notChecked');
                   const existingAlert = alertsByProduct[productId];
                   const hasAlert = Boolean(existingAlert);
                   const hasActiveAlert = existingAlert?.status === "active";
                   const isProductLoading = isCheckingOneProduct && selectedProduct?.id === product.id;
-                  const currentStatusTone = hasActiveAlert ? "critical" : hasAlert ? "success" : statusTone;
-                  const currentStatusLabel = hasActiveAlert
-                    ? t('manualCheck.catalogue.status.unsafe')
-                    : hasAlert
-                      ? t('manualCheck.catalogue.status.reviewed')
-                      : statusLabel;
+
+                  let currentStatusTone = "neutral";
+                  let currentStatusLabel = t('manualCheck.catalogue.status.notChecked');
+
+                  if (hasActiveAlert) {
+                    currentStatusTone = "critical";
+                    currentStatusLabel = t('status.needsReview');
+                  } else if (hasAlert) {
+                    currentStatusTone = "info";
+                    currentStatusLabel = t('manualCheck.catalogue.status.reviewed');
+                  } else if (checks.lastCheck) {
+                    if (checks.isSafe) {
+                      currentStatusTone = "success";
+                      currentStatusLabel = t('manualCheck.catalogue.status.safe');
+                    } else {
+                      currentStatusTone = "critical";
+                      currentStatusLabel = t('status.needsReview');
+                    }
+                  }
 
                   return (
                     <s-table-row key={product.id}>

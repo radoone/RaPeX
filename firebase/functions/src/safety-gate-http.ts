@@ -52,11 +52,17 @@ function coerceStringArray(value: unknown): string[] | undefined {
 }
 
 function extractApiKey(request: RequestShape): string {
-  return (
-    coerceString(request.headers["x-api-key"]) ||
-    coerceString(request.query.apiKey) ||
-    ""
-  );
+  const headerKey = coerceString(request.headers["x-api-key"]);
+  if (headerKey) {
+    return headerKey;
+  }
+
+  const authHeader = coerceString(request.headers["authorization"]);
+  if (authHeader && authHeader.toLowerCase().startsWith("bearer ")) {
+    return authHeader.slice(7).trim();
+  }
+
+  return "";
 }
 
 function readProductData(request: RequestShape): Partial<ProductCheckInput> | null {
@@ -75,21 +81,6 @@ function readProductData(request: RequestShape): Partial<ProductCheckInput> | nu
     };
   }
 
-  if (request.method === "GET") {
-    return {
-      name: coerceString(request.query.name) || coerceString(request.query.product),
-      category: coerceString(request.query.category),
-      description: coerceString(request.query.description),
-      imageUrl: coerceString(request.query.imageUrl),
-      imageUrls: coerceStringArray(request.query.imageUrls),
-      brand: coerceString(request.query.brand),
-      model: coerceString(request.query.model),
-      shop: coerceString(request.query.shop),
-      productId: coerceString(request.query.productId),
-      sourceUpdatedAt: coerceString(request.query.sourceUpdatedAt),
-    };
-  }
-
   return null;
 }
 
@@ -105,6 +96,14 @@ export async function handleCheckProductSafetyRequest(
 
   if (request.method === "OPTIONS") {
     response.status(204).send("");
+    return;
+  }
+
+  if (request.method !== "POST") {
+    response.status(405).json({
+      error: "Method not allowed",
+      message: "Only POST requests are supported",
+    });
     return;
   }
 

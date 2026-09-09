@@ -210,7 +210,24 @@ export function AlertTable({
               <s-table-cell colSpan={6}>
                 <s-box padding="large">
                   <s-stack gap="small" align="center">
-                    <s-text tone="subdued">{t('alerts.table.empty')}</s-text>
+                    <s-text fontWeight="semibold">
+                      {activeTab === "active" && !searchValue
+                        ? t("alerts.table.emptyAllClearTitle")
+                        : t("alerts.table.emptyFilteredTitle")}
+                    </s-text>
+                    <s-text tone="subdued">
+                      {activeTab === "active" && !searchValue
+                        ? t("alerts.table.emptyAllClearBody")
+                        : t("alerts.table.emptyFilteredBody")}
+                    </s-text>
+                    <s-stack direction="inline" gap="small" justifyContent="center">
+                      <s-button variant="primary" href="/app/manual-check#product-catalogue">
+                        {t("actions.checkOneProduct")}
+                      </s-button>
+                      <s-button variant="secondary" href="/app/evidence">
+                        {t("actions.viewEvidence")}
+                      </s-button>
+                    </s-stack>
                   </s-stack>
                 </s-box>
               </s-table-cell>
@@ -449,5 +466,10 @@ export function formatRelativeDate(
   if (diffDays === 1) return t('dates.yesterday');
   if (diffDays < 7) return t('dates.daysAgo', { count: diffDays });
   if (diffDays < 30) return t('dates.weeksAgo', { count: Math.floor(diffDays / 7) });
-  return parsedDate.toLocaleDateString(locale);
+  const resolvedLocale = !locale || locale === 'en' ? 'en-GB' : locale;
+  return parsedDate.toLocaleDateString(resolvedLocale, {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
 }

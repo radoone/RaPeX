@@ -10,7 +10,11 @@ import {
   runDailyMerchantDeltaMonitoring,
 } from "./merchant-monitoring.js";
 import { handleCheckProductSafetyRequest } from "./safety-gate-http.js";
-import { backfillRecentAlertEmbeddings, runSafetyGateLoader } from "./safety-gate-loader.js";
+import {
+  backfillRecentAlertEmbeddings,
+  runHistoricalSafetyGateBackfill,
+  runSafetyGateLoader,
+} from "./safety-gate-loader.js";
 
 // --- Scheduled Function ---
 export const dailyRapexDeltaLoader = onSchedule(
@@ -92,6 +96,52 @@ export const backfillRecentRapexEmbeddings = onRequest(
       res.status(500).json({
         success: false,
         message: "Recent Safety Gate embedding backfill failed",
+        error: error instanceof Error ? error.message : String(error),
+        timestamp: new Date().toISOString(),
+      });
+    }
+  },
+);
+
+export const backfillHistoricalRapexAlerts = onRequest(
+  {
+    region: "europe-west1",
+    memory: "1GiB",
+    timeoutSeconds: 540,
+    secrets: ["GOOGLE_API_KEY"],
+  },
+  async (req, res) => {
+    try {
+      const year = req.query.year ? Number.parseInt(String(req.query.year), 10) : undefined;
+      const fromYear = req.query.fromYear ? Number.parseInt(String(req.query.fromYear), 10) : undefined;
+      const toYear = req.query.toYear ? Number.parseInt(String(req.query.toYear), 10) : undefined;
+      const maxPages = req.query.maxPages ? Number.parseInt(String(req.query.maxPages), 10) : undefined;
+
+      logger.info("Historical Safety Gate backfill triggered via HTTP", {
+        method: req.method,
+        url: req.url,
+        year,
+        fromYear,
+        toYear,
+      });
+
+      const result = await runHistoricalSafetyGateBackfill({
+        year,
+        fromYear,
+        toYear,
+        maxPagesPerYear: maxPages,
+      });
+
+      res.status(200).json({
+        success: true,
+        ...result,
+        timestamp: new Date().toISOString(),
+      });
+    } catch (error) {
+      logger.error("Historical Safety Gate backfill failed", { error });
+      res.status(500).json({
+        success: false,
+        message: "Historical Safety Gate backfill failed",
         error: error instanceof Error ? error.message : String(error),
         timestamp: new Date().toISOString(),
       });

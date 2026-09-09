@@ -1,12 +1,16 @@
 import type { LoaderFunctionArgs } from "react-router";
-import { data as json } from "react-router";
-import { useLoaderData, useNavigate } from "react-router";
+import { data as json, isRouteErrorResponse, useLoaderData, useNavigate, useRouteError } from "react-router";
 import { useTranslation } from "react-i18next";
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
+import { boundary } from "@shopify/shopify-app-react-router/server";
 import { authenticate } from "../shopify.server";
 import db from "../merchant-db.server";
 import { formatRelativeDate } from "../components/AlertTable";
 import { requireActiveBilling } from "../services/billing.server";
+
+export const headers = (headersArgs: any) => {
+  return boundary.headers(headersArgs);
+};
 
 function parseAlertSummary(checkResult: string | null | undefined) {
   try {
@@ -26,8 +30,8 @@ function parseAlertSummary(checkResult: string | null | undefined) {
   }
 }
 
-function resolutionLabelKey(resolutionType: string | null) {
-  switch (resolutionType) {
+function decisionLabelKey(record: { resolutionType: string | null; status: string }) {
+  switch (record.resolutionType) {
     case "verified_safe":
       return "resolveActions.verifiedSafe";
     case "removed_from_sale":
@@ -41,8 +45,19 @@ function resolutionLabelKey(resolutionType: string | null) {
     case "not_my_product":
       return "resolveActions.notMyProduct";
     default:
-      return "status.needsReview";
+      return record.status === "resolved"
+        ? "status.resolved"
+        : record.status === "dismissed"
+          ? "status.dismissed"
+          : "status.needsReview";
   }
+}
+
+function compactEvidenceText(record: { notes?: string | null; reason?: string | null }) {
+  const source = record.notes || record.reason || "";
+  const firstSentence = source.split(/(?<=[.!?])\s+/)[0]?.trim();
+  if (!firstSentence) return "";
+  return firstSentence.length > 120 ? `${firstSentence.slice(0, 117).trim()}...` : firstSentence;
 }
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -94,8 +109,8 @@ export default function EvidencePage() {
   return (
     <s-page size="large" className="page-shell" suppressHydrationWarning>
       <s-heading slot="title" size="large" suppressHydrationWarning>{t("evidence.title")}</s-heading>
-      <s-button slot="primary-action" variant="primary" href="/app/audit-report" suppressHydrationWarning>
-        {t("actions.downloadAuditReport")}
+      <s-button slot="primary-action" variant="primary" onClick={() => navigate("/app/audit-report")} suppressHydrationWarning>
+        {t("auditReport.open")}
       </s-button>
 
       <div className="admin-stack">
@@ -135,18 +150,20 @@ export default function EvidencePage() {
               <s-option value="dismissed">{t("status.dismissed")}</s-option>
             </s-select>
           </div>
+          <div className="audit-report-table-wrap" aria-label={t("evidence.table.accessibilityLabel")}>
           <s-table accessibilityLabel={t("evidence.table.accessibilityLabel")}>
             <s-table-header-row>
               <s-table-header listSlot="primary">{t("evidence.table.product")}</s-table-header>
               <s-table-header listSlot="inline">{t("evidence.table.status")}</s-table-header>
               <s-table-header listSlot="labeled">{t("evidence.table.decision")}</s-table-header>
-              <s-table-header>{t("evidence.table.notes")}</s-table-header>
+              <s-table-header>{t("evidence.table.summary")}</s-table-header>
               <s-table-header>{t("evidence.table.updated")}</s-table-header>
+              <s-table-header>{t("evidence.table.details")}</s-table-header>
             </s-table-header-row>
             <s-table-body>
               {filteredRecords.length === 0 ? (
                 <s-table-row>
-                  <s-table-cell colSpan={5}>
+                  <s-table-cell colSpan={6}>
                     <s-box padding="large">
                       <s-text tone="subdued">
                         {records.length === 0 ? t("evidence.empty") : t("evidence.filters.noResults")}
@@ -154,61 +171,104 @@ export default function EvidencePage() {
                     </s-box>
                   </s-table-cell>
                 </s-table-row>
-              ) : filteredRecords.map((record: any) => (
-                <s-table-row key={record.id}>
-                  <s-table-cell>
-                    <s-stack gap="small-100">
-                      <s-link onClick={() => navigate(`/app/alerts?search=${encodeURIComponent(record.productTitle)}`)}>
-                        {record.productTitle}
-                      </s-link>
-                      {record.alertNumber ? (
-                        <s-text tone="subdued" size="small">{t("evidence.alertNumber", { number: record.alertNumber })}</s-text>
-                      ) : null}
-                    </s-stack>
-                  </s-table-cell>
-                  <s-table-cell>
-                    <s-badge tone={record.status === "active" ? "critical" : record.status === "resolved" ? "success" : "info"}>
-                      {record.status === "active"
-                        ? t("status.needsReview")
-                        : record.status === "resolved"
-                          ? t("status.resolved")
-                          : t("status.dismissed")}
-                    </s-badge>
-                  </s-table-cell>
-                  <s-table-cell>
-                    <s-stack gap="small-100">
-                      <s-text>{t(resolutionLabelKey(record.resolutionType))}</s-text>
-                      {record.riskLevel ? <s-text tone="subdued" size="small">{record.riskLevel}</s-text> : null}
-                    </s-stack>
-                  </s-table-cell>
-                  <s-table-cell>
-                    <div className={`evidence-note${expandedRecords.includes(record.id) ? " evidence-note--expanded" : ""}`}>
-                      <s-text>{record.notes || record.reason || t("evidence.noNotes")}</s-text>
-                    </div>
-                    {(record.notes || record.reason) ? (
-                      <s-button
-                        variant="tertiary"
-                        size="small"
-                        accessibilityLabel={expandedRecords.includes(record.id)
-                          ? t("evidence.filters.collapseForProduct", { title: record.productTitle })
-                          : t("evidence.filters.expandForProduct", { title: record.productTitle })}
-                        onClick={() => setExpandedRecords((current) => current.includes(record.id)
-                          ? current.filter((id) => id !== record.id)
-                          : [...current, record.id])}
-                      >
-                        {expandedRecords.includes(record.id) ? t("evidence.filters.showLess") : t("evidence.filters.showMore")}
-                      </s-button>
-                    ) : null}
-                  </s-table-cell>
-                  <s-table-cell>
-                    <s-text>{formatRelativeDate(new Date(record.updatedAt), t, dateLocale)}</s-text>
-                  </s-table-cell>
-                </s-table-row>
-              ))}
+              ) : filteredRecords.map((record: any) => {
+                const isExpanded = expandedRecords.includes(record.id);
+                const evidenceText = record.notes || record.reason || "";
+                return (
+                  <Fragment key={record.id}>
+                    <s-table-row>
+                      <s-table-cell>
+                        <s-stack gap="small-100">
+                          <s-link onClick={() => navigate(`/app/alerts?search=${encodeURIComponent(record.productTitle)}`)}>
+                            {record.productTitle}
+                          </s-link>
+                          {record.alertNumber ? (
+                            <s-text tone="subdued" size="small">{t("evidence.alertNumber", { number: record.alertNumber })}</s-text>
+                          ) : null}
+                        </s-stack>
+                      </s-table-cell>
+                      <s-table-cell>
+                        <s-badge tone={record.status === "active" ? "critical" : record.status === "resolved" ? "success" : "info"}>
+                          {record.status === "active"
+                            ? t("status.needsReview")
+                            : record.status === "resolved"
+                              ? t("status.resolved")
+                              : t("status.dismissed")}
+                        </s-badge>
+                      </s-table-cell>
+                      <s-table-cell>
+                        <s-stack gap="small-100">
+                          <s-text>{t(decisionLabelKey(record))}</s-text>
+                          {record.riskLevel ? <s-text tone="subdued" size="small">{record.riskLevel}</s-text> : null}
+                        </s-stack>
+                      </s-table-cell>
+                      <s-table-cell>
+                        <s-text tone={evidenceText ? undefined : "subdued"}>
+                          {compactEvidenceText(record) || t("evidence.noNotes")}
+                        </s-text>
+                      </s-table-cell>
+                      <s-table-cell>
+                        <s-text>{formatRelativeDate(new Date(record.updatedAt), t, dateLocale)}</s-text>
+                      </s-table-cell>
+                      <s-table-cell>
+                        {evidenceText ? (
+                          <s-button
+                            variant="tertiary"
+                            size="small"
+                            accessibilityLabel={isExpanded
+                              ? t("evidence.filters.collapseForProduct", { title: record.productTitle })
+                              : t("evidence.filters.expandForProduct", { title: record.productTitle })}
+                            onClick={() => setExpandedRecords((current) => current.includes(record.id)
+                              ? current.filter((id) => id !== record.id)
+                              : [...current, record.id])}
+                          >
+                            {isExpanded ? t("evidence.filters.showLess") : t("evidence.filters.showMore")}
+                          </s-button>
+                        ) : null}
+                      </s-table-cell>
+                    </s-table-row>
+                    {isExpanded && (
+                      <s-table-row>
+                        <s-table-cell colSpan={6}>
+                          <s-box padding="base" background="bg-surface-secondary" borderRadius="base">
+                            <s-stack gap="small-100">
+                              <s-text fontWeight="semibold">{t("evidence.fullEvidence")}</s-text>
+                              <s-text>{evidenceText}</s-text>
+                            </s-stack>
+                          </s-box>
+                        </s-table-cell>
+                      </s-table-row>
+                    )}
+                  </Fragment>
+                );
+              })}
             </s-table-body>
           </s-table>
+          </div>
         </section>
       </div>
+    </s-page>
+  );
+}
+
+export function ErrorBoundary() {
+  const { t } = useTranslation();
+  const error = useRouteError();
+  if (isRouteErrorResponse(error) && (error.status === 200 || !error.statusText)) {
+    return boundary.error(error);
+  }
+  const message = isRouteErrorResponse(error)
+    ? error.statusText || t("errors.unknown")
+    : error instanceof Error
+      ? error.message
+      : t("errors.unknown");
+  return (
+    <s-page size="large">
+      <s-heading slot="title" size="large">{t("evidence.title")}</s-heading>
+      <s-banner tone="critical" heading={t("errors.pageLoadFailed")}>
+        <s-text>{message}</s-text>
+        <s-button slot="secondary-actions" href="/app/evidence">{t("actions.retry")}</s-button>
+      </s-banner>
     </s-page>
   );
 }

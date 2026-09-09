@@ -31,17 +31,27 @@ export const SAFETY_GATE_CONFIG = {
 } as const;
 
 export const FIRESTORE_COLLECTIONS = {
+  merchants: "merchants",
   alerts: "rapex_alerts",
   alertImages: "rapex_alert_images",
   meta: "rapex_meta",
   loaderStateDoc: "loader_state",
-  merchantProducts: "merchant_products",
-  merchantAlerts: "merchant_alerts",
-  merchantChecks: "merchant_checks",
-  merchantSettings: "merchant_settings",
-  merchantWebhookErrors: "merchant_webhook_errors",
-  merchantMonitorState: "merchant_monitor_state",
   merchantMatchCache: "merchant_match_cache",
+  // Subcollections within merchants/{shop}:
+  subProducts: "products",
+  subAlerts: "alerts",
+  subChecks: "checks",
+  subActivityLogs: "activity_logs",
+  subWebhookErrors: "webhook_errors",
+} as const;
+
+export const AI_CONFIG = {
+  primaryModel: "gemini-2.5-flash",
+  fallbackModel: "gemini-2.5-flash-lite",
+  maxProductImages: 2,
+  maxAlertImages: 4,
+  matchCacheTtlDays: 30,
+  checkHistoryTtlDays: 90,
 } as const;
 
 export const SAFETY_GATE_HEADERS = {
@@ -56,8 +66,7 @@ export const SCHEDULER_CONFIG = {
 } as const;
 
 export const PRODUCT_SAFETY_API_USAGE = {
-  GET: "/checkProductSafetyAPI?name=Product&category=toys&description=Description",
-  POST: "/checkProductSafetyAPI with JSON body: {name, category, description, imageUrl?, imageUrls?, brand?, model?}",
+  POST: "/checkProductSafetyAPI with JSON body: {name, category, description, imageUrl?, imageUrls?, brand?, model?, shop?, productId?}",
 } as const;
 
 export const MATCHING_THRESHOLDS = {
