@@ -1,6 +1,7 @@
 import { buildCoreLocale } from "./core-locale";
 
 export default buildCoreLocale({ dashboard: "Panel", alertsLabel: "Alerty bezpieczeństwa", manual: "Kontrola ręczna", settings: "Ustawienia", language: "Język", reviewAlerts: "Przejrzyj alerty", search: "Szukaj", clear: "Wyczyść", needsReview: "Wymaga przeglądu", safe: "Bezpieczny", notChecked: "Nie sprawdzono", alertsTitle: "Alerty bezpieczeństwa", findProduct: "Znajdź produkt",
+  notifications: { enabledTitle: "Alerty bezpieczeństwa e-mail", enabledDescription: "Wysyłaj nowe wyniki natychmiast, a podsumowanie tygodniowe, gdy nie ma wyników.", emailLabel: "E-mail powiadomień", emailHelp: "Początkowo pobierany z Shopify. Możesz użyć innego adresu.", languageLabel: "Język wiadomości" },
   long: {
     "dashboardRecentAlertsDescription": "Najnowsze oznaczone produkty z Twojego sklepu są uporządkowane tak, aby można było szybko podjąć działania.",
     "dashboardNoAlertsDescription": "Lista alertów pojawi się tutaj po wykryciu pierwszego dopasowania z niebezpiecznym produktem.",

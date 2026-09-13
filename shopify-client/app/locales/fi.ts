@@ -1,6 +1,7 @@
 import { buildCoreLocale } from "./core-locale";
 
 export default buildCoreLocale({ dashboard: "Hallintapaneeli", alertsLabel: "Turvallisuushälytykset", manual: "Manuaalinen tarkistus", settings: "Asetukset", language: "Kieli", reviewAlerts: "Tarkista hälytykset", search: "Hae", clear: "Tyhjennä", needsReview: "Vaatii tarkistuksen", safe: "Turvallinen", notChecked: "Ei tarkistettu", alertsTitle: "Turvallisuushälytykset", findProduct: "Etsi tuote",
+  notifications: { enabledTitle: "Turvallisuushälytykset sähköpostilla", enabledDescription: "Lähetä uudet löydökset heti ja viikkoyhteenveto, kun löydöksiä ei ole.", emailLabel: "Ilmoitusten sähköposti", emailHelp: "Haetaan aluksi Shopifysta. Voit käyttää toista osoitetta.", languageLabel: "Sähköpostin kieli" },
   long: {
     "dashboardRecentAlertsDescription": "Kauppasi uusimmat merkityt tuotteet on järjestetty niin, että niihin voi reagoida nopeasti.",
     "dashboardNoAlertsDescription": "Hälytyslista ilmestyy tähän, kun ensimmäinen vaaralliseen tuotteeseen liittyvä osuma havaitaan.",

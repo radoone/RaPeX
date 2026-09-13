@@ -846,6 +846,14 @@ const sk = {
           "autoDraftTitle": "Prioritizovať vážne riziká",
           "autoDraftDescription": "Automaticky označiť produkty na prioritnú kontrolu, ak sa zhodujú so Safety Gate alertmi s vážnym rizikom (prah >= 95%)."
         },
+        "notifications": {
+          "enabledTitle": "E-mailové bezpečnostné upozornenia",
+          "enabledDescription": "Každý nový nález odošle okamžite a pri týždni bez nálezu pošle súhrn so stavom v poriadku.",
+          "emailLabel": "E-mail pre upozornenia",
+          "emailHelp": "Pôvodne sa prevezme zo Shopify. Môžete použiť inú adresu.",
+          "languageLabel": "Jazyk e-mailov",
+          "invalidEmail": "Pred zapnutím upozornení zadajte platnú e-mailovú adresu."
+        },
         "exclusions": {
           "eyebrow": "Pravidlá filtrovania",
           "title": "Pravidlá vylúčenia",

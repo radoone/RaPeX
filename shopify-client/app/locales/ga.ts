@@ -1,6 +1,7 @@
 import { buildCoreLocale } from "./core-locale";
 
 export default buildCoreLocale({ dashboard: "Painéal", alertsLabel: "Foláirimh sábháilteachta", manual: "Seiceáil láimhe", settings: "Socruithe", language: "Teanga", reviewAlerts: "Athbhreithnigh foláirimh", search: "Cuardaigh", clear: "Glan", needsReview: "Le hathbhreithniú", safe: "Sábháilte", notChecked: "Gan seiceáil", alertsTitle: "Foláirimh sábháilteachta", findProduct: "Aimsigh táirge",
+  notifications: { enabledTitle: "Foláirimh sábháilteachta ríomhphoist", enabledDescription: "Seol torthaí nua láithreach agus achoimre sheachtainiúil nuair nach bhfuil aon toradh ann.", emailLabel: "Ríomhphost fógraí", emailHelp: "Tógtar ó Shopify ar dtús é. Is féidir seoladh eile a úsáid.", languageLabel: "Teanga ríomhphoist" },
   long: {
     "dashboardRecentAlertsDescription": "Tá na táirgí is déanaí a marcáladh i do shiopa curtha in ord chun gníomh tapa a éascú.",
     "dashboardNoAlertsDescription": "Beidh an liosta foláireamh le feiceáil anseo tar éis an chéad mheaitseáil le táirge contúirteach a aimsiú.",

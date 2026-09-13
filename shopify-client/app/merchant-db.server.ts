@@ -104,6 +104,10 @@ export type SafetySettingRecord = {
   excludeVendors?: string | null;
   excludeTypes?: string | null;
   emailNotifications?: boolean;
+  notificationEmail?: string | null;
+  notificationLanguage?: string;
+  notificationEmailSource?: "shopify" | "custom";
+  lastWeeklySummaryAt?: Date | null;
   slackWebhookUrl?: string | null;
   createdAt: Date;
   updatedAt: Date;
@@ -660,6 +664,10 @@ const safetySetting = {
       excludeVendors: data.excludeVendors !== undefined ? String(data.excludeVendors || "") : undefined,
       excludeTypes: data.excludeTypes !== undefined ? String(data.excludeTypes || "") : undefined,
       emailNotifications: data.emailNotifications !== undefined ? Boolean(data.emailNotifications) : undefined,
+      notificationEmail: data.notificationEmail !== undefined ? String(data.notificationEmail || "") : undefined,
+      notificationLanguage: data.notificationLanguage !== undefined ? String(data.notificationLanguage || "en") : undefined,
+      notificationEmailSource: data.notificationEmailSource === "custom" ? "custom" : "shopify",
+      lastWeeklySummaryAt: normalizeDate(data.lastWeeklySummaryAt),
       slackWebhookUrl: data.slackWebhookUrl !== undefined ? String(data.slackWebhookUrl || "") : undefined,
       createdAt: normalizeDate(data.createdAt) || new Date(0),
       updatedAt: normalizeDate(data.updatedAt) || new Date(0),
@@ -690,6 +698,10 @@ const safetySetting = {
       excludeVendors: payload.excludeVendors !== undefined ? String(payload.excludeVendors || "") : undefined,
       excludeTypes: payload.excludeTypes !== undefined ? String(payload.excludeTypes || "") : undefined,
       emailNotifications: payload.emailNotifications !== undefined ? Boolean(payload.emailNotifications) : undefined,
+      notificationEmail: payload.notificationEmail !== undefined ? String(payload.notificationEmail || "") : undefined,
+      notificationLanguage: payload.notificationLanguage !== undefined ? String(payload.notificationLanguage || "en") : undefined,
+      notificationEmailSource: payload.notificationEmailSource === "custom" ? "custom" : "shopify",
+      lastWeeklySummaryAt: normalizeDate(payload.lastWeeklySummaryAt),
       slackWebhookUrl: payload.slackWebhookUrl !== undefined ? String(payload.slackWebhookUrl || "") : undefined,
       createdAt: normalizeDate(payload.createdAt) || now,
       updatedAt: normalizeDate(payload.updatedAt) || now,

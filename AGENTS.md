@@ -149,6 +149,8 @@ can be worked on without changing Shopify auth or app routes.
 - The Shopify app should sell its value inside the product UI: onboarding is value-first, dashboard shows subscription proof metrics, and empty alert queues show a demo Safety Gate match workflow so new merchants understand the paid outcome before real alerts exist.
 - Slack notifications and webhook inputs are completely removed from the app and backend (without backward compatibility shims) to keep the app focused exclusively on Shopify-native review workflows and compliance audit trails.
 - The merchant UI exposes language selection for the 24 official EU languages: English, Bulgarian, Czech, Danish, German, Greek, Spanish, Estonian, Finnish, French, Irish, Croatian, Hungarian, Italian, Lithuanian, Latvian, Maltese, Dutch, Polish, Portuguese, Romanian, Slovak, Slovenian, and Swedish.
+- Merchant safety email is sent through Brevo from Firebase only. A newly created `merchants/{shop}/alerts/{alertId}` document triggers one immediate email; updates do not resend it. A Monday 08:00 `Europe/Bratislava` job sends an all-clear summary only when the preceding seven-day window contains no new merchant alert.
+- Merchant email preferences live on `merchants/{shop}` as `emailNotifications`, `notificationEmail`, `notificationLanguage`, and `notificationEmailSource`. They default to enabled with the Shopify contact email when the authenticated app can retrieve it, and remain editable/disableable in Settings. Delivery lifecycle is stored in `merchants/{shop}/email_notifications`; Brevo delivery webhooks, authenticated with a bearer secret, are the only source that marks an email delivered in the audit trail.
 
 ## Technical Standards & Lessons Learned
 

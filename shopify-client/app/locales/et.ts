@@ -1,6 +1,7 @@
 import { buildCoreLocale } from "./core-locale";
 
 export default buildCoreLocale({ dashboard: "Töölaud", alertsLabel: "Ohutusteated", manual: "Käsitsi kontroll", settings: "Seaded", language: "Keel", reviewAlerts: "Vaata teateid", search: "Otsi", clear: "Tühjenda", needsReview: "Vajab ülevaatust", safe: "Ohutu", notChecked: "Kontrollimata", alertsTitle: "Ohutusteated", findProduct: "Leia toode",
+  notifications: { enabledTitle: "Ohutusteavitused e-postiga", enabledDescription: "Saada uued leiud kohe ja leidudeta nädala korral kokkuvõte.", emailLabel: "Teavituste e-post", emailHelp: "Algul võetakse Shopify poest. Võid kasutada teist aadressi.", languageLabel: "E-kirja keel" },
   long: {
     "dashboardRecentAlertsDescription": "Teie poe viimased märgitud tooted on järjestatud nii, et kaupmees saaks kiiresti tegutseda.",
     "dashboardNoAlertsDescription": "Hoiatuste loend ilmub siia pärast esimese ohtliku tootega seotud vaste tuvastamist.",

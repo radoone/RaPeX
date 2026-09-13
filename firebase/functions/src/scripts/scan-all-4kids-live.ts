@@ -125,15 +125,6 @@ async function runFullLiveStoreScan() {
   }
   console.log(`-> Dávková vektorizácia dokončená za ${((Date.now() - embedStart) / 1000).toFixed(1)}s.\n`);
 
-  function isBrandMismatch(productBrand?: string, alertBrand?: string): boolean {
-    if (!productBrand || !alertBrand) return false;
-    const p = productBrand.toLowerCase().trim();
-    const a = alertBrand.toLowerCase().trim();
-    if (p === "unknown" || p === "unbranded" || p === "not specified" || !p) return false;
-    if (a === "unknown" || a === "unbranded" || a === "not specified" || !a) return false;
-    return p !== a && !p.includes(a) && !a.includes(p);
-  }
-
   // 3. Fast KNN Firestore Retrieval to find candidate alerts
   console.log("3. Vyhľadávam podozrivých kandidátov vo Firestore cez KNN Cosine Search...");
   const knnStart = Date.now();
@@ -152,10 +143,7 @@ async function runFullLiveStoreScan() {
         const vector = allVectors[globalIdx];
         if (!vector || vector.length === 0) return;
 
-        const rawCandidates = await retrieveAlertsForVector(vector, 6);
-        const candidateAlerts = rawCandidates.filter(
-          (alert) => !isBrandMismatch(pInput.brand, alert.fields.product_brand)
-        );
+        const candidateAlerts = await retrieveAlertsForVector(vector, 6);
 
         if (candidateAlerts.length > 0) {
           candidatePairs.push({

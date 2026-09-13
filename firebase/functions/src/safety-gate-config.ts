@@ -43,6 +43,7 @@ export const FIRESTORE_COLLECTIONS = {
   subChecks: "checks",
   subActivityLogs: "activity_logs",
   subWebhookErrors: "webhook_errors",
+  subEmailNotifications: "email_notifications",
 } as const;
 
 export const AI_CONFIG = {

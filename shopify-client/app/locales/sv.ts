@@ -1,6 +1,7 @@
 import { buildCoreLocale } from "./core-locale";
 
 export default buildCoreLocale({ dashboard: "Översikt", alertsLabel: "Säkerhetsvarningar", manual: "Manuell kontroll", settings: "Inställningar", language: "Språk", reviewAlerts: "Granska varningar", search: "Sök", clear: "Rensa", needsReview: "Behöver granskas", safe: "Säker", notChecked: "Inte kontrollerad", alertsTitle: "Säkerhetsvarningar", findProduct: "Hitta produkt",
+  notifications: { enabledTitle: "Säkerhetsvarningar via e-post", enabledDescription: "Skicka nya fynd direkt och en veckosammanfattning när inga fynd finns.", emailLabel: "E-post för aviseringar", emailHelp: "Hämtas först från Shopify. Du kan använda en annan adress.", languageLabel: "E-postspråk" },
   long: {
     "dashboardRecentAlertsDescription": "De senast flaggade produkterna i din butik är sorterade så att du snabbt kan agera.",
     "dashboardNoAlertsDescription": "Din varningslista visas här efter den första upptäckta matchningen med en farlig produkt.",

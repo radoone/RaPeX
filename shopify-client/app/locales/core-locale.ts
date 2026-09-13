@@ -16,6 +16,14 @@ type CoreLocaleInput = {
   unknown?: string;
   close?: string;
   unsafe?: string;
+  notifications?: {
+    enabledTitle: string;
+    enabledDescription: string;
+    emailLabel: string;
+    emailHelp: string;
+    languageLabel: string;
+    invalidEmail?: string;
+  };
   long?: {
     dashboardRecentAlertsDescription: string;
     dashboardNoAlertsDescription: string;
@@ -258,6 +266,14 @@ export function buildCoreLocale(input: CoreLocaleInput) {
     settingsAdmin: {
       strictnessHint: long.settingsStrictnessHint,
       monitoringModeEyebrow: "Monitoring mode",
+      notifications: input.notifications || {
+        enabledTitle: "Email safety alerts",
+        enabledDescription: "Send new findings immediately and a weekly all-clear summary when no finding is created.",
+        emailLabel: "Notification email",
+        emailHelp: "Initially taken from Shopify. You can use a different address.",
+        languageLabel: "Email language",
+        invalidEmail: "Enter a valid email address before enabling alerts.",
+      },
       advancedMatchingSettings: "Advanced matching settings",
       automationStatusEyebrow: "Automatic monitoring",
       automationStatusTitle: "Safety Gate monitoring is working for this store",

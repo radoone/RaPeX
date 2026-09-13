@@ -1,6 +1,7 @@
 import { buildCoreLocale } from "./core-locale";
 
 export default buildCoreLocale({ dashboard: "Skydelis", alertsLabel: "Saugos įspėjimai", manual: "Rankinė patikra", settings: "Nustatymai", language: "Kalba", reviewAlerts: "Peržiūrėti įspėjimus", search: "Ieškoti", clear: "Išvalyti", needsReview: "Reikia peržiūros", safe: "Saugus", notChecked: "Nepatikrinta", alertsTitle: "Saugos įspėjimai", findProduct: "Rasti produktą",
+  notifications: { enabledTitle: "Saugos pranešimai el. paštu", enabledDescription: "Naujus radinius siųsti iš karto, o savaitę be radinių – suvestinę.", emailLabel: "Pranešimų el. paštas", emailHelp: "Iš pradžių paimamas iš Shopify. Galite naudoti kitą adresą.", languageLabel: "El. laiškų kalba" },
   long: {
     "dashboardRecentAlertsDescription": "Naujausi pažymėti jūsų parduotuvės produktai surikiuoti taip, kad būtų galima greitai imtis veiksmų.",
     "dashboardNoAlertsDescription": "Įspėjimų sąrašas bus rodomas čia po pirmos aptiktos atitikties su pavojingu produktu.",

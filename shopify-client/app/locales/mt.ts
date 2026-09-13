@@ -1,6 +1,7 @@
 import { buildCoreLocale } from "./core-locale";
 
 export default buildCoreLocale({ dashboard: "Dashboard", alertsLabel: "Twissijiet tas-sigurtà", manual: "Kontroll manwali", settings: "Settings", language: "Lingwa", reviewAlerts: "Irrevedi twissijiet", search: "Fittex", clear: "Ħassar", needsReview: "Jeħtieġ reviżjoni", safe: "Sikur", notChecked: "Mhux iċċekkjat", alertsTitle: "Twissijiet tas-sigurtà", findProduct: "Sib prodott",
+  notifications: { enabledTitle: "Twissijiet tas-sigurtà bl-email", enabledDescription: "Ibgħat sejbiet ġodda minnufih u sommarju ta' kull ġimgħa meta ma jkunx hemm sejbiet.", emailLabel: "Email għan-notifiki", emailHelp: "Jittieħed inizjalment minn Shopify. Tista' tuża indirizz ieħor.", languageLabel: "Lingwa tal-email" },
   long: {
     "dashboardRecentAlertsDescription": "L-aħħar prodotti mmarkati mill-ħanut tiegħek huma rranġati biex tkun tista’ taġixxi malajr.",
     "dashboardNoAlertsDescription": "Il-lista tat-twissijiet tidher hawn wara l-ewwel qbil ma’ prodott perikoluż.",

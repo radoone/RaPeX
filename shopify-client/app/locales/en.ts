@@ -846,6 +846,14 @@ const en = {
           "autoDraftTitle": "Prioritize serious risks",
           "autoDraftDescription": "Automatically mark products for priority review when they match Safety Gate alerts with serious risk (threshold >= 95%)."
         },
+        "notifications": {
+          "enabledTitle": "Email safety alerts",
+          "enabledDescription": "Send every new finding immediately and a weekly all-clear summary when no finding is created.",
+          "emailLabel": "Notification email",
+          "emailHelp": "Initially taken from Shopify. You can use a different address.",
+          "languageLabel": "Email language",
+          "invalidEmail": "Enter a valid email address before enabling alerts."
+        },
         "exclusions": {
           "eyebrow": "Filtering rules",
           "title": "Exclusion rules",

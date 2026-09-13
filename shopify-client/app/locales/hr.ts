@@ -1,6 +1,7 @@
 import { buildCoreLocale } from "./core-locale";
 
 export default buildCoreLocale({ dashboard: "Nadzorna ploča", alertsLabel: "Sigurnosna upozorenja", manual: "Ručna provjera", settings: "Postavke", language: "Jezik", reviewAlerts: "Pregledaj upozorenja", search: "Traži", clear: "Očisti", needsReview: "Potrebna provjera", safe: "Sigurno", notChecked: "Nije provjereno", alertsTitle: "Sigurnosna upozorenja", findProduct: "Pronađi proizvod",
+  notifications: { enabledTitle: "Sigurnosne obavijesti e-poštom", enabledDescription: "Nove nalaze pošalji odmah, a tjedni sažetak kada nema nalaza.", emailLabel: "E-pošta za obavijesti", emailHelp: "U početku se preuzima iz Shopifyja. Možete koristiti drugu adresu.", languageLabel: "Jezik e-pošte" },
   long: {
     "dashboardRecentAlertsDescription": "Najnoviji označeni proizvodi iz vaše trgovine poredani su tako da možete brzo reagirati.",
     "dashboardNoAlertsDescription": "Popis upozorenja pojavit će se ovdje nakon prve pronađene podudarnosti s opasnim proizvodom.",

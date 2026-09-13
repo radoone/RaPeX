@@ -36,19 +36,9 @@ export async function handleAutoDraftAndNotifications(
         });
       }
 
-      // 2. Email Notifications
-      if (settings.emailNotifications) {
-        console.log(`[Notification Alert] Send email to merchant for shop ${shop}: Product ${productId} is unsafe!`);
-        // Log notification trigger to activity log
-        await db.activityLog.create({
-          data: {
-            shop,
-            type: "automatic",
-            action: "check",
-            details: `Sent email alert notification for unsafe product match "${alertName}".`
-          }
-        });
-      }
+      // Email delivery is intentionally handled by the Firebase alert-created trigger.
+      // Keeping a single delivery path prevents duplicate messages across manual checks,
+      // Shopify webhooks, and scheduled delta monitoring.
     }
   } catch (error) {
     console.error("Error in handleAutoDraftAndNotifications:", error);

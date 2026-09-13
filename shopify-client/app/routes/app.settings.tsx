@@ -1,29 +1,76 @@
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "react-router";
 import { data as json, redirect } from "react-router";
-import { useLoaderData, useNavigation, Form, useRouteError, isRouteErrorResponse } from "react-router";
+import { useActionData, useLoaderData, useNavigation, Form, useRouteError, isRouteErrorResponse } from "react-router";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { authenticate } from "../shopify.server";
 import db from "../merchant-db.server";
 import { LanguageSwitcher } from "../components";
 import { requireActiveBilling } from "../services/billing.server";
+import { EU_LANGUAGES } from "../locales/languages";
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const SUPPORTED_LANGUAGES = new Set(EU_LANGUAGES.map((language) => language.code));
+
+async function getShopifyContactEmail(admin: any): Promise<string | null> {
+  const response = await admin.graphql(`#graphql
+    query notificationContactEmail {
+      shop { contactEmail email }
+    }
+  `);
+  const payload = await response.json();
+  const value = String(payload.data?.shop?.contactEmail || payload.data?.shop?.email || "").trim().toLowerCase();
+  return EMAIL_PATTERN.test(value) ? value : null;
+}
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { billing, session } = await authenticate.admin(request);
+  const { admin, billing, session } = await authenticate.admin(request);
   const billingRedirect = await requireActiveBilling(billing, session.shop);
   if (billingRedirect) return billingRedirect as never;
-  const settings = await db.safetySetting.findUnique({
+  let settings = await db.safetySetting.findUnique({
     where: { shop: session.shop },
   });
   
   const envDefault = Number(process.env.SAFETY_GATE_SIMILARITY_THRESHOLD || "0");
   const fallbackDefault = Number.isFinite(envDefault) ? envDefault : 70;
 
+  if (!settings || settings.emailNotifications === undefined || !settings.notificationEmail) {
+    const shopifyEmail = await getShopifyContactEmail(admin).catch((error) => {
+      console.warn("Could not load Shopify contact email for notifications", error);
+      return null;
+    });
+    settings = await db.safetySetting.upsert({
+      where: { shop: session.shop },
+      update: {
+        ...(settings?.emailNotifications === undefined ? { emailNotifications: true } : {}),
+        ...(!settings?.notificationEmail && shopifyEmail ? {
+          notificationEmail: shopifyEmail,
+          notificationEmailSource: "shopify" as const,
+        } : {}),
+        ...(!settings?.notificationLanguage ? { notificationLanguage: "en" } : {}),
+      },
+      create: {
+        shop: session.shop,
+        similarityThreshold: fallbackDefault,
+        autoDraftHighRisk: false,
+        emailNotifications: true,
+        notificationEmail: shopifyEmail,
+        notificationEmailSource: "shopify",
+        notificationLanguage: "en",
+        excludeVendors: null,
+        excludeTypes: null,
+      },
+    });
+  }
+
   return json({
     settings: settings || {
       similarityThreshold: fallbackDefault,
       autoDraftHighRisk: false,
-      emailNotifications: false,
+      emailNotifications: true,
+      notificationEmail: null,
+      notificationEmailSource: "shopify",
+      notificationLanguage: "en",
       excludeVendors: null,
       excludeTypes: null,
     },
@@ -43,6 +90,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     : 70;
 
   const autoDraftHighRisk = formData.get("autoDraftHighRisk") === "true";
+  const emailNotifications = formData.get("emailNotifications") === "true";
+  const notificationEmail = String(formData.get("notificationEmail") || "").trim().toLowerCase();
+  const requestedLanguage = String(formData.get("notificationLanguage") || "en");
+  const notificationLanguage = SUPPORTED_LANGUAGES.has(requestedLanguage as any) ? requestedLanguage : "en";
+  if (emailNotifications && !EMAIL_PATTERN.test(notificationEmail)) {
+    return json({ error: "invalid_notification_email" }, { status: 400 });
+  }
   const excludeVendors = (formData.get("excludeVendors") as string) || null;
   const excludeTypes = (formData.get("excludeTypes") as string) || null;
 
@@ -51,7 +105,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     update: {
       similarityThreshold,
       autoDraftHighRisk,
-      emailNotifications: false,
+      emailNotifications,
+      notificationEmail: notificationEmail || null,
+      notificationEmailSource: "custom",
+      notificationLanguage,
       excludeVendors,
       excludeTypes,
     },
@@ -59,7 +116,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       shop: session.shop,
       similarityThreshold,
       autoDraftHighRisk,
-      emailNotifications: false,
+      emailNotifications,
+      notificationEmail: notificationEmail || null,
+      notificationEmailSource: "custom",
+      notificationLanguage,
       excludeVendors,
       excludeTypes,
     },
@@ -97,11 +157,15 @@ export function ErrorBoundary() {
 
 export default function Settings() {
   const { settings, envDefault } = useLoaderData<typeof loader>();
+  const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
   const { t } = useTranslation();
   
   const [value, setValue] = useState((settings?.similarityThreshold ?? 70).toString());
   const [autoDraft, setAutoDraft] = useState(settings?.autoDraftHighRisk ?? false);
+  const [emailNotifications, setEmailNotifications] = useState(settings?.emailNotifications ?? true);
+  const [notificationEmail, setNotificationEmail] = useState(settings?.notificationEmail ?? "");
+  const [notificationLanguage, setNotificationLanguage] = useState(settings?.notificationLanguage ?? "en");
 
   const [vendorsList, setVendorsList] = useState<string[]>([]);
   const [typesList, setTypesList] = useState<string[]>([]);
@@ -112,6 +176,9 @@ export default function Settings() {
     if (settings) {
       setValue((settings.similarityThreshold ?? 70).toString());
       setAutoDraft(settings.autoDraftHighRisk ?? false);
+      setEmailNotifications(settings.emailNotifications ?? true);
+      setNotificationEmail(settings.notificationEmail ?? "");
+      setNotificationLanguage(settings.notificationLanguage ?? "en");
       setVendorsList(settings.excludeVendors ? settings.excludeVendors.split(',').map(s => s.trim()).filter(Boolean) : []);
       setTypesList(settings.excludeTypes ? settings.excludeTypes.split(',').map(s => s.trim()).filter(Boolean) : []);
     }
@@ -175,9 +242,14 @@ export default function Settings() {
       <s-heading slot="title" size="large" suppressHydrationWarning>{t('settings.title')}</s-heading>
 
       <div className="admin-stack">
+        {actionData && "error" in actionData && actionData.error === "invalid_notification_email" ? (
+          <s-banner tone="critical" heading={t("settingsAdmin.notifications.invalidEmail")} />
+        ) : null}
         <Form method="post">
           <input type="hidden" name="autoDraftHighRisk" value={autoDraft ? "true" : "false"} />
-          <input type="hidden" name="emailNotifications" value="false" />
+          <input type="hidden" name="emailNotifications" value={emailNotifications ? "true" : "false"} />
+          <input type="hidden" name="notificationEmail" value={notificationEmail} />
+          <input type="hidden" name="notificationLanguage" value={notificationLanguage} />
           <input type="hidden" name="excludeVendors" value={vendorsList.join(', ')} />
           <input type="hidden" name="excludeTypes" value={typesList.join(', ')} />
 
@@ -286,6 +358,39 @@ export default function Settings() {
                     <label style={{ display: 'flex', alignItems: 'flex-start', cursor: 'pointer', gap: '10px' }}>
                       <input
                         type="checkbox"
+                        checked={emailNotifications}
+                        onChange={(e) => setEmailNotifications(e.target.checked)}
+                        style={{ marginTop: '3px', transform: 'scale(1.15)' }}
+                      />
+                      <div>
+                        <s-text fontWeight="bold">{t("settingsAdmin.notifications.enabledTitle")}</s-text>
+                        <br />
+                        <s-text tone="subdued" size="small">{t("settingsAdmin.notifications.enabledDescription")}</s-text>
+                      </div>
+                    </label>
+                  </div>
+                  <s-text-field
+                    label={t("settingsAdmin.notifications.emailLabel")}
+                    type="email"
+                    value={notificationEmail}
+                    disabled={!emailNotifications || undefined}
+                    onChange={(event: any) => setNotificationEmail(event.currentTarget.value)}
+                    helpText={t("settingsAdmin.notifications.emailHelp")}
+                  />
+                  <s-select
+                    label={t("settingsAdmin.notifications.languageLabel")}
+                    value={notificationLanguage}
+                    disabled={!emailNotifications || undefined}
+                    onChange={(event: any) => setNotificationLanguage(event.currentTarget.value)}
+                  >
+                    {EU_LANGUAGES.map((language) => (
+                      <s-option key={language.code} value={language.code}>{language.label}</s-option>
+                    ))}
+                  </s-select>
+                  <div className="admin-checkbox-group">
+                    <label style={{ display: 'flex', alignItems: 'flex-start', cursor: 'pointer', gap: '10px' }}>
+                      <input
+                        type="checkbox"
                         checked={autoDraft}
                         onChange={(e) => setAutoDraft(e.target.checked)}
                         style={{ marginTop: '3px', transform: 'scale(1.15)' }}
@@ -373,6 +478,8 @@ export default function Settings() {
                 <s-button type="button" variant="secondary" onClick={() => {
                   setValue(envDefault.toString());
                   setAutoDraft(false);
+                  setEmailNotifications(true);
+                  setNotificationLanguage("en");
                   setVendorInput("");
                   setTypeInput("");
                   setVendorsList([]);

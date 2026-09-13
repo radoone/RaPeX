@@ -1,6 +1,7 @@
 import { buildCoreLocale } from "./core-locale";
 
 export default buildCoreLocale({ dashboard: "Tablou de bord", alertsLabel: "Alerte de siguranță", manual: "Verificare manuală", settings: "Setări", language: "Limbă", reviewAlerts: "Revizuiește alertele", search: "Caută", clear: "Șterge", needsReview: "Necesită revizuire", safe: "Sigur", notChecked: "Neverificat", alertsTitle: "Alerte de siguranță", findProduct: "Găsește produs",
+  notifications: { enabledTitle: "Alerte de siguranță prin e-mail", enabledDescription: "Trimite imediat constatările noi și un rezumat săptămânal când nu există constatări.", emailLabel: "E-mail pentru notificări", emailHelp: "Preluat inițial din Shopify. Puteți folosi altă adresă.", languageLabel: "Limba e-mailului" },
   long: {
     "dashboardRecentAlertsDescription": "Cele mai recente produse marcate din magazin sunt ordonate pentru ca comercianții să poată acționa rapid.",
     "dashboardNoAlertsDescription": "Lista alertelor va apărea aici după prima potrivire detectată cu un produs periculos.",

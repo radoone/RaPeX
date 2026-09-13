@@ -18,6 +18,7 @@ export default buildCoreLocale({
   all: "Всички",
   unknown: "Неизвестно",
   close: "Затвори",
+  notifications: { enabledTitle: "Имейл известия за безопасност", enabledDescription: "Изпращайте новите находки веднага и седмично резюме при липса на находки.", emailLabel: "Имейл за известия", emailHelp: "Първоначално се взема от Shopify. Можете да използвате друг адрес.", languageLabel: "Език на имейлите" },
   long: {
     "dashboardRecentAlertsDescription": "Най-новите маркирани продукти от магазина ви са подредени така, че да можете бързо да предприемете действие.",
     "dashboardNoAlertsDescription": "Списъкът с предупреждения ще се появи тук след първото открито съвпадение с опасен продукт.",

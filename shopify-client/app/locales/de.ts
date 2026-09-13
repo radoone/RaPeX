@@ -18,6 +18,7 @@ export default buildCoreLocale({
   all: "Alle",
   unknown: "Unbekannt",
   close: "Schließen",
+  notifications: { enabledTitle: "Sicherheitswarnungen per E-Mail", enabledDescription: "Neue Treffer sofort und bei einer Woche ohne Treffer eine Zusammenfassung senden.", emailLabel: "Benachrichtigungs-E-Mail", emailHelp: "Wird zunächst aus Shopify übernommen. Sie können eine andere Adresse verwenden.", languageLabel: "E-Mail-Sprache" },
   long: {
     "dashboardRecentAlertsDescription": "Die neuesten markierten Produkte aus Ihrem Shop sind so sortiert, dass Händler schnell handeln können.",
     "dashboardNoAlertsDescription": "Ihre Warnungsliste erscheint hier, sobald der erste Treffer mit einem gefährlichen Produkt erkannt wurde.",

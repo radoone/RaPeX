@@ -2,6 +2,7 @@
 import * as logger from "firebase-functions/logger";
 import { onRequest } from "firebase-functions/v2/https";
 import { onSchedule } from "firebase-functions/v2/scheduler";
+import { onDocumentCreated } from "firebase-functions/v2/firestore";
 import "./firebase-admin.js";
 import { SCHEDULER_CONFIG } from "./safety-gate-config.js";
 import {
@@ -11,6 +12,11 @@ import {
 } from "./merchant-monitoring.js";
 import { handleCheckProductSafetyRequest } from "./safety-gate-http.js";
 import { handleScanPublicShopifyStoreRequest } from "./public-store-scanner.js";
+import {
+  handleBrevoWebhook,
+  handleImmediateAlertCreated,
+  runWeeklyClearSummaries,
+} from "./email-notifications.js";
 import {
   backfillRecentAlertEmbeddings,
   runHistoricalSafetyGateBackfill,
@@ -182,6 +188,38 @@ export const dailyMerchantDeltaMonitoring = onSchedule(
   },
 );
 
+export const sendImmediateSafetyGateAlertEmail = onDocumentCreated(
+  {
+    document: "merchants/{shopId}/alerts/{alertId}",
+    region: "europe-west1",
+    secrets: ["BREVO_API_KEY"],
+  },
+  handleImmediateAlertCreated,
+);
+
+export const weeklyClearSafetyGateSummary = onSchedule(
+  {
+    region: "europe-west1",
+    schedule: "0 8 * * 1",
+    timeZone: "Europe/Bratislava",
+    secrets: ["BREVO_API_KEY"],
+  },
+  async (event) => {
+    const end = event.scheduleTime ? new Date(event.scheduleTime) : new Date();
+    logger.info("Starting weekly Safety Gate clear summaries", { end: end.toISOString() });
+    const result = await runWeeklyClearSummaries(end);
+    logger.info("Weekly Safety Gate clear summaries completed", result);
+  },
+);
+
+export const brevoEmailWebhook = onRequest(
+  {
+    region: "europe-west1",
+    secrets: ["BREVO_WEBHOOK_SECRET"],
+  },
+  handleBrevoWebhook,
+);
+
 // --- Product Safety Checker API ---
 export const checkProductSafetyAPI = onRequest(
   {
@@ -203,4 +241,3 @@ export const scanPublicShopifyStoreAPI = onRequest(
   },
   handleScanPublicShopifyStoreRequest,
 );
-

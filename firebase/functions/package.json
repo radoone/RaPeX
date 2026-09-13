@@ -4,6 +4,7 @@
   "scripts": {
     "lint": "eslint src safety_gate_fields.js",
     "build": "rm -rf lib && tsc",
+    "test": "npm run build && node --test test/*.test.mjs",
     "build:watch": "tsc --watch",
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",

@@ -168,7 +168,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const billingRedirect = await requireActiveBilling(billing, session.shop);
   if (billingRedirect) return billingRedirect as never;
 
-  const [activeAlerts, totalAlerts, resolvedAlerts, dismissedAlerts, totalChecks, recentAlerts, checkedProductIds, activeAlertRiskSample, settings, recentActivities, lastMonitoringActivityRows, currentCatalogProductIds] = await Promise.all([
+  const [activeAlerts, totalAlerts, resolvedAlerts, dismissedAlerts, totalChecks, recentAlerts, checkedProductIds, activeAlertRiskSample, storedSettings, recentActivities, lastMonitoringActivityRows, currentCatalogProductIds] = await Promise.all([
     db.safetyAlert.count({
       where: { shop: session.shop, status: 'active' },
     }),
@@ -215,6 +215,39 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     }),
     fetchCurrentCatalogProductIds(admin),
   ]);
+
+  let settings = storedSettings;
+  if (!settings || settings.emailNotifications === undefined || !settings.notificationEmail) {
+    let shopifyEmail: string | null = null;
+    try {
+      const response = await admin.graphql(`#graphql
+        query dashboardNotificationContactEmail { shop { contactEmail email } }
+      `);
+      const payload = await response.json();
+      const candidate = String(payload.data?.shop?.contactEmail || payload.data?.shop?.email || "").trim().toLowerCase();
+      shopifyEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(candidate) ? candidate : null;
+    } catch (error) {
+      console.warn("Could not initialize notification email from Shopify", error);
+    }
+    settings = await db.safetySetting.upsert({
+      where: { shop: session.shop },
+      update: {
+        ...(settings?.emailNotifications === undefined ? { emailNotifications: true } : {}),
+        ...(!settings?.notificationEmail && shopifyEmail ? { notificationEmail: shopifyEmail, notificationEmailSource: "shopify" as const } : {}),
+        ...(!settings?.notificationLanguage ? { notificationLanguage: "en" } : {}),
+      },
+      create: {
+        shop: session.shop,
+        onboardingCompleted: false,
+        similarityThreshold: 70,
+        autoDraftHighRisk: false,
+        emailNotifications: true,
+        notificationEmail: shopifyEmail,
+        notificationEmailSource: "shopify",
+        notificationLanguage: "en",
+      },
+    });
+  }
 
   // Fetch product images from Shopify
   const productIds = recentAlerts.map((a: any) => a.productId).filter(Boolean).map((id: string) =>
@@ -323,7 +356,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     onboardingCompleted: false,
     similarityThreshold: 70,
     autoDraftHighRisk: false,
-    emailNotifications: false,
+    emailNotifications: true,
   };
 
   return json({
@@ -455,14 +488,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           similarityThreshold,
           onboardingCompleted,
           autoDraftHighRisk,
-          emailNotifications: false,
+          emailNotifications: true,
         },
         create: {
           shop: session.shop,
           similarityThreshold,
           onboardingCompleted,
           autoDraftHighRisk,
-          emailNotifications: false,
+          emailNotifications: true,
         },
       });
 

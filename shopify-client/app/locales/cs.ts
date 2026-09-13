@@ -18,6 +18,7 @@ export default buildCoreLocale({
   all: "Vše",
   unknown: "Neznámé",
   close: "Zavřít",
+  notifications: { enabledTitle: "E-mailová bezpečnostní upozornění", enabledDescription: "Nové nálezy odešle ihned a při týdnu bez nálezu pošle souhrn.", emailLabel: "E-mail pro upozornění", emailHelp: "Zpočátku se převezme ze Shopify. Můžete použít jinou adresu.", languageLabel: "Jazyk e-mailů" },
   long: {
     "dashboardRecentAlertsDescription": "Nejnovější označené produkty z vašeho obchodu jsou seřazené tak, aby obchodník mohl rychle jednat.",
     "dashboardNoAlertsDescription": "Seznam upozornění se zobrazí po první zjištěné shodě s nebezpečným produktem.",

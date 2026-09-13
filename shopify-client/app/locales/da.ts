@@ -18,6 +18,7 @@ export default buildCoreLocale({
   all: "Alle",
   unknown: "Ukendt",
   close: "Luk",
+  notifications: { enabledTitle: "Sikkerhedsadvarsler via e-mail", enabledDescription: "Send nye fund med det samme og en ugentlig status, når der ikke er fund.", emailLabel: "E-mail til advarsler", emailHelp: "Hentes først fra Shopify. Du kan bruge en anden adresse.", languageLabel: "E-mailsprog" },
   long: {
     "dashboardRecentAlertsDescription": "De senest markerede produkter fra din butik er sorteret, så du hurtigt kan handle.",
     "dashboardNoAlertsDescription": "Din advarselsliste vises her, når den første usikre produktmatch er fundet.",

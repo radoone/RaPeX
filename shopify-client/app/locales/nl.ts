@@ -1,6 +1,7 @@
 import { buildCoreLocale } from "./core-locale";
 
 export default buildCoreLocale({ dashboard: "Dashboard", alertsLabel: "Veiligheidsmeldingen", manual: "Handmatige controle", settings: "Instellingen", language: "Taal", reviewAlerts: "Meldingen beoordelen", search: "Zoeken", clear: "Wissen", needsReview: "Moet worden beoordeeld", safe: "Veilig", notChecked: "Niet gecontroleerd", alertsTitle: "Veiligheidsmeldingen", findProduct: "Product zoeken",
+  notifications: { enabledTitle: "Veiligheidsmeldingen per e-mail", enabledDescription: "Stuur nieuwe bevindingen direct en een weekoverzicht wanneer er geen bevindingen zijn.", emailLabel: "E-mail voor meldingen", emailHelp: "Wordt eerst uit Shopify overgenomen. U kunt een ander adres gebruiken.", languageLabel: "E-mailtaal" },
   long: {
     "dashboardRecentAlertsDescription": "De meest recent gemarkeerde producten uit je winkel zijn zo gesorteerd dat je snel kunt handelen.",
     "dashboardNoAlertsDescription": "Je meldingenlijst verschijnt hier zodra de eerste match met een gevaarlijk product is gevonden.",

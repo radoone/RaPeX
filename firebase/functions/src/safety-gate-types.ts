@@ -109,6 +109,10 @@ export interface MerchantDocument {
   excludeVendors?: string | null;
   excludeTypes?: string | null;
   emailNotifications?: boolean;
+  notificationEmail?: string | null;
+  notificationLanguage?: string;
+  notificationEmailSource?: "shopify" | "custom";
+  lastWeeklySummaryAt?: Timestamp | FieldValue;
   createdAt: FieldValue;
   updatedAt: FieldValue;
   lastMonitorRunStart?: FieldValue;

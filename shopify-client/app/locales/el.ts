@@ -18,6 +18,7 @@ export default buildCoreLocale({
   all: "Όλα",
   unknown: "Άγνωστο",
   close: "Κλείσιμο",
+  notifications: { enabledTitle: "Ειδοποιήσεις ασφαλείας μέσω email", enabledDescription: "Αποστολή νέων ευρημάτων αμέσως και εβδομαδιαίας σύνοψης όταν δεν υπάρχουν ευρήματα.", emailLabel: "Email ειδοποιήσεων", emailHelp: "Αρχικά λαμβάνεται από το Shopify. Μπορείτε να χρησιμοποιήσετε άλλη διεύθυνση.", languageLabel: "Γλώσσα email" },
   long: {
     "dashboardRecentAlertsDescription": "Τα πιο πρόσφατα επισημασμένα προϊόντα του καταστήματός σας εμφανίζονται με σειρά που βοηθά στη γρήγορη ενέργεια.",
     "dashboardNoAlertsDescription": "Η λίστα ειδοποιήσεων θα εμφανιστεί εδώ μετά την πρώτη ανίχνευση αντιστοίχισης με επικίνδυνο προϊόν.",
