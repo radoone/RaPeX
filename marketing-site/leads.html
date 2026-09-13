@@ -24,6 +24,8 @@
         justify-content: space-between;
         align-items: center;
         margin-bottom: 28px;
+        flex-wrap: wrap;
+        gap: 16px;
       }
       .admin-title {
         font-size: 28px;
@@ -35,6 +37,22 @@
         color: #6b7280;
         font-size: 15px;
         margin-top: 6px;
+      }
+      .admin-auth-box {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #faf8f5;
+        padding: 8px 14px;
+        border-radius: 10px;
+        border: 1px solid rgba(31, 29, 26, 0.08);
+      }
+      .admin-auth-input {
+        padding: 6px 10px;
+        border-radius: 6px;
+        border: 1px solid #d1d5db;
+        font-size: 13px;
+        width: 180px;
       }
       .stats-grid {
         display: grid;
@@ -161,12 +179,18 @@
       <div class="admin-header">
         <div>
           <div style="font-size: 12px; font-weight: 700; color: #b84c28; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px;">
-            🔒 Interný Admin Nástroj
+            🔒 Súkromný Nástroj (Iba pre vás)
           </div>
           <h1 class="admin-title">Safety Gate Lead Generator & Public Scanner</h1>
           <div class="admin-subtitle">Vyhľadávanie potenciálnych klientov (Shopify e-shopov) s porušeniami EU Safety Gate pre cold outreach.</div>
         </div>
-        <a href="./index.html" style="font-size: 14px; font-weight: 600; color: #1f1d1a; text-decoration: none;">← Návrat na web</a>
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <div class="admin-auth-box">
+            <span style="font-size: 12px; font-weight: 600; color: #374151;">🔑 API Kľúč:</span>
+            <input type="password" id="api-key-input" class="admin-auth-input" placeholder="Zadajte Admin API kľúč" />
+          </div>
+          <a href="./index.html" style="font-size: 14px; font-weight: 600; color: #1f1d1a; text-decoration: none;">← Návrat na web</a>
+        </div>
       </div>
 
       <!-- Stats Grid -->
@@ -301,12 +325,21 @@
     <script>
       const FIREBASE_API_URL = "https://europe-west1-rapex-99a2c.cloudfunctions.net/scanPublicShopifyStoreAPI";
 
+      const apiKeyInput = document.getElementById("api-key-input");
+      const savedKey = localStorage.getItem("rapex_scanner_api_key") || "";
+      if (savedKey) apiKeyInput.value = savedKey;
+
+      apiKeyInput.addEventListener("input", (e) => {
+        localStorage.setItem("rapex_scanner_api_key", e.target.value.trim());
+      });
+
       document.getElementById("scan-form").addEventListener("submit", async (e) => {
         e.preventDefault();
         const domain = document.getElementById("domain-input").value.trim();
         const maxProducts = parseInt(document.getElementById("max-products-input").value, 10);
         const scanBtn = document.getElementById("scan-btn");
         const scanStatus = document.getElementById("scan-status");
+        const apiKey = apiKeyInput.value.trim() || localStorage.getItem("rapex_scanner_api_key") || "";
 
         if (!domain) return;
 
@@ -317,9 +350,15 @@
         scanStatus.innerText = `Prebieha cloudový sken obchodu ${domain} (sťahovanie katalógu a Safety Gate kontrola)...`;
 
         try {
+          const headers = { "Content-Type": "application/json" };
+          if (apiKey) {
+            headers["X-API-Key"] = apiKey;
+            headers["Authorization"] = `Bearer ${apiKey}`;
+          }
+
           const res = await fetch(FIREBASE_API_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers,
             body: JSON.stringify({ domain, maxProducts, similarityThreshold: 60 }),
           });
 
