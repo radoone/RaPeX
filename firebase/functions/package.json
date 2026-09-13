@@ -12,7 +12,8 @@
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
     "check-data": "node --loader ts-node/esm src/check-data.ts",
-    "backfill:history": "node lib/scripts/backfill-history.js"
+    "backfill:history": "node lib/scripts/backfill-history.js",
+    "scan": "npx tsx src/scripts/trigger-store-scan.ts"
   },
   "main": "lib/index.js",
   "type": "module",
