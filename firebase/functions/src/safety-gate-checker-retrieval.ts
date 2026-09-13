@@ -414,6 +414,59 @@ export async function retrieveAlertsWithRag(product: ProductInput): Promise<Norm
   return hydrated;
 }
 
+export async function retrieveAlertsForVector(
+  queryVector: number[],
+  limit = 8,
+  maxDistance = MATCHING_THRESHOLDS.scannerTextDistance,
+): Promise<NormalizedAlert[]> {
+  if (!queryVector || queryVector.length === 0) {
+    return [];
+  }
+
+  const db = getFirestore();
+  const candidates: NormalizedAlert[] = [];
+  const seen = new Set<string>();
+
+  try {
+    const snapshot = await db
+      .collection(FIRESTORE_COLLECTIONS.alerts)
+      .findNearest({
+        vectorField: VECTOR_TEXT_FIELD,
+        queryVector,
+        limit,
+        distanceMeasure: "COSINE",
+        distanceResultField: "distance",
+      })
+      .get();
+
+    for (const document of snapshot.docs) {
+      const normalized = normalizeRetrieverDocument({
+        content: [],
+        metadata: {
+          id: document.id,
+          ...document.data(),
+          distance: document.get("distance"),
+        },
+      } as DocumentData);
+
+      if (
+        !normalized ||
+        seen.has(normalized.id) ||
+        (normalized.distance != null && normalized.distance > maxDistance)
+      ) {
+        continue;
+      }
+      seen.add(normalized.id);
+      candidates.push(normalized);
+    }
+  } catch (error) {
+    console.warn("Direct vector retrieval failed", error);
+    return [];
+  }
+
+  return hydrateAlertsIfMissing(candidates);
+}
+
 export async function searchRecentRapexAlerts(days = ALERT_LOOKBACK_DAYS): Promise<NormalizedAlert[]> {
   const db = getFirestore();
   const cutoffDate = new Date();

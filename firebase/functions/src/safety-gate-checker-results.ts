@@ -36,8 +36,10 @@ export function buildComparisonPrompt(product: ProductInput, alerts: NormalizedA
 Product: ${alert.fields.product_description}
 Category: ${alert.fields.product_category}
 Brand: ${alert.fields.product_brand || "Unknown"}
-Risk Level: ${alert.fields.risk_level}
-Country: ${alert.fields.notifying_country}
+Model: ${alert.fields.product_model || "Not specified"}
+Alert Type: ${alert.fields.alert_type || alert.fields.risk_legal_provision || "Not specified"}
+Risk Level: ${alert.fields.risk_level || "Not specified"}
+Country: ${alert.fields.notifying_country || "Not specified"}
 ${describeAlertSource(alert)}`,
     )
     .join("\n\n");
@@ -49,7 +51,7 @@ Description: ${product.description}
 Brand: ${product.brand || "Not specified"}
 Model: ${product.model || "Not specified"}
 
-RECENT SAFETY GATE ALERTS (last 12 months):
+CANDIDATE SAFETY GATE ALERTS:
 ${alertsText}`;
 }
 

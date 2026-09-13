@@ -27,9 +27,13 @@ export default [
         __dirname: "readonly",
         __filename: "readonly",
         global: "readonly",
+        globalThis: "readonly",
         module: "readonly",
         require: "readonly",
         exports: "readonly",
+        fetch: "readonly",
+        setTimeout: "readonly",
+        clearTimeout: "readonly",
       },
     },
     plugins: {

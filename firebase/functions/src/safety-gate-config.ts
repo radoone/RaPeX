@@ -70,6 +70,7 @@ export const PRODUCT_SAFETY_API_USAGE = {
 } as const;
 
 export const MATCHING_THRESHOLDS = {
-  textDistance: 0.38,   // Cosine distance <= 0.38 (similarity >= 62%)
-  imageDistance: 0.35,  // Cosine distance <= 0.35 (similarity >= 65%)
+  textDistance: 0.38,          // Cosine distance <= 0.38 (similarity >= 62%) for broad RAG
+  imageDistance: 0.35,         // Cosine distance <= 0.35 (similarity >= 65%)
+  scannerTextDistance: 0.22,   // Cosine distance <= 0.22 (similarity >= 78%) for high-precision store scanning
 } as const;

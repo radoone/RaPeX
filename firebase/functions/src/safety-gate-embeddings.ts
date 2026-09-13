@@ -80,7 +80,9 @@ export function buildEmbeddingText(params: {
   const model = cleanString(params.model);
   const category = cleanString(params.category);
   const title = cleanString(params.title);
-  const description = cleanString(params.description);
+  // Truncate description to prevent generic e-commerce descriptions from diluting the specific product title/model
+  const rawDesc = cleanString(params.description);
+  const description = rawDesc.length > 350 ? `${rawDesc.slice(0, 350)}...` : rawDesc;
 
   const parts = [
     brand ? `Brand: ${brand}` : "",
@@ -122,6 +124,50 @@ export async function embedText(content: string, maxRetries = 3): Promise<number
     }
   }
   return undefined;
+}
+
+export async function embedTexts(
+  contents: string[],
+  maxRetries = 3,
+): Promise<Array<number[] | undefined>> {
+  if (!contents.length) {
+    return [];
+  }
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const results = await embeddingsAi.embedMany({
+        embedder: SAFETY_GATE_CONFIG.textEmbedder,
+        content: contents.map((c) => c.trim() || " "),
+        options: {
+          outputDimensionality: 1536,
+        },
+      });
+      return results.map((r) => r?.embedding);
+    } catch (error) {
+      const isRateLimit = String(error).includes("429") || String(error).includes("RESOURCE_EXHAUSTED");
+      if (isRateLimit && attempt < maxRetries) {
+        const delayMs = attempt * 2000;
+        logger.warn(`Rate limit hit during batch embed, retrying in ${delayMs}ms (attempt ${attempt}/${maxRetries})`);
+        await new Promise((resolve) => globalThis.setTimeout(resolve, delayMs));
+        continue;
+      }
+      logger.warn("Batch text embedding failed, falling back to individual embeddings", {
+        error: error instanceof Error ? error.message : String(error),
+      });
+      break;
+    }
+  }
+
+  // Fallback: chunked individual embeddings
+  const results: Array<number[] | undefined> = [];
+  const chunkSize = 10;
+  for (let i = 0; i < contents.length; i += chunkSize) {
+    const chunk = contents.slice(i, i + chunkSize);
+    const chunkEmbeddings = await Promise.all(chunk.map((c) => embedText(c)));
+    results.push(...chunkEmbeddings);
+  }
+  return results;
 }
 
 export async function embedImage(url: string): Promise<number[] | undefined> {

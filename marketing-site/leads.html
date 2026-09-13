@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="sk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Internal Lead Scanner | Safety Gate Monitor</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <style>
+      .admin-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px;
+      }
+      .admin-card {
+        background: #ffffff;
+        border: 1px solid rgba(31, 29, 26, 0.08);
+        border-radius: 16px;
+        padding: 28px;
+        margin-bottom: 24px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      }
+      .admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 28px;
+      }
+      .admin-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1f1d1a;
+        margin: 0;
+      }
+      .admin-subtitle {
+        color: #6b7280;
+        font-size: 15px;
+        margin-top: 6px;
+      }
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+      .stat-card {
+        background: #faf8f5;
+        border: 1px solid rgba(31, 29, 26, 0.06);
+        border-radius: 12px;
+        padding: 20px;
+      }
+      .stat-value {
+        font-size: 32px;
+        font-weight: 800;
+        color: #1f1d1a;
+        margin-top: 4px;
+      }
+      .stat-value.critical { color: #dc2626; }
+      .stat-value.warning { color: #d97706; }
+      .stat-label {
+        font-size: 13px;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 600;
+      }
+      .scan-form {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: flex-end;
+      }
+      .form-group {
+        flex: 1 1 280px;
+      }
+      .form-label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: #374151;
+      }
+      .form-input, .form-select {
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 8px;
+        border: 1px solid #d1d5db;
+        font-size: 14px;
+        box-sizing: border-box;
+      }
+      .btn-primary {
+        background: #1f1d1a;
+        color: #fff;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .btn-primary:hover {
+        background: #374151;
+      }
+      .btn-primary:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+      .leads-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+        text-align: left;
+      }
+      .leads-table th {
+        padding: 14px 16px;
+        border-bottom: 2px solid #e5e7eb;
+        color: #6b7280;
+        font-weight: 600;
+      }
+      .leads-table td {
+        padding: 16px;
+        border-bottom: 1px solid #f3f4f6;
+        vertical-align: middle;
+      }
+      .badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 9999px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .badge-critical { background: #fee2e2; color: #dc2626; }
+      .badge-warning { background: #fef3c7; color: #d97706; }
+      .badge-safe { background: #dcfce7; color: #16a34a; }
+      .badge-info { background: #dbeafe; color: #2563eb; }
+      .lead-row:hover { background: #fafafa; }
+      .outreach-modal {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      }
+      .outreach-modal.active { display: flex; }
+      .modal-box {
+        background: #fff;
+        border-radius: 16px;
+        max-width: 700px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        padding: 28px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      }
+    </style>
+  </head>
+  <body style="background: #f7f6f3;">
+    <div class="admin-container">
+      <div class="admin-header">
+        <div>
+          <div style="font-size: 12px; font-weight: 700; color: #b84c28; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px;">
+            🔒 Interný Admin Nástroj
+          </div>
+          <h1 class="admin-title">Safety Gate Lead Generator & Public Scanner</h1>
+          <div class="admin-subtitle">Vyhľadávanie potenciálnych klientov (Shopify e-shopov) s porušeniami EU Safety Gate pre cold outreach.</div>
+        </div>
+        <a href="./index.html" style="font-size: 14px; font-weight: 600; color: #1f1d1a; text-decoration: none;">← Návrat na web</a>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Naskenované obchody</div>
+          <div class="stat-value" id="stat-scanned">1</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Rizikové leady (Critical)</div>
+          <div class="stat-value critical" id="stat-critical">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Vysoká priorita (High)</div>
+          <div class="stat-value warning" id="stat-high">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Čisté obchody (Safe)</div>
+          <div class="stat-value" id="stat-safe" style="color: #16a34a;">1</div>
+        </div>
+      </div>
+
+      <!-- Scan Input Card -->
+      <div class="admin-card">
+        <h2 style="font-size: 18px; font-weight: 700; margin-top: 0; margin-bottom: 8px;">Spustiť sken verejného Shopify e-shopu</h2>
+        <p style="font-size: 14px; color: #6b7280; margin-bottom: 20px;">
+          Zadajte doménu akéhokoľvek verejného Shopify obchodu (napr. <code>4kidspoint.sk</code>). Skener automaticky stiahne produkty, nájde kontaktný e-mail a vyhodnotí zhodu s 32 000 Safety Gate alertmi.
+        </p>
+
+        <form id="scan-form" class="scan-form">
+          <div class="form-group" style="flex: 2 1 320px;">
+            <label class="form-label">Doména e-shopu</label>
+            <input type="text" id="domain-input" class="form-input" placeholder="napr. 4kidspoint.sk alebo store.myshopify.com" required />
+          </div>
+          <div class="form-group" style="flex: 1 1 140px;">
+            <label class="form-label">Počet produktov</label>
+            <select id="max-products-input" class="form-select">
+              <option value="50">50 položiek</option>
+              <option value="100" selected>100 položiek</option>
+              <option value="250">250 položiek</option>
+              <option value="500">500 položiek</option>
+            </select>
+          </div>
+          <div>
+            <button type="submit" id="scan-btn" class="btn-primary">Spustiť Cloud Sken</button>
+          </div>
+        </form>
+        <div id="scan-status" style="margin-top: 14px; font-size: 14px; font-weight: 500; display: none;"></div>
+      </div>
+
+      <!-- Leads Table Card -->
+      <div class="admin-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h2 style="font-size: 18px; font-weight: 700; margin: 0;">Zoznam vygenerovaných leadov</h2>
+          <button onclick="refreshLeads()" style="background: none; border: 1px solid #d1d5db; padding: 6px 14px; border-radius: 6px; font-size: 13px; cursor: pointer;">
+            ↻ Obnoviť dáta
+          </button>
+        </div>
+
+        <div style="overflow-x: auto;">
+          <table class="leads-table">
+            <thead>
+              <tr>
+                <th>E-shop / Doména</th>
+                <th>Kontaktný E-mail</th>
+                <th>Lead Score</th>
+                <th>Priorita</th>
+                <th>Zachytené / Celkovo</th>
+                <th>Akcie</th>
+              </tr>
+            </thead>
+            <tbody id="leads-tbody">
+              <tr class="lead-row">
+                <td>
+                  <div style="font-weight: 700;">4kidspoint.sk</div>
+                  <div style="font-size: 12px; color: #9ca3af;">Scanned 11. 9. 2026</div>
+                </td>
+                <td>
+                  <div style="color: #2563eb; font-weight: 600;">✉ info@4kidspoint.sk</div>
+                </td>
+                <td>
+                  <div style="font-weight: 800; font-size: 16px;">0 / 100</div>
+                </td>
+                <td>
+                  <span class="badge badge-safe">SAFE</span>
+                </td>
+                <td>
+                  <span style="font-weight: 600;">0</span> / 9 959
+                </td>
+                <td>
+                  <button onclick="openOutreach('4kidspoint.sk', 'info@4kidspoint.sk', 0, [])" style="background: #f3f4f6; border: 1px solid #d1d5db; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;">
+                    Generovať Outreach E-mail
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Outreach Email Modal -->
+    <div id="outreach-modal" class="outreach-modal">
+      <div class="modal-box">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h3 style="margin: 0; font-size: 20px; font-weight: 700;" id="modal-title">Koncept Outreach E-mailu</h3>
+          <button onclick="closeOutreach()" style="background: none; border: none; font-size: 20px; cursor: pointer;">✕</button>
+        </div>
+
+        <div style="margin-bottom: 16px;">
+          <label class="form-label">Príjemca (Adresát)</label>
+          <input type="text" id="modal-email" class="form-input" readonly />
+        </div>
+
+        <div style="margin-bottom: 16px;">
+          <label class="form-label">Predmet E-mailu</label>
+          <input type="text" id="modal-subject" class="form-input" />
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <label class="form-label">Telo správy</label>
+          <textarea id="modal-body" class="form-input" rows="12" style="font-family: monospace; font-size: 13px; line-height: 1.5;"></textarea>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <button onclick="closeOutreach()" style="background: #f3f4f6; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 600; cursor: pointer;">Zavrieť</button>
+          <button id="copy-email-btn" onclick="copyEmailDraft()" class="btn-primary">📋 Kopírovať E-mail do schránky</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const FIREBASE_API_URL = "https://europe-west1-rapex-99a2c.cloudfunctions.net/scanPublicShopifyStoreAPI";
+
+      document.getElementById("scan-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const domain = document.getElementById("domain-input").value.trim();
+        const maxProducts = parseInt(document.getElementById("max-products-input").value, 10);
+        const scanBtn = document.getElementById("scan-btn");
+        const scanStatus = document.getElementById("scan-status");
+
+        if (!domain) return;
+
+        scanBtn.disabled = true;
+        scanBtn.innerText = "Skenujem katalóg...";
+        scanStatus.style.display = "block";
+        scanStatus.style.color = "#2563eb";
+        scanStatus.innerText = `Prebieha cloudový sken obchodu ${domain} (sťahovanie katalógu a Safety Gate kontrola)...`;
+
+        try {
+          const res = await fetch(FIREBASE_API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ domain, maxProducts, similarityThreshold: 60 }),
+          });
+
+          const data = await res.json();
+          if (res.ok && data.success) {
+            scanStatus.style.color = "#16a34a";
+            scanStatus.innerText = `✓ Sken úspešne dokončený! Preverených ${data.lead.totalProductsScanned} produktov, nájdených záchytov: ${data.lead.flaggedProductsCount}.`;
+            addLeadToTable(data.lead);
+          } else {
+            scanStatus.style.color = "#dc2626";
+            scanStatus.innerText = `Chyba pri skenovaní: ${data.error || "Neznáma chyba"}`;
+          }
+        } catch (err) {
+          scanStatus.style.color = "#dc2626";
+          scanStatus.innerText = `Chyba spojenia: ${err.message}`;
+        } finally {
+          scanBtn.disabled = false;
+          scanBtn.innerText = "Spustiť Cloud Sken";
+        }
+      });
+
+      function addLeadToTable(lead) {
+        const tbody = document.getElementById("leads-tbody");
+        const row = document.createElement("tr");
+        row.className = "lead-row";
+        const priorityBadge = lead.priorityLevel === "CRITICAL" ? "badge-critical" : lead.priorityLevel === "HIGH" ? "badge-warning" : "badge-safe";
+
+        row.innerHTML = `
+          <td>
+            <div style="font-weight: 700;">${lead.domain}</div>
+            <div style="font-size: 12px; color: #9ca3af;">Scanned práve teraz</div>
+          </td>
+          <td>
+            <div style="color: #2563eb; font-weight: 600;">✉ ${lead.contactEmail || "Nenájdený"}</div>
+          </td>
+          <td>
+            <div style="font-weight: 800; font-size: 16px; color: ${lead.leadScore >= 75 ? '#dc2626' : '#1f1d1a'};">${lead.leadScore} / 100</div>
+          </td>
+          <td>
+            <span class="badge ${priorityBadge}">${lead.priorityLevel}</span>
+          </td>
+          <td>
+            <span style="font-weight: 600; color: ${lead.flaggedProductsCount > 0 ? '#dc2626' : 'inherit'}">${lead.flaggedProductsCount}</span> / ${lead.totalProductsScanned}
+          </td>
+          <td>
+            <button onclick='openOutreach("${lead.domain}", "${lead.contactEmail || ""}", ${lead.flaggedProductsCount}, ${JSON.stringify(lead.matches || [])})' style="background: #f3f4f6; border: 1px solid #d1d5db; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;">
+              Generovať Outreach E-mail
+            </button>
+          </td>
+        `;
+        tbody.prepend(row);
+      }
+
+      function openOutreach(domain, email, flaggedCount, matches) {
+        document.getElementById("modal-email").value = email || "info@" + domain;
+        document.getElementById("modal-subject").value = flaggedCount > 0
+          ? `Upozornenie: Nebezpečný produkt z EU Safety Gate zistený na ${domain}`
+          : `Overenie bezpečnosti sortimentu pre ${domain} (EU Safety Gate / RAPEX audit)`;
+
+        const sampleText = flaggedCount > 0
+          ? `Dobrý deň,\n\npočas automatického compliance auditu vášho e-shopu ${domain} voči oficiálnej databáze nebezpečných nepotravinových výrobkov Európskej únie (Safety Gate / RAPEX) náš systém identifikoval ${flaggedCount} produkt(y), ktoré sa zhodujú s bezpečnostnými varovaniami EÚ.\n\nPodľa nariadenia GPSR sú predajcovia povinní zabezpečiť stiahnutie dotknutých šarží.\n\nAk chcete automatizovať monitoring celého vášho katalógu, môžete si vyskúšať našu oficiálnu Shopify aplikáciu:\n👉 https://apps.shopify.com/safety-gate-checker\n\nS pozdravom,\nSafety Gate Compliance Tím`
+          : `Dobrý deň,\n\nkontaktujem vás z tímu Safety Gate Monitor. Preverili sme váš e-shop ${domain} voči oficiálnej databáze nebezpečných nepotravinových výrobkov EÚ (Safety Gate / RAPEX).\n\nVáš sortiment spĺňa bezpečnostné normy. Pre nepretržitý denný monitoring novovzniknutých európskych stiahnutí z trhu vám odporúčame našu Shopify aplikáciu:\n👉 https://apps.shopify.com/safety-gate-checker\n\nS pozdravom,\nSafety Gate Compliance Tím`;
+
+        document.getElementById("modal-body").value = sampleText;
+        document.getElementById("outreach-modal").classList.add("active");
+      }
+
+      function closeOutreach() {
+        document.getElementById("outreach-modal").classList.remove("active");
+      }
+
+      function copyEmailDraft() {
+        const subject = document.getElementById("modal-subject").value;
+        const body = document.getElementById("modal-body").value;
+        navigator.clipboard.writeText(`Predmet: ${subject}\n\n${body}`);
+        const btn = document.getElementById("copy-email-btn");
+        btn.innerText = "✓ Skopírované do schránky!";
+        setTimeout(() => { btn.innerText = "📋 Kopírovať E-mail do schránky"; }, 2500);
+      }
+
+      function refreshLeads() {
+        window.location.reload();
+      }
+    </script>
+  </body>
+</html>

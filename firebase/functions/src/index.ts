@@ -10,6 +10,7 @@ import {
   runDailyMerchantDeltaMonitoring,
 } from "./merchant-monitoring.js";
 import { handleCheckProductSafetyRequest } from "./safety-gate-http.js";
+import { handleScanPublicShopifyStoreRequest } from "./public-store-scanner.js";
 import {
   backfillRecentAlertEmbeddings,
   runHistoricalSafetyGateBackfill,
@@ -192,3 +193,14 @@ export const checkProductSafetyAPI = onRequest(
   },
   handleCheckProductSafetyRequest,
 );
+
+export const scanPublicShopifyStoreAPI = onRequest(
+  {
+    region: "europe-west1",
+    memory: "1GiB",
+    timeoutSeconds: 540,
+    secrets: ["GOOGLE_API_KEY", "SAFETY_GATE_API_KEY"],
+  },
+  handleScanPublicShopifyStoreRequest,
+);
+
