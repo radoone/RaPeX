@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title data-i18n="meta.title">Safety Gate Monitor for Shopify</title>
+    <meta
+      name="description"
+      content="Safety Gate Monitor helps Shopify merchants catch risky products by comparing catalog items against the EU Safety Gate / RAPEX database."
+      data-i18n="meta.description"
+      data-i18n-attr="content"
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23efb16d'/%3E%3Cstop offset='100%25' stop-color='%23b84c28'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='18' fill='%231f1d1a'/%3E%3Cpath d='M32 11 15 18v13c0 12.5 7.7 24 17 27 9.3-3 17-14.5 17-27V18Z' fill='url(%23g)'/%3E%3Cpath d='m25.5 31.5 4.7 4.8 8.3-10.3' fill='none' stroke='%23fff7f1' stroke-linecap='round' stroke-linejoin='round' stroke-width='4'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell" id="top">
+      <header class="hero">
+        <nav class="topbar">
+          <div class="brand-mark">
+            <span class="brand-mark__dot"></span>
+            Safety Gate Monitor
+          </div>
+
+          <div class="topbar__controls">
+            <a
+              class="topbar__link"
+              href="#workflow"
+              data-i18n="nav.howItWorks"
+            >
+              How it works
+            </a>
+
+            <div
+              class="locale-switch"
+              role="group"
+              aria-label="Language switcher"
+              data-i18n="nav.languageSwitcher"
+              data-i18n-attr="aria-label"
+            >
+              <span
+                class="locale-switch__label"
+                data-i18n="nav.language"
+              >
+                Language
+              </span>
+              <button
+                class="locale-switch__button"
+                type="button"
+                data-locale="en"
+                data-i18n="nav.locales.en"
+              >
+                English
+              </button>
+              <button
+                class="locale-switch__button"
+                type="button"
+                data-locale="sk"
+                data-i18n="nav.locales.sk"
+              >
+                Slovak
+              </button>
+            </div>
+          </div>
+        </nav>
+
+        <div class="hero__body">
+          <div class="hero__copy">
+            <p class="eyebrow" data-i18n="hero.eyebrow">
+              Shopify product safety monitoring
+            </p>
+            <h1 data-i18n="hero.title">
+              Catch risky products before they become returns, complaints, or takedowns.
+            </h1>
+            <p class="hero__lede" data-i18n="hero.lede">
+              Safety Gate Monitor compares your Shopify catalog against the EU
+              Safety Gate database, formerly RAPEX, and flags products that look
+              too close to already reported dangerous items.
+            </p>
+
+            <div class="hero__actions">
+              <a
+                class="button button--primary"
+                href="#install"
+                data-i18n="hero.ctaPrimary"
+              >
+                Install on Shopify
+              </a>
+              <a
+                class="button button--ghost"
+                href="#workflow"
+                data-i18n="hero.ctaSecondary"
+              >
+                See the workflow
+              </a>
+            </div>
+
+            <ul
+              class="hero__points"
+              aria-label="Key selling points"
+              data-i18n="hero.pointsLabel"
+              data-i18n-attr="aria-label"
+            >
+              <li data-i18n="hero.points.0">
+                Checks titles, descriptions, brands, models, categories, and images
+              </li>
+              <li data-i18n="hero.points.1">
+                Fits manual checks, bulk reviews, and product update workflows
+              </li>
+              <li data-i18n="hero.points.2">
+                Gives merchants an early warning before trust and revenue are hit
+              </li>
+            </ul>
+          </div>
+
+          <aside
+            class="hero-card"
+            aria-label="Product safety summary preview"
+            data-i18n="preview.aria"
+            data-i18n-attr="aria-label"
+          >
+            <div class="hero-card__header">
+              <p data-i18n="preview.label">Merchant view</p>
+              <span data-i18n="preview.live">Live check</span>
+            </div>
+
+            <div class="hero-card__product">
+              <div class="hero-card__thumb">BX</div>
+              <div>
+                <strong data-i18n="preview.productTitle">Kids balance scooter</strong>
+                <p data-i18n="preview.productSubtitle">
+                  Incoming product update from supplier
+                </p>
+              </div>
+            </div>
+
+            <div class="hero-card__meter">
+              <div>
+                <span data-i18n="preview.overall">Overall similarity</span>
+                <strong>87%</strong>
+              </div>
+              <div>
+                <span data-i18n="preview.image">Image similarity</span>
+                <strong>92%</strong>
+              </div>
+            </div>
+
+            <div class="hero-card__alert">
+              <p data-i18n="preview.alert">
+                Matched against a recalled toy listing in EU Safety Gate.
+              </p>
+              <small data-i18n="preview.action">
+                Suggested action: review supplier docs before publishing.
+              </small>
+            </div>
+
+            <div class="hero-card__chips">
+              <span data-i18n="preview.chips.0">Image-first matching</span>
+              <span data-i18n="preview.chips.1">Per-shop threshold</span>
+              <span data-i18n="preview.chips.2">Shopify-ready alerts</span>
+            </div>
+          </aside>
+        </div>
+      </header>
+
+      <main>
+        <section class="section section--tight" id="benefits">
+          <div class="section-heading">
+            <p class="eyebrow" data-i18n="signals.eyebrow">
+              Why merchants install it
+            </p>
+            <h2 data-i18n="signals.title">
+              Make the value obvious in a few seconds.
+            </h2>
+          </div>
+
+          <div
+            class="signal-band"
+            aria-label="Main advantages"
+            data-i18n="signals.aria"
+            data-i18n-attr="aria-label"
+          >
+            <article>
+              <span>01</span>
+              <h2 data-i18n="signals.items.0.title">Catch risky products early</h2>
+              <p data-i18n="signals.items.0.body">
+                Flag products that look too close to dangerous items already reported in EU Safety Gate.
+              </p>
+            </article>
+            <article>
+              <span>02</span>
+              <h2 data-i18n="signals.items.1.title">Reduce manual review time</h2>
+              <p data-i18n="signals.items.1.body">
+                Run checks inside normal Shopify product workflows instead of relying on slow spreadsheet reviews.
+              </p>
+            </article>
+            <article>
+              <span>03</span>
+              <h2 data-i18n="signals.items.2.title">Protect trust and revenue</h2>
+              <p data-i18n="signals.items.2.body">
+                Get earlier warnings before risky products trigger complaints, returns, or brand damage.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section section--tight" id="risk">
+          <div class="section-heading">
+            <p class="eyebrow" data-i18n="risk.eyebrow">What is at stake</p>
+            <h2 data-i18n="risk.title">A safety issue can cost more than one sale.</h2>
+          </div>
+
+          <div class="risk-grid">
+            <article class="risk-card risk-card--warning">
+              <span class="risk-card__badge" data-i18n="risk.items.0.badge">Warning</span>
+              <h3 data-i18n="risk.items.0.title">Fines and enforcement risk</h3>
+              <p data-i18n="risk.items.0.body">
+                Dangerous products can lead to regulatory scrutiny, forced removals, customer claims, and expensive operational cleanup.
+              </p>
+            </article>
+
+            <article class="risk-card risk-card--critical">
+              <span class="risk-card__badge" data-i18n="risk.items.1.badge">Critical</span>
+              <h3 data-i18n="risk.items.1.title">Trust loss is harder to recover</h3>
+              <p data-i18n="risk.items.1.body">
+                Customers may forgive a shipping delay. They rarely forget a product safety problem tied to your store.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section section--contrast section--tight" id="workflow">
+          <div class="section-heading">
+            <p class="eyebrow" data-i18n="workflow.eyebrow">How it works</p>
+            <h2 data-i18n="workflow.title">Simple workflow, merchant-facing output.</h2>
+          </div>
+
+          <div class="workflow">
+            <article class="workflow-step">
+              <span>1</span>
+              <h3 data-i18n="workflow.steps.0.title">Sync the alert source</h3>
+              <p data-i18n="workflow.steps.0.body">
+                The backend imports fresh records from the EU Safety Gate data
+                feed and keeps them searchable for matching.
+              </p>
+            </article>
+            <article class="workflow-step">
+              <span>2</span>
+              <h3 data-i18n="workflow.steps.1.title">Check products automatically or on demand</h3>
+              <p data-i18n="workflow.steps.1.body">
+                Product creates, updates, manual checks, and bulk runs all feed
+                normalized Shopify product data into the checker.
+              </p>
+            </article>
+            <article class="workflow-step">
+              <span>3</span>
+              <h3 data-i18n="workflow.steps.2.title">Review and act</h3>
+              <p data-i18n="workflow.steps.2.body">
+                Merchants get an alert with similarity context so they can
+                inspect the match, contact the supplier, or remove the listing.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section section--tight" id="install">
+          <div class="cta-panel">
+            <div class="cta-panel__copy">
+              <p class="eyebrow" data-i18n="cta.eyebrow">Install</p>
+              <h2 data-i18n="cta.title">Install the app in your Shopify store.</h2>
+              <p data-i18n="cta.body">
+                Enter your myshopify.com domain to start the install flow.
+              </p>
+            </div>
+
+            <form class="cta-form" method="post" action="/auth/login">
+              <label class="cta-form__label">
+                <span data-i18n="cta.label">Shop domain</span>
+                <input
+                  class="cta-form__input"
+                  type="text"
+                  name="shop"
+                  placeholder="your-store.myshopify.com"
+                  data-i18n="cta.placeholder"
+                  data-i18n-attr="placeholder"
+                  required
+                />
+              </label>
+              <button class="button button--primary cta-form__button" type="submit" data-i18n="cta.button">
+                Install on Shopify
+              </button>
+            </form>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div>
+          <p class="eyebrow" data-i18n="footer.eyebrow">Safety Gate Monitor</p>
+          <h2 data-i18n="footer.title">
+            Turn product safety checks into a repeatable Shopify workflow.
+          </h2>
+        </div>
+        <a class="button button--primary" href="#top" data-i18n="footer.backToTop">
+          Back to top
+        </a>
+      </footer>
+    </div>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

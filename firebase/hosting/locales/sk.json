@@ -1,0 +1,110 @@
+{
+  "meta": {
+    "title": "Safety Gate Monitor pre Shopify",
+    "description": "Safety Gate Monitor kontroluje Shopify produkty voči EU Safety Gate / RAPEX, zobrazuje stav priamo v Shopify Admin a sleduje nové alerty voči vášmu katalógu."
+  },
+  "nav": {
+    "howItWorks": "Ako to funguje",
+    "language": "Jazyk",
+    "languageSwitcher": "Prepínač jazykov",
+    "locales": {
+      "en": "Angličtina",
+      "sk": "Slovenčina"
+    }
+  },
+  "hero": {
+    "eyebrow": "Monitoring bezpečnosti produktov pre Shopify",
+    "title": "Kontrolujte Shopify produkty voči EU Safety Gate priamo v Shopify Admin.",
+    "lede": "Safety Gate Monitor porovnáva váš katalóg so záznamami EU Safety Gate / RAPEX podľa textu produktu, značky, modelu, kategórie a dostupných obrázkov a výsledok zobrazuje tam, kde váš tím už pracuje.",
+    "ctaPrimary": "Inštalovať na Shopify",
+    "ctaSecondary": "Ako to funguje",
+    "pointsLabel": "Hlavné dôvody",
+    "points": [
+      "Zobrazuje stav bezpečnosti priamo na detailnej stránke produktu v Shopify",
+      "Beží pri vytvorení produktu, jeho úprave, manuálnej kontrole aj monitoringu nových alertov",
+      "Má vlastný prah podobnosti pre každý obchod a alerty sa dajú rovno vyriešiť alebo zamietnuť"
+    ]
+  },
+  "preview": {
+    "aria": "Náhľad bezpečnostnej kontroly produktu",
+    "label": "Shopify Admin",
+    "live": "Stav produktu",
+    "productTitle": "Detská balančná kolobežka",
+    "productSubtitle": "Stav Safety Gate viditeľný na stránke produktu",
+    "overall": "Celková podobnosť",
+    "image": "Vizuálna podobnosť",
+    "alert": "Možná zhoda s alertom na stiahnutú hračku v EU Safety Gate.",
+    "action": "Odporúčanie: skontrolujte zhodu, kontaktujte dodávateľa alebo produkt ponechajte zablokovaný.",
+    "chips": [
+      "Rozšírenie na stránke produktu",
+      "Prahy pre každý obchod",
+      "Vyriešiť alebo zamietnuť alert"
+    ]
+  },
+  "signals": {
+    "aria": "Hlavné výhody",
+    "items": [
+      {
+        "title": "Vidíte stav na stránke produktu",
+        "body": "Tím má na detaile produktu v Shopify Admin posledný stav Safety Gate, kontext rizika aj odporúčanie na ďalší krok."
+      },
+      {
+        "title": "Sledujte nové alerty voči uloženým produktom",
+        "body": "Aplikácia si ukladá skontrolované produkty a porovnáva ich s novo importovanými Safety Gate alertmi, takže monitoring rieši len to, čo sa zmenilo."
+      },
+      {
+        "title": "Udržte alerty pod kontrolou",
+        "body": "Nastavíte si prah podobnosti pre obchod a zhody viete triediť cez vyriešiť a zamietnuť namiesto zahltenia falošnými pozitívami."
+      }
+    ],
+    "eyebrow": "Čo appka naozaj robí",
+    "title": "Postavené pre reálny Shopify admin workflow, nie pre generický prehliadač alertov."
+  },
+  "workflow": {
+    "eyebrow": "Ako to funguje",
+    "title": "Tri kroky napojené na aktuálny produktový workflow.",
+    "steps": [
+      {
+        "title": "Import čerstvých Safety Gate alertov",
+        "body": "Backend pravidelne importuje nové EU Safety Gate záznamy a drží ich pripravené na vyhľadanie a porovnanie."
+      },
+      {
+        "title": "Kontrola produktov v momente práce",
+        "body": "Kontroly bežia cez webhooky pri vytvorení a úprave produktu, manuálne kontroly aj akcie na stránke produktu v Shopify Admin, vrátane porovnania podľa obrázkov, keď sú dostupné."
+      },
+      {
+        "title": "Kontrola, vyriešenie, zamietnutie a nový monitoring",
+        "body": "Merchant vidí kontext zhody v admin rozhraní, vie alerty triagovať a spustiť monitoring voči novším Safety Gate záznamom bez toho, aby zakaždým začínal od nuly."
+      }
+    ]
+  },
+  "footer": {
+    "eyebrow": "Safety Gate Monitor",
+    "title": "Spravte zo Safety Gate kontrol opakovateľný Shopify workflow.",
+    "backToTop": "Späť hore"
+  },
+  "cta": {
+    "eyebrow": "Inštalácia",
+    "title": "Nainštalujte appku a začnite kontrolovať produkty v Shopify Admin.",
+    "body": "Zadajte svoju myshopify.com doménu a spustite inštaláciu.",
+    "label": "Doména obchodu",
+    "placeholder": "vas-obchod.myshopify.com",
+    "button": "Inštalovať na Shopify"
+  },
+  "risk": {
+    "eyebrow": "Čo je v hre",
+    "title": "Safety problém môže stáť viac než jednu objednávku.",
+    "items": [
+      {
+        "badge": "Varovanie",
+        "title": "Riziko pokút a zásahu úradov",
+        "body": "Nebezpečné produkty môžu viesť k regulačnému tlaku, nútenému stiahnutiu, zákazníckym nárokom a drahému operatívnemu riešeniu."
+      },
+      {
+        "badge": "Kritické",
+        "title": "Strata dôvery sa vracia ťažko",
+        "body": "Zákazník odpustí meškanie zásielky. Oveľa ťažšie zabudne na problém s bezpečnosťou produktu spojený s vaším obchodom."
+      }
+    ]
+  }
+}

@@ -24,8 +24,6 @@
         justify-content: space-between;
         align-items: center;
         margin-bottom: 28px;
-        flex-wrap: wrap;
-        gap: 16px;
       }
       .admin-title {
         font-size: 28px;
@@ -37,22 +35,6 @@
         color: #6b7280;
         font-size: 15px;
         margin-top: 6px;
-      }
-      .admin-auth-box {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        background: #faf8f5;
-        padding: 8px 14px;
-        border-radius: 10px;
-        border: 1px solid rgba(31, 29, 26, 0.08);
-      }
-      .admin-auth-input {
-        padding: 6px 10px;
-        border-radius: 6px;
-        border: 1px solid #d1d5db;
-        font-size: 13px;
-        width: 180px;
       }
       .stats-grid {
         display: grid;
@@ -179,18 +161,12 @@
       <div class="admin-header">
         <div>
           <div style="font-size: 12px; font-weight: 700; color: #b84c28; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px;">
-            🔒 Súkromný Nástroj (Iba pre vás)
+            🔒 Interný Admin Nástroj
           </div>
           <h1 class="admin-title">Safety Gate Lead Generator & Public Scanner</h1>
           <div class="admin-subtitle">Vyhľadávanie potenciálnych klientov (Shopify e-shopov) s porušeniami EU Safety Gate pre cold outreach.</div>
         </div>
-        <div style="display: flex; gap: 12px; align-items: center;">
-          <div class="admin-auth-box">
-            <span style="font-size: 12px; font-weight: 600; color: #374151;">🔑 API Kľúč:</span>
-            <input type="password" id="api-key-input" class="admin-auth-input" placeholder="Zadajte Admin API kľúč" />
-          </div>
-          <a href="./index.html" style="font-size: 14px; font-weight: 600; color: #1f1d1a; text-decoration: none;">← Návrat na web</a>
-        </div>
+        <a href="./index.html" style="font-size: 14px; font-weight: 600; color: #1f1d1a; text-decoration: none;">← Návrat na web</a>
       </div>
 
       <!-- Stats Grid -->
@@ -263,9 +239,27 @@
               </tr>
             </thead>
             <tbody id="leads-tbody">
-              <tr>
-                <td colspan="6" style="text-align: center; padding: 32px; color: #6b7280;">
-                  Načítavam uložené leady z databázy...
+              <tr class="lead-row">
+                <td>
+                  <div style="font-weight: 700;">4kidspoint.sk</div>
+                  <div style="font-size: 12px; color: #9ca3af;">Scanned 11. 9. 2026</div>
+                </td>
+                <td>
+                  <div style="color: #2563eb; font-weight: 600;">✉ info@4kidspoint.sk</div>
+                </td>
+                <td>
+                  <div style="font-weight: 800; font-size: 16px;">0 / 100</div>
+                </td>
+                <td>
+                  <span class="badge badge-safe">SAFE</span>
+                </td>
+                <td>
+                  <span style="font-weight: 600;">0</span> / 9 959
+                </td>
+                <td>
+                  <button onclick="openOutreach('4kidspoint.sk', 'info@4kidspoint.sk', 0, [])" style="background: #f3f4f6; border: 1px solid #d1d5db; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;">
+                    Generovať Outreach E-mail
+                  </button>
                 </td>
               </tr>
             </tbody>
@@ -307,102 +301,6 @@
     <script>
       const FIREBASE_API_URL = "https://europe-west1-rapex-99a2c.cloudfunctions.net/scanPublicShopifyStoreAPI";
 
-      const apiKeyInput = document.getElementById("api-key-input");
-      const savedKey = localStorage.getItem("rapex_scanner_api_key") || "";
-      if (savedKey) apiKeyInput.value = savedKey;
-
-      apiKeyInput.addEventListener("input", (e) => {
-        localStorage.setItem("rapex_scanner_api_key", e.target.value.trim());
-      });
-
-      function getAuthHeaders() {
-        const apiKey = apiKeyInput.value.trim() || localStorage.getItem("rapex_scanner_api_key") || "";
-        const headers = { "Content-Type": "application/json" };
-        if (apiKey) {
-          headers["X-API-Key"] = apiKey;
-          headers["Authorization"] = `Bearer ${apiKey}`;
-        }
-        return headers;
-      }
-
-      async function loadLeads() {
-        const tbody = document.getElementById("leads-tbody");
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 32px; color: #6b7280;">Načítavam uložené leady...</td></tr>`;
-
-        try {
-          const res = await fetch(FIREBASE_API_URL, {
-            method: "GET",
-            headers: getAuthHeaders(),
-          });
-
-          const data = await res.json();
-          if (res.ok && data.leads) {
-            renderLeads(data.leads);
-          } else {
-            tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 32px; color: #dc2626;">Chyba načítania: ${data.error || "Skontrolujte Admin API kľúč"}</td></tr>`;
-          }
-        } catch (err) {
-          tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 32px; color: #dc2626;">Chyba spojenia s databázou: ${err.message}</td></tr>`;
-        }
-      }
-
-      function renderLeads(leads) {
-        const tbody = document.getElementById("leads-tbody");
-        tbody.innerHTML = "";
-
-        let criticalCount = 0;
-        let highCount = 0;
-        let safeCount = 0;
-
-        if (!leads.length) {
-          tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 32px; color: #6b7280;">Zatiaľ nie sú uložené žiadne leady. Spustite sken zadaním domény vyššie.</td></tr>`;
-          return;
-        }
-
-        for (const lead of leads) {
-          if (lead.priorityLevel === "CRITICAL") criticalCount++;
-          else if (lead.priorityLevel === "HIGH") highCount++;
-          else safeCount++;
-
-          const row = document.createElement("tr");
-          row.className = "lead-row";
-          const priorityBadge = lead.priorityLevel === "CRITICAL" ? "badge-critical" : lead.priorityLevel === "HIGH" ? "badge-warning" : "badge-safe";
-          const formattedDate = lead.scannedAt ? new Date(lead.scannedAt).toLocaleDateString("sk-SK", { day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "Nedávno";
-
-          const matchesJson = JSON.stringify(lead.matches || []).replace(/'/g, "&#39;");
-
-          row.innerHTML = `
-            <td>
-              <div style="font-weight: 700; font-size: 15px;">${lead.domain}</div>
-              <div style="font-size: 12px; color: #9ca3af;">${formattedDate}</div>
-            </td>
-            <td>
-              <div style="color: #2563eb; font-weight: 600;">✉ ${lead.contactEmail || "Nenájdený"}</div>
-            </td>
-            <td>
-              <div style="font-weight: 800; font-size: 16px; color: ${lead.leadScore >= 75 ? '#dc2626' : lead.leadScore >= 50 ? '#d97706' : '#16a34a'};">${lead.leadScore} / 100</div>
-            </td>
-            <td>
-              <span class="badge ${priorityBadge}">${lead.priorityLevel}</span>
-            </td>
-            <td>
-              <span style="font-weight: 700; color: ${lead.flaggedProductsCount > 0 ? '#dc2626' : '#16a34a'}">${lead.flaggedProductsCount}</span> / ${lead.totalProductsScanned?.toLocaleString('sk-SK') || '0'}
-            </td>
-            <td>
-              <button onclick='openOutreach("${lead.domain}", "${lead.contactEmail || ""}", ${lead.flaggedProductsCount}, ${matchesJson})' style="background: #f3f4f6; border: 1px solid #d1d5db; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;">
-                Generovať Outreach E-mail
-              </button>
-            </td>
-          `;
-          tbody.appendChild(row);
-        }
-
-        document.getElementById("stat-scanned").innerText = leads.length;
-        document.getElementById("stat-critical").innerText = criticalCount;
-        document.getElementById("stat-high").innerText = highCount;
-        document.getElementById("stat-safe").innerText = safeCount;
-      }
-
       document.getElementById("scan-form").addEventListener("submit", async (e) => {
         e.preventDefault();
         const domain = document.getElementById("domain-input").value.trim();
@@ -421,7 +319,7 @@
         try {
           const res = await fetch(FIREBASE_API_URL, {
             method: "POST",
-            headers: getAuthHeaders(),
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ domain, maxProducts, similarityThreshold: 60 }),
           });
 
@@ -429,7 +327,7 @@
           if (res.ok && data.success) {
             scanStatus.style.color = "#16a34a";
             scanStatus.innerText = `✓ Sken úspešne dokončený! Preverených ${data.lead.totalProductsScanned} produktov, nájdených záchytov: ${data.lead.flaggedProductsCount}.`;
-            loadLeads();
+            addLeadToTable(data.lead);
           } else {
             scanStatus.style.color = "#dc2626";
             scanStatus.innerText = `Chyba pri skenovaní: ${data.error || "Neznáma chyba"}`;
@@ -442,6 +340,38 @@
           scanBtn.innerText = "Spustiť Cloud Sken";
         }
       });
+
+      function addLeadToTable(lead) {
+        const tbody = document.getElementById("leads-tbody");
+        const row = document.createElement("tr");
+        row.className = "lead-row";
+        const priorityBadge = lead.priorityLevel === "CRITICAL" ? "badge-critical" : lead.priorityLevel === "HIGH" ? "badge-warning" : "badge-safe";
+
+        row.innerHTML = `
+          <td>
+            <div style="font-weight: 700;">${lead.domain}</div>
+            <div style="font-size: 12px; color: #9ca3af;">Scanned práve teraz</div>
+          </td>
+          <td>
+            <div style="color: #2563eb; font-weight: 600;">✉ ${lead.contactEmail || "Nenájdený"}</div>
+          </td>
+          <td>
+            <div style="font-weight: 800; font-size: 16px; color: ${lead.leadScore >= 75 ? '#dc2626' : '#1f1d1a'};">${lead.leadScore} / 100</div>
+          </td>
+          <td>
+            <span class="badge ${priorityBadge}">${lead.priorityLevel}</span>
+          </td>
+          <td>
+            <span style="font-weight: 600; color: ${lead.flaggedProductsCount > 0 ? '#dc2626' : 'inherit'}">${lead.flaggedProductsCount}</span> / ${lead.totalProductsScanned}
+          </td>
+          <td>
+            <button onclick='openOutreach("${lead.domain}", "${lead.contactEmail || ""}", ${lead.flaggedProductsCount}, ${JSON.stringify(lead.matches || [])})' style="background: #f3f4f6; border: 1px solid #d1d5db; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;">
+              Generovať Outreach E-mail
+            </button>
+          </td>
+        `;
+        tbody.prepend(row);
+      }
 
       function openOutreach(domain, email, flaggedCount, matches) {
         document.getElementById("modal-email").value = email || "info@" + domain;
@@ -471,11 +401,8 @@
       }
 
       function refreshLeads() {
-        loadLeads();
+        window.location.reload();
       }
-
-      // Automatically load leads on startup
-      window.addEventListener("DOMContentLoaded", loadLeads);
     </script>
   </body>
 </html>

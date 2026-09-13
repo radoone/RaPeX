@@ -254,16 +254,33 @@ export async function handleScanPublicShopifyStoreRequest(
     return;
   }
 
-  if (request.method !== "POST") {
-    response.status(405).json({ error: "Method not allowed. Only POST is supported." });
-    return;
-  }
-
   const expectedKey = (process.env.SAFETY_GATE_API_KEY ?? "").trim();
   const providedKey = extractApiKey(request);
 
   if (expectedKey && providedKey !== expectedKey) {
     response.status(401).json({ error: "Unauthorized. Valid API key required." });
+    return;
+  }
+
+  if (request.method === "GET") {
+    try {
+      const snapshot = await db
+        .collection("rapex_leads")
+        .orderBy("updatedAt", "desc")
+        .limit(100)
+        .get();
+      const leads = snapshot.docs.map((doc) => doc.data());
+      response.status(200).json({ success: true, leads });
+      return;
+    } catch (err: unknown) {
+      logger.error("Failed to list leads:", err);
+      response.status(500).json({ error: "Failed to list leads." });
+      return;
+    }
+  }
+
+  if (request.method !== "POST") {
+    response.status(405).json({ error: "Method not allowed. Only GET and POST are supported." });
     return;
   }
 
