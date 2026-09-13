@@ -274,6 +274,25 @@
       </div>
     </div>
 
+    <!-- Findings Detail Modal -->
+    <div id="findings-modal" class="outreach-modal">
+      <div class="modal-box" style="max-width: 900px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #e5e7eb; padding-bottom: 16px;">
+          <div>
+            <h3 style="margin: 0; font-size: 22px; font-weight: 700;" id="findings-title">Zistené porušenia Safety Gate</h3>
+            <div id="findings-subtitle" style="font-size: 14px; color: #6b7280; margin-top: 4px;"></div>
+          </div>
+          <button onclick="closeFindings()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #6b7280;">✕</button>
+        </div>
+
+        <div id="findings-list" style="display: flex; flex-direction: column; gap: 16px;"></div>
+
+        <div style="margin-top: 24px; display: flex; justify-content: flex-end;">
+          <button onclick="closeFindings()" class="btn-primary">Zavrieť prehľad</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Outreach Email Modal -->
     <div id="outreach-modal" class="outreach-modal">
       <div class="modal-box">
@@ -307,6 +326,8 @@
     <script>
       const FIREBASE_API_URL = "https://europe-west1-rapex-99a2c.cloudfunctions.net/scanPublicShopifyStoreAPI";
 
+      let currentLeads = [];
+
       const apiKeyInput = document.getElementById("api-key-input");
       const savedKey = localStorage.getItem("rapex_scanner_api_key") || "";
       if (savedKey) apiKeyInput.value = savedKey;
@@ -327,7 +348,7 @@
 
       async function loadLeads() {
         const tbody = document.getElementById("leads-tbody");
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 32px; color: #6b7280;">Načítavam uložené leady...</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 32px; color: #6b7280;">Načítavam uložené leady z databázy...</td></tr>`;
 
         try {
           const res = await fetch(FIREBASE_API_URL, {
@@ -337,7 +358,8 @@
 
           const data = await res.json();
           if (res.ok && data.leads) {
-            renderLeads(data.leads);
+            currentLeads = data.leads;
+            renderLeads(currentLeads);
           } else {
             tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 32px; color: #dc2626;">Chyba načítania: ${data.error || "Skontrolujte Admin API kľúč"}</td></tr>`;
           }
@@ -359,7 +381,7 @@
           return;
         }
 
-        for (const lead of leads) {
+        leads.forEach((lead, idx) => {
           if (lead.priorityLevel === "CRITICAL") criticalCount++;
           else if (lead.priorityLevel === "HIGH") highCount++;
           else safeCount++;
@@ -369,7 +391,7 @@
           const priorityBadge = lead.priorityLevel === "CRITICAL" ? "badge-critical" : lead.priorityLevel === "HIGH" ? "badge-warning" : "badge-safe";
           const formattedDate = lead.scannedAt ? new Date(lead.scannedAt).toLocaleDateString("sk-SK", { day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "Nedávno";
 
-          const matchesJson = JSON.stringify(lead.matches || []).replace(/'/g, "&#39;");
+          const matchesCount = lead.flaggedProductsCount || (lead.matches ? lead.matches.length : 0);
 
           row.innerHTML = `
             <td>
@@ -386,21 +408,118 @@
               <span class="badge ${priorityBadge}">${lead.priorityLevel}</span>
             </td>
             <td>
-              <span style="font-weight: 700; color: ${lead.flaggedProductsCount > 0 ? '#dc2626' : '#16a34a'}">${lead.flaggedProductsCount}</span> / ${lead.totalProductsScanned?.toLocaleString('sk-SK') || '0'}
+              <span style="font-weight: 700; font-size: 15px; color: ${matchesCount > 0 ? '#dc2626' : '#16a34a'}">${matchesCount}</span> / ${lead.totalProductsScanned?.toLocaleString('sk-SK') || '0'}
             </td>
             <td>
-              <button onclick='openOutreach("${lead.domain}", "${lead.contactEmail || ""}", ${lead.flaggedProductsCount}, ${matchesJson})' style="background: #f3f4f6; border: 1px solid #d1d5db; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;">
-                Generovať Outreach E-mail
-              </button>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                ${matchesCount > 0 ? `
+                  <button onclick="openFindings(${idx})" style="background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer;">
+                    🔍 Zobraziť záchyty (${matchesCount})
+                  </button>
+                ` : ''}
+                <button onclick="openOutreach(${idx})" style="background: #f3f4f6; border: 1px solid #d1d5db; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;">
+                  ✉ Outreach E-mail
+                </button>
+              </div>
             </td>
           `;
           tbody.appendChild(row);
-        }
+        });
 
         document.getElementById("stat-scanned").innerText = leads.length;
         document.getElementById("stat-critical").innerText = criticalCount;
         document.getElementById("stat-high").innerText = highCount;
         document.getElementById("stat-safe").innerText = safeCount;
+      }
+
+      function openFindings(leadIndex) {
+        const lead = currentLeads[leadIndex];
+        if (!lead) return;
+
+        document.getElementById("findings-title").innerText = `Zistené porušenia: ${lead.domain}`;
+        document.getElementById("findings-subtitle").innerText = `Nájdených ${lead.flaggedProductsCount} rizikových produktov zodpovedajúcich databáze Safety Gate (z celkovo ${lead.totalProductsScanned} položiek).`;
+
+        const listContainer = document.getElementById("findings-list");
+        listContainer.innerHTML = "";
+
+        const matches = lead.matches || [];
+        if (!matches.length) {
+          listContainer.innerHTML = `<div style="text-align: center; padding: 20px; color: #6b7280;">Žiadne rizikové produkty.</div>`;
+        }
+
+        matches.forEach((m, i) => {
+          const w = m.result?.warnings?.[0] || {};
+          const sim = w.overallSimilarity || 0;
+          const imageSim = w.imageSimilarity || 0;
+          const riskLevel = w.riskLevel || "Serious risk";
+          const alertId = w.alertId || "N/A";
+          const productUrl = m.productUrl || `https://${lead.domain}/products/${m.productId || ''}`;
+
+          const card = document.createElement("div");
+          card.style.cssText = "background: #faf8f5; border: 1px solid #e5e7eb; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 12px;";
+
+          card.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap;">
+              <div style="display: flex; gap: 14px; align-items: flex-start; flex: 1 1 350px;">
+                ${m.productImage ? `<img src="${m.productImage}" alt="Produkt" style="width: 70px; height: 70px; object-fit: cover; border-radius: 8px; border: 1px solid #d1d5db; background: #fff;" />` : ''}
+                <div>
+                  <div style="font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase;">
+                    #${i + 1} • E-shop produkt (${m.vendor || 'Neznáma značka'})
+                  </div>
+                  <h4 style="margin: 2px 0 6px; font-size: 15px; font-weight: 700; color: #111827;">
+                    ${m.productTitle}
+                  </h4>
+                  <a href="${productUrl}" target="_blank" rel="noopener noreferrer" style="font-size: 12px; color: #2563eb; text-decoration: none; font-weight: 600;">
+                    🔗 Otvoriť v e-shope ↗
+                  </a>
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <div style="text-align: right;">
+                  <div style="font-size: 11px; color: #6b7280; font-weight: 600;">Miera zhody</div>
+                  <div style="font-size: 18px; font-weight: 800; color: #dc2626;">${sim}%</div>
+                </div>
+                ${imageSim > 0 ? `
+                  <div style="text-align: right; border-left: 1px solid #d1d5db; padding-left: 8px;">
+                    <div style="font-size: 11px; color: #6b7280; font-weight: 600;">Vizuálna zhoda</div>
+                    <div style="font-size: 18px; font-weight: 800; color: #d97706;">${imageSim}%</div>
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+
+            <div style="background: #fff; border: 1px solid #fee2e2; border-left: 4px solid #dc2626; border-radius: 8px; padding: 12px 16px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <div style="font-weight: 700; font-size: 13px; color: #991b1b;">
+                  🚨 EU Safety Gate Alert: ${w.brand ? `Značka: ${w.brand}` : ''} ${w.model ? `(Model: ${w.model})` : ''}
+                </div>
+                <span class="badge badge-critical">${riskLevel}</span>
+              </div>
+              <div style="font-size: 13px; color: #374151; line-height: 1.5; margin-bottom: 8px;">
+                <strong>Dôvod rizika / Norma:</strong> ${w.riskLegalProvision || w.message || 'Nesúlad s európskymi bezpečnostnými normami.'}
+              </div>
+              ${w.reason ? `
+                <div style="font-size: 12px; color: #4b5563; background: #f9fafb; padding: 8px 10px; border-radius: 6px; margin-bottom: 8px; border: 1px solid #f3f4f6;">
+                  <strong>💡 AI Vyhodnotenie zhody:</strong> ${w.reason}
+                </div>
+              ` : ''}
+              <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #6b7280;">
+                <span>RAPEX ID: <code>${alertId}</code></span>
+                <a href="https://ec.europa.eu/safety-gate-alerts/screen/webReport/alertDetail/${alertId}" target="_blank" rel="noopener noreferrer" style="color: #2563eb; font-weight: 600; text-decoration: none;">
+                  🇪🇺 Zobraziť oficiálne hlásenie Európskej komisie ↗
+                </a>
+              </div>
+            </div>
+          `;
+          listContainer.appendChild(card);
+        });
+
+        document.getElementById("findings-modal").classList.add("active");
+      }
+
+      function closeFindings() {
+        document.getElementById("findings-modal").classList.remove("active");
       }
 
       document.getElementById("scan-form").addEventListener("submit", async (e) => {
@@ -443,8 +562,15 @@
         }
       });
 
-      function openOutreach(domain, email, flaggedCount, matches) {
-        document.getElementById("modal-email").value = email || "info@" + domain;
+      function openOutreach(leadIndex) {
+        const lead = currentLeads[leadIndex];
+        if (!lead) return;
+
+        const domain = lead.domain;
+        const email = lead.contactEmail || "info@" + domain;
+        const flaggedCount = lead.flaggedProductsCount || (lead.matches ? lead.matches.length : 0);
+
+        document.getElementById("modal-email").value = email;
         document.getElementById("modal-subject").value = flaggedCount > 0
           ? `Upozornenie: Nebezpečný produkt z EU Safety Gate zistený na ${domain}`
           : `Overenie bezpečnosti sortimentu pre ${domain} (EU Safety Gate / RAPEX audit)`;
