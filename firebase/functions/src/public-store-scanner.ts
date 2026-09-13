@@ -262,6 +262,51 @@ export async function handleScanPublicShopifyStoreRequest(
     return;
   }
 
+async function enrichLeadMatches(matches: any[]): Promise<any[]> {
+  if (!matches || !matches.length) return [];
+  const alertIds = [...new Set(matches.map((m) => m.result?.warnings?.[0]?.alertId).filter(Boolean))];
+  if (!alertIds.length) return matches;
+
+  const alertDocs = await Promise.all(
+    alertIds.map((id) => db.collection("rapex_alerts").doc(id).get())
+  );
+  const alertMap = new Map<string, any>();
+  for (const doc of alertDocs) {
+    if (doc.exists) {
+      const data = doc.data() || {};
+      const f = data.fields || {};
+      const meta = data.meta || {};
+      alertMap.set(doc.id, {
+        alertId: doc.id,
+        alertNumber: f.alert_number || undefined,
+        rapexUrl:
+          f.rapex_url ||
+          `https://ec.europa.eu/safety-gate-alerts/screen/webReport/alertDetail/${meta.recordid || doc.id}`,
+        alertImage: f.product_image || (Array.isArray(f.pictures) ? f.pictures[0] : undefined),
+        brand: f.product_brand || undefined,
+        model: f.product_model || undefined,
+        name: f.product_name || f.product_type || undefined,
+        category: f.product_category || undefined,
+        riskLevel: f.risk_level || f.alert_level || "Serious risk",
+        alertType: f.alert_type || undefined,
+        description: f.product_description || undefined,
+        riskDescription: f.alert_description || f.risk_legal_provision || undefined,
+        notifyingCountry: f.notifying_country || undefined,
+      });
+    }
+  }
+
+  return matches.map((m) => {
+    const w = m.result?.warnings?.[0];
+    const alertMeta = w?.alertId ? alertMap.get(w.alertId) : undefined;
+    return {
+      ...m,
+      productUrl: m.productUrl || (m.productId ? `https://${m.shop || ''}/products/${m.productId}` : undefined),
+      alertDetails: alertMeta,
+    };
+  });
+}
+
   if (request.method === "GET") {
     try {
       const snapshot = await db
@@ -269,7 +314,15 @@ export async function handleScanPublicShopifyStoreRequest(
         .orderBy("updatedAt", "desc")
         .limit(100)
         .get();
-      const leads = snapshot.docs.map((doc) => doc.data());
+      const leads = await Promise.all(
+        snapshot.docs.map(async (doc) => {
+          const data = doc.data();
+          if (data.matches && data.matches.length) {
+            data.matches = await enrichLeadMatches(data.matches);
+          }
+          return data;
+        })
+      );
       response.status(200).json({ success: true, leads });
       return;
     } catch (err: unknown) {

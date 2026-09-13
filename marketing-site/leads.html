@@ -436,8 +436,9 @@
         const lead = currentLeads[leadIndex];
         if (!lead) return;
 
-        document.getElementById("findings-title").innerText = `Zistené porušenia: ${lead.domain}`;
-        document.getElementById("findings-subtitle").innerText = `Nájdených ${lead.flaggedProductsCount} rizikových produktov zodpovedajúcich databáze Safety Gate (z celkovo ${lead.totalProductsScanned} položiek).`;
+        const flaggedCount = lead.flaggedProductsCount || (lead.matches ? lead.matches.length : 0);
+        document.getElementById("findings-title").innerText = `Porovnanie záchytov: ${lead.domain}`;
+        document.getElementById("findings-subtitle").innerText = `Nájdených ${flaggedCount} rizikových produktov zodpovedajúcich databáze Safety Gate (z celkovo ${lead.totalProductsScanned} položiek katalógu).`;
 
         const listContainer = document.getElementById("findings-list");
         listContainer.innerHTML = "";
@@ -451,65 +452,115 @@
           const w = m.result?.warnings?.[0] || {};
           const sim = w.overallSimilarity || 0;
           const imageSim = w.imageSimilarity || 0;
-          const riskLevel = w.riskLevel || "Serious risk";
-          const alertId = w.alertId || "N/A";
+          const riskLevel = m.alertDetails?.riskLevel || w.riskLevel || "Serious risk";
+          const alertId = m.alertDetails?.alertId || w.alertId || "N/A";
+          const alertNumber = m.alertDetails?.alertNumber || "";
+          const alertImage = m.alertDetails?.alertImage || "";
+          const alertUrl = m.alertDetails?.rapexUrl || `https://ec.europa.eu/safety-gate-alerts/screen/webReport/alertDetail/${alertId}`;
+          const alertBrand = m.alertDetails?.brand || w.brand || "Neuvedená";
+          const alertModel = m.alertDetails?.model || w.model || "";
           const productUrl = m.productUrl || `https://${lead.domain}/products/${m.productId || ''}`;
+          const riskDesc = m.alertDetails?.riskDescription || w.riskLegalProvision || w.message || "Porušenie smernice o bezpečnosti výrobkov EÚ.";
 
           const card = document.createElement("div");
-          card.style.cssText = "background: #faf8f5; border: 1px solid #e5e7eb; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 12px;";
+          card.style.cssText = "background: #ffffff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);";
 
           card.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap;">
-              <div style="display: flex; gap: 14px; align-items: flex-start; flex: 1 1 350px;">
-                ${m.productImage ? `<img src="${m.productImage}" alt="Produkt" style="width: 70px; height: 70px; object-fit: cover; border-radius: 8px; border: 1px solid #d1d5db; background: #fff;" />` : ''}
-                <div>
-                  <div style="font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase;">
-                    #${i + 1} • E-shop produkt (${m.vendor || 'Neznáma značka'})
-                  </div>
-                  <h4 style="margin: 2px 0 6px; font-size: 15px; font-weight: 700; color: #111827;">
-                    ${m.productTitle}
-                  </h4>
-                  <a href="${productUrl}" target="_blank" rel="noopener noreferrer" style="font-size: 12px; color: #2563eb; text-decoration: none; font-weight: 600;">
-                    🔗 Otvoriť v e-shope ↗
-                  </a>
-                </div>
+            <!-- Top bar with match scores -->
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f3f4f6; padding-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 13px; font-weight: 800; background: #1f1d1a; color: #fff; padding: 3px 8px; border-radius: 6px;">#${i + 1}</span>
+                <span class="badge badge-critical">${riskLevel}</span>
+                ${alertNumber ? `<span style="font-size: 12px; color: #6b7280; font-weight: 600;">Číslo alertu: <strong>${alertNumber}</strong></span>` : ''}
               </div>
 
-              <div style="display: flex; gap: 8px; align-items: center;">
-                <div style="text-align: right;">
-                  <div style="font-size: 11px; color: #6b7280; font-weight: 600;">Miera zhody</div>
-                  <div style="font-size: 18px; font-weight: 800; color: #dc2626;">${sim}%</div>
+              <div style="display: flex; gap: 12px; align-items: center;">
+                <div style="background: #fef2f2; border: 1px solid #fee2e2; padding: 4px 10px; border-radius: 8px; text-align: right;">
+                  <span style="font-size: 11px; color: #991b1b; font-weight: 700; text-transform: uppercase;">Celková zhoda:</span>
+                  <span style="font-size: 16px; font-weight: 800; color: #dc2626; margin-left: 4px;">${sim}%</span>
                 </div>
                 ${imageSim > 0 ? `
-                  <div style="text-align: right; border-left: 1px solid #d1d5db; padding-left: 8px;">
-                    <div style="font-size: 11px; color: #6b7280; font-weight: 600;">Vizuálna zhoda</div>
-                    <div style="font-size: 18px; font-weight: 800; color: #d97706;">${imageSim}%</div>
+                  <div style="background: #fffbeb; border: 1px solid #fef3c7; padding: 4px 10px; border-radius: 8px; text-align: right;">
+                    <span style="font-size: 11px; color: #92400e; font-weight: 700; text-transform: uppercase;">Vizuálna zhoda:</span>
+                    <span style="font-size: 16px; font-weight: 800; color: #d97706; margin-left: 4px;">${imageSim}%</span>
                   </div>
                 ` : ''}
               </div>
             </div>
 
-            <div style="background: #fff; border: 1px solid #fee2e2; border-left: 4px solid #dc2626; border-radius: 8px; padding: 12px 16px;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                <div style="font-weight: 700; font-size: 13px; color: #991b1b;">
-                  🚨 EU Safety Gate Alert: ${w.brand ? `Značka: ${w.brand}` : ''} ${w.model ? `(Model: ${w.model})` : ''}
+            <!-- Side-by-Side Comparison Grid -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px;">
+              
+              <!-- LEFT: In Store -->
+              <div style="background: #faf8f5; border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px; display: flex; gap: 14px;">
+                <div style="flex-shrink: 0;">
+                  ${m.productImage ? `
+                    <img src="${m.productImage}" alt="Produkt v e-shope" style="width: 100px; height: 100px; object-fit: contain; border-radius: 8px; border: 1px solid #d1d5db; background: #fff;" />
+                  ` : `
+                    <div style="width: 100px; height: 100px; background: #e5e7eb; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #9ca3af;">Bez fotky</div>
+                  `}
                 </div>
-                <span class="badge badge-critical">${riskLevel}</span>
+                <div style="display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1;">
+                  <div>
+                    <div style="font-size: 11px; font-weight: 700; color: #2563eb; text-transform: uppercase; letter-spacing: 0.05em;">
+                      🛒 V e-shope (${lead.domain})
+                    </div>
+                    <h4 style="margin: 4px 0 6px; font-size: 14px; font-weight: 700; color: #111827; line-height: 1.3;">
+                      ${m.productTitle}
+                    </h4>
+                    <div style="font-size: 12px; color: #4b5563;">
+                      Značka: <strong>${m.vendor || 'Neuvedená'}</strong>
+                    </div>
+                  </div>
+                  <div style="margin-top: 8px;">
+                    <a href="${productUrl}" target="_blank" rel="noopener noreferrer" style="font-size: 12px; color: #2563eb; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+                      🔗 Otvoriť v e-shope ↗
+                    </a>
+                  </div>
+                </div>
               </div>
-              <div style="font-size: 13px; color: #374151; line-height: 1.5; margin-bottom: 8px;">
-                <strong>Dôvod rizika / Norma:</strong> ${w.riskLegalProvision || w.message || 'Nesúlad s európskymi bezpečnostnými normami.'}
+
+              <!-- RIGHT: In Safety Gate / RAPEX -->
+              <div style="background: #fff5f5; border: 1px solid #fed7d7; border-radius: 10px; padding: 14px; display: flex; gap: 14px;">
+                <div style="flex-shrink: 0;">
+                  ${alertImage ? `
+                    <img src="${alertImage}" alt="Safety Gate Alert" style="width: 100px; height: 100px; object-fit: contain; border-radius: 8px; border: 1px solid #feb2b2; background: #fff;" />
+                  ` : `
+                    <div style="width: 100px; height: 100px; background: #fed7d7; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #c53030; text-align: center; padding: 4px;">🚨 Safety Gate</div>
+                  `}
+                </div>
+                <div style="display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1;">
+                  <div>
+                    <div style="font-size: 11px; font-weight: 700; color: #c53030; text-transform: uppercase; letter-spacing: 0.05em;">
+                      🚨 V databáze EU Safety Gate
+                    </div>
+                    <h4 style="margin: 4px 0 6px; font-size: 14px; font-weight: 700; color: #9b2c2c; line-height: 1.3;">
+                      ${alertBrand} ${alertModel ? `• ${alertModel}` : ''}
+                    </h4>
+                    <div style="font-size: 12px; color: #4b5563;">
+                      Kategória: <strong>${m.alertDetails?.category || w.category || 'Childcare / Toys'}</strong>
+                    </div>
+                  </div>
+                  <div style="margin-top: 8px;">
+                    <a href="${alertUrl}" target="_blank" rel="noopener noreferrer" style="font-size: 12px; color: #c53030; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+                      🇪🇺 Oficiálne hlásenie EÚ ↗
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Risk details & AI Explanation -->
+            <div style="background: #f9fafb; border: 1px solid #f3f4f6; border-radius: 8px; padding: 12px 14px;">
+              <div style="font-size: 13px; color: #374151; line-height: 1.5; margin-bottom: 6px;">
+                <strong style="color: #991b1b;">⚠️ Popis bezpečnostného rizika / Norma:</strong> ${riskDesc}
               </div>
               ${w.reason ? `
-                <div style="font-size: 12px; color: #4b5563; background: #f9fafb; padding: 8px 10px; border-radius: 6px; margin-bottom: 8px; border: 1px solid #f3f4f6;">
-                  <strong>💡 AI Vyhodnotenie zhody:</strong> ${w.reason}
+                <div style="font-size: 12px; color: #4b5563; line-height: 1.4; border-top: 1px solid #e5e7eb; padding-top: 6px; margin-top: 6px;">
+                  <strong>💡 AI Odôvodnenie zhody (Gemini 2.5 Flash):</strong> ${w.reason}
                 </div>
               ` : ''}
-              <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #6b7280;">
-                <span>RAPEX ID: <code>${alertId}</code></span>
-                <a href="https://ec.europa.eu/safety-gate-alerts/screen/webReport/alertDetail/${alertId}" target="_blank" rel="noopener noreferrer" style="color: #2563eb; font-weight: 600; text-decoration: none;">
-                  🇪🇺 Zobraziť oficiálne hlásenie Európskej komisie ↗
-                </a>
-              </div>
             </div>
           `;
           listContainer.appendChild(card);
