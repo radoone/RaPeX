@@ -1,110 +1,214 @@
 {
   "meta": {
-    "title": "Safety Gate Monitor pre Shopify",
-    "description": "Safety Gate Monitor kontroluje Shopify produkty voči EU Safety Gate / RAPEX, zobrazuje stav priamo v Shopify Admin a sleduje nové alerty voči vášmu katalógu."
+    "title": "Safety Gate Monitor pre Shopify – Bezplatný scan & Pokoj na duši (GPSR & RAPEX)",
+    "description": "Automatický monitoring bezpečnosti produktov pre Shopify e-shopy. Spustite bezplatný scan a chráňte svoj obchod 24/7 pred nebezpečnými produktmi, recallmi a pokutami podľa EU Safety Gate (RAPEX) a GPSR."
   },
   "nav": {
+    "freeScan": "Bezplatný scan",
+    "benefits": "Pokoj na duši",
+    "resellers": "Pre koho",
     "howItWorks": "Ako to funguje",
+    "risk": "Prečo na tom záleží",
+    "faq": "Časté otázky (FAQ)",
+    "rapexOfficial": "Oficiálny Safety Gate ↗",
     "language": "Jazyk",
     "languageSwitcher": "Prepínač jazykov",
     "locales": {
-      "en": "Angličtina",
+      "en": "English",
       "sk": "Slovenčina"
     }
   },
   "hero": {
-    "eyebrow": "Monitoring bezpečnosti produktov pre Shopify",
-    "title": "Kontrolujte Shopify produkty voči EU Safety Gate priamo v Shopify Admin.",
-    "lede": "Safety Gate Monitor porovnáva váš katalóg so záznamami EU Safety Gate / RAPEX podľa textu produktu, značky, modelu, kategórie a dostupných obrázkov a výsledok zobrazuje tam, kde váš tím už pracuje.",
-    "ctaPrimary": "Inštalovať na Shopify",
+    "eyebrow": "Automatický bezpečnostný štít & GPSR compliance pre Shopify",
+    "freeScanBadge": "✨ Získajte bezplatný bezpečnostný scan vášho katalógu",
+    "title": "Predávajte s úplným pokojom na duši.",
+    "lede": "Vy sa venujte rastu e-shopu a predaju, bezpečnosť sortimentu nechajte na automat. Prihláste sa na bezplatný scan a zistite, či sa vo vašom obchode nenachádzajú produkty z vyše 35 000 záznamov oficiálnej databázy nebezpečných výrobkov EU Safety Gate (RAPEX).",
+    "ctaPrimary": "Spustiť bezplatný scan",
     "ctaSecondary": "Ako to funguje",
-    "pointsLabel": "Hlavné dôvody",
+    "ctaNote": "Bezplatný scan sortimentu • Bez nutnosti platobnej karty • Rýchla aktivácia",
+    "pointsLabel": "Hlavné dôvody pre váš pokoj",
     "points": [
-      "Zobrazuje stav bezpečnosti priamo na detailnej stránke produktu v Shopify",
-      "Beží pri vytvorení produktu, jeho úprave, manuálnej kontrole aj monitoringu nových alertov",
-      "Má vlastný prah podobnosti pre každý obchod a alerty sa dajú rovno vyriešiť alebo zamietnuť"
+      "Bezplatný vstupný scan: Okamžite overte svoj katalóg voči 35 000+ nebezpečným výrobkom v EÚ",
+      "100% pokoj bez manuálnej práce: 24/7 automatický monitoring ~250+ nových alertov mesačne",
+      "Vizuálna AI vidí aj fotky: Odhalí nebezpečné produkty aj keď dodávateľ zmenil názov či značku",
+      "Priamo v Shopify Admin: Okamžitý stav na detaile produktu a týždenný e-mail „Všetko je v poriadku“"
     ]
   },
+  "stats": {
+    "items": [
+      {
+        "number": "35 000+",
+        "title": "Nebezpečných produktov v databáze",
+        "desc": "Kompletná história nahlásených a stiahnutých výrobkov v EU Safety Gate"
+      },
+      {
+        "number": "~250+",
+        "title": "Nových alertov mesačne",
+        "desc": "Európska komisia zverejňuje 50–80 nových recallov každý piatok"
+      },
+      {
+        "number": "100%",
+        "title": "Vizuálna AI kontrola",
+        "desc": "Analýza parametrov, textu aj reálnych fotografií a balenia"
+      },
+      {
+        "number": "24/7",
+        "title": "Priebežný automatický štít",
+        "desc": "Monitoring nového tovaru a pondelkový e-mailový súhrn pokoja"
+      }
+    ]
+  },
+  "trust": {
+    "freeScan": "Bezplatný scan katalógu",
+    "gpsr": "Súlad s GPSR (EÚ 2023/988)",
+    "feed": "Oficiálny EU Safety Gate (RAPEX) feed ↗",
+    "ai": "Vizuálna AI analýza fotiek & textu",
+    "native": "100% natívna Shopify Admin aplikácia",
+    "email": "Pondelkový e-mailový súhrn pokoja"
+  },
   "preview": {
-    "aria": "Náhľad bezpečnostnej kontroly produktu",
-    "label": "Shopify Admin",
-    "live": "Stav produktu",
-    "productTitle": "Detská balančná kolobežka",
-    "productSubtitle": "Stav Safety Gate viditeľný na stránke produktu",
-    "overall": "Celková podobnosť",
+    "aria": "Náhľad bezpečnostného monitoringu v Shopify Admin",
+    "adminHeader": "Shopify Admin • Detail produktu",
+    "statusBadge": "Vyžaduje kontrolu (87% zhoda)",
+    "yourProductTitle": "Váš Shopify produkt",
+    "yourProductSubtitle": "Detská balančná kolobežka (Import od dodávateľa)",
+    "safetyGateMatchTitle": "EU Safety Gate alert",
+    "safetyGateMatchSubtitle": "Recall #A12/00892/24 (Nahlásené: Nemecko)",
+    "overall": "Celková zhoda",
     "image": "Vizuálna podobnosť",
-    "alert": "Možná zhoda s alertom na stiahnutú hračku v EU Safety Gate.",
-    "action": "Odporúčanie: skontrolujte zhodu, kontaktujte dodávateľa alebo produkt ponechajte zablokovaný.",
+    "alert": "Vážne riziko: uvoľnenie malých plastových častí a riziko zadusenia.",
+    "action": "Odporúčanie: overiť certifikáciu dodávateľa pred predajom.",
+    "btnReview": "Preskúmať zhodu",
+    "btnDismiss": "Zamietnuť",
+    "btnResolve": "Vyriešiť",
     "chips": [
-      "Rozšírenie na stránke produktu",
-      "Prahy pre každý obchod",
-      "Vyriešiť alebo zamietnuť alert"
+      "Bezplatný audit",
+      "24/7 delta monitoring",
+      "Vizuálna AI"
     ]
   },
   "signals": {
-    "aria": "Hlavné výhody",
+    "eyebrow": "Prečo mať pokoj na duši",
+    "title": "Vaša poistka proti pokutám, recallom a zbytočnému stresu.",
+    "aria": "Piliere pokoja na duši",
     "items": [
       {
-        "title": "Vidíte stav na stránke produktu",
-        "body": "Tím má na detaile produktu v Shopify Admin posledný stav Safety Gate, kontext rizika aj odporúčanie na ďalší krok."
+        "title": "Bezplatný audit bez záväzkov",
+        "body": "Nemusíte hádať, v akom stave je váš obchod. Spustite bezplatný scan a získajte jasný prehľad o tom, či nepredávate tovar, ktorý bol v EÚ stiahnutý z trhu."
       },
       {
-        "title": "Sledujte nové alerty voči uloženým produktom",
-        "body": "Aplikácia si ukladá skontrolované produkty a porovnáva ich s novo importovanými Safety Gate alertmi, takže monitoring rieši len to, čo sa zmenilo."
+        "title": "Koniec stresu z kontrol a GPSR",
+        "body": "Nové nariadenie EÚ o všeobecnej bezpečnosti výrobkov (GPSR) vyžaduje aktívny dohľad nad sortimentom. Aplikácia stráži váš katalóg automaticky, takže vás SOI ani colné orgány nezaskočia."
       },
       {
-        "title": "Udržte alerty pod kontrolou",
-        "body": "Nastavíte si prah podobnosti pre obchod a zhody viete triediť cez vyriešiť a zamietnuť namiesto zahltenia falošnými pozitívami."
+        "title": "AI vidí aj to, čo dodávateľ zmenil",
+        "body": "Dodávatelia často premenujú výrobky alebo predávajú white-label tovar. Inteligentná vizuálna AI porovnáva okrem názvov aj reálne fotografie a balenie, takže odhalí aj prebrandovaný nebezpečný tovar."
       }
-    ],
-    "eyebrow": "Čo appka naozaj robí",
-    "title": "Postavené pre reálny Shopify admin workflow, nie pre generický prehliadač alertov."
+    ]
+  },
+  "resellers": {
+    "eyebrow": "Pre koho je monitor určený",
+    "title": "Spoľahlivá ochrana pre e-shopy, dovozcov a resellerov.",
+    "items": [
+      {
+        "icon": "🧸",
+        "title": "Hračky a detský tovar",
+        "body": "Najprísnejšie kontrolovaná kategória v EÚ. Ochrana pred stiahnutím výrobkov s malými uvoľniteľnými časťami či ftalátmi."
+      },
+      {
+        "icon": "⚡",
+        "title": "Elektronika a nabíjačky",
+        "body": "Časté riziká úrazu elektrickým prúdom, prehrievania batérií a necertifikovaných adaptérov od zahraničných dodávateľov."
+      },
+      {
+        "icon": "💄",
+        "title": "Kozmetika a starostlivosť",
+        "body": "Automatické odhalenie výrobkov so zakázanými chemickými látkami a alergénmi (napr. Lilial / BMHCA, ťažké kovy)."
+      },
+      {
+        "icon": "📦",
+        "title": "Dropshipping & Reselleri",
+        "body": "Dodávateľ zmenil názov či balenie? Vizuálna AI porovná fotografie výrobku a zachytí zhodu s nebezpečným tovarom."
+      }
+    ]
+  },
+  "risk": {
+    "eyebrow": "Čo riskujete bez ochrany",
+    "title": "Jeden nebezpečný produkt môže ohroziť celý váš biznis.",
+    "items": [
+      {
+        "badge": "Právne a finančné riziko",
+        "title": "Vysoké pokuty a nútené sťahovanie tovaru",
+        "body": "Predaj výrobkov nahlásených v Safety Gate vedie k okamžitému príkazu na stiahnutie z trhu, povinnému odškodneniu zákazníkov a pokutám siahajúcim do desiatok tisíc eur."
+      },
+      {
+        "badge": "Reputačné riziko",
+        "title": "Okamžitá strata dôvery a blokácia platieb",
+        "body": "Zákazníci a platobné brány neodpúšťajú predaj zdraviu škodlivého tovaru. Bezplatný scan a priebežný monitoring chránia vašu reputáciu budovanú roky."
+      }
+    ]
   },
   "workflow": {
     "eyebrow": "Ako to funguje",
-    "title": "Tri kroky napojené na aktuálny produktový workflow.",
+    "title": "Jednoduchý 3-krokový proces, ktorý začína bezplatným scanom.",
     "steps": [
       {
-        "title": "Import čerstvých Safety Gate alertov",
-        "body": "Backend pravidelne importuje nové EU Safety Gate záznamy a drží ich pripravené na vyhľadanie a porovnanie."
+        "title": "1. Bezplatný scan a synchronizácia",
+        "body": "Zadáte doménu obchodu a systém bleskovo porovná váš katalóg s oficiálnou databázou nebezpečných výrobkov EU Safety Gate (RAPEX)."
       },
       {
-        "title": "Kontrola produktov v momente práce",
-        "body": "Kontroly bežia cez webhooky pri vytvorení a úprave produktu, manuálne kontroly aj akcie na stránke produktu v Shopify Admin, vrátane porovnania podľa obrázkov, keď sú dostupné."
+        "title": "2. Automatická ochrana na pozadí",
+        "body": "Pri každom novom produkte, zmene či novo publikovanom týždennom reporte Európskej komisie prebehne automatická vizuálna AI kontrola."
       },
       {
-        "title": "Kontrola, vyriešenie, zamietnutie a nový monitoring",
-        "body": "Merchant vidí kontext zhody v admin rozhraní, vie alerty triagovať a spustiť monitoring voči novším Safety Gate záznamom bez toho, aby zakaždým začínal od nuly."
+        "title": "3. Rýchle rozhodnutie a audit trail",
+        "body": "Priamo v Shopify Admin vidíte stav, 1 klikom vyriešite alebo zamietnete alert a udržiavate si čistý audit trail pre prípad kontroly zo strany úradov."
       }
     ]
+  },
+  "faq": {
+    "eyebrow": "Často kladené otázky",
+    "title": "Všetko, čo potrebujete vedieť o bezpečnosti, scanovaní a GPSR.",
+    "items": [
+      {
+        "q": "Koľko položiek je v databáze Safety Gate a koľko pribúda mesačne?",
+        "a": "Oficiálna databáza EU Safety Gate (RAPEX) aktuálne obsahuje viac ako 35 000 nahlásených nebezpečných výrobkov z celej Európskej únie. Európska komisia zverejňuje nové reporty každý piatok – mesačne tak pribudne približne 200 až 300+ nových alertov a nariadených recallov (cca 50 až 80 týždenne)."
+      },
+      {
+        "q": "Ako funguje bezplatný scan môjho e-shopu?",
+        "a": "Stačí zadať doménu vášho Shopify obchodu a e-mail. Aplikácia skontroluje produkty vo vašom katalógu voči celej databáze EU Safety Gate (RAPEX) a výsledný bezpečnostný report vám zašle priamo na e-mail."
+      },
+      {
+        "q": "Čo je to systém EU Safety Gate (bývalý RAPEX)?",
+        "a": "EU Safety Gate (predtým RAPEX) je oficiálny systém rýchleho varovania Európskej únie pre nebezpečné nepotravinové výrobky. Európska komisia v ňom týždenne zverejňuje produkty (hračky, elektroniku, kozmetiku, nabíjačky či odevy), ktoré predstavujú vážne riziko a musia byť stiahnuté z trhu. Oficiálnu databázu nájdete na ec.europa.eu/safety-gate-alerts."
+      },
+      {
+        "q": "Čo je to nariadenie GPSR a aké povinnosti ukladá e-shopom?",
+        "a": "Od 13. decembra 2024 platí v celej EÚ Všeobecné nariadenie o bezpečnosti výrobkov (GPSR – General Product Safety Regulation). E-shopy predávajúce v EÚ sú povinné aktívne monitorovať bezpečnosť svojho sortimentu a okamžite reagovať na zistené nebezpečné výrobky."
+      },
+      {
+        "q": "Ako vizuálna AI odhalí tovar, ak dodávateľ zmenil názov či značku?",
+        "a": "Mnoho dodávateľov predáva rovnaké výrobky pod inými značkami (white-label). Safety Gate Monitor využíva pokročilú vizuálnu AI, ktorá analyzuje reálne fotografie, tvar a dizajn produktov, vďaka čomu zachytí aj vizuálne zhodný prebrandovaný tovar."
+      }
+    ]
+  },
+  "cta": {
+    "eyebrow": "Bezplatný scan",
+    "title": "Prihláste sa na bezplatný scan vášho e-shopu.",
+    "body": "Zadajte doménu svojho obchodu a e-mail, kam vám zašleme kompletný audit zhody voči databáze EU Safety Gate (RAPEX).",
+    "domainLabel": "Doména e-shopu",
+    "domainPlaceholder": "vas-obchod.sk alebo .myshopify.com",
+    "emailLabel": "E-mail na zaslanie výsledku scanu",
+    "emailPlaceholder": "meno@vas-obchod.sk",
+    "button": "Zaslať výsledok scanu na e-mail",
+    "note": "100% bezplatný scan • Výsledok do vášho e-mailu • Bez záväzkov",
+    "successTitle": "Požiadavka na scan bola prijatá!",
+    "successBody": "Spustili sme porovnanie vášho sortimentu voči databáze EU Safety Gate. Výsledný report vám zašleme priamo na zadaný e-mail."
   },
   "footer": {
     "eyebrow": "Safety Gate Monitor",
-    "title": "Spravte zo Safety Gate kontrol opakovateľný Shopify workflow.",
+    "title": "Predávajte bez obáv. Bezplatný scan a automatická ochrana produktov pre moderný Shopify e-commerce.",
+    "rapexLink": "Oficiálna databáza: EU Safety Gate (RAPEX) – Európska komisia ↗",
     "backToTop": "Späť hore"
-  },
-  "cta": {
-    "eyebrow": "Inštalácia",
-    "title": "Nainštalujte appku a začnite kontrolovať produkty v Shopify Admin.",
-    "body": "Zadajte svoju myshopify.com doménu a spustite inštaláciu.",
-    "label": "Doména obchodu",
-    "placeholder": "vas-obchod.myshopify.com",
-    "button": "Inštalovať na Shopify"
-  },
-  "risk": {
-    "eyebrow": "Čo je v hre",
-    "title": "Safety problém môže stáť viac než jednu objednávku.",
-    "items": [
-      {
-        "badge": "Varovanie",
-        "title": "Riziko pokút a zásahu úradov",
-        "body": "Nebezpečné produkty môžu viesť k regulačnému tlaku, nútenému stiahnutiu, zákazníckym nárokom a drahému operatívnemu riešeniu."
-      },
-      {
-        "badge": "Kritické",
-        "title": "Strata dôvery sa vracia ťažko",
-        "body": "Zákazník odpustí meškanie zásielky. Oveľa ťažšie zabudne na problém s bezpečnosťou produktu spojený s vaším obchodom."
-      }
-    ]
   }
 }

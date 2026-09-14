@@ -45,6 +45,38 @@ function syncDocument(language) {
   });
 }
 
+function initFormHandler() {
+  const form = document.getElementById("scan-form");
+  const successBox = document.getElementById("scan-success");
+  const submitBtn = form?.querySelector("button[type='submit']");
+
+  if (!form || !successBox) {
+    return;
+  }
+
+  form.addEventListener("submit", (e) => {
+    const domainInput = document.getElementById("scan-domain");
+    const emailInput = document.getElementById("scan-email");
+
+    const domain = domainInput?.value?.trim();
+    const email = emailInput?.value?.trim();
+
+    if (!domain || !email) {
+      return;
+    }
+
+    // If it's not directly submitting to an active backend endpoint, display instant success feedback
+    e.preventDefault();
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = "0.7";
+    }
+
+    successBox.style.display = "flex";
+    successBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  });
+}
+
 async function initI18n() {
   await i18next.use(LanguageDetector).init({
     resources,
@@ -66,6 +98,7 @@ async function initI18n() {
   const activeLanguage = i18next.resolvedLanguage || i18next.language || "en";
   syncDocument(activeLanguage);
   setQueryLanguage(activeLanguage);
+  initFormHandler();
 
   document.querySelectorAll("[data-locale]").forEach((button) => {
     button.addEventListener("click", async () => {
@@ -93,4 +126,5 @@ initI18n().catch((error) => {
   console.error("Failed to initialize marketing site translations", error);
   syncDocument("en");
   setQueryLanguage("en");
+  initFormHandler();
 });

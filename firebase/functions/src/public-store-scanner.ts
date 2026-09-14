@@ -331,7 +331,7 @@ async function fetchStoreCatalog(domain: string, maxProducts = 250): Promise<any
       if (pageProds.length < perPage || products.length >= maxProducts) break;
 
       page += 1;
-      await sleep(2500); // 2.5s polite delay between pages
+      await sleep(400); // polite delay between pages
     } catch (err: any) {
       logger.warn(`Failed fetching page ${page} from ${domain}:`, err);
       break;
@@ -589,26 +589,42 @@ async function enrichLeadMatches(matches: any[], leadDomain?: string): Promise<a
       }> = [];
 
       const EMBED_BATCH_SIZE = 50;
-      for (let i = 0; i < toEmbedTexts.length; i += EMBED_BATCH_SIZE) {
-        const textChunk = toEmbedTexts.slice(i, i + EMBED_BATCH_SIZE);
-        const indexChunk = toEmbedIndices.slice(i, i + EMBED_BATCH_SIZE);
-        const vectors = await embedTexts(textChunk);
+      const PARALLEL_BATCHES = 5;
+      for (let i = 0; i < toEmbedTexts.length; i += EMBED_BATCH_SIZE * PARALLEL_BATCHES) {
+        const batchSliceTexts: string[][] = [];
+        const batchSliceIndices: number[][] = [];
 
-        for (let j = 0; j < vectors.length; j++) {
-          const globalProdIdx = indexChunk[j];
-          const vec = vectors[j];
-          allVectors[globalProdIdx] = vec;
+        for (let b = 0; b < PARALLEL_BATCHES; b++) {
+          const start = i + b * EMBED_BATCH_SIZE;
+          if (start >= toEmbedTexts.length) break;
+          const end = Math.min(start + EMBED_BATCH_SIZE, toEmbedTexts.length);
+          batchSliceTexts.push(toEmbedTexts.slice(start, end));
+          batchSliceIndices.push(toEmbedIndices.slice(start, end));
+        }
 
-          if (vec && vec.length > 0) {
-            newlyEmbeddedToSave.push({
-              productId: productInputs[globalProdIdx].productId || String(rawProducts[globalProdIdx]?.id || globalProdIdx),
-              handle: rawProducts[globalProdIdx]?.handle,
-              title: productInputs[globalProdIdx].name,
-              pInput: productInputs[globalProdIdx],
-              embeddingText: textChunk[j],
-              vector: vec,
-              sourceUpdatedAt: rawProducts[globalProdIdx]?.updated_at,
-            });
+        const results = await Promise.all(batchSliceTexts.map((chunk) => embedTexts(chunk)));
+
+        for (let b = 0; b < results.length; b++) {
+          const vectors = results[b];
+          const textChunk = batchSliceTexts[b];
+          const indexChunk = batchSliceIndices[b];
+
+          for (let j = 0; j < vectors.length; j++) {
+            const globalProdIdx = indexChunk[j];
+            const vec = vectors[j];
+            allVectors[globalProdIdx] = vec;
+
+            if (vec && vec.length > 0) {
+              newlyEmbeddedToSave.push({
+                productId: productInputs[globalProdIdx].productId || String(rawProducts[globalProdIdx]?.id || globalProdIdx),
+                handle: rawProducts[globalProdIdx]?.handle,
+                title: productInputs[globalProdIdx].name,
+                pInput: productInputs[globalProdIdx],
+                embeddingText: textChunk[j],
+                vector: vec,
+                sourceUpdatedAt: rawProducts[globalProdIdx]?.updated_at,
+              });
+            }
           }
         }
       }

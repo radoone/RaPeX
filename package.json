@@ -14,7 +14,7 @@
     "firebase:deploy": "npm run deploy --workspace=firebase",
     "shopify:dev": "npm run dev --workspace=shopify-client",
     "marketing:dev": "vite --config marketing-site/vite.config.ts",
-    "marketing:build": "vite build --config marketing-site/vite.config.ts",
+    "marketing:build": "vite build --config marketing-site/vite.config.ts && cp -r marketing-site/dist/* firebase/hosting/",
     "marketing:preview": "vite preview --config marketing-site/vite.config.ts"
   },
   "devDependencies": {
