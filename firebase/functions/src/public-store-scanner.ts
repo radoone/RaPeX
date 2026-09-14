@@ -1,4 +1,5 @@
 import * as logger from "firebase-functions/logger";
+import { FieldValue } from "firebase-admin/firestore";
 import { db } from "./firebase-admin.js";
 import { checkProductAgainstAlerts } from "./safety-gate-checker.js";
 import type { ProductInput, SafetyCheckResult } from "./safety-gate-checker.schemas.js";
@@ -125,8 +126,125 @@ function normalizeTags(tags: unknown): string[] {
 }
 
 function stripHtml(val: unknown): string {
-  if (typeof val !== "string") return "";
+  if (!val || typeof val !== "string") return "";
   return val.replace(/<[^>]*>/g, "").trim();
+}
+
+function asVectorArray(value: unknown): number[] | undefined {
+  if (!value || typeof value !== "object") {
+    return undefined;
+  }
+
+  const maybeVector = value as { toArray?: () => number[]; _values?: number[] };
+  if (typeof maybeVector.toArray === "function") {
+    return maybeVector.toArray();
+  }
+
+  if (Array.isArray(maybeVector._values)) {
+    return maybeVector._values;
+  }
+
+  return undefined;
+}
+
+interface CachedProductVector {
+  vector: number[];
+  embeddingText?: string;
+  sourceUpdatedAt?: string;
+}
+
+async function loadCachedProductVectors(
+  domain: string,
+  productIds: string[]
+): Promise<Map<string, CachedProductVector>> {
+  const result = new Map<string, CachedProductVector>();
+  if (!productIds.length) return result;
+
+  const productsCol = db
+    .collection("rapex_leads")
+    .doc(encodeURIComponent(domain))
+    .collection("products");
+
+  const CHUNK_SIZE = 100;
+  for (let i = 0; i < productIds.length; i += CHUNK_SIZE) {
+    const chunkIds = productIds.slice(i, i + CHUNK_SIZE);
+    const docRefs = chunkIds.map((id) => productsCol.doc(encodeURIComponent(id)));
+    try {
+      const snapshots = await db.getAll(...docRefs);
+      for (let j = 0; j < snapshots.length; j++) {
+        const snap = snapshots[j];
+        if (snap.exists) {
+          const data = snap.data();
+          const vector = asVectorArray(data?.vector_text);
+          if (vector && vector.length > 0) {
+            result.set(chunkIds[j], {
+              vector,
+              embeddingText: data?.embeddingText,
+              sourceUpdatedAt: data?.sourceUpdatedAt,
+            });
+          }
+        }
+      }
+    } catch (err) {
+      logger.warn(`Failed to batch load cached product vectors from Firestore:`, err);
+    }
+  }
+
+  return result;
+}
+
+async function saveProductVectors(
+  domain: string,
+  items: Array<{
+    productId: string;
+    handle?: string;
+    title: string;
+    pInput: ProductInput;
+    embeddingText: string;
+    vector: number[];
+    sourceUpdatedAt?: string;
+  }>
+): Promise<void> {
+  if (!items.length) return;
+
+  const productsCol = db
+    .collection("rapex_leads")
+    .doc(encodeURIComponent(domain))
+    .collection("products");
+
+  const BATCH_SIZE = 200;
+  for (let i = 0; i < items.length; i += BATCH_SIZE) {
+    const chunk = items.slice(i, i + BATCH_SIZE);
+    const batch = db.batch();
+
+    for (const item of chunk) {
+      const docRef = productsCol.doc(encodeURIComponent(item.productId));
+      batch.set(
+        docRef,
+        {
+          productId: item.productId,
+          handle: item.handle || "",
+          title: item.title,
+          brand: item.pInput.brand || null,
+          category: item.pInput.category || null,
+          description: item.pInput.description || null,
+          imageUrl: item.pInput.imageUrl || null,
+          imageUrls: item.pInput.imageUrls || [],
+          embeddingText: item.embeddingText,
+          vector_text: FieldValue.vector(item.vector),
+          sourceUpdatedAt: item.sourceUpdatedAt || null,
+          updatedAt: FieldValue.serverTimestamp(),
+        },
+        { merge: true }
+      );
+    }
+
+    try {
+      await batch.commit();
+    } catch (err) {
+      logger.warn(`Failed to commit batch vector write to Firestore:`, err);
+    }
+  }
 }
 
 function shopifyRawToProductInput(raw: any, shop: string): ProductInput {
@@ -379,14 +497,82 @@ async function enrichLeadMatches(matches: any[], leadDomain?: string): Promise<a
       })
     );
 
-    // 3. Batch embed texts in chunks (e.g. 50 items per batch)
-    logger.info(`Generating text embeddings in batch for ${productInputs.length} products...`);
-    const allVectors: Array<number[] | undefined> = [];
-    const EMBED_BATCH_SIZE = 50;
-    for (let i = 0; i < embeddingTexts.length; i += EMBED_BATCH_SIZE) {
-      const chunk = embeddingTexts.slice(i, i + EMBED_BATCH_SIZE);
-      const vectors = await embedTexts(chunk);
-      allVectors.push(...vectors);
+    // 3. Batch embed texts with Firestore vector cache lookup
+    logger.info(`Checking Firestore for existing product embeddings for ${domain}...`);
+    const cachedMap = await loadCachedProductVectors(
+      domain,
+      productInputs.map((p) => p.productId || "").filter(Boolean)
+    );
+
+    const allVectors: Array<number[] | undefined> = new Array(productInputs.length);
+    const toEmbedIndices: number[] = [];
+    const toEmbedTexts: string[] = [];
+
+    for (let i = 0; i < productInputs.length; i++) {
+      const p = productInputs[i];
+      const text = embeddingTexts[i];
+      const raw = rawProducts[i];
+      const prodId = p.productId || String(raw?.id || raw?.handle || i);
+      const cached = cachedMap.get(prodId);
+
+      if (
+        cached &&
+        (cached.embeddingText === text || (raw.updated_at && cached.sourceUpdatedAt === raw.updated_at))
+      ) {
+        allVectors[i] = cached.vector;
+      } else {
+        toEmbedIndices.push(i);
+        toEmbedTexts.push(text);
+      }
+    }
+
+    const cachedCount = productInputs.length - toEmbedIndices.length;
+    logger.info(
+      `Embedding status for ${domain}: ${cachedCount} loaded from Firestore cache, ${toEmbedIndices.length} new items to embed.`
+    );
+
+    if (toEmbedTexts.length > 0) {
+      const newlyEmbeddedToSave: Array<{
+        productId: string;
+        handle?: string;
+        title: string;
+        pInput: ProductInput;
+        embeddingText: string;
+        vector: number[];
+        sourceUpdatedAt?: string;
+      }> = [];
+
+      const EMBED_BATCH_SIZE = 50;
+      for (let i = 0; i < toEmbedTexts.length; i += EMBED_BATCH_SIZE) {
+        const textChunk = toEmbedTexts.slice(i, i + EMBED_BATCH_SIZE);
+        const indexChunk = toEmbedIndices.slice(i, i + EMBED_BATCH_SIZE);
+        const vectors = await embedTexts(textChunk);
+
+        for (let j = 0; j < vectors.length; j++) {
+          const globalProdIdx = indexChunk[j];
+          const vec = vectors[j];
+          allVectors[globalProdIdx] = vec;
+
+          if (vec && vec.length > 0) {
+            newlyEmbeddedToSave.push({
+              productId: productInputs[globalProdIdx].productId || String(rawProducts[globalProdIdx]?.id || globalProdIdx),
+              handle: rawProducts[globalProdIdx]?.handle,
+              title: productInputs[globalProdIdx].name,
+              pInput: productInputs[globalProdIdx],
+              embeddingText: textChunk[j],
+              vector: vec,
+              sourceUpdatedAt: rawProducts[globalProdIdx]?.updated_at,
+            });
+          }
+        }
+      }
+
+      if (newlyEmbeddedToSave.length > 0) {
+        logger.info(
+          `Saving ${newlyEmbeddedToSave.length} new product embeddings to Firestore (rapex_leads/${domain}/products)...`
+        );
+        await saveProductVectors(domain, newlyEmbeddedToSave);
+      }
     }
 
     // 4. Fast Firestore KNN Retrieval to filter candidates (Cosine Distance <= 0.22)
