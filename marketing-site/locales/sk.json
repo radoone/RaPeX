@@ -138,13 +138,35 @@
     "items": [
       {
         "badge": "Právne a finančné riziko",
-        "title": "Vysoké pokuty a nútené sťahovanie tovaru",
-        "body": "Predaj výrobkov nahlásených v Safety Gate vedie k okamžitému príkazu na stiahnutie z trhu, povinnému odškodneniu zákazníkov a pokutám siahajúcim do desiatok tisíc eur."
+        "title": "Vysoké pokuty (až do 332 000 €) a nútené sťahovanie tovaru",
+        "body": "Predaj výrobkov nahlásených v Safety Gate vedie k okamžitému príkazu na stiahnutie z trhu (recall), povinnému bezodkladnému odškodneniu zákazníkov a pokutám od SOI a dozorných orgánov EÚ siahajúcim od desiatok tisíc až do 332 000 € (alebo percentuálnemu podielu z ročného obratu).",
+        "sourceLabel": "Oficiálna legislatíva & dozor:",
+        "sources": [
+          {
+            "label": "Nariadenie (EÚ) 2023/988 (GPSR) ↗",
+            "url": "https://eur-lex.europa.eu/eli/reg/2023/988/oj"
+          },
+          {
+            "label": "Slovenská obchodná inšpekcia (SOI) ↗",
+            "url": "https://www.soi.sk/sk/Nebezpecne-vyrobky.soi"
+          },
+          {
+            "label": "Safety Business Gateway ↗",
+            "url": "https://ec.europa.eu/safety-gate-alerts/screen/business"
+          }
+        ]
       },
       {
-        "badge": "Reputačné riziko",
-        "title": "Okamžitá strata dôvery a blokácia platieb",
-        "body": "Zákazníci a platobné brány neodpúšťajú predaj zdraviu škodlivého tovaru. Bezplatný scan a priebežný monitoring chránia vašu reputáciu budovanú roky."
+        "badge": "Reputačné & prevádzkové riziko",
+        "title": "Okamžitá strata dôvery, blokácia platieb a delisting z trhovísk",
+        "body": "Zákazníci, banky, platobné brány (Shopify Payments, Stripe) ani trhoviská (Google, Meta, Amazon) neodpúšťajú predaj zdraviu škodlivého tovaru. Nahlásený produkt vedie k zmrazeniu výplat, zrušeniu účtov a trvalému poškodeniu značky.",
+        "sourceLabel": "Ochrana spotrebiteľov:",
+        "sources": [
+          {
+            "label": "Európska komisia – Bezpečnosť výrobkov ↗",
+            "url": "https://commission.europa.eu/business-economy-euro/doing-business-eu/product-safety_en"
+          }
+        ]
       }
     ]
   },
@@ -175,16 +197,20 @@
         "a": "Oficiálna databáza EU Safety Gate (RAPEX) aktuálne obsahuje viac ako 35 000 nahlásených nebezpečných výrobkov z celej Európskej únie. Európska komisia zverejňuje nové reporty každý piatok – mesačne tak pribudne približne 200 až 300+ nových alertov a nariadených recallov (cca 50 až 80 týždenne)."
       },
       {
+        "q": "Aké sankcie a právne dôsledky mi reálne hrozia pri predaji výrobku zo Safety Gate?",
+        "a": "Podľa Nariadenia (EÚ) 2023/988 (GPSR) a Zákona o ochrane spotrebiteľa má predajca prísne povinnosti: (1) Okamžite zastaviť predaj a stiahnuť výrobok z trhu aj od koncových zákazníkov (recall). (2) Vrátiť zákazníkovi plnú kúpnu cenu do 3 pracovných dní a to aj bez pokladničného bloku či po záručnej dobe. (3) Orgán dozoru (napr. Slovenská obchodná inšpekcia) môže uložiť pokutu do 66 400 €, pri opakovanom porušení do 166 000 € a pri ohrození zdravia či života až do 332 000 €."
+      },
+      {
         "q": "Ako funguje bezplatný scan môjho e-shopu?",
         "a": "Stačí zadať doménu vášho Shopify obchodu a e-mail. Aplikácia skontroluje produkty vo vašom katalógu voči celej databáze EU Safety Gate (RAPEX) a výsledný bezpečnostný report vám zašle priamo na e-mail."
       },
       {
         "q": "Čo je to systém EU Safety Gate (bývalý RAPEX)?",
-        "a": "EU Safety Gate (predtým RAPEX) je oficiálny systém rýchleho varovania Európskej únie pre nebezpečné nepotravinové výrobky. Európska komisia v ňom týždenne zverejňuje produkty (hračky, elektroniku, kozmetiku, nabíjačky či odevy), ktoré predstavujú vážne riziko a musia byť stiahnuté z trhu. Oficiálnu databázu nájdete na ec.europa.eu/safety-gate-alerts."
+        "a": "EU Safety Gate (predtým RAPEX) je oficiálny systém rýchleho varovania Európskej únie pre nebezpečné nepotravinové výrobky. Európska komisia v ňom týždenne zverejňuje produkty (hračky, elektroniku, kozmetiku, nabíjačky či odevy), ktoré predstavujú vážne riziko a musia byť stiahnuté z trhu. Oficiálny portál nájdete na ec.europa.eu/safety-gate-alerts."
       },
       {
         "q": "Čo je to nariadenie GPSR a aké povinnosti ukladá e-shopom?",
-        "a": "Od 13. decembra 2024 platí v celej EÚ Všeobecné nariadenie o bezpečnosti výrobkov (GPSR – General Product Safety Regulation). E-shopy predávajúce v EÚ sú povinné aktívne monitorovať bezpečnosť svojho sortimentu a okamžite reagovať na zistené nebezpečné výrobky."
+        "a": "Od 13. decembra 2024 platí v celej EÚ Všeobecné nariadenie o bezpečnosti výrobkov (GPSR – General Product Safety Regulation, Nariadenie EÚ 2023/988). E-shopy predávajúce v EÚ sú povinné aktívne overovať bezpečnosť svojho sortimentu, uvádzať kontaktné údaje zodpovednej osoby v EÚ a okamžite spolupracovať s dozornými orgánmi."
       },
       {
         "q": "Ako vizuálna AI odhalí tovar, ak dodávateľ zmenil názov či značku?",

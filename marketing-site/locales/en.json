@@ -138,13 +138,35 @@
     "items": [
       {
         "badge": "Legal & Financial Risk",
-        "title": "Heavy regulatory fines & forced product recalls",
-        "body": "Selling items listed on EU Safety Gate leads to immediate mandatory recall orders, customer compensation obligations, and severe regulatory penalties."
+        "title": "Heavy regulatory fines (up to €332,000) & mandatory product recalls",
+        "body": "Selling products flagged in Safety Gate leads to immediate mandatory recall orders, mandatory customer refunds, and regulatory penalties under GPSR and national authorities reaching tens or hundreds of thousands of euros.",
+        "sourceLabel": "Official regulations & surveillance:",
+        "sources": [
+          {
+            "label": "Regulation (EU) 2023/988 (GPSR) ↗",
+            "url": "https://eur-lex.europa.eu/eli/reg/2023/988/oj"
+          },
+          {
+            "label": "Safety Business Gateway ↗",
+            "url": "https://ec.europa.eu/safety-gate-alerts/screen/business"
+          },
+          {
+            "label": "EU Market Surveillance Authorities ↗",
+            "url": "https://www.soi.sk/sk/Nebezpecne-vyrobky.soi"
+          }
+        ]
       },
       {
-        "badge": "Reputational Risk",
-        "title": "Permanent loss of customer trust & gateway holds",
-        "body": "Customers and payment processors do not tolerate dangerous or recalled goods. A free scan and proactive monitoring protect the reputation you spent years building."
+        "badge": "Reputational & Platform Risk",
+        "title": "Instant loss of customer trust, payment holds & marketplace delisting",
+        "body": "Customers, banks, payment processors (Shopify Payments, Stripe), and ad networks (Google, Meta, Amazon) strictly penalize hazardous goods. A single safety alert can freeze payouts, terminate accounts, and permanently damage brand reputation.",
+        "sourceLabel": "Consumer safety:",
+        "sources": [
+          {
+            "label": "European Commission – Product Safety ↗",
+            "url": "https://commission.europa.eu/business-economy-euro/doing-business-eu/product-safety_en"
+          }
+        ]
       }
     ]
   },
@@ -175,6 +197,10 @@
         "a": "The official EU Safety Gate (RAPEX) database currently holds over 35,000 dangerous non-food consumer products. The European Commission releases new reports every Friday, adding approximately 200 to 300+ new alerts and mandatory product recalls every month (roughly 50 to 80 per week)."
       },
       {
+        "q": "What specific penalties and legal obligations apply under GPSR and market authorities?",
+        "a": "Under EU Regulation 2023/988 (GPSR) and consumer protection laws: (1) Merchants must immediately cease sales and execute a mandatory product recall, notifying all affected buyers. (2) Merchants must provide a full refund or remedy without delay (even without original packaging/receipts). (3) Market surveillance authorities can impose fines ranging from €66,400 up to €332,000 or significant percentages of annual turnover for serious hazards."
+      },
+      {
         "q": "How does the free store scan work?",
         "a": "Simply enter your Shopify store domain and email address. The app performs a full scan of your catalog against the official EU Safety Gate (RAPEX) database and sends the report directly to your inbox."
       },
@@ -184,7 +210,7 @@
       },
       {
         "q": "What is the GPSR regulation and why does it affect Shopify merchants?",
-        "a": "The EU General Product Safety Regulation (GPSR - EU 2023/988) applies to all e-commerce merchants selling to EU consumers. It mandates active product safety monitoring and swift remediation for unsafe products, backed by strict market surveillance fines."
+        "a": "The EU General Product Safety Regulation (GPSR - EU 2023/988, effective Dec 13, 2024) applies to all e-commerce stores selling to EU consumers. It mandates active product safety verification, responsible EU economic operator identification, and instant cooperation with surveillance authorities."
       },
       {
         "q": "How does Visual AI detect products if suppliers changed names or branding?",
