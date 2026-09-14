@@ -388,12 +388,18 @@ h1 {
   border: 1px solid rgba(255, 255, 255, 0.06);
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
 }
 
 .compare-box--alert {
   background: rgba(239, 68, 68, 0.08);
   border-color: rgba(239, 68, 68, 0.22);
+}
+
+.compare-box__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .compare-box__tag {
@@ -406,6 +412,54 @@ h1 {
 
 .compare-box--alert .compare-box__tag {
   color: #f87171;
+}
+
+.compare-box__media {
+  position: relative;
+  width: 100%;
+  height: 90px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.compare-box--alert .compare-box__media {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.12) 0%, rgba(185, 28, 28, 0.05) 100%);
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+.compare-box__svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.compare-box__media-badge {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.65);
+  color: #f5ead8;
+  backdrop-filter: blur(4px);
+}
+
+.compare-box--alert .compare-box__media-badge {
+  background: rgba(220, 38, 38, 0.85);
+  color: #ffffff;
+}
+
+.compare-box__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .compare-box__title {
