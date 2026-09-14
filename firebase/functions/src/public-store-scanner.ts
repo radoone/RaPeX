@@ -247,6 +247,34 @@ async function saveProductVectors(
   }
 }
 
+async function updateScanProgress(
+  domain: string,
+  progress: {
+    stage: "fetching" | "embedding" | "vector_search" | "ai_evaluating" | "completed" | "error";
+    percent: number;
+    message: string;
+    details?: string;
+  }
+): Promise<void> {
+  try {
+    const isTerminal = progress.stage === "completed" || progress.stage === "error";
+    await db
+      .collection("rapex_leads")
+      .doc(encodeURIComponent(domain))
+      .set(
+        {
+          domain,
+          status: progress.stage === "error" ? "error" : isTerminal ? "review_needed" : "scanning",
+          scanProgress: progress,
+          updatedAt: new Date().toISOString(),
+        },
+        { merge: true }
+      );
+  } catch (err) {
+    logger.warn(`Failed to update scan progress for ${domain}:`, err);
+  }
+}
+
 function shopifyRawToProductInput(raw: any, shop: string): ProductInput {
   const tags = normalizeTags(raw?.tags);
   const category = raw.product_type || raw.productType || tags.find((t) =>
@@ -477,6 +505,12 @@ async function enrichLeadMatches(matches: any[], leadDomain?: string): Promise<a
   logger.info(`Starting batch vectorized public store scan for ${domain} (maxProducts=${maxProducts})...`);
 
   try {
+    await updateScanProgress(domain, {
+      stage: "fetching",
+      percent: 10,
+      message: `Sťahujem katalóg (${maxProducts} položiek) a kontaktné údaje pre ${domain}...`,
+    });
+
     // 1. Concurrently fetch catalog and search for contact email in Google Cloud
     const [rawProducts, contactEmail] = await Promise.all([
       fetchStoreCatalog(domain, maxProducts),
@@ -484,6 +518,12 @@ async function enrichLeadMatches(matches: any[], leadDomain?: string): Promise<a
     ]);
 
     logger.info(`Fetched ${rawProducts.length} products from ${domain}, contactEmail: ${contactEmail}`);
+
+    await updateScanProgress(domain, {
+      stage: "embedding",
+      percent: 25,
+      message: `Stiahnutých ${rawProducts.length} produktov. Načítavam embeddingy z Firestore cache...`,
+    });
 
     // 2. Build product inputs and prepare text representation for batch vectorization
     const productInputs = rawProducts.map((raw) => shopifyRawToProductInput(raw, domain));
@@ -532,6 +572,12 @@ async function enrichLeadMatches(matches: any[], leadDomain?: string): Promise<a
     );
 
     if (toEmbedTexts.length > 0) {
+      await updateScanProgress(domain, {
+        stage: "embedding",
+        percent: 45,
+        message: `Generujem vektorové embeddingy pre ${toEmbedTexts.length} nových položiek (${cachedCount} načítaných z cache)...`,
+      });
+
       const newlyEmbeddedToSave: Array<{
         productId: string;
         handle?: string;
@@ -577,6 +623,12 @@ async function enrichLeadMatches(matches: any[], leadDomain?: string): Promise<a
 
     // 4. Fast Firestore KNN Retrieval to filter candidates (Cosine Distance <= 0.22)
     logger.info(`Running fast Firestore vector nearest-neighbor search for candidate alerts...`);
+    await updateScanProgress(domain, {
+      stage: "vector_search",
+      percent: 65,
+      message: `Vektorové KNN vyhľadávanie v 32 000 Safety Gate záznamoch pre ${productInputs.length} produktov...`,
+    });
+
     const candidatePairs: Array<{
       productInput: ProductInput;
       raw: any;
@@ -609,6 +661,12 @@ async function enrichLeadMatches(matches: any[], leadDomain?: string): Promise<a
     );
 
     // 5. Targeted LLM evaluation (Gemini 2.5 Flash) ONLY on candidate pairs
+    await updateScanProgress(domain, {
+      stage: "ai_evaluating",
+      percent: 80,
+      message: `Multimodálna AI analýza (Gemini 2.5 Flash) pre ${candidatePairs.length} rizikových kandidátov...`,
+    });
+
     const matches: any[] = [];
     const LLM_CONCURRENCY = 3;
 
@@ -668,6 +726,11 @@ async function enrichLeadMatches(matches: any[], leadDomain?: string): Promise<a
       contactEmail: contactEmail || undefined,
       scannedAt: now,
       updatedAt: now,
+      scanProgress: {
+        stage: "completed",
+        percent: 100,
+        message: `Sken dokončený. Preverených ${rawProducts.length} produktov, zistených ${matches.length} záchytov.`,
+      },
     };
 
     await db.collection("rapex_leads").doc(encodeURIComponent(domain)).set(leadDoc, { merge: true });
@@ -680,6 +743,11 @@ async function enrichLeadMatches(matches: any[], leadDomain?: string): Promise<a
     });
   } catch (error: any) {
     logger.error(`Public store scan failed for ${domain}:`, error);
+    await updateScanProgress(domain, {
+      stage: "error",
+      percent: 0,
+      message: `Chyba: ${error instanceof Error ? error.message : "Skenovanie zlyhalo"}`,
+    });
     response.status(500).json({
       error: error instanceof Error ? error.message : "Public store scan failed",
     });

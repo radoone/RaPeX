@@ -172,6 +172,30 @@
         padding: 28px;
         box-shadow: 0 20px 40px rgba(0,0,0,0.2);
       }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      .progress-step {
+        padding: 8px 6px;
+        border-radius: 8px;
+        background: #f1f5f9;
+        color: #64748b;
+        font-weight: 600;
+        font-size: 11px;
+        transition: all 0.3s ease;
+      }
+      .progress-step.active {
+        background: #eff6ff;
+        color: #1d4ed8;
+        font-weight: 700;
+        border: 1px solid #bfdbfe;
+      }
+      .progress-step.completed {
+        background: #f0fdf4;
+        color: #15803d;
+        font-weight: 700;
+        border: 1px solid #bbf7d0;
+      }
     </style>
   </head>
   <body style="background: #f7f6f3;">
@@ -242,6 +266,38 @@
             <button type="submit" id="scan-btn" class="btn-primary">Spustiť Cloud Sken</button>
           </div>
         </form>
+        <!-- Real-time Progress Container -->
+        <div id="scan-progress-card" style="display: none; margin-top: 18px; padding: 18px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="spinner" style="display: inline-block; width: 16px; height: 16px; border: 2px solid #3b82f6; border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite;"></span>
+              <strong id="progress-domain-title" style="font-size: 14px; color: #1e293b;">Prebieha sken obchodu...</strong>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span id="progress-timer" style="font-family: monospace; font-size: 13px; font-weight: 700; color: #64748b; background: #e2e8f0; padding: 2px 8px; border-radius: 6px;">⏱ 00:00s</span>
+              <span id="progress-percent" style="font-size: 13px; font-weight: 800; color: #2563eb;">10%</span>
+            </div>
+          </div>
+
+          <!-- Progress Bar -->
+          <div style="width: 100%; height: 8px; background: #e2e8f0; border-radius: 999px; overflow: hidden; margin-bottom: 12px;">
+            <div id="progress-bar-fill" style="width: 10%; height: 100%; background: linear-gradient(90deg, #3b82f6, #2563eb); border-radius: 999px; transition: width 0.4s ease;"></div>
+          </div>
+
+          <!-- Live Step Status Message -->
+          <div id="progress-stage-msg" style="font-size: 13px; color: #475569; display: flex; align-items: center; gap: 6px;">
+            Sťahujem katalóg a kontaktné údaje...
+          </div>
+
+          <!-- Stepper Pipeline Indicators -->
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 14px; padding-top: 12px; border-top: 1px solid #e2e8f0; text-align: center;">
+            <div id="step-1" class="progress-step active">1. Katalóg 📥</div>
+            <div id="step-2" class="progress-step">2. Vektory 🧠</div>
+            <div id="step-3" class="progress-step">3. Safety Gate 🔍</div>
+            <div id="step-4" class="progress-step">4. AI Arbiter 🤖</div>
+          </div>
+        </div>
+
         <div id="scan-status" style="margin-top: 14px; font-size: 14px; font-weight: 500; display: none;"></div>
       </div>
 
@@ -597,14 +653,90 @@
         const maxProducts = parseInt(document.getElementById("max-products-input").value, 10);
         const scanBtn = document.getElementById("scan-btn");
         const scanStatus = document.getElementById("scan-status");
+        const progressCard = document.getElementById("scan-progress-card");
+        const progressDomainTitle = document.getElementById("progress-domain-title");
+        const progressTimer = document.getElementById("progress-timer");
+        const progressPercent = document.getElementById("progress-percent");
+        const progressBarFill = document.getElementById("progress-bar-fill");
+        const progressStageMsg = document.getElementById("progress-stage-msg");
+
+        const step1 = document.getElementById("step-1");
+        const step2 = document.getElementById("step-2");
+        const step3 = document.getElementById("step-3");
+        const step4 = document.getElementById("step-4");
 
         if (!domain) return;
 
         scanBtn.disabled = true;
-        scanBtn.innerText = "Skenujem katalóg...";
-        scanStatus.style.display = "block";
-        scanStatus.style.color = "#2563eb";
-        scanStatus.innerText = `Prebieha cloudový sken obchodu ${domain} (sťahovanie katalógu a Safety Gate kontrola)...`;
+        scanBtn.innerText = "Skenujem...";
+        scanStatus.style.display = "none";
+        progressCard.style.display = "block";
+        progressDomainTitle.innerText = `Skenujem ${domain} (${maxProducts} položiek)...`;
+        progressPercent.innerText = "10%";
+        progressBarFill.style.width = "10%";
+        progressStageMsg.innerText = "Sťahujem katalóg a vyhľadávam kontaktný e-mail...";
+
+        function updateStepUI(stage, percent, message) {
+          if (percent) {
+            progressPercent.innerText = `${percent}%`;
+            progressBarFill.style.width = `${percent}%`;
+          }
+          if (message) {
+            progressStageMsg.innerText = message;
+          }
+
+          step1.className = "progress-step";
+          step2.className = "progress-step";
+          step3.className = "progress-step";
+          step4.className = "progress-step";
+
+          if (stage === "fetching") {
+            step1.className = "progress-step active";
+          } else if (stage === "embedding") {
+            step1.className = "progress-step completed";
+            step2.className = "progress-step active";
+          } else if (stage === "vector_search") {
+            step1.className = "progress-step completed";
+            step2.className = "progress-step completed";
+            step3.className = "progress-step active";
+          } else if (stage === "ai_evaluating") {
+            step1.className = "progress-step completed";
+            step2.className = "progress-step completed";
+            step3.className = "progress-step completed";
+            step4.className = "progress-step active";
+          } else if (stage === "completed") {
+            step1.className = "progress-step completed";
+            step2.className = "progress-step completed";
+            step3.className = "progress-step completed";
+            step4.className = "progress-step completed";
+          }
+        }
+
+        updateStepUI("fetching", 10, `Sťahujem katalóg (${maxProducts} položiek) a kontaktné údaje pre ${domain}...`);
+
+        const startTime = Date.now();
+        const timerInterval = setInterval(() => {
+          const elapsedSec = Math.floor((Date.now() - startTime) / 1000);
+          const mins = String(Math.floor(elapsedSec / 60)).padStart(2, "0");
+          const secs = String(elapsedSec % 60).padStart(2, "0");
+          progressTimer.innerText = `⏱ ${mins}:${secs}s`;
+        }, 1000);
+
+        // Poll for real-time progress updates from Firestore
+        const pollInterval = setInterval(async () => {
+          try {
+            const res = await fetch(FIREBASE_API_URL, { headers: getAuthHeaders() });
+            if (res.ok) {
+              const data = await res.json();
+              const lead = (data.leads || []).find((l) => l.domain.toLowerCase() === domain.toLowerCase());
+              if (lead && lead.scanProgress) {
+                updateStepUI(lead.scanProgress.stage, lead.scanProgress.percent, lead.scanProgress.message);
+              }
+            }
+          } catch (err) {
+            // silent poll error
+          }
+        }, 1500);
 
         try {
           const res = await fetch(FIREBASE_API_URL, {
@@ -614,15 +746,24 @@
           });
 
           const data = await res.json();
+          clearInterval(timerInterval);
+          clearInterval(pollInterval);
+
           if (res.ok && data.success) {
+            updateStepUI("completed", 100, `✓ Sken úspešne dokončený! Preverených ${data.lead.totalProductsScanned} produktov.`);
+            scanStatus.style.display = "block";
             scanStatus.style.color = "#16a34a";
-            scanStatus.innerText = `✓ Sken úspešne dokončený! Preverených ${data.lead.totalProductsScanned} produktov, nájdených záchytov: ${data.lead.flaggedProductsCount}.`;
+            scanStatus.innerText = `✓ Sken obchodu ${domain} dokončený (${data.lead.totalProductsScanned} položiek). Nájdených ${data.lead.flaggedProductsCount} záchytov v Safety Gate.`;
             loadLeads();
           } else {
+            scanStatus.style.display = "block";
             scanStatus.style.color = "#dc2626";
             scanStatus.innerText = `Chyba pri skenovaní: ${data.error || "Neznáma chyba"}`;
           }
         } catch (err) {
+          clearInterval(timerInterval);
+          clearInterval(pollInterval);
+          scanStatus.style.display = "block";
           scanStatus.style.color = "#dc2626";
           scanStatus.innerText = `Chyba spojenia: ${err.message}`;
         } finally {
