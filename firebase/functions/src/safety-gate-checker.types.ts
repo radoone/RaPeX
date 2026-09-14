@@ -21,18 +21,37 @@ export type NormalizedAlert = {
     record_timestamp?: string;
   };
   fields: {
-    product_category: string;
-    product_description: string;
-    risk_level: string;
-    alert_level: string;
-    alert_type: string;
-    risk_legal_provision: string;
-    notifying_country: string;
+    // Official ec.europa.eu schema fields
+    caseNumber?: string;
+    brand?: string;
+    name?: string;
+    product?: string;
+    type_numberOfModel?: string;
+    category?: string;
+    danger?: string;
+    measures?: string;
+    description?: string;
+    level?: string;
+    riskType?: string;
+    notifyingCountry?: string;
+    countryOfOrigin?: string;
+    url?: string;
+
+    // Legacy fields for backward compatibility
+    alert_number?: string;
+    product_category?: string;
+    product_description?: string;
+    risk_level?: string;
+    alert_level?: string;
+    alert_type?: string;
+    risk_legal_provision?: string;
+    notifying_country?: string;
     product_brand?: string;
     product_model?: string;
     product_image?: string;
     product_other_images?: string;
     pictures?: string[];
+    [key: string]: any;
   };
   distance?: number;
   source?: "retriever" | "recent";

@@ -106,10 +106,10 @@ can be worked on without changing Shopify auth or app routes.
 
 ## Real workflow
 
-1. A scheduled Firebase function fetches new Safety Gate data from the OpenDataSoft dataset `healthref-europe-rapex-en`.
-2. Records are upserted into Firestore collection `rapex_alerts`.
-3. For alerts within the recent embedding window (currently 6 months), the loader also writes per-image vector docs into `rapex_alert_images` so every alert picture can participate in image similarity retrieval.
-4. The loader stores a checkpoint in `rapex_meta/loader_state` so later runs can do delta loading.
+1. The primary loader (`safety-gate-weekly-loader.ts` via `dailyRapexDeltaLoader`) fetches weekly reports directly from the European Commission's official Safety Gate XML feed (`ec.europa.eu/safety-gate-alerts/api/download/weeklyReport/...`), which publishes every Friday. (OpenDataSoft was used for historical backfill but retired for ongoing delta syncs to eliminate 1-month lag).
+2. Records are upserted into Firestore collection `rapex_alerts` using official `ec.europa.eu` schema fields (`caseNumber`, `brand`, `name`, `product`, `type_numberOfModel`, `category`, `danger`, `measures`, `description`, `level`, `riskType`, `notifyingCountry`, `countryOfOrigin`, `batchNumber`, `barcode`, `pictures`, `url`) while maintaining legacy aliases (`alert_number`, `product_brand`, `product_category`, etc.) for seamless backward compatibility.
+3. Every alert picture is embedded via Vertex AI multimodal embeddings (`vertexai/multimodalembedding@001`) into `rapex_alert_images`, and text is embedded into `rapex_alerts.vector_text`, allowing vector retrieval over 100% of the entire database without arbitrary date cutoff limits.
+4. The loader stores a checkpoint in `rapex_meta/loader_state` (`last_report_year`, `last_report_week`, `last_alert_date`) so subsequent runs only process newly published weekly reports.
 5. When a Shopify product is created, updated, manually checked, or bulk-checked, the Shopify app sends normalized product data to Firebase endpoint `checkProductSafetyAPI`.
 6. The backend compares the product against recent/imported Safety Gate alerts, using AI plus Firestore retrieval/embeddings.
 7. The Shopify app upserts checked Shopify products to Firestore `merchants/{shop}/products` through Firebase endpoint `upsertMerchantProductAPI`.

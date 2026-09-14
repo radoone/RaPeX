@@ -64,6 +64,10 @@ export const functionsAi = genkit({
       apiKey: process.env.GOOGLE_API_KEY || undefined,
     }),
     vertexAI({
+      projectId:
+        process.env.FIREBASE_PROJECT_ID ||
+        process.env.GCLOUD_PROJECT ||
+        "rapex-99a2c",
       location: process.env.GCLOUD_LOCATION || "us-central1",
     }),
   ],

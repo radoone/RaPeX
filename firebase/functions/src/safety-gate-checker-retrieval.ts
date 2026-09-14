@@ -275,7 +275,7 @@ function normalizeRetrieverDocument(doc: DocumentData): NormalizedAlert | null {
 
 async function hydrateAlertsIfMissing(candidates: NormalizedAlert[]): Promise<NormalizedAlert[]> {
   const missingAlertIds = candidates
-    .filter((c) => !c.fields.product_category && !c.fields.product_description)
+    .filter((c) => !c.fields.category && !c.fields.product_category && !c.fields.description && !c.fields.product_description)
     .map((c) => c.id);
 
   if (missingAlertIds.length === 0) {
@@ -295,7 +295,7 @@ async function hydrateAlertsIfMissing(candidates: NormalizedAlert[]): Promise<No
   }
 
   return candidates.map((candidate) => {
-    if (candidate.fields.product_category || candidate.fields.product_description) {
+    if (candidate.fields.category || candidate.fields.product_category || candidate.fields.description || candidate.fields.product_description) {
       return candidate;
     }
     const data = alertMap.get(candidate.id);
@@ -312,15 +312,32 @@ async function hydrateAlertsIfMissing(candidates: NormalizedAlert[]): Promise<No
         ingested_at: normalizeTimestamp(meta.ingested_at || candidate.meta.ingested_at),
       },
       fields: {
-        product_category: String(fields.product_category || ""),
-        product_description: String(fields.product_description || ""),
-        risk_level: String(fields.risk_level || ""),
-        alert_level: String(fields.alert_level || ""),
-        alert_type: String(fields.alert_type || ""),
-        risk_legal_provision: String(fields.risk_legal_provision || ""),
-        notifying_country: String(fields.notifying_country || ""),
-        product_brand: fields.product_brand != null ? String(fields.product_brand) : undefined,
-        product_model: fields.product_model != null ? String(fields.product_model) : undefined,
+        ...fields,
+        caseNumber: String(fields.caseNumber || fields.alert_number || ""),
+        alert_number: String(fields.caseNumber || fields.alert_number || ""),
+        brand: fields.brand != null ? String(fields.brand) : (fields.product_brand != null ? String(fields.product_brand) : undefined),
+        product_brand: fields.brand != null ? String(fields.brand) : (fields.product_brand != null ? String(fields.product_brand) : undefined),
+        name: String(fields.name || fields.product_name || ""),
+        product_name: String(fields.name || fields.product_name || ""),
+        type_numberOfModel: fields.type_numberOfModel != null ? String(fields.type_numberOfModel) : (fields.product_model != null ? String(fields.product_model) : undefined),
+        product_model: fields.type_numberOfModel != null ? String(fields.type_numberOfModel) : (fields.product_model != null ? String(fields.product_model) : undefined),
+        category: String(fields.category || fields.product_category || ""),
+        product_category: String(fields.category || fields.product_category || ""),
+        danger: String(fields.danger || fields.alert_description || ""),
+        alert_description: String(fields.danger || fields.alert_description || ""),
+        measures: String(fields.measures || fields.technical_defect || ""),
+        technical_defect: String(fields.measures || fields.technical_defect || ""),
+        description: String(fields.description || fields.product_description || ""),
+        product_description: String(fields.description || fields.product_description || ""),
+        level: String(fields.level || fields.risk_level || fields.alert_level || ""),
+        risk_level: String(fields.level || fields.risk_level || fields.alert_level || ""),
+        alert_level: String(fields.level || fields.alert_level || fields.risk_level || ""),
+        riskType: String(fields.riskType || fields.alert_type || ""),
+        alert_type: String(fields.riskType || fields.alert_type || ""),
+        risk_legal_provision: String(fields.risk_legal_provision || fields.danger || ""),
+        notifyingCountry: String(fields.notifyingCountry || fields.alert_country || fields.notifying_country || ""),
+        notifying_country: String(fields.notifyingCountry || fields.alert_country || fields.notifying_country || ""),
+        countryOfOrigin: String(fields.countryOfOrigin || fields.product_country || fields.country_of_origin || ""),
         pictures: normalizePictures(fields),
       },
     };
@@ -504,15 +521,31 @@ export async function searchRecentRapexAlerts(days = ALERT_LOOKBACK_DAYS): Promi
       },
       fields: {
         ...fields,
-        product_category: String(fields.product_category || ""),
-        product_description: String(fields.product_description || ""),
-        risk_level: String(fields.risk_level || ""),
-        alert_level: String(fields.alert_level || ""),
-        alert_type: String(fields.alert_type || ""),
-        risk_legal_provision: String(fields.risk_legal_provision || ""),
-        notifying_country: String(fields.notifying_country || ""),
-        product_brand: fields.product_brand != null ? String(fields.product_brand) : undefined,
-        product_model: fields.product_model != null ? String(fields.product_model) : undefined,
+        caseNumber: String(fields.caseNumber || fields.alert_number || ""),
+        alert_number: String(fields.caseNumber || fields.alert_number || ""),
+        brand: fields.brand != null ? String(fields.brand) : (fields.product_brand != null ? String(fields.product_brand) : undefined),
+        product_brand: fields.brand != null ? String(fields.brand) : (fields.product_brand != null ? String(fields.product_brand) : undefined),
+        name: String(fields.name || fields.product_name || ""),
+        product_name: String(fields.name || fields.product_name || ""),
+        type_numberOfModel: fields.type_numberOfModel != null ? String(fields.type_numberOfModel) : (fields.product_model != null ? String(fields.product_model) : undefined),
+        product_model: fields.type_numberOfModel != null ? String(fields.type_numberOfModel) : (fields.product_model != null ? String(fields.product_model) : undefined),
+        category: String(fields.category || fields.product_category || ""),
+        product_category: String(fields.category || fields.product_category || ""),
+        danger: String(fields.danger || fields.alert_description || ""),
+        alert_description: String(fields.danger || fields.alert_description || ""),
+        measures: String(fields.measures || fields.technical_defect || ""),
+        technical_defect: String(fields.measures || fields.technical_defect || ""),
+        description: String(fields.description || fields.product_description || ""),
+        product_description: String(fields.description || fields.product_description || ""),
+        level: String(fields.level || fields.risk_level || fields.alert_level || ""),
+        risk_level: String(fields.level || fields.risk_level || fields.alert_level || ""),
+        alert_level: String(fields.level || fields.alert_level || fields.risk_level || ""),
+        riskType: String(fields.riskType || fields.alert_type || ""),
+        alert_type: String(fields.riskType || fields.alert_type || ""),
+        risk_legal_provision: String(fields.risk_legal_provision || fields.danger || ""),
+        notifyingCountry: String(fields.notifyingCountry || fields.alert_country || fields.notifying_country || ""),
+        notifying_country: String(fields.notifyingCountry || fields.alert_country || fields.notifying_country || ""),
+        countryOfOrigin: String(fields.countryOfOrigin || fields.product_country || fields.country_of_origin || ""),
         pictures: normalizePictures(fields),
       },
       source: "recent" as const,

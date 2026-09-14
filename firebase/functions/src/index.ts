@@ -22,18 +22,59 @@ import {
   runHistoricalSafetyGateBackfill,
   runSafetyGateLoader,
 } from "./safety-gate-loader.js";
+import { runSafetyGateWeeklyLoaderJob } from "./safety-gate-weekly-loader.js";
 
 // --- Scheduled Function ---
 export const dailyRapexDeltaLoader = onSchedule(
   {
     ...SCHEDULER_CONFIG,
     timeoutSeconds: 540,
-    memory: "512MiB",
+    memory: "1GiB",
     secrets: ["GOOGLE_API_KEY"],
   },
   async (event) => {
-    logger.info("Starting daily Safety Gate delta loader job.", { event });
-    await runSafetyGateLoader();
+    logger.info("Starting Safety Gate weekly XML loader job from ec.europa.eu", { event });
+    await runSafetyGateWeeklyLoaderJob();
+  },
+);
+
+// --- Manual Weekly XML Loader HTTP Trigger ---
+export const manualSafetyGateWeeklyLoader = onRequest(
+  {
+    region: "europe-west1",
+    memory: "1GiB",
+    timeoutSeconds: 540,
+    secrets: ["GOOGLE_API_KEY"],
+  },
+  async (req, res) => {
+    try {
+      const year = req.query.year ? Number.parseInt(String(req.query.year), 10) : undefined;
+      const weeks = req.query.weeks
+        ? String(req.query.weeks)
+            .split(",")
+            .map((w) => Number.parseInt(w.trim(), 10))
+            .filter(Boolean)
+        : undefined;
+      const forceSyncAll = req.query.forceSyncAll === "true";
+
+      const result = await runSafetyGateWeeklyLoaderJob({
+        year,
+        weeks,
+        forceSyncAllReports: forceSyncAll,
+      });
+
+      res.status(200).json({
+        success: true,
+        ...result,
+        timestamp: new Date().toISOString(),
+      });
+    } catch (error) {
+      logger.error("Safety Gate weekly loader failed", { error });
+      res.status(500).json({
+        success: false,
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
   },
 );
 

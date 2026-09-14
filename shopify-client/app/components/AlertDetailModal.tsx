@@ -680,11 +680,20 @@ function WarningCard({
     typeof warning.overallSimilarity === "number" ? warning.overallSimilarity : 0;
   const pictures = getWarningImages(warning);
 
-  // Get correct field names from Safety Gate database
-  const notifyingCountry = fields.alert_country || fields.notifying_country;
-  const originCountry = fields.product_country || fields.country_of_origin;
-  const productName = fields.product_name || fields.name;
-  const productModel = fields.product_model_type || fields.product_model || fields.model;
+  // Get correct field names from Safety Gate database (official ec.europa.eu fields with fallbacks)
+  const caseNumber = fields.caseNumber || fields.alert_number;
+  const brand = fields.brand || fields.product_brand;
+  const category = fields.category || fields.product_category;
+  const productName = fields.name || fields.product || fields.product_name;
+  const productModel = fields.type_numberOfModel || fields.product_model_type || fields.product_model || fields.model;
+  const notifyingCountry = fields.notifyingCountry || fields.alert_country || fields.notifying_country;
+  const originCountry = fields.countryOfOrigin || fields.product_country || fields.country_of_origin;
+  const alertLevel = fields.level || fields.alert_level || fields.risk_level;
+  const alertType = fields.riskType || fields.alert_type;
+  const safetyGateUrl = fields.url || fields.rapex_url || fields.reference;
+  const dangerDescription = fields.danger || fields.alert_description;
+  const productDescription = fields.description || fields.product_description;
+  const measuresDescription = fields.measures || fields.technical_defect || fields.measures_country;
 
   // Determine card border color based on similarity
   const borderColor = warningOverallSimilarity >= 80 ? "border-critical" : warningOverallSimilarity >= 60 ? "border-warning" : "border";
@@ -692,9 +701,9 @@ function WarningCard({
 
   // Check matching fields with merchant product details for highlighting
   const merchantTitle = String(merchantProduct?.productTitle || "").toLowerCase();
-  const isBrandMatched = fields.product_brand && merchantTitle.includes(fields.product_brand.trim().toLowerCase());
+  const isBrandMatched = brand && merchantTitle.includes(brand.trim().toLowerCase());
   const isModelMatched = productModel && merchantTitle.includes(productModel.trim().toLowerCase());
-  const isCategoryMatched = fields.product_category && merchantProduct?.productType && merchantTitle.includes(fields.product_category.trim().toLowerCase());
+  const isCategoryMatched = category && merchantProduct?.productType && merchantTitle.includes(category.trim().toLowerCase());
 
   return (
     <s-box
@@ -709,30 +718,32 @@ function WarningCard({
         {/* HEADER: Risk badges + source link */}
         <s-stack direction="inline" align="space-between" blockAlign="center" wrap>
           <s-stack direction="inline" gap="small" wrap blockAlign="center">
-            <AlertBadge
-              alertLevel={fields.alert_level}
-              showSeverity={true}
-            />
-            {fields.alert_type && (
+            {alertLevel && (
               <AlertBadge
-                alertLevel={fields.alert_level}
-                alertType={fields.alert_type}
-                riskDescription={warning.riskLegalProvision}
+                alertLevel={alertLevel}
+                showSeverity={true}
+              />
+            )}
+            {alertType && (
+              <AlertBadge
+                alertLevel={alertLevel}
+                alertType={alertType}
+                riskDescription={warning.riskLegalProvision || dangerDescription}
               />
             )}
           </s-stack>
           
-          {fields.rapex_url && (
-            <s-link href={fields.rapex_url} target="_blank">
+          {safetyGateUrl && (
+            <s-link href={safetyGateUrl} target="_blank">
               {t("analysis.viewOnSafetyGate")}
             </s-link>
           )}
         </s-stack>
 
         {/* Alert number */}
-        {fields.alert_number && (
+        {caseNumber && (
           <s-text tone="subdued" size="small">
-            {t("analysis.alertNumber", { number: fields.alert_number })} • {formattedDate}
+            {t("analysis.alertNumber", { number: caseNumber })} • {formattedDate}
           </s-text>
         )}
 
@@ -785,28 +796,28 @@ function WarningCard({
 
           <div className="match-detail-list">
             {productName && <DetailItem label={t("analysis.fields.productName")} value={productName} />}
-            {fields.product_brand && (
-              <DetailItem label={t("analysis.fields.brand")} value={fields.product_brand} highlight={Boolean(isBrandMatched)} />
+            {brand && (
+              <DetailItem label={t("analysis.fields.brand")} value={brand} highlight={Boolean(isBrandMatched)} />
             )}
             {productModel && (
               <DetailItem label={t("analysis.fields.model")} value={productModel} highlight={Boolean(isModelMatched)} />
             )}
-            {fields.product_category && (
-              <DetailItem label={t("analysis.fields.category")} value={fields.product_category} highlight={Boolean(isCategoryMatched)} />
+            {category && (
+              <DetailItem label={t("analysis.fields.category")} value={category} highlight={Boolean(isCategoryMatched)} />
             )}
             {notifyingCountry && <DetailItem label={t("analysis.fields.notifyingCountry")} value={notifyingCountry} />}
             {originCountry && <DetailItem label={t("analysis.fields.origin")} value={originCountry} />}
             <DetailItem label={t("analysis.fields.alertDate")} value={formattedDate} />
-            {fields.alert_level && (
+            {alertLevel && (
               <div className="match-detail-list__item">
                 <span>{t("analysis.riskSeverity")}</span>
-                <AlertBadge alertLevel={fields.alert_level} showSeverity={true} />
+                <AlertBadge alertLevel={alertLevel} showSeverity={true} />
               </div>
             )}
-            {fields.alert_type && (
+            {alertType && (
               <div className="match-detail-list__item">
                 <span>{t("analysis.hazardType")}</span>
-                <AlertBadge alertLevel={fields.alert_level} alertType={fields.alert_type} />
+                <AlertBadge alertLevel={alertLevel} alertType={alertType} />
               </div>
             )}
           </div>
@@ -825,7 +836,7 @@ function WarningCard({
         )}
 
         {/* RISK DESCRIPTION (if present) */}
-        {fields.alert_description && (
+        {dangerDescription && (
           <s-box
             padding="base"
             borderRadius="base"
@@ -833,23 +844,33 @@ function WarningCard({
           >
             <s-stack gap="small-100">
               <s-text fontWeight="bold" tone="critical" size="small">{t("analysis.riskDescription")}</s-text>
-              <s-text>{fields.alert_description}</s-text>
+              <s-text>{dangerDescription}</s-text>
+            </s-stack>
+          </s-box>
+        )}
+
+        {/* Measures (if present) */}
+        {measuresDescription && (
+          <s-box padding="base" borderRadius="base" background="bg-surface-warning">
+            <s-stack gap="small-100">
+              <s-text fontWeight="bold" tone="warning" size="small">{t("analysis.measures") || "Compulsory / Economic Operator Measures"}</s-text>
+              <s-text size="small">{measuresDescription}</s-text>
             </s-stack>
           </s-box>
         )}
 
         {/* Product Description */}
-        {fields.product_description && (
+        {productDescription && (
           <s-box padding="base" borderRadius="base" background="bg-surface-secondary">
             <s-stack gap="small-100">
               <s-text tone="subdued" size="small">{t("analysis.fields.productDescription")}</s-text>
-              <s-text size="small">{fields.product_description}</s-text>
+              <s-text size="small">{productDescription}</s-text>
             </s-stack>
           </s-box>
         )}
 
         {/* Legal Provision */}
-        {fields.risk_legal_provision && (
+        {fields.risk_legal_provision && fields.risk_legal_provision !== dangerDescription && (
           <s-box padding="base" borderRadius="base" background="bg-surface-warning">
             <s-stack gap="small-100">
               <s-text fontWeight="bold" tone="warning" size="small">{t("analysis.legalProvision")}</s-text>

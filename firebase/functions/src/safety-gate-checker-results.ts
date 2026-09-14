@@ -31,17 +31,32 @@ function describeAlertSource(alert: NormalizedAlert): string {
 
 export function buildComparisonPrompt(product: ProductInput, alerts: NormalizedAlert[]): string {
   const alertsText = alerts
-    .map(
-      (alert) => `Alert ID: ${alert.id}
-Product: ${alert.fields.product_description}
-Category: ${alert.fields.product_category}
-Brand: ${alert.fields.product_brand || "Unknown"}
-Model: ${alert.fields.product_model || "Not specified"}
-Alert Type: ${alert.fields.alert_type || alert.fields.risk_legal_provision || "Not specified"}
-Risk Level: ${alert.fields.risk_level || "Not specified"}
-Country: ${alert.fields.notifying_country || "Not specified"}
-${describeAlertSource(alert)}`,
-    )
+    .map((alert) => {
+      const f = alert.fields || {};
+      const caseNumber = f.caseNumber || f.alert_number || "Not specified";
+      const prodName = f.name || f.product || f.product_name || f.product_description || "Not specified";
+      const category = f.category || f.product_category || "Not specified";
+      const brand = f.brand || f.product_brand || "Unknown";
+      const model = f.type_numberOfModel || f.product_model || f.product_model_type || "Not specified";
+      const danger = f.danger || f.alert_description || f.risk_legal_provision || "Not specified";
+      const measures = f.measures || f.technical_defect || f.measures_country || "Not specified";
+      const riskType = f.riskType || f.alert_type || "Not specified";
+      const level = f.level || f.alert_level || f.risk_level || "Not specified";
+      const country = f.notifyingCountry || f.notifying_country || f.alert_country || "Not specified";
+
+      return `Alert ID: ${alert.id}
+Case Number: ${caseNumber}
+Product: ${prodName}
+Category: ${category}
+Brand: ${brand}
+Model: ${model}
+Danger: ${danger}
+Measures: ${measures}
+Risk Type: ${riskType}
+Risk Level: ${level}
+Country: ${country}
+${describeAlertSource(alert)}`;
+    })
     .join("\n\n");
 
   return `NEW PRODUCT TO CHECK:
@@ -224,16 +239,56 @@ function buildAlertDetails(alert?: NormalizedAlert): MatchResult["alertDetails"]
     return {
       meta: { recordid: "", alert_date: "", ingested_at: "" },
       fields: {
+        caseNumber: "",
+        alert_number: "",
+        brand: "",
+        product_brand: "",
+        name: "",
+        product_name: "",
+        category: "",
         product_category: "",
+        danger: "",
+        alert_description: "",
+        measures: "",
+        technical_defect: "",
+        description: "",
         product_description: "",
+        level: "",
         risk_level: "",
         alert_level: "",
+        riskType: "",
         alert_type: "",
         risk_legal_provision: "",
+        notifyingCountry: "",
         notifying_country: "",
+        countryOfOrigin: "",
+        product_country: "",
+        type_numberOfModel: "",
+        product_model: "",
+        pictures: [],
+        url: "",
+        rapex_url: "",
       },
     };
   }
+
+  const f = alert.fields || {};
+  const caseNumber = String(f.caseNumber || f.alert_number || "");
+  const brand = String(f.brand || f.product_brand || "");
+  const name = String(f.name || f.product_name || "");
+  const category = String(f.category || f.product_category || "");
+  const danger = String(f.danger || f.alert_description || "");
+  const measures = String(f.measures || f.technical_defect || f.measures_country || "");
+  const description = String(f.description || f.product_description || "");
+  const level = String(f.level || f.alert_level || f.risk_level || "");
+  const riskType = String(f.riskType || f.alert_type || "");
+  const notifyingCountry = String(f.notifyingCountry || f.alert_country || f.notifying_country || "");
+  const countryOfOrigin = String(f.countryOfOrigin || f.product_country || f.country_of_origin || "");
+  const type_numberOfModel = String(f.type_numberOfModel || f.product_model_type || f.product_model || "");
+  const url = String(f.url || f.rapex_url || f.reference || "");
+  const pictures = Array.isArray(f.pictures) && f.pictures.length > 0
+    ? f.pictures
+    : (f.product_image ? [f.product_image] : []);
 
   return {
     meta: {
@@ -243,14 +298,39 @@ function buildAlertDetails(alert?: NormalizedAlert): MatchResult["alertDetails"]
       ingested_at: String(alert.meta?.ingested_at || ""),
     },
     fields: {
-      ...(alert.fields || {}),
-      product_category: String(alert.fields?.product_category || ""),
-      product_description: String(alert.fields?.product_description || ""),
-      risk_level: String(alert.fields?.risk_level || ""),
-      alert_level: String(alert.fields?.alert_level || ""),
-      alert_type: String(alert.fields?.alert_type || ""),
-      risk_legal_provision: String(alert.fields?.risk_legal_provision || ""),
-      notifying_country: String(alert.fields?.notifying_country || ""),
+      ...f,
+      caseNumber,
+      alert_number: caseNumber,
+      brand,
+      product_brand: brand,
+      name,
+      product_name: name,
+      category,
+      product_category: category,
+      danger,
+      alert_description: danger,
+      measures,
+      technical_defect: measures,
+      description,
+      product_description: description,
+      level,
+      alert_level: level,
+      risk_level: level,
+      riskType,
+      alert_type: riskType,
+      risk_legal_provision: String(f.risk_legal_provision || danger),
+      notifyingCountry,
+      notifying_country: notifyingCountry,
+      alert_country: notifyingCountry,
+      countryOfOrigin,
+      country_of_origin: countryOfOrigin,
+      product_country: countryOfOrigin,
+      type_numberOfModel,
+      product_model: type_numberOfModel,
+      product_model_type: type_numberOfModel,
+      pictures,
+      url,
+      rapex_url: url,
     },
   };
 }
@@ -324,9 +404,9 @@ export function buildSafetyCheckResult(
         imageSimilarity,
         textSimilarity,
         scoreBreakdown: getScoreBreakdown(scoringMode),
-        riskLevel: mapRiskLevel(alertDetails.fields.risk_level || ""),
-        alertType: alertType || alertLevel || "Unknown",
-        riskLegalProvision: riskLegalProvision || "",
+        riskLevel: mapRiskLevel(alertDetails.fields.level || alertDetails.fields.risk_level || alertDetails.fields.alert_level || ""),
+        alertType: alertDetails.fields.riskType || alertType || alertLevel || "Unknown",
+        riskLegalProvision: riskLegalProvision || alertDetails.fields.danger || "",
         reason: enrichReason(match.reason, scoringMode, imageSimilarity, overallSimilarity),
         alertDetails,
       };

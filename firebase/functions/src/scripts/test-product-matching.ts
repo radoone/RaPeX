@@ -29,8 +29,8 @@ async function runTest() {
   const candidates1 = await retrieveAlertsWithRag(product1);
   console.log(`Nájdených ${candidates1.length} relevantných alertov v okruhu podobnosti:`);
   candidates1.slice(0, 3).forEach((c, i) => {
-    console.log(`  [${i + 1}] Alert ID: ${c.id} | Vzdialenosť: ${c.distance?.toFixed(3) ?? 'N/A'} | Značka: ${c.fields.product_brand || 'N/A'} | Kategória: ${c.fields.product_category}`);
-    console.log(`      Popis: ${c.fields.product_description.slice(0, 100)}...`);
+    console.log(`  [${i + 1}] Alert ID: ${c.id} | Vzdialenosť: ${c.distance?.toFixed(3) ?? 'N/A'} | Značka: ${c.fields.brand || c.fields.product_brand || 'N/A'} | Kategória: ${c.fields.category || c.fields.product_category}`);
+    console.log(`      Popis: ${(c.fields.description || c.fields.product_description || '').slice(0, 100)}...`);
   });
 
   console.log("\n-> Spustenie porovnania cez Gemini matcher...");
