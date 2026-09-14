@@ -456,10 +456,24 @@
           const alertId = m.alertDetails?.alertId || w.alertId || "N/A";
           const alertNumber = m.alertDetails?.alertNumber || "";
           const alertImage = m.alertDetails?.alertImage || "";
-          const alertUrl = m.alertDetails?.rapexUrl || `https://ec.europa.eu/safety-gate-alerts/screen/webReport/alertDetail/${alertId}`;
+          
+          const isRapexUrlValid = m.alertDetails?.rapexUrl && !m.alertDetails.rapexUrl.includes("undefined") && !m.alertDetails.rapexUrl.includes(alertId);
+          const alertUrl = isRapexUrlValid
+            ? m.alertDetails.rapexUrl
+            : (alertNumber
+                ? `https://ec.europa.eu/safety-gate-alerts/screen/search?keywords=${encodeURIComponent(alertNumber)}`
+                : (m.alertDetails?.brand
+                    ? `https://ec.europa.eu/safety-gate-alerts/screen/search?keywords=${encodeURIComponent(m.alertDetails.brand)}`
+                    : `https://ec.europa.eu/safety-gate-alerts/screen/search?keywords=${encodeURIComponent(m.productTitle || "")}`));
+
           const alertBrand = m.alertDetails?.brand || w.brand || "Neuvedená";
           const alertModel = m.alertDetails?.model || w.model || "";
-          const productUrl = m.productUrl || `https://${lead.domain}/products/${m.productId || ''}`;
+
+          const isProductUrlValid = m.productUrl && !m.productUrl.includes("undefined") && !m.productUrl.endsWith("/products/") && !m.productUrl.endsWith("/products");
+          const productUrl = isProductUrlValid
+            ? m.productUrl
+            : `https://${lead.domain}/search?q=${encodeURIComponent(m.productTitle || "")}`;
+
           const riskDesc = m.alertDetails?.riskDescription || w.riskLegalProvision || w.message || "Porušenie smernice o bezpečnosti výrobkov EÚ.";
 
           const card = document.createElement("div");

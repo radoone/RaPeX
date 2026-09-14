@@ -262,7 +262,7 @@ export async function handleScanPublicShopifyStoreRequest(
     return;
   }
 
-async function enrichLeadMatches(matches: any[]): Promise<any[]> {
+async function enrichLeadMatches(matches: any[], leadDomain?: string): Promise<any[]> {
   if (!matches || !matches.length) return [];
   const alertIds = [...new Set(matches.map((m) => m.result?.warnings?.[0]?.alertId).filter(Boolean))];
   if (!alertIds.length) return matches;
@@ -275,13 +275,16 @@ async function enrichLeadMatches(matches: any[]): Promise<any[]> {
     if (doc.exists) {
       const data = doc.data() || {};
       const f = data.fields || {};
-      const meta = data.meta || {};
+      const alertNumber = f.alert_number || undefined;
+      const rapexUrl =
+        f.rapex_url ||
+        (alertNumber
+          ? `https://ec.europa.eu/safety-gate-alerts/screen/search?keywords=${encodeURIComponent(alertNumber)}`
+          : undefined);
       alertMap.set(doc.id, {
         alertId: doc.id,
-        alertNumber: f.alert_number || undefined,
-        rapexUrl:
-          f.rapex_url ||
-          `https://ec.europa.eu/safety-gate-alerts/screen/webReport/alertDetail/${meta.recordid || doc.id}`,
+        alertNumber,
+        rapexUrl,
         alertImage: f.product_image || (Array.isArray(f.pictures) ? f.pictures[0] : undefined),
         brand: f.product_brand || undefined,
         model: f.product_model || undefined,
@@ -299,9 +302,14 @@ async function enrichLeadMatches(matches: any[]): Promise<any[]> {
   return matches.map((m) => {
     const w = m.result?.warnings?.[0];
     const alertMeta = w?.alertId ? alertMap.get(w.alertId) : undefined;
+    const storeDomain = leadDomain || m.shop || "";
+    let productUrl = m.productUrl;
+    if (!productUrl || productUrl.includes("undefined") || productUrl.endsWith("/products/") || productUrl.endsWith("/products")) {
+      productUrl = storeDomain ? `https://${storeDomain}/search?q=${encodeURIComponent(m.productTitle || "")}` : undefined;
+    }
     return {
       ...m,
-      productUrl: m.productUrl || (m.productId ? `https://${m.shop || ''}/products/${m.productId}` : undefined),
+      productUrl,
       alertDetails: alertMeta,
     };
   });
@@ -318,7 +326,7 @@ async function enrichLeadMatches(matches: any[]): Promise<any[]> {
         snapshot.docs.map(async (doc) => {
           const data = doc.data();
           if (data.matches && data.matches.length) {
-            data.matches = await enrichLeadMatches(data.matches);
+            data.matches = await enrichLeadMatches(data.matches, data.domain);
           }
           return data;
         })
@@ -436,7 +444,7 @@ async function enrichLeadMatches(matches: any[]): Promise<any[]> {
               matches.push({
                 productId: candidate.raw.id ? String(candidate.raw.id) : candidate.productInput.productId,
                 productTitle: candidate.raw.title,
-                productUrl: `https://${domain}/products/${candidate.raw.handle}`,
+                productUrl: candidate.raw.handle ? `https://${domain}/products/${candidate.raw.handle}` : `https://${domain}/search?q=${encodeURIComponent(candidate.raw.title || "")}`,
                 productImage: candidate.productInput.imageUrl,
                 vendor: candidate.productInput.brand,
                 productType: candidate.productInput.category,
