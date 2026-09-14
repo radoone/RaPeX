@@ -215,9 +215,10 @@ h3 {
 }
 
 h1 {
-  max-width: 12ch;
-  font-size: clamp(3.4rem, 6vw, 6rem);
-  letter-spacing: -0.05em;
+  max-width: 18ch;
+  font-size: clamp(2.2rem, 3.8vw, 3.4rem);
+  line-height: 1.12;
+  letter-spacing: -0.035em;
 }
 
 .hero__lede {
@@ -1091,8 +1092,9 @@ a.trust-item:hover {
   }
 
   h1 {
-    max-width: 14ch;
-    font-size: clamp(2.8rem, 12vw, 4.6rem);
+    max-width: 100%;
+    font-size: clamp(1.9rem, 6vw, 2.7rem);
+    line-height: 1.15;
   }
 }
 
