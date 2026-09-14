@@ -494,7 +494,7 @@ async function enrichLeadMatches(matches: any[], leadDomain?: string): Promise<a
   const body = request.body || {};
   const rawDomain = coerceString(body.domain);
   const maxProducts = typeof body.maxProducts === "number" ? Math.min(body.maxProducts, 10000) : 100;
-  const similarityThreshold = typeof body.similarityThreshold === "number" ? body.similarityThreshold : 50;
+  const similarityThreshold = typeof body.similarityThreshold === "number" ? body.similarityThreshold : 80;
 
   if (!rawDomain) {
     response.status(400).json({ error: "Missing required 'domain' parameter." });
