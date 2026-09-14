@@ -194,11 +194,15 @@
     "items": [
       {
         "q": "How many items are in the Safety Gate database and how many are added monthly?",
-        "a": "The official EU Safety Gate (RAPEX) database currently holds over 35,000 dangerous non-food consumer products. The European Commission releases new reports every Friday, adding approximately 200 to 300+ new alerts and mandatory product recalls every month (roughly 50 to 80 per week)."
+        "a": "The official EU Safety Gate (RAPEX) database currently holds over <strong>35,000 dangerous non-food consumer products</strong>. The European Commission releases new reports every Friday, adding approximately <strong>200 to 300+ new alerts</strong> and mandatory product recalls every month (roughly 50 to 80 per week)."
       },
       {
         "q": "What specific penalties and legal obligations apply under GPSR and market authorities?",
-        "a": "Under EU Regulation 2023/988 (GPSR) and consumer protection laws: (1) Merchants must immediately cease sales and execute a mandatory product recall, notifying all affected buyers. (2) Merchants must provide a full refund or remedy without delay (even without original packaging/receipts). (3) Market surveillance authorities can impose fines ranging from €66,400 up to €332,000 or significant percentages of annual turnover for serious hazards."
+        "a": "Under <strong>EU Regulation 2023/988 (GPSR)</strong> and consumer protection laws:<br><br>• <strong>Immediate sales ban and mandatory recall:</strong> You must immediately pull the product from the market, contact all buyers, and report to Safety Business Gateway.<br>• <strong>Mandatory full refunds within 3 days:</strong> Consumers are legally entitled to a full refund even <em>without receipts or original packaging</em>.<br>• <strong>Severe regulatory fines:</strong> National surveillance authorities (such as SOI, BAuA, DGCCRF) can impose fines from <strong>€66,400 up to €332,000 (or 2%–4% of annual turnover)</strong> for dangerous products."
+      },
+      {
+        "q": "Are there real cases and published fines in EU member states?",
+        "a": "Yes. Market surveillance authorities routinely audit online retailers and issue public recalls and substantial fines. Frequent cases involve toys containing toxic phthalates, uncertified power adapters posing fire/shock hazards, and cosmetics containing banned reproductive toxins.<br><br>📌 <strong>Official registries and enforcement reports:</strong><br>• <a href=\"https://www.soi.sk/sk/Nebezpecne-vyrobky.soi\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"faq-source-link\">Official Registry of Recalls &amp; Dangerous Products ↗</a><br>• <a href=\"https://ec.europa.eu/safety-gate-alerts/\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"faq-source-link\">European Commission Safety Gate Alerts Database ↗</a><br>• <a href=\"https://commission.europa.eu/business-economy-euro/doing-business-eu/product-safety_en\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"faq-source-link\">EU Consumer Safety &amp; Enforcement Directives ↗</a>"
       },
       {
         "q": "How does the free store scan work?",
@@ -206,11 +210,11 @@
       },
       {
         "q": "What is the EU Safety Gate (formerly RAPEX) system?",
-        "a": "EU Safety Gate (formerly RAPEX) is the European Union's rapid alert system for dangerous non-food consumer products. The European Commission publishes weekly reports on recalled items (toys, electronics, cosmetics, chargers, apparel) that pose serious health or safety risks. You can browse the database at ec.europa.eu/safety-gate-alerts."
+        "a": "EU Safety Gate (formerly RAPEX) is the European Union's rapid alert system for dangerous non-food consumer products. The European Commission publishes weekly reports on recalled items (toys, electronics, cosmetics, chargers, apparel) that pose serious health or safety risks. You can browse the database at <a href=\"https://ec.europa.eu/safety-gate-alerts/\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"faq-source-link\">ec.europa.eu/safety-gate-alerts ↗</a>."
       },
       {
         "q": "What is the GPSR regulation and why does it affect Shopify merchants?",
-        "a": "The EU General Product Safety Regulation (GPSR - EU 2023/988, effective Dec 13, 2024) applies to all e-commerce stores selling to EU consumers. It mandates active product safety verification, responsible EU economic operator identification, and instant cooperation with surveillance authorities."
+        "a": "The EU General Product Safety Regulation (<strong>GPSR - EU 2023/988, effective Dec 13, 2024</strong>) applies to all e-commerce stores selling to EU consumers. It mandates active product safety verification, responsible EU economic operator identification, and instant cooperation with surveillance authorities."
       },
       {
         "q": "How does Visual AI detect products if suppliers changed names or branding?",

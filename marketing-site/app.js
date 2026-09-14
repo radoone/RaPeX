@@ -36,7 +36,11 @@ function syncDocument(language) {
       return;
     }
 
-    element.textContent = value;
+    if (element.dataset.i18nHtml === "true" || (value.includes("<") && value.includes(">"))) {
+      element.innerHTML = value;
+    } else {
+      element.textContent = value;
+    }
   });
 
   document.querySelectorAll("[data-locale]").forEach((button) => {

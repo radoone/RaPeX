@@ -194,11 +194,15 @@
     "items": [
       {
         "q": "Koľko položiek je v databáze Safety Gate a koľko pribúda mesačne?",
-        "a": "Oficiálna databáza EU Safety Gate (RAPEX) aktuálne obsahuje viac ako 35 000 nahlásených nebezpečných výrobkov z celej Európskej únie. Európska komisia zverejňuje nové reporty každý piatok – mesačne tak pribudne približne 200 až 300+ nových alertov a nariadených recallov (cca 50 až 80 týždenne)."
+        "a": "Oficiálna databáza EU Safety Gate (RAPEX) aktuálne obsahuje viac ako <strong>35 000 nahlásených nebezpečných výrobkov</strong> z celej Európskej únie. Európska komisia zverejňuje nové reporty každý piatok – mesačne tak pribudne približne <strong>200 až 300+ nových alertov</strong> a nariadených recallov (cca 50 až 80 týždenne)."
       },
       {
         "q": "Aké sankcie a právne dôsledky mi reálne hrozia pri predaji výrobku zo Safety Gate?",
-        "a": "Podľa Nariadenia (EÚ) 2023/988 (GPSR) a Zákona o ochrane spotrebiteľa má predajca prísne povinnosti: (1) Okamžite zastaviť predaj a stiahnuť výrobok z trhu aj od koncových zákazníkov (recall). (2) Vrátiť zákazníkovi plnú kúpnu cenu do 3 pracovných dní a to aj bez pokladničného bloku či po záručnej dobe. (3) Orgán dozoru (napr. Slovenská obchodná inšpekcia) môže uložiť pokutu do 66 400 €, pri opakovanom porušení do 166 000 € a pri ohrození zdravia či života až do 332 000 €."
+        "a": "Podľa <strong>Nariadenia (EÚ) 2023/988 (GPSR)</strong> a Zákona o ochrane spotrebiteľa má predajca prísne povinnosti:<br><br>• <strong>Okamžitý zákaz predaja a povinný recall:</strong> Výrobok musíte bezodkladne stiahnuť z trhu aj od koncových zákazníkov a nahlásiť do systému Safety Business Gateway.<br>• <strong>Povinné vrátenie peňazí do 3 pracovných dní:</strong> Spotrebiteľ má nárok na plné vrátenie kúpnej ceny a účelných nákladov aj <em>bez dokladu o kúpe</em> a po uplynutí záruky.<br>• <strong>Vysoké finančné pokuty od SOI:</strong> Slovenská obchodná inšpekcia ukladá pokuty <strong>do 66 400 €</strong> pri prvom zistení, <strong>do 166 000 €</strong> pri opakovanom porušení a <strong>až do 332 000 € (resp. 2 % z ročného obratu)</strong> pri ohrození zdravia či života spotrebiteľov."
+      },
+      {
+        "q": "Existujú reálne prípady a medializované pokuty na Slovensku?",
+        "a": "Áno, Slovenská obchodná inšpekcia (SOI) a ÚVZ SR pravidelne vykonávajú kontroly e-shopov a nariaďujú okamžité stiahnutie tovaru z predaja. Medzi časté medializované prípady patria nebezpečné hračky (ftaláty a malé uvoľniteľné časti), horľavé predlžovacie káble či adaptéry bez CE certifikácie a kozmetika so zakázanými látkami.<br><br>📌 <strong>Oficiálne zdroje a medializované kontroly:</strong><br>• <a href=\"https://www.soi.sk/sk/Nebezpecne-vyrobky.soi\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"faq-source-link\">Oficiálny register nebezpečných výrobkov a recallov SOI ↗</a><br>• <a href=\"https://www.soi.sk/sk/informacie-pre-podnikatelov/Vseobecna-bezpecnost-vyrobkov.soi\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"faq-source-link\">Informácie SOI o povinnostiach a sankciách pre podnikateľov ↗</a><br>• <a href=\"https://www.startitup.sk\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"faq-source-link\">Správy Startitup &amp; FonTech o kontrolách nebezpečných výrobkov a sankciách e-shopov ↗</a><br>• <a href=\"https://www.aktuality.sk\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"faq-source-link\">Aktuality.sk – Kontroly internetových obchodov a pokuty ↗</a>"
       },
       {
         "q": "Ako funguje bezplatný scan môjho e-shopu?",
@@ -206,11 +210,11 @@
       },
       {
         "q": "Čo je to systém EU Safety Gate (bývalý RAPEX)?",
-        "a": "EU Safety Gate (predtým RAPEX) je oficiálny systém rýchleho varovania Európskej únie pre nebezpečné nepotravinové výrobky. Európska komisia v ňom týždenne zverejňuje produkty (hračky, elektroniku, kozmetiku, nabíjačky či odevy), ktoré predstavujú vážne riziko a musia byť stiahnuté z trhu. Oficiálny portál nájdete na ec.europa.eu/safety-gate-alerts."
+        "a": "EU Safety Gate (predtým RAPEX) je oficiálny systém rýchleho varovania Európskej únie pre nebezpečné nepotravinové výrobky. Európska komisia v ňom týždenne zverejňuje produkty (hračky, elektroniku, kozmetiku, nabíjačky či odevy), ktoré predstavujú vážne riziko a musia byť stiahnuté z trhu. Oficiálny portál nájdete na <a href=\"https://ec.europa.eu/safety-gate-alerts/\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"faq-source-link\">ec.europa.eu/safety-gate-alerts ↗</a>."
       },
       {
         "q": "Čo je to nariadenie GPSR a aké povinnosti ukladá e-shopom?",
-        "a": "Od 13. decembra 2024 platí v celej EÚ Všeobecné nariadenie o bezpečnosti výrobkov (GPSR – General Product Safety Regulation, Nariadenie EÚ 2023/988). E-shopy predávajúce v EÚ sú povinné aktívne overovať bezpečnosť svojho sortimentu, uvádzať kontaktné údaje zodpovednej osoby v EÚ a okamžite spolupracovať s dozornými orgánmi."
+        "a": "Od 13. decembra 2024 platí v celej EÚ Všeobecné nariadenie o bezpečnosti výrobkov (<strong>GPSR – General Product Safety Regulation, Nariadenie EÚ 2023/988</strong>). E-shopy predávajúce v EÚ sú povinné aktívne overovať bezpečnosť svojho sortimentu, uvádzať kontaktné údaje zodpovednej osoby v EÚ a okamžite spolupracovať s dozornými orgánmi."
       },
       {
         "q": "Ako vizuálna AI odhalí tovar, ak dodávateľ zmenil názov či značku?",
