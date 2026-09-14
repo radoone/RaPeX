@@ -465,7 +465,7 @@ async function enrichLeadMatches(matches: any[], leadDomain?: string): Promise<a
 
   const body = request.body || {};
   const rawDomain = coerceString(body.domain);
-  const maxProducts = typeof body.maxProducts === "number" ? Math.min(body.maxProducts, 1000) : 100;
+  const maxProducts = typeof body.maxProducts === "number" ? Math.min(body.maxProducts, 10000) : 100;
   const similarityThreshold = typeof body.similarityThreshold === "number" ? body.similarityThreshold : 50;
 
   if (!rawDomain) {
