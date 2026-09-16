@@ -81,6 +81,7 @@
     "btnReview": "Review Match",
     "btnDismiss": "Dismiss",
     "btnResolve": "Resolve",
+    "interactiveToast": "Shopify Admin Action Preview: One-click resolution recorded in your compliance audit trail.",
     "chips": [
       "Free Audit",
       "24/7 Delta Monitoring",

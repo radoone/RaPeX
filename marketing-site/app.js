@@ -49,6 +49,32 @@ function syncDocument(language) {
   });
 }
 
+function initHeroPreviewHandler() {
+  const toast = document.getElementById("preview-toast");
+  const buttons = document.querySelectorAll(".hero-card__btn");
+
+  if (!toast || buttons.length === 0) {
+    return;
+  }
+
+  let toastTimeout = null;
+
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const action = btn.dataset.action;
+      toast.style.display = "flex";
+      
+      if (toastTimeout) {
+        clearTimeout(toastTimeout);
+      }
+
+      toastTimeout = setTimeout(() => {
+        toast.style.display = "none";
+      }, 3500);
+    });
+  });
+}
+
 function initFormHandler() {
   const form = document.getElementById("scan-form");
   const successBox = document.getElementById("scan-success");
@@ -103,6 +129,7 @@ async function initI18n() {
   syncDocument(activeLanguage);
   setQueryLanguage(activeLanguage);
   initFormHandler();
+  initHeroPreviewHandler();
 
   document.querySelectorAll("[data-locale]").forEach((button) => {
     button.addEventListener("click", async () => {
@@ -131,4 +158,5 @@ initI18n().catch((error) => {
   syncDocument("en");
   setQueryLanguage("en");
   initFormHandler();
+  initHeroPreviewHandler();
 });

@@ -81,6 +81,7 @@
     "btnReview": "Preskúmať zhodu",
     "btnDismiss": "Zamietnuť",
     "btnResolve": "Vyriešiť",
+    "interactiveToast": "Ukážka akcie v Shopify Admin: Akcia na jedno kliknutie zapísaná do auditnej stopy.",
     "chips": [
       "Bezplatný audit",
       "24/7 delta monitoring",
