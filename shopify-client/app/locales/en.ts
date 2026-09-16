@@ -23,6 +23,32 @@ const en = {
       },
       "dashboard": {
         "title": "Safety Gate EU",
+        "liveScan": {
+          "eyebrow": "Automated Safety Audit",
+          "heading": "Free catalog safety audit in progress...",
+          "description": "Importing your catalog from Shopify and scanning products against 35,000+ records in the official EU Safety Gate (RAPEX) database. Results will appear below momentarily.",
+          "stepImport": "1. Import products from Shopify",
+          "stepScan": "2. Compare with Safety Gate database (35,000+ records)",
+          "stepAudit": "3. Prepare GPSR audit trail and compliance status",
+          "inProgress": "In progress...",
+          "completed": "Done",
+          "pending": "Pending"
+        },
+        "safetyBreakdown": {
+          "eyebrow": "Catalog Protection Status",
+          "title": "Product Safety Status",
+          "description": "Overview of your product catalog verification against European safety lists and the GPSR directive.",
+          "protectedLabel": "Protected Products",
+          "protectedDesc": "Verified products with zero matches found in the dangerous products database.",
+          "actionLabel": "Action Required",
+          "actionDesc": "Matches found with EU Safety Gate reports that require review and resolution.",
+          "unprotectedLabel": "Unprotected Products",
+          "unprotectedDesc": "Unchecked products in your catalog currently awaiting safety verification.",
+          "unprotectedAllCovered": "100% of your catalog is verified and protected.",
+          "reviewAlertsAction": "Review alerts",
+          "protectRemainingAction": "Verify unprotected ({{count}})",
+          "scanAllAction": "Run full catalog audit"
+        },
         "activeAlertsBanner": {
           "title": "Active safety alerts need attention",
           "content": "Resolve {{count}} active alert to keep affected products available in your store.",
@@ -396,7 +422,11 @@ const en = {
         "safe": "Safe",
         "unsafe": "Needs review",
         "updated": "Updated",
-        "flagged": "flagged"
+        "flagged": "flagged",
+        "protected": "Protected",
+        "unprotected": "Unprotected",
+        "actionRequired": "Action required",
+        "scanning": "Scanning in progress"
       },
       "analysis": {
         "modalHeading": "Review Safety Gate match",

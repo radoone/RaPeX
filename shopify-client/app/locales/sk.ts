@@ -23,6 +23,32 @@ const sk = {
       },
       "dashboard": {
         "title": "Safety Gate EÚ",
+        "liveScan": {
+          "eyebrow": "Automatický bezpečnostný audit",
+          "heading": "Prebieha bezplatný audit bezpečnosti katalógu...",
+          "description": "Importujeme váš katalóg zo Shopify a porovnávame produkty s 35 000+ záznamami v oficiálnej databáze EU Safety Gate (RAPEX). Výsledky sa okamžite zobrazia nižšie.",
+          "stepImport": "1. Import produktov zo Shopify",
+          "stepScan": "2. Porovnávanie s databázou Safety Gate (35 000+ záznamov)",
+          "stepAudit": "3. Príprava GPSR audítorskej stopy a súladu",
+          "inProgress": "Prebieha...",
+          "completed": "Hotovo",
+          "pending": "Čaká"
+        },
+        "safetyBreakdown": {
+          "eyebrow": "Stav ochrany katalógu",
+          "title": "Bezpečnostný status produktov",
+          "description": "Prehľad overenia vašich produktov voči európskym bezpečnostným zoznamom a nariadeniu GPSR.",
+          "protectedLabel": "Chránené produkty",
+          "protectedDesc": "Preverené produkty bez nájdenej zhody v databáze nebezpečných výrobkov.",
+          "actionLabel": "Vyžaduje akciu",
+          "actionDesc": "Zistená zhoda s hlásením EU Safety Gate vyžadujúca rozhodnutie.",
+          "unprotectedLabel": "Nechránené produkty",
+          "unprotectedDesc": "Zatiaľ nepreverené produkty v katalógu čakajúce na kontrolu.",
+          "unprotectedAllCovered": "100% katalógu je úspešne preverených a chránených.",
+          "reviewAlertsAction": "Skontrolovať upozornenia",
+          "protectRemainingAction": "Preveriť nechránené ({{count}})",
+          "scanAllAction": "Spustiť audit celého katalógu"
+        },
         "activeAlertsBanner": {
           "title": "Aktívne bezpečnostné upozornenia vyžadujú pozornosť",
           "content": "Vyriešte {{count}} aktívne upozornenie, aby ste udržali dotknuté produkty dostupné vo vašom obchode.",
@@ -396,7 +422,11 @@ const sk = {
         "safe": "Bezpečné",
         "unsafe": "Vyžaduje kontrolu",
         "updated": "Aktualizované",
-        "flagged": "označené"
+        "flagged": "označené",
+        "protected": "Chránené",
+        "unprotected": "Nechránené",
+        "actionRequired": "Vyžaduje akciu",
+        "scanning": "Prebieha kontrola"
       },
       "analysis": {
         "modalHeading": "Skontrolovať zhodu zo Safety Gate",

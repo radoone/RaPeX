@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
 import { useFetcher, useLoaderData, useNavigation, useNavigate, useRouteError, isRouteErrorResponse } from "react-router";
 import { data as json } from "react-router";
@@ -7,7 +7,7 @@ import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
 import db, { type SafetySettingRecord } from "../merchant-db.server";
 import { firestore } from "../firestore.server";
-import { OnboardingWizard, formatRelativeDate } from "../components";
+import { formatRelativeDate } from "../components";
 import { getBillingStatus, requireActiveBilling } from "../services/billing.server";
 import {
   runMerchantDeltaMonitoring,
@@ -357,11 +357,16 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   }).length;
 
   const defaultSettings: Partial<SafetySettingRecord> & { onboardingCompleted: boolean } = {
-    onboardingCompleted: false,
+    onboardingCompleted: true,
     similarityThreshold: 70,
     autoDraftHighRisk: false,
     emailNotifications: true,
   };
+
+  const resolvedSettings = {
+    ...(settings || defaultSettings),
+    onboardingCompleted: true,
+  } as SafetySettingRecord;
 
   return json({
     stats: {
@@ -376,7 +381,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       criticalActiveAlerts,
     },
     recentAlerts: processedRecentAlerts,
-    settings: (settings || defaultSettings) as SafetySettingRecord,
+    settings: resolvedSettings,
     billingStatus,
     recentActivities,
     lastMonitoringAt: lastMonitoringActivityRows.find((activity: any) =>
@@ -647,6 +652,24 @@ export default function Index() {
   const cleanRiskLabel = (value?: string | null) =>
     value ? value.replace(/\s*\/\s*other\b/gi, "").trim() : "";
 
+  const hasAutoStartedScan = useRef(false);
+  useEffect(() => {
+    // Auto-trigger free catalog scan immediately upon entry if store has unverified catalog and scan hasn't run yet
+    const isScanNeeded = !settings?.freeScanUsed && stats.checkedProducts === 0;
+    if (isScanNeeded && !hasAutoStartedScan.current && fetcher.state === "idle" && !fetcher.data) {
+      hasAutoStartedScan.current = true;
+      fetcher.submit(
+        { action: "importCatalogAndMonitor" },
+        { method: "POST" }
+      );
+    }
+  }, [settings?.freeScanUsed, stats.checkedProducts, fetcher]);
+
+  const protectedCount = Math.max(0, stats.checkedProducts - stats.activeAlerts);
+  const actionRequiredCount = stats.activeAlerts;
+  const unprotectedCount = stats.uncheckedProducts;
+  const isScanning = isSubmitting || fetcher.state !== "idle";
+
   useEffect(() => {
     if (fetcher.data) {
       if (fetcher.data.success && fetcher.data.message) {
@@ -668,46 +691,7 @@ export default function Index() {
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // ONBOARDING WIZARD VIEW
-  // ═══════════════════════════════════════════════════════════════════════════
-  if (settings && !settings.onboardingCompleted) {
-    const triggerInitialScan = () => {
-      fetcher.submit(
-        {
-          action: "importCatalogAndMonitor",
-        },
-        { method: "POST" }
-      );
-    };
-
-    const finishOnboarding = (payload: {
-      similarityThreshold: number;
-      autoDraftHighRisk: boolean;
-    }) => {
-      fetcher.submit(
-        {
-          action: "completeOnboarding",
-          similarityThreshold: payload.similarityThreshold.toString(),
-          onboardingCompleted: "true",
-          autoDraftHighRisk: payload.autoDraftHighRisk.toString(),
-        },
-        { method: "POST" }
-      );
-    };
-
-    return (
-      <OnboardingWizard
-        stats={stats}
-        isSubmitting={isSubmitting}
-        onScanCatalog={triggerInitialScan}
-        scanResults={fetcher.data || undefined}
-        onComplete={finishOnboarding}
-      />
-    );
-  }
-
-  // ═══════════════════════════════════════════════════════════════════════════
-  // STANDARD DASHBOARD VIEW
+  // STANDARD DASHBOARD VIEW (Direct access, zero onboarding blocker)
   // ═══════════════════════════════════════════════════════════════════════════
   return (
     <s-page size="large" className="page-shell" suppressHydrationWarning>
@@ -728,6 +712,172 @@ export default function Index() {
       </s-button>
 
       <div className="admin-stack">
+        {/* Live Scan Progress Card when scan is active */}
+        {isScanning && (
+          <section className="live-scan-card" aria-live="polite">
+            <div className="live-scan-header">
+              <div>
+                <p className="admin-eyebrow" style={{ margin: 0, color: "#008060" }}>
+                  {t("dashboard.liveScan.eyebrow")}
+                </p>
+                <h3 style={{ margin: "4px 0 0", fontSize: "18px", fontWeight: 600 }}>
+                  {t("dashboard.liveScan.heading")}
+                </h3>
+              </div>
+              <span className="live-scan-badge">
+                <s-spinner size="small" />
+                {t("dashboard.liveScan.inProgress")}
+              </span>
+            </div>
+            <p style={{ margin: "6px 0 0", fontSize: "13px", color: "var(--text-subdued)", maxWidth: "75ch" }}>
+              {t("dashboard.liveScan.description")}
+            </p>
+            <div className="live-scan-steps">
+              <div className="live-scan-step live-scan-step--done">
+                <span className="live-scan-step-icon live-scan-step-icon--done">✓</span>
+                <span>{t("dashboard.liveScan.stepImport")}</span>
+              </div>
+              <div className="live-scan-step live-scan-step--active">
+                <span className="live-scan-step-icon live-scan-step-icon--active">
+                  <s-spinner size="small" />
+                </span>
+                <span>{t("dashboard.liveScan.stepScan")}</span>
+              </div>
+              <div className="live-scan-step">
+                <span className="live-scan-step-icon live-scan-step-icon--pending">3</span>
+                <span style={{ color: "var(--text-subdued)" }}>{t("dashboard.liveScan.stepAudit")}</span>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* 3-Card Catalog Safety Status Breakdown */}
+        <section aria-label={t("dashboard.safetyBreakdown.eyebrow")}>
+          <div style={{ marginBottom: "12px" }}>
+            <p className="admin-eyebrow" style={{ margin: 0 }}>{t("dashboard.safetyBreakdown.eyebrow")}</p>
+            <h2 style={{ margin: "4px 0 0", fontSize: "20px", fontWeight: 600 }}>{t("dashboard.safetyBreakdown.title")}</h2>
+            <p style={{ margin: "4px 0 0", fontSize: "13px", color: "var(--text-subdued)" }}>{t("dashboard.safetyBreakdown.description")}</p>
+          </div>
+
+          <div className="safety-status-grid">
+            {/* 1. Protected Card (Green) */}
+            <div className="safety-status-card safety-status-card--protected">
+              <div>
+                <div className="safety-status-card__top">
+                  <span className="safety-status-card__badge safety-status-card__badge--protected">
+                    🟢 {t("status.protected")}
+                  </span>
+                  <small style={{ color: "var(--text-subdued)", fontSize: "12px" }}>
+                    {stats.totalProducts > 0 ? `${Math.round((protectedCount / Math.max(1, stats.totalProducts)) * 100)}%` : "0%"}
+                  </small>
+                </div>
+                <div className="safety-status-card__value" style={{ color: "#108043" }}>
+                  {protectedCount}
+                </div>
+                <div className="safety-status-card__label">
+                  {t("dashboard.safetyBreakdown.protectedLabel")}
+                </div>
+                <div className="safety-status-card__desc">
+                  {t("dashboard.safetyBreakdown.protectedDesc")}
+                </div>
+              </div>
+              <div className="safety-status-card__action">
+                <s-button
+                  variant="secondary"
+                  onClick={() => navigate("/app/evidence")}
+                >
+                  {t("actions.viewEvidence")}
+                </s-button>
+              </div>
+            </div>
+
+            {/* 2. Action Required Card (Red / Critical) */}
+            <div className="safety-status-card safety-status-card--action">
+              <div>
+                <div className="safety-status-card__top">
+                  <span className="safety-status-card__badge safety-status-card__badge--action">
+                    🔴 {t("status.actionRequired")}
+                  </span>
+                  <small style={{ color: "var(--text-subdued)", fontSize: "12px" }}>
+                    {stats.criticalActiveAlerts > 0 ? `${stats.criticalActiveAlerts} critical` : ""}
+                  </small>
+                </div>
+                <div className="safety-status-card__value" style={{ color: actionRequiredCount > 0 ? "#d82c0d" : "inherit" }}>
+                  {actionRequiredCount}
+                </div>
+                <div className="safety-status-card__label">
+                  {t("dashboard.safetyBreakdown.actionLabel")}
+                </div>
+                <div className="safety-status-card__desc">
+                  {t("dashboard.safetyBreakdown.actionDesc")}
+                </div>
+              </div>
+              <div className="safety-status-card__action">
+                <s-button
+                  variant={actionRequiredCount > 0 ? "primary" : "secondary"}
+                  tone={actionRequiredCount > 0 ? "critical" : undefined}
+                  onClick={() => navigate("/app/alerts?status=active")}
+                >
+                  {t("dashboard.safetyBreakdown.reviewAlertsAction")}
+                </s-button>
+              </div>
+            </div>
+
+            {/* 3. Unprotected Card (Yellow / Amber) */}
+            <div className="safety-status-card safety-status-card--unprotected">
+              <div>
+                <div className="safety-status-card__top">
+                  <span className="safety-status-card__badge safety-status-card__badge--unprotected">
+                    🟡 {t("status.unprotected")}
+                  </span>
+                  <small style={{ color: "var(--text-subdued)", fontSize: "12px" }}>
+                    {unprotectedCount > 0 ? `${unprotectedCount} pending` : "All clear"}
+                  </small>
+                </div>
+                <div className="safety-status-card__value" style={{ color: unprotectedCount > 0 ? "#b98900" : "#108043" }}>
+                  {unprotectedCount}
+                </div>
+                <div className="safety-status-card__label">
+                  {t("dashboard.safetyBreakdown.unprotectedLabel")}
+                </div>
+                <div className="safety-status-card__desc">
+                  {unprotectedCount > 0
+                    ? t("dashboard.safetyBreakdown.unprotectedDesc")
+                    : t("dashboard.safetyBreakdown.unprotectedAllCovered")}
+                </div>
+              </div>
+              <div className="safety-status-card__action">
+                {unprotectedCount > 0 ? (
+                  <s-button
+                    variant="primary"
+                    onClick={() =>
+                      fetcher.submit(
+                        { action: "importCatalogAndMonitor" },
+                        { method: "POST" }
+                      )
+                    }
+                    disabled={isScanning}
+                  >
+                    {t("dashboard.safetyBreakdown.protectRemainingAction", { count: unprotectedCount })}
+                  </s-button>
+                ) : (
+                  <s-button
+                    variant="secondary"
+                    onClick={() =>
+                      fetcher.submit(
+                        { action: "importCatalogAndMonitor" },
+                        { method: "POST" }
+                      )
+                    }
+                    disabled={isScanning}
+                  >
+                    {t("dashboard.safetyBreakdown.scanAllAction")}
+                  </s-button>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
         {billingStatus && !billingStatus.hasActivePayment && billingStatus.freeScanUsed && (
           <s-banner tone="warning" heading={t("billing.upgradeRequiredHeading")}>
             <s-text>{t("billing.upgradeRequiredDescription")}</s-text>

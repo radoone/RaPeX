@@ -2564,3 +2564,199 @@ s-modal s-box[background="bg-surface-critical"] s-grid {
   height: 14px;
   margin: 4px 0;
 }
+
+/* Live Scan Progress Card */
+.live-scan-card {
+  border: 1px solid rgba(0, 128, 96, 0.35);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, rgba(0, 128, 96, 0.08), rgba(255, 255, 255, 0.98) 60%);
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.live-scan-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.live-scan-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  background: rgba(0, 128, 96, 0.12);
+  color: #008060;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.live-scan-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.live-scan-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid var(--border);
+  font-size: 13px;
+}
+
+.live-scan-step--active {
+  border-color: rgba(0, 128, 96, 0.4);
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 128, 96, 0.12);
+  font-weight: 600;
+}
+
+.live-scan-step--done {
+  border-color: rgba(0, 128, 96, 0.2);
+  color: var(--text-subdued);
+}
+
+.live-scan-step-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.live-scan-step-icon--active {
+  color: #008060;
+}
+
+.live-scan-step-icon--done {
+  background: #008060;
+  color: #fff;
+}
+
+.live-scan-step-icon--pending {
+  background: var(--surface-subdued);
+  color: var(--text-subdued);
+}
+
+/* Safety Status Grid (Protected / Action Required / Unprotected) */
+.safety-status-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 840px) {
+  .safety-status-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.safety-status-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 18px 20px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.safety-status-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.safety-status-card--protected {
+  border-left: 4px solid #108043;
+  background: linear-gradient(135deg, rgba(16, 128, 67, 0.05), rgba(255, 255, 255, 0.98) 45%);
+}
+
+.safety-status-card--action {
+  border-left: 4px solid #d82c0d;
+  background: linear-gradient(135deg, rgba(216, 44, 13, 0.05), rgba(255, 255, 255, 0.98) 45%);
+}
+
+.safety-status-card--unprotected {
+  border-left: 4px solid #b98900;
+  background: linear-gradient(135deg, rgba(185, 137, 0, 0.05), rgba(255, 255, 255, 0.98) 45%);
+}
+
+.safety-status-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.safety-status-card__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.safety-status-card__badge--protected {
+  background: rgba(16, 128, 67, 0.12);
+  color: #108043;
+}
+
+.safety-status-card__badge--action {
+  background: rgba(216, 44, 13, 0.12);
+  color: #d82c0d;
+}
+
+.safety-status-card__badge--unprotected {
+  background: rgba(185, 137, 0, 0.14);
+  color: #8a6400;
+}
+
+.safety-status-card__value {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.safety-status-card__label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.safety-status-card__desc {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--text-subdued);
+  margin-bottom: 16px;
+  flex-grow: 1;
+}
+
+.safety-status-card__action {
+  margin-top: auto;
+  padding-top: 8px;
+}
+
