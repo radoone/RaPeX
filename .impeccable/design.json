@@ -1,0 +1,216 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-16T09:28:00.000Z",
+  "title": "Design System: Safety Gate Monitor",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Polaris Emerald",
+        "canonical": "#008060",
+        "tonalRamp": [
+          "#003628",
+          "#004d39",
+          "#00664c",
+          "#008060",
+          "#26997b",
+          "#5cb39c",
+          "#99d1c1",
+          "#d9f0e9"
+        ]
+      },
+      "critical": {
+        "role": "critical",
+        "displayName": "Critical Ruby",
+        "canonical": "#d82c0d",
+        "tonalRamp": [
+          "#5c1104",
+          "#851906",
+          "#b02108",
+          "#d82c0d",
+          "#e25a42",
+          "#ec8978",
+          "#f5b8ad",
+          "#fcebe8"
+        ]
+      },
+      "warning": {
+        "role": "warning",
+        "displayName": "Warning Amber",
+        "canonical": "#c68400",
+        "tonalRamp": [
+          "#543800",
+          "#785000",
+          "#9e6a00",
+          "#c68400",
+          "#d69f33",
+          "#e4b966",
+          "#f1d599",
+          "#fdf5e6"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Card Surface",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#202223",
+          "#414548",
+          "#6d7175",
+          "#999ea4",
+          "#c4c8cd",
+          "#e1e3e5",
+          "#f6f6f7",
+          "#ffffff"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Major milestone titles and dashboard status headlines."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Admin card headers and modal dialog titles."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Product names, table row headers, and comparison card titles."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Main product descriptions and Safety Gate risk summaries."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Status pills, eyebrows, and metric sub-labels."
+      }
+    },
+    "shadows": [
+      {
+        "name": "card-rest",
+        "value": "0 1px 0 rgba(22, 29, 37, 0.05)",
+        "purpose": "Default elevation for admin cards and panels."
+      },
+      {
+        "name": "elevated-popover",
+        "value": "0 1px 0 rgba(22, 29, 37, 0.05), 0 2px 6px rgba(22, 29, 37, 0.08)",
+        "purpose": "Hovered items, popovers, and floating drawers."
+      },
+      {
+        "name": "focus-ring",
+        "value": "0 0 0 3px rgba(0, 128, 96, 0.35)",
+        "purpose": "Keyboard and form focus indicators."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-standard",
+        "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Standard interactive transitions (buttons, modal open/close)."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "960px"
+      },
+      {
+        "name": "lg",
+        "value": "1200px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Primary merchant confirmation and action trigger in Shopify Admin.",
+      "html": "<button class=\"ds-btn-primary\">Review Match</button>",
+      "css": ".ds-btn-primary { background: #008060; color: #ffffff; padding: 8px 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; transition: background 0.15s ease; } .ds-btn-primary:hover { background: #006e52; } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(0, 128, 96, 0.35); }"
+    },
+    {
+      "name": "Critical Button",
+      "kind": "button",
+      "refersTo": "button-critical",
+      "description": "Urgent risk mitigation action, e.g., immediate pause of product sales.",
+      "html": "<button class=\"ds-btn-critical\">Pause Sales</button>",
+      "css": ".ds-btn-critical { background: #d82c0d; color: #ffffff; padding: 8px 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; transition: background 0.15s ease; } .ds-btn-critical:hover { background: #b02108; } .ds-btn-critical:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(216, 44, 13, 0.35); }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Secondary dismiss or cancel action.",
+      "html": "<button class=\"ds-btn-ghost\">Dismiss</button>",
+      "css": ".ds-btn-ghost { background: transparent; color: #202223; padding: 8px 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; font-weight: 600; border: 1px solid #e1e3e5; border-radius: 8px; cursor: pointer; transition: background 0.15s ease, border-color 0.15s ease; } .ds-btn-ghost:hover { background: #f1f2f3; border-color: #c4c8cd; }"
+    },
+    {
+      "name": "Risk Status Badge",
+      "kind": "chip",
+      "refersTo": "badge-critical",
+      "description": "Indicates high-severity Safety Gate recall match.",
+      "html": "<span class=\"ds-badge-critical\">Serious Risk (87% Match)</span>",
+      "css": ".ds-badge-critical { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: rgba(216, 44, 13, 0.08); border: 1px solid rgba(216, 44, 13, 0.22); color: #d82c0d; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.02em; }"
+    },
+    {
+      "name": "Admin Card",
+      "kind": "card",
+      "refersTo": "admin-card",
+      "description": "Standard Shopify Polaris administrative container.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-header\"><span class=\"ds-eyebrow\">SAFETY GATE MONITOR</span><h3 class=\"ds-card-title\">Catalog Protection</h3></div><p class=\"ds-card-body\">24/7 background monitoring active across all store products.</p></div>",
+      "css": ".ds-card { background: #ffffff; border: 1px solid #e1e3e5; border-radius: 12px; box-shadow: 0 1px 0 rgba(22, 29, 37, 0.05); padding: 18px 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; } .ds-eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; color: #6d7175; text-transform: uppercase; margin-bottom: 4px; display: block; } .ds-card-title { margin: 0 0 6px 0; font-size: 18px; color: #202223; font-weight: 600; } .ds-card-body { margin: 0; font-size: 14px; color: #6d7175; line-height: 1.5; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Vigilant Guardian & Native Shopify Cockpit",
+    "overview": "Safety Gate Monitor's design system unifies high-stakes EU regulatory protection with effortless, zero-friction merchant workflow. Inside the Shopify Admin, the interface feels 100% native: calm, restrained, and structured around Shopify Polaris design tokens and web components.",
+    "keyCharacteristics": [
+      "Polaris Native Ergonomics",
+      "Triage-First Hierarchy",
+      "Side-by-Side Clarity",
+      "Audit-Proof Record"
+    ],
+    "rules": [
+      {
+        "name": "The Triage Hierarchy Rule",
+        "body": "Red (#d82c0d) is strictly reserved for actionable, serious safety hazards. Informational stats and passive states must use neutral slate or emerald trust tones to prevent alarm fatigue.",
+        "section": "colors"
+      },
+      {
+        "name": "The Native Surface Rule",
+        "body": "In Shopify Admin routes, all container backgrounds must inherit either --surface (#ffffff) or --surface-subdued (#f6f6f7) to guarantee visual unity with the host admin OS.",
+        "section": "colors"
+      },
+      {
+        "name": "The Eyebrow-Title Rule",
+        "body": "Major admin cards lead with an uppercase 12px muted eyebrow before the 20px headline to immediately establish category context.",
+        "section": "typography"
+      },
+      {
+        "name": "The Crisp-Border Rule",
+        "body": "Every surface has an explicit 1px border. Shadows never float unbordered in administrative screens.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do use Polaris Web Components with s- prefix for all interactive Shopify Admin primitives.",
+      "Do provide side-by-side visual comparisons between the Shopify product and the Safety Gate recall alert.",
+      "Do use explicit percentage indicators (overallSimilarity & imageSimilarity) alongside merchant recommendations.",
+      "Do maintain full keyboard accessibility and WCAG 2.1 AA color contrast across all severity chips.",
+      "Do localize all merchant-facing text through the 24 EU locale files."
+    ],
+    "donts": [
+      "Don't use alarmist, panic-inducing copy; focus on proactive peace of mind, clear risk facts, and definitive next steps.",
+      "Don't use raw unformatted JSON or technical model debug scores in merchant-facing views.",
+      "Don't mutate Shopify product catalog status directly without merchant review action.",
+      "Don't mix non-Polaris UI component libraries into the embedded Shopify admin shell."
+    ]
+  }
+}

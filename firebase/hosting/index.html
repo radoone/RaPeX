@@ -123,8 +123,8 @@
         ]
       }
     </script>
-    <script type="module" crossorigin src="/assets/index-DqyLGbFK.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-CJ45mSYR.css">
+    <script type="module" crossorigin src="/assets/index-Bf8FfDaS.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CPHTi5yx.css">
   </head>
   <body>
     <div class="page-shell" id="top">
@@ -297,7 +297,7 @@
               <div class="compare-box">
                 <div class="compare-box__header">
                   <span class="compare-box__tag">🛒 Your Catalog</span>
-                  <span class="compare-box__tag" style="color: #34d399;">Active • Online Store</span>
+                  <span class="compare-box__tag compare-box__tag--success">Active • Online Store</span>
                 </div>
                 <div class="compare-box__media">
                   <svg class="compare-box__svg" viewBox="0 0 160 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Shopify product illustration">
@@ -325,7 +325,7 @@
               <div class="compare-box compare-box--alert">
                 <div class="compare-box__header">
                   <span class="compare-box__tag">⚠️ EU Safety Gate</span>
-                  <span class="compare-box__tag" style="color: #f87171;">Recall #A12/00892/24</span>
+                  <span class="compare-box__tag compare-box__tag--alert">Recall #A12/00892/24</span>
                 </div>
                 <div class="compare-box__media">
                   <svg class="compare-box__svg" viewBox="0 0 160 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="EU Safety Gate recall illustration">
@@ -368,23 +368,26 @@
 
             <div class="hero-card__alert-msg">
               <p data-i18n="preview.alert">
-                Serious risk: detachment of small plastic parts causing choking hazard.
+                Serious risk: risk of injuries and fall – wheel may detach during use.
               </p>
               <small data-i18n="preview.action">
-                Suggested action: verify supplier certificates before selling.
+                Suggested action: pause sales and verify batch with supplier.
               </small>
             </div>
 
             <div class="hero-card__actions">
-              <a class="hero-card__btn hero-card__btn--primary" href="#install" data-i18n="preview.btnReview">
+              <button class="hero-card__btn hero-card__btn--primary" type="button" data-action="review" data-i18n="preview.btnReview">
                 Review Match
-              </a>
-              <a class="hero-card__btn hero-card__btn--ghost" href="#install" data-i18n="preview.btnDismiss">
+              </button>
+              <button class="hero-card__btn hero-card__btn--ghost" type="button" data-action="dismiss" data-i18n="preview.btnDismiss">
                 Dismiss
-              </a>
-              <a class="hero-card__btn hero-card__btn--ghost" href="#install" data-i18n="preview.btnResolve">
+              </button>
+              <button class="hero-card__btn hero-card__btn--ghost" type="button" data-action="resolve" data-i18n="preview.btnResolve">
                 Resolve
-              </a>
+              </button>
+            </div>
+            <div class="hero-card__toast" id="preview-toast" role="status" aria-live="polite" style="display: none;">
+              ✨ <span data-i18n="preview.interactiveToast">Shopify Admin Preview: One-click action recorded in your audit trail</span>
             </div>
           </aside>
         </div>

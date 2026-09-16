@@ -17,6 +17,8 @@ build/
 # IDE and editor files
 .vscode/
 .idea/
+.claude/
+.cursor/
 *.swp
 *.swo
 *~
@@ -110,3 +112,4 @@ ui-debug.log
 # PgLite debug logs
 pglite-debug.log
 /artifacts
+.impeccable/config.local.json
