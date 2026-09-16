@@ -155,13 +155,15 @@ li {
     transform 160ms ease;
 }
 
-.locale-switch__button:hover {
-  transform: translateY(-1px);
+.topbar__link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 4px;
 }
 
-.locale-switch__button[aria-pressed="true"] {
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
-  color: #fff7f1;
+.locale-switch__button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(184, 76, 40, 0.4);
 }
 
 .hero {
@@ -252,6 +254,11 @@ h1 {
 
 .button:hover {
   transform: translateY(-1px);
+}
+
+.button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(184, 76, 40, 0.45);
 }
 
 .button--primary {
@@ -613,6 +620,12 @@ h1 {
   backdrop-filter: blur(16px);
   box-shadow: var(--shadow);
   text-align: center;
+  transition: transform 160ms ease, border-color 160ms ease;
+}
+
+.stat-box:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
 }
 
 .stat-box__number {
@@ -720,6 +733,18 @@ h1 {
 .reason-card,
 .workflow-step {
   padding: 24px;
+  transition: transform 160ms ease, border-color 160ms ease;
+}
+
+.signal-band article {
+  transition: transform 160ms ease, border-color 160ms ease;
+}
+
+.signal-band article:hover,
+.workflow-step:hover,
+.reason-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
 }
 
 .reason-card h3,
@@ -1052,6 +1077,12 @@ a.trust-item:hover {
   background: rgba(255, 250, 243, 0.76);
   backdrop-filter: blur(16px);
   box-shadow: var(--shadow);
+  transition: transform 160ms ease, border-color 160ms ease;
+}
+
+.faq-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(184, 76, 40, 0.35);
 }
 
 .faq-card h3 {
