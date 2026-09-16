@@ -27,21 +27,29 @@
     "successBody": "We are scanning your public catalog against the EU Safety Gate database. The report will be sent to your email shortly."
   },
   "preview": {
+    "adminStore": "your-store.myshopify.com",
+    "adminSearch": "Search products, orders, apps (⌘K)",
+    "breadcrumb": "Products",
+    "badgeActive": "Active",
     "badge": "Shopify Admin Preview",
-    "status": "Action Required • High Similarity Match",
+    "status": "Action Required • 92% Match",
     "yourProduct": "Your Catalog Product",
-    "yourProductTitle": "Adjustable Kids Scooter",
-    "yourProductSku": "SKU: SC-KIDS-01 • Active",
+    "yourProductTitle": "Kids Balance Scooter",
+    "yourProductSku": "SKU: SC-KIDS-01 • In stock (124)",
     "safetyGateMatch": "EU Safety Gate Record",
     "safetyGateMatchTitle": "Recall #A12/00892/24",
     "safetyGateMatchOrigin": "Reported by Germany (BAuA)",
     "matchScore": "Visual Match",
-    "riskHeading": "Serious Risk: Wheel detachment and injury hazard",
+    "riskHeading": "Serious Risk: Wheel detachment and fall hazard",
     "riskDescription": "Front axle pin can loosen during normal use, posing fall and injury risk.",
     "actionAdvice": "Recommended action: Pause product sales and verify certification with supplier.",
     "btnReview": "Review in Admin",
     "btnDismiss": "Dismiss Alert",
-    "btnResolve": "Resolve"
+    "btnResolve": "Resolve",
+    "caption": "Embedded natively into Shopify Admin. Review visual matches, compare recalled items with photos from EU Safety Gate, and record compliance decisions with 1 click.",
+    "tabReview": "Review Modal",
+    "tabDashboard": "Coverage Dashboard",
+    "auditNote": "Automated audit trail: All review actions are timestamped and preserved for regulatory compliance."
   },
   "facts": {
     "records": {

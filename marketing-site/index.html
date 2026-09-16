@@ -137,73 +137,61 @@
             </div>
           </div>
 
-          <!-- Authentic, Clean Product Comparison Preview -->
-          <div class="preview-container">
-            <div class="preview-card">
-              <div class="preview-card__top">
-                <span class="preview-card__badge" data-i18n="preview.badge">Shopify Admin Preview</span>
+          <!-- Real Shopify Admin Environment Showcase with Actual Screenshot -->
+          <div class="shopify-showcase" role="region" aria-label="Shopify Admin Environment Showcase">
+            <div class="shopify-showcase__header">
+              <div class="shopify-showcase__badges">
+                <span class="pill-badge" data-i18n="preview.badge">Shopify Admin Preview</span>
                 <span class="status-indicator status-indicator--warning" data-i18n="preview.status">
-                  Action Required • High Similarity Match
+                  Action Required • 92% Match
                 </span>
               </div>
-
-              <div class="preview-comparison">
-                <!-- Merchant Product -->
-                <div class="preview-column">
-                  <span class="column-eyebrow" data-i18n="preview.yourProduct">Your Catalog Product</span>
-                  <div class="product-entry">
-                    <div class="product-entry__thumb">
-                      <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Product thumbnail">
-                        <rect width="40" height="40" rx="6" fill="#f4f4f5"/>
-                        <path d="M14 14h12v12H14z" stroke="#71717a" stroke-width="2"/>
-                        <circle cx="20" cy="20" r="3" fill="#a1a1aa"/>
-                      </svg>
-                    </div>
-                    <div class="product-entry__details">
-                      <strong class="product-title" data-i18n="preview.yourProductTitle">Adjustable Kids Scooter</strong>
-                      <span class="product-meta" data-i18n="preview.yourProductSku">SKU: SC-KIDS-01 • Active</span>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Recalled Match -->
-                <div class="preview-column preview-column--alert">
-                  <div class="column-header">
-                    <span class="column-eyebrow" data-i18n="preview.safetyGateMatch">EU Safety Gate Record</span>
-                    <span class="similarity-pill">92% <span data-i18n="preview.matchScore">Visual Match</span></span>
-                  </div>
-                  <div class="product-entry">
-                    <div class="product-entry__thumb product-entry__thumb--alert">
-                      <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Recall thumbnail">
-                        <rect width="40" height="40" rx="6" fill="#fef2f2"/>
-                        <path d="M20 12v11M20 28h.01" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round"/>
-                      </svg>
-                    </div>
-                    <div class="product-entry__details">
-                      <strong class="product-title" data-i18n="preview.safetyGateMatchTitle">Recall #A12/00892/24</strong>
-                      <span class="product-meta" data-i18n="preview.safetyGateMatchOrigin">Reported by Germany (BAuA)</span>
-                    </div>
-                  </div>
-                </div>
+              <p class="shopify-showcase__caption" data-i18n="preview.caption">
+                Embedded natively into Shopify Admin. Review visual matches, compare recalled items with photos from EU Safety Gate, and record compliance decisions with 1 click.
+              </p>
+              <!-- Interactive View Switcher Tabs -->
+              <div class="showcase-tabs" role="tablist">
+                <button
+                  type="button"
+                  class="showcase-tab showcase-tab--active"
+                  role="tab"
+                  aria-selected="true"
+                  data-showcase-tab="review"
+                  data-showcase-img="/images/shopify-admin-preview.png"
+                  data-i18n="preview.tabReview"
+                >
+                  Review Modal
+                </button>
+                <button
+                  type="button"
+                  class="showcase-tab"
+                  role="tab"
+                  aria-selected="false"
+                  data-showcase-tab="dashboard"
+                  data-showcase-img="/images/shopify-dashboard.png"
+                  data-i18n="preview.tabDashboard"
+                >
+                  Coverage Dashboard
+                </button>
               </div>
+            </div>
 
-              <!-- Risk Advice & Actions -->
-              <div class="preview-card__bottom">
-                <div class="risk-summary">
-                  <strong class="risk-title" data-i18n="preview.riskHeading">Serious Risk: Wheel detachment and injury hazard</strong>
-                  <p class="risk-text" data-i18n="preview.riskDescription">Front axle pin can loosen during normal use, posing fall and injury risk.</p>
-                  <p class="risk-advice" data-i18n="preview.actionAdvice">Recommended action: Pause product sales and verify certification with supplier.</p>
-                </div>
-                <div class="preview-actions">
-                  <button class="btn btn--small btn--primary preview-action-btn" type="button" data-action="review" data-i18n="preview.btnReview">Review in Admin</button>
-                  <button class="btn btn--small btn--secondary preview-action-btn" type="button" data-action="dismiss" data-i18n="preview.btnDismiss">Dismiss Alert</button>
-                  <button class="btn btn--small btn--secondary preview-action-btn" type="button" data-action="resolve" data-i18n="preview.btnResolve">Resolve</button>
-                </div>
-              </div>
+            <!-- Authentic Screenshot Frame -->
+            <div class="shopify-showcase__frame">
+              <img
+                id="showcase-img"
+                src="/images/shopify-admin-preview.png"
+                alt="Safety Gate Monitor inside Shopify Admin - Review Safety Gate match modal"
+                class="shopify-showcase__img"
+                loading="eager"
+                width="1722"
+                height="1324"
+              />
+            </div>
 
-              <div class="preview-toast" id="preview-toast" style="display: none;" role="status">
-                <span>✓ Interactive preview: one-click action recorded in your audit trail.</span>
-              </div>
+            <div class="preview-audit-note">
+              <span class="audit-icon" aria-hidden="true">✓</span>
+              <span data-i18n="preview.auditNote">Automated audit trail: All review actions are timestamped and preserved for regulatory compliance.</span>
             </div>
           </div>
         </section>

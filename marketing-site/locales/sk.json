@@ -27,21 +27,29 @@
     "successBody": "Váš verejný katalóg porovnávame s databázou EU Safety Gate. Výsledný report vám pošleme na zadaný e-mail."
   },
   "preview": {
+    "adminStore": "vas-obchod.myshopify.com",
+    "adminSearch": "Hľadať produkty, objednávky, aplikácie (⌘K)",
+    "breadcrumb": "Produkty",
+    "badgeActive": "Aktívny",
     "badge": "Ukážka zo Shopify Admin",
-    "status": "Vyžaduje kontrolu • Vysoká zhoda",
-    "yourProduct": "Váš produkt v ponuke",
-    "yourProductTitle": "Detská nastaviteľná kolobežka",
-    "yourProductSku": "SKU: SC-KIDS-01 • Aktívny v obchode",
+    "status": "Vyžaduje kontrolu • 92% zhoda",
+    "yourProduct": "Váš produkt v katalógu",
+    "yourProductTitle": "Detská balančná kolobežka",
+    "yourProductSku": "SKU: SC-KIDS-01 • Skladom (124 ks)",
     "safetyGateMatch": "Záznam EU Safety Gate",
     "safetyGateMatchTitle": "Recall #A12/00892/24",
-    "safetyGateMatchOrigin": "Nahlásilo: Nemecko (BAuA)",
+    "safetyGateMatchOrigin": "Nahlásilo Nemecko (BAuA)",
     "matchScore": "Vizuálna zhoda",
     "riskHeading": "Vážne riziko: Uvoľnenie kolesa a nebezpečenstvo pádu",
     "riskDescription": "Čap predného kolesa sa môže počas jazdy uvoľniť a spôsobiť pád dieťaťa.",
     "actionAdvice": "Odporúčaný krok: Pozastaviť predaj a overiť certifikáciu u dodávateľa.",
     "btnReview": "Skontrolovať v Admine",
     "btnDismiss": "Zamietnuť",
-    "btnResolve": "Vyriešiť"
+    "btnResolve": "Vyriešiť",
+    "caption": "Integrované priamo v rozhraní Shopify Admin. Overujte vizuálne zhody, porovnávajte tovar s fotkami z EU Safety Gate a zaznamenávajte rozhodnutia jedným klikom.",
+    "tabReview": "Detail zhody",
+    "tabDashboard": "Prehľad monitoringu",
+    "auditNote": "Audítorský záznam: Každá akcia je časovo zaznamenaná a pripravená pre prípad kontroly SOI."
   },
   "facts": {
     "records": {
