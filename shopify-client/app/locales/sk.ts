@@ -4,6 +4,23 @@ const sk = {
         "opening": "Otváram cenové plány Shopify...",
         "openPricingPlans": "Otvoriť cenové plány"
       },
+      "billing": {
+        "freeScanAvailableHeading": "Bezplatný úvodný scan katalógu je pripravený",
+        "freeScanAvailableDescription": "Máte k dispozícii 1 bezplatný scan katalógu. Spustite svoj prvý audit a skontrolujte produkty voči databáze nebezpečných výrobkov EU Safety Gate.",
+        "upgradeRequiredHeading": "Aktivujte nepretržitú 24/7 ochranu Safety Gate",
+        "upgradeRequiredDescription": "Váš bezplatný úvodný scan bol dokončený. Aktivujte si predplatné pre odomknutie automatického 24/7 delta monitoringu, dennej synchronizácie Safety Gate a neobmedzených manuálnych kontrol.",
+        "upgradePlanButton": "Prejsť na Pro predplatné",
+        "managePlanButton": "Spravovať predplatné",
+        "planEyebrow": "Plán a ochrana",
+        "planTitle": "Predplatné a monitoring bezpečnosti",
+        "planActiveDescription": "Váš obchod je aktívne chránený nepretržitým 24/7 Safety Gate delta monitoringom a neobmedzenými kontrolami.",
+        "planFreeUsedDescription": "Váš bezplatný úvodný scan bol vyčerpaný. Prejdite na plný plán pre zachovanie dennej ochrany a audítorskej stopy.",
+        "planFreeAvailableDescription": "Aktuálne ste na bezplatnej skúšobnej verzii s 1 bezplatným scanom katalógu.",
+        "statusLabel": "Aktuálny plán",
+        "statusActivePro": "Safety Gate Pro (Aktívne)",
+        "statusFreeUsed": "Bezplatný scan vyčerpaný",
+        "statusFreeAvailable": "1 bezplatný scan k dispozícii"
+      },
       "dashboard": {
         "title": "Safety Gate EÚ",
         "activeAlertsBanner": {

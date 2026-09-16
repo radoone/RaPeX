@@ -12,7 +12,7 @@ import { runProductSafetyCheck } from "../services/product-safety-admin.server";
 import { runMerchantDeltaMonitoring } from "../services/safety-gate-checker.server";
 import { AlertDetailModal, SummaryCard } from "../components";
 import { type ResolutionType, formatRelativeDate } from "../components/AlertTable";
-import { requireActiveBilling } from "../services/billing.server";
+import { getBillingStatus, requireActiveBilling } from "../services/billing.server";
 
 type ShopifyCatalogProduct = {
   id: string;
@@ -133,8 +133,12 @@ async function planCatalogChecksForManualCheck(params: {
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { admin, billing, session } = await authenticate.admin(request);
-  const billingRedirect = await requireActiveBilling(billing, session.shop);
+  const billingRedirect = await requireActiveBilling(billing, session.shop, {
+    allowFreeInitialScan: true,
+  });
   if (billingRedirect) return billingRedirect as never;
+
+  const billingStatus = await getBillingStatus(billing, session.shop);
   const url = new URL(request.url);
   const search = url.searchParams.get("search")?.trim() || "";
 
@@ -314,15 +318,20 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       lastActivityDetails: latestActivity?.details || null,
       totalChecks: allProductChecks.length,
     },
+    billingStatus,
   });
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const { admin, billing, session } = await authenticate.admin(request);
-  const billingRedirect = await requireActiveBilling(billing, session.shop);
-  if (billingRedirect) return billingRedirect as never;
   const formData = await request.formData();
   const action = formData.get("action") as string;
+
+  if (action === "checkProduct" || action === "checkAllProducts") {
+    const billingRedirect = await requireActiveBilling(billing, session.shop);
+    if (billingRedirect) return billingRedirect as never;
+  }
+
   const updateOwnedAlert = async (
     alertId: string,
     data: Parameters<typeof db.safetyAlert.update>[0]["data"],

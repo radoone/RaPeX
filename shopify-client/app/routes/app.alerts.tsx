@@ -14,7 +14,9 @@ import { requireActiveBilling } from "../services/billing.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { billing, session, admin } = await authenticate.admin(request);
-  const billingRedirect = await requireActiveBilling(billing, session.shop);
+  const billingRedirect = await requireActiveBilling(billing, session.shop, {
+    allowFreeInitialScan: true,
+  });
   if (billingRedirect) return billingRedirect as never;
 
   const url = new URL(request.url);
@@ -143,7 +145,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const { billing, session } = await authenticate.admin(request);
-  const billingRedirect = await requireActiveBilling(billing, session.shop);
+  const billingRedirect = await requireActiveBilling(billing, session.shop, {
+    allowFreeInitialScan: true,
+  });
   if (billingRedirect) return billingRedirect as never;
   const formData = await request.formData();
   const action = formData.get("action") as string;

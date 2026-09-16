@@ -55,11 +55,11 @@ export function buildCoreLocale(input: CoreLocaleInput) {
   return {
     nav: {
       dashboard: input.dashboard,
-      safetyAlerts: "Review Queue",
-      manualCheck: "Catalog Coverage",
-      catalogCoverage: "Catalog Coverage",
+      safetyAlerts: input.alertsLabel,
+      manualCheck: input.manual,
+      catalogCoverage: input.manual,
       evidence: "Audit Trail",
-      settings: "Settings",
+      settings: input.settings,
     },
     common: {
       language: input.language,
@@ -70,6 +70,23 @@ export function buildCoreLocale(input: CoreLocaleInput) {
     billingRedirect: {
       opening: "Opening Shopify pricing plans...",
       openPricingPlans: "Open pricing plans",
+    },
+    billing: {
+      freeScanAvailableHeading: "Free Initial Catalog Scan Active",
+      freeScanAvailableDescription: "You have 1 free catalog scan available. Run your first audit to check your store's products against the EU Safety Gate database for dangerous non-food products.",
+      upgradeRequiredHeading: "Activate Continuous 24/7 Safety Gate Protection",
+      upgradeRequiredDescription: "Your free initial scan has been completed. Subscribe to a plan to unlock 24/7 automated delta monitoring, daily Safety Gate sync, and unlimited manual product scans.",
+      upgradePlanButton: "Upgrade to Pro",
+      managePlanButton: "Manage subscription",
+      planEyebrow: "Plan & Coverage",
+      planTitle: "Subscription & Safety Monitoring",
+      planActiveDescription: "Your store is actively protected with 24/7 Safety Gate delta monitoring and unlimited compliance checks.",
+      planFreeUsedDescription: "Your free initial scan has finished. Upgrade to maintain ongoing daily protection and compliance audit trails.",
+      planFreeAvailableDescription: "You are currently on the Free Trial tier with 1 free catalog scan available.",
+      statusLabel: "Current Plan",
+      statusActivePro: "Safety Gate Pro (Active)",
+      statusFreeUsed: "Free Scan Used",
+      statusFreeAvailable: "Free Initial Scan",
     },
     actions: {
       checkNewSafetyGateAlerts: "Check new Safety Gate alerts",

@@ -8,7 +8,7 @@ import { authenticate } from "../shopify.server";
 import db, { type SafetySettingRecord } from "../merchant-db.server";
 import { firestore } from "../firestore.server";
 import { OnboardingWizard, formatRelativeDate } from "../components";
-import { requireActiveBilling } from "../services/billing.server";
+import { getBillingStatus, requireActiveBilling } from "../services/billing.server";
 import {
   runMerchantDeltaMonitoring,
   shopifyProductToProductData,
@@ -165,8 +165,12 @@ async function importCurrentCatalogForMonitoring(params: {
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { billing, session, admin } = await authenticate.admin(request);
-  const billingRedirect = await requireActiveBilling(billing, session.shop);
+  const billingRedirect = await requireActiveBilling(billing, session.shop, {
+    allowFreeInitialScan: true,
+  });
   if (billingRedirect) return billingRedirect as never;
+
+  const billingStatus = await getBillingStatus(billing, session.shop);
 
   const [activeAlerts, totalAlerts, resolvedAlerts, dismissedAlerts, totalChecks, recentAlerts, checkedProductIds, activeAlertRiskSample, storedSettings, recentActivities, lastMonitoringActivityRows, currentCatalogProductIds] = await Promise.all([
     db.safetyAlert.count({
@@ -373,6 +377,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     },
     recentAlerts: processedRecentAlerts,
     settings: (settings || defaultSettings) as SafetySettingRecord,
+    billingStatus,
     recentActivities,
     lastMonitoringAt: lastMonitoringActivityRows.find((activity: any) =>
       activity.type === "bulk" || activity.type === "automatic" || activity.action === "check"
@@ -382,8 +387,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const { billing, session, admin } = await authenticate.admin(request);
-  const billingRedirect = await requireActiveBilling(billing, session.shop);
-  if (billingRedirect) return billingRedirect as never;
   const formData = await request.formData();
   const actionType = formData.get("action");
   const includeAlreadyChecked = formData.get("includeAlreadyChecked") === "true";
@@ -396,7 +399,72 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     ? Number(monitoringDaysValue)
     : undefined;
 
+  if (actionType === "importCatalogAndMonitor") {
+    const billingRedirect = await requireActiveBilling(billing, session.shop, {
+      allowFreeInitialScan: true,
+    });
+    if (billingRedirect) return billingRedirect as never;
+
+    try {
+      const importedCatalog = await importCurrentCatalogForMonitoring({
+        admin,
+        shop: session.shop,
+        limit: 300,
+      });
+      const monitoring = await runMerchantDeltaMonitoring(session.shop, {
+        forceFullScan: true,
+        limit: 300,
+        monitoringMode: "full-lookback",
+      });
+
+      await db.safetySetting.upsert({
+        where: { shop: session.shop },
+        update: {
+          freeScanUsed: true,
+          freeScanCompletedAt: new Date(),
+        },
+        create: {
+          shop: session.shop,
+          similarityThreshold: 70,
+          freeScanUsed: true,
+          freeScanCompletedAt: new Date(),
+        },
+      });
+
+      await db.activityLog.create({
+        data: {
+          shop: session.shop,
+          type: "bulk",
+          action: "check",
+          details: `Imported ${importedCatalog.imported} current catalog products for monitoring and checked them against recent Safety Gate alerts.`
+        }
+      });
+
+      const results: BulkCheckResults = {
+        processed: importedCatalog.imported,
+        checked: monitoring.productsScanned,
+        skipped: importedCatalog.failed,
+        alertsCreated: monitoring.alertsCreated,
+        errors: importedCatalog.failed,
+        totalProducts: importedCatalog.totalFetched,
+        products: [],
+      };
+
+      return json({
+        success: true,
+        message: `Imported ${importedCatalog.imported} products for monitoring and created ${monitoring.alertsCreated} Safety Gate review items`,
+        results,
+      });
+    } catch (error) {
+      console.error('Catalog import and monitoring failed:', error);
+      return json({ success: false, error: error instanceof Error ? error.message : 'Catalog import and monitoring failed' }, { status: 500 });
+    }
+  }
+
   if (actionType === "bulkCheck") {
+    const billingRedirect = await requireActiveBilling(billing, session.shop);
+    if (billingRedirect) return billingRedirect as never;
+
     try {
       const monitoring = await runMerchantDeltaMonitoring(session.shop, {
         forceFullScan: includeAlreadyChecked,
@@ -434,50 +502,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
   }
 
-  if (actionType === "importCatalogAndMonitor") {
-    try {
-      const importedCatalog = await importCurrentCatalogForMonitoring({
-        admin,
-        shop: session.shop,
-        limit: 300,
-      });
-      const monitoring = await runMerchantDeltaMonitoring(session.shop, {
-        forceFullScan: true,
-        limit: 300,
-        monitoringMode: "full-lookback",
-      });
-
-      await db.activityLog.create({
-        data: {
-          shop: session.shop,
-          type: "bulk",
-          action: "check",
-          details: `Imported ${importedCatalog.imported} current catalog products for monitoring and checked them against recent Safety Gate alerts.`
-        }
-      });
-
-      const results: BulkCheckResults = {
-        processed: importedCatalog.imported,
-        checked: monitoring.productsScanned,
-        skipped: importedCatalog.failed,
-        alertsCreated: monitoring.alertsCreated,
-        errors: importedCatalog.failed,
-        totalProducts: importedCatalog.totalFetched,
-        products: [],
-      };
-
-      return json({
-        success: true,
-        message: `Imported ${importedCatalog.imported} products for monitoring and created ${monitoring.alertsCreated} Safety Gate review items`,
-        results,
-      });
-    } catch (error) {
-      console.error('Catalog import and monitoring failed:', error);
-      return json({ success: false, error: error instanceof Error ? error.message : 'Catalog import and monitoring failed' }, { status: 500 });
-    }
-  }
-
   if (actionType === "completeOnboarding") {
+    const billingRedirect = await requireActiveBilling(billing, session.shop, {
+      allowFreeInitialScan: true,
+    });
+    if (billingRedirect) return billingRedirect as never;
+
     const similarityThreshold = Number(formData.get("similarityThreshold") || 70);
     const onboardingCompleted = formData.get("onboardingCompleted") === "true";
     const autoDraftHighRisk = formData.get("autoDraftHighRisk") === "true";
@@ -540,7 +570,7 @@ export function ErrorBoundary() {
 }
 
 export default function Index() {
-  const { stats, recentAlerts, settings, recentActivities, lastMonitoringAt } = useLoaderData<typeof loader>();
+  const { stats, recentAlerts, settings, billingStatus, recentActivities, lastMonitoringAt } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<ActionResponse>();
   const navigation = useNavigation();
   const shopify = useAppBridge();
@@ -698,6 +728,22 @@ export default function Index() {
       </s-button>
 
       <div className="admin-stack">
+        {billingStatus && !billingStatus.hasActivePayment && billingStatus.freeScanUsed && (
+          <s-banner tone="warning" heading={t("billing.upgradeRequiredHeading")}>
+            <s-text>{t("billing.upgradeRequiredDescription")}</s-text>
+            <div style={{ marginTop: "var(--s-space-300)" }}>
+              <s-button
+                variant="primary"
+                onClick={() => {
+                  window.open(billingStatus.pricingPlansUrl, "_top");
+                }}
+                suppressHydrationWarning
+              >
+                {t("billing.upgradePlanButton")}
+              </s-button>
+            </div>
+          </s-banner>
+        )}
         <section className={`dashboard-status-panel dashboard-status-panel--${dashboardStatus.tone}`}>
           <div className="dashboard-status-panel__content">
             <p className="admin-eyebrow">{dashboardStatus.eyebrow}</p>

@@ -62,7 +62,9 @@ function compactEvidenceText(record: { notes?: string | null; reason?: string | 
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { billing, session } = await authenticate.admin(request);
-  const billingRedirect = await requireActiveBilling(billing, session.shop);
+  const billingRedirect = await requireActiveBilling(billing, session.shop, {
+    allowFreeInitialScan: true,
+  });
   if (billingRedirect) return billingRedirect as never;
   const alerts = await db.safetyAlert.findMany({
     where: { shop: session.shop },

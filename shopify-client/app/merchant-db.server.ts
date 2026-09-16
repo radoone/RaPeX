@@ -101,6 +101,8 @@ export type SafetySettingRecord = {
   similarityThreshold: number;
   onboardingCompleted?: boolean;
   autoDraftHighRisk?: boolean;
+  freeScanUsed?: boolean;
+  freeScanCompletedAt?: Date | null;
   excludeVendors?: string | null;
   excludeTypes?: string | null;
   emailNotifications?: boolean;
@@ -661,6 +663,8 @@ const safetySetting = {
       similarityThreshold: Number(data.similarityThreshold || 0),
       onboardingCompleted: data.onboardingCompleted !== undefined ? Boolean(data.onboardingCompleted) : undefined,
       autoDraftHighRisk: data.autoDraftHighRisk !== undefined ? Boolean(data.autoDraftHighRisk) : undefined,
+      freeScanUsed: data.freeScanUsed !== undefined ? Boolean(data.freeScanUsed) : false,
+      freeScanCompletedAt: normalizeDate(data.freeScanCompletedAt),
       excludeVendors: data.excludeVendors !== undefined ? String(data.excludeVendors || "") : undefined,
       excludeTypes: data.excludeTypes !== undefined ? String(data.excludeTypes || "") : undefined,
       emailNotifications: data.emailNotifications !== undefined ? Boolean(data.emailNotifications) : undefined,
@@ -695,6 +699,8 @@ const safetySetting = {
       similarityThreshold: Number(payload.similarityThreshold || 0),
       onboardingCompleted: payload.onboardingCompleted !== undefined ? Boolean(payload.onboardingCompleted) : undefined,
       autoDraftHighRisk: payload.autoDraftHighRisk !== undefined ? Boolean(payload.autoDraftHighRisk) : undefined,
+      freeScanUsed: payload.freeScanUsed !== undefined ? Boolean(payload.freeScanUsed) : false,
+      freeScanCompletedAt: normalizeDate(payload.freeScanCompletedAt),
       excludeVendors: payload.excludeVendors !== undefined ? String(payload.excludeVendors || "") : undefined,
       excludeTypes: payload.excludeTypes !== undefined ? String(payload.excludeTypes || "") : undefined,
       emailNotifications: payload.emailNotifications !== undefined ? Boolean(payload.emailNotifications) : undefined,

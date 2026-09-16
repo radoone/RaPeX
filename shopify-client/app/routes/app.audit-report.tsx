@@ -45,7 +45,9 @@ function resolutionLabelKey(resolutionType: string | null) {
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { billing, session } = await authenticate.admin(request);
-  const billingRedirect = await requireActiveBilling(billing, session.shop);
+  const billingRedirect = await requireActiveBilling(billing, session.shop, {
+    allowFreeInitialScan: true,
+  });
   if (billingRedirect) return billingRedirect as never;
   const alerts = await db.safetyAlert.findMany({ where: { shop: session.shop }, orderBy: { createdAt: "desc" }, take: 1000 });
   const records = alerts.map((alert: any) => ({ ...alert, warning: parsePrimaryWarning(alert.checkResult) }));

@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { authenticate } from "../shopify.server";
 import db from "../merchant-db.server";
 import { LanguageSwitcher } from "../components";
-import { requireActiveBilling } from "../services/billing.server";
+import { getBillingStatus, requireActiveBilling } from "../services/billing.server";
 import { EU_LANGUAGES } from "../locales/languages";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -25,8 +25,12 @@ async function getShopifyContactEmail(admin: any): Promise<string | null> {
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { admin, billing, session } = await authenticate.admin(request);
-  const billingRedirect = await requireActiveBilling(billing, session.shop);
+  const billingRedirect = await requireActiveBilling(billing, session.shop, {
+    allowFreeInitialScan: true,
+  });
   if (billingRedirect) return billingRedirect as never;
+
+  const billingStatus = await getBillingStatus(billing, session.shop);
   let settings = await db.safetySetting.findUnique({
     where: { shop: session.shop },
   });
@@ -75,12 +79,15 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       excludeTypes: null,
     },
     envDefault: fallbackDefault,
+    billingStatus,
   });
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const { billing, session } = await authenticate.admin(request);
-  const billingRedirect = await requireActiveBilling(billing, session.shop);
+  const billingRedirect = await requireActiveBilling(billing, session.shop, {
+    allowFreeInitialScan: true,
+  });
   if (billingRedirect) return billingRedirect as never;
   const formData = await request.formData();
   
@@ -156,7 +163,7 @@ export function ErrorBoundary() {
 }
 
 export default function Settings() {
-  const { settings, envDefault } = useLoaderData<typeof loader>();
+  const { settings, envDefault, billingStatus } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
   const { t } = useTranslation();
@@ -532,6 +539,43 @@ export default function Settings() {
                   <span>{t("settingsAdmin.included.teamDescription")}</span>
                 </div>
               </details>
+
+              <div className="admin-card">
+                <div className="admin-card__header">
+                  <div>
+                    <p className="admin-eyebrow">{t("billing.planEyebrow")}</p>
+                    <h2 className="admin-card__title">{t("billing.planTitle")}</h2>
+                    <p className="admin-card__description">
+                      {billingStatus.hasActivePayment
+                        ? t("billing.planActiveDescription")
+                        : billingStatus.freeScanUsed
+                          ? t("billing.planFreeUsedDescription")
+                          : t("billing.planFreeAvailableDescription")}
+                    </p>
+                  </div>
+                </div>
+                <div className="admin-form-block">
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px" }}>
+                    <div>
+                      <span style={{ marginRight: "8px", fontWeight: 600 }}>{t("billing.statusLabel")}:</span>
+                      <s-badge tone={billingStatus.hasActivePayment ? "success" : billingStatus.freeScanUsed ? "warning" : "info"}>
+                        {billingStatus.hasActivePayment
+                          ? t("billing.statusActivePro")
+                          : billingStatus.freeScanUsed
+                            ? t("billing.statusFreeUsed")
+                            : t("billing.statusFreeAvailable")}
+                      </s-badge>
+                    </div>
+                    <s-button
+                      variant={billingStatus.hasActivePayment ? "secondary" : "primary"}
+                      onClick={() => window.open(billingStatus.pricingPlansUrl, "_top")}
+                      suppressHydrationWarning
+                    >
+                      {billingStatus.hasActivePayment ? t("billing.managePlanButton") : t("billing.upgradePlanButton")}
+                    </s-button>
+                  </div>
+                </div>
+              </div>
 
               <div className="admin-card">
                 <div className="admin-card__header">
