@@ -1,245 +1,104 @@
 {
   "meta": {
-    "title": "Safety Gate Monitor for Shopify – Free Scan & Total Peace of Mind (GPSR & RAPEX)",
-    "description": "Automated product safety monitoring for Shopify stores. Start your free store scan to protect your catalog 24/7 against dangerous products, recalls, and regulatory fines under EU Safety Gate (RAPEX) and GPSR."
+    "title": "Safety Gate Monitor for Shopify – EU Product Safety & GPSR Compliance",
+    "description": "Automated EU Safety Gate (RAPEX) monitoring for Shopify. Protect your store against dangerous product recalls and regulatory fines under the General Product Safety Regulation (GPSR)."
   },
   "nav": {
-    "freeScan": "Free Scan",
-    "benefits": "Peace of mind",
-    "resellers": "For Resellers",
     "howItWorks": "How it works",
-    "risk": "Why it matters",
+    "gpsr": "GPSR & Compliance",
     "faq": "FAQ",
-    "rapexOfficial": "Official Safety Gate ↗",
+    "officialRapex": "Official EU Safety Gate ↗",
+    "freeScan": "Free Scan",
     "language": "Language",
-    "languageSwitcher": "Language switcher",
     "locales": {
-      "en": "English",
-      "sk": "Slovenčina"
+      "en": "EN",
+      "sk": "SK"
     }
   },
   "hero": {
-    "eyebrow": "Automated Shopify Safety & GPSR Compliance",
-    "freeScanBadge": "✨ Get a free safety scan for your product catalog",
-    "title": "Sell with complete peace of mind.",
-    "lede": "Focus on growing your business and sales while automation handles product safety. Sign up for a free scan and find out whether your catalog contains items from over 35,000 records in the official EU Safety Gate (RAPEX) database of dangerous goods.",
-    "ctaPrimary": "Start Free Scan",
-    "ctaSecondary": "How it works",
-    "ctaNote": "Free catalog scan • No credit card required • Instant setup",
-    "pointsLabel": "Key peace-of-mind benefits",
-    "points": [
-      "Instant free scan: Immediately audit your catalog against 35,000+ dangerous goods in the EU",
-      "100% peace of mind: 24/7 automated background monitoring of ~250+ new alerts every month",
-      "Visual AI analyzes images too: Detects hazardous products even if suppliers change names or brands",
-      "Built right into Shopify Admin: Instant safety status on product pages plus weekly 'All-Clear' email digests"
-    ]
-  },
-  "stats": {
-    "items": [
-      {
-        "number": "35,000+",
-        "title": "Dangerous products in database",
-        "desc": "Complete official history of reported and recalled goods in EU Safety Gate"
-      },
-      {
-        "number": "~250+",
-        "title": "New alerts every month",
-        "desc": "The European Commission publishes 50–80 new recalls every Friday"
-      },
-      {
-        "number": "100%",
-        "title": "Visual AI verification",
-        "desc": "Analysis of specifications, text, and actual product photos & packaging"
-      },
-      {
-        "number": "24/7",
-        "title": "Continuous automated shield",
-        "desc": "Real-time monitoring of new inventory & Monday peace-of-mind digest"
-      }
-    ]
-  },
-  "trust": {
-    "freeScan": "Free Store Safety Scan",
-    "gpsr": "GPSR (EU 2023/988) Compliant",
-    "feed": "Official EU Safety Gate (RAPEX) Feed ↗",
-    "ai": "Visual AI Photo & Text Matching",
-    "native": "100% Native Shopify Admin Extension",
-    "email": "Monday Peace-of-Mind Email Digest"
+    "badge": "EU Safety Gate (RAPEX) • Regulation (EU) 2023/988",
+    "title": "Automated product safety monitoring for your Shopify store.",
+    "subtitle": "Continuously checks your catalog against 35,000+ dangerous and recalled products in the official European Commission database. Stay compliant with GPSR and avoid heavy fines.",
+    "inputPlaceholder": "your-store.myshopify.com",
+    "emailPlaceholder": "your-email@store.com",
+    "ctaButton": "Run Free Safety Scan",
+    "subtext": "Free scan • No credit card required • Results delivered instantly",
+    "successTitle": "Scan started!",
+    "successBody": "We are scanning your public catalog against the EU Safety Gate database. The report will be sent to your email shortly."
   },
   "preview": {
-    "aria": "Product safety monitoring preview in Shopify Admin",
-    "adminHeader": "Shopify Admin • Product Details",
-    "statusBadge": "Needs Review (87% Match)",
-    "yourProductTitle": "Your Shopify Product",
-    "yourProductSubtitle": "Kids balance scooter (Supplier Import)",
-    "safetyGateMatchTitle": "EU Safety Gate Recall",
-    "safetyGateMatchSubtitle": "Recall #A12/00892/24 (Reported: Germany)",
-    "overall": "Overall similarity",
-    "image": "Visual image similarity",
-    "alert": "Serious risk: risk of injuries and fall – wheel may detach during use.",
-    "action": "Suggested action: pause sales and verify batch with supplier.",
-    "btnReview": "Review Match",
-    "btnDismiss": "Dismiss",
-    "btnResolve": "Resolve",
-    "interactiveToast": "Shopify Admin Action Preview: One-click resolution recorded in your compliance audit trail.",
-    "chips": [
-      "Free Audit",
-      "24/7 Delta Monitoring",
-      "Visual AI"
-    ]
+    "badge": "Shopify Admin Preview",
+    "status": "Action Required • High Similarity Match",
+    "yourProduct": "Your Catalog Product",
+    "yourProductTitle": "Adjustable Kids Scooter",
+    "yourProductSku": "SKU: SC-KIDS-01 • Active",
+    "safetyGateMatch": "EU Safety Gate Record",
+    "safetyGateMatchTitle": "Recall #A12/00892/24",
+    "safetyGateMatchOrigin": "Reported by Germany (BAuA)",
+    "matchScore": "Visual Match",
+    "riskHeading": "Serious Risk: Wheel detachment and injury hazard",
+    "riskDescription": "Front axle pin can loosen during normal use, posing fall and injury risk.",
+    "actionAdvice": "Recommended action: Pause product sales and verify certification with supplier.",
+    "btnReview": "Review in Admin",
+    "btnDismiss": "Dismiss Alert",
+    "btnResolve": "Resolve"
   },
-  "signals": {
-    "eyebrow": "Why peace of mind matters",
-    "title": "Your proactive shield against fines, recalls, and unnecessary stress.",
-    "aria": "Peace of mind pillars",
-    "items": [
-      {
-        "title": "Zero-risk free catalog audit",
-        "body": "No guessing or uncertainty. Start with a free scan and get an immediate, clear overview of whether any products in your catalog match EU safety recalls."
-      },
-      {
-        "title": "Zero stress over GPSR & EU regulations",
-        "body": "The EU General Product Safety Regulation (GPSR) requires active product vigilance. Our automated monitor keeps your catalog in check 24/7 so regulatory inspectors never catch you off guard."
-      },
-      {
-        "title": "AI spots hidden risks in product photos",
-        "body": "Suppliers frequently rebrand products or sell unbranded items. Advanced visual AI compares visual packaging and product photos to detect rebadged hazardous goods that keywords miss."
-      }
-    ]
-  },
-  "resellers": {
-    "eyebrow": "Built for your business",
-    "title": "Essential protection for Shopify merchants, importers & resellers.",
-    "items": [
-      {
-        "icon": "🧸",
-        "title": "Toys & Baby Products",
-        "body": "The most strictly audited category in the EU. Instant alerts for choking hazards, small parts, and banned phthalates."
-      },
-      {
-        "icon": "⚡",
-        "title": "Consumer Electronics & Chargers",
-        "body": "Frequent risks of electric shock, overheating lithium batteries, and uncertified adapters from overseas suppliers."
-      },
-      {
-        "icon": "💄",
-        "title": "Cosmetics & Personal Care",
-        "body": "Automatic detection of prohibited chemicals, heavy metals, and banned fragrance compounds (e.g. Lilial / BMHCA)."
-      },
-      {
-        "icon": "📦",
-        "title": "Dropshipping & Resellers",
-        "body": "Supplier rebranded or renamed an item? Visual AI compares product photos and catches matches with flagged goods."
-      }
-    ]
-  },
-  "risk": {
-    "eyebrow": "What is at stake without protection",
-    "title": "A single unsafe product can jeopardize your entire business.",
-    "items": [
-      {
-        "badge": "Legal & Financial Risk",
-        "title": "Heavy regulatory fines (up to €332,000) & mandatory product recalls",
-        "body": "Selling products flagged in Safety Gate leads to immediate mandatory recall orders, mandatory customer refunds, and regulatory penalties under GPSR and national authorities reaching tens or hundreds of thousands of euros.",
-        "sourceLabel": "Official regulations & surveillance:",
-        "sources": [
-          {
-            "label": "Regulation (EU) 2023/988 (GPSR) ↗",
-            "url": "https://eur-lex.europa.eu/eli/reg/2023/988/oj"
-          },
-          {
-            "label": "Safety Business Gateway ↗",
-            "url": "https://ec.europa.eu/safety-gate-alerts/screen/business"
-          },
-          {
-            "label": "EU Market Surveillance Authorities ↗",
-            "url": "https://www.soi.sk/nebezpecne-vyrobky/narodny-trh-sr"
-          }
-        ]
-      },
-      {
-        "badge": "Reputational & Platform Risk",
-        "title": "Instant loss of customer trust, payment holds & marketplace delisting",
-        "body": "Customers, banks, payment processors (Shopify Payments, Stripe), and ad networks (Google, Meta, Amazon) strictly penalize hazardous goods. A single safety alert can freeze payouts, terminate accounts, and permanently damage brand reputation.",
-        "sourceLabel": "Consumer safety:",
-        "sources": [
-          {
-            "label": "European Commission – Product Safety ↗",
-            "url": "https://commission.europa.eu/business-economy-euro/doing-business-eu/product-safety_en"
-          }
-        ]
-      }
-    ]
+  "facts": {
+    "records": {
+      "number": "35,000+",
+      "label": "Recalled products in database",
+      "detail": "Historical safety records from the European Commission"
+    },
+    "updates": {
+      "number": "Every Friday",
+      "label": "Automatic database updates",
+      "detail": "Synced with newly published official EU weekly reports"
+    },
+    "automation": {
+      "number": "100%",
+      "label": "Automated in Shopify",
+      "detail": "Zero manual spreadsheets. Instant alerts on your product pages."
+    }
   },
   "workflow": {
     "eyebrow": "How it works",
-    "title": "A seamless 3-step process starting with your free scan.",
-    "steps": [
-      {
-        "title": "1. Free scan & feed sync",
-        "body": "Enter your store domain to instantly compare your catalog against the European Commission's official Safety Gate (RAPEX) database."
-      },
-      {
-        "title": "2. Automated background scanning",
-        "body": "Whenever products are created, updated, or a new weekly EU report is published, advanced visual AI instantly compares titles, specifications, and images against the full database."
-      },
-      {
-        "title": "3. One-click decisions & compliance audit trail",
-        "body": "View safety status right inside Shopify Admin, resolve or dismiss alerts in seconds, and maintain a complete audit log ready for any authority inspection."
-      }
-    ]
+    "title": "Three simple steps to complete product safety.",
+    "step1Title": "1. Scan your catalog",
+    "step1Desc": "Start with a free scan. We cross-reference every product title, description, and photo against official EU Safety Gate records.",
+    "step2Title": "2. Continuous 24/7 delta monitoring",
+    "step2Desc": "Whenever you add new inventory, or when the European Commission publishes weekly Friday recall reports, our visual AI re-evaluates risk automatically.",
+    "step3Title": "3. One-click resolution in Shopify Admin",
+    "step3Desc": "Review matched items directly on your Shopify product page. Pause sales, contact suppliers, or resolve findings while maintaining a timestamped compliance audit trail."
+  },
+  "compliance": {
+    "eyebrow": "Regulatory Context",
+    "title": "Why EU Safety Gate and GPSR matter for every merchant.",
+    "p1": "Under the EU General Product Safety Regulation (GPSR – Regulation EU 2023/988), online sellers are legally responsible for ensuring products sold to EU consumers are safe and not subject to active safety recalls.",
+    "p2": "National market surveillance authorities (such as SOI in Slovakia, ČOI in Czechia, BAuA in Germany, and DGCCRF in France) actively inspect online shops. Selling recalled goods can trigger mandatory recalls, customer refunds without receipt, payment processor holds, and fines up to €100,000+.",
+    "p3": "Safety Gate Monitor operates inside your Shopify Admin to give you proactive proof of due diligence and an immutable audit trail ready for any authority inspection.",
+    "linkGpsr": "Read Regulation (EU) 2023/988 on EUR-Lex ↗",
+    "linkSafetyGate": "Browse Official EU Safety Gate Portal ↗"
   },
   "faq": {
-    "eyebrow": "Frequently Asked Questions",
-    "title": "Everything you need to know about safety, free scanning & GPSR compliance.",
-    "items": [
-      {
-        "q": "How many items are in the Safety Gate database and how many are added monthly?",
-        "a": "The official EU Safety Gate (RAPEX) database currently holds over <strong>35,000 dangerous non-food consumer products</strong>. The European Commission releases new reports every Friday, adding approximately <strong>200 to 300+ new alerts</strong> and mandatory product recalls every month (roughly 50 to 80 per week)."
-      },
-      {
-        "q": "What specific penalties and legal obligations apply under GPSR and market authorities?",
-        "a": "Under <strong>EU Regulation 2023/988 (GPSR)</strong> and consumer protection laws:<br><br>• <strong>Immediate sales ban and mandatory recall:</strong> You must immediately pull the product from the market, contact all buyers, and report to Safety Business Gateway.<br>• <strong>Mandatory full refunds within 3 days:</strong> Consumers are legally entitled to a full refund even <em>without receipts or original packaging</em>.<br>• <strong>Severe regulatory fines:</strong> National surveillance authorities (such as SOI, BAuA, DGCCRF) can impose fines from <strong>€66,400 up to €332,000 (or 2%–4% of annual turnover)</strong> for dangerous products."
-      },
-      {
-        "q": "Are there real cases and published fines in EU member states?",
-        "a": "Yes. Market surveillance authorities routinely audit online retailers and issue public recalls and substantial fines. Frequent cases involve toys containing toxic phthalates, uncertified power adapters posing fire/shock hazards, and cosmetics containing banned reproductive toxins.<br><br>📌 <strong>Official registries and enforcement reports:</strong><br>• <a href=\"https://www.soi.sk/nebezpecne-vyrobky/narodny-trh-sr\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"faq-source-link\">Registry of National Dangerous Goods &amp; Recalls (SOI) ↗</a><br>• <a href=\"https://www.soi.sk/kontrolna-cinnost/vysledky-kontrol-soi\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"faq-source-link\">Official Inspection Results &amp; Decisions (SOI) ↗</a><br>• <a href=\"https://ec.europa.eu/safety-gate-alerts/\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"faq-source-link\">European Commission Safety Gate Alerts Database ↗</a><br>• <a href=\"https://commission.europa.eu/business-economy-euro/doing-business-eu/product-safety_en\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"faq-source-link\">EU Consumer Safety &amp; Enforcement Directives ↗</a>"
-      },
-      {
-        "q": "How does the free store scan work?",
-        "a": "Simply enter your Shopify store domain and email address. The app performs a full scan of your catalog against the official EU Safety Gate (RAPEX) database and sends the report directly to your inbox."
-      },
-      {
-        "q": "What is the EU Safety Gate (formerly RAPEX) system?",
-        "a": "EU Safety Gate (formerly RAPEX) is the European Union's rapid alert system for dangerous non-food consumer products. The European Commission publishes weekly reports on recalled items (toys, electronics, cosmetics, chargers, apparel) that pose serious health or safety risks. You can browse the database at <a href=\"https://ec.europa.eu/safety-gate-alerts/\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"faq-source-link\">ec.europa.eu/safety-gate-alerts ↗</a>."
-      },
-      {
-        "q": "What is the GPSR regulation and why does it affect Shopify merchants?",
-        "a": "The EU General Product Safety Regulation (<strong>GPSR - EU 2023/988, effective Dec 13, 2024</strong>) applies to all e-commerce stores selling to EU consumers. It mandates active product safety verification, responsible EU economic operator identification, and instant cooperation with surveillance authorities."
-      },
-      {
-        "q": "How does Visual AI detect products if suppliers changed names or branding?",
-        "a": "Suppliers often relabel or white-label products under different names. Safety Gate Monitor uses advanced visual AI to inspect both product descriptions and actual product photos, spotting visually identical dangerous goods regardless of name changes."
-      }
-    ]
+    "eyebrow": "FAQ",
+    "title": "Frequently Asked Questions",
+    "q1": "What is the EU Safety Gate (formerly RAPEX)?",
+    "a1": "EU Safety Gate is the European Union's rapid alert system for dangerous non-food consumer products. It alerts member states and consumers about hazardous toys, electronics, cosmetics, and equipment subject to recalls.",
+    "q2": "How does visual AI detect rebranded or white-label products?",
+    "a2": "Suppliers often rename or repackage products. Our system uses multimodal vector embeddings to compare both text specifications and actual product photographs against recall photos in the EU database, catching rebadged products even when titles differ.",
+    "q3": "Does this app modify or unpublish my Shopify products automatically?",
+    "a3": "No. Safety Gate Monitor is strictly advisory and operates under read-only catalog access. It flags potential risks and creates actionable review alerts in your Shopify Admin, leaving all publishing decisions entirely under your control.",
+    "q4": "What is included in the free scan?",
+    "a4": "The free scan audits your current public catalog against the entire EU Safety Gate database and sends a comprehensive safety summary report to your email, highlighting any products that require your attention."
   },
   "cta": {
-    "eyebrow": "Free Scan",
-    "title": "Sign up for a free scan of your Shopify store.",
-    "body": "Enter your store domain and email address where we will send your full EU Safety Gate (RAPEX) compliance audit.",
-    "domainLabel": "Store domain",
-    "domainPlaceholder": "your-store.com or .myshopify.com",
-    "emailLabel": "Email for scan results",
-    "emailPlaceholder": "name@your-store.com",
-    "button": "Send Free Scan Results to Email",
-    "note": "100% Free scan • Delivered to your inbox • No commitment",
-    "successTitle": "Scan request received!",
-    "successBody": "We are analyzing your catalog against EU Safety Gate records. Your report will be delivered directly to your inbox."
+    "title": "Ready to protect your store?",
+    "subtitle": "Run a free scan today and ensure your products comply with EU safety regulations.",
+    "button": "Run Free Safety Scan"
   },
   "footer": {
-    "eyebrow": "Safety Gate Monitor",
-    "title": "Sell with confidence. Free store scan and automated product safety compliance for modern Shopify merchants.",
-    "rapexLink": "Official Database: EU Safety Gate (RAPEX) – European Commission ↗",
-    "backToTop": "Back to top"
+    "text": "Safety Gate Monitor for Shopify. Autonomous product safety compliance.",
+    "officialDisclaimer": "Data sourced from the European Commission's official Safety Gate alert system.",
+    "backToTop": "Back to top ↑"
   }
 }

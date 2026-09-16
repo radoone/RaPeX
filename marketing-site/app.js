@@ -51,7 +51,7 @@ function syncDocument(language) {
 
 function initHeroPreviewHandler() {
   const toast = document.getElementById("preview-toast");
-  const buttons = document.querySelectorAll(".hero-card__btn");
+  const buttons = document.querySelectorAll(".preview-action-btn");
 
   if (!toast || buttons.length === 0) {
     return;
