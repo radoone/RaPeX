@@ -1,7 +1,7 @@
 import { buildCoreLocale } from "./core-locale";
 
 export default buildCoreLocale({
-  reviewLayout: { possibleMatch: 'Możliwe dopasowanie w Safety Gate', compareHeading: 'Porównaj produkty', decisionHeading: 'Zapisz decyzję', chooseOutcome: 'Wybierz wynik' }, dashboard: "Panel", alertsLabel: "Alerty bezpieczeństwa", manual: "Kontrola ręczna", settings: "Ustawienia", language: "Język", reviewAlerts: "Przejrzyj alerty", search: "Szukaj", clear: "Wyczyść", needsReview: "Wymaga przeglądu", safe: "Bezpieczny", notChecked: "Nie sprawdzono", alertsTitle: "Alerty bezpieczeństwa", findProduct: "Znajdź produkt",
+  reviewLayout: { possibleMatch: 'Możliwe dopasowanie w Safety Gate', compareHeading: 'Porównaj produkty', decisionHeading: 'Zapisz decyzję', chooseOutcome: 'Wybierz wynik', actionNeeded: 'Wymagane działanie', readyToRecord: 'Gotowe do zapisania', noteLabel: 'Co sprawdzono? (opcjonalnie)' }, dashboard: "Panel", alertsLabel: "Alerty bezpieczeństwa", manual: "Kontrola ręczna", settings: "Ustawienia", language: "Język", reviewAlerts: "Przejrzyj alerty", search: "Szukaj", clear: "Wyczyść", needsReview: "Wymaga przeglądu", safe: "Bezpieczny", notChecked: "Nie sprawdzono", alertsTitle: "Alerty bezpieczeństwa", findProduct: "Znajdź produkt",
   notifications: { enabledTitle: "Alerty bezpieczeństwa e-mail", enabledDescription: "Wysyłaj nowe wyniki natychmiast, a podsumowanie tygodniowe, gdy nie ma wyników.", emailLabel: "E-mail powiadomień", emailHelp: "Początkowo pobierany z Shopify. Możesz użyć innego adresu.", languageLabel: "Język wiadomości" },
   long: {
     "dashboardRecentAlertsDescription": "Najnowsze oznaczone produkty z Twojego sklepu są uporządkowane tak, aby można było szybko podjąć działania.",

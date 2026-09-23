@@ -220,8 +220,13 @@ export function AlertDetailModal({
 
           {isActive ? (
             <section className="review-modal__decision" aria-label={t("analysis.reviewLayout.decisionHeading")}>
-              <div className="review-modal__section-heading"><h3>{t("analysis.reviewLayout.decisionHeading")}</h3></div>
-              <p>{t("analysis.decisionContextDesc")}</p>
+              <div className="review-modal__decision-heading">
+                <h3>{t("analysis.reviewLayout.decisionHeading")}</h3>
+                <s-badge tone={selectedOutcome ? "success" : "warning"}>
+                  {selectedOutcome ? t("analysis.reviewLayout.readyToRecord") : t("analysis.reviewLayout.actionNeeded")}
+                </s-badge>
+              </div>
+              <p className="review-modal__decision-prompt">{t("analysis.reviewLayout.decisionPrompt")}</p>
               <s-select label={t("analysis.reviewLayout.outcomeLabel")} value={selectedOutcome} onChange={(event: any) => setSelectedOutcome(event.currentTarget.value || "")}>
                 <s-option value="">{t("analysis.reviewLayout.chooseOutcome")}</s-option>
                 <s-option value="removed_from_sale">{t("resolveActions.removedFromSale")}</s-option>
@@ -231,7 +236,8 @@ export function AlertDetailModal({
                 <s-option value="false_positive">{t("resolveActions.falsePositive")}</s-option>
                 <s-option value="not_my_product">{t("resolveActions.notMyProduct")}</s-option>
               </s-select>
-              <s-text-area label={t("analysis.audit.noteLabel")} placeholder={t("analysis.audit.notePlaceholder")} value={auditNote} onInput={(event: any) => setAuditNote(event.currentTarget.value || "")} />
+              <s-text-area label={t("analysis.reviewLayout.noteLabel")} placeholder={t("analysis.audit.notePlaceholder")} value={auditNote} onInput={(event: any) => setAuditNote(event.currentTarget.value || "")} />
+              <p className="review-modal__decision-note">{t("analysis.decisionContextDesc")}</p>
             </section>
           ) : (
             <div className="review-modal__recorded">

@@ -1712,7 +1712,6 @@ s-clickable s-icon {
 }
 
 .review-modal__intro,
-.review-modal__decision > p,
 .review-modal__score-help {
   margin: 0;
   color: var(--text-subdued);
@@ -1846,11 +1845,44 @@ s-clickable s-icon {
 
 .review-modal__decision {
   display: grid;
-  gap: 10px;
-  padding: 16px;
-  border: 1px solid var(--border-subdued);
+  gap: 12px;
+  padding: 18px;
+  border: 1px solid rgba(198, 132, 0, 0.45);
+  border-left: 5px solid var(--warning);
   border-radius: var(--radius-lg);
-  background: var(--surface-subdued);
+  background: linear-gradient(135deg, var(--warning-surface), var(--surface) 72%);
+  box-shadow: var(--shadow-md);
+}
+
+.review-modal__decision-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.review-modal__decision-heading h3 {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+.review-modal__decision-prompt {
+  margin: 0;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.review-modal__decision-note {
+  margin: 0;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-subdued);
+  color: var(--text-subdued);
+  font-size: 12px;
+  line-height: 1.4;
 }
 
 .review-modal__recorded { display: grid; gap: 6px; }

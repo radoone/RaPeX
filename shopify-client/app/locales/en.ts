@@ -440,8 +440,12 @@ const en = {
           "reviewPointsHeading": "Points to review",
           "fullEvidence": "Full Safety Gate evidence ({{count}})",
           "decisionHeading": "Record your decision",
+          "actionNeeded": "Action needed",
+          "readyToRecord": "Ready to record",
+          "decisionPrompt": "Choose the review outcome. You can add a note on what you checked.",
           "outcomeLabel": "Review outcome",
-          "chooseOutcome": "Choose an outcome"
+          "chooseOutcome": "Choose an outcome",
+          "noteLabel": "What did you check? (optional)"
         },
         "yourProduct": "Your Shopify product",
         "editInShopify": "Edit Product in Shopify",

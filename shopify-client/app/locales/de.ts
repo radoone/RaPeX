@@ -1,7 +1,7 @@
 import { buildCoreLocale } from "./core-locale";
 
 export default buildCoreLocale({
-  reviewLayout: { possibleMatch: 'Mögliche Übereinstimmung in Safety Gate', compareHeading: 'Produkte vergleichen', decisionHeading: 'Entscheidung dokumentieren', chooseOutcome: 'Ergebnis auswählen' },
+  reviewLayout: { possibleMatch: 'Mögliche Übereinstimmung in Safety Gate', compareHeading: 'Produkte vergleichen', decisionHeading: 'Entscheidung dokumentieren', chooseOutcome: 'Ergebnis auswählen', actionNeeded: 'Handlung erforderlich', readyToRecord: 'Bereit zum Erfassen', noteLabel: 'Was haben Sie geprüft? (optional)' },
   dashboard: "Dashboard",
   alertsLabel: "Sicherheitswarnungen",
   manual: "Manuelle Prüfung",

@@ -440,8 +440,12 @@ const sk = {
           "reviewPointsHeading": "Body na overenie",
           "fullEvidence": "Úplné podklady Safety Gate ({{count}})",
           "decisionHeading": "Zaznamenajte rozhodnutie",
+          "actionNeeded": "Potrebné rozhodnutie",
+          "readyToRecord": "Pripravené na uloženie",
+          "decisionPrompt": "Vyberte výsledok posúdenia. Môžete doplniť, čo ste overili.",
           "outcomeLabel": "Výsledok posúdenia",
-          "chooseOutcome": "Vyberte výsledok"
+          "chooseOutcome": "Vyberte výsledok",
+          "noteLabel": "Čo ste overili? (voliteľné)"
         },
         "yourProduct": "Váš produkt v Shopify",
         "editInShopify": "Upraviť produkt v Shopify",

@@ -1,7 +1,7 @@
 import { buildCoreLocale } from "./core-locale";
 
 export default buildCoreLocale({
-  reviewLayout: { possibleMatch: 'Възможно съвпадение в Safety Gate', compareHeading: 'Сравнете продуктите', decisionHeading: 'Запишете решението си', chooseOutcome: 'Изберете резултат' },
+  reviewLayout: { possibleMatch: 'Възможно съвпадение в Safety Gate', compareHeading: 'Сравнете продуктите', decisionHeading: 'Запишете решението си', chooseOutcome: 'Изберете резултат', actionNeeded: 'Необходимо действие', readyToRecord: 'Готово за запис', noteLabel: 'Какво проверихте? (по избор)' },
   dashboard: "Табло",
   alertsLabel: "Предупреждения за безопасност",
   manual: "Ръчна проверка",

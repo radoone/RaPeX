@@ -1,7 +1,7 @@
 import { buildCoreLocale } from "./core-locale";
 
 export default buildCoreLocale({
-  reviewLayout: { possibleMatch: 'Πιθανή αντιστοίχιση στο Safety Gate', compareHeading: 'Συγκρίνετε τα προϊόντα', decisionHeading: 'Καταγράψτε την απόφασή σας', chooseOutcome: 'Επιλέξτε αποτέλεσμα' },
+  reviewLayout: { possibleMatch: 'Πιθανή αντιστοίχιση στο Safety Gate', compareHeading: 'Συγκρίνετε τα προϊόντα', decisionHeading: 'Καταγράψτε την απόφασή σας', chooseOutcome: 'Επιλέξτε αποτέλεσμα', actionNeeded: 'Απαιτείται ενέργεια', readyToRecord: 'Έτοιμο για καταγραφή', noteLabel: 'Τι ελέγξατε; (προαιρετικό)' },
   dashboard: "Πίνακας",
   alertsLabel: "Ειδοποιήσεις ασφάλειας",
   manual: "Χειροκίνητος έλεγχος",

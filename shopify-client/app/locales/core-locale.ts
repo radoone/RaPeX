@@ -24,8 +24,12 @@ type CoreLocaleInput = {
     reviewPointsHeading: string;
     fullEvidence: string;
     decisionHeading: string;
+    actionNeeded: string;
+    readyToRecord: string;
+    decisionPrompt: string;
     outcomeLabel: string;
     chooseOutcome: string;
+    noteLabel: string;
   }>;
   unsafe?: string;
   notifications?: {
@@ -521,8 +525,12 @@ export function buildCoreLocale(input: CoreLocaleInput) {
         reviewPointsHeading: "Points to review",
         fullEvidence: "Full Safety Gate evidence ({{count}})",
         decisionHeading: "Record your decision",
+        actionNeeded: "Action needed",
+        readyToRecord: "Ready to record",
+        decisionPrompt: "Choose the review outcome. You can add a note on what you checked.",
         outcomeLabel: "Review outcome",
         chooseOutcome: "Choose an outcome",
+        noteLabel: "What did you check? (optional)",
         ...input.reviewLayout,
       },
       riskSeverity: "Risk severity",

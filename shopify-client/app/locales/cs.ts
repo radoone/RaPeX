@@ -1,7 +1,7 @@
 import { buildCoreLocale } from "./core-locale";
 
 export default buildCoreLocale({
-  reviewLayout: { possibleMatch: 'Možná shoda v Safety Gate', compareHeading: 'Porovnejte produkty', decisionHeading: 'Zaznamenejte rozhodnutí', chooseOutcome: 'Vyberte výsledek' },
+  reviewLayout: { possibleMatch: 'Možná shoda v Safety Gate', compareHeading: 'Porovnejte produkty', decisionHeading: 'Zaznamenejte rozhodnutí', chooseOutcome: 'Vyberte výsledek', actionNeeded: 'Vyžaduje akci', readyToRecord: 'Připraveno k záznamu', noteLabel: 'Co jste ověřili? (volitelné)' },
   dashboard: "Přehled",
   alertsLabel: "Bezpečnostní upozornění",
   manual: "Ruční kontrola",
