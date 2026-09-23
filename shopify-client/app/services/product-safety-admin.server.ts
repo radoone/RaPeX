@@ -1,5 +1,5 @@
 import db from "../merchant-db.server";
-import type { ProductData } from "./safety-gate-checker.client";
+import type { ProductData } from "./safety-gate-product-data";
 import {
   checkProductSafety,
   getSimilarityThresholdForShop,
@@ -84,6 +84,7 @@ function toProductGid(rawProductId: string): string {
 function getRiskLevel(result: SafetyCheckResult): string {
   const firstWarning = result.warnings[0];
   return (
+    firstWarning?.alertDetails?.fields?.level ||
     firstWarning?.alertDetails?.fields?.alert_level ||
     firstWarning?.alertDetails?.fields?.risk_level ||
     firstWarning?.riskLevel ||
@@ -301,7 +302,7 @@ export async function runProductSafetyCheck(input: {
 
     if (existingActiveAlert) {
       const updated = await db.safetyAlert.update({
-        where: { id: existingActiveAlert.id },
+        where: { id: existingActiveAlert.id, shop: input.shop },
         data: {
           checkResult: JSON.stringify(safetyResult),
           riskLevel,
@@ -338,7 +339,7 @@ export async function runProductSafetyCheck(input: {
 
     if (existingActiveAlert) {
       const resolved = await db.safetyAlert.update({
-        where: { id: existingActiveAlert.id },
+        where: { id: existingActiveAlert.id, shop: input.shop },
         data: {
           status: "resolved",
           resolvedAt: new Date(),

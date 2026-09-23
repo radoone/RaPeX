@@ -9,6 +9,13 @@ export default defineConfig({
   build: {
     outDir: resolve(rootDir, "dist"),
     emptyOutDir: true,
+    rollupOptions: {
+      input: {
+        main: resolve(rootDir, "index.html"),
+        about: resolve(rootDir, "about.html"),
+        leads: resolve(rootDir, "leads.html"),
+      },
+    },
   },
   server: {
     port: 4174,

@@ -73,7 +73,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       if (existingAlert) {
         // Update existing alert with new check result
         await db.safetyAlert.update({
-          where: { id: existingAlert.id },
+          where: { id: existingAlert.id, shop },
           data: {
             checkResult: JSON.stringify(safetyResult),
             riskLevel,
@@ -130,7 +130,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       if (existingAlert) {
         // Mark existing alert as resolved
         await db.safetyAlert.update({
-          where: { id: existingAlert.id },
+          where: { id: existingAlert.id, shop },
           data: {
             status: 'resolved',
             resolvedAt: new Date(),

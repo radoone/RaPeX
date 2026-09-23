@@ -478,7 +478,7 @@ export async function retrieveAlertsForVector(
     }
   } catch (error) {
     console.warn("Direct vector retrieval failed", error);
-    return [];
+    throw error;
   }
 
   return hydrateAlertsIfMissing(candidates);

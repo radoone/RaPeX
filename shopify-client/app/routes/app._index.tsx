@@ -11,9 +11,9 @@ import { formatRelativeDate } from "../components";
 import { getBillingStatus, requireActiveBilling } from "../services/billing.server";
 import {
   runMerchantDeltaMonitoring,
-  shopifyProductToProductData,
   upsertMerchantProductForMonitoring,
 } from "../services/safety-gate-checker.server";
+import { shopifyProductToProductData } from "../services/safety-gate-product-data";
 
 type BulkCheckResults = {
   processed: number;
@@ -161,6 +161,70 @@ async function importCurrentCatalogForMonitoring(params: {
   }
 
   return { imported, failed, totalFetched: products.length };
+}
+
+async function runInitialCatalogScanInBackground(params: { admin: any; shop: string }) {
+  try {
+    const importedCatalog = await importCurrentCatalogForMonitoring({
+      admin: params.admin,
+      shop: params.shop,
+      limit: 300,
+    });
+
+    if (importedCatalog.totalFetched === 0 || importedCatalog.imported === 0) {
+      throw new Error(
+        importedCatalog.totalFetched === 0
+          ? "No Shopify products were returned for the initial catalog scan."
+          : `Could not import any of the ${importedCatalog.totalFetched} Shopify products for the initial catalog scan.`,
+      );
+    }
+
+    const monitoring = await runMerchantDeltaMonitoring(params.shop, {
+      forceFullScan: true,
+      limit: 300,
+      monitoringMode: "full-lookback",
+    });
+
+    await db.safetySetting.upsert({
+      where: { shop: params.shop },
+      update: {
+        freeScanUsed: true,
+        freeScanCompletedAt: new Date(),
+        initialScanStatus: "completed",
+      },
+      create: {
+        shop: params.shop,
+        similarityThreshold: 70,
+        freeScanUsed: true,
+        freeScanCompletedAt: new Date(),
+        initialScanStatus: "completed",
+      },
+    });
+
+    await db.activityLog.create({
+      data: {
+        shop: params.shop,
+        type: "bulk",
+        action: "check",
+        details: `Imported ${importedCatalog.imported} current catalog products for monitoring and checked them against recent Safety Gate alerts.`,
+      },
+    });
+
+    console.info("Initial Safety Gate catalog scan completed", {
+      shop: params.shop,
+      imported: importedCatalog.imported,
+      importFailed: importedCatalog.failed,
+      productsScanned: monitoring.productsScanned,
+      alertsCreated: monitoring.alertsCreated,
+    });
+  } catch (error) {
+    console.error("Initial Safety Gate catalog scan failed", { shop: params.shop, error });
+    await db.safetySetting.upsert({
+      where: { shop: params.shop },
+      update: { initialScanStatus: "failed" },
+      create: { shop: params.shop, similarityThreshold: 70, initialScanStatus: "failed" },
+    });
+  }
 }
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -410,60 +474,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     });
     if (billingRedirect) return billingRedirect as never;
 
-    try {
-      const importedCatalog = await importCurrentCatalogForMonitoring({
-        admin,
-        shop: session.shop,
-        limit: 300,
-      });
-      const monitoring = await runMerchantDeltaMonitoring(session.shop, {
-        forceFullScan: true,
-        limit: 300,
-        monitoringMode: "full-lookback",
-      });
+    await db.safetySetting.upsert({
+      where: { shop: session.shop },
+      update: { initialScanStatus: "scanning", initialScanStartedAt: new Date() },
+      create: { shop: session.shop, similarityThreshold: 70, initialScanStatus: "scanning", initialScanStartedAt: new Date() },
+    });
 
-      await db.safetySetting.upsert({
-        where: { shop: session.shop },
-        update: {
-          freeScanUsed: true,
-          freeScanCompletedAt: new Date(),
-        },
-        create: {
-          shop: session.shop,
-          similarityThreshold: 70,
-          freeScanUsed: true,
-          freeScanCompletedAt: new Date(),
-        },
-      });
-
-      await db.activityLog.create({
-        data: {
-          shop: session.shop,
-          type: "bulk",
-          action: "check",
-          details: `Imported ${importedCatalog.imported} current catalog products for monitoring and checked them against recent Safety Gate alerts.`
-        }
-      });
-
-      const results: BulkCheckResults = {
-        processed: importedCatalog.imported,
-        checked: monitoring.productsScanned,
-        skipped: importedCatalog.failed,
-        alertsCreated: monitoring.alertsCreated,
-        errors: importedCatalog.failed,
-        totalProducts: importedCatalog.totalFetched,
-        products: [],
-      };
-
-      return json({
-        success: true,
-        message: `Imported ${importedCatalog.imported} products for monitoring and created ${monitoring.alertsCreated} Safety Gate review items`,
-        results,
-      });
-    } catch (error) {
-      console.error('Catalog import and monitoring failed:', error);
-      return json({ success: false, error: error instanceof Error ? error.message : 'Catalog import and monitoring failed' }, { status: 500 });
-    }
+    // The scan can involve embeddings and model matching. Return before the
+    // Cloudflare tunnel deadline, while retaining its durable merchant state.
+    void runInitialCatalogScanInBackground({ admin, shop: session.shop });
+    return json({ success: true, message: "Catalog safety scan started" });
   }
 
   if (actionType === "bulkCheck") {
@@ -654,8 +674,20 @@ export default function Index() {
 
   const hasAutoStartedScan = useRef(false);
   useEffect(() => {
-    // Auto-trigger free catalog scan immediately upon entry if store has unverified catalog and scan hasn't run yet
-    const isScanNeeded = !settings?.freeScanUsed && stats.checkedProducts === 0;
+    // Start first-run protection without asking the merchant to discover a
+    // secondary dashboard action. Paid stores may retry an interrupted first
+    // import; free stores retain their one-scan billing limit.
+    const completedWithoutChecks = settings?.initialScanStatus === "completed" &&
+      stats.totalProducts > 0 &&
+      stats.checkedProducts === 0;
+    const canRetryInitialScan = Boolean(billingStatus?.hasActivePayment) ||
+      !settings?.freeScanUsed ||
+      completedWithoutChecks;
+    const isScanNeeded = stats.totalProducts > 0 &&
+      stats.uncheckedProducts > 0 &&
+      canRetryInitialScan &&
+      settings?.initialScanStatus !== "scanning" &&
+      (settings?.initialScanStatus !== "completed" || completedWithoutChecks);
     if (isScanNeeded && !hasAutoStartedScan.current && fetcher.state === "idle" && !fetcher.data) {
       hasAutoStartedScan.current = true;
       fetcher.submit(
@@ -663,12 +695,20 @@ export default function Index() {
         { method: "POST" }
       );
     }
-  }, [settings?.freeScanUsed, stats.checkedProducts, fetcher]);
+  }, [
+    billingStatus?.hasActivePayment,
+    settings?.freeScanUsed,
+    settings?.initialScanStatus,
+    stats.totalProducts,
+    stats.checkedProducts,
+    stats.uncheckedProducts,
+    fetcher,
+  ]);
 
   const protectedCount = Math.max(0, stats.checkedProducts - stats.activeAlerts);
   const actionRequiredCount = stats.activeAlerts;
   const unprotectedCount = stats.uncheckedProducts;
-  const isScanning = isSubmitting || fetcher.state !== "idle";
+  const isScanning = isSubmitting || fetcher.state !== "idle" || settings?.initialScanStatus === "scanning";
 
   useEffect(() => {
     if (fetcher.data) {
@@ -693,23 +733,27 @@ export default function Index() {
   // ═══════════════════════════════════════════════════════════════════════════
   // STANDARD DASHBOARD VIEW (Direct access, zero onboarding blocker)
   // ═══════════════════════════════════════════════════════════════════════════
+  const showCoverageBreakdown = !isScanning && (hasCompleteCoverage || stats.activeAlerts > 0);
+  const shouldShowPrimaryAction = !isScanning && dashboardState === "review-needed";
+
   return (
     <s-page size="large" className="page-shell" suppressHydrationWarning>
       <s-heading slot="title" size="large" suppressHydrationWarning>{t('dashboard.title')}</s-heading>
-      <s-button
-        slot="primary-action"
-        variant="primary"
-        onClick={() => navigate(dashboardStatus.actionHref)}
-        suppressHydrationWarning
-      >
-        {dashboardStatus.actionLabel}
-      </s-button>
-      <s-button slot="secondary-actions" variant="secondary" onClick={() => navigate("/app/audit-report")} suppressHydrationWarning>
-        {t("actions.auditReport")}
-      </s-button>
-      <s-button slot="secondary-actions" variant="secondary" onClick={() => navigate("/app/evidence")} suppressHydrationWarning>
-        {t("actions.viewEvidence")}
-      </s-button>
+      {shouldShowPrimaryAction ? (
+        <s-button
+          slot="primary-action"
+          variant="primary"
+          onClick={() => navigate(dashboardStatus.actionHref)}
+          suppressHydrationWarning
+        >
+          {dashboardStatus.actionLabel}
+        </s-button>
+      ) : null}
+      {!isScanning ? (
+        <s-button slot="secondary-actions" variant="secondary" onClick={() => navigate("/app/evidence")} suppressHydrationWarning>
+          {t("actions.viewEvidence")}
+        </s-button>
+      ) : null}
 
       <div className="admin-stack">
         {/* Live Scan Progress Card when scan is active */}
@@ -751,8 +795,10 @@ export default function Index() {
           </section>
         )}
 
-        {/* 3-Card Catalog Safety Status Breakdown */}
-        <section aria-label={t("dashboard.safetyBreakdown.eyebrow")}>
+        {/* After the first scan, show the compact breakdown. During setup the
+            progress panel is the only primary message, so merchants know that
+            the app is working and do not have to choose a second action. */}
+        {showCoverageBreakdown ? <section aria-label={t("dashboard.safetyBreakdown.eyebrow")}>
           <div style={{ marginBottom: "12px" }}>
             <p className="admin-eyebrow" style={{ margin: 0 }}>{t("dashboard.safetyBreakdown.eyebrow")}</p>
             <h2 style={{ margin: "4px 0 0", fontSize: "20px", fontWeight: 600 }}>{t("dashboard.safetyBreakdown.title")}</h2>
@@ -877,7 +923,8 @@ export default function Index() {
               </div>
             </div>
           </div>
-        </section>
+        </section> : null}
+        {!isScanning ? <>
         {billingStatus && !billingStatus.hasActivePayment && billingStatus.freeScanUsed && (
           <s-banner tone="warning" heading={t("billing.upgradeRequiredHeading")}>
             <s-text>{t("billing.upgradeRequiredDescription")}</s-text>
@@ -894,7 +941,7 @@ export default function Index() {
             </div>
           </s-banner>
         )}
-        <section className={`dashboard-status-panel dashboard-status-panel--${dashboardStatus.tone}`}>
+        {!isScanning ? <section className={`dashboard-status-panel dashboard-status-panel--${dashboardStatus.tone}`}>
           <div className="dashboard-status-panel__content">
             <p className="admin-eyebrow">{dashboardStatus.eyebrow}</p>
             <h2 className="dashboard-status-panel__title">{dashboardStatus.title}</h2>
@@ -935,7 +982,7 @@ export default function Index() {
               <small>{t("dashboard.admin.status.deltaMonitoring")}</small>
             </div>
           </div>
-        </section>
+        </section> : null}
 
         <section className="protection-value-panel" aria-label={t("dashboard.admin.proofGridLabel")}>
           <div className="protection-value-panel__content">
@@ -1108,6 +1155,7 @@ export default function Index() {
             )}
           </section>
         </div>
+        </> : null}
       </div>
     </s-page>
   );

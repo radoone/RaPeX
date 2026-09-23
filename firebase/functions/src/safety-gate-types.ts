@@ -120,6 +120,7 @@ export interface MerchantDocument {
   lastMonitorStatus?: "SUCCESS" | "FAILURE" | "IN_PROGRESS";
   lastRapexAlertDate?: Timestamp | null;
   lastRapexRecordTimestamp?: string | null;
+  lastRapexAlertDocId?: string | null;
   lastProductsScanned?: number;
   lastAlertsCreated?: number;
   lastMatchesFound?: number;

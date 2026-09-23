@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Internal Lead Scanner | Safety Gate Monitor</title>
-    <link rel="stylesheet" href="./styles.css" />
     <style>
       .admin-container {
         max-width: 1200px;
@@ -24,6 +23,8 @@
         justify-content: space-between;
         align-items: center;
         margin-bottom: 28px;
+        flex-wrap: wrap;
+        gap: 16px;
       }
       .admin-title {
         font-size: 28px;
@@ -35,6 +36,22 @@
         color: #6b7280;
         font-size: 15px;
         margin-top: 6px;
+      }
+      .admin-auth-box {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #faf8f5;
+        padding: 8px 14px;
+        border-radius: 10px;
+        border: 1px solid rgba(31, 29, 26, 0.08);
+      }
+      .admin-auth-input {
+        padding: 6px 10px;
+        border-radius: 6px;
+        border: 1px solid #d1d5db;
+        font-size: 13px;
+        width: 180px;
       }
       .stats-grid {
         display: grid;
@@ -154,19 +171,50 @@
         padding: 28px;
         box-shadow: 0 20px 40px rgba(0,0,0,0.2);
       }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      .progress-step {
+        padding: 8px 6px;
+        border-radius: 8px;
+        background: #f1f5f9;
+        color: #64748b;
+        font-weight: 600;
+        font-size: 11px;
+        transition: all 0.3s ease;
+      }
+      .progress-step.active {
+        background: #eff6ff;
+        color: #1d4ed8;
+        font-weight: 700;
+        border: 1px solid #bfdbfe;
+      }
+      .progress-step.completed {
+        background: #f0fdf4;
+        color: #15803d;
+        font-weight: 700;
+        border: 1px solid #bbf7d0;
+      }
     </style>
+    <link rel="stylesheet" crossorigin href="/assets/styles-BpiIE4Yx.css">
   </head>
   <body style="background: #f7f6f3;">
     <div class="admin-container">
       <div class="admin-header">
         <div>
           <div style="font-size: 12px; font-weight: 700; color: #b84c28; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px;">
-            🔒 Interný Admin Nástroj
+            🔒 Súkromný Nástroj (Iba pre vás)
           </div>
           <h1 class="admin-title">Safety Gate Lead Generator & Public Scanner</h1>
           <div class="admin-subtitle">Vyhľadávanie potenciálnych klientov (Shopify e-shopov) s porušeniami EU Safety Gate pre cold outreach.</div>
         </div>
-        <a href="./index.html" style="font-size: 14px; font-weight: 600; color: #1f1d1a; text-decoration: none;">← Návrat na web</a>
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <div class="admin-auth-box">
+            <span style="font-size: 12px; font-weight: 600; color: #374151;">🔑 API Kľúč:</span>
+            <input type="password" id="api-key-input" class="admin-auth-input" placeholder="Zadajte Admin API kľúč" />
+          </div>
+          <a href="./index.html" style="font-size: 14px; font-weight: 600; color: #1f1d1a; text-decoration: none;">← Návrat na web</a>
+        </div>
       </div>
 
       <!-- Stats Grid -->
@@ -205,15 +253,60 @@
             <label class="form-label">Počet produktov</label>
             <select id="max-products-input" class="form-select">
               <option value="50">50 položiek</option>
-              <option value="100" selected>100 položiek</option>
+              <option value="100">100 položiek</option>
               <option value="250">250 položiek</option>
               <option value="500">500 položiek</option>
+              <option value="1000" selected>1 000 položiek</option>
+              <option value="2500">2 500 položiek</option>
+              <option value="5000">5 000 položiek</option>
+              <option value="10000">Kompletný sortiment (až 10 000 položiek)</option>
+            </select>
+          </div>
+          <div class="form-group" style="flex: 1 1 160px;">
+            <label class="form-label">Prah zhody (AI Filter)</label>
+            <select id="threshold-input" class="form-select">
+              <option value="70">≥ 70% (Širší monitoring)</option>
+              <option value="80" selected>≥ 80% (Vysoká presnosť)</option>
+              <option value="85">≥ 85% (Iba presné zhody)</option>
+              <option value="90">≥ 90% (Kritické zhody)</option>
             </select>
           </div>
           <div>
             <button type="submit" id="scan-btn" class="btn-primary">Spustiť Cloud Sken</button>
           </div>
         </form>
+        <!-- Real-time Progress Container -->
+        <div id="scan-progress-card" style="display: none; margin-top: 18px; padding: 18px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="spinner" style="display: inline-block; width: 16px; height: 16px; border: 2px solid #3b82f6; border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite;"></span>
+              <strong id="progress-domain-title" style="font-size: 14px; color: #1e293b;">Prebieha sken obchodu...</strong>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span id="progress-timer" style="font-family: monospace; font-size: 13px; font-weight: 700; color: #64748b; background: #e2e8f0; padding: 2px 8px; border-radius: 6px;">⏱ 00:00s</span>
+              <span id="progress-percent" style="font-size: 13px; font-weight: 800; color: #2563eb;">10%</span>
+            </div>
+          </div>
+
+          <!-- Progress Bar -->
+          <div style="width: 100%; height: 8px; background: #e2e8f0; border-radius: 999px; overflow: hidden; margin-bottom: 12px;">
+            <div id="progress-bar-fill" style="width: 10%; height: 100%; background: linear-gradient(90deg, #3b82f6, #2563eb); border-radius: 999px; transition: width 0.4s ease;"></div>
+          </div>
+
+          <!-- Live Step Status Message -->
+          <div id="progress-stage-msg" style="font-size: 13px; color: #475569; display: flex; align-items: center; gap: 6px;">
+            Sťahujem katalóg a kontaktné údaje...
+          </div>
+
+          <!-- Stepper Pipeline Indicators -->
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 14px; padding-top: 12px; border-top: 1px solid #e2e8f0; text-align: center;">
+            <div id="step-1" class="progress-step active">1. Katalóg 📥</div>
+            <div id="step-2" class="progress-step">2. Vektory 🧠</div>
+            <div id="step-3" class="progress-step">3. Safety Gate 🔍</div>
+            <div id="step-4" class="progress-step">4. AI Arbiter 🤖</div>
+          </div>
+        </div>
+
         <div id="scan-status" style="margin-top: 14px; font-size: 14px; font-weight: 500; display: none;"></div>
       </div>
 
@@ -239,31 +332,32 @@
               </tr>
             </thead>
             <tbody id="leads-tbody">
-              <tr class="lead-row">
-                <td>
-                  <div style="font-weight: 700;">4kidspoint.sk</div>
-                  <div style="font-size: 12px; color: #9ca3af;">Scanned 11. 9. 2026</div>
-                </td>
-                <td>
-                  <div style="color: #2563eb; font-weight: 600;">✉ info@4kidspoint.sk</div>
-                </td>
-                <td>
-                  <div style="font-weight: 800; font-size: 16px;">0 / 100</div>
-                </td>
-                <td>
-                  <span class="badge badge-safe">SAFE</span>
-                </td>
-                <td>
-                  <span style="font-weight: 600;">0</span> / 9 959
-                </td>
-                <td>
-                  <button onclick="openOutreach('4kidspoint.sk', 'info@4kidspoint.sk', 0, [])" style="background: #f3f4f6; border: 1px solid #d1d5db; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;">
-                    Generovať Outreach E-mail
-                  </button>
+              <tr>
+                <td colspan="6" style="text-align: center; padding: 32px; color: #6b7280;">
+                  Načítavam uložené leady z databázy...
                 </td>
               </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Findings Detail Modal -->
+    <div id="findings-modal" class="outreach-modal">
+      <div class="modal-box" style="max-width: 900px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #e5e7eb; padding-bottom: 16px;">
+          <div>
+            <h3 style="margin: 0; font-size: 22px; font-weight: 700;" id="findings-title">Zistené porušenia Safety Gate</h3>
+            <div id="findings-subtitle" style="font-size: 14px; color: #6b7280; margin-top: 4px;"></div>
+          </div>
+          <button onclick="closeFindings()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #6b7280;">✕</button>
+        </div>
+
+        <div id="findings-list" style="display: flex; flex-direction: column; gap: 16px;"></div>
+
+        <div style="margin-top: 24px; display: flex; justify-content: flex-end;">
+          <button onclick="closeFindings()" class="btn-primary">Zavrieť prehľad</button>
         </div>
       </div>
     </div>
@@ -301,38 +395,385 @@
     <script>
       const FIREBASE_API_URL = "https://europe-west1-rapex-99a2c.cloudfunctions.net/scanPublicShopifyStoreAPI";
 
+      let currentLeads = [];
+
+      const apiKeyInput = document.getElementById("api-key-input");
+      const savedKey = localStorage.getItem("rapex_scanner_api_key") || "cc940932d645c8523e764868cd8c162ef2c9947a1da4d189792ea651c70c99b2";
+      if (savedKey) apiKeyInput.value = savedKey;
+
+      apiKeyInput.addEventListener("input", (e) => {
+        localStorage.setItem("rapex_scanner_api_key", e.target.value.trim());
+      });
+
+      function getAuthHeaders() {
+        const apiKey = apiKeyInput.value.trim() || localStorage.getItem("rapex_scanner_api_key") || "";
+        const headers = { "Content-Type": "application/json" };
+        if (apiKey) {
+          headers["X-API-Key"] = apiKey;
+          headers["Authorization"] = `Bearer ${apiKey}`;
+        }
+        return headers;
+      }
+
+      async function loadLeads() {
+        const tbody = document.getElementById("leads-tbody");
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 32px; color: #6b7280;">Načítavam uložené leady z databázy...</td></tr>`;
+
+        try {
+          const res = await fetch(FIREBASE_API_URL, {
+            method: "GET",
+            headers: getAuthHeaders(),
+          });
+
+          const data = await res.json();
+          if (res.ok && data.leads) {
+            currentLeads = data.leads;
+            renderLeads(currentLeads);
+          } else {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 32px; color: #dc2626;">Chyba načítania: ${data.error || "Skontrolujte Admin API kľúč"}</td></tr>`;
+          }
+        } catch (err) {
+          tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 32px; color: #dc2626;">Chyba spojenia s databázou: ${err.message}</td></tr>`;
+        }
+      }
+
+      function renderLeads(leads) {
+        const tbody = document.getElementById("leads-tbody");
+        tbody.innerHTML = "";
+
+        let criticalCount = 0;
+        let highCount = 0;
+        let safeCount = 0;
+
+        if (!leads.length) {
+          tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 32px; color: #6b7280;">Zatiaľ nie sú uložené žiadne leady. Spustite sken zadaním domény vyššie.</td></tr>`;
+          return;
+        }
+
+        leads.forEach((lead, idx) => {
+          if (lead.priorityLevel === "CRITICAL") criticalCount++;
+          else if (lead.priorityLevel === "HIGH") highCount++;
+          else safeCount++;
+
+          const row = document.createElement("tr");
+          row.className = "lead-row";
+          const priorityBadge = lead.priorityLevel === "CRITICAL" ? "badge-critical" : lead.priorityLevel === "HIGH" ? "badge-warning" : "badge-safe";
+          const formattedDate = lead.scannedAt ? new Date(lead.scannedAt).toLocaleDateString("sk-SK", { day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "Nedávno";
+
+          const matchesCount = lead.flaggedProductsCount || (lead.matches ? lead.matches.length : 0);
+
+          row.innerHTML = `
+            <td>
+              <div style="font-weight: 700; font-size: 15px;">${lead.domain}</div>
+              <div style="font-size: 12px; color: #9ca3af;">${formattedDate}</div>
+            </td>
+            <td>
+              <div style="color: #2563eb; font-weight: 600;">✉ ${lead.contactEmail || "Nenájdený"}</div>
+            </td>
+            <td>
+              <div style="font-weight: 800; font-size: 16px; color: ${lead.leadScore >= 75 ? '#dc2626' : lead.leadScore >= 50 ? '#d97706' : '#16a34a'};">${lead.leadScore} / 100</div>
+            </td>
+            <td>
+              <span class="badge ${priorityBadge}">${lead.priorityLevel}</span>
+            </td>
+            <td>
+              <span style="font-weight: 700; font-size: 15px; color: ${matchesCount > 0 ? '#dc2626' : '#16a34a'}">${matchesCount}</span> / ${lead.totalProductsScanned?.toLocaleString('sk-SK') || '0'}
+            </td>
+            <td>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                ${matchesCount > 0 ? `
+                  <button onclick="openFindings(${idx})" style="background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer;">
+                    🔍 Zobraziť záchyty (${matchesCount})
+                  </button>
+                ` : ''}
+                <button onclick="openOutreach(${idx})" style="background: #f3f4f6; border: 1px solid #d1d5db; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;">
+                  ✉ Outreach E-mail
+                </button>
+              </div>
+            </td>
+          `;
+          tbody.appendChild(row);
+        });
+
+        document.getElementById("stat-scanned").innerText = leads.length;
+        document.getElementById("stat-critical").innerText = criticalCount;
+        document.getElementById("stat-high").innerText = highCount;
+        document.getElementById("stat-safe").innerText = safeCount;
+      }
+
+      function openFindings(leadIndex) {
+        const lead = currentLeads[leadIndex];
+        if (!lead) return;
+
+        const flaggedCount = lead.flaggedProductsCount || (lead.matches ? lead.matches.length : 0);
+        document.getElementById("findings-title").innerText = `Porovnanie záchytov: ${lead.domain}`;
+        document.getElementById("findings-subtitle").innerText = `Nájdených ${flaggedCount} rizikových produktov zodpovedajúcich databáze Safety Gate (z celkovo ${lead.totalProductsScanned} položiek katalógu).`;
+
+        const listContainer = document.getElementById("findings-list");
+        listContainer.innerHTML = "";
+
+        const matches = lead.matches || [];
+        if (!matches.length) {
+          listContainer.innerHTML = `<div style="text-align: center; padding: 20px; color: #6b7280;">Žiadne rizikové produkty.</div>`;
+        }
+
+        matches.forEach((m, i) => {
+          const w = m.result?.warnings?.[0] || {};
+          const sim = w.overallSimilarity || 0;
+          const imageSim = w.imageSimilarity || 0;
+          const riskLevel = m.alertDetails?.riskLevel || w.riskLevel || "Serious risk";
+          const alertId = m.alertDetails?.alertId || w.alertId || "N/A";
+          const alertNumber = m.alertDetails?.alertNumber || "";
+          const alertImage = m.alertDetails?.alertImage || "";
+
+          const isRapexUrlValid = m.alertDetails?.rapexUrl && !m.alertDetails.rapexUrl.includes("undefined") && !m.alertDetails.rapexUrl.includes(alertId);
+          const alertUrl = isRapexUrlValid
+            ? m.alertDetails.rapexUrl
+            : (alertNumber
+                ? `https://ec.europa.eu/safety-gate-alerts/screen/search?keywords=${encodeURIComponent(alertNumber)}`
+                : (m.alertDetails?.brand
+                    ? `https://ec.europa.eu/safety-gate-alerts/screen/search?keywords=${encodeURIComponent(m.alertDetails.brand)}`
+                    : `https://ec.europa.eu/safety-gate-alerts/screen/search?keywords=${encodeURIComponent(m.productTitle || "")}`));
+
+          const alertBrand = m.alertDetails?.brand || w.brand || "Neuvedená";
+          const alertModel = m.alertDetails?.model || w.model || "";
+
+          const isProductUrlValid = m.productUrl && !m.productUrl.includes("undefined") && !m.productUrl.endsWith("/products/") && !m.productUrl.endsWith("/products");
+          const productUrl = isProductUrlValid
+            ? m.productUrl
+            : `https://${lead.domain}/search?q=${encodeURIComponent(m.productTitle || "")}`;
+
+          const riskDesc = m.alertDetails?.riskDescription || w.riskLegalProvision || w.message || "Porušenie smernice o bezpečnosti výrobkov EÚ.";
+
+          const card = document.createElement("div");
+          card.style.cssText = "background: #ffffff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);";
+
+          card.innerHTML = `
+            <!-- Top bar with match scores -->
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f3f4f6; padding-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 13px; font-weight: 800; background: #1f1d1a; color: #fff; padding: 3px 8px; border-radius: 6px;">#${i + 1}</span>
+                <span class="badge badge-critical">${riskLevel}</span>
+                ${alertNumber ? `<span style="font-size: 12px; color: #6b7280; font-weight: 600;">Číslo alertu: <strong>${alertNumber}</strong></span>` : ''}
+              </div>
+
+              <div style="display: flex; gap: 12px; align-items: center;">
+                <div style="background: #fef2f2; border: 1px solid #fee2e2; padding: 4px 10px; border-radius: 8px; text-align: right;">
+                  <span style="font-size: 11px; color: #991b1b; font-weight: 700; text-transform: uppercase;">Celková zhoda:</span>
+                  <span style="font-size: 16px; font-weight: 800; color: #dc2626; margin-left: 4px;">${sim}%</span>
+                </div>
+                ${imageSim > 0 ? `
+                  <div style="background: #fffbeb; border: 1px solid #fef3c7; padding: 4px 10px; border-radius: 8px; text-align: right;">
+                    <span style="font-size: 11px; color: #92400e; font-weight: 700; text-transform: uppercase;">Vizuálna zhoda:</span>
+                    <span style="font-size: 16px; font-weight: 800; color: #d97706; margin-left: 4px;">${imageSim}%</span>
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+
+            <!-- Side-by-Side Comparison Grid -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px;">
+
+              <!-- LEFT: In Store -->
+              <div style="background: #faf8f5; border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px; display: flex; gap: 14px;">
+                <div style="flex-shrink: 0;">
+                  ${m.productImage ? `
+                    <img src="${m.productImage}" alt="Produkt v e-shope" style="width: 100px; height: 100px; object-fit: contain; border-radius: 8px; border: 1px solid #d1d5db; background: #fff;" />
+                  ` : `
+                    <div style="width: 100px; height: 100px; background: #e5e7eb; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #9ca3af;">Bez fotky</div>
+                  `}
+                </div>
+                <div style="display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1;">
+                  <div>
+                    <div style="font-size: 11px; font-weight: 700; color: #2563eb; text-transform: uppercase; letter-spacing: 0.05em;">
+                      🛒 V e-shope (${lead.domain})
+                    </div>
+                    <h4 style="margin: 4px 0 6px; font-size: 14px; font-weight: 700; color: #111827; line-height: 1.3;">
+                      ${m.productTitle}
+                    </h4>
+                    <div style="font-size: 12px; color: #4b5563;">
+                      Značka: <strong>${m.vendor || 'Neuvedená'}</strong>
+                    </div>
+                  </div>
+                  <div style="margin-top: 8px;">
+                    <a href="${productUrl}" target="_blank" rel="noopener noreferrer" style="font-size: 12px; color: #2563eb; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+                      🔗 Otvoriť v e-shope ↗
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- RIGHT: In Safety Gate / RAPEX -->
+              <div style="background: #fff5f5; border: 1px solid #fed7d7; border-radius: 10px; padding: 14px; display: flex; gap: 14px;">
+                <div style="flex-shrink: 0;">
+                  ${alertImage ? `
+                    <img src="${alertImage}" alt="Safety Gate Alert" style="width: 100px; height: 100px; object-fit: contain; border-radius: 8px; border: 1px solid #feb2b2; background: #fff;" />
+                  ` : `
+                    <div style="width: 100px; height: 100px; background: #fed7d7; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #c53030; text-align: center; padding: 4px;">🚨 Safety Gate</div>
+                  `}
+                </div>
+                <div style="display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1;">
+                  <div>
+                    <div style="font-size: 11px; font-weight: 700; color: #c53030; text-transform: uppercase; letter-spacing: 0.05em;">
+                      🚨 V databáze EU Safety Gate
+                    </div>
+                    <h4 style="margin: 4px 0 6px; font-size: 14px; font-weight: 700; color: #9b2c2c; line-height: 1.3;">
+                      ${alertBrand} ${alertModel ? `• ${alertModel}` : ''}
+                    </h4>
+                    <div style="font-size: 12px; color: #4b5563;">
+                      Kategória: <strong>${m.alertDetails?.category || w.category || 'Childcare / Toys'}</strong>
+                    </div>
+                  </div>
+                  <div style="margin-top: 8px;">
+                    <a href="${alertUrl}" target="_blank" rel="noopener noreferrer" style="font-size: 12px; color: #c53030; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+                      🇪🇺 Oficiálne hlásenie EÚ ↗
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Risk details & AI Explanation -->
+            <div style="background: #f9fafb; border: 1px solid #f3f4f6; border-radius: 8px; padding: 12px 14px;">
+              <div style="font-size: 13px; color: #374151; line-height: 1.5; margin-bottom: 6px;">
+                <strong style="color: #991b1b;">⚠️ Popis bezpečnostného rizika / Norma:</strong> ${riskDesc}
+              </div>
+              ${w.reason ? `
+                <div style="font-size: 12px; color: #4b5563; line-height: 1.4; border-top: 1px solid #e5e7eb; padding-top: 6px; margin-top: 6px;">
+                  <strong>💡 AI Odôvodnenie zhody (Gemini 2.5 Flash):</strong> ${w.reason}
+                </div>
+              ` : ''}
+            </div>
+          `;
+          listContainer.appendChild(card);
+        });
+
+        document.getElementById("findings-modal").classList.add("active");
+      }
+
+      function closeFindings() {
+        document.getElementById("findings-modal").classList.remove("active");
+      }
+
       document.getElementById("scan-form").addEventListener("submit", async (e) => {
         e.preventDefault();
         const domain = document.getElementById("domain-input").value.trim();
         const maxProducts = parseInt(document.getElementById("max-products-input").value, 10);
+        const similarityThreshold = parseInt(document.getElementById("threshold-input")?.value || "80", 10);
         const scanBtn = document.getElementById("scan-btn");
         const scanStatus = document.getElementById("scan-status");
+        const progressCard = document.getElementById("scan-progress-card");
+        const progressDomainTitle = document.getElementById("progress-domain-title");
+        const progressTimer = document.getElementById("progress-timer");
+        const progressPercent = document.getElementById("progress-percent");
+        const progressBarFill = document.getElementById("progress-bar-fill");
+        const progressStageMsg = document.getElementById("progress-stage-msg");
+
+        const step1 = document.getElementById("step-1");
+        const step2 = document.getElementById("step-2");
+        const step3 = document.getElementById("step-3");
+        const step4 = document.getElementById("step-4");
 
         if (!domain) return;
 
         scanBtn.disabled = true;
-        scanBtn.innerText = "Skenujem katalóg...";
-        scanStatus.style.display = "block";
-        scanStatus.style.color = "#2563eb";
-        scanStatus.innerText = `Prebieha cloudový sken obchodu ${domain} (sťahovanie katalógu a Safety Gate kontrola)...`;
+        scanBtn.innerText = "Skenujem...";
+        scanStatus.style.display = "none";
+        progressCard.style.display = "block";
+        progressDomainTitle.innerText = `Skenujem ${domain} (${maxProducts} položiek, prah ≥ ${similarityThreshold}%)...`;
+        progressPercent.innerText = "10%";
+        progressBarFill.style.width = "10%";
+        progressStageMsg.innerText = "Sťahujem katalóg a vyhľadávam kontaktný e-mail...";
+
+        function updateStepUI(stage, percent, message) {
+          if (percent) {
+            progressPercent.innerText = `${percent}%`;
+            progressBarFill.style.width = `${percent}%`;
+          }
+          if (message) {
+            progressStageMsg.innerText = message;
+          }
+
+          step1.className = "progress-step";
+          step2.className = "progress-step";
+          step3.className = "progress-step";
+          step4.className = "progress-step";
+
+          if (stage === "fetching") {
+            step1.className = "progress-step active";
+          } else if (stage === "embedding") {
+            step1.className = "progress-step completed";
+            step2.className = "progress-step active";
+          } else if (stage === "vector_search") {
+            step1.className = "progress-step completed";
+            step2.className = "progress-step completed";
+            step3.className = "progress-step active";
+          } else if (stage === "ai_evaluating") {
+            step1.className = "progress-step completed";
+            step2.className = "progress-step completed";
+            step3.className = "progress-step completed";
+            step4.className = "progress-step active";
+          } else if (stage === "completed") {
+            step1.className = "progress-step completed";
+            step2.className = "progress-step completed";
+            step3.className = "progress-step completed";
+            step4.className = "progress-step completed";
+          }
+        }
+
+        updateStepUI("fetching", 10, `Sťahujem katalóg (${maxProducts} položiek) a kontaktné údaje pre ${domain}...`);
+
+        const startTime = Date.now();
+        const timerInterval = setInterval(() => {
+          const elapsedSec = Math.floor((Date.now() - startTime) / 1000);
+          const mins = String(Math.floor(elapsedSec / 60)).padStart(2, "0");
+          const secs = String(elapsedSec % 60).padStart(2, "0");
+          progressTimer.innerText = `⏱ ${mins}:${secs}s`;
+        }, 1000);
+
+        // Poll for real-time progress updates from Firestore
+        const pollInterval = setInterval(async () => {
+          try {
+            const res = await fetch(FIREBASE_API_URL, { headers: getAuthHeaders() });
+            if (res.ok) {
+              const data = await res.json();
+              const lead = (data.leads || []).find((l) => l.domain.toLowerCase() === domain.toLowerCase());
+              if (lead && lead.scanProgress) {
+                updateStepUI(lead.scanProgress.stage, lead.scanProgress.percent, lead.scanProgress.message);
+              }
+            }
+          } catch (err) {
+            // silent poll error
+          }
+        }, 1500);
 
         try {
           const res = await fetch(FIREBASE_API_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ domain, maxProducts, similarityThreshold: 60 }),
+            headers: getAuthHeaders(),
+            body: JSON.stringify({ domain, maxProducts, similarityThreshold }),
           });
 
           const data = await res.json();
+          clearInterval(timerInterval);
+          clearInterval(pollInterval);
+
           if (res.ok && data.success) {
+            updateStepUI("completed", 100, `✓ Sken úspešne dokončený! Preverených ${data.lead.totalProductsScanned} produktov.`);
+            scanStatus.style.display = "block";
             scanStatus.style.color = "#16a34a";
-            scanStatus.innerText = `✓ Sken úspešne dokončený! Preverených ${data.lead.totalProductsScanned} produktov, nájdených záchytov: ${data.lead.flaggedProductsCount}.`;
-            addLeadToTable(data.lead);
+            scanStatus.innerText = `✓ Sken obchodu ${domain} dokončený (${data.lead.totalProductsScanned} položiek). Nájdených ${data.lead.flaggedProductsCount} záchytov v Safety Gate.`;
+            loadLeads();
           } else {
+            scanStatus.style.display = "block";
             scanStatus.style.color = "#dc2626";
             scanStatus.innerText = `Chyba pri skenovaní: ${data.error || "Neznáma chyba"}`;
           }
         } catch (err) {
+          clearInterval(timerInterval);
+          clearInterval(pollInterval);
+          scanStatus.style.display = "block";
           scanStatus.style.color = "#dc2626";
           scanStatus.innerText = `Chyba spojenia: ${err.message}`;
         } finally {
@@ -341,40 +782,15 @@
         }
       });
 
-      function addLeadToTable(lead) {
-        const tbody = document.getElementById("leads-tbody");
-        const row = document.createElement("tr");
-        row.className = "lead-row";
-        const priorityBadge = lead.priorityLevel === "CRITICAL" ? "badge-critical" : lead.priorityLevel === "HIGH" ? "badge-warning" : "badge-safe";
+      function openOutreach(leadIndex) {
+        const lead = currentLeads[leadIndex];
+        if (!lead) return;
 
-        row.innerHTML = `
-          <td>
-            <div style="font-weight: 700;">${lead.domain}</div>
-            <div style="font-size: 12px; color: #9ca3af;">Scanned práve teraz</div>
-          </td>
-          <td>
-            <div style="color: #2563eb; font-weight: 600;">✉ ${lead.contactEmail || "Nenájdený"}</div>
-          </td>
-          <td>
-            <div style="font-weight: 800; font-size: 16px; color: ${lead.leadScore >= 75 ? '#dc2626' : '#1f1d1a'};">${lead.leadScore} / 100</div>
-          </td>
-          <td>
-            <span class="badge ${priorityBadge}">${lead.priorityLevel}</span>
-          </td>
-          <td>
-            <span style="font-weight: 600; color: ${lead.flaggedProductsCount > 0 ? '#dc2626' : 'inherit'}">${lead.flaggedProductsCount}</span> / ${lead.totalProductsScanned}
-          </td>
-          <td>
-            <button onclick='openOutreach("${lead.domain}", "${lead.contactEmail || ""}", ${lead.flaggedProductsCount}, ${JSON.stringify(lead.matches || [])})' style="background: #f3f4f6; border: 1px solid #d1d5db; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;">
-              Generovať Outreach E-mail
-            </button>
-          </td>
-        `;
-        tbody.prepend(row);
-      }
+        const domain = lead.domain;
+        const email = lead.contactEmail || "info@" + domain;
+        const flaggedCount = lead.flaggedProductsCount || (lead.matches ? lead.matches.length : 0);
 
-      function openOutreach(domain, email, flaggedCount, matches) {
-        document.getElementById("modal-email").value = email || "info@" + domain;
+        document.getElementById("modal-email").value = email;
         document.getElementById("modal-subject").value = flaggedCount > 0
           ? `Upozornenie: Nebezpečný produkt z EU Safety Gate zistený na ${domain}`
           : `Overenie bezpečnosti sortimentu pre ${domain} (EU Safety Gate / RAPEX audit)`;
@@ -401,8 +817,11 @@
       }
 
       function refreshLeads() {
-        window.location.reload();
+        loadLeads();
       }
+
+      // Automatically load leads on startup
+      window.addEventListener("DOMContentLoaded", loadLeads);
     </script>
   </body>
 </html>

@@ -846,6 +846,34 @@ const sk = {
         "automationStatusEyebrow": "Automatický monitoring",
         "automationStatusTitle": "Safety Gate monitoring pracuje pre tento obchod",
         "automationStatusDescription": "Denné aktualizácie EÚ Safety Gate, zmeny produktov v Shopify a auditné záznamy sa spracúvajú automaticky. Tieto nastavenia slúžia hlavne na doladenie počtu kontrol a notifikácií.",
+        "automationStatus": {
+          "notStarted": {
+            "title": "Úvodný audit katalógu nie je potvrdený",
+            "description": "Úvodný import sa ešte nedokončil, preto pokrytie katalógu zatiaľ nie je potvrdené.",
+            "badge": "Neoverené"
+          },
+          "scanning": {
+            "title": "Prebieha úvodný audit katalógu",
+            "description": "Produkty sa importujú a kontrolujú. Pokrytie katalógu sa potvrdí po dokončení auditu.",
+            "badge": "Prebieha"
+          },
+          "failed": {
+            "title": "Úvodný audit katalógu vyžaduje pozornosť",
+            "description": "Posledný import alebo audit sa nedokončil. Pred spoliehaním sa na monitoring obnovte pokrytie katalógu.",
+            "badge": "Vyžaduje pozornosť"
+          },
+          "completedNoPlan": {
+            "title": "Úvodný audit katalógu je dokončený",
+            "description": "Úvodný audit katalógu je hotový. Priebežný automatický monitoring vyžaduje aktívny plán.",
+            "badge": "Audit dokončený"
+          },
+          "active": {
+            "title": "Audit katalógu je dokončený",
+            "description": "Úvodný audit katalógu sa dokončil a tento obchod má aktívny plán monitoringu.",
+            "badge": "Plán aktívny"
+          },
+          "openCatalog": "Otvoriť pokrytie katalógu"
+        },
         "valueEyebrow": "Ochrana katalógu",
         "valueTitle": "Čo ostáva pokryté",
         "valueDescription": "Priebežná ochrana automaticky denne kontroluje váš katalóg voči alertom Safety Gate.",

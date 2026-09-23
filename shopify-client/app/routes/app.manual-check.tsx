@@ -1,11 +1,11 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "react-router";
-import { useLoaderData, useFetcher, useNavigate, useRouteError, isRouteErrorResponse } from "react-router";
+import { useLoaderData, useFetcher, useNavigate, useRouteError } from "react-router";
 import { data as json } from "react-router";
 import { useTranslation } from "react-i18next";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
-import { shopifyProductToProductData } from "../services/safety-gate-checker.client";
+import { shopifyProductToProductData } from "../services/safety-gate-product-data";
 import db from "../merchant-db.server";
 import { firestore } from "../firestore.server";
 import { runProductSafetyCheck } from "../services/product-safety-admin.server";
@@ -345,7 +345,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
 
     return db.safetyAlert.update({
-      where: { id: alert.id },
+      where: { id: alert.id, shop: session.shop },
       data,
     });
   };
@@ -505,21 +505,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export function ErrorBoundary() {
-  const error = useRouteError();
+  useRouteError();
   const { t } = useTranslation();
-
-  const title = isRouteErrorResponse(error)
-    ? `${error.status} ${error.statusText}`
-    : error instanceof Error
-      ? error.message
-      : t("common.unknown");
 
   return (
     <s-page suppressHydrationWarning>
       <s-heading slot="title" size="large" suppressHydrationWarning>{t("manualCheck.title")}</s-heading>
       <div className="admin-stack" style={{ marginTop: "var(--s-space-400)" }}>
         <s-banner tone="critical" heading={t("errors.pageLoadFailed")}>
-          <s-text>{title}</s-text>
+          <s-text>{t("errors.apiError")}</s-text>
           <div style={{ marginTop: "var(--s-space-200)" }}>
             <s-button onClick={() => window.location.reload()} suppressHydrationWarning>
               {t("actions.retry")}

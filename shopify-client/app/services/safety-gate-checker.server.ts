@@ -1,5 +1,5 @@
 import merchantDb from "../merchant-db.server";
-import { shopifyProductToProductData, type ProductData } from "./safety-gate-checker.client";
+import { shopifyProductToProductData, type ProductData } from "./safety-gate-product-data";
 
 const FIREBASE_FUNCTIONS_BASE_URL =
   process.env.FIREBASE_FUNCTIONS_BASE_URL ||

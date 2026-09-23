@@ -1,4 +1,4 @@
-import { FieldValue, Timestamp } from "firebase-admin/firestore";
+import { FieldPath, FieldValue, Timestamp } from "firebase-admin/firestore";
 import * as logger from "firebase-functions/logger";
 import { db } from "./firebase-admin.js";
 import { AI_CONFIG, FIRESTORE_COLLECTIONS, MATCHING_THRESHOLDS } from "./safety-gate-config.js";
@@ -298,13 +298,24 @@ async function loadRapexAlertCandidatesSince(
   checkpointDate: Date,
   limit: number,
   checkpointRecordTimestamp?: string | null,
+  checkpointDocId?: string | null,
 ): Promise<AlertRetrievalCandidate[]> {
-  const snapshot = await db
+  let query = db
     .collection(FIRESTORE_COLLECTIONS.alerts)
     .where("meta.alert_date", ">=", Timestamp.fromDate(checkpointDate))
-    .orderBy("meta.alert_date", "desc")
-    .limit(limit)
-    .get();
+    .orderBy("meta.alert_date", "asc")
+    .orderBy("meta.record_timestamp", "asc")
+    .orderBy(FieldPath.documentId(), "asc");
+
+  if (checkpointRecordTimestamp) {
+    query = query.startAfter(
+      Timestamp.fromDate(checkpointDate),
+      checkpointRecordTimestamp,
+      checkpointDocId || "",
+    );
+  }
+
+  const snapshot = await query.limit(limit).get();
 
   return snapshot.docs
     .map((doc) => {
@@ -315,39 +326,17 @@ async function loadRapexAlertCandidatesSince(
         imageVector: asVectorArray(data.vector_image),
       };
     })
-    .filter((candidate) => {
-      if (!checkpointRecordTimestamp) {
-        return true;
-      }
-
-      const alertDate = normalizeAlertDate(candidate.alert.meta.alert_date);
-      if (!alertDate) {
-        return false;
-      }
-
-      const alertTime = alertDate.getTime();
-      const checkpointTime = checkpointDate.getTime();
-      if (alertTime > checkpointTime) {
-        return true;
-      }
-
-      if (alertTime < checkpointTime) {
-        return false;
-      }
-
-      const recordTimestamp = candidate.alert.meta.record_timestamp || "";
-      return Boolean(recordTimestamp && recordTimestamp > checkpointRecordTimestamp);
-    })
     .sort((left, right) => {
       const leftDate = normalizeAlertDate(left.alert.meta.alert_date)?.getTime() || 0;
       const rightDate = normalizeAlertDate(right.alert.meta.alert_date)?.getTime() || 0;
       if (leftDate !== rightDate) {
-        return rightDate - leftDate;
+        return leftDate - rightDate;
       }
 
-      return String(right.alert.meta.record_timestamp || "").localeCompare(
-        String(left.alert.meta.record_timestamp || ""),
+      const timestampOrder = String(left.alert.meta.record_timestamp || "").localeCompare(
+        String(right.alert.meta.record_timestamp || ""),
       );
+      return timestampOrder || left.alert.id.localeCompare(right.alert.id);
     });
 }
 
@@ -619,6 +608,7 @@ export async function runMerchantDeltaMonitoringForShop(params: {
       monitoringWindow.strategy === "since-last-check"
         ? monitoringWindow.checkpointRecordTimestamp
         : null,
+      monitoringWindow.strategy === "since-last-check" ? currentState?.lastRapexAlertDocId : null,
     );
     const rapexAlerts = rapexAlertCandidates.map((candidate) => candidate.alert);
     const candidateProductsByDocId = new Map<
@@ -716,7 +706,7 @@ export async function runMerchantDeltaMonitoringForShop(params: {
       }
     }
 
-    const latestAlert = rapexAlerts[0];
+    const latestAlert = rapexAlerts.at(-1);
     const summary: MerchantMonitoringSummary = {
       shop,
       mode: monitoringWindow.mode,
@@ -749,6 +739,7 @@ export async function runMerchantDeltaMonitoringForShop(params: {
           : currentState?.lastRapexAlertDate || null,
         lastRapexRecordTimestamp:
           summary.checkpoint.lastRapexRecordTimestamp || currentState?.lastRapexRecordTimestamp || null,
+        lastRapexAlertDocId: latestAlert?.id || currentState?.lastRapexAlertDocId || null,
       } satisfies Partial<MerchantMonitorStateDocument>,
       { merge: true },
     );

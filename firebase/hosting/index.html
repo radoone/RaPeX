@@ -3,25 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title data-i18n="meta.title">Safety Gate Monitor for Shopify – EU Product Safety &amp; GPSR Compliance</title>
+    <title data-i18n="meta.title">Shopify Product Safety Monitoring | Safety Gate Monitor</title>
     <meta
       name="description"
-      content="Automated EU Safety Gate (RAPEX) monitoring for Shopify. Protect your store against dangerous product recalls and regulatory fines under the General Product Safety Regulation (GPSR)."
+      content="Safety Gate Monitor compares Shopify catalogs with official EU product safety alerts and asks for action only when a product needs review."
       data-i18n="meta.description"
       data-i18n-attr="content"
     />
     <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://rapex-99a2c.web.app/" />
+    <link rel="alternate" hreflang="en" href="https://rapex-99a2c.web.app/?lang=en" />
+    <link rel="alternate" hreflang="sk" href="https://rapex-99a2c.web.app/?lang=sk" />
+    <link rel="alternate" hreflang="x-default" href="https://rapex-99a2c.web.app/" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Safety Gate Monitor for Shopify" />
     <meta
       property="og:title"
-      content="Safety Gate Monitor for Shopify – EU Product Safety &amp; GPSR Compliance"
+      content="Shopify Product Safety Monitoring | Safety Gate Monitor"
       data-i18n="meta.title"
       data-i18n-attr="content"
     />
     <meta
       property="og:description"
-      content="Automated EU Safety Gate (RAPEX) monitoring for Shopify. Protect your store against dangerous product recalls and regulatory fines under the General Product Safety Regulation (GPSR)."
+      content="Safety Gate Monitor compares Shopify catalogs with official EU product safety alerts and asks for action only when a product needs review."
       data-i18n="meta.description"
       data-i18n-attr="content"
     />
@@ -38,30 +42,28 @@
         "name": "Safety Gate Monitor for Shopify",
         "applicationCategory": "BusinessApplication",
         "operatingSystem": "Shopify",
-        "description": "Automated product safety monitoring for Shopify stores checking against official EU Safety Gate (RAPEX) recall database.",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "EUR"
-        }
+        "url": "https://rapex-99a2c.web.app/",
+        "description": "Product safety monitoring for Shopify stores that checks catalogs against official EU Safety Gate alerts and highlights products that need review."
       }
     </script>
-    <script type="module" crossorigin src="/assets/index-DZS4TiGQ.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-C8vipbkW.css">
+    <script type="module" crossorigin src="/assets/app-DJoL6XVm.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/styles-BpiIE4Yx.css">
   </head>
   <body>
     <div class="site-container" id="top">
       <!-- Top Navigation -->
       <header class="site-nav">
-        <div class="nav-brand">
+        <a class="nav-brand" href="./index.html" aria-label="Safety Gate Monitor home" data-i18n="nav.homeLabel" data-i18n-attr="aria-label">
           <span class="brand-badge"></span>
           <span class="brand-text">Safety Gate Monitor</span>
-        </div>
+        </a>
 
-        <nav class="nav-links">
+        <nav class="nav-links" id="primary-nav" aria-label="Primary navigation" data-i18n="nav.primaryLabel" data-i18n-attr="aria-label">
           <a href="#how-it-works" class="nav-link" data-i18n="nav.howItWorks">How it works</a>
+          <a href="#pricing" class="nav-link" data-i18n="nav.pricing">Pricing</a>
           <a href="#gpsr" class="nav-link" data-i18n="nav.gpsr">GPSR &amp; Compliance</a>
           <a href="#faq" class="nav-link" data-i18n="nav.faq">FAQ</a>
+          <a href="./about.html" class="nav-link" data-i18n="nav.about">About us</a>
           <a
             href="https://ec.europa.eu/safety-gate-alerts/"
             class="nav-link nav-link--external"
@@ -74,145 +76,179 @@
         </nav>
 
         <div class="nav-actions">
-          <div class="lang-switch" role="group" aria-label="Language">
+          <div class="lang-switch" role="group" aria-label="Language" data-i18n="nav.language" data-i18n-attr="aria-label">
             <button class="lang-btn" type="button" data-locale="en">EN</button>
             <span class="lang-divider">/</span>
             <button class="lang-btn" type="button" data-locale="sk">SK</button>
           </div>
-          <a href="#scan" class="btn btn--small btn--primary" data-i18n="nav.freeScan">Free Scan</a>
+          <a href="#scan-form" class="btn btn--small btn--primary" data-i18n="nav.freeScan">Free Scan</a>
+          <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-nav" data-i18n="nav.menu" data-i18n-attr="aria-label">Menu</button>
         </div>
       </header>
 
       <!-- Hero Section -->
       <main>
         <section class="hero-section" id="scan">
-          <div class="hero-header">
-            <span class="pill-badge" data-i18n="hero.badge">EU Safety Gate (RAPEX) • Regulation (EU) 2023/988</span>
-            <h1 class="hero-title" data-i18n="hero.title">
-              Automated product safety monitoring for your Shopify store.
-            </h1>
-            <p class="hero-subtitle" data-i18n="hero.subtitle">
-              Continuously checks your catalog against 35,000+ dangerous and recalled products in the official European Commission database. Stay compliant with GPSR and avoid heavy fines.
-            </p>
+          <div class="hero-grid">
+            <div class="hero-copy">
+              <span class="section-eyebrow" data-i18n="hero.badge">Product safety for Shopify</span>
+              <h1 class="hero-title" data-i18n="hero.title">Run your store. We will handle the scan.</h1>
+              <p class="hero-subtitle" data-i18n="hero.subtitle">Once the app is installed, we keep comparing your Shopify products with Safety Gate alerts in the background. We send clear evidence when something needs review. When there is no new finding, a short update confirms there is nothing new to act on.</p>
+              <div class="hero-actions">
+                <a href="#example" class="btn btn--primary" data-i18n="hero.exampleCta">See an example result</a>
+                <a href="#scan-form" class="text-link" data-i18n="hero.scanLink">Request a free scan ↓</a>
+              </div>
+              <p class="hero-reassurance" data-i18n="hero.reassurance">We check public product listings. No Shopify Admin access is needed for the free scan.</p>
+            </div>
+            <figure class="hero-visual">
+              <div class="mock-app" aria-hidden="true">
+                <div class="mock-app__topbar">
+                  <span class="mock-app__mark"></span>
+                  <span class="mock-app__brand">Safety Gate Monitor</span>
+                  <span class="mock-app__demo" data-i18n="hero.mockDemo">Illustrative preview</span>
+                </div>
+                <div class="mock-app__content">
+                  <div class="mock-app__header">
+                    <div>
+                      <span class="mock-app__eyebrow" data-i18n="hero.mockEyebrow">Product check</span>
+                      <strong data-i18n="hero.mockTitle">A possible match to review</strong>
+                    </div>
+                    <span class="mock-app__badge" data-i18n="hero.mockStatus">Needs review</span>
+                  </div>
+                  <div class="mock-app__comparison">
+                    <div class="mock-app__product">
+                      <div class="mock-app__product-art"><img src="/images/product-comparison-illustration.jpg" width="1536" height="1024" alt="" loading="eager" /></div>
+                      <span data-i18n="hero.mockYourProduct">Your product</span>
+                      <strong data-i18n="hero.mockProductName">Children's balance bike</strong>
+                    </div>
+                    <span class="mock-app__compare" aria-hidden="true">↔</span>
+                    <div class="mock-app__product mock-app__product--alert">
+                      <div class="mock-app__product-art mock-app__product-art--alert"><img src="/images/product-comparison-illustration.jpg" width="1536" height="1024" alt="" loading="eager" /></div>
+                      <span data-i18n="hero.mockAlert">Safety Gate alert</span>
+                      <strong data-i18n="hero.mockAlertName">Similar product category</strong>
+                    </div>
+                  </div>
+                  <div class="mock-app__insight">
+                    <span class="mock-app__insight-icon" aria-hidden="true">i</span>
+                    <span data-i18n="hero.mockReason">Compare the model and batch before deciding.</span>
+                  </div>
+                </div>
+              </div>
+              <figcaption data-i18n="hero.visualCaption">Illustration of a possible product match, not an actual scan result.</figcaption>
+            </figure>
           </div>
+        </section>
 
-          <!-- Direct In-Hero Scan Intake Form -->
+        <section class="section example-section" id="example" aria-labelledby="example-title">
+          <div class="section-heading">
+            <span class="section-eyebrow" data-i18n="showcase.eyebrow">Illustrative previews</span>
+            <h2 class="section-title" id="example-title" data-i18n="showcase.title">See what happens after you ask for a scan.</h2>
+            <p class="section-intro" data-i18n="showcase.intro">From the first scan to a clear next step. These screens show the intended experience with fictional products and sample messages.</p>
+          </div>
+          <div class="showcase-grid">
+            <figure class="showcase-card">
+              <div class="showcase-window showcase-window--scan">
+                <div class="showcase-window__bar"><span class="showcase-window__brand">Safety Gate Monitor</span><span class="showcase-window__sample" data-i18n="showcase.sample">Illustration</span></div>
+                <div class="showcase-window__body">
+                  <span class="showcase-kicker" data-i18n="showcase.scanKicker">Scan after email confirmation</span>
+                  <strong class="showcase-window__title" data-i18n="showcase.scanScreenTitle">Your request is being processed</strong>
+                  <p class="showcase-window__text" data-i18n="showcase.scanScreenText">You can close this page. We will email the result after the scan finishes.</p>
+                  <div class="showcase-art showcase-art--catalog"><img src="/images/catalog-illustration.svg" width="600" height="260" alt="" loading="lazy" /></div>
+                  <div class="showcase-status"><span class="showcase-status__pulse" aria-hidden="true"></span><span data-i18n="showcase.scanStatus">Scan running in the background</span></div>
+                </div>
+              </div>
+              <figcaption><span class="showcase-number">01</span><strong data-i18n="showcase.scanTitle">We handle the scan</strong><span data-i18n="showcase.scanBody">No need to wait on the page. The report arrives by email.</span></figcaption>
+            </figure>
+            <figure class="showcase-card">
+              <div class="showcase-window showcase-window--match">
+                <div class="showcase-window__bar"><span class="showcase-window__brand">Safety Gate Monitor</span><span class="showcase-window__sample" data-i18n="showcase.sample">Illustration</span></div>
+                <div class="showcase-window__body">
+                  <span class="showcase-kicker" data-i18n="showcase.matchKicker">Review queue</span>
+                  <strong class="showcase-window__title" data-i18n="showcase.matchScreenTitle">Possible match to review</strong>
+                  <div class="showcase-match-visual"><img src="/images/product-comparison-illustration.jpg" width="1536" height="1024" alt="" loading="lazy" /><span class="showcase-match-visual__divider" aria-hidden="true">↔</span></div>
+                  <div class="showcase-match-labels"><span data-i18n="showcase.yourProduct">Your product</span><span data-i18n="showcase.alertRecord">Safety Gate record</span></div>
+                  <div class="showcase-callout"><span aria-hidden="true">i</span><span data-i18n="showcase.matchReason">Compare photos, model and batch before deciding.</span></div>
+                </div>
+              </div>
+              <figcaption><span class="showcase-number">02</span><strong data-i18n="showcase.matchTitle">Act only when needed</strong><span data-i18n="showcase.matchBody">A possible match comes with a reason and a clear review step.</span></figcaption>
+            </figure>
+            <figure class="showcase-card">
+              <div class="showcase-window showcase-window--clear">
+                <div class="showcase-window__bar"><span class="showcase-window__brand" data-i18n="showcase.emailLabel">Email update</span><span class="showcase-window__sample" data-i18n="showcase.sample">Illustration</span></div>
+                <div class="showcase-window__body">
+                  <span class="showcase-kicker" data-i18n="showcase.clearKicker">Weekly update after installation</span>
+                  <div class="showcase-art showcase-art--mail"><img src="/images/all-clear-illustration.svg" width="600" height="260" alt="" loading="lazy" /></div>
+                  <strong class="showcase-window__title" data-i18n="showcase.clearScreenTitle">No new findings this week</strong>
+                  <p class="showcase-window__text" data-i18n="showcase.clearScreenText">We found no new alerts for your store in the past seven days. There is nothing new to review.</p>
+                  <div class="showcase-quiet"><span aria-hidden="true">✓</span><span data-i18n="showcase.clearStatus">No action needed</span></div>
+                </div>
+              </div>
+              <figcaption><span class="showcase-number">03</span><strong data-i18n="showcase.clearTitle">A short note when all is quiet</strong><span data-i18n="showcase.clearBody">After installing the app, a weekly email confirms when no new alert appeared.</span></figcaption>
+            </figure>
+          </div>
+          <p class="showcase-disclaimer" data-i18n="showcase.disclaimer">Illustrative interface concepts and fictional products. They do not show a real scan, Safety Gate finding or sent email.</p>
+        </section>
+
+        <section class="section scan-section" aria-labelledby="scan-title">
+          <div class="scan-section__copy">
+            <span class="section-eyebrow" data-i18n="scan.eyebrow">Start with your public catalog</span>
+            <h2 class="section-title" id="scan-title" data-i18n="scan.title">Request your free safety scan.</h2>
+            <p data-i18n="scan.description">We check up to 100 publicly accessible products and email you a summary of possible matches. No Shopify login or payment details.</p>
+            <ul class="scan-benefits">
+              <li data-i18n="scan.benefit1">Uses public product listings only</li>
+              <li data-i18n="scan.benefit2">Shows possible matches for human review</li>
+              <li data-i18n="scan.benefit3">Does not change products in your store</li>
+            </ul>
+          </div>
           <div class="scan-box">
             <form class="scan-form" id="scan-form">
-              <div class="form-inputs">
-                <input
-                  class="form-input"
-                  type="text"
-                  name="shop"
-                  id="scan-domain"
-                  placeholder="your-store.myshopify.com"
-                  data-i18n="hero.inputPlaceholder"
-                  data-i18n-attr="placeholder"
-                  required
-                />
-                <input
-                  class="form-input"
-                  type="email"
-                  name="email"
-                  id="scan-email"
-                  placeholder="your-email@store.com"
-                  data-i18n="hero.emailPlaceholder"
-                  data-i18n-attr="placeholder"
-                  required
-                />
-                <button class="btn btn--primary btn--submit" type="submit" data-i18n="hero.ctaButton">
-                  Run Free Safety Scan
-                </button>
-              </div>
-              <p class="form-subtext" data-i18n="hero.subtext">
-                Free scan • No credit card required • Results delivered instantly
-              </p>
+              <label for="scan-domain" data-i18n="scan.domainLabel">Your myshopify.com domain</label>
+              <input class="form-input" type="text" name="shop" id="scan-domain" inputmode="url" autocomplete="url" placeholder="your-store.myshopify.com" data-i18n="hero.inputPlaceholder" data-i18n-attr="placeholder" required />
+              <label for="scan-email" data-i18n="scan.emailLabel">Email for the report</label>
+              <input class="form-input" type="email" name="email" id="scan-email" autocomplete="email" placeholder="you@store.com" data-i18n="hero.emailPlaceholder" data-i18n-attr="placeholder" required />
+              <div id="scan-turnstile" class="scan-turnstile"></div>
+              <button class="btn btn--primary btn--submit" type="submit" data-i18n="hero.ctaButton">Request free scan</button>
+              <p class="form-subtext" data-i18n="scan.privacyNote">We will send a confirmation link. The scan starts only after you confirm your email; the result goes to the same address.</p>
             </form>
-
-            <div class="scan-feedback" id="scan-success" style="display: none;">
-              <span class="feedback-icon">✓</span>
-              <div>
-                <strong data-i18n="hero.successTitle">Scan started!</strong>
-                <p data-i18n="hero.successBody">We are scanning your public catalog against the EU Safety Gate database. The report will be sent to your email shortly.</p>
-              </div>
+            <div class="scan-confirmation" id="scan-confirmation" hidden>
+              <strong data-i18n="scan.confirmTitle">Confirm your email address</strong>
+              <p data-i18n="scan.confirmBody">Confirm this request to start the public catalog scan.</p>
+              <button class="btn btn--primary" id="scan-confirm-button" type="button" data-i18n="scan.confirmButton">Confirm and start scan</button>
             </div>
-          </div>
-
-          <!-- Real Shopify Admin Environment Showcase with Actual Screenshot -->
-          <div class="shopify-showcase" role="region" aria-label="Shopify Admin Environment Showcase">
-            <div class="shopify-showcase__header">
-              <div class="shopify-showcase__badges">
-                <span class="pill-badge" data-i18n="preview.badge">Shopify Admin Preview</span>
-                <span class="status-indicator status-indicator--warning" data-i18n="preview.status">
-                  Action Required • 92% Match
-                </span>
-              </div>
-              <p class="shopify-showcase__caption" data-i18n="preview.caption">
-                Embedded natively into Shopify Admin. Review visual matches, compare recalled items with photos from EU Safety Gate, and record compliance decisions with 1 click.
-              </p>
-              <!-- Interactive View Switcher Tabs -->
-              <div class="showcase-tabs" role="tablist">
-                <button
-                  type="button"
-                  class="showcase-tab showcase-tab--active"
-                  role="tab"
-                  aria-selected="true"
-                  data-showcase-tab="review"
-                  data-showcase-img="/images/shopify-admin-preview.png"
-                  data-i18n="preview.tabReview"
-                >
-                  Review Modal
-                </button>
-                <button
-                  type="button"
-                  class="showcase-tab"
-                  role="tab"
-                  aria-selected="false"
-                  data-showcase-tab="dashboard"
-                  data-showcase-img="/images/shopify-dashboard.png"
-                  data-i18n="preview.tabDashboard"
-                >
-                  Coverage Dashboard
-                </button>
-              </div>
-            </div>
-
-            <!-- Authentic Screenshot Frame -->
-            <div class="shopify-showcase__frame">
-              <img
-                id="showcase-img"
-                src="/images/shopify-admin-preview.png"
-                alt="Safety Gate Monitor inside Shopify Admin - Review Safety Gate match modal"
-                class="shopify-showcase__img"
-                loading="eager"
-                width="1722"
-                height="1324"
-              />
-            </div>
-
-            <div class="preview-audit-note">
-              <span class="audit-icon" aria-hidden="true">✓</span>
-              <span data-i18n="preview.auditNote">Automated audit trail: All review actions are timestamped and preserved for regulatory compliance.</span>
+            <div class="scan-feedback" id="scan-feedback" role="status" aria-live="polite" hidden>
+              <strong id="scan-feedback-title"></strong>
+              <p id="scan-feedback-body"></p>
             </div>
           </div>
         </section>
 
-        <!-- Key Facts Minimalist Strip -->
+        <!-- What merchants can expect from ongoing monitoring -->
         <section class="facts-strip">
           <div class="fact-item">
-            <span class="fact-number" data-i18n="facts.records.number">35,000+</span>
-            <strong class="fact-label" data-i18n="facts.records.label">Recalled products in database</strong>
-            <span class="fact-detail" data-i18n="facts.records.detail">Historical safety records from the European Commission</span>
+            <span class="fact-number" data-i18n="facts.records.number">Text + images</span>
+            <strong class="fact-label" data-i18n="facts.records.label">More than name matching</strong>
+            <span class="fact-detail" data-i18n="facts.records.detail">Shortlist possible matches even when product titles differ.</span>
           </div>
           <div class="fact-item">
-            <span class="fact-number" data-i18n="facts.updates.number">Every Friday</span>
-            <strong class="fact-label" data-i18n="facts.updates.label">Automatic database updates</strong>
-            <span class="fact-detail" data-i18n="facts.updates.detail">Synced with newly published official EU weekly reports</span>
+            <span class="fact-number" data-i18n="facts.updates.number">Weekly alerts</span>
+            <strong class="fact-label" data-i18n="facts.updates.label">Current EU publications</strong>
+            <span class="fact-detail" data-i18n="facts.updates.detail">New official Safety Gate reports feed ongoing monitoring.</span>
           </div>
           <div class="fact-item">
-            <span class="fact-number" data-i18n="facts.automation.number">100%</span>
-            <strong class="fact-label" data-i18n="facts.automation.label">Automated in Shopify</strong>
-            <span class="fact-detail" data-i18n="facts.automation.detail">Zero manual spreadsheets. Instant alerts on your product pages.</span>
+            <span class="fact-number" data-i18n="facts.automation.number">Your decision</span>
+            <strong class="fact-label" data-i18n="facts.automation.label">Clear review trail</strong>
+            <span class="fact-detail" data-i18n="facts.automation.detail">The merchant reviews possible matches and records the outcome.</span>
+          </div>
+        </section>
+
+        <section class="section quiet-section" aria-labelledby="quiet-title">
+          <div>
+            <span class="section-eyebrow" data-i18n="quiet.eyebrow">FEWER INTERRUPTIONS</span>
+            <h2 class="section-title" id="quiet-title" data-i18n="quiet.title">Only ask for action when a product needs review.</h2>
+          </div>
+          <div class="quiet-section__copy">
+            <p data-i18n="quiet.body">Once the app is installed, monitoring runs in the background. A likely match goes to your review queue with supporting evidence. When the preceding week has no new merchant alert, you receive a short all-clear email instead of another task.</p>
+            <p class="quiet-section__note" data-i18n="quiet.note">All-clear means no new alerts were found in that period; it is not a guarantee that every product is safe.</p>
           </div>
         </section>
 
@@ -220,31 +256,44 @@
         <section class="section" id="how-it-works">
           <div class="section-heading">
             <span class="section-eyebrow" data-i18n="workflow.eyebrow">How it works</span>
-            <h2 class="section-title" data-i18n="workflow.title">Three simple steps to complete product safety.</h2>
+            <h2 class="section-title" data-i18n="workflow.title">From possible match to clear next step.</h2>
           </div>
 
           <div class="workflow-grid">
             <div class="workflow-card">
               <span class="step-num">01</span>
-              <h3 class="step-title" data-i18n="workflow.step1Title">1. Scan your catalog</h3>
+              <h3 class="step-title" data-i18n="workflow.step1Title">1. Check public products</h3>
               <p class="step-desc" data-i18n="workflow.step1Desc">
-                Start with a free scan. We cross-reference every product title, description, and photo against official EU Safety Gate records.
+                The free scan compares up to 100 public product listings with Safety Gate alerts.
               </p>
             </div>
             <div class="workflow-card">
               <span class="step-num">02</span>
-              <h3 class="step-title" data-i18n="workflow.step2Title">2. Continuous 24/7 delta monitoring</h3>
+              <h3 class="step-title" data-i18n="workflow.step2Title">2. Review the evidence</h3>
               <p class="step-desc" data-i18n="workflow.step2Desc">
-                Whenever you add new inventory, or when the European Commission publishes weekly Friday recall reports, our visual AI re-evaluates risk automatically.
+                Likely matches are shortlisted using product details and images. A match is a lead to verify, not a verdict.
               </p>
             </div>
             <div class="workflow-card">
               <span class="step-num">03</span>
-              <h3 class="step-title" data-i18n="workflow.step3Title">3. One-click resolution in Shopify Admin</h3>
+              <h3 class="step-title" data-i18n="workflow.step3Title">3. Decide in Shopify Admin</h3>
               <p class="step-desc" data-i18n="workflow.step3Desc">
-                Review matched items directly on your Shopify product page. Pause sales, contact suppliers, or resolve findings while maintaining a timestamped compliance audit trail.
+                With the app installed, review potential matches, choose the next action and keep a record of your decision.
               </p>
             </div>
+          </div>
+        </section>
+
+        <section class="section pricing-section" id="pricing" aria-labelledby="pricing-title">
+          <div class="pricing-section__copy">
+            <span class="section-eyebrow" data-i18n="pricing.eyebrow">SIMPLE PRICING</span>
+            <h2 class="section-title" id="pricing-title" data-i18n="pricing.title">One straightforward monthly price.</h2>
+            <p data-i18n="pricing.body">The same monitoring features and the same price for every Shopify store. Start with a free public-catalog scan.</p>
+          </div>
+          <div class="price-display">
+            <div class="price-display__amount"><strong>9,90 €</strong><span data-i18n="pricing.period">/ month</span></div>
+            <p data-i18n="pricing.scope">Per Shopify store. Billed through Shopify after you choose a plan.</p>
+            <a href="#scan-form" class="btn btn--primary" data-i18n="pricing.cta">Try the free scan first</a>
           </div>
         </section>
 
@@ -253,15 +302,15 @@
           <div class="compliance-layout">
             <div class="compliance-content">
               <span class="section-eyebrow" data-i18n="compliance.eyebrow">Regulatory Context</span>
-              <h2 class="section-title" data-i18n="compliance.title">Why EU Safety Gate and GPSR matter for every merchant.</h2>
+              <h2 class="section-title" data-i18n="compliance.title">Official alerts help you decide what to review.</h2>
               <p class="compliance-p" data-i18n="compliance.p1">
-                Under the EU General Product Safety Regulation (GPSR – Regulation EU 2023/988), online sellers are legally responsible for ensuring products sold to EU consumers are safe and not subject to active safety recalls.
+                The EU Safety Gate system shares alerts about dangerous non-food products. The General Product Safety Regulation applies to businesses selling consumer products in the EU.
               </p>
               <p class="compliance-p" data-i18n="compliance.p2">
-                National market surveillance authorities (such as SOI in Slovakia, ČOI in Czechia, BAuA in Germany, and DGCCRF in France) actively inspect online shops. Selling recalled goods can trigger mandatory recalls, customer refunds without receipt, payment processor holds, and fines up to €100,000+.
+                A Safety Gate alert can be a useful signal for a merchant to compare product identifiers, photos and batches. Requirements and corrective steps depend on the product and the country.
               </p>
               <p class="compliance-p" data-i18n="compliance.p3">
-                Safety Gate Monitor operates inside your Shopify Admin to give you proactive proof of due diligence and an immutable audit trail ready for any authority inspection.
+                Safety Gate Monitor helps organize possible matches and review decisions. It does not make a legal determination or change product status for you.
               </p>
               <div class="compliance-links">
                 <a href="https://eur-lex.europa.eu/eli/reg/2023/988/oj" target="_blank" rel="noopener noreferrer" class="text-link" data-i18n="compliance.linkGpsr">
@@ -269,6 +318,9 @@
                 </a>
                 <a href="https://ec.europa.eu/safety-gate-alerts/" target="_blank" rel="noopener noreferrer" class="text-link" data-i18n="compliance.linkSafetyGate">
                   Browse Official EU Safety Gate Portal ↗
+                </a>
+                <a href="https://www.soi.sk/kontakt" target="_blank" rel="noopener noreferrer" class="text-link" data-i18n="compliance.linkAuthority">
+                  Slovak Trade Inspection (SOI) ↗
                 </a>
               </div>
             </div>
@@ -290,9 +342,9 @@
               </p>
             </div>
             <div class="faq-row">
-              <h3 class="faq-question" data-i18n="faq.q2">How does visual AI detect rebranded or white-label products?</h3>
+              <h3 class="faq-question" data-i18n="faq.q2">Why is this more than a one-off AI search?</h3>
               <p class="faq-answer" data-i18n="faq.a2">
-                Suppliers often rename or repackage products. Our system uses multimodal vector embeddings to compare both text specifications and actual product photographs against recall photos in the EU database, catching rebadged products even when titles differ.
+                Products can be renamed or photographed differently, and new Safety Gate alerts are published over time. The app combines catalog comparison, ongoing updates, a review queue and a record of merchant decisions.
               </p>
             </div>
             <div class="faq-row">
@@ -304,7 +356,7 @@
             <div class="faq-row">
               <h3 class="faq-question" data-i18n="faq.q4">What is included in the free scan?</h3>
               <p class="faq-answer" data-i18n="faq.a4">
-                The free scan audits your current public catalog against the entire EU Safety Gate database and sends a comprehensive safety summary report to your email, highlighting any products that require your attention.
+                We check up to 100 publicly accessible Shopify products against Safety Gate alerts and email a summary of possible matches. It does not cover private listings and is not a certificate of safety.
               </p>
             </div>
           </div>
@@ -313,12 +365,12 @@
         <!-- Final Simple CTA -->
         <section class="section section--cta">
           <div class="cta-box">
-            <h2 class="cta-title" data-i18n="cta.title">Ready to protect your store?</h2>
+            <h2 class="cta-title" data-i18n="cta.title">Run your store with more peace of mind.</h2>
             <p class="cta-subtitle" data-i18n="cta.subtitle">
-              Run a free scan today and ensure your products comply with EU safety regulations.
+              We keep watch for new Safety Gate alerts and show you clearly when a product needs attention.
             </p>
             <div class="cta-action">
-              <a href="#scan" class="btn btn--primary btn--large" data-i18n="cta.button">Run Free Safety Scan</a>
+              <a href="#scan-form" class="btn btn--primary btn--large" data-i18n="cta.button">Run Free Safety Scan</a>
             </div>
           </div>
         </section>
@@ -328,10 +380,12 @@
       <footer class="site-footer">
         <div class="footer-left">
           <span class="footer-brand">Safety Gate Monitor</span>
-          <p class="footer-text" data-i18n="footer.text">Safety Gate Monitor for Shopify. Autonomous product safety compliance.</p>
+          <p class="footer-text" data-i18n="footer.text">Quiet, continuous product safety monitoring for Shopify.</p>
           <p class="footer-disclaimer" data-i18n="footer.officialDisclaimer">Data sourced from the European Commission's official Safety Gate alert system.</p>
         </div>
         <div class="footer-right">
+          <a href="./about.html" class="footer-link" data-i18n="footer.about">About us</a>
+          <a href="mailto:radoone@radoone.eu" class="footer-link" data-i18n="footer.contact">Contact</a>
           <a href="#top" class="footer-link" data-i18n="footer.backToTop">Back to top ↑</a>
         </div>
       </footer>

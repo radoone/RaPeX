@@ -398,7 +398,7 @@
       let currentLeads = [];
 
       const apiKeyInput = document.getElementById("api-key-input");
-      const savedKey = localStorage.getItem("rapex_scanner_api_key") || "";
+      const savedKey = localStorage.getItem("rapex_scanner_api_key") || "cc940932d645c8523e764868cd8c162ef2c9947a1da4d189792ea651c70c99b2";
       if (savedKey) apiKeyInput.value = savedKey;
 
       apiKeyInput.addEventListener("input", (e) => {
@@ -525,7 +525,7 @@
           const alertId = m.alertDetails?.alertId || w.alertId || "N/A";
           const alertNumber = m.alertDetails?.alertNumber || "";
           const alertImage = m.alertDetails?.alertImage || "";
-          
+
           const isRapexUrlValid = m.alertDetails?.rapexUrl && !m.alertDetails.rapexUrl.includes("undefined") && !m.alertDetails.rapexUrl.includes(alertId);
           const alertUrl = isRapexUrlValid
             ? m.alertDetails.rapexUrl
@@ -573,7 +573,7 @@
 
             <!-- Side-by-Side Comparison Grid -->
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px;">
-              
+
               <!-- LEFT: In Store -->
               <div style="background: #faf8f5; border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px; display: flex; gap: 14px;">
                 <div style="flex-shrink: 0;">

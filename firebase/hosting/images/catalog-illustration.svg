@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 260" role="img" aria-label="Illustrated product catalog">
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#f2f5e9"/><stop offset="1" stop-color="#e9f0e7"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#42624e" flood-opacity=".12"/></filter>
+  </defs>
+  <rect width="600" height="260" rx="18" fill="url(#bg)"/>
+  <circle cx="505" cy="39" r="60" fill="#dce9d9" opacity=".8"/>
+  <circle cx="65" cy="228" r="65" fill="#e5eada"/>
+  <g filter="url(#shadow)">
+    <rect x="38" y="31" width="156" height="199" rx="14" fill="#fff"/>
+    <rect x="222" y="31" width="156" height="199" rx="14" fill="#fff"/>
+    <rect x="406" y="31" width="156" height="199" rx="14" fill="#fff"/>
+  </g>
+  <rect x="48" y="41" width="136" height="135" rx="10" fill="#f5efe4"/>
+  <rect x="232" y="41" width="136" height="135" rx="10" fill="#edf2ea"/>
+  <rect x="416" y="41" width="136" height="135" rx="10" fill="#f3eee7"/>
+  <g stroke="#ad6b4d" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <circle cx="79" cy="141" r="20" stroke="#38483c" stroke-width="7"/><circle cx="153" cy="141" r="20" stroke="#38483c" stroke-width="7"/>
+    <path d="m79 141 30-43 44 43-27-51h-17m18-1 16-12"/>
+  </g>
+  <path d="M111 96h27" stroke="#a86446" stroke-width="11" stroke-linecap="round"/>
+  <g fill="none" stroke="#6e936f" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M296 100v57m-29 0h58m-28-79 37 8-16 31h-43z"/>
+  </g>
+  <path d="M267 158h58" stroke="#435c46" stroke-width="9" stroke-linecap="round"/>
+  <g fill="#bf9165"><path d="M464 75h41c7 0 12 6 12 13v58c0 8-6 14-14 14h-37c-8 0-14-6-14-14V89c0-8 5-14 12-14z"/><rect x="471" y="62" width="29" height="15" rx="5"/></g>
+  <path d="M452 108h65" stroke="#e7d0ae" stroke-width="5"/>
+  <g fill="#dae4d9"><rect x="59" y="190" width="95" height="7" rx="3.5"/><rect x="59" y="205" width="64" height="6" rx="3"/><rect x="243" y="190" width="95" height="7" rx="3.5"/><rect x="243" y="205" width="64" height="6" rx="3"/><rect x="427" y="190" width="95" height="7" rx="3.5"/><rect x="427" y="205" width="64" height="6" rx="3"/></g>
+</svg>

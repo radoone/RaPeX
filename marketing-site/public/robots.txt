@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rapex-99a2c.web.app/sitemap.xml

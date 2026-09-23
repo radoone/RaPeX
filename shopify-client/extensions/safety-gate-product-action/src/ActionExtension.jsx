@@ -1,3 +1,4 @@
+/** @jsxImportSource preact */
 import "@shopify/ui-extensions/preact";
 import { render } from "preact";
 import { useCallback, useState } from "preact/hooks";
@@ -8,24 +9,23 @@ export default async function () {
 
 function Extension() {
   const { data, close } = shopify;
-  const productId = data.selected[0].id;
+  const productId = data?.selected?.[0]?.id;
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
 
   const runCheck = useCallback(async () => {
+    if (!productId || running) return;
+
     try {
       setRunning(true);
       setError("");
 
       const response = await fetch("/api/product-safety-check", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ productId }),
       });
-
       const payload = await response.json();
 
       if (!response.ok) {
@@ -38,23 +38,20 @@ function Extension() {
     } finally {
       setRunning(false);
     }
-  }, [productId]);
+  }, [productId, running]);
 
   return (
-    <s-admin-action heading="Run product safety check">
+    <s-admin-action heading="Run Safety Gate check" loading={running}>
       <s-button
-        slot="primaryAction"
+        slot="primary-action"
         variant="primary"
-        disabled={running}
+        disabled={running || !productId}
         loading={running}
         onClick={runCheck}
       >
         {running ? "Checking..." : "Run check"}
       </s-button>
-      <s-button slot="secondaryActions" onClick={close}>
-        Close
-      </s-button>
-
+      <s-button slot="secondary-actions" onClick={close}>Close</s-button>
       <s-box padding="base">
         <s-stack direction="block" gap="base">
           <s-text>
@@ -71,19 +68,25 @@ function Extension() {
 function ResultDetails({ result }) {
   const status = result.status;
   const firstWarning = result.result?.warnings?.[0];
+  const riskLevel = [
+    status.riskLevel,
+    firstWarning?.riskLevel,
+    firstWarning?.alertDetails?.fields?.level,
+    firstWarning?.alertDetails?.fields?.alert_level,
+    firstWarning?.alertDetails?.fields?.risk_level,
+  ].find((value) => {
+    if (typeof value !== "string" || !value.trim()) return false;
+    return !["unknown", "not specified", "n/a"].includes(value.trim().toLowerCase());
+  });
 
   return (
     <s-stack direction="block" gap="tight">
-      <s-text>
-        {`Outcome: ${labelForState(status.state)}`}
-      </s-text>
-      {status.checkedAt ? (
-        <s-text>Checked at: {new Date(status.checkedAt).toLocaleString()}</s-text>
-      ) : null}
+      <s-text>{`Outcome: ${labelForState(status.state)}`}</s-text>
+      {status.checkedAt ? <s-text>Checked at: {new Date(status.checkedAt).toLocaleString()}</s-text> : null}
       {status.topReason || firstWarning?.reason ? (
         <s-text>Top reason: {status.topReason || firstWarning.reason}</s-text>
       ) : null}
-      {firstWarning?.riskLevel ? <s-text>Risk level: {firstWarning.riskLevel}</s-text> : null}
+      {riskLevel ? <s-text>Risk level: {riskLevel}</s-text> : null}
       {result.result?.recommendation ? <s-text>{result.result.recommendation}</s-text> : null}
     </s-stack>
   );
@@ -92,13 +95,12 @@ function ResultDetails({ result }) {
 function labelForState(state) {
   switch (state) {
     case "unsafe":
+    case "needs-review":
       return "Needs review";
     case "safe":
       return "No likely match detected";
     case "resolved":
       return "Decision recorded";
-    case "needs-review":
-      return "Needs review";
     default:
       return "Not checked";
   }

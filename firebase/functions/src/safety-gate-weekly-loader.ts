@@ -320,6 +320,7 @@ export async function runSafetyGateWeeklyLoaderJob(options?: {
     logger.info(`Found ${targetReports.length} weekly reports to sync from ec.europa.eu.`);
 
     let notificationsProcessed = 0;
+    let notificationFailures = 0;
     let newAlertsCreated = 0;
     let alertsUpdated = 0;
     let imagesEmbedded = 0;
@@ -345,6 +346,7 @@ export async function runSafetyGateWeeklyLoaderJob(options?: {
             latestAlertDate = notifDate;
           }
         } catch (itemError) {
+          notificationFailures++;
           logger.error(`Error ingesting notification ${notif.caseNumber}:`, itemError);
         }
       }
@@ -353,6 +355,10 @@ export async function runSafetyGateWeeklyLoaderJob(options?: {
         latestYear = report.year;
         latestWeek = report.week;
       }
+    }
+
+    if (notificationFailures > 0) {
+      throw new Error(`Weekly Safety Gate sync had ${notificationFailures} notification ingestion failure(s)`);
     }
 
     const runEnd = Timestamp.now();

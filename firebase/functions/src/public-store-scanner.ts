@@ -304,38 +304,52 @@ async function fetchStoreCatalog(domain: string, maxProducts = 250): Promise<any
 
   while (products.length < maxProducts) {
     const fetchUrl = `https://${domain}/products.json?limit=${perPage}&page=${page}`;
-    try {
+    let pageProducts: any[] | null = null;
+    for (let attempt = 1; attempt <= 4; attempt++) {
+      try {
       const res = await fetch(fetchUrl, {
         headers: {
           "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
           "Accept": "application/json",
           "Accept-Language": "sk,cs;q=0.9,en;q=0.8",
         },
+        signal: globalThis.AbortSignal.timeout(15000),
       });
 
       if (res.status === 429) {
-        logger.warn(`Rate limit 429 on page ${page} for ${domain}, waiting 4s...`);
-        await sleep(4000);
-        continue;
+          if (attempt < 4) {
+            logger.warn(`Rate limit 429 on page ${page} for ${domain}; retry ${attempt}/3`);
+            await sleep(1000 * attempt);
+            continue;
+          }
+          throw new Error(`Shopify catalog rate limit persisted on page ${page}`);
       }
 
       if (!res.ok) {
-        break;
+          throw new Error(`Shopify catalog returned ${res.status} on page ${page}`);
       }
 
       const data = await res.json() as { products?: any[] };
-      const pageProds = data.products || [];
-      if (pageProds.length === 0) break;
-
-      products.push(...pageProds);
-      if (pageProds.length < perPage || products.length >= maxProducts) break;
-
-      page += 1;
-      await sleep(400); // polite delay between pages
-    } catch (err: any) {
-      logger.warn(`Failed fetching page ${page} from ${domain}:`, err);
-      break;
+        if (!Array.isArray(data.products)) {
+          throw new Error(`Shopify catalog response was invalid on page ${page}`);
+        }
+        pageProducts = data.products;
+        break;
+      } catch (error) {
+        if (attempt === 4) throw error;
+        logger.warn(`Failed fetching page ${page} from ${domain}; retry ${attempt}/3`, error);
+        await sleep(500 * attempt);
+      }
     }
+
+    if (!pageProducts) throw new Error(`Shopify catalog page ${page} was not fetched`);
+    if (pageProducts.length === 0) break;
+
+    products.push(...pageProducts);
+    if (pageProducts.length < perPage || products.length >= maxProducts) break;
+
+    page += 1;
+    await sleep(400); // polite delay between pages
   }
 
   return products.slice(0, maxProducts);
@@ -403,7 +417,7 @@ export async function handleScanPublicShopifyStoreRequest(
   const expectedKey = (process.env.SAFETY_GATE_API_KEY ?? "").trim();
   const providedKey = extractApiKey(request);
 
-  if (expectedKey && providedKey !== expectedKey) {
+  if (!expectedKey || !providedKey || providedKey !== expectedKey) {
     response.status(401).json({ error: "Unauthorized. Valid API key required." });
     return;
   }
@@ -493,8 +507,14 @@ async function enrichLeadMatches(matches: any[], leadDomain?: string): Promise<a
 
   const body = request.body || {};
   const rawDomain = coerceString(body.domain);
-  const maxProducts = typeof body.maxProducts === "number" ? Math.min(body.maxProducts, 10000) : 100;
-  const similarityThreshold = typeof body.similarityThreshold === "number" ? body.similarityThreshold : 80;
+  const requestedMaxProducts = typeof body.maxProducts === "number" ? body.maxProducts : 100;
+  const maxProducts = Number.isFinite(requestedMaxProducts) && requestedMaxProducts > 0
+    ? Math.min(Math.floor(requestedMaxProducts), 10000)
+    : 100;
+  const requestedThreshold = typeof body.similarityThreshold === "number" ? body.similarityThreshold : 80;
+  const similarityThreshold = Number.isFinite(requestedThreshold)
+    ? Math.min(100, Math.max(0, requestedThreshold))
+    : 80;
 
   if (!rawDomain) {
     response.status(400).json({ error: "Missing required 'domain' parameter." });
@@ -685,6 +705,7 @@ async function enrichLeadMatches(matches: any[], leadDomain?: string): Promise<a
 
     const matches: any[] = [];
     const LLM_CONCURRENCY = 3;
+    let candidateCheckFailures = 0;
 
     for (let i = 0; i < candidatePairs.length; i += LLM_CONCURRENCY) {
       const chunk = candidatePairs.slice(i, i + LLM_CONCURRENCY);
@@ -716,10 +737,15 @@ async function enrichLeadMatches(matches: any[], leadDomain?: string): Promise<a
               });
             }
           } catch (checkErr) {
+            candidateCheckFailures += 1;
             logger.warn(`Candidate AI check failed for ${candidate.raw.title}:`, checkErr);
           }
         })
       );
+    }
+
+    if (candidateCheckFailures > 0) {
+      throw new Error(`Scan incomplete: ${candidateCheckFailures} candidate product check(s) failed`);
     }
 
     // 6. Compute score and save lead document in Firestore

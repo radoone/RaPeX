@@ -243,6 +243,25 @@ export default function Settings() {
   const thresholdNumber = Number(value);
   const monitoringMode =
     thresholdNumber < 60 ? "broad" : thresholdNumber <= 75 ? "balanced" : "strict";
+  const initialScanStatus = settings?.initialScanStatus;
+  const hasCompletedInitialScan = initialScanStatus === "completed" ||
+    (settings?.freeScanUsed === true && Boolean(settings?.freeScanCompletedAt));
+  const automationStatus = initialScanStatus === "scanning"
+    ? "scanning"
+    : initialScanStatus === "failed"
+      ? "failed"
+      : hasCompletedInitialScan
+        ? billingStatus?.hasActivePayment
+          ? "active"
+          : "completedNoPlan"
+        : "notStarted";
+  const automationStatusTone = automationStatus === "active"
+    ? "success"
+    : automationStatus === "failed"
+      ? "critical"
+      : automationStatus === "scanning" || automationStatus === "completedNoPlan"
+        ? "warning"
+        : "info";
 
   return (
     <s-page size="large" className="page-shell" suppressHydrationWarning>
@@ -264,34 +283,67 @@ export default function Settings() {
             <div className="admin-card__header">
               <div>
                 <p className="admin-eyebrow">{t("settingsAdmin.automationStatusEyebrow")}</p>
-                <h2 className="admin-card__title">{t("settingsAdmin.automationStatusTitle")}</h2>
-                <p className="admin-card__description">{t("settingsAdmin.automationStatusDescription")}</p>
+                <h2 className="admin-card__title">{t(`settingsAdmin.automationStatus.${automationStatus}.title`)}</h2>
+                <p className="admin-card__description">{t(`settingsAdmin.automationStatus.${automationStatus}.description`)}</p>
               </div>
-              <s-badge tone="success">{t("settingsAdmin.status.running")}</s-badge>
+              <s-badge tone={automationStatusTone}>{t(`settingsAdmin.automationStatus.${automationStatus}.badge`)}</s-badge>
             </div>
-            <div className="settings-status-grid">
-              <div className="settings-status-item">
-                <span>{t("settingsAdmin.status.dailySafetyGateUpdates")}</span>
-                <strong>{t("settingsAdmin.status.on")}</strong>
-              </div>
-              <div className="settings-status-item">
-                <span>{t("settingsAdmin.status.shopifyProductUpdates")}</span>
-                <strong>{t("settingsAdmin.status.on")}</strong>
-              </div>
-              <div className="settings-status-item">
-                <span>{t("settingsAdmin.status.auditTrail")}</span>
-                <strong>{t("settingsAdmin.status.on")}</strong>
-              </div>
-              <div className="settings-status-item">
-                <span>{t("settingsAdmin.status.autoQuarantine")}</span>
-                <strong>{autoDraft ? t("settingsAdmin.status.on") : t("settingsAdmin.status.off")}</strong>
-              </div>
-            </div>
+            {automationStatus !== "active" ? (
+              <s-button href="/app/manual-check" variant="secondary">
+                {t("settingsAdmin.automationStatus.openCatalog")}
+              </s-button>
+            ) : null}
           </section>
 
           <section className="admin-section-grid admin-section-grid--wide">
             {/* COLUMN 1: Settings Form */}
             <div className="admin-stack">
+              {/* Automation & Notifications settings */}
+              <div className="admin-card">
+                <div className="admin-card__header">
+                  <div>
+                    <h2 className="admin-card__title">{t("settingsAdmin.notifications.enabledTitle")}</h2>
+                    <p className="admin-card__description">{t("settingsAdmin.notifications.enabledDescription")}</p>
+                  </div>
+                </div>
+
+                <div className="admin-form-block" style={{ gap: '20px', display: 'flex', flexDirection: 'column' }}>
+                  <div className="admin-checkbox-group">
+                    <label style={{ display: 'flex', alignItems: 'flex-start', cursor: 'pointer', gap: '10px' }}>
+                      <input
+                        type="checkbox"
+                        checked={emailNotifications}
+                        onChange={(e) => setEmailNotifications(e.target.checked)}
+                        style={{ marginTop: '3px', transform: 'scale(1.15)' }}
+                      />
+                      <div>
+                        <s-text fontWeight="bold">{t("settingsAdmin.notifications.enabledTitle")}</s-text>
+                        <br />
+                        <s-text tone="subdued" size="small">{t("settingsAdmin.notifications.enabledDescription")}</s-text>
+                      </div>
+                    </label>
+                  </div>
+                  <s-text-field
+                    label={t("settingsAdmin.notifications.emailLabel")}
+                    type="email"
+                    value={notificationEmail}
+                    disabled={!emailNotifications || undefined}
+                    onChange={(event: any) => setNotificationEmail(event.currentTarget.value)}
+                    helpText={t("settingsAdmin.notifications.emailHelp")}
+                  />
+                  <s-select
+                    label={t("settingsAdmin.notifications.languageLabel")}
+                    value={notificationLanguage}
+                    disabled={!emailNotifications || undefined}
+                    onChange={(event: any) => setNotificationLanguage(event.currentTarget.value)}
+                  >
+                    {EU_LANGUAGES.map((language) => (
+                      <s-option key={language.code} value={language.code}>{language.label}</s-option>
+                    ))}
+                  </s-select>
+                </div>
+              </div>
+
               {/* Threshold Settings */}
               <div className="admin-card">
                 <div className="admin-card__header">
@@ -350,7 +402,7 @@ export default function Settings() {
                 </details>
               </div>
 
-              {/* Automation & Notifications settings */}
+              {/* Safety automation settings */}
               <div className="admin-card">
                 <div className="admin-card__header">
                   <div>
@@ -361,39 +413,6 @@ export default function Settings() {
                 </div>
 
                 <div className="admin-form-block" style={{ gap: '20px', display: 'flex', flexDirection: 'column' }}>
-                  <div className="admin-checkbox-group">
-                    <label style={{ display: 'flex', alignItems: 'flex-start', cursor: 'pointer', gap: '10px' }}>
-                      <input
-                        type="checkbox"
-                        checked={emailNotifications}
-                        onChange={(e) => setEmailNotifications(e.target.checked)}
-                        style={{ marginTop: '3px', transform: 'scale(1.15)' }}
-                      />
-                      <div>
-                        <s-text fontWeight="bold">{t("settingsAdmin.notifications.enabledTitle")}</s-text>
-                        <br />
-                        <s-text tone="subdued" size="small">{t("settingsAdmin.notifications.enabledDescription")}</s-text>
-                      </div>
-                    </label>
-                  </div>
-                  <s-text-field
-                    label={t("settingsAdmin.notifications.emailLabel")}
-                    type="email"
-                    value={notificationEmail}
-                    disabled={!emailNotifications || undefined}
-                    onChange={(event: any) => setNotificationEmail(event.currentTarget.value)}
-                    helpText={t("settingsAdmin.notifications.emailHelp")}
-                  />
-                  <s-select
-                    label={t("settingsAdmin.notifications.languageLabel")}
-                    value={notificationLanguage}
-                    disabled={!emailNotifications || undefined}
-                    onChange={(event: any) => setNotificationLanguage(event.currentTarget.value)}
-                  >
-                    {EU_LANGUAGES.map((language) => (
-                      <s-option key={language.code} value={language.code}>{language.label}</s-option>
-                    ))}
-                  </s-select>
                   <div className="admin-checkbox-group">
                     <label style={{ display: 'flex', alignItems: 'flex-start', cursor: 'pointer', gap: '10px' }}>
                       <input

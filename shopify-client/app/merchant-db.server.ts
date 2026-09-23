@@ -103,6 +103,8 @@ export type SafetySettingRecord = {
   autoDraftHighRisk?: boolean;
   freeScanUsed?: boolean;
   freeScanCompletedAt?: Date | null;
+  initialScanStatus?: "scanning" | "completed" | "failed";
+  initialScanStartedAt?: Date | null;
   excludeVendors?: string | null;
   excludeTypes?: string | null;
   emailNotifications?: boolean;
@@ -665,6 +667,10 @@ const safetySetting = {
       autoDraftHighRisk: data.autoDraftHighRisk !== undefined ? Boolean(data.autoDraftHighRisk) : undefined,
       freeScanUsed: data.freeScanUsed !== undefined ? Boolean(data.freeScanUsed) : false,
       freeScanCompletedAt: normalizeDate(data.freeScanCompletedAt),
+      initialScanStatus: data.initialScanStatus === "scanning" || data.initialScanStatus === "completed" || data.initialScanStatus === "failed"
+        ? data.initialScanStatus
+        : undefined,
+      initialScanStartedAt: normalizeDate(data.initialScanStartedAt),
       excludeVendors: data.excludeVendors !== undefined ? String(data.excludeVendors || "") : undefined,
       excludeTypes: data.excludeTypes !== undefined ? String(data.excludeTypes || "") : undefined,
       emailNotifications: data.emailNotifications !== undefined ? Boolean(data.emailNotifications) : undefined,
@@ -701,6 +707,10 @@ const safetySetting = {
       autoDraftHighRisk: payload.autoDraftHighRisk !== undefined ? Boolean(payload.autoDraftHighRisk) : undefined,
       freeScanUsed: payload.freeScanUsed !== undefined ? Boolean(payload.freeScanUsed) : false,
       freeScanCompletedAt: normalizeDate(payload.freeScanCompletedAt),
+      initialScanStatus: payload.initialScanStatus === "scanning" || payload.initialScanStatus === "completed" || payload.initialScanStatus === "failed"
+        ? payload.initialScanStatus
+        : undefined,
+      initialScanStartedAt: normalizeDate(payload.initialScanStartedAt),
       excludeVendors: payload.excludeVendors !== undefined ? String(payload.excludeVendors || "") : undefined,
       excludeTypes: payload.excludeTypes !== undefined ? String(payload.excludeTypes || "") : undefined,
       emailNotifications: payload.emailNotifications !== undefined ? Boolean(payload.emailNotifications) : undefined,

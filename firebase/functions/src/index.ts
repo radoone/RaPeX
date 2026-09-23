@@ -2,7 +2,7 @@
 import * as logger from "firebase-functions/logger";
 import { onRequest } from "firebase-functions/v2/https";
 import { onSchedule } from "firebase-functions/v2/scheduler";
-import { onDocumentCreated } from "firebase-functions/v2/firestore";
+import { onDocumentCreated, onDocumentUpdated } from "firebase-functions/v2/firestore";
 import "./firebase-admin.js";
 import { SCHEDULER_CONFIG } from "./safety-gate-config.js";
 import {
@@ -12,6 +12,7 @@ import {
 } from "./merchant-monitoring.js";
 import { handleCheckProductSafetyRequest } from "./safety-gate-http.js";
 import { handleScanPublicShopifyStoreRequest } from "./public-store-scanner.js";
+import { handleFreeScanRequest, processFreeScanRequest } from "./free-scan.js";
 import {
   handleBrevoWebhook,
   handleImmediateAlertCreated,
@@ -23,6 +24,14 @@ import {
   runSafetyGateLoader,
 } from "./safety-gate-loader.js";
 import { runSafetyGateWeeklyLoaderJob } from "./safety-gate-weekly-loader.js";
+
+function requireOperationsKey(req: { get(name: string): string | undefined }, res: { status(code: number): { json(payload: unknown): void } }): boolean {
+  const expected = (process.env.SAFETY_GATE_API_KEY || "").trim();
+  const provided = (req.get("x-api-key") || "").trim();
+  if (expected && provided === expected) return true;
+  res.status(expected ? 401 : 503).json({ error: expected ? "Unauthorized" : "Operations key is not configured" });
+  return false;
+}
 
 // --- Scheduled Function ---
 export const dailyRapexDeltaLoader = onSchedule(
@@ -44,9 +53,10 @@ export const manualSafetyGateWeeklyLoader = onRequest(
     region: "europe-west1",
     memory: "1GiB",
     timeoutSeconds: 540,
-    secrets: ["GOOGLE_API_KEY"],
+    secrets: ["GOOGLE_API_KEY", "SAFETY_GATE_API_KEY"],
   },
   async (req, res) => {
+    if (!requireOperationsKey(req, res)) return;
     try {
       const year = req.query.year ? Number.parseInt(String(req.query.year), 10) : undefined;
       const weeks = req.query.weeks
@@ -83,9 +93,10 @@ export const manualRapexLoader = onRequest(
   {
     region: "europe-west1",
     memory: "256MiB",
-    secrets: ["GOOGLE_API_KEY"],
+    secrets: ["GOOGLE_API_KEY", "SAFETY_GATE_API_KEY"],
   },
   async (req, res) => {
+    if (!requireOperationsKey(req, res)) return;
     try {
       logger.info("Manual Safety Gate loader triggered via HTTP", { method: req.method, url: req.url });
 
@@ -113,9 +124,10 @@ export const backfillRecentRapexEmbeddings = onRequest(
     region: "europe-west1",
     memory: "1GiB",
     timeoutSeconds: 540,
-    secrets: ["GOOGLE_API_KEY"],
+    secrets: ["GOOGLE_API_KEY", "SAFETY_GATE_API_KEY"],
   },
   async (req, res) => {
+    if (!requireOperationsKey(req, res)) return;
     try {
       const days = Number.parseInt(String(req.query.days || ""), 10);
       const limit = Number.parseInt(String(req.query.limit || ""), 10);
@@ -156,9 +168,10 @@ export const backfillHistoricalRapexAlerts = onRequest(
     region: "europe-west1",
     memory: "1GiB",
     timeoutSeconds: 540,
-    secrets: ["GOOGLE_API_KEY"],
+    secrets: ["GOOGLE_API_KEY", "SAFETY_GATE_API_KEY"],
   },
   async (req, res) => {
+    if (!requireOperationsKey(req, res)) return;
     try {
       const year = req.query.year ? Number.parseInt(String(req.query.year), 10) : undefined;
       const fromYear = req.query.fromYear ? Number.parseInt(String(req.query.fromYear), 10) : undefined;
@@ -281,4 +294,26 @@ export const scanPublicShopifyStoreAPI = onRequest(
     secrets: ["GOOGLE_API_KEY", "SAFETY_GATE_API_KEY"],
   },
   handleScanPublicShopifyStoreRequest,
+);
+
+// Public marketing-site intake. Expensive scans run only after a bounded request is queued.
+export const freeScanRequestAPI = onRequest(
+  { region: "europe-west1", maxInstances: 10, secrets: ["TURNSTILE_SECRET_KEY", "BREVO_API_KEY"] },
+  handleFreeScanRequest,
+);
+
+export const processFreeScanRequestJob = onDocumentUpdated(
+  {
+    document: "free_scan_requests/{requestId}",
+    region: "europe-west1",
+    memory: "1GiB",
+    timeoutSeconds: 540,
+    maxInstances: 2,
+    secrets: ["GOOGLE_API_KEY", "SAFETY_GATE_API_KEY", "BREVO_API_KEY"],
+  },
+  async (event) => {
+    if (event.data?.before.get("status") !== "queued" && event.data?.after.get("status") === "queued") {
+      await processFreeScanRequest(event.params.requestId);
+    }
+  },
 );

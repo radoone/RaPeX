@@ -11,7 +11,15 @@
       "**/node_modules/**",
       "leads.html"
     ],
-    "rewrites": []
+    "rewrites": [
+      {
+        "source": "/api/free-scan",
+        "function": {
+          "functionId": "freeScanRequestAPI",
+          "region": "europe-west1"
+        }
+      }
+    ]
   },
   "functions": [
     {

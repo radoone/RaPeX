@@ -295,6 +295,34 @@ export function buildCoreLocale(input: CoreLocaleInput) {
       automationStatusEyebrow: "Automatic monitoring",
       automationStatusTitle: "Safety Gate monitoring is working for this store",
       automationStatusDescription: "Daily EU Safety Gate updates, Shopify product changes, and audit records are handled automatically.",
+      automationStatus: {
+        notStarted: {
+          title: "Catalog audit not confirmed",
+          description: "The initial import has not completed, so catalog coverage is not confirmed yet.",
+          badge: "Not verified",
+        },
+        scanning: {
+          title: "Initial catalog audit in progress",
+          description: "Products are being imported and checked. Catalog coverage will be confirmed after the audit finishes.",
+          badge: "In progress",
+        },
+        failed: {
+          title: "Initial catalog audit needs attention",
+          description: "The last import or audit did not complete. Retry catalog coverage before relying on monitoring status.",
+          badge: "Needs attention",
+        },
+        completedNoPlan: {
+          title: "Initial catalog audit completed",
+          description: "The initial catalog audit is complete. Ongoing automatic monitoring requires an active plan.",
+          badge: "Audit complete",
+        },
+        active: {
+          title: "Catalog audit completed",
+          description: "The initial catalog audit completed and this store has an active monitoring plan.",
+          badge: "Plan active",
+        },
+        openCatalog: "Open catalog coverage",
+      },
       valueEyebrow: "Subscription value",
       valueTitle: "What stays covered",
       valueDescription: "These capabilities are the core value merchants keep when they stay subscribed.",
