@@ -24,7 +24,8 @@ export type ResolutionType =
   | 'modified_product'   // Product modified to address safety concern
   | 'contacted_supplier' // Supplier has been contacted
   | 'false_positive'     // Match was incorrect / not relevant
-  | 'not_my_product';    // Product doesn't match the alert
+  | 'not_my_product'    // Product doesn't match the alert
+  | 'other';            // Merchant records a different outcome with a required note
 
 interface AlertTableProps {
   alerts: Alert[];

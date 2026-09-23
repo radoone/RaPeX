@@ -402,7 +402,8 @@ const en = {
         "modifiedProduct": "Product modified",
         "contactedSupplier": "Contacted supplier (Pending response)",
         "falsePositive": "False positive",
-        "notMyProduct": "Not my product"
+        "notMyProduct": "Not my product",
+        "other": "Other"
       },
       "dates": {
         "today": "Today",
@@ -445,7 +446,9 @@ const en = {
           "decisionPrompt": "Choose the review outcome. You can add a note on what you checked.",
           "outcomeLabel": "Review outcome",
           "chooseOutcome": "Choose an outcome",
-          "noteLabel": "What did you check? (optional)"
+          "noteLabel": "What did you check? (optional)",
+          "noteRequiredLabel": "What did you check? (required)",
+          "otherNoteRequired": "Add a note to explain the other outcome."
         },
         "yourProduct": "Your Shopify product",
         "editInShopify": "Edit Product in Shopify",

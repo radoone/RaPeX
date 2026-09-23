@@ -154,7 +154,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const alertId = formData.get("alertId") as string;
   const alertIdsJson = formData.get("alertIds") as string;
   const resolutionType = formData.get("resolutionType") as string | null;
-  const notes = formData.get("notes") as string || undefined;
+  const notes = (formData.get("notes") as string | null)?.trim() || undefined;
+
+  if ((action === "resolve" || action === "dismiss") && resolutionType === "other" && !notes) {
+    return json({ success: false, error: "A note is required for the other outcome" }, { status: 400 });
+  }
 
   const ids = alertIdsJson ? JSON.parse(alertIdsJson) as string[] : [alertId];
   const scopedWhere = { id: { in: ids.filter(Boolean) }, shop: session.shop };

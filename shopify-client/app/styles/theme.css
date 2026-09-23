@@ -1885,6 +1885,13 @@ s-clickable s-icon {
   line-height: 1.4;
 }
 
+.review-modal__required-note {
+  margin: -6px 0 0;
+  color: var(--critical);
+  font-size: 12px;
+  font-weight: 650;
+}
+
 .review-modal__recorded { display: grid; gap: 6px; }
 .review-modal__recorded p { margin: 0; }
 

@@ -1,7 +1,8 @@
 import { buildCoreLocale } from "./core-locale";
 
 export default buildCoreLocale({
-  reviewLayout: { possibleMatch: 'Taqbila possibbli f’Safety Gate', compareHeading: 'Qabbel il-prodotti', decisionHeading: 'Irreġistra d-deċiżjoni', chooseOutcome: 'Agħżel riżultat', actionNeeded: 'Azzjoni meħtieġa', readyToRecord: 'Lest biex tirreġistra', noteLabel: 'X’ivverifikajt? (mhux obbligatorju)' }, dashboard: "Dashboard", alertsLabel: "Twissijiet tas-sigurtà", manual: "Kontroll manwali", settings: "Settings", language: "Lingwa", reviewAlerts: "Irrevedi twissijiet", search: "Fittex", clear: "Ħassar", needsReview: "Jeħtieġ reviżjoni", safe: "Sikur", notChecked: "Mhux iċċekkjat", alertsTitle: "Twissijiet tas-sigurtà", findProduct: "Sib prodott",
+  otherOutcome: 'Oħrajn',
+  reviewLayout: { possibleMatch: 'Taqbila possibbli f’Safety Gate', compareHeading: 'Qabbel il-prodotti', decisionHeading: 'Irreġistra d-deċiżjoni', chooseOutcome: 'Agħżel riżultat', actionNeeded: 'Azzjoni meħtieġa', readyToRecord: 'Lest biex tirreġistra', noteLabel: 'X’ivverifikajt? (mhux obbligatorju)', noteRequiredLabel: 'X’ivverifikajt? (meħtieġ)' }, dashboard: "Dashboard", alertsLabel: "Twissijiet tas-sigurtà", manual: "Kontroll manwali", settings: "Settings", language: "Lingwa", reviewAlerts: "Irrevedi twissijiet", search: "Fittex", clear: "Ħassar", needsReview: "Jeħtieġ reviżjoni", safe: "Sikur", notChecked: "Mhux iċċekkjat", alertsTitle: "Twissijiet tas-sigurtà", findProduct: "Sib prodott",
   notifications: { enabledTitle: "Twissijiet tas-sigurtà bl-email", enabledDescription: "Ibgħat sejbiet ġodda minnufih u sommarju ta' kull ġimgħa meta ma jkunx hemm sejbiet.", emailLabel: "Email għan-notifiki", emailHelp: "Jittieħed inizjalment minn Shopify. Tista' tuża indirizz ieħor.", languageLabel: "Lingwa tal-email" },
   long: {
     "dashboardRecentAlertsDescription": "L-aħħar prodotti mmarkati mill-ħanut tiegħek huma rranġati biex tkun tista’ taġixxi malajr.",

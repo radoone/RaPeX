@@ -450,6 +450,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const resolutionType = formData.get("resolutionType") as string | null;
     const notes = formData.get("notes") as string | null;
 
+    if (resolutionType === "other" && !notes?.trim()) {
+      return json({ success: false, error: "A note is required for the other outcome" }, { status: 400 });
+    }
+
     try {
       await updateOwnedAlert(alertId, {
         status: "resolved",
@@ -468,6 +472,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const alertId = formData.get("alertId") as string;
     const resolutionType = formData.get("resolutionType") as string | null;
     const notes = formData.get("notes") as string | null;
+
+    if (resolutionType === "other" && !notes?.trim()) {
+      return json({ success: false, error: "A note is required for the other outcome" }, { status: 400 });
+    }
 
     try {
       await updateOwnedAlert(alertId, {

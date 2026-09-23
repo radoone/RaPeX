@@ -1,7 +1,8 @@
 import { buildCoreLocale } from "./core-locale";
 
 export default buildCoreLocale({
-  reviewLayout: { possibleMatch: 'Mahdollinen osuma Safety Gatessa', compareHeading: 'Vertaa tuotteita', decisionHeading: 'Kirjaa päätös', chooseOutcome: 'Valitse tulos', actionNeeded: 'Toimenpide tarvitaan', readyToRecord: 'Valmis kirjattavaksi', noteLabel: 'Mitä tarkistit? (valinnainen)' }, dashboard: "Hallintapaneeli", alertsLabel: "Turvallisuushälytykset", manual: "Manuaalinen tarkistus", settings: "Asetukset", language: "Kieli", reviewAlerts: "Tarkista hälytykset", search: "Hae", clear: "Tyhjennä", needsReview: "Vaatii tarkistuksen", safe: "Turvallinen", notChecked: "Ei tarkistettu", alertsTitle: "Turvallisuushälytykset", findProduct: "Etsi tuote",
+  otherOutcome: 'Muu',
+  reviewLayout: { possibleMatch: 'Mahdollinen osuma Safety Gatessa', compareHeading: 'Vertaa tuotteita', decisionHeading: 'Kirjaa päätös', chooseOutcome: 'Valitse tulos', actionNeeded: 'Toimenpide tarvitaan', readyToRecord: 'Valmis kirjattavaksi', noteLabel: 'Mitä tarkistit? (valinnainen)', noteRequiredLabel: 'Mitä tarkistit? (pakollinen)' }, dashboard: "Hallintapaneeli", alertsLabel: "Turvallisuushälytykset", manual: "Manuaalinen tarkistus", settings: "Asetukset", language: "Kieli", reviewAlerts: "Tarkista hälytykset", search: "Hae", clear: "Tyhjennä", needsReview: "Vaatii tarkistuksen", safe: "Turvallinen", notChecked: "Ei tarkistettu", alertsTitle: "Turvallisuushälytykset", findProduct: "Etsi tuote",
   notifications: { enabledTitle: "Turvallisuushälytykset sähköpostilla", enabledDescription: "Lähetä uudet löydökset heti ja viikkoyhteenveto, kun löydöksiä ei ole.", emailLabel: "Ilmoitusten sähköposti", emailHelp: "Haetaan aluksi Shopifysta. Voit käyttää toista osoitetta.", languageLabel: "Sähköpostin kieli" },
   long: {
     "dashboardRecentAlertsDescription": "Kauppasi uusimmat merkityt tuotteet on järjestetty niin, että niihin voi reagoida nopeasti.",

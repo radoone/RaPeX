@@ -5,6 +5,7 @@ type CoreLocaleInput = {
   settings: string;
   language: string;
   reviewAlerts: string;
+  otherOutcome?: string;
   search: string;
   clear: string;
   needsReview: string;
@@ -30,6 +31,8 @@ type CoreLocaleInput = {
     outcomeLabel: string;
     chooseOutcome: string;
     noteLabel: string;
+    noteRequiredLabel: string;
+    otherNoteRequired: string;
   }>;
   unsafe?: string;
   notifications?: {
@@ -86,6 +89,9 @@ export function buildCoreLocale(input: CoreLocaleInput) {
     billingRedirect: {
       opening: "Opening Shopify pricing plans...",
       openPricingPlans: "Open pricing plans",
+    },
+    resolveActions: {
+      other: input.otherOutcome || "Other",
     },
     billing: {
       freeScanAvailableHeading: "Free Initial Catalog Scan Active",
@@ -531,6 +537,8 @@ export function buildCoreLocale(input: CoreLocaleInput) {
         outcomeLabel: "Review outcome",
         chooseOutcome: "Choose an outcome",
         noteLabel: "What did you check? (optional)",
+        noteRequiredLabel: "What did you check? (required)",
+        otherNoteRequired: "Add a note to explain the other outcome.",
         ...input.reviewLayout,
       },
       riskSeverity: "Risk severity",

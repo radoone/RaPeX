@@ -145,6 +145,7 @@ can be worked on without changing Shopify auth or app routes.
 - The **Alert Table** supports **Bulk Actions** (Resolve/Dismiss) for efficient management of multiple findings.
 - High-risk alerts ("Serious" or "High") are visually prioritized in the UI with critical color coding and borders.
 - The **Alert Detail Modal** should prioritize merchant decision-making first: show the Shopify product, the likely Safety Gate match, why it matched, and the recommended action before exposing deeper technical scoring/debug details.
+- The review outcome **Other** requires a non-empty audit note. Enforce this in the modal and in both Review Queue and manual-check server actions; show the outcome in decision history and audit reports.
 - Manual checks now include **Skeleton loading states** and product search so merchants can find a specific Shopify product instead of scanning a fixed recent-products list.
 - The dashboard primary action should describe the actual monitoring behavior. "Check all products" implies a full catalog scan; use clearer wording when the action checks new Safety Gate alerts or runs delta monitoring.
 - The Shopify app should sell its value inside the product UI: onboarding is value-first, dashboard shows subscription proof metrics, and empty alert queues show a demo Safety Gate match workflow so new merchants understand the paid outcome before real alerts exist.

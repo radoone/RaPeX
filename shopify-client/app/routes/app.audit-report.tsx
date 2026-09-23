@@ -39,6 +39,7 @@ function resolutionLabelKey(resolutionType: string | null) {
     contacted_supplier: "contactedSupplier",
     false_positive: "falsePositive",
     not_my_product: "notMyProduct",
+    other: "other",
   };
   return resolutionType ? keys[resolutionType] : undefined;
 }

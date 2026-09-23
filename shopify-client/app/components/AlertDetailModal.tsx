@@ -120,6 +120,8 @@ export function AlertDetailModal({
   const imageSimilarity = typeof primaryWarning?.imageSimilarity === "number" ? primaryWarning.imageSimilarity : null;
   const isActive = alert.status === "active";
   const isDismissOutcome = selectedOutcome === "false_positive" || selectedOutcome === "not_my_product";
+  const needsOtherNote = selectedOutcome === "other";
+  const canRecordDecision = Boolean(selectedOutcome && (!needsOtherNote || auditNote.trim()));
   const outcomeLabels: Record<ResolutionType, string> = {
     verified_safe: t("resolveActions.verifiedSafe"),
     removed_from_sale: t("resolveActions.removedFromSale"),
@@ -127,10 +129,11 @@ export function AlertDetailModal({
     contacted_supplier: t("resolveActions.contactedSupplier"),
     false_positive: t("resolveActions.falsePositive"),
     not_my_product: t("resolveActions.notMyProduct"),
+    other: t("resolveActions.other"),
   };
   const recordedOutcome = alert.resolutionType ? outcomeLabels[alert.resolutionType as ResolutionType] : null;
   const recordDecision = () => {
-    if (!selectedOutcome || isLoading) return;
+    if (!canRecordDecision || !selectedOutcome || isLoading) return;
     const action = isDismissOutcome ? onDismiss : onResolve;
     action?.(alert.id, selectedOutcome, auditNote.trim() || undefined);
   };
@@ -222,8 +225,8 @@ export function AlertDetailModal({
             <section className="review-modal__decision" aria-label={t("analysis.reviewLayout.decisionHeading")}>
               <div className="review-modal__decision-heading">
                 <h3>{t("analysis.reviewLayout.decisionHeading")}</h3>
-                <s-badge tone={selectedOutcome ? "success" : "warning"}>
-                  {selectedOutcome ? t("analysis.reviewLayout.readyToRecord") : t("analysis.reviewLayout.actionNeeded")}
+                <s-badge tone={canRecordDecision ? "success" : "warning"}>
+                  {canRecordDecision ? t("analysis.reviewLayout.readyToRecord") : t("analysis.reviewLayout.actionNeeded")}
                 </s-badge>
               </div>
               <p className="review-modal__decision-prompt">{t("analysis.reviewLayout.decisionPrompt")}</p>
@@ -235,8 +238,10 @@ export function AlertDetailModal({
                 <s-option value="verified_safe">{t("resolveActions.verifiedSafe")}</s-option>
                 <s-option value="false_positive">{t("resolveActions.falsePositive")}</s-option>
                 <s-option value="not_my_product">{t("resolveActions.notMyProduct")}</s-option>
+                <s-option value="other">{t("resolveActions.other")}</s-option>
               </s-select>
-              <s-text-area label={t("analysis.reviewLayout.noteLabel")} placeholder={t("analysis.audit.notePlaceholder")} value={auditNote} onInput={(event: any) => setAuditNote(event.currentTarget.value || "")} />
+              <s-text-area label={t(needsOtherNote ? "analysis.reviewLayout.noteRequiredLabel" : "analysis.reviewLayout.noteLabel")} placeholder={t("analysis.audit.notePlaceholder")} value={auditNote} required={needsOtherNote || undefined} onInput={(event: any) => setAuditNote(event.currentTarget.value || "")} />
+              {needsOtherNote && !auditNote.trim() && <p className="review-modal__required-note" role="status">{t("analysis.reviewLayout.otherNoteRequired")}</p>}
               <p className="review-modal__decision-note">{t("analysis.decisionContextDesc")}</p>
             </section>
           ) : (
@@ -260,7 +265,7 @@ export function AlertDetailModal({
 
         </div>
         {isActive && (
-          <s-button slot="primary-action" variant="primary" disabled={!selectedOutcome || isLoading} loading={isLoading || undefined} onClick={recordDecision} commandFor={selectedOutcome ? modalId : undefined} command={selectedOutcome ? "--hide" : undefined}>
+          <s-button slot="primary-action" variant="primary" disabled={!canRecordDecision || isLoading} loading={isLoading || undefined} onClick={recordDecision} commandFor={canRecordDecision ? modalId : undefined} command={canRecordDecision ? "--hide" : undefined}>
             {t("actions.recordDecision")}
           </s-button>
         )}

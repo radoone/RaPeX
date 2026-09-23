@@ -1,7 +1,8 @@
 import { buildCoreLocale } from "./core-locale";
 
 export default buildCoreLocale({
-  reviewLayout: { possibleMatch: 'Lehetséges egyezés a Safety Gate-ben', compareHeading: 'Termékek összehasonlítása', decisionHeading: 'Döntés rögzítése', chooseOutcome: 'Válasszon eredményt', actionNeeded: 'Teendő szükséges', readyToRecord: 'Rögzítésre kész', noteLabel: 'Mit ellenőrzött? (nem kötelező)' }, dashboard: "Irányítópult", alertsLabel: "Biztonsági riasztások", manual: "Kézi ellenőrzés", settings: "Beállítások", language: "Nyelv", reviewAlerts: "Riasztások áttekintése", search: "Keresés", clear: "Törlés", needsReview: "Ellenőrzést igényel", safe: "Biztonságos", notChecked: "Nincs ellenőrizve", alertsTitle: "Biztonsági riasztások", findProduct: "Termék keresése",
+  otherOutcome: 'Egyéb',
+  reviewLayout: { possibleMatch: 'Lehetséges egyezés a Safety Gate-ben', compareHeading: 'Termékek összehasonlítása', decisionHeading: 'Döntés rögzítése', chooseOutcome: 'Válasszon eredményt', actionNeeded: 'Teendő szükséges', readyToRecord: 'Rögzítésre kész', noteLabel: 'Mit ellenőrzött? (nem kötelező)', noteRequiredLabel: 'Mit ellenőrzött? (kötelező)' }, dashboard: "Irányítópult", alertsLabel: "Biztonsági riasztások", manual: "Kézi ellenőrzés", settings: "Beállítások", language: "Nyelv", reviewAlerts: "Riasztások áttekintése", search: "Keresés", clear: "Törlés", needsReview: "Ellenőrzést igényel", safe: "Biztonságos", notChecked: "Nincs ellenőrizve", alertsTitle: "Biztonsági riasztások", findProduct: "Termék keresése",
   notifications: { enabledTitle: "Biztonsági e-mail értesítések", enabledDescription: "Az új találatokat azonnal, találat nélküli héten pedig összefoglalót küld.", emailLabel: "Értesítési e-mail", emailHelp: "Kezdetben a Shopify-ból származik. Másik cím is használható.", languageLabel: "E-mail nyelve" },
   long: {
     "dashboardRecentAlertsDescription": "Az üzlet legutóbb megjelölt termékei úgy vannak rendezve, hogy gyorsan lehessen intézkedni.",

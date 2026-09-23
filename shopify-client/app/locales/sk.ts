@@ -402,7 +402,8 @@ const sk = {
         "modifiedProduct": "Produkt upravený",
         "contactedSupplier": "Kontaktovaný dodávateľ (Čaká na odpoveď)",
         "falsePositive": "Falošná zhoda",
-        "notMyProduct": "Nie je môj produkt"
+        "notMyProduct": "Nie je môj produkt",
+        "other": "Iné"
       },
       "dates": {
         "today": "Dnes",
@@ -445,7 +446,9 @@ const sk = {
           "decisionPrompt": "Vyberte výsledok posúdenia. Môžete doplniť, čo ste overili.",
           "outcomeLabel": "Výsledok posúdenia",
           "chooseOutcome": "Vyberte výsledok",
-          "noteLabel": "Čo ste overili? (voliteľné)"
+          "noteLabel": "Čo ste overili? (voliteľné)",
+          "noteRequiredLabel": "Čo ste overili? (povinné)",
+          "otherNoteRequired": "Pri výsledku Iné doplňte poznámku s vysvetlením."
         },
         "yourProduct": "Váš produkt v Shopify",
         "editInShopify": "Upraviť produkt v Shopify",

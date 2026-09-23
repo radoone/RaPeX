@@ -1,7 +1,8 @@
 import { buildCoreLocale } from "./core-locale";
 
 export default buildCoreLocale({
-  reviewLayout: { possibleMatch: 'Muligt match i Safety Gate', compareHeading: 'Sammenlign produkterne', decisionHeading: 'Registrer din beslutning', chooseOutcome: 'Vælg et resultat', actionNeeded: 'Handling påkrævet', readyToRecord: 'Klar til registrering', noteLabel: 'Hvad kontrollerede du? (valgfrit)' },
+  otherOutcome: 'Andet',
+  reviewLayout: { possibleMatch: 'Muligt match i Safety Gate', compareHeading: 'Sammenlign produkterne', decisionHeading: 'Registrer din beslutning', chooseOutcome: 'Vælg et resultat', actionNeeded: 'Handling påkrævet', readyToRecord: 'Klar til registrering', noteLabel: 'Hvad kontrollerede du? (valgfrit)', noteRequiredLabel: 'Hvad kontrollerede du? (påkrævet)' },
   dashboard: "Dashboard",
   alertsLabel: "Sikkerhedsadvarsler",
   manual: "Manuel kontrol",

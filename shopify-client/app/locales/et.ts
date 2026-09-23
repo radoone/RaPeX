@@ -1,7 +1,8 @@
 import { buildCoreLocale } from "./core-locale";
 
 export default buildCoreLocale({
-  reviewLayout: { possibleMatch: 'Võimalik vaste Safety Gate’is', compareHeading: 'Võrdle tooteid', decisionHeading: 'Salvesta otsus', chooseOutcome: 'Vali tulemus', actionNeeded: 'Vajab tegevust', readyToRecord: 'Valmis salvestamiseks', noteLabel: 'Mida kontrollisite? (valikuline)' }, dashboard: "Töölaud", alertsLabel: "Ohutusteated", manual: "Käsitsi kontroll", settings: "Seaded", language: "Keel", reviewAlerts: "Vaata teateid", search: "Otsi", clear: "Tühjenda", needsReview: "Vajab ülevaatust", safe: "Ohutu", notChecked: "Kontrollimata", alertsTitle: "Ohutusteated", findProduct: "Leia toode",
+  otherOutcome: 'Muu',
+  reviewLayout: { possibleMatch: 'Võimalik vaste Safety Gate’is', compareHeading: 'Võrdle tooteid', decisionHeading: 'Salvesta otsus', chooseOutcome: 'Vali tulemus', actionNeeded: 'Vajab tegevust', readyToRecord: 'Valmis salvestamiseks', noteLabel: 'Mida kontrollisite? (valikuline)', noteRequiredLabel: 'Mida kontrollisite? (kohustuslik)' }, dashboard: "Töölaud", alertsLabel: "Ohutusteated", manual: "Käsitsi kontroll", settings: "Seaded", language: "Keel", reviewAlerts: "Vaata teateid", search: "Otsi", clear: "Tühjenda", needsReview: "Vajab ülevaatust", safe: "Ohutu", notChecked: "Kontrollimata", alertsTitle: "Ohutusteated", findProduct: "Leia toode",
   notifications: { enabledTitle: "Ohutusteavitused e-postiga", enabledDescription: "Saada uued leiud kohe ja leidudeta nädala korral kokkuvõte.", emailLabel: "Teavituste e-post", emailHelp: "Algul võetakse Shopify poest. Võid kasutada teist aadressi.", languageLabel: "E-kirja keel" },
   long: {
     "dashboardRecentAlertsDescription": "Teie poe viimased märgitud tooted on järjestatud nii, et kaupmees saaks kiiresti tegutseda.",

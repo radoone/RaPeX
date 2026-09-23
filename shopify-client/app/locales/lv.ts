@@ -1,7 +1,8 @@
 import { buildCoreLocale } from "./core-locale";
 
 export default buildCoreLocale({
-  reviewLayout: { possibleMatch: 'Iespējama atbilstība Safety Gate', compareHeading: 'Salīdziniet produktus', decisionHeading: 'Reģistrējiet lēmumu', chooseOutcome: 'Izvēlieties rezultātu', actionNeeded: 'Nepieciešama darbība', readyToRecord: 'Gatavs saglabāšanai', noteLabel: 'Ko pārbaudījāt? (neobligāti)' }, dashboard: "Panelis", alertsLabel: "Drošības brīdinājumi", manual: "Manuāla pārbaude", settings: "Iestatījumi", language: "Valoda", reviewAlerts: "Pārskatīt brīdinājumus", search: "Meklēt", clear: "Notīrīt", needsReview: "Nepieciešama pārskatīšana", safe: "Drošs", notChecked: "Nav pārbaudīts", alertsTitle: "Drošības brīdinājumi", findProduct: "Atrast produktu",
+  otherOutcome: 'Cits',
+  reviewLayout: { possibleMatch: 'Iespējama atbilstība Safety Gate', compareHeading: 'Salīdziniet produktus', decisionHeading: 'Reģistrējiet lēmumu', chooseOutcome: 'Izvēlieties rezultātu', actionNeeded: 'Nepieciešama darbība', readyToRecord: 'Gatavs saglabāšanai', noteLabel: 'Ko pārbaudījāt? (neobligāti)', noteRequiredLabel: 'Ko pārbaudījāt? (obligāti)' }, dashboard: "Panelis", alertsLabel: "Drošības brīdinājumi", manual: "Manuāla pārbaude", settings: "Iestatījumi", language: "Valoda", reviewAlerts: "Pārskatīt brīdinājumus", search: "Meklēt", clear: "Notīrīt", needsReview: "Nepieciešama pārskatīšana", safe: "Drošs", notChecked: "Nav pārbaudīts", alertsTitle: "Drošības brīdinājumi", findProduct: "Atrast produktu",
   notifications: { enabledTitle: "Drošības paziņojumi e-pastā", enabledDescription: "Jaunos atradumus nosūtīt uzreiz un nedēļā bez atradumiem – kopsavilkumu.", emailLabel: "Paziņojumu e-pasts", emailHelp: "Sākotnēji iegūts no Shopify. Varat izmantot citu adresi.", languageLabel: "E-pasta valoda" },
   long: {
     "dashboardRecentAlertsDescription": "Jaunākie atzīmētie produkti no jūsu veikala ir sakārtoti tā, lai varētu ātri rīkoties.",

@@ -1,7 +1,8 @@
 import { buildCoreLocale } from "./core-locale";
 
 export default buildCoreLocale({
-  reviewLayout: { possibleMatch: 'Posible coincidencia en Safety Gate', compareHeading: 'Comparar los productos', decisionHeading: 'Registrar la decisión', chooseOutcome: 'Elegir un resultado', actionNeeded: 'Acción necesaria', readyToRecord: 'Listo para registrar', noteLabel: '¿Qué comprobaste? (opcional)' }, dashboard: "Panel", alertsLabel: "Alertas de seguridad", manual: "Comprobación manual", settings: "Configuración", language: "Idioma", reviewAlerts: "Revisar alertas", search: "Buscar", clear: "Borrar", needsReview: "Necesita revisión", safe: "Seguro", notChecked: "No comprobado", alertsTitle: "Alertas de seguridad", findProduct: "Buscar producto",
+  otherOutcome: 'Otro',
+  reviewLayout: { possibleMatch: 'Posible coincidencia en Safety Gate', compareHeading: 'Comparar los productos', decisionHeading: 'Registrar la decisión', chooseOutcome: 'Elegir un resultado', actionNeeded: 'Acción necesaria', readyToRecord: 'Listo para registrar', noteLabel: '¿Qué comprobaste? (opcional)', noteRequiredLabel: '¿Qué comprobaste? (obligatorio)' }, dashboard: "Panel", alertsLabel: "Alertas de seguridad", manual: "Comprobación manual", settings: "Configuración", language: "Idioma", reviewAlerts: "Revisar alertas", search: "Buscar", clear: "Borrar", needsReview: "Necesita revisión", safe: "Seguro", notChecked: "No comprobado", alertsTitle: "Alertas de seguridad", findProduct: "Buscar producto",
   notifications: { enabledTitle: "Alertas de seguridad por correo", enabledDescription: "Envía los nuevos hallazgos de inmediato y un resumen semanal cuando no haya hallazgos.", emailLabel: "Correo de notificaciones", emailHelp: "Se obtiene inicialmente de Shopify. Puedes usar otra dirección.", languageLabel: "Idioma del correo" },
   long: {
     "dashboardRecentAlertsDescription": "Los productos marcados más recientes de tu tienda se ordenan para que puedas actuar rápido.",

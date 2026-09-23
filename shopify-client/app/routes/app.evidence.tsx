@@ -44,6 +44,8 @@ function decisionLabelKey(record: { resolutionType: string | null; status: strin
       return "resolveActions.falsePositive";
     case "not_my_product":
       return "resolveActions.notMyProduct";
+    case "other":
+      return "resolveActions.other";
     default:
       return record.status === "resolved"
         ? "status.resolved"
