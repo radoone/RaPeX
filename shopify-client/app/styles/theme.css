@@ -1683,6 +1683,189 @@ s-clickable s-icon {
 }
 
 /* ===== Alert Detail Modal Enhancements ===== */
+.review-modal {
+  display: grid;
+  gap: 20px;
+  padding: 4px 0 12px;
+  color: var(--text);
+}
+
+.review-modal__summary,
+.review-modal__section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.review-modal__eyebrow,
+.review-modal__card-label {
+  color: var(--text-subdued);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.review-modal__title {
+  margin: 4px 0 6px;
+  font-size: 21px;
+  line-height: 1.25;
+}
+
+.review-modal__intro,
+.review-modal__decision > p,
+.review-modal__score-help {
+  margin: 0;
+  color: var(--text-subdued);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.review-modal__badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.review-modal__section {
+  display: grid;
+  gap: 12px;
+}
+
+.review-modal__section-heading h3 {
+  margin: 0;
+  font-size: 15px;
+}
+
+.review-modal__section-heading span {
+  color: var(--text-subdued);
+  font-size: 12px;
+  text-align: right;
+}
+
+.review-modal__comparison {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.review-modal__product-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--border-subdued);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.review-modal__product-card--safety {
+  border-color: rgba(216, 44, 13, 0.25);
+  background: var(--critical-surface-subdued);
+}
+
+.review-modal__image-button {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 210px;
+  padding: 8px;
+  border: 1px solid var(--border-subdued);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text-subdued);
+  cursor: zoom-in;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.review-modal__image-button:disabled { cursor: default; }
+.review-modal__image-button:focus-visible { outline: var(--focus); }
+
+.review-modal__image-button img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: contain;
+}
+
+.review-modal__card-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.review-modal__card-details span { color: var(--text-subdued); }
+
+.review-modal__points {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.review-modal__final-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  align-items: start;
+  gap: 14px;
+}
+
+.review-modal__points > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 11px;
+  border: 1px solid var(--border-subdued);
+  border-radius: var(--radius);
+  font-size: 12px;
+}
+
+.review-modal__points span { color: var(--text-subdued); text-align: right; }
+.review-modal__reason {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.review-modal__evidence {
+  border-top: 1px solid var(--border-subdued);
+  border-bottom: 1px solid var(--border-subdued);
+  padding: 12px 0;
+}
+
+.review-modal__evidence summary { cursor: pointer; font-weight: 650; }
+.review-modal__evidence-content { display: grid; gap: 12px; padding-top: 14px; }
+
+.review-modal__decision {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid var(--border-subdued);
+  border-radius: var(--radius-lg);
+  background: var(--surface-subdued);
+}
+
+.review-modal__recorded { display: grid; gap: 6px; }
+.review-modal__recorded p { margin: 0; }
+
+@media (max-width: 650px) {
+  .review-modal__summary,
+  .review-modal__section-heading { flex-direction: column; gap: 8px; }
+  .review-modal__badges { justify-content: flex-start; }
+  .review-modal__section-heading span { text-align: left; }
+  .review-modal__comparison,
+  .review-modal__final-row { grid-template-columns: 1fr; }
+  .review-modal__image-button { height: 180px; }
+}
+
 s-modal s-table {
   font-size: 13px;
   width: 100%;
@@ -2759,4 +2942,3 @@ s-modal s-box[background="bg-surface-critical"] s-grid {
   margin-top: auto;
   padding-top: 8px;
 }
-

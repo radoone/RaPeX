@@ -431,6 +431,18 @@ const sk = {
       "analysis": {
         "modalHeading": "Skontrolovať zhodu zo Safety Gate",
         "modalAccessibilityLabel": "Detaily zhody Safety Gate pre {{title}}",
+        "reviewLayout": {
+          "possibleMatch": "Možná zhoda v Safety Gate",
+          "compareHeading": "Porovnajte produkty",
+          "compareHint": "Pred rozhodnutím overte fotografie, značku, model a kategóriu.",
+          "noImage": "Obrázok nie je dostupný",
+          "unnamedRecord": "Záznam Safety Gate",
+          "reviewPointsHeading": "Body na overenie",
+          "fullEvidence": "Úplné podklady Safety Gate ({{count}})",
+          "decisionHeading": "Zaznamenajte rozhodnutie",
+          "outcomeLabel": "Výsledok posúdenia",
+          "chooseOutcome": "Vyberte výsledok"
+        },
         "yourProduct": "Váš produkt v Shopify",
         "editInShopify": "Upraviť produkt v Shopify",
         "openProductImage": "Otvoriť obrázok produktu {{title}}",

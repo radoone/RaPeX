@@ -15,6 +15,18 @@ type CoreLocaleInput = {
   all?: string;
   unknown?: string;
   close?: string;
+  reviewLayout?: Partial<{
+    possibleMatch: string;
+    compareHeading: string;
+    compareHint: string;
+    noImage: string;
+    unnamedRecord: string;
+    reviewPointsHeading: string;
+    fullEvidence: string;
+    decisionHeading: string;
+    outcomeLabel: string;
+    chooseOutcome: string;
+  }>;
   unsafe?: string;
   notifications?: {
     enabledTitle: string;
@@ -500,6 +512,19 @@ export function buildCoreLocale(input: CoreLocaleInput) {
     },
     analysis: {
       modalAccessibilityLabel: "Safety Gate match details for {{title}}",
+      reviewLayout: {
+        possibleMatch: "Possible Safety Gate match",
+        compareHeading: "Compare the products",
+        compareHint: "Check the photos, brand, model and category before deciding.",
+        noImage: "No image available",
+        unnamedRecord: "Safety Gate record",
+        reviewPointsHeading: "Points to review",
+        fullEvidence: "Full Safety Gate evidence ({{count}})",
+        decisionHeading: "Record your decision",
+        outcomeLabel: "Review outcome",
+        chooseOutcome: "Choose an outcome",
+        ...input.reviewLayout,
+      },
       riskSeverity: "Risk severity",
       hazardType: "Hazard type",
       decisionContextTitle: "Recording compliance decisions",

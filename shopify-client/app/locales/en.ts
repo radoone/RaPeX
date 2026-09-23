@@ -431,6 +431,18 @@ const en = {
       "analysis": {
         "modalHeading": "Review Safety Gate match",
         "modalAccessibilityLabel": "Safety Gate match details for {{title}}",
+        "reviewLayout": {
+          "possibleMatch": "Possible Safety Gate match",
+          "compareHeading": "Compare the products",
+          "compareHint": "Check the photos, brand, model and category before deciding.",
+          "noImage": "No image available",
+          "unnamedRecord": "Safety Gate record",
+          "reviewPointsHeading": "Points to review",
+          "fullEvidence": "Full Safety Gate evidence ({{count}})",
+          "decisionHeading": "Record your decision",
+          "outcomeLabel": "Review outcome",
+          "chooseOutcome": "Choose an outcome"
+        },
         "yourProduct": "Your Shopify product",
         "editInShopify": "Edit Product in Shopify",
         "openProductImage": "Open image for {{title}}",
