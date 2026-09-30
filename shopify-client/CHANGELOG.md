@@ -2,6 +2,9 @@
 
 Recent entries below are based on the GitHub history of [`radoone/RaPeX`](https://github.com/radoone/RaPeX).
 
+## 2026.10.01
+- [`fb51017`](https://github.com/radoone/RaPeX/commit/fb51017) Add durable Shopify product deletion cleanup through Firebase Cloud Tasks; preserve alert and decision history.
+
 ## 2026.01.12
 - [`98f79f0`](https://github.com/radoone/RaPeX/commit/98f79f0) Refactor dashboard and manual check UI, upgrade alert actions icons
 - [`84a5e1d`](https://github.com/radoone/RaPeX/commit/84a5e1d) feat: implement i18n, refactor UI, and update Firebase functions

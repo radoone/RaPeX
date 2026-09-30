@@ -1,71 +1,55 @@
-# Safety Gate API Setup Guide
+# Shopify-to-Firebase integration setup
 
-## Overview
-This guide explains how to set up secure authentication between the Shopify app and Firebase Functions for the Safety Gate product safety checking system.
+The Shopify app calls Firebase Functions over HTTPS for product checks, merchant product upserts, catalog audit starts, monitoring runs, and Shopify product lifecycle events. Server-to-server requests use `SAFETY_GATE_API_KEY`. Product create/update/delete webhooks are verified by Shopify in the app first; the app then submits work to Firebase. Firebase Cloud Tasks perform product matching after the Shopify webhook request returns.
 
-## Prerequisites
-- Firebase project with Functions deployed
-- Shopify app with admin access
+## Required configuration
 
-## Step 1: Generate API Key
-Generate a secure API key for authentication:
+Create one high-entropy API key for each environment. Store it in Firebase Secret Manager as the `SAFETY_GATE_API_KEY` Functions secret and in the Shopify app host's Secret Manager under the same runtime variable name. Do not use `firebase functions:config:set`; the deployed functions declare this credential as a Secret Manager secret.
 
-```bash
-# Generate a random 32-character API key
-openssl rand -hex 32
-```
+Set the Firebase secret using the Firebase CLI:
 
-## Step 2: Set Firebase Environment Variable
-Set the API key in your Firebase Functions environment:
-
-```bash
+```sh
 cd firebase/functions
-firebase functions:config:set safety_gate.api_key="YOUR_GENERATED_API_KEY"
+firebase functions:secrets:set SAFETY_GATE_API_KEY --project <project-id>
 ```
 
-Or set it directly in the Firebase Console:
-1. Go to Firebase Console > Functions > Configuration
-2. Add environment variable: `SAFETY_GATE_API_KEY`
-3. Set value to your generated API key
+Configure these server-side Shopify app values in the host's secret/environment configuration:
 
-## Step 3: Set Shopify App Environment Variable
-Create a `.env` file in your Shopify app root directory:
-
-```bash
-# .env
-SAFETY_GATE_API_KEY=your-generated-api-key-here
-FIREBASE_FUNCTIONS_BASE_URL=https://europe-west1-rapex-99a2c.cloudfunctions.net
+```text
+FIREBASE_FUNCTIONS_BASE_URL=https://europe-west1-<project-id>.cloudfunctions.net
+SAFETY_GATE_API_KEY=<same environment-specific secret value>
+SHOPIFY_SESSION_STORAGE=firestore
 ```
 
-## Step 4: Deploy Firebase Functions
-Deploy the updated Firebase Functions:
+The hosted app service account needs access to the private `shopify_sessions` collection. Firebase workers also need Firestore access and `roles/cloudtasks.enqueuer` for task creation. Do not put API keys or Shopify offline access tokens in source control, public task documents, URLs, or browser code.
 
-```bash
-cd firebase/functions
-npm run deploy
+## Shopify events and background work
+
+The app's stable public HTTPS URL must be configured in the Shopify app settings for OAuth and webhook delivery. After a Shopify product webhook definition changes, open/authenticate the app once so `ensureShopifyWebhooksRegistered` registers the current subscriptions. Firebase queue workers then continue independently of the merchant's browser or open Admin page.
+
+- `products/create` and `products/update` enqueue a version-keyed Safety Gate check and require a current monitoring entitlement.
+- `products/delete` enqueues cleanup even if the entitlement has ended. Product and alert records are marked deleted; checks, decisions, and audit history remain.
+- `merchantCatalogAuditTask` performs the initial catalog import in 100-product pages and checks indexed Safety Gate alerts in 500-alert pages.
+- `merchantMonitoringTask` processes per-shop Safety Gate delta runs.
+
+Configure Shopify App Pricing separately in the Partner Dashboard. A production billing check requires `SHOPIFY_PARTNER_ORG_ID`, `SHOPIFY_PARTNER_API_TOKEN`, and `SHOPIFY_APP_GID`, with the Partner token stored as a secret. The current development setup does not have these values or a verified plan, so it cannot prove paid entitlement or an end-to-end paid monitoring run. Do not turn on the local bypass in production.
+
+## Validation
+
+From `firebase/functions/`, run:
+
+```sh
+npm run lint
+npm test
 ```
 
-## Step 5: Restart Shopify App
-Restart your Shopify app to load the new environment variables.
+From `shopify-client/`, run:
 
-## Security Notes
-- Never commit API keys to version control
-- Use different API keys for development and production
-- Regularly rotate API keys
-- Monitor Firebase Functions logs for unauthorized access attempts
-
-## Testing
-Test the authentication by making a request to the API:
-
-```bash
-curl -X POST \
-  -H "Content-Type: application/json" \
-  -H "X-API-Key: YOUR_API_KEY" \
-  -d '{"name":"Test Product","category":"toys","description":"Test description"}' \
-  https://europe-west1-{project-id}.cloudfunctions.net/checkProductSafetyAPI
+```sh
+npx tsc --noEmit
+npm run lint
+npm run build
+npm test
 ```
 
-## Troubleshooting
-- **403 Forbidden**: Check if API key is correctly set in both Firebase and Shopify app
-- **401 Unauthorized**: Verify API key format and ensure it matches exactly
-- **Environment variables not loading**: Restart the Shopify app after setting environment variables
+An unsigned POST to a protected Firebase ingress should return HTTP 401. A full runtime smoke test must use an authenticated dev shop, verify Shopify webhook registration, observe a task through `queued` to `completed` or a retry state, and confirm the merchant's product/check/alert state. A healthy HTTP endpoint or successful build alone does not establish that the queue flow completed.

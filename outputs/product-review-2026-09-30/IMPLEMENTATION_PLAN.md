@@ -1,8 +1,8 @@
 # Implementačný plán — jednoduchý Safety Gate monitoring s predplatným
 
-## Výsledok a zvolené pravidlá
+## Navrhovaný výsledok a pracovné pravidlá
 
-Jeden plán za 9,90 € mesačne za Shopify obchod. Obchodník po inštalácii dostane jeden bezplatný úvodný audit, jeho výsledok zostane dostupný a platený plán zapne nové kontroly, kontrolu zmien produktov a denné porovnávanie s novými Safety Gate alertmi. Bez ďalšieho plateného trialu v prvej verzii. Verejný marketing scan ostáva samostatný, maximálne 100 verejných produktov; jeho použitie nespotrebuje merchant scan.
+Jeden plán za navrhovaných 9,90 € mesačne za Shopify obchod; cena a mena čakajú na potvrdenie v Shopify Partner Dashboarde. Obchodník po inštalácii dostane jeden bezplatný úvodný audit, jeho výsledok zostane dostupný a platený plán zapne nové kontroly, kontrolu zmien produktov a denné porovnávanie s novými Safety Gate alertmi. Bez ďalšieho plateného trialu v prvej verzii. Verejný marketing scan ostáva samostatný, maximálne 100 verejných produktov; jeho použitie nespotrebuje merchant scan.
 
 Rovnaké jadro pre malé obchody, veľké katalógy a agentúry; každá Shopify inštalácia má vlastný nárok, dáta a cenu. Samostatný agentúrny portál, ďalšie plány, automatické unpublishing a právne certifikáty sú mimo tejto implementácie. Zachovať read_products a existujúce Polaris s- komponenty.
 
@@ -64,4 +64,14 @@ Acceptance: nový merchant bez nastavení dosiahne výsledok; v bežnom toku nep
 - Po každom client PR: npx tsc --noEmit, npm run lint, npm run build a autentifikovaný Shopify smoke test príslušných zmien. Firebase: build/lint a regresné testy pre jobs, entitlement, emaily a checkpoints. Pred release kompletný tok install → free scan → výsledok → test plán → denný monitoring → nález → email → rozhodnutie → CSV → koniec predplatného.
 - Existujúce dáta migrovať additive a idempotentne; nezmazať históriu. Zavádzať najprv na dev obchode, potom internom platenom pilote. Žiadna automatická publikácia Partner verzie alebo reálne charge v rámci implementácie bez osobitného release kroku.
 
-Stav k 30. 9. 2026: prvá spoľahlivostná/billing/exportovacia časť je implementovaná lokálne; Firebase scheduled worker a monitoring API sú nasadené do vývojového projektu bez emailových funkcií. Ďalšia implementácia (emaily vynechať): PR 2 — durable stránkovaný úvodný audit katalógu, presné pokrytie verzie produktu, run history a odstránenie limitu 300 bez tvrdenia o úplnej kontrole. Nasleduje PR 4 — waiting-for-supplier decision event a zjednodušenie každodenného dashboard toku. Emaily sú odložené do samostatného PR 3. Runtime test 30. 9. 2026 potvrdil individuálny check, ale obnova katalógu skončila HTTP 500; úspešný build nie je potvrdenie funkčného monitoringu.
+Stav k 30. 9. 2026 je historický; aktuálny výsledok a runtime dôkazy sú v [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md).
+
+## Implementačný stav a rozhodnutia — 1. 10. 2026
+
+- Používateľ rozhodol, že e-mailové úlohy sa zatiaľ nevykonávajú. Existujúci emailový kód a nastavenia v repozitári zostávajú; nové emailové zmeny ani emailové konfiguračné kroky nie sú súčasťou aktívnej implementácie.
+- Firebase scheduled monitoring, počiatočný stránkovaný audit a produktové create/update úlohy používajú Cloud Tasks, takže spracovanie pokračuje po zatvorení Shopify Adminu. To vyžaduje dostupný stabilný app host pre Shopify webhooky a raz zaregistrované webhook subscription.
+- Dňa 1. 10. bola nasadená durable obsluha `products/delete`: zmazanie označí produkt a súvisiace alerty bez mazania kontrol, rozhodnutí a auditu. Staršie alebo rovnaké update verzie produkt neobnovia. Kód Shopify servera registruje delete webhook, no obchod ho musí po nasadení znovu otvoriť/autentifikovať; túto registráciu a prihlásený smoke test sa nepodarilo potvrdiť, pretože pracovný Mac bol zamknutý.
+- Rozhodnutie k cene: 9,90 €/mesiac je návrh v pláne, nie potvrdená live Shopify cena. Kým sa neoverí Partner Dashboard plán a mena a nenastavia sa Partner API údaje (`SHOPIFY_PARTNER_ORG_ID`, `SHOPIFY_PARTNER_API_TOKEN`, `SHOPIFY_APP_GID`), platený entitlement a reálny platený monitoring nie sú overené. V rámci tejto implementácie sa nepublikuje nová Partner verzia ani nevytvára reálny charge.
+- PR 2 je implementovaný pre durable úvodný audit, progress, version-aware coverage, run history a produktové eventy. Katalógová reconciliation pre prípad vynechaného `products/delete` webhooku zostáva nedokončená; preto netvrdiť, že stratený Shopify webhook bude automaticky opravený.
+- PR 4 rozhodnutia `waiting_for_supplier`, nemenný decision audit a zjednodušený merchant tok sú implementované podľa status dokumentu. Marketingový App Store listing, právne/support informácie, analytics, nákladové meranie a smoke testy extensions zostávajú pred release.
+- Nasadené 1. 10.: Firebase `startShopifyProductChangeAPI` a `shopifyProductChangeTask`; Cloud Run `safety-gate-shopify-00006-ptw`. Lokálne kontroly po zmene: Shopify `tsc`, lint, build a 10 testov; Firebase lint a 19 testov. Produkčný HTTP health check pre app root vrátil 200. Reálny authenticated task flow ešte nebol pozorovaný od `queued` po `completed`.

@@ -74,14 +74,14 @@ Imported alert documents store:
 The Shopify app is the merchant-facing UI and workflow layer.
 
 It:
-- listens to Shopify product create/update webhooks
+- listens to Shopify product create/update/delete webhooks and queues durable processing in Firebase
 - allows manual checks from the UI
 - exposes Shopify Admin UI extensions on product details pages
 - allows user-triggered RAPEX delta monitoring runs
 - stores merchant-facing business data in Firestore
 - keeps Prisma/SQLite for local Shopify auth sessions and supports a server-only Firestore session adapter (`SHOPIFY_SESSION_STORAGE=firestore`) for hosted multi-instance runtimes and task workers
 - runs on React Router 7 through `@shopify/shopify-app-react-router`
-- uses Prisma config-based datasource setup through `shopify-client/prisma.config.ts`, but because `shopify-client` currently runs on Prisma `6.19.2`, `shopify-client/prisma/schema.prisma` must still keep an inline SQLite `url` for `prisma generate` compatibility
+- uses Prisma config-based datasource setup through `shopify-client/prisma.config.ts`, but because `shopify-client` currently runs on Prisma `6.19.3`, `shopify-client/prisma/schema.prisma` must still keep an inline SQLite `url` for `prisma generate` compatibility
 
 Main files:
 - `shopify-client/app/services/safety-gate-checker.server.ts`
@@ -97,6 +97,7 @@ Main files:
 - `shopify-client/app/routes/api.product-safety-check.ts`
 - `shopify-client/app/routes/webhooks.products.create.tsx`
 - `shopify-client/app/routes/webhooks.products.update.tsx`
+- `shopify-client/app/routes/webhooks.products.delete.tsx`
 - `shopify-client/extensions/safety-gate-product-block/shopify.extension.toml`
 - `shopify-client/extensions/safety-gate-product-action/shopify.extension.toml`
 
@@ -114,20 +115,19 @@ can be worked on without changing Shopify auth or app routes.
 2. Records are upserted into Firestore collection `rapex_alerts` using official `ec.europa.eu` schema fields (`caseNumber`, `brand`, `name`, `product`, `type_numberOfModel`, `category`, `danger`, `measures`, `description`, `level`, `riskType`, `notifyingCountry`, `countryOfOrigin`, `batchNumber`, `barcode`, `pictures`, `url`) while maintaining legacy aliases (`alert_number`, `product_brand`, `product_category`, etc.) for seamless backward compatibility.
 3. Every alert picture is embedded via Vertex AI multimodal embeddings (`vertexai/multimodalembedding@001`) into `rapex_alert_images`, and text is embedded into `rapex_alerts.vector_text`, allowing vector retrieval over 100% of the entire database without arbitrary date cutoff limits.
 4. The loader stores a checkpoint in `rapex_meta/loader_state` (`last_report_year`, `last_report_week`, `last_alert_date`) so subsequent runs only process newly published weekly reports.
-5. When a Shopify product is created, updated, manually checked, or bulk-checked, the Shopify app sends normalized product data to Firebase endpoint `checkProductSafetyAPI`.
+5. Manual and bulk product checks send normalized product data to Firebase endpoint `checkProductSafetyAPI`. Shopify create/update webhooks enqueue version-keyed background checks through `startShopifyProductChangeAPI`; delete webhooks enqueue lifecycle cleanup through the same authenticated ingress.
 6. The backend compares the product against recent/imported Safety Gate alerts, using AI plus Firestore retrieval/embeddings.
 7. The Shopify app upserts checked Shopify products to Firestore `merchants/{shop}/products` through Firebase endpoint `upsertMerchantProductAPI`.
 8. Merchant-facing alerts/checks/settings are stored in Firestore under tenant documents (`merchants/{shop}` and subcollections `alerts`, `checks`, `activity_logs`, `webhook_errors`).
 9. Shopify Admin product detail extensions show the latest Safety Gate state inline and can trigger a fresh check from the product page.
 10. The public Shopify app configuration currently uses `read_products`; high-risk automation creates merchant alerts and priority-review activity entries, but does not mutate Shopify product status. Do not reintroduce `write_products` unless product status updates are intentionally restored and justified for Shopify App Store review.
-11. Shopify App Pricing is mandatory in the Shopify app UI: pricing, trial days, public/private plans, and test plans are configured in the Shopify Partner Dashboard. Production subscription checks use Partner API `activeSubscription` with `SHOPIFY_PARTNER_ORG_ID`, `SHOPIFY_PARTNER_API_TOKEN`, `SHOPIFY_APP_GID`, and the shop GID fetched from Admin GraphQL. Store the Partner token in the host's secret manager; grant only the required Manage apps permission. `SHOPIFY_BILLING_MODE=legacy` is an explicit compatibility path only for a confirmed legacy app. The app redirects merchants without a verified active plan to `https://admin.shopify.com/store/:store_handle/charges/:app_handle/pricing_plans`; set `SHOPIFY_APP_HANDLE` in both Shopify and Firebase environments. A local bypass is enabled only when `NODE_ENV !== "production"` and `SHOPIFY_BILLING_BYPASS` is not `false`; never rely on it for production or App Store review. Verified entitlement is cached on the merchant root with its plan, verification time, and billing-period end, and scheduled monitoring/webhook checks fail closed when it is absent or expired.
+11. Shopify App Pricing is mandatory in the Shopify app UI: pricing, trial days, public/private plans, and test plans are configured in the Shopify Partner Dashboard. Production subscription checks use Partner API `activeSubscription` with `SHOPIFY_PARTNER_ORG_ID`, `SHOPIFY_PARTNER_API_TOKEN`, `SHOPIFY_APP_GID`, and the shop GID fetched from Admin GraphQL. Store the Partner token in the host's secret manager; grant only the required Manage apps permission. `SHOPIFY_BILLING_MODE=legacy` is an explicit compatibility path only for a confirmed legacy app. The app redirects merchants without a verified active plan to `https://admin.shopify.com/store/:store_handle/charges/:app_handle/pricing_plans`; set `SHOPIFY_APP_HANDLE` in the Shopify app environment and in Firebase only when Firebase email links are enabled. A local bypass is enabled only when `NODE_ENV !== "production"` and `SHOPIFY_BILLING_BYPASS` is not `false`; never rely on it for production or App Store review. Verified entitlement is cached on the merchant root with its plan, verification time, and billing-period end, and scheduled monitoring plus product create/update checks fail closed when it is absent or expired. Product deletion cleanup always runs so stale products do not remain after entitlement ends.
 12. Daily monitoring defaults to "since last check", while manual/user-triggered monitoring can also run against explicit recent windows such as the last 7 days by passing `monitoringMode` / `days` to the Firebase monitoring API.
 13. Monitoring compares only RAPEX records newer than the chosen checkpoint/window in `merchants/{shop}.monitorState`, queries registered tenants directly from `merchants`, then uses vector retrieval over `merchants/{shop}/products` to shortlist likely merchant products before running the Gemini 2.5 Flash matcher. Daily per-shop runs enqueue `merchantMonitoringTask` through Firebase Task Queue and persist run status/progress in `merchants/{shop}/monitoring_runs/{runId}`; retries use a stable run ID and stable check document IDs so replay does not duplicate checks. The Firebase runtime service account needs `roles/cloudtasks.enqueuer` to schedule the queue.
 14. The Shopify dashboard reads only the current shop's latest documents from `merchants/{shop}/monitoring_runs`, shows a bounded status/progress summary, and never exposes backend error text. Missing or unreadable run history must not break the rest of the dashboard.
-15. Shopify product create/update/delete webhooks must enqueue Firebase Cloud Tasks through the authenticated ingress; webhook requests never perform model work inline. Product deletion is lifecycle cleanup, so it must still be queued after billing entitlement ends. Mark the product and its alerts as deleted while retaining all checks, alert decisions, and audit history. Delayed update tasks at or before the deletion's Shopify version must not resurrect the product; a genuinely newer version can reactivate it.
-16. Prisma remains only for Shopify sessions.
-16. Product create/update webhooks are enqueue-only: `startShopifyProductChangeAPI` validates the current entitlement and submits a version-keyed `shopifyProductChangeTask`; the Firebase task upserts the product, runs the Safety Gate check, and stores the versioned check/alert with Cloud Tasks retries. Shopify webhook delivery must return a retryable failure if enqueueing fails. Newly imported or updated Safety Gate alerts trigger merchant delta tasks immediately after the scheduled XML load succeeds. Both workflows must run without an open Shopify Admin page; the Shopify app webhook routes still require a stable, publicly reachable hosted app server.
-15. The first dashboard audit is enqueued to `merchantCatalogAuditTask`. Each retryable task imports one Shopify page (up to 100 products), reuses unchanged Firestore embeddings, batches text embeddings in groups of 50, and advances the cursor only after the whole page is persisted. It then checks all indexed Safety Gate history in 500-alert pages, using the merchant monitoring vector shortlist before Gemini. Run state and safe progress counts live under `merchants/{shop}/initial_catalog_runs/{runId}` and on the merchant root; task payloads never include access tokens. The app mirrors its offline Shopify session into private `shopify_sessions` when starting the job, and uninstall / `shop/redact` delete that copy. Product import does not set `lastCheckedAt` or count as a completed safety check.
+15. Product create/update/delete webhooks enqueue Firebase Cloud Tasks through the authenticated ingress; webhook requests never perform model work inline. Create/update ingress and workers require a current entitlement. Product deletion is lifecycle cleanup and remains enqueueable after entitlement ends: mark the product and its alerts as deleted while retaining checks, decisions, and audit history. Delayed update tasks at or before the recorded deletion version must not resurrect a product; a newer version may reactivate it. These webhook and scheduled flows work while Shopify Admin is closed, provided the app has a stable, publicly reachable host and Shopify has registered the subscriptions. Product create/update tasks use stable version-keyed task IDs. Shopify delivery must receive a retryable error when enqueueing fails. Newly imported or updated Safety Gate alerts trigger merchant delta tasks after the scheduled XML load succeeds. Missing-product catalog reconciliation for a missed delete webhook is not implemented yet.
+16. The first dashboard audit is enqueued to `merchantCatalogAuditTask`. Each retryable task imports one Shopify page (up to 100 products), reuses unchanged Firestore embeddings, batches text embeddings in groups of 50, and advances the cursor only after the whole page is persisted. It then checks all indexed Safety Gate history in 500-alert pages, using the merchant monitoring vector shortlist before Gemini. Run state and safe progress counts live under `merchants/{shop}/initial_catalog_runs/{runId}` and on the merchant root; task payloads never include access tokens. The app mirrors its offline Shopify session into private `shopify_sessions` when starting the job, and uninstall / `shop/redact` delete that copy. Product import does not set `lastCheckedAt` or count as a completed safety check.
+17. Prisma remains only for Shopify sessions.
 
 ## Important product behavior
 
@@ -136,7 +136,7 @@ can be worked on without changing Shopify auth or app routes.
 - Matching is similarity-based, not exact-ID matching only.
 - Similarity can use product title, description, brand, model, category, and sometimes image data.
 - Similarity can use product title, description, brand, model, category, and multiple product images when available.
-- Merchant product checks now persist per-shop Shopify products into `merchant_products` early enough that repeated checks can reuse cached `vector_text` / `vector_image` instead of always re-embedding the product, as long as the same `shop`, `productId`, and `sourceUpdatedAt` are provided.
+- Merchant product checks persist per-shop Shopify products into `merchants/{shop}/products` early enough that repeated checks can reuse cached `vector_text` / `vector_image` instead of always re-embedding the product, as long as the same `shop`, `productId`, and `sourceUpdatedAt` are provided.
 - Recent alert image retrieval now uses `rapex_alert_images` so all alert pictures can be embedded and searched; legacy `rapex_alerts.vector_image` remains a fallback during rollout/backfill.
 - Safety check responses now distinguish between `overallSimilarity` (final review score) and `imageSimilarity` (visual packaging similarity).
 - Candidate alert retrieval and merchant product monitoring use Cosine Distance threshold pre-filtering (`textDistance <= 0.38` and `imageDistance <= 0.35` in `safety-gate-config.ts`) to immediately classify products as safe, bypassing the expensive Gemini LLM matcher when no high-similarity vector matches are found.
@@ -198,7 +198,8 @@ can be worked on without changing Shopify auth or app routes.
 ## Data source
 
 Primary external source:
-- EU Safety Gate data exposed through OpenDataSoft dataset `healthref-europe-rapex-en`
+- European Commission official weekly Safety Gate XML feed for ongoing ingestion
+- OpenDataSoft dataset `healthref-europe-rapex-en` for historical backfill only
 
 Relevant facts:
 - this is the EU rapid alert system for dangerous non-food products
@@ -209,10 +210,12 @@ Relevant facts:
 When explaining or changing behavior, prefer these files as the source of truth:
 
 - ingestion and API surface: `firebase/functions/src/index.ts`
-- loader internals and OpenDataSoft fetch flow: `firebase/functions/src/safety-gate-loader.ts`
+- weekly XML ingestion and loader internals: `firebase/functions/src/safety-gate-weekly-loader.ts` and `firebase/functions/src/safety-gate-loader.ts`
 - recent embedding backfill trigger: `firebase/functions/src/index.ts`
 - HTTP parsing/auth/CORS for product checks: `firebase/functions/src/safety-gate-http.ts`
 - merchant product upsert + delta monitoring: `firebase/functions/src/merchant-monitoring.ts`
+- delayed product-event ordering guard: `firebase/functions/src/product-lifecycle.ts`
+- durable first catalog audit: `firebase/functions/src/merchant-catalog-audit.ts`
 - shared Firebase config/constants: `firebase/functions/src/safety-gate-config.ts`
 - main product matching logic: `firebase/functions/src/safety-gate-checker.ts`
 - alert retrieval and Firestore/RAG lookup: `firebase/functions/src/safety-gate-checker-retrieval.ts`

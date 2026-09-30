@@ -17,13 +17,13 @@ The app is not a generic Safety Gate browser and not a broad compliance rules en
 
 ## What It Does
 
-1. Imports EU Safety Gate alerts from OpenDataSoft into Firestore.
+1. Imports weekly EU Safety Gate alerts from the European Commission XML feed into Firestore; OpenDataSoft is used only for historical backfill.
 2. Stores alert metadata, raw fields, text embeddings, and recent image embeddings.
 3. Checks Shopify products against imported Safety Gate alerts.
 4. Uses product title, description, brand, model, category, and images where available.
 5. Persists merchant product snapshots, check history, settings, and alert states in Firestore.
 6. Shows merchant-facing safety workflows inside Shopify Admin.
-7. Supports automatic webhooks, manual checks, bulk checks, and per-shop delta monitoring.
+7. Supports Shopify product create/update/delete webhooks, manual checks, bulk checks, and per-shop delta monitoring.
 
 ## Repository Layout
 
@@ -39,7 +39,9 @@ rapex/
 │   │   │   ├── safety-gate-checker-retrieval.ts
 │   │   │   ├── safety-gate-checker-results.ts
 │   │   │   ├── safety-gate-checker-media.ts
-│   │   │   └── merchant-monitoring.ts
+│   │   │   ├── merchant-monitoring.ts
+│   │   │   ├── merchant-catalog-audit.ts
+│   │   │   └── product-lifecycle.ts
 │   │   └── prompts/
 │   ├── firebase.json
 │   ├── firestore.indexes.json
@@ -70,8 +72,9 @@ Main responsibilities:
 - scheduled Safety Gate delta import
 - manual import and backfill operations
 - product safety check HTTP API
-- merchant product upsert API
-- per-shop RAPEX delta monitoring
+- authenticated product-change ingress and retryable Cloud Tasks for Shopify product create/update/delete events
+- durable first-catalog audit in 100-product pages and Safety Gate history in 500-alert pages
+- per-shop RAPEX delta monitoring queued independently of an open Shopify Admin page
 - Firestore vector retrieval for text and image similarity
 
 Important files:
@@ -93,12 +96,13 @@ Core backend collections:
 - `rapex_alerts`: imported Safety Gate alert records
 - `rapex_alert_images`: per-image embeddings for recent Safety Gate alerts
 - `rapex_meta/loader_state`: loader checkpoint and run status
-- `merchant_products`: per-shop Shopify product snapshots and vectors
-- `merchant_alerts`: merchant-facing safety alerts
-- `merchant_checks`: check history
-- `merchant_settings`: per-shop settings such as similarity threshold
-- `merchant_webhook_errors`: webhook error logs
-- `merchant_monitor_state`: per-shop monitoring checkpoints
+- `merchants/{shop}/products`: per-shop Shopify product snapshots and vectors
+- `merchants/{shop}/alerts`: merchant-facing safety alerts and review decisions
+- `merchants/{shop}/checks`: check history
+- `merchants/{shop}/activity_logs`: merchant activity history
+- `merchants/{shop}/monitoring_runs`: scheduled monitoring status and progress
+- `merchants/{shop}/initial_catalog_runs`: durable first-catalog audit status and progress
+- `shopify_sessions`: private offline Shopify sessions used by Firebase background catalog workers
 
 ## Shopify App
 
@@ -110,7 +114,7 @@ Main flows:
 - Manual product search and safety check
 - Alert queue with filtering, sorting, detail modal, and bulk actions
 - Settings for per-shop similarity threshold
-- Product create/update webhook checks
+- Product create/update checks and delete cleanup through Shopify webhooks
 - Shopify Admin product detail extensions for inline safety status/actions
 
 Important files:
@@ -142,17 +146,17 @@ The non-English/non-Slovak locale files include both short UI labels and longer 
 
 ## Data Source
 
-Primary external dataset:
+Primary ongoing feed:
 
-- EU Safety Gate / RAPEX OpenDataSoft dataset: `healthref-europe-rapex-en`
-- API: `https://public.opendatasoft.com/api/records/1.0/search`
+- European Commission weekly Safety Gate XML reports at `ec.europa.eu/safety-gate-alerts/api/download/weeklyReport/...`
+- OpenDataSoft dataset `healthref-europe-rapex-en` is retained for historical backfill only.
 
 Safety Gate is the current public name. RAPEX is the older name and still appears in code, Firestore collection names, and operational terminology.
 
 ## Requirements
 
 - Node.js 22 for Firebase Functions
-- Node.js 21+ for the Shopify app
+- Node.js 22+ for the Shopify app
 - npm workspaces
 - Firebase CLI
 - Shopify CLI
@@ -201,6 +205,8 @@ SAFETY_GATE_API_KEY=...
 The optional Firestore Shopify session adapter stores OAuth sessions in the server-only `shopify_sessions` collection. Use it for a hosted app that needs durable sessions across instances or Firebase task workers. The app service account must have Firestore access, and uninstall / `shop/redact` webhooks delete these session documents. Keep Prisma/SQLite for local development unless you explicitly set `SHOPIFY_SESSION_STORAGE=firestore`.
 
 The initial merchant audit is processed by the Firebase `merchantCatalogAuditTask` queue. When a merchant starts it, the Shopify app copies its offline session to the private `shopify_sessions` collection so the worker can page Shopify Admin GraphQL after the app request ends; the task payload contains only the shop and run cursor. Uninstall and `shop/redact` remove that copy. The worker imports every product in 100-item pages, batch-embeds product text, then checks all indexed Safety Gate history in 500-alert pages. A stable public Shopify app URL is still needed for OAuth, webhooks, and Admin redirects, but the queued audit itself does not depend on the app process staying alive.
+
+After Shopify registers the product webhooks, create/update events enqueue version-keyed `shopifyProductChangeTask` work in Firebase. Product deletion uses the same queue for cleanup even after subscription entitlement expires; deletion marks product and alert records while preserving check and decision history. Shopify Admin does not need to stay open for these workers. Missing-product reconciliation for a webhook Shopify never delivered is not implemented yet. The hosted app currently runs as Cloud Run service `safety-gate-shopify` in `europe-west1`; reopen the app after a webhook registration change so `ensureShopifyWebhooksRegistered` can install the current subscriptions.
 
 ## Development Commands
 

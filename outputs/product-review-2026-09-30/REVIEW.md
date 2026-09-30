@@ -161,3 +161,9 @@ V katalógu bol následne spustený individuálny check „The Multi-managed Sno
 ![Uložený výsledok bez nálezu](/Users/radoone/Devel/rapex/outputs/product-review-2026-09-30/screenshots/18-safe-check-persisted.jpg)
 
 Na nezmenenom klientskom kóde prešli `npx tsc --noEmit`, `npm run lint` a `npm run build` pod repo Node 24.14.1. Logy sú uložené pri reporte. Tieto kontroly nepotvrdzujú úspešný Firestore monitoring, billing ani email delivery. Aplikačné opravy v tomto review neboli implementované.
+
+## Implementačný follow-up: 1. 10. 2026
+
+Od pôvodného review pribudli durable Firebase Cloud Task workflows pre denný Safety Gate monitoring, úvodný stránkovaný audit a Shopify produktové zmeny. Dňa 1. 10. bola nasadená aj Shopify `products/delete` trasa a Firebase cleanup worker. Delete označí produkt a jeho alerty ako zmazané a zachová históriu kontrol a rozhodnutí. Opravy monitorovacieho Firestore cursoru a verziovo presné pokrytie produktov sú implementované podľa aktuálneho zdrojového kódu.
+
+Nasadenie bolo overené health checkom Shopify Cloud Run root (HTTP 200), odmietnutím neautorizovaného Firebase ingressu (HTTP 401) a odmietnutím unsigned delete webhook požiadavky (HTTP 400). Unit/build validácie prešli: Shopify 10 testov a Firebase 19 testov. Tieto dôkazy nepotvrdzujú Shopify login, samotnú registráciu delete subscription, spracovanie reálnej merchant task od `queued` po `completed`, aktívny Partner billing, email delivery ani katalógovú reconciliation pri nedoručenom Shopify webhooku. Autentifikovaný UI test sa nepodarilo vykonať, lebo bol Mac zamknutý. Podrobný aktuálny stav je v [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md); pôvodný review vyššie zostáva snapshotom z 30. 9. 2026.

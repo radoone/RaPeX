@@ -4,7 +4,7 @@ This is the merchant-facing Shopify app for the Safety Gate / RAPEX checker. It 
 
 The Firebase backend imports and indexes Safety Gate records. This app turns that backend into Shopify Admin workflows:
 
-- automatic checks on product create/update webhooks
+- background checks for product create/update webhooks and durable cleanup for product deletion
 - manual checks for selected products
 - bulk catalog checks
 - alert queue review, resolve, and dismiss actions
@@ -43,6 +43,7 @@ UI should be clear for merchants who already understand Shopify Admin menus. Pre
 - `app/routes/api.product-safety-check.ts`: product extension check API
 - `app/routes/webhooks.products.create.tsx`: product create webhook
 - `app/routes/webhooks.products.update.tsx`: product update webhook
+- `app/routes/webhooks.products.delete.tsx`: product delete cleanup webhook
 
 ## Components
 
@@ -143,11 +144,13 @@ SAFETY_GATE_API_KEY=...
 SAFETY_GATE_SIMILARITY_THRESHOLD=0
 ```
 
-The app requires a verified Shopify App Pricing subscription before merchants can start paid monitoring. Configure plans, trials, private test plans, and welcome links in the Shopify Partner Dashboard. `SHOPIFY_APP_HANDLE` must match the app handle. Subscription verification uses a Partner API client with the Manage apps permission and the app's GID; keep its token in the hosting secret manager. `SHOPIFY_BILLING_MODE=legacy` is only for an app confirmed to remain on legacy Billing API. The local bypass is for development UI work only and must be disabled in production.
+The app requires a verified Shopify App Pricing subscription before merchants can start paid monitoring. Configure plans, trials, private test plans, and welcome links in the Shopify Partner Dashboard. Production billing remains unverified until the Partner organization ID, API token, app GID, and actual plan are configured and tested. `SHOPIFY_APP_HANDLE` must match the app handle. Subscription verification uses a Partner API client with the Manage apps permission and the app's GID; keep its token in the hosting secret manager. `SHOPIFY_BILLING_MODE=legacy` is only for an app confirmed to remain on legacy Billing API. The local bypass is for development UI work only and must be disabled in production.
 
 Firebase email notifications also need the public app handle set as `SHOPIFY_APP_HANDLE` in the Functions environment so alert emails can open the right Shopify Admin app page.
 
 The first catalog audit is queued to Firebase Cloud Tasks and continues after the Shopify request ends. The app mirrors the shop's offline session into the private Firestore `shopify_sessions` collection when it starts the job; the worker reads products in pages of 100, batches product text embeddings, and checks all indexed Safety Gate history in pages of 500. The task payload contains no Shopify token, and uninstall / `shop/redact` remove the mirrored session. Set `SHOPIFY_ADMIN_API_VERSION` to a supported stable Admin API version (currently `2026-07`) in Functions. The app itself also targets Shopify API `2026-07`.
+
+Product create/update webhooks queue version-keyed Firebase tasks that perform the Safety Gate check away from the Shopify request. Delete webhooks queue lifecycle cleanup even when a subscription entitlement is no longer current; the worker marks the product and alerts as deleted and keeps check and decision history. These flows work with Shopify Admin closed once the app has registered the webhook subscriptions and the Cloud Run app host remains available. Reopen/authenticate the app after changing webhook registration so the server installs the current subscriptions. Automatic catalog reconciliation for a delete webhook Shopify never delivered is still pending.
 
 For local Firebase Admin credentials, use the project-specific setup expected by `app/firestore.server.ts`.
 
@@ -191,6 +194,8 @@ Use the Shopify CLI commands from this directory:
 npm run config:link
 npm run deploy
 ```
+
+`npm run deploy` publishes a Shopify app version. Treat that as a separate release step; routine Cloud Run and Firebase deployments do not publish a Partner Dashboard version or create a charge.
 
 ## Files To Check First
 
