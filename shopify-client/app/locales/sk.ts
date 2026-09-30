@@ -30,7 +30,10 @@ const sk = {
         "liveScan": {
           "eyebrow": "Automatický bezpečnostný audit",
           "heading": "Prebieha bezplatný audit bezpečnosti katalógu...",
-          "description": "Importujeme váš katalóg zo Shopify a porovnávame produkty s 35 000+ záznamami v oficiálnej databáze EU Safety Gate (RAPEX). Výsledky sa okamžite zobrazia nižšie.",
+        "description": "Importujeme váš katalóg zo Shopify a porovnávame produkty s 35 000+ záznamami v oficiálnej databáze EU Safety Gate (RAPEX). Výsledky sa okamžite zobrazia nižšie.",
+        "progress": "Importovaných {{imported}} z {{fetched}} produktov; s {{alerts}} upozorneniami Safety Gate sme zatiaľ porovnali {{scanned}} produktov.",
+        "failedHeading": "Audit katalógu treba zopakovať",
+        "failedDescription": "Audit sa nepodarilo dokončiť a katalóg nebol označený ako úplne skontrolovaný. Spustite kontrolu znova alebo kontaktujte podporu, ak problém pretrváva.",
           "stepImport": "1. Import produktov zo Shopify",
           "stepScan": "2. Porovnávanie s databázou Safety Gate (35 000+ záznamov)",
           "stepAudit": "3. Príprava GPSR audítorskej stopy a súladu",

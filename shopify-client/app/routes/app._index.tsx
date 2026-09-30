@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
+import { randomUUID } from "node:crypto";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
-import { useFetcher, useLoaderData, useNavigation, useNavigate, useRouteError, isRouteErrorResponse } from "react-router";
+import { useFetcher, useLoaderData, useNavigation, useNavigate, useRevalidator, useRouteError, isRouteErrorResponse } from "react-router";
 import { data as json } from "react-router";
 import { useTranslation } from "react-i18next";
 import { useAppBridge } from "@shopify/app-bridge-react";
@@ -11,11 +12,11 @@ import { formatRelativeDate } from "../components";
 import { getBillingStatus, requireActiveBilling } from "../services/billing.server";
 import {
   runMerchantDeltaMonitoring,
-  upsertMerchantProductForMonitoring,
+  startMerchantCatalogAudit,
 } from "../services/safety-gate-checker.server";
-import { shopifyProductToProductData } from "../services/safety-gate-product-data";
 import { checkCoversCurrentProductVersion } from "../services/catalog-coverage.server";
 import { getRecentMonitoringRuns } from "../services/monitoring-runs.server";
+import { mirrorOfflineSessionForCatalogAudit } from "../services/catalog-audit-session.server";
 
 type BulkCheckResults = {
   processed: number;
@@ -44,21 +45,20 @@ type ActionResponse = {
   };
 };
 
-type ShopifyCatalogProduct = {
-  id: string;
-  title: string;
-  handle?: string;
-  updatedAt?: string;
-  [key: string]: unknown;
+type CatalogAuditProgress = {
+  status: string | null;
+  productsFetched: number;
+  productsImported: number;
+  productsScanned: number;
+  alertsScanned: number;
+  failureCode: string | null;
 };
 
-async function fetchCurrentCatalogProductVersions(admin: any, limit = 300): Promise<Array<{ id: string; updatedAt: string | null }>> {
+async function fetchCurrentCatalogProductVersions(admin: any): Promise<Array<{ id: string; updatedAt: string | null }>> {
   const productVersions: Array<{ id: string; updatedAt: string | null }> = [];
   let after: string | null = null;
   let hasNextPage = true;
-
-  while (hasNextPage && productVersions.length < limit) {
-    const first = Math.min(100, limit - productVersions.length);
+  while (hasNextPage) {
     const response: { json: () => Promise<any> } = await admin.graphql(`#graphql
       query dashboardCatalogProductIds($first: Int!, $after: String) {
         products(first: $first, after: $after) {
@@ -66,168 +66,20 @@ async function fetchCurrentCatalogProductVersions(admin: any, limit = 300): Prom
           nodes { id updatedAt }
         }
       }
-    `, { variables: { first, after } });
+    `, { variables: { first: 250, after } });
     const payload = await response.json();
+    if (payload.errors?.length) throw new Error(payload.errors[0]?.message || "Could not load Shopify catalog versions");
     const connection = payload.data?.products;
-    productVersions.push(...(connection?.nodes || []).map((product: { id: string; updatedAt?: string | null }) => ({
+    const nodes = (connection?.nodes || []) as Array<{ id: string; updatedAt?: string | null }>;
+    productVersions.push(...nodes.map((product) => ({
       id: product.id.replace("gid://shopify/Product/", ""),
       updatedAt: product.updatedAt || null,
     })));
-    hasNextPage = Boolean(connection?.pageInfo?.hasNextPage) && productVersions.length < limit;
+    hasNextPage = Boolean(connection?.pageInfo?.hasNextPage);
     after = connection?.pageInfo?.endCursor || null;
+    if (hasNextPage && !after) throw new Error("Shopify catalog page did not include its next cursor");
   }
-
   return productVersions;
-}
-
-async function fetchCurrentCatalogProducts(admin: any, limit = 300): Promise<ShopifyCatalogProduct[]> {
-  const products: ShopifyCatalogProduct[] = [];
-  let after: string | null = null;
-  let hasNextPage = true;
-
-  while (hasNextPage && products.length < limit) {
-    const first = Math.min(100, limit - products.length);
-    const response: { json: () => Promise<any> } = await admin.graphql(`#graphql
-      query monitorCatalogProducts($first: Int!, $after: String) {
-        products(first: $first, after: $after, sortKey: UPDATED_AT, reverse: true) {
-          pageInfo {
-            hasNextPage
-            endCursor
-          }
-          edges {
-            node {
-              id
-              title
-              handle
-              vendor
-              productType
-              tags
-              description
-              descriptionHtml
-              featuredImage { url altText }
-              images(first: 4) { nodes { url altText } }
-              variants(first: 5) { edges { node { id title image { url altText } } } }
-              updatedAt
-              createdAt
-            }
-          }
-        }
-      }
-    `, { variables: { first, after } });
-    const payload: any = await response.json();
-    if (payload.errors?.length) {
-      throw new Error(payload.errors[0]?.message || "Could not load Shopify catalog");
-    }
-
-    const connection: any = payload.data?.products;
-    const nodes = connection?.edges?.map((edge: any) => edge.node).filter(Boolean) || [];
-    products.push(...nodes);
-    hasNextPage = Boolean(connection?.pageInfo?.hasNextPage) && products.length < limit;
-    after = connection?.pageInfo?.endCursor || null;
-  }
-
-  return products;
-}
-
-async function importCurrentCatalogForMonitoring(params: {
-  admin: any;
-  shop: string;
-  limit?: number;
-}): Promise<{ imported: number; failed: number; totalFetched: number }> {
-  const products = await fetchCurrentCatalogProducts(params.admin, params.limit);
-  let imported = 0;
-  let failed = 0;
-
-  for (const product of products) {
-    try {
-      const productId = product.id.replace("gid://shopify/Product/", "");
-      const productData = shopifyProductToProductData(product);
-
-      await upsertMerchantProductForMonitoring({
-        shop: params.shop,
-        productId,
-        productTitle: product.title,
-        productHandle: product.handle,
-        product: productData,
-        sourceUpdatedAt: product.updatedAt,
-      });
-
-      imported += 1;
-    } catch (error) {
-      failed += 1;
-      console.error("Failed importing product for Safety Gate monitoring", {
-        shop: params.shop,
-        productId: product.id,
-        error,
-      });
-    }
-  }
-
-  return { imported, failed, totalFetched: products.length };
-}
-
-async function runInitialCatalogScanInBackground(params: { admin: any; shop: string }) {
-  try {
-    const importedCatalog = await importCurrentCatalogForMonitoring({
-      admin: params.admin,
-      shop: params.shop,
-      limit: 300,
-    });
-
-    if (importedCatalog.totalFetched === 0 || importedCatalog.imported === 0) {
-      throw new Error(
-        importedCatalog.totalFetched === 0
-          ? "No Shopify products were returned for the initial catalog scan."
-          : `Could not import any of the ${importedCatalog.totalFetched} Shopify products for the initial catalog scan.`,
-      );
-    }
-
-    const monitoring = await runMerchantDeltaMonitoring(params.shop, {
-      forceFullScan: true,
-      limit: 300,
-      monitoringMode: "full-lookback",
-    });
-
-    await db.safetySetting.upsert({
-      where: { shop: params.shop },
-      update: {
-        freeScanUsed: true,
-        freeScanCompletedAt: new Date(),
-        initialScanStatus: "completed",
-      },
-      create: {
-        shop: params.shop,
-        similarityThreshold: 70,
-        freeScanUsed: true,
-        freeScanCompletedAt: new Date(),
-        initialScanStatus: "completed",
-      },
-    });
-
-    await db.activityLog.create({
-      data: {
-        shop: params.shop,
-        type: "bulk",
-        action: "check",
-        details: `Imported ${importedCatalog.imported} current catalog products for monitoring and checked them against recent Safety Gate alerts.`,
-      },
-    });
-
-    console.info("Initial Safety Gate catalog scan completed", {
-      shop: params.shop,
-      imported: importedCatalog.imported,
-      importFailed: importedCatalog.failed,
-      productsScanned: monitoring.productsScanned,
-      alertsCreated: monitoring.alertsCreated,
-    });
-  } catch (error) {
-    console.error("Initial Safety Gate catalog scan failed", { shop: params.shop, error });
-    await db.safetySetting.upsert({
-      where: { shop: params.shop },
-      update: { initialScanStatus: "failed" },
-      create: { shop: params.shop, similarityThreshold: 70, initialScanStatus: "failed" },
-    });
-  }
 }
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -483,6 +335,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     });
     if (billingRedirect) return billingRedirect as never;
     const currentBillingStatus = await getBillingStatus(billing, session.shop, admin);
+    const runId = randomUUID();
 
     const merchantRef = firestore.collection("merchants").doc(encodeURIComponent(session.shop));
     const reserved = await firestore.runTransaction(async (transaction) => {
@@ -503,6 +356,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         similarityThreshold: Number(settings.similarityThreshold || 70),
         initialScanStatus: "scanning",
         initialScanStartedAt: new Date(),
+        initialScanRunId: runId,
+        initialScanProductsFetched: 0,
+        initialScanProductsImported: 0,
+        initialScanProductsScanned: 0,
+        initialScanAlertsScanned: 0,
+        initialScanFailureCode: null,
         updatedAt: new Date(),
       }, { merge: true });
       return true;
@@ -511,10 +370,19 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       return json({ success: false, error: "A catalog check is already running or the free initial scan has already been used." }, { status: 409 });
     }
 
-    // The scan can involve embeddings and model matching. Return before the
-    // Cloudflare tunnel deadline, while retaining its durable merchant state.
-    void runInitialCatalogScanInBackground({ admin, shop: session.shop });
-    return json({ success: true, message: "Catalog safety scan started" });
+    try {
+      await mirrorOfflineSessionForCatalogAudit(session.shop);
+      await startMerchantCatalogAudit(session.shop, runId);
+      return json({ success: true, message: "Catalog safety scan started" });
+    } catch (error) {
+      console.error("Could not queue initial Safety Gate catalog scan", { shop: session.shop, error });
+      await firestore.collection("merchants").doc(encodeURIComponent(session.shop)).set({
+        initialScanStatus: "failed",
+        initialScanFailureCode: "enqueue_failed",
+        updatedAt: new Date(),
+      }, { merge: true });
+      return json({ success: false, error: "Could not start the catalog check. Please try again." }, { status: 503 });
+    }
   }
 
   if (actionType === "bulkCheck") {
@@ -623,7 +491,9 @@ export function ErrorBoundary() {
 export default function Index() {
   const { stats, recentAlerts, settings, billingStatus, recentActivities, lastMonitoringAt, monitorState, recentMonitoringRuns } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<ActionResponse>();
+  const progressFetcher = useFetcher<CatalogAuditProgress>();
   const navigation = useNavigation();
+  const revalidator = useRevalidator();
   const shopify = useAppBridge();
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -699,6 +569,8 @@ export default function Index() {
     value ? value.replace(/\s*\/\s*other\b/gi, "").trim() : "";
 
   const hasAutoStartedScan = useRef(false);
+  const refreshedAfterAudit = useRef(false);
+  const loadAuditProgress = progressFetcher.load;
   useEffect(() => {
     // Start first-run protection without asking the merchant to discover a
     // secondary dashboard action. Paid stores may retry an interrupted first
@@ -732,7 +604,30 @@ export default function Index() {
     fetcher,
   ]);
 
-  const isScanning = isSubmitting || fetcher.state !== "idle" || settings?.initialScanStatus === "scanning";
+  useEffect(() => {
+    const observedStatus = progressFetcher.data?.status;
+    if (observedStatus === "completed" || observedStatus === "failed") return;
+    const shouldPoll = observedStatus === "scanning" ||
+      (!observedStatus && (settings?.initialScanStatus === "scanning" || fetcher.data?.success));
+    if (!shouldPoll) return;
+    loadAuditProgress("/api/catalog-audit-status");
+    const timer = window.setInterval(() => loadAuditProgress("/api/catalog-audit-status"), 7000);
+    return () => window.clearInterval(timer);
+  }, [settings?.initialScanStatus, progressFetcher.data?.status, fetcher.data?.success, loadAuditProgress]);
+
+  const scanStatus = progressFetcher.data?.status || settings?.initialScanStatus;
+  useEffect(() => {
+    if (scanStatus !== "completed") {
+      refreshedAfterAudit.current = false;
+      return;
+    }
+    if (!refreshedAfterAudit.current && settings?.initialScanStatus === "scanning") {
+      refreshedAfterAudit.current = true;
+      revalidator.revalidate();
+    }
+  }, [scanStatus, settings?.initialScanStatus, revalidator]);
+
+  const isScanning = isSubmitting || fetcher.state !== "idle" || scanStatus === "scanning";
 
   useEffect(() => {
     if (fetcher.data) {
@@ -794,6 +689,16 @@ export default function Index() {
             <p style={{ margin: "6px 0 0", fontSize: "13px", color: "var(--text-subdued)", maxWidth: "75ch" }}>
               {t("dashboard.liveScan.description")}
             </p>
+            {progressFetcher.data ? (
+              <p style={{ margin: "8px 0 0", fontSize: "13px", color: "var(--text-subdued)" }}>
+                {t("dashboard.liveScan.progress", {
+                  imported: progressFetcher.data.productsImported,
+                  fetched: progressFetcher.data.productsFetched,
+                  scanned: progressFetcher.data.productsScanned,
+                  alerts: progressFetcher.data.alertsScanned,
+                })}
+              </p>
+            ) : null}
             <div className="live-scan-steps">
               <div className="live-scan-step live-scan-step--done">
                 <span className="live-scan-step-icon live-scan-step-icon--done">✓</span>
@@ -814,6 +719,14 @@ export default function Index() {
         )}
 
         {!isScanning ? <>
+        {scanStatus === "failed" && (
+          <s-banner tone="warning" heading={t("dashboard.liveScan.failedHeading")}>
+            <s-text>{t("dashboard.liveScan.failedDescription")}</s-text>
+            <div style={{ marginTop: "var(--s-space-200)" }}>
+              <s-button variant="secondary" onClick={() => window.location.reload()}>{t("actions.retry")}</s-button>
+            </div>
+          </s-banner>
+        )}
         {billingStatus && !billingStatus.developmentBypass && !billingStatus.billingVerified && (
           <s-banner tone="warning" heading={t("billing.statusUnverified")}>
             <s-text>{t("billing.verificationError")}</s-text>

@@ -1,6 +1,7 @@
 import type { ActionFunctionArgs } from "react-router";
 import { authenticate, sessionStorage } from "../shopify.server";
 import { purgeMerchantShopData } from "../merchant-db.server";
+import { deleteCatalogAuditSessions } from "../services/catalog-audit-session.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const { shop, topic } = await authenticate.webhook(request);
@@ -13,6 +14,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   await sessionStorage.deleteSessions(sessions.map((item) => item.id));
 
   try {
+    await deleteCatalogAuditSessions(shop);
     await purgeMerchantShopData(shop);
   } catch (error) {
     console.error("Failed to purge merchant data on uninstall", { shop, error });

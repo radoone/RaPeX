@@ -1,6 +1,7 @@
 import type { ActionFunctionArgs } from "react-router";
 import { authenticate, sessionStorage } from "../shopify.server";
 import { purgeMerchantShopData } from "../merchant-db.server";
+import { deleteCatalogAuditSessions } from "../services/catalog-audit-session.server";
 
 /**
  * GDPR webhook: shop/redact
@@ -25,7 +26,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     // Delete sessions for this shop
     const shopSessions = await sessionStorage.findSessionsByShop(shop);
     await sessionStorage.deleteSessions(shopSessions.map((item) => item.id));
-    console.log(`Deleted ${shopSessions.length} sessions`);
+    const workerSessions = await deleteCatalogAuditSessions(shop);
+    console.log(`Deleted ${shopSessions.length + workerSessions} sessions`);
 
     console.log(`✅ Successfully deleted all data for shop: ${shop}`);
 

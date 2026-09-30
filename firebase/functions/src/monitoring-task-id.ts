@@ -8,3 +8,8 @@ export function monitoringTaskId(shop: string, runId: string): string {
 export function scheduledMonitoringRunId(date: Date): string {
   return `scheduled-${date.toISOString().slice(0, 10)}`;
 }
+
+export function merchantCatalogAuditTaskId(shop: string, runId: string, pageId: string): string {
+  const digest = createHash("sha256").update(`${shop}:${runId}:${pageId}`).digest("hex");
+  return `merchant-catalog-audit-${digest}`;
+}

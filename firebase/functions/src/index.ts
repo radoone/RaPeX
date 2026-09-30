@@ -26,6 +26,10 @@ import {
   runSafetyGateLoader,
 } from "./safety-gate-loader.js";
 import { runSafetyGateWeeklyLoaderJob } from "./safety-gate-weekly-loader.js";
+import {
+  handleMerchantCatalogAuditTask,
+  handleStartMerchantCatalogAuditRequest,
+} from "./merchant-catalog-audit.js";
 
 function requireOperationsKey(req: { get(name: string): string | undefined }, res: { status(code: number): { json(payload: unknown): void } }): boolean {
   const expected = (process.env.SAFETY_GATE_API_KEY || "").trim();
@@ -229,6 +233,37 @@ export const runMerchantDeltaMonitoringAPI = onRequest(
     secrets: ["GOOGLE_API_KEY", "SAFETY_GATE_API_KEY"],
   },
   handleRunMerchantDeltaMonitoringRequest,
+);
+
+export const startMerchantCatalogAuditAPI = onRequest(
+  {
+    region: "europe-west1",
+    memory: "256MiB",
+    timeoutSeconds: 60,
+    secrets: ["SAFETY_GATE_API_KEY"],
+  },
+  handleStartMerchantCatalogAuditRequest,
+);
+
+export const merchantCatalogAuditTask = onTaskDispatched(
+  {
+    region: "europe-west1",
+    memory: "1GiB",
+    timeoutSeconds: 1800,
+    maxInstances: 10,
+    rateLimits: { maxConcurrentDispatches: 4, maxDispatchesPerSecond: 1 },
+    retryConfig: {
+      maxAttempts: 8,
+      maxRetrySeconds: 24 * 60 * 60,
+      minBackoffSeconds: 60,
+      maxBackoffSeconds: 600,
+      maxDoublings: 4,
+    },
+    secrets: ["GOOGLE_API_KEY"],
+  },
+  async (request) => {
+    await handleMerchantCatalogAuditTask(request.data, request.context.retryCount);
+  },
 );
 
 export const dailyMerchantDeltaMonitoring = onSchedule(

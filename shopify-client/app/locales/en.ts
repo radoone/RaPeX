@@ -30,7 +30,10 @@ const en = {
         "liveScan": {
           "eyebrow": "Automated Safety Audit",
           "heading": "Free catalog safety audit in progress...",
-          "description": "Importing your catalog from Shopify and scanning products against 35,000+ records in the official EU Safety Gate (RAPEX) database. Results will appear below momentarily.",
+        "description": "Importing your catalog from Shopify and scanning products against 35,000+ records in the official EU Safety Gate (RAPEX) database. Results will appear below momentarily.",
+        "progress": "Imported {{imported}} of {{fetched}} products; compared {{scanned}} products with {{alerts}} Safety Gate alerts so far.",
+        "failedHeading": "Catalog audit needs another try",
+        "failedDescription": "We could not finish this audit. Your catalog was not marked as fully checked. Start the scan again or contact support if the problem continues.",
           "stepImport": "1. Import products from Shopify",
           "stepScan": "2. Compare with Safety Gate database (35,000+ records)",
           "stepAudit": "3. Prepare GPSR audit trail and compliance status",

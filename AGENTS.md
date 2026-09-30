@@ -29,12 +29,14 @@ The Firebase Functions project does four jobs:
 - exposes an API that checks a product against those alerts
 - upserts merchant Shopify products (including vectors) to Firestore
 - runs per-shop RAPEX delta monitoring based on checkpoints
+- runs first-time full-catalog imports and all-history Safety Gate audits through durable Cloud Tasks
 
 Main files:
 - `firebase/functions/src/index.ts`
 - `firebase/functions/src/safety-gate-loader.ts`
 - `firebase/functions/src/safety-gate-http.ts`
 - `firebase/functions/src/merchant-monitoring.ts`
+- `firebase/functions/src/merchant-catalog-audit.ts`
 - `firebase/functions/src/safety-gate-config.ts`
 - `firebase/functions/src/safety-gate-checker.ts`
 - `firebase/functions/src/safety-gate-checker-retrieval.ts`
@@ -123,6 +125,7 @@ can be worked on without changing Shopify auth or app routes.
 13. Monitoring compares only RAPEX records newer than the chosen checkpoint/window in `merchants/{shop}.monitorState`, queries registered tenants directly from `merchants`, then uses vector retrieval over `merchants/{shop}/products` to shortlist likely merchant products before running the Gemini 2.5 Flash matcher. Daily per-shop runs enqueue `merchantMonitoringTask` through Firebase Task Queue and persist run status/progress in `merchants/{shop}/monitoring_runs/{runId}`; retries use a stable run ID and stable check document IDs so replay does not duplicate checks. The Firebase runtime service account needs `roles/cloudtasks.enqueuer` to schedule the queue.
 14. The Shopify dashboard reads only the current shop's latest documents from `merchants/{shop}/monitoring_runs`, shows a bounded status/progress summary, and never exposes backend error text. Missing or unreadable run history must not break the rest of the dashboard.
 14. Prisma remains only for Shopify sessions.
+15. The first dashboard audit is enqueued to `merchantCatalogAuditTask`. Each retryable task imports one Shopify page (up to 100 products), reuses unchanged Firestore embeddings, batches text embeddings in groups of 50, and advances the cursor only after the whole page is persisted. It then checks all indexed Safety Gate history in 500-alert pages, using the merchant monitoring vector shortlist before Gemini. Run state and safe progress counts live under `merchants/{shop}/initial_catalog_runs/{runId}` and on the merchant root; task payloads never include access tokens. The app mirrors its offline Shopify session into private `shopify_sessions` when starting the job, and uninstall / `shop/redact` delete that copy. Product import does not set `lastCheckedAt` or count as a completed safety check.
 
 ## Important product behavior
 
@@ -159,6 +162,7 @@ can be worked on without changing Shopify auth or app routes.
 - Merchant safety email is sent through Brevo from Firebase only. A newly created `merchants/{shop}/alerts/{alertId}` document triggers one immediate email; updates do not resend it. A Monday 08:00 `Europe/Bratislava` job sends an all-clear summary only when the preceding seven-day window contains no new merchant alert.
 - Merchant email preferences live on `merchants/{shop}` as `emailNotifications`, `immediateAlertEmails`, `weeklySummaryEmails`, `notificationEmail`, `notificationLanguage`, and `notificationEmailSource`. Legacy `emailNotifications` migrates to both new preferences. They default to enabled with the Shopify contact email when the authenticated app can retrieve it, and remain editable/disableable in Settings. Delivery lifecycle is stored in `merchants/{shop}/email_notifications`; Brevo delivery webhooks, authenticated with a bearer secret, are the only source that marks an email delivered in the audit trail. Immediate and weekly email sends require a current cached monitoring entitlement.
 - On first dashboard visit, begin the catalog import and full Safety Gate monitoring automatically when coverage is incomplete. While it runs, show only the progress state; after it completes, show either the action queue or an all-clear status. Do not mark an initial scan as consumed when Shopify returns zero catalog products, so a later visit can retry it.
+- The first catalog audit runs as a Firebase Cloud Task rather than fire-and-forget work in the Shopify request process. Keep its import and alert cursors durable and idempotent, show progress from Firestore, and mark the free scan consumed only after a non-empty catalog has completed all-history monitoring. If Shopify returns zero products, leave the free scan available for a later retry.
 - The marketing-site free scan accepts only public `*.myshopify.com` domains through the Firebase Hosting `/api/free-scan` rewrite. `freeScanRequestAPI` requires a server-verified Cloudflare Turnstile token, rate limits by IP/domain/email plus a global daily budget, and sends a single-use 30-minute email confirmation link through Brevo. A confirmed request is preflighted for a nonempty public JSON catalog before its Firestore `free_scan_requests` status changes to `queued`; `processFreeScanRequestJob` triggers on that status update, scans up to 100 public products using the protected public-store scanner, then submits a report through Brevo. The page polls status while open, but email delivery is the primary result path. Never enable Cloudflare's test keys in production, and do not claim a scan succeeded before the worker finishes or Brevo accepts the report. This one-off free scan is separate from the installed app's ongoing monitoring and Monday all-clear emails.
 
 ## Technical Standards & Lessons Learned

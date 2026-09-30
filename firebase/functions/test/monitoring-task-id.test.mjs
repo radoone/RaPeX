@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { monitoringTaskId, scheduledMonitoringRunId } from "../lib/monitoring-task-id.js";
+import { merchantCatalogAuditTaskId, monitoringTaskId, scheduledMonitoringRunId } from "../lib/monitoring-task-id.js";
 
 test("scheduled run IDs are stable for the same UTC calendar day", () => {
   assert.equal(
@@ -20,4 +20,15 @@ test("task IDs deduplicate one shop and run without exposing the shop name", () 
   assert.notEqual(monitoringTaskId("another-shop.myshopify.com", runId), id);
   assert.notEqual(monitoringTaskId(shop, "scheduled-2026-10-01"), id);
   assert.equal(id.includes(shop), false);
+});
+
+test("catalog audit page task IDs are stable, page-specific, and hide the shop name", () => {
+  const shop = "merchant-example.myshopify.com";
+  const runId = "audit-run-12345678";
+  const pageZero = merchantCatalogAuditTaskId(shop, runId, "import-0");
+  assert.match(pageZero, /^merchant-catalog-audit-[a-f0-9]{64}$/);
+  assert.equal(merchantCatalogAuditTaskId(shop, runId, "import-0"), pageZero);
+  assert.notEqual(merchantCatalogAuditTaskId(shop, runId, "import-1"), pageZero);
+  assert.notEqual(merchantCatalogAuditTaskId(shop, runId, "monitor-0"), pageZero);
+  assert.equal(pageZero.includes(shop), false);
 });

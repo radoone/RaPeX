@@ -137,6 +137,7 @@ SHOPIFY_PARTNER_ORG_ID=...
 SHOPIFY_PARTNER_API_TOKEN=...
 SHOPIFY_APP_GID=gid://shopify/App/...
 SHOPIFY_PARTNER_API_VERSION=2026-07
+SHOPIFY_ADMIN_API_VERSION=2026-07
 FIREBASE_FUNCTIONS_BASE_URL=https://europe-west1-<project-id>.cloudfunctions.net
 SAFETY_GATE_API_KEY=...
 SAFETY_GATE_SIMILARITY_THRESHOLD=0
@@ -145,6 +146,8 @@ SAFETY_GATE_SIMILARITY_THRESHOLD=0
 The app requires a verified Shopify App Pricing subscription before merchants can start paid monitoring. Configure plans, trials, private test plans, and welcome links in the Shopify Partner Dashboard. `SHOPIFY_APP_HANDLE` must match the app handle. Subscription verification uses a Partner API client with the Manage apps permission and the app's GID; keep its token in the hosting secret manager. `SHOPIFY_BILLING_MODE=legacy` is only for an app confirmed to remain on legacy Billing API. The local bypass is for development UI work only and must be disabled in production.
 
 Firebase email notifications also need the public app handle set as `SHOPIFY_APP_HANDLE` in the Functions environment so alert emails can open the right Shopify Admin app page.
+
+The first catalog audit is queued to Firebase Cloud Tasks and continues after the Shopify request ends. The app mirrors the shop's offline session into the private Firestore `shopify_sessions` collection when it starts the job; the worker reads products in pages of 100, batches product text embeddings, and checks all indexed Safety Gate history in pages of 500. The task payload contains no Shopify token, and uninstall / `shop/redact` remove the mirrored session. Set `SHOPIFY_ADMIN_API_VERSION` to a supported stable Admin API version (currently `2026-07`) in Functions. The app itself also targets Shopify API `2026-07`.
 
 For local Firebase Admin credentials, use the project-specific setup expected by `app/firestore.server.ts`.
 

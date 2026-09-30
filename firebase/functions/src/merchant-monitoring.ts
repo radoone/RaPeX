@@ -11,7 +11,7 @@ import type { ProductInput } from "./safety-gate-checker.schemas.js";
 import { normalizePictures } from "./safety-gate-checker-media.js";
 import type { NormalizedAlert } from "./safety-gate-checker.types.js";
 import { ALERT_LOOKBACK_DAYS } from "./safety-gate-checker-retrieval.js";
-import { buildEmbeddingText, embedImage, embedText } from "./safety-gate-embeddings.js";
+import { buildEmbeddingText, embedImage, embedText, embedTexts } from "./safety-gate-embeddings.js";
 import type {
   MerchantMonitorStateDocument,
   MerchantProductUpsertInput,
@@ -83,10 +83,10 @@ export type MerchantMonitoringTaskPayload = {
   triggerMode: "scheduled";
 };
 
-function monitoringRunRef(shop: string, runId: string) {
+function monitoringRunRef(shop: string, runId: string, collection = MONITORING_RUNS) {
   return db.collection(FIRESTORE_COLLECTIONS.merchants)
     .doc(encodeURIComponent(shop))
-    .collection(MONITORING_RUNS)
+    .collection(collection)
     .doc(runId);
 }
 
@@ -196,11 +196,22 @@ function coercePositiveInteger(value: unknown): number | undefined {
 function resolveMonitoringWindow(params: {
   currentState: MerchantMonitorStateDocument | null;
   forceFullScan?: boolean;
+  allHistory?: boolean;
   days?: number;
 }): MerchantMonitoringWindow {
   const now = new Date();
   const fullLookbackDate = new Date(now);
   fullLookbackDate.setDate(fullLookbackDate.getDate() - ALERT_LOOKBACK_DAYS);
+
+  if (params.allHistory) {
+    return {
+      mode: "bootstrap",
+      strategy: "full-lookback",
+      days: null,
+      checkpointDate: new Date("1970-01-01T00:00:00.000Z"),
+      checkpointRecordTimestamp: null,
+    };
+  }
 
   if (params.forceFullScan) {
     return {
@@ -567,7 +578,6 @@ export async function upsertMerchantProduct(
     description: input.product.description,
     createdAt: FieldValue.serverTimestamp(),
     updatedAt: FieldValue.serverTimestamp(),
-    lastCheckedAt: FieldValue.serverTimestamp(),
     ...(input.productHandle ? { productHandle: input.productHandle } : {}),
     ...(primaryImage ? { imageUrl: primaryImage } : {}),
     ...(input.product.imageUrls?.length ? { imageUrls: input.product.imageUrls } : {}),
@@ -597,13 +607,109 @@ export async function upsertMerchantProduct(
   };
 }
 
+/** Import a Shopify catalog page with batched text embeddings and bounded image work. */
+export async function upsertMerchantProductsBatch(
+  inputs: MerchantProductUpsertInput[],
+): Promise<{ imported: number; embedded: number }> {
+  if (!inputs.length) return { imported: 0, embedded: 0 };
+
+  const prepared = inputs.map((input) => {
+    const productId = String(input.productId || "").trim();
+    const shop = String(input.shop || "").trim();
+    if (!shop || !productId) throw new Error("shop and productId are required");
+    return {
+      input,
+      shop,
+      productId,
+      text: buildEmbeddingText({
+        brand: input.product.brand,
+        model: input.product.model,
+        category: input.product.category,
+        title: input.product.name,
+        description: input.product.description,
+      }),
+      image: input.product.imageUrl || input.product.imageUrls?.[0],
+    };
+  });
+  const shop = prepared[0].shop;
+  if (prepared.some((item) => item.shop !== shop)) throw new Error("A product batch must belong to one shop");
+
+  const merchantRef = db.collection(FIRESTORE_COLLECTIONS.merchants).doc(encodeURIComponent(shop));
+  const existingSnapshots = await Promise.all(prepared.map((item) => merchantRef
+    .collection(FIRESTORE_COLLECTIONS.subProducts)
+    .doc(encodeURIComponent(item.productId))
+    .get()));
+  const reusable = prepared.map((item, index) => {
+    const existing = existingSnapshots[index];
+    const existingData = (existing.data() || {}) as Record<string, unknown>;
+    return existing.exists &&
+      typeof existingData.sourceUpdatedAt === "string" &&
+      Boolean(item.input.sourceUpdatedAt) &&
+      existingData.sourceUpdatedAt === item.input.sourceUpdatedAt;
+  });
+
+  const textVectors: Array<number[] | undefined> = new Array(prepared.length);
+  const imageVectors: Array<number[] | undefined> = new Array(prepared.length);
+  for (let start = 0; start < prepared.length; start += 50) {
+    const indexes = prepared.slice(start, start + 50)
+      .map((_, offset) => start + offset)
+      .filter((index) => !reusable[index] && Boolean(prepared[index].text));
+    const vectors = await embedTexts(indexes.map((index) => prepared[index].text));
+    indexes.forEach((index, vectorIndex) => { textVectors[index] = vectors[vectorIndex]; });
+  }
+
+  for (let start = 0; start < prepared.length; start += 4) {
+    const indexes = prepared.slice(start, start + 4)
+      .map((_, offset) => start + offset)
+      .filter((index) => !reusable[index] && Boolean(prepared[index].image));
+    const vectors = await Promise.all(indexes.map((index) => embedImage(prepared[index].image!)));
+    indexes.forEach((index, vectorIndex) => { imageVectors[index] = vectors[vectorIndex]; });
+  }
+
+  const batch = db.batch();
+  let embedded = 0;
+  prepared.forEach((item, index) => {
+    if (!reusable[index] && item.text && !textVectors[index]?.length) {
+      throw new Error(`Text embedding is unavailable for Shopify product ${item.productId}`);
+    }
+    const existing = existingSnapshots[index];
+    const docRef = merchantRef.collection(FIRESTORE_COLLECTIONS.subProducts).doc(encodeURIComponent(item.productId));
+    const changedSource = !reusable[index];
+    const payload: Record<string, unknown> = {
+      shop,
+      productId: item.productId,
+      productTitle: item.input.productTitle,
+      name: item.input.product.name,
+      category: item.input.product.category,
+      description: item.input.product.description,
+      createdAt: existing.exists ? existing.get("createdAt") || FieldValue.serverTimestamp() : FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
+      ...(item.input.productHandle ? { productHandle: item.input.productHandle } : {}),
+      ...(item.image ? { imageUrl: item.image } : {}),
+      ...(item.input.product.imageUrls?.length ? { imageUrls: item.input.product.imageUrls } : {}),
+      ...(item.input.product.brand ? { brand: item.input.product.brand } : {}),
+      ...(item.input.product.model ? { model: item.input.product.model } : {}),
+      ...(item.input.sourceUpdatedAt ? { sourceUpdatedAt: item.input.sourceUpdatedAt } : {}),
+      ...(changedSource ? { vector_text: textVectors[index]?.length ? FieldValue.vector(textVectors[index]!) : FieldValue.delete() } : {}),
+      ...(changedSource ? { vector_image: imageVectors[index]?.length ? FieldValue.vector(imageVectors[index]!) : FieldValue.delete() } : {}),
+    };
+    if (textVectors[index]?.length) embedded += 1;
+    batch.set(docRef, payload, { merge: true });
+  });
+  batch.set(merchantRef, { shop, updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+  await batch.commit();
+  return { imported: prepared.length, embedded };
+}
+
 export async function runMerchantDeltaMonitoringForShop(params: {
   shop: string;
   forceFullScan?: boolean;
+  allHistory?: boolean;
   days?: number;
   limit?: number;
   triggerMode?: "manual" | "scheduled";
   runId?: string;
+  monitoringRunCollection?: string;
 }): Promise<MerchantMonitoringSummary> {
   const shop = params.shop.trim();
   if (!shop) {
@@ -618,12 +724,24 @@ export async function runMerchantDeltaMonitoringForShop(params: {
   const monitoringWindow = resolveMonitoringWindow({
     currentState,
     forceFullScan,
+    allHistory: params.allHistory,
     days: params.days,
   });
   const limit = Number.isFinite(params.limit) && (params.limit as number) > 0
     ? Math.min(Math.floor(params.limit as number), 500)
     : 250;
   const runId = params.runId || randomUUID();
+  const runRef = params.runId
+    ? monitoringRunRef(shop, params.runId, params.monitoringRunCollection)
+    : null;
+
+  if (runRef) {
+    const completedRun = await runRef.get();
+    const completedSummary = completedRun.get("completedSummary");
+    if (completedRun.get("status") === "completed" && completedSummary && typeof completedSummary === "object") {
+      return completedSummary as MerchantMonitoringSummary;
+    }
+  }
 
   await monitorRef.set(
     {
@@ -678,7 +796,6 @@ export async function runMerchantDeltaMonitoringForShop(params: {
       checkpointDate: monitoringWindow.checkpointDate.toISOString(),
     });
 
-    const runRef = params.runId ? monitoringRunRef(shop, params.runId) : null;
     if (runRef) {
       await runRef.set({
         status: "processing",
@@ -789,8 +906,7 @@ export async function runMerchantDeltaMonitoringForShop(params: {
       },
     };
 
-    await monitorRef.set(
-      {
+    const checkpointUpdate = {
         updatedAt: FieldValue.serverTimestamp(),
         lastMonitorRunEnd: FieldValue.serverTimestamp(),
         lastMonitorStatus: "SUCCESS",
@@ -804,9 +920,19 @@ export async function runMerchantDeltaMonitoringForShop(params: {
         lastRapexRecordTimestamp:
           summary.checkpoint.lastRapexRecordTimestamp || currentState?.lastRapexRecordTimestamp || null,
         lastRapexAlertDocId: latestAlert?.id || currentState?.lastRapexAlertDocId || null,
-      } satisfies Partial<MerchantMonitorStateDocument>,
-      { merge: true },
-    );
+      } satisfies Partial<MerchantMonitorStateDocument>;
+    await db.runTransaction(async (transaction) => {
+      transaction.set(monitorRef, checkpointUpdate, { merge: true });
+      if (runRef) {
+        transaction.set(runRef, {
+          status: "completed",
+          completedSummary: summary,
+          completedAt: FieldValue.serverTimestamp(),
+          leaseExpiresAt: FieldValue.delete(),
+          updatedAt: FieldValue.serverTimestamp(),
+        }, { merge: true });
+      }
+    });
 
     return summary;
   } catch (error) {

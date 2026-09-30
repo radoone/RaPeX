@@ -282,4 +282,19 @@ export async function runMerchantDeltaMonitoring(
   return payload.result;
 }
 
+export async function startMerchantCatalogAudit(shop: string, runId: string): Promise<void> {
+  const response = await fetch(`${FIREBASE_FUNCTIONS_BASE_URL}/startMerchantCatalogAuditAPI`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-Key": requireApiKey(),
+    },
+    body: JSON.stringify({ shop, runId }),
+  });
+  if (!response.ok) {
+    const message = await response.text();
+    throw new Error(`Could not start catalog audit: ${response.status} ${message}`);
+  }
+}
+
 export { shopifyProductToProductData };

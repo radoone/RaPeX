@@ -185,6 +185,7 @@ SHOPIFY_API_SECRET=...
 SCOPES=...
 SHOPIFY_APP_URL=...
 SHOPIFY_SESSION_STORAGE=firestore # Hosted app option; local development defaults to Prisma/SQLite.
+SHOPIFY_ADMIN_API_VERSION=2026-07 # Version used by the Firebase catalog audit worker.
 FIREBASE_FUNCTIONS_BASE_URL=https://europe-west1-<project-id>.cloudfunctions.net
 SAFETY_GATE_API_KEY=...
 SAFETY_GATE_SIMILARITY_THRESHOLD=0
@@ -198,6 +199,8 @@ SAFETY_GATE_API_KEY=...
 ```
 
 The optional Firestore Shopify session adapter stores OAuth sessions in the server-only `shopify_sessions` collection. Use it for a hosted app that needs durable sessions across instances or Firebase task workers. The app service account must have Firestore access, and uninstall / `shop/redact` webhooks delete these session documents. Keep Prisma/SQLite for local development unless you explicitly set `SHOPIFY_SESSION_STORAGE=firestore`.
+
+The initial merchant audit is processed by the Firebase `merchantCatalogAuditTask` queue. When a merchant starts it, the Shopify app copies its offline session to the private `shopify_sessions` collection so the worker can page Shopify Admin GraphQL after the app request ends; the task payload contains only the shop and run cursor. Uninstall and `shop/redact` remove that copy. The worker imports every product in 100-item pages, batch-embeds product text, then checks all indexed Safety Gate history in 500-alert pages. A stable public Shopify app URL is still needed for OAuth, webhooks, and Admin redirects, but the queued audit itself does not depend on the app process staying alive.
 
 ## Development Commands
 
