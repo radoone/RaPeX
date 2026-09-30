@@ -7,6 +7,13 @@ import type { ResolutionType } from "./AlertTable";
 
 interface AlertDetailModalProps {
   alert: any;
+  decisionHistory?: Array<{
+    action: string;
+    reviewState: string;
+    resolutionType: string | null;
+    notes: string | null;
+    createdAt: Date | string;
+  }>;
   modalId: string;
   onDismiss?: (alertId: string, resolutionType?: ResolutionType, notes?: string) => void;
   onResolve?: (alertId: string, resolutionType?: ResolutionType, notes?: string) => void;
@@ -17,6 +24,7 @@ interface AlertDetailModalProps {
 
 export function AlertDetailModal({
   alert,
+  decisionHistory = [],
   modalId,
   onDismiss,
   onResolve,
@@ -250,6 +258,37 @@ export function AlertDetailModal({
               {recordedOutcome && <span>{recordedOutcome}</span>}
               {alert.notes && <p>{alert.notes}</p>}
             </div>
+          )}
+          {decisionHistory.length > 0 && (
+            <section className="review-modal__section" aria-label={t("analysis.decisionRecorded")}>
+              <div className="review-modal__section-heading"><h3>{t("analysis.decisionRecorded")}</h3></div>
+              <ol className="review-modal__history">
+                {decisionHistory.map((event, index) => {
+                  const stateKey = event.reviewState === "waiting_for_supplier"
+                    ? "resolveActions.contactPending"
+                    : event.reviewState === "dismissed"
+                      ? "status.dismissed"
+                      : event.reviewState === "resolved"
+                        ? "status.resolved"
+                        : "status.needsReview";
+                  const eventOutcome = event.resolutionType
+                    ? outcomeLabels[event.resolutionType as ResolutionType] || event.resolutionType
+                    : null;
+                  return (
+                    <li key={`${event.createdAt}-${index}`}>
+                      <s-stack gap="small-100">
+                        <s-stack direction="inline" gap="small-100" alignItems="center">
+                          <s-text fontWeight="semibold">{t(stateKey)}</s-text>
+                          {eventOutcome && <s-text>{eventOutcome}</s-text>}
+                          <s-text tone="subdued" size="small">{new Date(event.createdAt).toLocaleString()}</s-text>
+                        </s-stack>
+                        {event.notes && <s-text>{event.notes}</s-text>}
+                      </s-stack>
+                    </li>
+                  );
+                })}
+              </ol>
+            </section>
           )}
           </div>
           {warnings.length > 0 && (

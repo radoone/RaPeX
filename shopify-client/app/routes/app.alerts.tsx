@@ -110,6 +110,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       productImage: productImages[alert.productId] || productImages[`gid://shopify/Product/${alert.productId}`] || alertDetails?.fallbackImage || null,
     };
   });
+  const decisionHistory = openAlertId
+    ? await db.safetyAlert.listDecisionEvents({ shop: session.shop, alertId: openAlertId, take: 10 })
+    : [];
 
   const criticalActiveAlerts = activeAlertRiskSample.filter((alert: any) => {
     try {
@@ -131,6 +134,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   return json({
     alerts,
+    decisionHistory,
     pagination: { currentPage: page, totalPages: Math.ceil(totalCount / pageSize), totalCount, hasNext: page < Math.ceil(totalCount / pageSize), hasPrevious: page > 1 },
     filters: { status: statusFilters, riskLevel: riskLevelFilters, search, sortBy: sortByParam, sortOrder: sortOrderParam, showAllRecords, openAlertId },
     stats: { active: activeCount, resolved: resolvedCount, dismissed: dismissedCount, total: activeCount + resolvedCount + dismissedCount, criticalActive: criticalActiveAlerts },
@@ -208,7 +212,7 @@ export function ErrorBoundary() {
 }
 
 export default function AlertsPage() {
-  const { alerts, pagination, filters, stats, shop } = useLoaderData<typeof loader>();
+  const { alerts, decisionHistory, pagination, filters, stats, shop } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -404,6 +408,7 @@ export default function AlertsPage() {
         <AlertDetailModal
           key={alert.id}
           alert={{ ...alert, shop: alert.shop || shop }}
+          decisionHistory={alert.id === filters.openAlertId ? decisionHistory : []}
           modalId={`alert-detail-${alert.id}`}
           openOnMount={alert.id === filters.openAlertId}
           onDismiss={(id, resolutionType, notes) => handleAlertAction(id, 'dismiss', resolutionType, notes)}

@@ -378,6 +378,37 @@ function buildBaseQuery(
 // 1. Safety Alerts (merchants/{shop}/alerts)
 // ============================================================================
 const safetyAlert = {
+  async listDecisionEvents(input: { shop: string; alertId: string; take?: number }): Promise<Array<{
+    action: AlertDecisionAction;
+    reviewState: "needs_review" | "waiting_for_supplier" | "resolved" | "dismissed";
+    resolutionType: string | null;
+    notes: string | null;
+    actorId: string;
+    createdAt: Date;
+  }>> {
+    const shop = input.shop.trim();
+    const alertId = input.alertId.trim();
+    if (!shop || !alertId) return [];
+    const ref = getMerchantDocRef(shop)
+      .collection(SUBCOLLECTIONS.alerts)
+      .doc(alertId)
+      .collection(SUBCOLLECTIONS.decisionEvents)
+      .orderBy("createdAt", "desc")
+      .limit(Math.min(Math.max(input.take || 10, 1), 25));
+    const snapshot = await withCredentialFallback(() => ref.get(), null as any);
+    return snapshot?.docs.map((doc: any) => {
+      const event = doc.data() || {};
+      return {
+        action: event.action as AlertDecisionAction,
+        reviewState: event.reviewState as "needs_review" | "waiting_for_supplier" | "resolved" | "dismissed",
+        resolutionType: typeof event.resolutionType === "string" ? event.resolutionType : null,
+        notes: typeof event.notes === "string" ? event.notes : null,
+        actorId: typeof event.actorId === "string" ? event.actorId : "",
+        createdAt: normalizeDate(event.createdAt) || new Date(0),
+      };
+    }) || [];
+  },
+
   async findMany(options: FindManyOptions = {}): Promise<any[]> {
     const { query: baseQuery, shop, inMemoryContains } = buildBaseQuery(SUBCOLLECTIONS.alerts, options.where);
     let firestoreQuery = baseQuery;
