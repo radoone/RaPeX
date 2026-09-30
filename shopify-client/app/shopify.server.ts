@@ -48,6 +48,10 @@ const shopify = shopifyApp({
       deliveryMethod: DeliveryMethod.Http,
       callbackUrl: "/webhooks/products/update",
     },
+    PRODUCTS_DELETE: {
+      deliveryMethod: DeliveryMethod.Http,
+      callbackUrl: "/webhooks/products/delete",
+    },
     APP_UNINSTALLED: {
       deliveryMethod: DeliveryMethod.Http,
       callbackUrl: "/webhooks/app/uninstalled",
@@ -71,7 +75,7 @@ const shopify = shopifyApp({
     : {}),
 });
 
-const WEBHOOK_REGISTRATION_VERSION = "product-events-2026-07-v1";
+const WEBHOOK_REGISTRATION_VERSION = "product-events-2026-07-v2";
 
 /** Register app-managed subscriptions after OAuth and restore them on existing sessions. */
 export async function ensureShopifyWebhooksRegistered(

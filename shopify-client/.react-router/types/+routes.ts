@@ -38,6 +38,9 @@ type Pages = {
   "/webhooks/products/create": {
     params: {};
   };
+  "/webhooks/products/delete": {
+    params: {};
+  };
   "/webhooks/products/update": {
     params: {};
   };
@@ -96,7 +99,7 @@ type Pages = {
 type RouteFiles = {
   "root.tsx": {
     id: "root";
-    page: "/" | "/webhooks/customers/data_request" | "/webhooks/app/scopes_update" | "/api/product-safety-status" | "/webhooks/customers/redact" | "/api/catalog-audit-status" | "/api/product-safety-check" | "/webhooks/app/uninstalled" | "/webhooks/products/create" | "/webhooks/products/update" | "/webhooks/shop/redact" | "/billing/redirect" | "/audit-report" | "/manual-check" | "/auth/login" | "/evidence" | "/settings" | "/alerts" | "/auth/*" | "/app" | "/app/audit-report.csv" | "/app/audit-report" | "/app/manual-check" | "/app/evidence" | "/app/settings" | "/app/alerts";
+    page: "/" | "/webhooks/customers/data_request" | "/webhooks/app/scopes_update" | "/api/product-safety-status" | "/webhooks/customers/redact" | "/api/catalog-audit-status" | "/api/product-safety-check" | "/webhooks/app/uninstalled" | "/webhooks/products/create" | "/webhooks/products/delete" | "/webhooks/products/update" | "/webhooks/shop/redact" | "/billing/redirect" | "/audit-report" | "/manual-check" | "/auth/login" | "/evidence" | "/settings" | "/alerts" | "/auth/*" | "/app" | "/app/audit-report.csv" | "/app/audit-report" | "/app/manual-check" | "/app/evidence" | "/app/settings" | "/app/alerts";
   };
   "routes/webhooks.customers.data_request.tsx": {
     id: "routes/webhooks.customers.data_request";
@@ -129,6 +132,10 @@ type RouteFiles = {
   "routes/webhooks.products.create.tsx": {
     id: "routes/webhooks.products.create";
     page: "/webhooks/products/create";
+  };
+  "routes/webhooks.products.delete.tsx": {
+    id: "routes/webhooks.products.delete";
+    page: "/webhooks/products/delete";
   };
   "routes/webhooks.products.update.tsx": {
     id: "routes/webhooks.products.update";
@@ -218,6 +225,7 @@ type RouteModules = {
   "routes/api.product-safety-check": typeof import("./app/routes/api.product-safety-check.ts");
   "routes/webhooks.app.uninstalled": typeof import("./app/routes/webhooks.app.uninstalled.tsx");
   "routes/webhooks.products.create": typeof import("./app/routes/webhooks.products.create.tsx");
+  "routes/webhooks.products.delete": typeof import("./app/routes/webhooks.products.delete.tsx");
   "routes/webhooks.products.update": typeof import("./app/routes/webhooks.products.update.tsx");
   "routes/webhooks.shop.redact": typeof import("./app/routes/webhooks.shop.redact.tsx");
   "routes/billing.redirect": typeof import("./app/routes/billing.redirect.tsx");

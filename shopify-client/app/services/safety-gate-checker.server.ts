@@ -320,4 +320,23 @@ export async function queueShopifyProductChange(input: {
   }
 }
 
+export async function queueShopifyProductDeletion(input: {
+  shop: string;
+  productId: string;
+  sourceUpdatedAt?: string;
+}): Promise<void> {
+  const response = await fetch(`${FIREBASE_FUNCTIONS_BASE_URL}/startShopifyProductChangeAPI`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-Key": requireApiKey(),
+    },
+    body: JSON.stringify({ ...input, operation: "delete" }),
+  });
+  if (!response.ok) {
+    const message = await response.text();
+    throw new Error(`Could not queue Shopify product removal: ${response.status} ${message}`);
+  }
+}
+
 export { shopifyProductToProductData };

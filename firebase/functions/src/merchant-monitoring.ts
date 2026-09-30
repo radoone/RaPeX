@@ -6,6 +6,7 @@ import { db } from "./firebase-admin.js";
 import { AI_CONFIG, FIRESTORE_COLLECTIONS, MATCHING_THRESHOLDS } from "./safety-gate-config.js";
 import { buildMonitoringCursorValues } from "./monitoring-cursor.js";
 import { monitoringTaskId, scheduledMonitoringRunId } from "./monitoring-task-id.js";
+import { isProductChangeSupersededByDeletion } from "./product-lifecycle.js";
 import { checkProductAgainstAlerts, checkProductSafety } from "./safety-gate-checker.js";
 import type { ProductInput } from "./safety-gate-checker.schemas.js";
 import { normalizePictures } from "./safety-gate-checker-media.js";
@@ -87,13 +88,14 @@ export type MerchantMonitoringTaskPayload = {
 };
 
 export type ShopifyProductChangeTaskPayload = {
+  operation?: "upsert" | "delete";
   shop: string;
   productId: string;
-  productTitle: string;
+  productTitle?: string;
   productHandle?: string;
-  sourceUpdatedAt: string;
-  product: ProductInput;
-  similarityThreshold: number;
+  sourceUpdatedAt?: string;
+  product?: ProductInput;
+  similarityThreshold?: number;
 };
 
 function monitoringRunRef(shop: string, runId: string, collection = MONITORING_RUNS) {
@@ -1140,7 +1142,9 @@ export async function runDailyMerchantDeltaMonitoring(scheduleTime?: string): Pr
 }
 
 function productChangeJobId(payload: ShopifyProductChangeTaskPayload): string {
-  return monitoringTaskId(payload.shop, `product:${payload.productId}:${payload.sourceUpdatedAt}`);
+  return monitoringTaskId(payload.shop, payload.operation === "delete"
+    ? `product-delete:${payload.productId}`
+    : `product:${payload.productId}:${payload.sourceUpdatedAt}`);
 }
 
 function productChangeJobRef(shop: string, jobId: string) {
@@ -1166,23 +1170,25 @@ export async function handleStartShopifyProductChangeRequest(
     const productId = coerceString(body.productId);
     const productTitle = coerceString(body.productTitle);
     const sourceUpdatedAt = coerceString(body.sourceUpdatedAt);
+    const operation = body.operation === "delete" ? "delete" : "upsert";
     const product = body.product as ProductInput | undefined;
     const threshold = Number(body.similarityThreshold ?? 0);
-    if (!shop || !productId || !productTitle || !sourceUpdatedAt || !product?.name || !product.category || !product.description) {
+    if (!shop || !productId || (operation === "upsert" && (!productTitle || !sourceUpdatedAt || !product?.name || !product.category || !product.description))) {
       return response.status(400).json({ error: "shop, product identity, sourceUpdatedAt and normalized product fields are required" });
     }
     const payload: ShopifyProductChangeTaskPayload = {
+      operation,
       shop,
       productId,
-      productTitle,
+      ...(productTitle ? { productTitle } : {}),
       productHandle: coerceString(body.productHandle),
-      sourceUpdatedAt,
-      product: { ...product, shop, productId, sourceUpdatedAt },
+      ...(sourceUpdatedAt ? { sourceUpdatedAt } : {}),
+      ...(product ? { product: { ...product, shop, productId, sourceUpdatedAt } } : {}),
       similarityThreshold: Number.isFinite(threshold) ? Math.max(0, threshold) : 0,
     };
     const merchantRef = db.collection(FIRESTORE_COLLECTIONS.merchants).doc(encodeURIComponent(shop));
     const merchantSnapshot = await merchantRef.get();
-    if (!currentEntitlement((merchantSnapshot.data() || {}) as Record<string, unknown>)) {
+    if (operation !== "delete" && !currentEntitlement((merchantSnapshot.data() || {}) as Record<string, unknown>)) {
       return response.status(200).json({ success: true, queued: false, reason: "no_current_entitlement" });
     }
 
@@ -1223,7 +1229,7 @@ export async function handleStartShopifyProductChangeRequest(
   }
 }
 
-/** Retryable Cloud Task processor for Shopify product create/update webhooks. */
+/** Retryable Cloud Task processor for Shopify product lifecycle webhooks. */
 export async function handleShopifyProductChangeTask(
   payload: ShopifyProductChangeTaskPayload,
   retryCount = 0,
@@ -1235,7 +1241,7 @@ export async function handleShopifyProductChangeTask(
   const jobSnapshot = await jobRef.get();
   if (jobSnapshot.get("status") === "completed") return;
   const merchantSnapshot = await merchantRef.get();
-  if (!currentEntitlement((merchantSnapshot.data() || {}) as Record<string, unknown>)) {
+  if (payload.operation !== "delete" && !currentEntitlement((merchantSnapshot.data() || {}) as Record<string, unknown>)) {
     await jobRef.set({ status: "skipped_unentitled", updatedAt: FieldValue.serverTimestamp() }, { merge: true });
     return;
   }
@@ -1243,9 +1249,44 @@ export async function handleShopifyProductChangeTask(
   await jobRef.set({ status: "processing", attemptCount: retryCount + 1, startedAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp() }, { merge: true });
   try {
     const productRef = merchantRef.collection(FIRESTORE_COLLECTIONS.subProducts).doc(encodeURIComponent(payload.productId));
+    if (payload.operation === "delete") {
+      const now = FieldValue.serverTimestamp();
+      const productSnapshot = await productRef.get();
+      const alertSnapshot = await merchantRef.collection(FIRESTORE_COLLECTIONS.subAlerts)
+        .where("productId", "==", payload.productId)
+        .get();
+      const batch = db.batch();
+      if (productSnapshot.exists) {
+        batch.set(productRef, {
+          deletedAt: now,
+          deletedSourceUpdatedAt: payload.sourceUpdatedAt || null,
+          updatedAt: now,
+        }, { merge: true });
+      }
+      alertSnapshot.docs.forEach((document) => batch.set(document.ref, {
+        productDeleted: true,
+        productDeletedAt: now,
+        updatedAt: now,
+      }, { merge: true }));
+      if (productSnapshot.exists || !alertSnapshot.empty) await batch.commit();
+      await jobRef.set({ status: "completed", completedAt: now, updatedAt: now }, { merge: true });
+      return;
+    }
+
+    if (!payload.sourceUpdatedAt || !payload.product || !payload.productTitle) {
+      throw new Error("Product change task is missing normalized product data");
+    }
     const existingProduct = await productRef.get();
     const existingVersion = existingProduct.get("sourceUpdatedAt");
     if (typeof existingVersion === "string" && Date.parse(existingVersion) > Date.parse(payload.sourceUpdatedAt)) {
+      await jobRef.set({ status: "superseded", updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+      return;
+    }
+    if (isProductChangeSupersededByDeletion(
+      existingProduct.get("deletedAt"),
+      existingProduct.get("deletedSourceUpdatedAt"),
+      payload.sourceUpdatedAt,
+    )) {
       await jobRef.set({ status: "superseded", updatedAt: FieldValue.serverTimestamp() }, { merge: true });
       return;
     }
@@ -1266,8 +1307,9 @@ export async function handleShopifyProductChangeTask(
     let resultJson = jobSnapshot.get("resultJson");
     if (typeof resultJson !== "string") {
       const result = await checkProductSafety(payload.product);
-      const filteredWarnings = payload.similarityThreshold > 0
-        ? result.warnings.filter((warning) => warning.overallSimilarity >= payload.similarityThreshold)
+      const threshold = payload.similarityThreshold ?? 0;
+      const filteredWarnings = threshold > 0
+        ? result.warnings.filter((warning) => warning.overallSimilarity >= threshold)
         : result.warnings;
       const filteredResult = {
         ...result,
@@ -1297,6 +1339,8 @@ export async function handleShopifyProductChangeTask(
     }, { merge: true });
 
     await productRef.set({
+      deletedAt: FieldValue.delete(),
+      deletedSourceUpdatedAt: FieldValue.delete(),
       lastImmediateCheckAt: FieldValue.serverTimestamp(),
       lastCheckedAt: FieldValue.serverTimestamp(),
       updatedAt: FieldValue.serverTimestamp(),
