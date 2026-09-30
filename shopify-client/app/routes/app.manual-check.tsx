@@ -352,23 +352,19 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     if (billingRedirect) return billingRedirect as never;
   }
 
-  const updateOwnedAlert = async (
+  const recordOwnedAlertDecision = async (
     alertId: string,
-    data: Parameters<typeof db.safetyAlert.update>[0]["data"],
-  ) => {
-    const alert = await db.safetyAlert.findFirst({
-      where: { id: alertId, shop: session.shop },
-    });
-
-    if (!alert) {
-      throw new Error("Alert not found");
-    }
-
-    return db.safetyAlert.update({
-      where: { id: alert.id, shop: session.shop },
-      data,
-    });
-  };
+    decision: "resolve" | "dismiss" | "reactivate",
+    resolutionType?: string | null,
+    notes?: string | null,
+  ) => db.safetyAlert.recordDecisions({
+    shop: session.shop,
+    alertIds: [alertId],
+    action: decision,
+    actorId: session.id,
+    resolutionType,
+    notes,
+  });
 
   if (action === "checkProduct") {
     const productData = JSON.parse(formData.get("productData") as string);
@@ -475,13 +471,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
 
     try {
-      const waitingForSupplier = resolutionType === "contacted_supplier";
-      await updateOwnedAlert(alertId, {
-        status: waitingForSupplier ? "active" : "resolved",
-        resolvedAt: waitingForSupplier ? null : new Date(),
-        resolutionType: resolutionType || null,
-        notes: notes?.trim() || null,
-      });
+      await recordOwnedAlertDecision(alertId, "resolve", resolutionType, notes);
       return json({ success: true, action: "resolved" });
     } catch (error) {
       return json({ success: false, error: error instanceof Error ? error.message : 'Unknown error' });
@@ -499,13 +489,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
 
     try {
-      await updateOwnedAlert(alertId, {
-        status: "dismissed",
-        dismissedAt: new Date(),
-        dismissedBy: session.shop,
-        resolutionType: resolutionType || null,
-        notes: notes?.trim() || null,
-      });
+      await recordOwnedAlertDecision(alertId, "dismiss", resolutionType, notes);
       return json({ success: true, action: "dismissed" });
     } catch (error) {
       return json({ success: false, error: error instanceof Error ? error.message : 'Unknown error' });
@@ -517,13 +501,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const alertId = formData.get("alertId") as string;
 
     try {
-      await updateOwnedAlert(alertId, {
-        status: "active",
-        dismissedAt: null,
-        dismissedBy: null,
-        resolvedAt: null,
-        resolutionType: null,
-      });
+      await recordOwnedAlertDecision(alertId, "reactivate");
       return json({ success: true, action: "reactivated" });
     } catch (error) {
       return json({ success: false, error: error instanceof Error ? error.message : 'Unknown error' });

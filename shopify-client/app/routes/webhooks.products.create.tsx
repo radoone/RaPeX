@@ -86,6 +86,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           shop: shop,
           checkResult: JSON.stringify(safetyResult),
           status: 'active',
+          reviewState: 'needs_review',
           riskLevel,
           warningsCount: safetyResult.warnings.length,
         },

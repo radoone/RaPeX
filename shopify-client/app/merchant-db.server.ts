@@ -1,5 +1,6 @@
 import { FieldPath, FieldValue, Timestamp } from "firebase-admin/firestore";
 import { firestore } from "./firestore.server";
+import { getAlertDecisionTransition, type AlertDecisionAction } from "./services/alert-decision";
 
 type SortOrder = "asc" | "desc";
 
@@ -65,6 +66,7 @@ type SafetyAlertRecord = {
   shop: string;
   checkResult: string;
   status: string;
+  reviewState?: "needs_review" | "waiting_for_supplier" | "resolved" | "dismissed";
   riskLevel: string;
   warningsCount: number;
   createdAt: Date;
@@ -140,6 +142,7 @@ const SUBCOLLECTIONS = {
   activityLogs: "activity_logs",
   webhookErrors: "webhook_errors",
   products: "products",
+  decisionEvents: "decision_events",
 } as const;
 
 let credentialWarningShown = false;
@@ -265,6 +268,15 @@ function convertSafetyAlert(id: string, data: Record<string, unknown>, fallbackS
     shop: String(data.shop || fallbackShop),
     checkResult: String(data.checkResult || ""),
     status: String(data.status || "active"),
+    reviewState: data.reviewState === "waiting_for_supplier" || data.reviewState === "resolved" || data.reviewState === "dismissed"
+      ? data.reviewState
+      : data.status === "resolved"
+        ? "resolved"
+        : data.status === "dismissed"
+          ? "dismissed"
+          : data.resolutionType === "contacted_supplier"
+            ? "waiting_for_supplier"
+            : "needs_review",
     riskLevel: String(data.riskLevel || "Unknown"),
     warningsCount: Number(data.warningsCount || 0),
     createdAt: normalizeDate(data.createdAt) || new Date(0),
@@ -507,6 +519,80 @@ const safetyAlert = {
 
     await withCredentialFallback(() => batch.commit(), undefined);
     return { count: snapshot.size };
+  },
+
+  async recordDecisions(input: {
+    shop: string;
+    alertIds: string[];
+    action: AlertDecisionAction;
+    actorId: string;
+    resolutionType?: string | null;
+    notes?: string | null;
+  }): Promise<{ count: number }> {
+    const shop = input.shop.trim();
+    const alertIds = [...new Set(input.alertIds.map((id) => id.trim()).filter(Boolean))];
+    if (!shop || !input.actorId.trim() || alertIds.length === 0 || alertIds.length > 250) {
+      throw new Error("A shop, actor, and between 1 and 250 alert IDs are required");
+    }
+
+    const shopRef = getMerchantDocRef(shop);
+    const alertRefs = alertIds.map((id) => shopRef.collection(SUBCOLLECTIONS.alerts).doc(id));
+    await firestore.runTransaction(async (transaction) => {
+      const snapshots = [];
+      for (const ref of alertRefs) snapshots.push(await transaction.get(ref));
+      if (snapshots.some((snapshot) => !snapshot.exists)) {
+        throw new Error("One or more alerts were not found for this shop");
+      }
+
+      const transition = getAlertDecisionTransition({
+        action: input.action,
+        resolutionType: input.resolutionType,
+        notes: input.notes,
+        actorId: input.actorId,
+      });
+      const changedAt = FieldValue.serverTimestamp();
+
+      snapshots.forEach((snapshot, index) => {
+        const alertRef = alertRefs[index];
+        const before = snapshot.data() || {};
+        const fromStatus = typeof before.status === "string" ? before.status : "active";
+        const fromReviewState = before.reviewState === "waiting_for_supplier" || before.reviewState === "resolved" || before.reviewState === "dismissed"
+          ? before.reviewState
+          : fromStatus === "resolved"
+            ? "resolved"
+            : fromStatus === "dismissed"
+              ? "dismissed"
+              : before.resolutionType === "contacted_supplier"
+                ? "waiting_for_supplier"
+                : "needs_review";
+        const eventRef = alertRef.collection(SUBCOLLECTIONS.decisionEvents).doc();
+        transaction.update(alertRef, {
+          status: transition.status,
+          reviewState: transition.reviewState,
+          resolvedAt: transition.resolvedAt,
+          dismissedAt: transition.dismissedAt,
+          dismissedBy: transition.dismissedBy,
+          resolutionType: transition.resolutionType,
+          notes: transition.notes,
+          updatedAt: changedAt,
+        });
+        transaction.create(eventRef, {
+          shop,
+          alertId: snapshot.id,
+          action: input.action,
+          fromStatus,
+          fromReviewState,
+          toStatus: transition.status,
+          reviewState: transition.reviewState,
+          resolutionType: transition.resolutionType,
+          notes: transition.notes,
+          actorId: input.actorId,
+          createdAt: changedAt,
+        });
+      });
+    });
+
+    return { count: alertIds.length };
   },
 
   async deleteMany(options: DeleteManyOptions = {}): Promise<{ count: number }> {

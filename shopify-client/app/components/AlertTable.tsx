@@ -393,7 +393,7 @@ function AlertRow({
       <s-table-cell>
         <s-badge tone={statusTone}>
           {alert.status === 'active'
-            ? alert.resolutionType === 'contacted_supplier'
+            ? alert.reviewState === 'waiting_for_supplier' || alert.resolutionType === 'contacted_supplier'
               ? t('resolveActions.contactPending')
               : t('status.needsReview')
             : alert.status === 'resolved'

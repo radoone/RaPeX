@@ -46,6 +46,7 @@ export interface SafetyAlert {
   productTitle: string;
   checkResult: SafetyCheckResult;
   status: 'active' | 'dismissed' | 'resolved';
+  reviewState?: 'needs_review' | 'waiting_for_supplier' | 'dismissed' | 'resolved';
   createdAt: string;
   updatedAt: string;
   dismissedAt?: string;

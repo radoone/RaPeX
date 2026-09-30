@@ -21,6 +21,7 @@ type SafetyAlertRecord = {
   shop: string;
   checkResult: string;
   status: string;
+  reviewState?: "needs_review" | "waiting_for_supplier" | "resolved" | "dismissed";
   riskLevel: string;
   warningsCount: number;
   createdAt: Date;
@@ -308,6 +309,7 @@ export async function runProductSafetyCheck(input: {
           riskLevel,
           warningsCount: safetyResult.warnings.length,
           status: "active",
+          reviewState: "needs_review",
           resolvedAt: null,
           dismissedAt: null,
           dismissedBy: null,
@@ -325,6 +327,7 @@ export async function runProductSafetyCheck(input: {
           shop: input.shop,
           checkResult: JSON.stringify(safetyResult),
           status: "active",
+          reviewState: "needs_review",
           riskLevel,
           warningsCount: safetyResult.warnings.length,
         },

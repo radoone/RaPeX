@@ -151,51 +151,33 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return json({ success: false, error: "A note is required for the other outcome" }, { status: 400 });
   }
 
-  const ids = alertIdsJson ? JSON.parse(alertIdsJson) as string[] : [alertId];
-  const scopedWhere = { id: { in: ids.filter(Boolean) }, shop: session.shop };
-
-  switch (action) {
-    case "dismiss":
-      await db.safetyAlert.updateMany({
-        where: scopedWhere,
-        data: {
-          status: 'dismissed',
-          dismissedAt: new Date(),
-          dismissedBy: session.id,
-          resolutionType: resolutionType || undefined,
-          notes: notes
-        }
-      });
-      break;
-    case "resolve": {
-      const waitingForSupplier = resolutionType === "contacted_supplier";
-      await db.safetyAlert.updateMany({
-        where: scopedWhere,
-        data: {
-          status: waitingForSupplier ? 'active' : 'resolved',
-          resolvedAt: waitingForSupplier ? null : new Date(),
-          resolutionType: resolutionType || undefined,
-          notes: notes
-        }
-      });
-      break;
-    }
-    case "reactivate":
-      await db.safetyAlert.updateMany({
-        where: scopedWhere,
-        data: {
-          status: 'active',
-          dismissedAt: null,
-          dismissedBy: null,
-          resolvedAt: null,
-          resolutionType: null
-        }
-      });
-      break;
-    default:
-      return json({ success: false, error: "Invalid action" }, { status: 400 });
+  if (action !== "resolve" && action !== "dismiss" && action !== "reactivate") {
+    return json({ success: false, error: "Invalid action" }, { status: 400 });
   }
-  return json({ success: true });
+
+  let ids: string[];
+  try {
+    ids = alertIdsJson ? JSON.parse(alertIdsJson) as string[] : [alertId];
+  } catch {
+    return json({ success: false, error: "Invalid alert selection" }, { status: 400 });
+  }
+  if (!Array.isArray(ids) || ids.some((id) => typeof id !== "string")) {
+    return json({ success: false, error: "Invalid alert selection" }, { status: 400 });
+  }
+
+  try {
+    await db.safetyAlert.recordDecisions({
+      shop: session.shop,
+      alertIds: ids,
+      action,
+      actorId: session.id,
+      resolutionType,
+      notes,
+    });
+    return json({ success: true });
+  } catch (error) {
+    return json({ success: false, error: error instanceof Error ? error.message : "Could not save alert decision" }, { status: 400 });
+  }
 };
 
 export function ErrorBoundary() {

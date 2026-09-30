@@ -55,6 +55,7 @@ Main collections:
 - `merchants`: tenant root documents storing per-shop settings and monitor state
 - `merchants/{shop}/products`: per-shop Shopify product snapshots with vector embeddings
 - `merchants/{shop}/alerts`: per-shop alert records for matched Shopify products
+- `merchants/{shop}/alerts/{alertId}/decision_events`: immutable merchant decisions with actor, timestamp, outcome, and workflow state
 - `merchants/{shop}/checks`: per-shop check history
 - `merchants/{shop}/activity_logs`: per-shop activity audit trail
 - `merchants/{shop}/webhook_errors`: per-shop webhook error log
@@ -144,6 +145,7 @@ can be worked on without changing Shopify auth or app routes.
 - The Shopify app UI should follow a Shopify Admin merchant workflow: **review match → compare product → choose action → keep an audit trail**. Prefer clear merchant actions such as "Needs review", "Check one product", "Review alerts", "Resolve", and "Dismiss" over internal implementation language such as "active", "unsafe", "candidate alerts", or raw monitoring modes.
 - "Needs review" is reserved for active unresolved merchant decisions across the dashboard, Review Queue, and manual product checks. Historical resolved/dismissed matches must be labelled as reviewed history, not counted as current flagged products. Cached catalog refresh actions should describe the merchant outcome (for example, "Refresh catalog coverage") instead of implying every unchanged product is rechecked from scratch.
 - The **Alert Table** supports **Bulk Actions** (Resolve/Dismiss) for efficient management of multiple findings.
+- Merchant alert decisions are written transactionally to the alert and an immutable `decision_events` subcollection. `reviewState` distinguishes `needs_review`, `waiting_for_supplier`, `resolved`, and `dismissed`; `waiting_for_supplier` remains an open alert (`status: active`) so existing open-alert queries continue to include it. Legacy `contacted_supplier` alerts are normalized to `waiting_for_supplier` when read.
 - High-risk alerts ("Serious" or "High") are visually prioritized in the UI with critical color coding and borders.
 - The **Alert Detail Modal** should prioritize merchant decision-making first: show the Shopify product, the likely Safety Gate match, why it matched, and the recommended action before exposing deeper technical scoring/debug details.
 - The review outcome **Other** requires a non-empty audit note. Enforce this in the modal and in both Review Queue and manual-check server actions; show the outcome in decision history and audit reports.
