@@ -1,6 +1,5 @@
 import type { ActionFunctionArgs } from "react-router";
-import { authenticate } from "../shopify.server";
-import sessionDb from "../db.server";
+import { authenticate, sessionStorage } from "../shopify.server";
 import { purgeMerchantShopData } from "../merchant-db.server";
 
 /**
@@ -24,16 +23,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     console.log(`Deleted ${deleted.monitorState} monitor state docs`);
 
     // Delete sessions for this shop
-    const deletedSessions = await sessionDb.session.deleteMany({
-      where: { shop },
-    });
-    console.log(`Deleted ${deletedSessions.count} sessions`);
+    const shopSessions = await sessionStorage.findSessionsByShop(shop);
+    await sessionStorage.deleteSessions(shopSessions.map((item) => item.id));
+    console.log(`Deleted ${shopSessions.length} sessions`);
 
     console.log(`✅ Successfully deleted all data for shop: ${shop}`);
 
   } catch (error) {
     console.error(`Error during shop redact for ${shop}:`, error);
-    // Still return 200 to acknowledge the webhook
+    // Return a retryable response so Shopify does not treat failed deletion as complete.
+    return new Response(null, { status: 500 });
   }
 
   return new Response(null, { status: 200 });

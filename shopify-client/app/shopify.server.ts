@@ -7,6 +7,12 @@ import {
 } from "@shopify/shopify-app-react-router/server";
 import { PrismaSessionStorage } from "@shopify/shopify-app-session-storage-prisma";
 import prisma from "./db.server";
+import { FirestoreSessionStorage } from "./firestore-session-storage.server";
+import { firestore } from "./firestore.server";
+
+const configuredSessionStorage = process.env.SHOPIFY_SESSION_STORAGE === "firestore"
+  ? new FirestoreSessionStorage(firestore)
+  : new PrismaSessionStorage(prisma);
 
 export const SHOPIFY_BILLING_TEST = process.env.SHOPIFY_BILLING_TEST !== "false";
 export const SHOPIFY_APP_HANDLE = process.env.SHOPIFY_APP_HANDLE || "";
@@ -25,7 +31,7 @@ const shopify = shopifyApp({
   scopes: process.env.SCOPES?.split(","),
   appUrl: process.env.SHOPIFY_APP_URL || "",
   authPathPrefix: "/auth",
-  sessionStorage: new PrismaSessionStorage(prisma),
+  sessionStorage: configuredSessionStorage,
   distribution: AppDistribution.AppStore,
   webhooks: {
     PRODUCTS_CREATE: {

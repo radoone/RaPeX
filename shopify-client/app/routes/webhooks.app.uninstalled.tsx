@@ -1,22 +1,23 @@
 import type { ActionFunctionArgs } from "react-router";
-import { authenticate } from "../shopify.server";
-import db from "../db.server";
+import { authenticate, sessionStorage } from "../shopify.server";
 import { purgeMerchantShopData } from "../merchant-db.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const { shop, session, topic } = await authenticate.webhook(request);
+  const { shop, topic } = await authenticate.webhook(request);
 
   console.log(`Received ${topic} webhook for ${shop}`);
 
-  // Webhook requests can trigger multiple times and after an app has already been uninstalled.
-  // If this webhook already ran, the session may have been deleted previously.
-  if (session) {
-    await db.session.deleteMany({ where: { shop } });
-  }
+  // Webhook requests can trigger multiple times after the app is uninstalled.
+  // Find first because the webhook's own session may already have been removed.
+  const sessions = await sessionStorage.findSessionsByShop(shop);
+  await sessionStorage.deleteSessions(sessions.map((item) => item.id));
 
-  await purgeMerchantShopData(shop).catch((error) => {
-    console.error("Failed to purge Firestore merchant data on uninstall", { shop, error });
-  });
+  try {
+    await purgeMerchantShopData(shop);
+  } catch (error) {
+    console.error("Failed to purge merchant data on uninstall", { shop, error });
+    return new Response(null, { status: 500 });
+  }
 
   return new Response();
 };

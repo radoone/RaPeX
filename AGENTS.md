@@ -59,6 +59,7 @@ Main collections:
 - `merchants/{shop}/checks`: per-shop check history
 - `merchants/{shop}/activity_logs`: per-shop activity audit trail
 - `merchants/{shop}/webhook_errors`: per-shop webhook error log
+- `shopify_sessions`: private Shopify OAuth sessions when the hosted Firestore session adapter is enabled; uninstall and `shop/redact` webhooks must delete these documents
 
 Imported alert documents store:
 - raw Safety Gate fields
@@ -76,7 +77,7 @@ It:
 - exposes Shopify Admin UI extensions on product details pages
 - allows user-triggered RAPEX delta monitoring runs
 - stores merchant-facing business data in Firestore
-- keeps Prisma/SQLite only for Shopify auth sessions
+- keeps Prisma/SQLite for local Shopify auth sessions and supports a server-only Firestore session adapter (`SHOPIFY_SESSION_STORAGE=firestore`) for hosted multi-instance runtimes and task workers
 - runs on React Router 7 through `@shopify/shopify-app-react-router`
 - uses Prisma config-based datasource setup through `shopify-client/prisma.config.ts`, but because `shopify-client` currently runs on Prisma `6.19.2`, `shopify-client/prisma/schema.prisma` must still keep an inline SQLite `url` for `prisma generate` compatibility
 
@@ -146,6 +147,7 @@ can be worked on without changing Shopify auth or app routes.
 - "Needs review" is reserved for active unresolved merchant decisions across the dashboard, Review Queue, and manual product checks. Historical resolved/dismissed matches must be labelled as reviewed history, not counted as current flagged products. Cached catalog refresh actions should describe the merchant outcome (for example, "Refresh catalog coverage") instead of implying every unchanged product is rechecked from scratch.
 - The **Alert Table** supports **Bulk Actions** (Resolve/Dismiss) for efficient management of multiple findings.
 - Merchant alert decisions are written transactionally to the alert and an immutable `decision_events` subcollection. The Alert Detail modal shows the ten latest events. `reviewState` distinguishes `needs_review`, `waiting_for_supplier`, `resolved`, and `dismissed`; `waiting_for_supplier` remains an open alert (`status: active`) so existing open-alert queries continue to include it. Legacy `contacted_supplier` alerts are normalized to `waiting_for_supplier` when read.
+- When `SHOPIFY_SESSION_STORAGE=firestore`, `shopify_sessions` contains Shopify OAuth access tokens and must remain server-only. GDPR `shop/redact` and uninstall handlers delete sessions through the configured `sessionStorage` adapter. Failed merchant-data deletion must return a retryable webhook error and never acknowledge completion.
 - High-risk alerts ("Serious" or "High") are visually prioritized in the UI with critical color coding and borders.
 - The **Alert Detail Modal** should prioritize merchant decision-making first: show the Shopify product, the likely Safety Gate match, why it matched, and the recommended action before exposing deeper technical scoring/debug details.
 - The review outcome **Other** requires a non-empty audit note. Enforce this in the modal and in both Review Queue and manual-check server actions; show the outcome in decision history and audit reports.

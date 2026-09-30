@@ -959,7 +959,7 @@ export async function purgeMerchantShopData(shop: string): Promise<{
   activityLogs: number;
 }> {
   const shopRef = getMerchantDocRef(shop);
-  await withCredentialFallback(() => firestore.recursiveDelete(shopRef), undefined);
+  await firestore.recursiveDelete(shopRef);
 
   return {
     alerts: 0,
