@@ -10,6 +10,8 @@ import {
   handleRunMerchantDeltaMonitoringRequest,
   handleMerchantMonitoringTask,
   handleUpsertMerchantProductRequest,
+  handleStartShopifyProductChangeRequest,
+  handleShopifyProductChangeTask,
   runDailyMerchantDeltaMonitoring,
 } from "./merchant-monitoring.js";
 import { handleCheckProductSafetyRequest } from "./safety-gate-http.js";
@@ -49,7 +51,14 @@ export const dailyRapexDeltaLoader = onSchedule(
   },
   async (event) => {
     logger.info("Starting Safety Gate weekly XML loader job from ec.europa.eu", { event });
-    await runSafetyGateWeeklyLoaderJob();
+    const loaderResult = await runSafetyGateWeeklyLoaderJob();
+    if (loaderResult.newAlertsCreated + loaderResult.alertsUpdated > 0) {
+      logger.info("Safety Gate alerts were imported; enqueueing merchant delta checks immediately", {
+        newAlertsCreated: loaderResult.newAlertsCreated,
+        alertsUpdated: loaderResult.alertsUpdated,
+      });
+      await runDailyMerchantDeltaMonitoring(event.scheduleTime);
+    }
   },
 );
 
@@ -243,6 +252,37 @@ export const startMerchantCatalogAuditAPI = onRequest(
     secrets: ["SAFETY_GATE_API_KEY"],
   },
   handleStartMerchantCatalogAuditRequest,
+);
+
+export const startShopifyProductChangeAPI = onRequest(
+  {
+    region: "europe-west1",
+    memory: "256MiB",
+    timeoutSeconds: 60,
+    secrets: ["SAFETY_GATE_API_KEY"],
+  },
+  handleStartShopifyProductChangeRequest,
+);
+
+export const shopifyProductChangeTask = onTaskDispatched(
+  {
+    region: "europe-west1",
+    memory: "1GiB",
+    timeoutSeconds: 1800,
+    maxInstances: 10,
+    rateLimits: { maxConcurrentDispatches: 4, maxDispatchesPerSecond: 1 },
+    retryConfig: {
+      maxAttempts: 8,
+      maxRetrySeconds: 24 * 60 * 60,
+      minBackoffSeconds: 60,
+      maxBackoffSeconds: 600,
+      maxDoublings: 4,
+    },
+    secrets: ["GOOGLE_API_KEY"],
+  },
+  async (request) => {
+    await handleShopifyProductChangeTask(request.data, request.context.retryCount);
+  },
 );
 
 export const merchantCatalogAuditTask = onTaskDispatched(

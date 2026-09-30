@@ -297,4 +297,27 @@ export async function startMerchantCatalogAudit(shop: string, runId: string): Pr
   }
 }
 
+export async function queueShopifyProductChange(input: {
+  shop: string;
+  productId: string;
+  productTitle: string;
+  productHandle?: string;
+  sourceUpdatedAt: string;
+  product: ProductData;
+  similarityThreshold: number;
+}): Promise<void> {
+  const response = await fetch(`${FIREBASE_FUNCTIONS_BASE_URL}/startShopifyProductChangeAPI`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-Key": requireApiKey(),
+    },
+    body: JSON.stringify(input),
+  });
+  if (!response.ok) {
+    const message = await response.text();
+    throw new Error(`Could not queue Shopify product check: ${response.status} ${message}`);
+  }
+}
+
 export { shopifyProductToProductData };

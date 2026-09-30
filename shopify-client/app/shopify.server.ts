@@ -9,6 +9,7 @@ import { PrismaSessionStorage } from "@shopify/shopify-app-session-storage-prism
 import prisma from "./db.server";
 import { FirestoreSessionStorage } from "./firestore-session-storage.server";
 import { firestore } from "./firestore.server";
+import { FieldValue } from "firebase-admin/firestore";
 
 const configuredSessionStorage = process.env.SHOPIFY_SESSION_STORAGE === "firestore"
   ? new FirestoreSessionStorage(firestore)
@@ -33,6 +34,11 @@ const shopify = shopifyApp({
   authPathPrefix: "/auth",
   sessionStorage: configuredSessionStorage,
   distribution: AppDistribution.AppStore,
+  hooks: {
+    afterAuth: async ({ session }) => {
+      await ensureShopifyWebhooksRegistered(session);
+    },
+  },
   webhooks: {
     PRODUCTS_CREATE: {
       deliveryMethod: DeliveryMethod.Http,
@@ -64,6 +70,29 @@ const shopify = shopifyApp({
     ? { customShopDomains: [process.env.SHOP_CUSTOM_DOMAIN] }
     : {}),
 });
+
+const WEBHOOK_REGISTRATION_VERSION = "product-events-2026-07-v1";
+
+/** Register app-managed subscriptions after OAuth and restore them on existing sessions. */
+export async function ensureShopifyWebhooksRegistered(
+  session: Parameters<typeof shopify.registerWebhooks>[0]["session"],
+): Promise<void> {
+  const merchantRef = firestore.collection("merchants").doc(encodeURIComponent(session.shop));
+  const merchantSnapshot = await merchantRef.get();
+  if (merchantSnapshot.get("webhookRegistrationVersion") === WEBHOOK_REGISTRATION_VERSION) return;
+
+  const registrations = await shopify.registerWebhooks({ session });
+  if (!registrations) throw new Error("Shopify did not confirm webhook registration");
+  const failures = Object.values(registrations || {}).flat().filter((result) => !result.success);
+  if (failures.length > 0) {
+    throw new Error(`Shopify webhook registration failed for ${failures.length} subscription(s)`);
+  }
+  await merchantRef.set({
+    shop: session.shop,
+    webhookRegistrationVersion: WEBHOOK_REGISTRATION_VERSION,
+    webhooksRegisteredAt: FieldValue.serverTimestamp(),
+  }, { merge: true });
+}
 
 export default shopify;
 export const apiVersion = ApiVersion.July26;

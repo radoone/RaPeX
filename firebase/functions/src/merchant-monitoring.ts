@@ -6,7 +6,7 @@ import { db } from "./firebase-admin.js";
 import { AI_CONFIG, FIRESTORE_COLLECTIONS, MATCHING_THRESHOLDS } from "./safety-gate-config.js";
 import { buildMonitoringCursorValues } from "./monitoring-cursor.js";
 import { monitoringTaskId, scheduledMonitoringRunId } from "./monitoring-task-id.js";
-import { checkProductAgainstAlerts } from "./safety-gate-checker.js";
+import { checkProductAgainstAlerts, checkProductSafety } from "./safety-gate-checker.js";
 import type { ProductInput } from "./safety-gate-checker.schemas.js";
 import { normalizePictures } from "./safety-gate-checker-media.js";
 import type { NormalizedAlert } from "./safety-gate-checker.types.js";
@@ -76,11 +76,24 @@ const MAX_MONITORING_TASK_ATTEMPTS = 8;
 const MONITORING_TASK_QUEUE = getFunctions().taskQueue<MerchantMonitoringTaskPayload>(
   "locations/europe-west1/functions/merchantMonitoringTask",
 );
+const PRODUCT_CHANGE_TASK_QUEUE = getFunctions().taskQueue<ShopifyProductChangeTaskPayload>(
+  "locations/europe-west1/functions/shopifyProductChangeTask",
+);
 
 export type MerchantMonitoringTaskPayload = {
   shop: string;
   runId: string;
   triggerMode: "scheduled";
+};
+
+export type ShopifyProductChangeTaskPayload = {
+  shop: string;
+  productId: string;
+  productTitle: string;
+  productHandle?: string;
+  sourceUpdatedAt: string;
+  product: ProductInput;
+  similarityThreshold: number;
 };
 
 function monitoringRunRef(shop: string, runId: string, collection = MONITORING_RUNS) {
@@ -588,16 +601,17 @@ export async function upsertMerchantProduct(
     ...(vectorImage?.length ? { vector_image: FieldValue.vector(vectorImage) } : {}),
   };
 
-  await Promise.all([
-    docRef.set(payload, { merge: true }),
-    merchantRef.set(
-      {
-        shop,
-        updatedAt: FieldValue.serverTimestamp(),
-      },
-      { merge: true },
-    ),
-  ]);
+  await db.runTransaction(async (transaction) => {
+    const latest = await transaction.get(docRef);
+    const latestVersion = latest.get("sourceUpdatedAt");
+    if (typeof latestVersion === "string" && incomingSourceUpdatedAt &&
+      Date.parse(latestVersion) > Date.parse(incomingSourceUpdatedAt)) return;
+    transaction.set(docRef, {
+      ...payload,
+      createdAt: latest.exists ? latest.get("createdAt") || FieldValue.serverTimestamp() : FieldValue.serverTimestamp(),
+    }, { merge: true });
+    transaction.set(merchantRef, { shop, updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+  });
 
   return {
     shop,
@@ -1123,6 +1137,203 @@ export async function runDailyMerchantDeltaMonitoring(scheduleTime?: string): Pr
     shopsSkippedUnentitled: merchantsSnapshot.size - eligibleShops.length,
     failures,
   };
+}
+
+function productChangeJobId(payload: ShopifyProductChangeTaskPayload): string {
+  return monitoringTaskId(payload.shop, `product:${payload.productId}:${payload.sourceUpdatedAt}`);
+}
+
+function productChangeJobRef(shop: string, jobId: string) {
+  return db.collection(FIRESTORE_COLLECTIONS.merchants)
+    .doc(encodeURIComponent(shop))
+    .collection("product_change_jobs")
+    .doc(jobId);
+}
+
+/** Fast authenticated ingress: Shopify's webhook only queues work and returns. */
+export async function handleStartShopifyProductChangeRequest(
+  request: RequestShape,
+  response: ResponseShape,
+): Promise<void> {
+  applyCorsHeaders(response);
+  if (request.method === "OPTIONS") return response.status(204).send("");
+  if (request.method !== "POST") return response.status(405).json({ error: "Method not allowed" });
+  if (!requireAuthorizedRequest(request)) return response.status(401).json({ error: "Unauthorized" });
+
+  try {
+    const body = request.body || {};
+    const shop = coerceString(body.shop);
+    const productId = coerceString(body.productId);
+    const productTitle = coerceString(body.productTitle);
+    const sourceUpdatedAt = coerceString(body.sourceUpdatedAt);
+    const product = body.product as ProductInput | undefined;
+    const threshold = Number(body.similarityThreshold ?? 0);
+    if (!shop || !productId || !productTitle || !sourceUpdatedAt || !product?.name || !product.category || !product.description) {
+      return response.status(400).json({ error: "shop, product identity, sourceUpdatedAt and normalized product fields are required" });
+    }
+    const payload: ShopifyProductChangeTaskPayload = {
+      shop,
+      productId,
+      productTitle,
+      productHandle: coerceString(body.productHandle),
+      sourceUpdatedAt,
+      product: { ...product, shop, productId, sourceUpdatedAt },
+      similarityThreshold: Number.isFinite(threshold) ? Math.max(0, threshold) : 0,
+    };
+    const merchantRef = db.collection(FIRESTORE_COLLECTIONS.merchants).doc(encodeURIComponent(shop));
+    const merchantSnapshot = await merchantRef.get();
+    if (!currentEntitlement((merchantSnapshot.data() || {}) as Record<string, unknown>)) {
+      return response.status(200).json({ success: true, queued: false, reason: "no_current_entitlement" });
+    }
+
+    const jobId = productChangeJobId(payload);
+    const jobRef = productChangeJobRef(shop, jobId);
+    const shouldEnqueue = await db.runTransaction(async (transaction) => {
+      const snapshot = await transaction.get(jobRef);
+      if (["queued", "processing", "completed"].includes(String(snapshot.get("status")))) return false;
+      transaction.set(jobRef, {
+        shop,
+        productId,
+        sourceUpdatedAt,
+        status: "queued",
+        attemptCount: 0,
+        createdAt: snapshot.get("createdAt") || FieldValue.serverTimestamp(),
+        queuedAt: FieldValue.serverTimestamp(),
+        updatedAt: FieldValue.serverTimestamp(),
+      }, { merge: true });
+      return true;
+    });
+    if (shouldEnqueue) {
+      try {
+        await PRODUCT_CHANGE_TASK_QUEUE.enqueue(payload, {
+          id: jobId,
+          dispatchDeadlineSeconds: 1800,
+        });
+      } catch (error) {
+        if ((error as { code?: string })?.code !== "functions/task-already-exists") {
+          await jobRef.set({ status: "enqueue_failed", lastError: error instanceof Error ? error.message : String(error), updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+          throw error;
+        }
+      }
+    }
+    return response.status(202).json({ success: true, queued: true, jobId });
+  } catch (error) {
+    logger.error("Could not queue Shopify product change", { error });
+    return response.status(500).json({ success: false, error: "Could not queue product check" });
+  }
+}
+
+/** Retryable Cloud Task processor for Shopify product create/update webhooks. */
+export async function handleShopifyProductChangeTask(
+  payload: ShopifyProductChangeTaskPayload,
+  retryCount = 0,
+): Promise<void> {
+  const shop = payload.shop.trim();
+  const jobId = productChangeJobId(payload);
+  const jobRef = productChangeJobRef(shop, jobId);
+  const merchantRef = db.collection(FIRESTORE_COLLECTIONS.merchants).doc(encodeURIComponent(shop));
+  const jobSnapshot = await jobRef.get();
+  if (jobSnapshot.get("status") === "completed") return;
+  const merchantSnapshot = await merchantRef.get();
+  if (!currentEntitlement((merchantSnapshot.data() || {}) as Record<string, unknown>)) {
+    await jobRef.set({ status: "skipped_unentitled", updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+    return;
+  }
+
+  await jobRef.set({ status: "processing", attemptCount: retryCount + 1, startedAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+  try {
+    const productRef = merchantRef.collection(FIRESTORE_COLLECTIONS.subProducts).doc(encodeURIComponent(payload.productId));
+    const existingProduct = await productRef.get();
+    const existingVersion = existingProduct.get("sourceUpdatedAt");
+    if (typeof existingVersion === "string" && Date.parse(existingVersion) > Date.parse(payload.sourceUpdatedAt)) {
+      await jobRef.set({ status: "superseded", updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+      return;
+    }
+    await upsertMerchantProduct({
+      shop,
+      productId: payload.productId,
+      productTitle: payload.productTitle,
+      productHandle: payload.productHandle,
+      product: payload.product,
+      sourceUpdatedAt: payload.sourceUpdatedAt,
+    });
+    const currentProduct = await productRef.get();
+    if (currentProduct.get("sourceUpdatedAt") !== payload.sourceUpdatedAt) {
+      await jobRef.set({ status: "superseded", updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+      return;
+    }
+
+    let resultJson = jobSnapshot.get("resultJson");
+    if (typeof resultJson !== "string") {
+      const result = await checkProductSafety(payload.product);
+      const filteredWarnings = payload.similarityThreshold > 0
+        ? result.warnings.filter((warning) => warning.overallSimilarity >= payload.similarityThreshold)
+        : result.warnings;
+      const filteredResult = {
+        ...result,
+        warnings: filteredWarnings,
+        isSafe: filteredWarnings.length === 0,
+      };
+      resultJson = JSON.stringify(filteredResult);
+      await jobRef.set({ status: "analyzed", resultJson, updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+    }
+    const result = JSON.parse(resultJson) as {
+      isSafe: boolean;
+      warnings: Array<Record<string, any>>;
+      checkedAt: string;
+    };
+    const productKey = `${jobId}`;
+    const expireDate = new Date();
+    expireDate.setDate(expireDate.getDate() + AI_CONFIG.checkHistoryTtlDays);
+    await merchantRef.collection(FIRESTORE_COLLECTIONS.subChecks).doc(productKey).set({
+      shop,
+      productId: payload.productId,
+      productTitle: payload.productTitle,
+      isSafe: result.isSafe,
+      checkedAt: new Date(result.checkedAt),
+      sourceUpdatedAt: payload.sourceUpdatedAt,
+      createdAt: FieldValue.serverTimestamp(),
+      expireAt: Timestamp.fromDate(expireDate),
+    }, { merge: true });
+
+    await productRef.set({
+      lastImmediateCheckAt: FieldValue.serverTimestamp(),
+      lastCheckedAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
+    }, { merge: true });
+
+    if (!result.isSafe && result.warnings.length > 0) {
+      const warning = result.warnings[0];
+      await upsertAlertForProduct({
+        shop,
+        productId: payload.productId,
+        productTitle: payload.productTitle,
+        productHandle: payload.productHandle,
+        resultJson,
+        warningsCount: result.warnings.length,
+        riskLevel: warning.alertDetails?.fields?.alert_level || warning.alertDetails?.fields?.risk_level || warning.riskLevel || "Unknown",
+      });
+    } else {
+      const activeAlerts = await merchantRef.collection(FIRESTORE_COLLECTIONS.subAlerts)
+        .where("productId", "==", payload.productId)
+        .where("status", "==", "active")
+        .get();
+      const batch = db.batch();
+      activeAlerts.docs.forEach((document) => batch.set(document.ref, {
+        status: "resolved",
+        resolvedAt: FieldValue.serverTimestamp(),
+        resolutionType: "automatic_product_update",
+        updatedAt: FieldValue.serverTimestamp(),
+      }, { merge: true }));
+      if (!activeAlerts.empty) await batch.commit();
+    }
+
+    await jobRef.set({ status: "completed", completedAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+    logger.info("Shopify product change processed", { shop, productId: payload.productId, sourceUpdatedAt: payload.sourceUpdatedAt, isSafe: result.isSafe });
+  } catch (error) {
+    await jobRef.set({ status: "retrying", lastError: error instanceof Error ? error.message : String(error), updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+    throw error;
+  }
 }
 
 function parseUpsertInput(body: Record<string, unknown> | undefined): MerchantProductUpsertInput {

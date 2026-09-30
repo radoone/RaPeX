@@ -1,0 +1,17 @@
+.gcloudignore
+.git
+.gitignore
+.codex
+.playwright-cli
+.playwright-mcp
+.impeccable
+outputs
+output
+**/node_modules
+**/build
+**/dist
+**/lib
+**/.cache
+**/.env
+**/.env.*
+!**/.env.example

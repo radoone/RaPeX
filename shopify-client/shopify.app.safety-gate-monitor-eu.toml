@@ -2,7 +2,7 @@
 
 client_id = "0f8c446d88af9f13ac49947a87c47207"
 name = "Safety Gate Monitor"
-application_url = "https://harbor-celebrate-postage-asin.trycloudflare.com"
+application_url = "https://safety-gate-shopify-29849753697.europe-west1.run.app"
 embedded = true
 handle = "safety-gate-monitor-eu"
 
@@ -10,14 +10,14 @@ handle = "safety-gate-monitor-eu"
 automatically_update_urls_on_dev = true
 
 [webhooks]
-api_version = "2025-07"
+api_version = "2026-07"
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
 scopes = "read_products"
 
 [auth]
-redirect_urls = ["https://harbor-celebrate-postage-asin.trycloudflare.com/auth/callback", "https://harbor-celebrate-postage-asin.trycloudflare.com/auth/shopify/callback", "https://harbor-celebrate-postage-asin.trycloudflare.com/api/auth/callback"]
+redirect_urls = ["https://safety-gate-shopify-29849753697.europe-west1.run.app/auth/callback", "https://safety-gate-shopify-29849753697.europe-west1.run.app/auth/shopify/callback", "https://safety-gate-shopify-29849753697.europe-west1.run.app/api/auth/callback"]
 
 [pos]
 embedded = false

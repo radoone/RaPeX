@@ -1,143 +1,33 @@
 import type { ActionFunctionArgs } from "react-router";
 import { authenticate } from "../shopify.server";
-import db from "../merchant-db.server";
 import {
-  checkProductSafety,
   getSimilarityThresholdForShop,
+  queueShopifyProductChange,
   shopifyProductToProductData,
-  upsertMerchantProductForMonitoring,
 } from "../services/safety-gate-checker.server";
-import { handleAutoDraftAndNotifications } from "../services/safety-gate-notifications.server";
 import { hasCurrentMonitoringEntitlement } from "../services/billing.server";
 
-/**
- * Webhook handler for product creation
- * Automatically checks new products against Safety Gate database
- */
+/** Queue the check durably; processing continues after this webhook returns. */
 export const action = async ({ request }: ActionFunctionArgs) => {
   const { payload, topic, shop } = await authenticate.webhook(request);
+  if (!(await hasCurrentMonitoringEntitlement(shop))) return new Response(null, { status: 200 });
 
-  console.log(`Received ${topic} webhook for ${shop}`);
-
-  try {
-    if (!(await hasCurrentMonitoringEntitlement(shop))) {
-      console.log(`Skipped product-create safety check for ${shop}: no current monitoring entitlement`);
-      return new Response(null, { status: 200 });
-    }
-    const product = payload as any;
-
-    // Convert Shopify product to format needed for Safety Gate checking
-    const productData = shopifyProductToProductData(product);
-    const similarityThreshold = await getSimilarityThresholdForShop(shop);
-
-    await upsertMerchantProductForMonitoring({
-      shop,
-      productId: product.id.toString(),
-      productTitle: product.title,
-      productHandle: product.handle || undefined,
-      product: productData,
-      sourceUpdatedAt: product.updated_at || product.updatedAt || undefined,
-    });
-
-    console.log(`Checking product safety for: ${productData.name}`);
-
-    // Check product against Safety Gate database
-    const safetyResult = await checkProductSafety(productData, similarityThreshold, {
-      shop,
-      productId: product.id.toString(),
-      sourceUpdatedAt: product.updated_at || product.updatedAt || undefined,
-    });
-
-    await db.safetyCheck.create({
-      data: {
-        productId: product.id.toString(),
-        productTitle: product.title,
-        shop: shop,
-        isSafe: safetyResult.isSafe,
-        checkedAt: new Date(safetyResult.checkedAt),
-        sourceUpdatedAt: product.updated_at || product.updatedAt || null,
-      },
-    });
-
-    // If product is not safe, create alert record
-    if (!safetyResult.isSafe && safetyResult.warnings.length > 0) {
-      console.log(`⚠️ UNSAFE PRODUCT DETECTED: ${productData.name}`, {
-        warningsCount: safetyResult.warnings.length,
-        highestRisk: Math.max(...safetyResult.warnings.map(w =>
-          w.riskLevel === 'serious' ? 4 :
-          w.riskLevel === 'high' ? 3 :
-          w.riskLevel === 'medium' ? 2 : 1
-        ))
-      });
-
-      // Store safety alert in database
-      // Risk level is stored in alertDetails.fields.alert_level from Safety Gate API
-      const firstWarning = safetyResult.warnings[0];
-      const riskLevel = firstWarning?.alertDetails?.fields?.alert_level ||
-                        firstWarning?.alertDetails?.fields?.risk_level ||
-                        firstWarning?.riskLevel ||
-                        'unknown';
-      
-      await db.safetyAlert.create({
-        data: {
-          productId: product.id.toString(),
-          productTitle: product.title,
-          productHandle: product.handle,
-          shop: shop,
-          checkResult: JSON.stringify(safetyResult),
-          status: 'active',
-          reviewState: 'needs_review',
-          riskLevel,
-          warningsCount: safetyResult.warnings.length,
-        },
-      });
-
-      // Log webhook automatic quarantine/unsafe event
-      await db.activityLog.create({
-        data: {
-          shop,
-          type: "automatic",
-          action: "quarantine",
-          details: `Webhook detected unsafe product "${product.title}" (${safetyResult.warnings.length} matches).`
-        }
-      });
-
-      // Run auto-draft and notification flow asynchronously
-      handleAutoDraftAndNotifications(shop, product.id.toString(), safetyResult).catch(err => {
-        console.error("Failed executing webhook notifications:", err);
-      });
-
-      console.log(`🚨 Alert created for unsafe product: ${product.title}`);
-
-    } else {
-      console.log(`✅ Product is safe: ${productData.name}`);
-
-      // Log webhook check success
-      await db.activityLog.create({
-        data: {
-          shop,
-          type: "automatic",
-          action: "check",
-          details: `Webhook successfully verified product "${product.title}" as safe.`
-        }
-      });
-    }
-
-  } catch (error) {
-    console.error(`Error processing product creation webhook:`, error);
-
-    // Log the error but don't fail the webhook - Shopify might retry
-    await db.webhookError.create({
-      data: {
-        shop: shop,
-        topic: topic,
-        error: error instanceof Error ? error.message : 'Unknown error',
-        payload: JSON.stringify(payload),
-      },
-    }).catch(dbError => {
-      console.error('Failed to log webhook error to database:', dbError);
-    });
+  const product = payload as Record<string, any>;
+  const productId = String(product.id || "");
+  const sourceUpdatedAt = String(product.updated_at || product.updatedAt || product.created_at || "");
+  if (!productId || !sourceUpdatedAt) {
+    console.error(`Cannot queue ${topic} webhook for ${shop}: product identity or version is missing`);
+    return new Response("Product identity or version is missing", { status: 422 });
   }
 
-  return new Response(null, { status: 200 });
+  await queueShopifyProductChange({
+    shop,
+    productId,
+    productTitle: String(product.title || "Untitled product"),
+    productHandle: product.handle ? String(product.handle) : undefined,
+    sourceUpdatedAt,
+    product: shopifyProductToProductData(product),
+    similarityThreshold: await getSimilarityThresholdForShop(shop),
+  });
+  return new Response(null, { status: 202 });
 };

@@ -3,7 +3,7 @@ import { NavMenu } from "@shopify/app-bridge-react";
 import { data as json } from "react-router";
 import { useTranslation } from "react-i18next";
 import { boundary } from "@shopify/shopify-app-react-router/server";
-import { authenticate } from "../shopify.server";
+import { authenticate, ensureShopifyWebhooksRegistered } from "../shopify.server";
 import db from "../merchant-db.server";
 import { getBillingStatus } from "../services/billing.server";
 
@@ -13,6 +13,7 @@ export const headers = (headersArgs: any) => {
 
 export const loader = async ({ request }: { request: Request }) => {
   const { billing, session, admin } = await authenticate.admin(request);
+  await ensureShopifyWebhooksRegistered(session);
   const billingStatus = await getBillingStatus(billing, session.shop, admin);
 
   const activeAlertsCount = await db.safetyAlert.count({
