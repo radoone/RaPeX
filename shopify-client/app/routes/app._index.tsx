@@ -15,6 +15,7 @@ import {
 } from "../services/safety-gate-checker.server";
 import { shopifyProductToProductData } from "../services/safety-gate-product-data";
 import { checkCoversCurrentProductVersion } from "../services/catalog-coverage.server";
+import { getRecentMonitoringRuns } from "../services/monitoring-runs.server";
 
 type BulkCheckResults = {
   processed: number;
@@ -286,6 +287,10 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     .doc(encodeURIComponent(session.shop))
     .get();
   const monitorState = monitorStateSnapshot.exists ? monitorStateSnapshot.data() : null;
+  const recentMonitoringRuns = await getRecentMonitoringRuns(session.shop).catch((error) => {
+    console.error("Could not load recent Safety Gate monitoring runs", { shop: session.shop, error });
+    return [];
+  });
 
   let settings = storedSettings;
   if (!settings || settings.emailNotifications === undefined || !settings.notificationEmail) {
@@ -445,6 +450,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     settings: resolvedSettings,
     billingStatus,
     recentActivities,
+    recentMonitoringRuns,
     monitorState: monitorState ? {
       status: monitorState.lastMonitorStatus || null,
       lastRunAt: monitorState.lastMonitorRunEnd || null,
@@ -615,7 +621,7 @@ export function ErrorBoundary() {
 }
 
 export default function Index() {
-  const { stats, recentAlerts, settings, billingStatus, recentActivities, lastMonitoringAt, monitorState } = useLoaderData<typeof loader>();
+  const { stats, recentAlerts, settings, billingStatus, recentActivities, lastMonitoringAt, monitorState, recentMonitoringRuns } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<ActionResponse>();
   const navigation = useNavigation();
   const shopify = useAppBridge();
@@ -881,6 +887,39 @@ export default function Index() {
             </div>
           </div>
         </section> : null}
+
+        {!isScanning ? <s-section heading={t("dashboard.admin.monitoringRunHistoryTitle")}>
+          {recentMonitoringRuns.length === 0 ? (
+            <s-text>{t("dashboard.admin.monitoringRunHistoryEmpty")}</s-text>
+          ) : (
+            <div className="monitoring-run-list" aria-label={t("dashboard.admin.monitoringRunHistoryTitle")}>
+              {recentMonitoringRuns.map((run) => {
+                const statusKey = ["queued", "processing", "retrying", "completed", "failed", "enqueue_failed", "skipped_unentitled"].includes(run.status)
+                  ? run.status
+                  : "unknown";
+                const tone = run.status === "completed" ? "success" :
+                  run.status === "failed" || run.status === "enqueue_failed" ? "critical" :
+                    run.status === "skipped_unentitled" ? "warning" : "info";
+                return (
+                  <div className="monitoring-run-list__row" key={run.id}>
+                    <div className="monitoring-run-list__summary">
+                      <s-badge tone={tone}>{t(`dashboard.admin.monitoringRunStatus.${statusKey}`)}</s-badge>
+                      <span>{t("dashboard.admin.monitoringRunProgress", {
+                        products: run.productsScanned,
+                        alerts: run.alertsCreated,
+                      })}</span>
+                    </div>
+                    <small>
+                      {run.updatedAt
+                        ? formatRelativeDate(new Date(run.updatedAt), t, i18n.language)
+                        : t("dashboard.admin.monitoringRunDateUnknown")}
+                    </small>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </s-section> : null}
 
         <section className="protection-value-panel" aria-label={t("dashboard.admin.proofGridLabel")}>
           <div className="protection-value-panel__content">

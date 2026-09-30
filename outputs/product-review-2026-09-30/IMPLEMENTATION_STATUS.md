@@ -14,21 +14,22 @@ The local worktree contains the first reliability, access, billing-adapter, expo
 - Dashboard/catalog wording no longer equates saved checks with a safety guarantee.
 - Daily monitoring now enqueues one Cloud Task per entitled shop instead of processing every shop serially in the scheduler invocation. Each shop/day has a deterministic run ID and task ID, run state and progress are persisted under `merchants/{shop}/monitoring_runs`, and worker retries reuse deterministic check IDs. The worker rechecks subscription entitlement before it performs model work.
 - Dashboard and catalog coverage now count a saved check only when it matches the current Shopify product version. New check records persist `sourceUpdatedAt`; legacy check records count only when their `checkedAt` is no earlier than the current product update. Product snapshots and embeddings alone no longer inflate the dashboard coverage count.
+- The Shopify dashboard now shows the latest three scheduled monitor-run states with safe progress counts; internal failure details are not sent to the browser. Missing run history degrades to an empty history panel without failing the dashboard.
 
 ## Required before billing or production claims
 
 - The Shopify Partner Dashboard plan was not created or inspected. The development environment has no Partner API organization ID, Partner API token, or app GID configured. Configure a €9.90 monthly plan (if that is the approved amount/currency), its welcome link, and a private test plan in the Partner Dashboard; configure `SHOPIFY_PARTNER_ORG_ID`, `SHOPIFY_PARTNER_API_TOKEN`, and `SHOPIFY_APP_GID` in the hosting secret manager, and verify the exact plan amount and currency there.
 - Set `SHOPIFY_APP_HANDLE=safety-gate-monitor-eu` in the production Shopify app and Firebase Functions environments. The local Functions environment was updated only for development.
 - A successful authenticated monitoring run has not yet cleared the old failed state in this shop. The running Admin view still contains the result of the previous Firestore 500. It needs a new catalog-monitoring run after the server uses these changes.
-- The initial catalog scan still runs in the Shopify app process and is capped at 300 products. Full-catalog pagination, version freshness across the entire catalog, deletion reconciliation, and merchant-facing monitoring-run history remain to be implemented.
-- The scheduled Task Queue worker is deployed and its queue is `RUNNING`; a real task has not yet been enqueued and observed through `queued → completed/retried`. The queue run ledger is not surfaced in the merchant UI yet. The initial Shopify catalog import still runs in the app process and is capped at 300; it needs its own durable paged worker before large catalogs can be claimed as fully audited.
+- The initial catalog scan still runs in the Shopify app process and is capped at 300 products. Full-catalog pagination and deletion reconciliation remain outstanding.
+- The scheduled Task Queue worker is deployed and its queue is `RUNNING`; a real task has not yet been enqueued and observed through `queued → completed/retried`. The queue run ledger is now surfaced in the merchant dashboard, but the initial Shopify catalog import still needs its own durable paged worker before large catalogs can be claimed as fully audited.
 - Immediate and weekly email content currently has complete English and Slovak templates; other EU-selected email languages still fall back to English. Bounded email retries, delivery-status/settings view, safe test email, and provider reconciliation remain outstanding.
 - `contacted_supplier` is kept open using the existing `active` status. The dedicated `waiting_for_supplier` state and immutable decision-event migration remain outstanding.
 - Marketing listing URL/legal/support publication, analytics, cost verification for 100/1,000/5,000 products, final extension smoke tests, and production release remain outstanding.
 
 ## Local validation
 
-- Shopify client: `npx tsc --noEmit`, `npm run lint`, and `npm run build` pass after the current-product-version coverage change; 4 focused helper cases pass.
+- Shopify client: `npm test` passes 6/6; `npx tsc --noEmit`, `npm run lint`, and `npm run build` pass after the dashboard run-history change.
 - Firebase Functions: `npm run build`, `npm run lint`, and `npm test` pass, including two new cursor regression tests.
 - Shopify Admin UI was inspected in the open dev preview before the latest Shopify package update. After that update, Shopify CLI connected successfully but the embedded app iframe remained on Loading/about:blank; a post-update UI smoke test remains outstanding. The old monitoring failure in the dev shop was not replaced by a successful run.
 - Firebase Functions: `npm test` passes 15/15, `npm run lint`, `npm run build`, and workspace `git diff --check` pass. The monitoring functions are deployed to the Firebase development project, but no real Cloud Task has been processed as an integration test.

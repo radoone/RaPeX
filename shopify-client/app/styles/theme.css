@@ -171,6 +171,43 @@ body {
   line-height: 1.25;
 }
 
+.monitoring-run-list {
+  display: grid;
+  gap: 8px;
+}
+
+.monitoring-run-list__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-block: 8px;
+  border-bottom: 1px solid var(--border-subdued);
+}
+
+.monitoring-run-list__row:last-child {
+  border-bottom: 0;
+}
+
+.monitoring-run-list__summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.monitoring-run-list__row small {
+  color: var(--text-subdued);
+  white-space: nowrap;
+}
+
+@media (max-width: 680px) {
+  .monitoring-run-list__row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
 .protection-value-panel {
   display: grid;
   grid-template-columns: minmax(320px, 1.25fr) minmax(360px, 1fr);
