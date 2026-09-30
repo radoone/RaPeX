@@ -1,6 +1,6 @@
 # Implementation status — 30 September 2026
 
-The local worktree contains the first reliability, access, billing-adapter, export, email-preference, and copy-cleanup tranche, plus durable retries for scheduled per-shop monitoring. On 30 September 2026, only the Firebase monitoring worker, daily enqueue function, and manual monitoring API were deployed to `rapex-99a2c`; email functions were deliberately excluded. Shopify client changes remain local and are not deployed.
+The product/reliability changes are committed and pushed to `origin/main`. On 30 September 2026, only the Firebase monitoring worker, daily enqueue function, and manual monitoring API were deployed to `rapex-99a2c`; email functions were deliberately excluded. Shopify client changes remain source-only and are not deployed.
 
 ## Implemented locally
 
@@ -12,7 +12,7 @@ The local worktree contains the first reliability, access, billing-adapter, expo
 - Email preferences distinguish immediate findings from weekly summaries while migrating the existing `emailNotifications` value. Immediate alert emails use a Shopify Admin app deep link with `open`; weekly summaries include findings and report incomplete monitoring honestly. Weekly summaries stop when cached entitlement expires.
 - “Contacted supplier” remains an open review item and is labelled as waiting for the supplier; it is not marked resolved.
 - Dashboard/catalog wording no longer equates saved checks with a safety guarantee.
-- Daily monitoring now enqueues one Cloud Task per entitled shop instead of processing every shop serially in the scheduler invocation. Each shop/day has a deterministic run ID and task ID, run state and progress are persisted under `merchants/{shop}/monitoring_runs`, and worker retries reuse deterministic check IDs. The worker rechecks subscription entitlement before it performs model work.
+- Daily monitoring now enqueues one Cloud Task per entitled shop instead of processing every shop serially in the scheduler invocation. Each shop/day has a deterministic run ID and task ID, run state and progress are persisted under `merchants/{shop}/monitoring_runs`, and worker retries reuse deterministic check IDs. The worker rechecks subscription entitlement before it performs model work. The deployed monitoring functions use Firebase Functions 7.4, Firebase Admin 14.5, and Genkit 1.42.
 - Dashboard and catalog coverage now count a saved check only when it matches the current Shopify product version. New check records persist `sourceUpdatedAt`; legacy check records count only when their `checkedAt` is no earlier than the current product update. Product snapshots and embeddings alone no longer inflate the dashboard coverage count.
 - The Shopify dashboard now shows the latest three scheduled monitor-run states with safe progress counts; internal failure details are not sent to the browser. Missing run history degrades to an empty history panel without failing the dashboard.
 
@@ -32,4 +32,4 @@ The local worktree contains the first reliability, access, billing-adapter, expo
 - Shopify client: `npm test` passes 6/6; `npx tsc --noEmit`, `npm run lint`, and `npm run build` pass after the dashboard run-history change.
 - Firebase Functions: `npm run build`, `npm run lint`, and `npm test` pass, including two new cursor regression tests.
 - Shopify Admin UI was inspected in the open dev preview before the latest Shopify package update. After that update, Shopify CLI connected successfully but the embedded app iframe remained on Loading/about:blank; a post-update UI smoke test remains outstanding. The old monitoring failure in the dev shop was not replaced by a successful run.
-- Firebase Functions: `npm test` passes 15/15, `npm run lint`, `npm run build`, and workspace `git diff --check` pass. The monitoring functions are deployed to the Firebase development project, but no real Cloud Task has been processed as an integration test.
+- Firebase Functions on Node 22: `npm test` passes 15/15, `npm run lint`, and `npm run build`; the three selected monitoring functions are active after deployment. The deploy no longer reports an outdated `firebase-functions` warning. No real Cloud Task has been processed as an integration test. `npm audit --omit=dev` still reports transitive vulnerabilities; don't use `npm audit fix --force` without evaluating its breaking upgrades against Genkit and Firebase compatibility.
