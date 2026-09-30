@@ -6,7 +6,6 @@ import { boundary } from "@shopify/shopify-app-react-router/server";
 import { authenticate } from "../shopify.server";
 import db from "../merchant-db.server";
 import { formatRelativeDate } from "../components/AlertTable";
-import { requireActiveBilling } from "../services/billing.server";
 
 export const headers = (headersArgs: any) => {
   return boundary.headers(headersArgs);
@@ -63,11 +62,7 @@ function compactEvidenceText(record: { notes?: string | null; reason?: string | 
 }
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { billing, session } = await authenticate.admin(request);
-  const billingRedirect = await requireActiveBilling(billing, session.shop, {
-    allowFreeInitialScan: true,
-  });
-  if (billingRedirect) return billingRedirect as never;
+  const { session } = await authenticate.admin(request);
   const alerts = await db.safetyAlert.findMany({
     where: { shop: session.shop },
     orderBy: { updatedAt: "desc" },

@@ -10,14 +10,9 @@ import {
   AlertTable,
   AlertDetailModal,
 } from "../components";
-import { requireActiveBilling } from "../services/billing.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { billing, session, admin } = await authenticate.admin(request);
-  const billingRedirect = await requireActiveBilling(billing, session.shop, {
-    allowFreeInitialScan: true,
-  });
-  if (billingRedirect) return billingRedirect as never;
+  const { session, admin } = await authenticate.admin(request);
 
   const url = new URL(request.url);
   const openAlertId = url.searchParams.get("open") || null;
@@ -144,11 +139,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const { billing, session } = await authenticate.admin(request);
-  const billingRedirect = await requireActiveBilling(billing, session.shop, {
-    allowFreeInitialScan: true,
-  });
-  if (billingRedirect) return billingRedirect as never;
+  const { session } = await authenticate.admin(request);
   const formData = await request.formData();
   const action = formData.get("action") as string;
   const alertId = formData.get("alertId") as string;
@@ -176,17 +167,19 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         }
       });
       break;
-    case "resolve":
+    case "resolve": {
+      const waitingForSupplier = resolutionType === "contacted_supplier";
       await db.safetyAlert.updateMany({
         where: scopedWhere,
         data: {
-          status: 'resolved',
-          resolvedAt: new Date(),
+          status: waitingForSupplier ? 'active' : 'resolved',
+          resolvedAt: waitingForSupplier ? null : new Date(),
           resolutionType: resolutionType || undefined,
           notes: notes
         }
       });
       break;
+    }
     case "reactivate":
       await db.safetyAlert.updateMany({
         where: scopedWhere,

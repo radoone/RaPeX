@@ -83,6 +83,7 @@ type SafetyCheckRecord = {
   shop: string;
   isSafe: boolean;
   checkedAt: Date;
+  sourceUpdatedAt?: string | null;
   createdAt: Date;
 };
 
@@ -108,10 +109,17 @@ export type SafetySettingRecord = {
   excludeVendors?: string | null;
   excludeTypes?: string | null;
   emailNotifications?: boolean;
+  immediateAlertEmails?: boolean;
+  weeklySummaryEmails?: boolean;
   notificationEmail?: string | null;
   notificationLanguage?: string;
   notificationEmailSource?: "shopify" | "custom";
   lastWeeklySummaryAt?: Date | null;
+  subscriptionStatus?: "active" | "inactive" | "unknown";
+  planHandle?: string | null;
+  monitoringEntitled?: boolean;
+  billingVerifiedAt?: Date | null;
+  subscriptionValidUntil?: Date | null;
   slackWebhookUrl?: string | null;
   createdAt: Date;
   updatedAt: Date;
@@ -277,6 +285,7 @@ function convertSafetyCheck(id: string, data: Record<string, unknown>, fallbackS
     shop: String(data.shop || fallbackShop),
     isSafe: Boolean(data.isSafe),
     checkedAt: normalizeDate(data.checkedAt) || new Date(0),
+    sourceUpdatedAt: typeof data.sourceUpdatedAt === "string" ? data.sourceUpdatedAt : null,
     createdAt: normalizeDate(data.createdAt) || new Date(0),
   };
 }
@@ -674,10 +683,17 @@ const safetySetting = {
       excludeVendors: data.excludeVendors !== undefined ? String(data.excludeVendors || "") : undefined,
       excludeTypes: data.excludeTypes !== undefined ? String(data.excludeTypes || "") : undefined,
       emailNotifications: data.emailNotifications !== undefined ? Boolean(data.emailNotifications) : undefined,
+      immediateAlertEmails: data.immediateAlertEmails !== undefined ? Boolean(data.immediateAlertEmails) : undefined,
+      weeklySummaryEmails: data.weeklySummaryEmails !== undefined ? Boolean(data.weeklySummaryEmails) : undefined,
       notificationEmail: data.notificationEmail !== undefined ? String(data.notificationEmail || "") : undefined,
       notificationLanguage: data.notificationLanguage !== undefined ? String(data.notificationLanguage || "en") : undefined,
       notificationEmailSource: data.notificationEmailSource === "custom" ? "custom" : "shopify",
       lastWeeklySummaryAt: normalizeDate(data.lastWeeklySummaryAt),
+      subscriptionStatus: data.subscriptionStatus === "active" || data.subscriptionStatus === "inactive" || data.subscriptionStatus === "unknown" ? data.subscriptionStatus : undefined,
+      planHandle: data.planHandle !== undefined ? String(data.planHandle || "") : undefined,
+      monitoringEntitled: data.monitoringEntitled !== undefined ? Boolean(data.monitoringEntitled) : undefined,
+      billingVerifiedAt: normalizeDate(data.billingVerifiedAt),
+      subscriptionValidUntil: normalizeDate(data.subscriptionValidUntil),
       slackWebhookUrl: data.slackWebhookUrl !== undefined ? String(data.slackWebhookUrl || "") : undefined,
       createdAt: normalizeDate(data.createdAt) || new Date(0),
       updatedAt: normalizeDate(data.updatedAt) || new Date(0),
@@ -714,10 +730,17 @@ const safetySetting = {
       excludeVendors: payload.excludeVendors !== undefined ? String(payload.excludeVendors || "") : undefined,
       excludeTypes: payload.excludeTypes !== undefined ? String(payload.excludeTypes || "") : undefined,
       emailNotifications: payload.emailNotifications !== undefined ? Boolean(payload.emailNotifications) : undefined,
+      immediateAlertEmails: payload.immediateAlertEmails !== undefined ? Boolean(payload.immediateAlertEmails) : undefined,
+      weeklySummaryEmails: payload.weeklySummaryEmails !== undefined ? Boolean(payload.weeklySummaryEmails) : undefined,
       notificationEmail: payload.notificationEmail !== undefined ? String(payload.notificationEmail || "") : undefined,
       notificationLanguage: payload.notificationLanguage !== undefined ? String(payload.notificationLanguage || "en") : undefined,
       notificationEmailSource: payload.notificationEmailSource === "custom" ? "custom" : "shopify",
       lastWeeklySummaryAt: normalizeDate(payload.lastWeeklySummaryAt),
+      subscriptionStatus: payload.subscriptionStatus === "active" || payload.subscriptionStatus === "inactive" || payload.subscriptionStatus === "unknown" ? payload.subscriptionStatus : undefined,
+      planHandle: payload.planHandle !== undefined ? String(payload.planHandle || "") : undefined,
+      monitoringEntitled: payload.monitoringEntitled !== undefined ? Boolean(payload.monitoringEntitled) : undefined,
+      billingVerifiedAt: normalizeDate(payload.billingVerifiedAt),
+      subscriptionValidUntil: normalizeDate(payload.subscriptionValidUntil),
       slackWebhookUrl: payload.slackWebhookUrl !== undefined ? String(payload.slackWebhookUrl || "") : undefined,
       createdAt: normalizeDate(payload.createdAt) || now,
       updatedAt: normalizeDate(payload.updatedAt) || now,

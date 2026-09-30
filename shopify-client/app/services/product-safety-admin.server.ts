@@ -357,6 +357,7 @@ export async function runProductSafetyCheck(input: {
       shop: input.shop,
       isSafe: safetyResult.isSafe,
       checkedAt: new Date(safetyResult.checkedAt),
+      sourceUpdatedAt: input.sourceUpdatedAt || null,
     },
   });
 

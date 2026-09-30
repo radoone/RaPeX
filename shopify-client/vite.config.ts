@@ -47,9 +47,7 @@ export default defineConfig({
       allow: ["app", "node_modules"],
     },
   },
-  plugins: [
-    reactRouter(),
-  ],
+  plugins: [reactRouter()],
   resolve: {
     tsconfigPaths: true,
   },

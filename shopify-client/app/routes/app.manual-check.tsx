@@ -13,6 +13,7 @@ import { runMerchantDeltaMonitoring } from "../services/safety-gate-checker.serv
 import { AlertDetailModal, SummaryCard } from "../components";
 import { type ResolutionType, formatRelativeDate } from "../components/AlertTable";
 import { getBillingStatus, requireActiveBilling } from "../services/billing.server";
+import { checkCoversCurrentProductVersion } from "../services/catalog-coverage.server";
 
 type ShopifyCatalogProduct = {
   id: string;
@@ -133,12 +134,7 @@ async function planCatalogChecksForManualCheck(params: {
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { admin, billing, session } = await authenticate.admin(request);
-  const billingRedirect = await requireActiveBilling(billing, session.shop, {
-    allowFreeInitialScan: true,
-  });
-  if (billingRedirect) return billingRedirect as never;
-
-  const billingStatus = await getBillingStatus(billing, session.shop);
+  const billingStatus = await getBillingStatus(billing, session.shop, admin);
   const url = new URL(request.url);
   const search = url.searchParams.get("search")?.trim() || "";
 
@@ -196,6 +192,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     orderBy: { createdAt: 'desc' },
     take: 25,
   });
+  const monitorStateSnapshot = await firestore
+    .collection("merchants")
+    .doc(encodeURIComponent(session.shop))
+    .get();
+  const monitorState = monitorStateSnapshot.exists ? monitorStateSnapshot.data() : null;
 
   // Load existing alerts for products (same transformation as Alerts page)
   const rawAlerts = await db.safetyAlert.findMany({
@@ -257,7 +258,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     }
     return acc;
   }, {});
-  const checkedProductIds = new Set(allProductChecks.map((check: any) => check.productId).filter(Boolean));
   const currentCatalogProductIds = new Set(
     coverageCatalogProducts.map((product) => product.id.replace("gid://shopify/Product/", "")),
   );
@@ -283,7 +283,25 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const latestActivity = lastCoverageActivity.find((activity: any) =>
     activity.type === "bulk" || activity.type === "automatic" || activity.action === "check"
   ) || null;
-  const coveredProductIds = new Set([...checkedProductIds, ...monitoredProductIds]);
+  // Product registration/embeddings are not evidence of a completed Safety Gate
+  // check. A saved result counts only for the Shopify product version it checked.
+  const coverageChecksByProduct = new Map<string, any[]>();
+  for (const check of allProductChecks) {
+    if (!check.productId) continue;
+    const productChecksForVersion = coverageChecksByProduct.get(check.productId) || [];
+    productChecksForVersion.push(check);
+    coverageChecksByProduct.set(check.productId, productChecksForVersion);
+  }
+  const coveredProductIds = new Set(
+    coverageCatalogProducts
+      .filter((product) => {
+        const productId = product.id.replace("gid://shopify/Product/", "");
+        return (coverageChecksByProduct.get(productId) || []).some((check) =>
+          checkCoversCurrentProductVersion(check, product.updatedAt),
+        );
+      })
+      .map((product) => product.id.replace("gid://shopify/Product/", "")),
+  );
   const checkedProductCount = currentCatalogProductIds.size > 0
     ? Array.from(currentCatalogProductIds).filter((productId) => coveredProductIds.has(productId)).length
     : coveredProductIds.size;
@@ -311,7 +329,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       checkedProductCount,
       uncheckedProductCount,
       coveragePercent,
-      isComplete: totalProducts > 0 && checkedProductCount >= totalProducts,
+      isComplete: totalProducts > 0 && checkedProductCount >= totalProducts && monitorState?.lastMonitorStatus !== "FAILURE",
+      monitoringStatus: monitorState?.lastMonitorStatus || null,
+      monitoringLastRunAt: monitorState?.lastMonitorRunEnd || null,
       lastCheckedAt: latestCheck?.checkedAt || null,
       lastResultSafe: typeof latestCheck?.isSafe === "boolean" ? latestCheck.isSafe : null,
       lastActivityAt: latestActivity?.createdAt || null,
@@ -328,7 +348,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const action = formData.get("action") as string;
 
   if (action === "checkProduct" || action === "checkAllProducts") {
-    const billingRedirect = await requireActiveBilling(billing, session.shop);
+    const billingRedirect = await requireActiveBilling(billing, session.shop, { admin });
     if (billingRedirect) return billingRedirect as never;
   }
 
@@ -455,9 +475,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
 
     try {
+      const waitingForSupplier = resolutionType === "contacted_supplier";
       await updateOwnedAlert(alertId, {
-        status: "resolved",
-        resolvedAt: new Date(),
+        status: waitingForSupplier ? "active" : "resolved",
+        resolvedAt: waitingForSupplier ? null : new Date(),
         resolutionType: resolutionType || null,
         notes: notes?.trim() || null,
       });
@@ -543,7 +564,6 @@ export default function ManualCheckPage() {
     totalProducts,
     coverage,
     storeStats,
-    monitoredProductIds,
   } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
   const resolveFetcher = useFetcher<typeof action>();
@@ -560,8 +580,6 @@ export default function ManualCheckPage() {
   const [tabFilter, setTabFilter] = useState<'all' | 'unprotected' | 'needs_review' | 'safe'>('all');
   const dateLocale = i18n.language === 'sk' ? 'sk-SK' : 'en-GB';
 
-  const monitoredSet = useMemo(() => new Set(monitoredProductIds || []), [monitoredProductIds]);
-
   const filterCounts = useMemo(() => {
     let unprotected = 0;
     let needsReview = 0;
@@ -571,14 +589,14 @@ export default function ManualCheckPage() {
       const checks = checksByProduct[productId];
       const existingAlert = alertsByProduct[productId];
       const hasActiveAlert = existingAlert?.status === 'active';
-      const isProtected = monitoredSet.has(productId) || Boolean(checks?.lastCheck);
+      const isProtected = Boolean(checks?.lastCheck);
 
       if (!isProtected) unprotected++;
       if (hasActiveAlert) needsReview++;
       if (checks?.lastCheck && checks.isSafe && !hasActiveAlert) safe++;
     });
     return { all: products.length, unprotected, needsReview, safe };
-  }, [products, checksByProduct, alertsByProduct, monitoredSet]);
+  }, [products, checksByProduct, alertsByProduct]);
 
   const filteredProducts = useMemo(() => {
     return products.filter((product: any) => {
@@ -586,7 +604,7 @@ export default function ManualCheckPage() {
       const checks = checksByProduct[productId];
       const existingAlert = alertsByProduct[productId];
       const hasActiveAlert = existingAlert?.status === 'active';
-      const isProtected = monitoredSet.has(productId) || Boolean(checks?.lastCheck);
+      const isProtected = Boolean(checks?.lastCheck);
 
       if (tabFilter === 'unprotected') {
         return !isProtected;
@@ -599,7 +617,7 @@ export default function ManualCheckPage() {
       }
       return true;
     });
-  }, [products, checksByProduct, alertsByProduct, monitoredSet, tabFilter]);
+  }, [products, checksByProduct, alertsByProduct, tabFilter]);
 
   // Synchronize searchValue with URL parameter when it changes (e.g., cleared/updated externally)
   useEffect(() => {
@@ -827,7 +845,15 @@ export default function ManualCheckPage() {
               title={t("manualCheck.coverage.lastRun")}
               value={lastRunAt ? formatRelativeDate(new Date(lastRunAt), t, dateLocale) : t("status.notChecked")}
               description={lastRunResult}
-              badge={<s-badge tone={storeStats.activeAlerts > 0 ? "critical" : "success"}>{storeStats.activeAlerts > 0 ? t("status.needsReview") : t("status.allClear")}</s-badge>}
+              badge={<s-badge tone={coverage.monitoringStatus === "FAILURE" || storeStats.activeAlerts > 0 ? "critical" : coverage.isComplete ? "success" : "warning"}>
+                {coverage.monitoringStatus === "FAILURE"
+                  ? t("dashboard.admin.status.monitoringProblem.eyebrow")
+                  : storeStats.activeAlerts > 0
+                    ? t("status.needsReview")
+                    : coverage.isComplete
+                      ? t("status.allClear")
+                      : t("manualCheck.coverage.remaining")}
+              </s-badge>}
             />
             <SummaryCard
               title={t("manualCheck.coverage.remaining")}
@@ -839,8 +865,14 @@ export default function ManualCheckPage() {
           </div>
           <div className="admin-card__header admin-card__header--compact" style={{ marginTop: "var(--s-space-300)" }}>
             <div className="admin-inline-meta">
-              <s-badge tone={storeStats.activeAlerts > 0 ? "critical" : "success"}>
-                {storeStats.activeAlerts === 0 ? t('status.allClear') : t('manualCheck.badges.needsReview', { count: storeStats.activeAlerts })}
+              <s-badge tone={coverage.monitoringStatus === "FAILURE" || storeStats.activeAlerts > 0 ? "critical" : coverage.isComplete ? "success" : "warning"}>
+                {coverage.monitoringStatus === "FAILURE"
+                  ? t("dashboard.admin.status.monitoringProblem.eyebrow")
+                  : storeStats.activeAlerts > 0
+                    ? t('manualCheck.badges.needsReview', { count: storeStats.activeAlerts })
+                    : coverage.isComplete
+                      ? t('status.allClear')
+                      : t("manualCheck.coverage.remaining")}
               </s-badge>
               <s-badge tone="info">{t('manualCheck.badges.checks', { count: storeStats.totalChecks })}</s-badge>
             </div>
@@ -850,6 +882,12 @@ export default function ManualCheckPage() {
         {fetcher.data && 'error' in fetcher.data && fetcher.data.error && (
           <s-banner tone="critical" heading={t('manualCheck.banners.failedHeading')}>
             <s-text>{(fetcher.data as any).error}</s-text>
+          </s-banner>
+        )}
+
+        {coverage.monitoringStatus === "FAILURE" && (
+          <s-banner tone="critical" heading={t("dashboard.admin.status.monitoringProblem.title")}>
+            <s-text>{t("dashboard.admin.status.monitoringProblem.description")}</s-text>
           </s-banner>
         )}
 

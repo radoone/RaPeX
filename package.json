@@ -8,6 +8,7 @@
     "shopify-client"
   ],
   "scripts": {
+    "postinstall": "patch-package",
     "build": "npm run build --workspaces",
     "test": "npm run test --workspaces",
     "lint": "npm run lint --workspaces",
@@ -20,7 +21,8 @@
   "devDependencies": {
     "@eslint/js": "^9.39.1",
     "eslint": "^9.39.1",
-    "react-router": "^7.18.2"
+    "patch-package": "^8.0.1",
+    "react-router": "7.18.2"
   },
   "engines": {
     "node": ">=18.0.0",

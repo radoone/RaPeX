@@ -1,0 +1,35 @@
+diff --git a/node_modules/@react-router/dev/dist/cli/index.js b/node_modules/@react-router/dev/dist/cli/index.js
+index fde70f9..373f0f9 100644
+--- a/node_modules/@react-router/dev/dist/cli/index.js
++++ b/node_modules/@react-router/dev/dist/cli/index.js
+@@ -160,7 +160,7 @@ async function createContext({
+       postcss: {}
+     },
+     configFile: false,
+-    envFile: false,
++    envDir: false,
+     plugins: []
+   });
+   await devServer.pluginContainer.buildStart({});
+diff --git a/node_modules/@react-router/dev/dist/vite.js b/node_modules/@react-router/dev/dist/vite.js
+index e19423e..cd2d79b 100644
+--- a/node_modules/@react-router/dev/dist/vite.js
++++ b/node_modules/@react-router/dev/dist/vite.js
+@@ -173,7 +173,7 @@ async function createContext({
+       postcss: {}
+     },
+     configFile: false,
+-    envFile: false,
++    envDir: false,
+     plugins: []
+   });
+   await devServer.pluginContainer.buildStart({});
+@@ -3773,7 +3773,7 @@ var reactRouterVitePlugin = () => {
+             hmr: false
+           },
+           configFile: false,
+-          envFile: false,
++          envDir: false,
+           plugins: [
+             childCompilerPlugins.filter(
+               (plugin) => typeof plugin === "object" && plugin !== null && "name" in plugin && plugin.name !== "react-router" && plugin.name !== "react-router:route-exports" && plugin.name !== "react-router:hmr-updates" && plugin.name !== "react-router:validate-plugin-order"

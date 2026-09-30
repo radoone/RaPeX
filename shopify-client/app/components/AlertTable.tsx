@@ -335,11 +335,6 @@ function AlertRow({
   const isSerious = alert.riskLevel?.toLowerCase().includes('serious') || alert.riskLevel?.toLowerCase().includes('high');
   const riskTone = isSerious && alert.status === 'active' ? 'critical' : 'info';
 
-  // Serious risk indicator style
-  const seriousRowStyle = isSerious && alert.status === 'active' 
-    ? { borderLeft: '4px solid var(--critical)', paddingLeft: '4px' } 
-    : {};
-
   return (
     <s-table-row selected={isSelected || undefined}>
       <s-table-cell>
@@ -351,7 +346,7 @@ function AlertRow({
       </s-table-cell>
 
       {/* Product Cell - Shopify style */}
-      <s-table-cell style={seriousRowStyle}>
+      <s-table-cell>
         <s-stack direction="inline" gap="small" alignItems="center">
           {alert.productImage ? (
             <s-clickable
@@ -398,7 +393,9 @@ function AlertRow({
       <s-table-cell>
         <s-badge tone={statusTone}>
           {alert.status === 'active'
-            ? t('status.needsReview')
+            ? alert.resolutionType === 'contacted_supplier'
+              ? t('resolveActions.contactPending')
+              : t('status.needsReview')
             : alert.status === 'resolved'
               ? t('status.resolved')
               : t('status.dismissed')}

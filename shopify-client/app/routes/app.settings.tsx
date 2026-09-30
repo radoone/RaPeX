@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { authenticate } from "../shopify.server";
 import db from "../merchant-db.server";
 import { LanguageSwitcher } from "../components";
-import { getBillingStatus, requireActiveBilling } from "../services/billing.server";
+import { getBillingStatus } from "../services/billing.server";
 import { EU_LANGUAGES } from "../locales/languages";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -25,12 +25,7 @@ async function getShopifyContactEmail(admin: any): Promise<string | null> {
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { admin, billing, session } = await authenticate.admin(request);
-  const billingRedirect = await requireActiveBilling(billing, session.shop, {
-    allowFreeInitialScan: true,
-  });
-  if (billingRedirect) return billingRedirect as never;
-
-  const billingStatus = await getBillingStatus(billing, session.shop);
+  const billingStatus = await getBillingStatus(billing, session.shop, admin);
   let settings = await db.safetySetting.findUnique({
     where: { shop: session.shop },
   });
@@ -38,7 +33,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const envDefault = Number(process.env.SAFETY_GATE_SIMILARITY_THRESHOLD || "0");
   const fallbackDefault = Number.isFinite(envDefault) ? envDefault : 70;
 
-  if (!settings || settings.emailNotifications === undefined || !settings.notificationEmail) {
+  if (!settings || settings.emailNotifications === undefined || settings.immediateAlertEmails === undefined || settings.weeklySummaryEmails === undefined || !settings.notificationEmail) {
     const shopifyEmail = await getShopifyContactEmail(admin).catch((error) => {
       console.warn("Could not load Shopify contact email for notifications", error);
       return null;
@@ -47,6 +42,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       where: { shop: session.shop },
       update: {
         ...(settings?.emailNotifications === undefined ? { emailNotifications: true } : {}),
+        ...(settings?.immediateAlertEmails === undefined ? { immediateAlertEmails: settings?.emailNotifications !== false } : {}),
+        ...(settings?.weeklySummaryEmails === undefined ? { weeklySummaryEmails: settings?.emailNotifications !== false } : {}),
         ...(!settings?.notificationEmail && shopifyEmail ? {
           notificationEmail: shopifyEmail,
           notificationEmailSource: "shopify" as const,
@@ -58,6 +55,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         similarityThreshold: fallbackDefault,
         autoDraftHighRisk: false,
         emailNotifications: true,
+        immediateAlertEmails: true,
+        weeklySummaryEmails: true,
         notificationEmail: shopifyEmail,
         notificationEmailSource: "shopify",
         notificationLanguage: "en",
@@ -72,6 +71,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       similarityThreshold: fallbackDefault,
       autoDraftHighRisk: false,
       emailNotifications: true,
+      immediateAlertEmails: true,
+      weeklySummaryEmails: true,
       notificationEmail: null,
       notificationEmailSource: "shopify",
       notificationLanguage: "en",
@@ -84,11 +85,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const { billing, session } = await authenticate.admin(request);
-  const billingRedirect = await requireActiveBilling(billing, session.shop, {
-    allowFreeInitialScan: true,
-  });
-  if (billingRedirect) return billingRedirect as never;
+  const { session } = await authenticate.admin(request);
   const formData = await request.formData();
   
   const threshold = Number(formData.get("similarityThreshold"));
@@ -97,7 +94,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     : 70;
 
   const autoDraftHighRisk = formData.get("autoDraftHighRisk") === "true";
-  const emailNotifications = formData.get("emailNotifications") === "true";
+  const immediateAlertEmails = formData.get("immediateAlertEmails") === "true";
+  const weeklySummaryEmails = formData.get("weeklySummaryEmails") === "true";
+  const emailNotifications = immediateAlertEmails || weeklySummaryEmails;
   const notificationEmail = String(formData.get("notificationEmail") || "").trim().toLowerCase();
   const requestedLanguage = String(formData.get("notificationLanguage") || "en");
   const notificationLanguage = SUPPORTED_LANGUAGES.has(requestedLanguage as any) ? requestedLanguage : "en";
@@ -113,6 +112,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       similarityThreshold,
       autoDraftHighRisk,
       emailNotifications,
+      immediateAlertEmails,
+      weeklySummaryEmails,
       notificationEmail: notificationEmail || null,
       notificationEmailSource: "custom",
       notificationLanguage,
@@ -170,7 +171,8 @@ export default function Settings() {
   
   const [value, setValue] = useState((settings?.similarityThreshold ?? 70).toString());
   const [autoDraft, setAutoDraft] = useState(settings?.autoDraftHighRisk ?? false);
-  const [emailNotifications, setEmailNotifications] = useState(settings?.emailNotifications ?? true);
+  const [immediateAlertEmails, setImmediateAlertEmails] = useState(settings?.immediateAlertEmails ?? settings?.emailNotifications ?? true);
+  const [weeklySummaryEmails, setWeeklySummaryEmails] = useState(settings?.weeklySummaryEmails ?? settings?.emailNotifications ?? true);
   const [notificationEmail, setNotificationEmail] = useState(settings?.notificationEmail ?? "");
   const [notificationLanguage, setNotificationLanguage] = useState(settings?.notificationLanguage ?? "en");
 
@@ -183,7 +185,8 @@ export default function Settings() {
     if (settings) {
       setValue((settings.similarityThreshold ?? 70).toString());
       setAutoDraft(settings.autoDraftHighRisk ?? false);
-      setEmailNotifications(settings.emailNotifications ?? true);
+      setImmediateAlertEmails(settings.immediateAlertEmails ?? settings.emailNotifications ?? true);
+      setWeeklySummaryEmails(settings.weeklySummaryEmails ?? settings.emailNotifications ?? true);
       setNotificationEmail(settings.notificationEmail ?? "");
       setNotificationLanguage(settings.notificationLanguage ?? "en");
       setVendorsList(settings.excludeVendors ? settings.excludeVendors.split(',').map(s => s.trim()).filter(Boolean) : []);
@@ -273,7 +276,8 @@ export default function Settings() {
         ) : null}
         <Form method="post">
           <input type="hidden" name="autoDraftHighRisk" value={autoDraft ? "true" : "false"} />
-          <input type="hidden" name="emailNotifications" value={emailNotifications ? "true" : "false"} />
+          <input type="hidden" name="immediateAlertEmails" value={immediateAlertEmails ? "true" : "false"} />
+          <input type="hidden" name="weeklySummaryEmails" value={weeklySummaryEmails ? "true" : "false"} />
           <input type="hidden" name="notificationEmail" value={notificationEmail} />
           <input type="hidden" name="notificationLanguage" value={notificationLanguage} />
           <input type="hidden" name="excludeVendors" value={vendorsList.join(', ')} />
@@ -312,14 +316,27 @@ export default function Settings() {
                     <label style={{ display: 'flex', alignItems: 'flex-start', cursor: 'pointer', gap: '10px' }}>
                       <input
                         type="checkbox"
-                        checked={emailNotifications}
-                        onChange={(e) => setEmailNotifications(e.target.checked)}
+                        checked={immediateAlertEmails}
+                        onChange={(e) => setImmediateAlertEmails(e.target.checked)}
                         style={{ marginTop: '3px', transform: 'scale(1.15)' }}
                       />
                       <div>
-                        <s-text fontWeight="bold">{t("settingsAdmin.notifications.enabledTitle")}</s-text>
+                        <s-text fontWeight="bold">{t("settingsAdmin.notifications.immediateTitle")}</s-text>
                         <br />
-                        <s-text tone="subdued" size="small">{t("settingsAdmin.notifications.enabledDescription")}</s-text>
+                        <s-text tone="subdued" size="small">{t("settingsAdmin.notifications.immediateDescription")}</s-text>
+                      </div>
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'flex-start', cursor: 'pointer', gap: '10px', marginTop: '12px' }}>
+                      <input
+                        type="checkbox"
+                        checked={weeklySummaryEmails}
+                        onChange={(e) => setWeeklySummaryEmails(e.target.checked)}
+                        style={{ marginTop: '3px', transform: 'scale(1.15)' }}
+                      />
+                      <div>
+                        <s-text fontWeight="bold">{t("settingsAdmin.notifications.weeklyTitle")}</s-text>
+                        <br />
+                        <s-text tone="subdued" size="small">{t("settingsAdmin.notifications.weeklyDescription")}</s-text>
                       </div>
                     </label>
                   </div>
@@ -327,14 +344,14 @@ export default function Settings() {
                     label={t("settingsAdmin.notifications.emailLabel")}
                     type="email"
                     value={notificationEmail}
-                    disabled={!emailNotifications || undefined}
+                    disabled={(!immediateAlertEmails && !weeklySummaryEmails) || undefined}
                     onChange={(event: any) => setNotificationEmail(event.currentTarget.value)}
                     helpText={t("settingsAdmin.notifications.emailHelp")}
                   />
                   <s-select
                     label={t("settingsAdmin.notifications.languageLabel")}
                     value={notificationLanguage}
-                    disabled={!emailNotifications || undefined}
+                    disabled={(!immediateAlertEmails && !weeklySummaryEmails) || undefined}
                     onChange={(event: any) => setNotificationLanguage(event.currentTarget.value)}
                   >
                     {EU_LANGUAGES.map((language) => (
@@ -504,7 +521,8 @@ export default function Settings() {
                 <s-button type="button" variant="secondary" onClick={() => {
                   setValue(envDefault.toString());
                   setAutoDraft(false);
-                  setEmailNotifications(true);
+                  setImmediateAlertEmails(true);
+                  setWeeklySummaryEmails(true);
                   setNotificationLanguage("en");
                   setVendorInput("");
                   setTypeInput("");
@@ -577,21 +595,25 @@ export default function Settings() {
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px" }}>
                     <div>
                       <span style={{ marginRight: "8px", fontWeight: 600 }}>{t("billing.statusLabel")}:</span>
-                      <s-badge tone={billingStatus.hasActivePayment ? "success" : billingStatus.freeScanUsed ? "warning" : "info"}>
-                        {billingStatus.hasActivePayment
-                          ? t("billing.statusActivePro")
-                          : billingStatus.freeScanUsed
-                            ? t("billing.statusFreeUsed")
-                            : t("billing.statusFreeAvailable")}
+                      <s-badge tone={billingStatus.developmentBypass ? "info" : !billingStatus.billingVerified ? "critical" : billingStatus.hasActivePayment ? "success" : billingStatus.freeScanUsed ? "warning" : "info"}>
+                        {billingStatus.developmentBypass
+                          ? t("billing.statusDevelopmentBypass")
+                          : !billingStatus.billingVerified
+                            ? t("billing.statusUnverified")
+                            : billingStatus.hasActivePayment
+                              ? t("billing.statusActivePro")
+                              : billingStatus.freeScanUsed
+                                ? t("billing.statusFreeUsed")
+                                : t("billing.statusFreeAvailable")}
                       </s-badge>
                     </div>
-                    <s-button
+                    {billingStatus.pricingPlansUrl ? <s-button
                       variant={billingStatus.hasActivePayment ? "secondary" : "primary"}
-                      onClick={() => window.open(billingStatus.pricingPlansUrl, "_top")}
+                      onClick={() => window.open(billingStatus.pricingPlansUrl || undefined, "_top")}
                       suppressHydrationWarning
                     >
                       {billingStatus.hasActivePayment ? t("billing.managePlanButton") : t("billing.upgradePlanButton")}
-                    </s-button>
+                    </s-button> : <s-text tone="critical">{t("billing.pricingUnavailable")}</s-text>}
                   </div>
                 </div>
               </div>

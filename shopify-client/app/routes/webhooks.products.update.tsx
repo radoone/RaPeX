@@ -8,6 +8,7 @@ import {
   upsertMerchantProductForMonitoring,
 } from "../services/safety-gate-checker.server";
 import { handleAutoDraftAndNotifications } from "../services/safety-gate-notifications.server";
+import { hasCurrentMonitoringEntitlement } from "../services/billing.server";
 
 /**
  * Webhook handler for product updates
@@ -19,6 +20,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   console.log(`Received ${topic} webhook for ${shop}`);
 
   try {
+    if (!(await hasCurrentMonitoringEntitlement(shop))) {
+      console.log(`Skipped product-update safety check for ${shop}: no current monitoring entitlement`);
+      return new Response(null, { status: 200 });
+    }
     const product = payload as any;
 
     // Convert Shopify product to format needed for Safety Gate checking
@@ -50,6 +55,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         shop: shop,
         isSafe: safetyResult.isSafe,
         checkedAt: new Date(safetyResult.checkedAt),
+        sourceUpdatedAt: product.updated_at || product.updatedAt || null,
       },
     });
 

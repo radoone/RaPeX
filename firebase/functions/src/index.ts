@@ -2,11 +2,13 @@
 import * as logger from "firebase-functions/logger";
 import { onRequest } from "firebase-functions/v2/https";
 import { onSchedule } from "firebase-functions/v2/scheduler";
+import { onTaskDispatched } from "firebase-functions/v2/tasks";
 import { onDocumentCreated, onDocumentUpdated } from "firebase-functions/v2/firestore";
 import "./firebase-admin.js";
 import { SCHEDULER_CONFIG } from "./safety-gate-config.js";
 import {
   handleRunMerchantDeltaMonitoringRequest,
+  handleMerchantMonitoringTask,
   handleUpsertMerchantProductRequest,
   runDailyMerchantDeltaMonitoring,
 } from "./merchant-monitoring.js";
@@ -236,9 +238,30 @@ export const dailyMerchantDeltaMonitoring = onSchedule(
     secrets: ["GOOGLE_API_KEY", "SAFETY_GATE_API_KEY"],
   },
   async (event) => {
-    logger.info("Starting daily merchant delta monitoring job.", { event });
-    const result = await runDailyMerchantDeltaMonitoring();
-    logger.info("Daily merchant delta monitoring completed.", result);
+    logger.info("Starting daily merchant delta monitoring enqueue.", { event });
+    const result = await runDailyMerchantDeltaMonitoring(event.scheduleTime);
+    logger.info("Daily merchant delta monitoring enqueue completed.", result);
+  },
+);
+
+export const merchantMonitoringTask = onTaskDispatched(
+  {
+    region: "europe-west1",
+    memory: "1GiB",
+    timeoutSeconds: 1800,
+    maxInstances: 10,
+    rateLimits: { maxConcurrentDispatches: 4, maxDispatchesPerSecond: 1 },
+    retryConfig: {
+      maxAttempts: 8,
+      maxRetrySeconds: 24 * 60 * 60,
+      minBackoffSeconds: 60,
+      maxBackoffSeconds: 600,
+      maxDoublings: 4,
+    },
+    secrets: ["GOOGLE_API_KEY"],
+  },
+  async (request) => {
+    await handleMerchantMonitoringTask(request.data, request.context.retryCount);
   },
 );
 

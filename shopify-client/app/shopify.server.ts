@@ -10,6 +10,11 @@ import prisma from "./db.server";
 
 export const SHOPIFY_BILLING_TEST = process.env.SHOPIFY_BILLING_TEST !== "false";
 export const SHOPIFY_APP_HANDLE = process.env.SHOPIFY_APP_HANDLE || "";
+export const SHOPIFY_BILLING_MODE = process.env.SHOPIFY_BILLING_MODE || "app-pricing";
+export const SHOPIFY_PARTNER_ORG_ID = process.env.SHOPIFY_PARTNER_ORG_ID || "";
+export const SHOPIFY_PARTNER_API_TOKEN = process.env.SHOPIFY_PARTNER_API_TOKEN || "";
+export const SHOPIFY_APP_GID = process.env.SHOPIFY_APP_GID || "";
+export const SHOPIFY_PARTNER_API_VERSION = process.env.SHOPIFY_PARTNER_API_VERSION || "2026-07";
 export const SHOPIFY_BILLING_BYPASS =
   process.env.NODE_ENV !== "production" && process.env.SHOPIFY_BILLING_BYPASS !== "false";
 

@@ -4,16 +4,10 @@ import { useTranslation } from "react-i18next";
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { authenticate } from "../shopify.server";
 import db from "../merchant-db.server";
-import { requireActiveBilling } from "../services/billing.server";
 
 export const headers = (headersArgs: any) => {
   return boundary.headers(headersArgs);
 };
-
-function csvCell(value: unknown) {
-  const text = value === null || value === undefined ? "" : String(value);
-  return `"${text.replace(/"/g, '""')}"`;
-}
 
 function parsePrimaryWarning(checkResult: string | null | undefined) {
   try {
@@ -45,21 +39,20 @@ function resolutionLabelKey(resolutionType: string | null) {
 }
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { billing, session } = await authenticate.admin(request);
-  const billingRedirect = await requireActiveBilling(billing, session.shop, {
-    allowFreeInitialScan: true,
-  });
-  if (billingRedirect) return billingRedirect as never;
-  const alerts = await db.safetyAlert.findMany({ where: { shop: session.shop }, orderBy: { createdAt: "desc" }, take: 1000 });
-  const records = alerts.map((alert: any) => ({ ...alert, warning: parsePrimaryWarning(alert.checkResult) }));
-
-  if (new URL(request.url).searchParams.has("download")) {
-    const headers = ["Product", "Shopify product ID", "Status", "Resolution", "Risk level", "Alert type", "Overall match", "Safety Gate alert", "Detected at", "Resolved at", "Dismissed at", "Audit notes", "Recommendation"];
-    const rows = records.map(({ warning, ...alert }) => [alert.productTitle, alert.productId, alert.status, alert.resolutionType, warning.riskLevel || alert.riskLevel, warning.alertType, warning.overallSimilarity, warning.safetyGateAlert, alert.createdAt, alert.resolvedAt, alert.dismissedAt, alert.notes, warning.recommendation].map(csvCell).join(","));
-    const date = new Date().toISOString().slice(0, 10);
-    const csvContent = "\uFEFF" + [headers.map(csvCell).join(","), ...rows].join("\n");
-    return new Response(csvContent, { headers: { "Content-Type": "text/csv; charset=utf-8", "Content-Disposition": `attachment; filename="safety-gate-audit-report-${date}.csv"` } });
+  const { session } = await authenticate.admin(request);
+  const batchSize = 500;
+  const alerts: any[] = [];
+  for (let skip = 0; ; skip += batchSize) {
+    const batch = await db.safetyAlert.findMany({
+      where: { shop: session.shop },
+      orderBy: { createdAt: "desc" },
+      skip,
+      take: batchSize,
+    });
+    alerts.push(...batch);
+    if (batch.length < batchSize) break;
   }
+  const records = alerts.map((alert: any) => ({ ...alert, warning: parsePrimaryWarning(alert.checkResult) }));
 
   return json({
     generatedAt: new Date().toISOString(),
@@ -77,7 +70,7 @@ export default function AuditReportPage() {
   return (
     <s-page size="large" className="page-shell">
       <s-heading slot="title" size="large">{t("auditReport.title")}</s-heading>
-      <s-button slot="primary-action" variant="primary" href="/app/audit-report?download=1">{t("auditReport.download")}</s-button>
+      <s-button slot="primary-action" variant="primary" onClick={() => window.open("/app/audit-report.csv", "_blank", "noopener,noreferrer")}>{t("auditReport.download")}</s-button>
       <s-button slot="secondary-actions" variant="secondary" onClick={() => navigate("/app/evidence")}>
         {t("auditReport.viewHistory")}
       </s-button>

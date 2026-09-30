@@ -109,6 +109,8 @@ export interface MerchantDocument {
   excludeVendors?: string | null;
   excludeTypes?: string | null;
   emailNotifications?: boolean;
+  immediateAlertEmails?: boolean;
+  weeklySummaryEmails?: boolean;
   notificationEmail?: string | null;
   notificationLanguage?: string;
   notificationEmailSource?: "shopify" | "custom";

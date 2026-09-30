@@ -70,6 +70,9 @@ type Pages = {
   "/app": {
     params: {};
   };
+  "/app/audit-report.csv": {
+    params: {};
+  };
   "/app/audit-report": {
     params: {};
   };
@@ -90,7 +93,7 @@ type Pages = {
 type RouteFiles = {
   "root.tsx": {
     id: "root";
-    page: "/" | "/webhooks/customers/data_request" | "/webhooks/app/scopes_update" | "/api/product-safety-status" | "/webhooks/customers/redact" | "/api/product-safety-check" | "/webhooks/app/uninstalled" | "/webhooks/products/create" | "/webhooks/products/update" | "/webhooks/shop/redact" | "/billing/redirect" | "/audit-report" | "/manual-check" | "/auth/login" | "/evidence" | "/settings" | "/alerts" | "/auth/*" | "/app" | "/app/audit-report" | "/app/manual-check" | "/app/evidence" | "/app/settings" | "/app/alerts";
+    page: "/" | "/webhooks/customers/data_request" | "/webhooks/app/scopes_update" | "/api/product-safety-status" | "/webhooks/customers/redact" | "/api/product-safety-check" | "/webhooks/app/uninstalled" | "/webhooks/products/create" | "/webhooks/products/update" | "/webhooks/shop/redact" | "/billing/redirect" | "/audit-report" | "/manual-check" | "/auth/login" | "/evidence" | "/settings" | "/alerts" | "/auth/*" | "/app" | "/app/audit-report.csv" | "/app/audit-report" | "/app/manual-check" | "/app/evidence" | "/app/settings" | "/app/alerts";
   };
   "routes/webhooks.customers.data_request.tsx": {
     id: "routes/webhooks.customers.data_request";
@@ -166,7 +169,11 @@ type RouteFiles = {
   };
   "routes/app.tsx": {
     id: "routes/app";
-    page: "/app" | "/app/audit-report" | "/app/manual-check" | "/app/evidence" | "/app/settings" | "/app/alerts";
+    page: "/app" | "/app/audit-report.csv" | "/app/audit-report" | "/app/manual-check" | "/app/evidence" | "/app/settings" | "/app/alerts";
+  };
+  "routes/app.audit-report[.]csv.ts": {
+    id: "routes/app.audit-report[.]csv";
+    page: "/app/audit-report.csv";
   };
   "routes/app.audit-report.tsx": {
     id: "routes/app.audit-report";
@@ -215,6 +222,7 @@ type RouteModules = {
   "routes/alerts": typeof import("./app/routes/alerts.tsx");
   "routes/auth.$": typeof import("./app/routes/auth.$.tsx");
   "routes/app": typeof import("./app/routes/app.tsx");
+  "routes/app.audit-report[.]csv": typeof import("./app/routes/app.audit-report[.]csv.ts");
   "routes/app.audit-report": typeof import("./app/routes/app.audit-report.tsx");
   "routes/app.manual-check": typeof import("./app/routes/app.manual-check.tsx");
   "routes/app.evidence": typeof import("./app/routes/app.evidence.tsx");

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-process.env.APP_PUBLIC_URL = "https://safety.example";
+process.env.SHOPIFY_APP_HANDLE = "safety-gate-monitor-eu";
 const { emailNotificationTestUtils, weeklyWindow } = await import("../lib/email-notifications.js");
 
 test("weekly window preserves Bratislava wall-clock time across spring DST", () => {
@@ -24,11 +24,26 @@ test("immediate email escapes merchant and Safety Gate content", () => {
     overallSimilarity: 96,
     safetyGateProduct: "Toy & parts",
     reason: "Review <now>",
-  }, "alert-1");
+  }, "alert-1", "example.myshopify.com");
   assert.doesNotMatch(content.htmlContent, /<script>/);
   assert.match(content.htmlContent, /&lt;script&gt;/);
   assert.match(content.htmlContent, /Toy &amp; parts/);
-  assert.match(content.textContent, /https:\/\/safety\.example\/app\/alerts\?alertId=alert-1/);
+  assert.match(content.textContent, /https:\/\/admin\.shopify\.com\/store\/example\/apps\/safety-gate-monitor-eu\/app\/alerts\?open=alert-1/);
+});
+
+test("weekly email reports findings and refuses to claim an incomplete week is clear", () => {
+  const content = emailNotificationTestUtils.buildWeeklyContent("en", "example.myshopify.com", new Date("2026-09-21T06:00:00Z"), new Date("2026-09-28T06:00:00Z"), {
+    products: 22,
+    checks: 18,
+    safetyGateRecords: 4,
+    newFindings: 2,
+    openFindings: 3,
+    monitoringComplete: false,
+    lastSuccessfulRun: null,
+  });
+  assert.match(content.subject, /Monitoring was incomplete/);
+  assert.ok(content.textContent.includes("2\nOpen findings: 3"));
+  assert.doesNotMatch(content.textContent, /No new finding was created/);
 });
 
 test("recipient validation and provider statuses are conservative", () => {

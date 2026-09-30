@@ -1,8 +1,7 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { authenticate } from "../shopify.server";
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const url = new URL(request.url);
+export const loader = async ({ request, url }: LoaderFunctionArgs) => {
   
   // Skip authentication for login path - it's handled by auth.login route
   if (url.pathname === "/auth/login") {

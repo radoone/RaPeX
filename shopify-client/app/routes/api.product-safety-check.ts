@@ -5,7 +5,7 @@ import { requireActiveBilling } from "../services/billing.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const { admin, billing, session, cors } = await authenticate.admin(request);
-  const billingRedirect = await requireActiveBilling(billing, session.shop);
+  const billingRedirect = await requireActiveBilling(billing, session.shop, { admin });
   if (billingRedirect) return billingRedirect as never;
 
   try {

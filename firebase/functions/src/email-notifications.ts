@@ -1,4 +1,5 @@
 import { createHash, timingSafeEqual } from "node:crypto";
+import { URL } from "node:url";
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import * as logger from "firebase-functions/logger";
 import type { CloudEvent } from "firebase-functions/v2";
@@ -7,7 +8,7 @@ import type { Request } from "firebase-functions/v2/https";
 import { db } from "./firebase-admin.js";
 import { FIRESTORE_COLLECTIONS } from "./safety-gate-config.js";
 
-export type EmailNotificationType = "immediate_alert" | "weekly_clear_summary";
+export type EmailNotificationType = "immediate_alert" | "weekly_summary";
 export type EmailNotificationStatus = "pending" | "accepted" | "delivered" | "bounced" | "blocked" | "failed";
 
 type ResponseShape = {
@@ -18,6 +19,8 @@ type ResponseShape = {
 type MerchantSettings = {
   shop: string;
   emailNotifications: boolean;
+  immediateAlertEmails?: boolean;
+  weeklySummaryEmails?: boolean;
   notificationEmail: string | null;
   notificationLanguage: string;
 };
@@ -68,6 +71,8 @@ function readMerchantSettings(shop: string, data: Record<string, unknown>): Merc
   return {
     shop,
     emailNotifications: data.emailNotifications !== false,
+    immediateAlertEmails: typeof data.immediateAlertEmails === "boolean" ? data.immediateAlertEmails : data.emailNotifications !== false,
+    weeklySummaryEmails: typeof data.weeklySummaryEmails === "boolean" ? data.weeklySummaryEmails : data.emailNotifications !== false,
     notificationEmail: normalizeEmail(data.notificationEmail),
     notificationLanguage: typeof data.notificationLanguage === "string" ? data.notificationLanguage : "en",
   };
@@ -101,16 +106,17 @@ function parseAlertDetails(data: Record<string, unknown>): AlertEmailDetails {
   };
 }
 
-function appAlertUrl(alertId: string): string {
-  const baseUrl = (process.env.APP_PUBLIC_URL || "").trim().replace(/\/$/, "");
-  if (!baseUrl) {
-    throw new Error("APP_PUBLIC_URL is not configured");
-  }
-  return `${baseUrl}/app/alerts?alertId=${encodeURIComponent(alertId)}`;
+function shopifyAdminAppUrl(shop: string, path: string, query?: Record<string, string>): string {
+  const handle = (process.env.SHOPIFY_APP_HANDLE || "").trim();
+  if (!handle) throw new Error("SHOPIFY_APP_HANDLE is not configured");
+  const storeHandle = shop.replace(/\.myshopify\.com$/i, "");
+  const url = new URL(`https://admin.shopify.com/store/${encodeURIComponent(storeHandle)}/apps/${encodeURIComponent(handle)}/${path.replace(/^\//, "")}`);
+  for (const [key, value] of Object.entries(query || {})) url.searchParams.set(key, value);
+  return url.toString();
 }
 
 function emailShell(title: string, body: string, actionLabel: string, actionUrl: string): string {
-  return `<!doctype html><html><body style="margin:0;background:#f3f3f3;font-family:Arial,sans-serif;color:#202223">
+  return `<!doctype html><html><body style="margin:0;background:#f3f3f3;font-family:-apple-system,BlinkMacSystemFont,'San Francisco','Segoe UI',Roboto,'Helvetica Neue',sans-serif;color:#202223">
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center" style="padding:24px 12px">
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:600px;background:#fff;border-radius:12px;border:1px solid #ddd;overflow:hidden">
   <tr><td style="padding:24px"><p style="margin:0 0 8px;color:#616161;font-size:13px">SAFETY GATE MONITOR</p><h1 style="font-size:24px;margin:0 0 20px">${title}</h1>${body}
@@ -118,10 +124,10 @@ function emailShell(title: string, body: string, actionLabel: string, actionUrl:
   </td></tr></table></td></tr></table></body></html>`;
 }
 
-function buildImmediateContent(language: string, details: AlertEmailDetails, alertId: string): EmailContent {
+function buildImmediateContent(language: string, details: AlertEmailDetails, alertId: string, shop: string): EmailContent {
   const slovak = language === "sk";
   const similarity = details.overallSimilarity === null ? (slovak ? "Neuvedená" : "Not available") : `${Math.round(details.overallSimilarity)}%`;
-  const url = appAlertUrl(alertId);
+  const url = shopifyAdminAppUrl(shop, "app/alerts", { open: alertId });
   const title = slovak ? "Produkt vyžaduje bezpečnostnú kontrolu" : "A product needs a safety review";
   const body = `<p>${slovak ? "Našli sme možnú zhodu medzi produktom vo vašom Shopify katalógu a záznamom EÚ Safety Gate." : "We found a possible match between a product in your Shopify catalog and an EU Safety Gate record."}</p>
   <table role="presentation" width="100%" style="border-collapse:collapse;margin-top:20px">
@@ -148,28 +154,40 @@ function formatDate(date: Date, language: string): string {
   }).format(date);
 }
 
-function buildWeeklyContent(language: string, start: Date, end: Date, metrics: {
+function buildWeeklyContent(language: string, shop: string, start: Date, end: Date, metrics: {
   products: number;
   checks: number;
   safetyGateRecords: number;
+  newFindings: number;
+  openFindings: number;
+  monitoringComplete: boolean;
+  lastSuccessfulRun: Date | null;
 }): EmailContent {
   const slovak = language === "sk";
-  const appUrl = (process.env.APP_PUBLIC_URL || "").trim().replace(/\/$/, "");
-  if (!appUrl) throw new Error("APP_PUBLIC_URL is not configured");
-  const url = `${appUrl}/app`;
+  const url = shopifyAdminAppUrl(shop, "app");
   const period = `${formatDate(start, language)} – ${formatDate(end, language)}`;
-  const title = slovak ? "Týždenný monitoring: žiadne nové nálezy" : "Weekly monitoring: no new findings";
-  const body = `<p>${slovak ? "Za posledných sedem dní sme vo vašom monitorovanom katalógu nevytvorili žiadny nový Safety Gate nález." : "No new Safety Gate finding was created for your monitored catalog during the last seven days."}</p>
+  const title = metrics.monitoringComplete
+    ? (slovak ? "Týždenný prehľad monitoringu" : "Weekly monitoring summary")
+    : (slovak ? "Monitoring nebol celý dokončený" : "Monitoring was incomplete");
+  const statusText = metrics.monitoringComplete
+    ? metrics.newFindings === 0
+      ? (slovak ? "Počas obdobia nevznikol nový nález." : "No new finding was created during this period.")
+      : (slovak ? `Vzniklo ${metrics.newFindings} nových nálezov, ktoré treba skontrolovať.` : `${metrics.newFindings} new findings need review.`)
+    : (slovak ? "Za toto obdobie nevieme potvrdiť úspešný dokončený monitoring." : "A completed monitoring run could not be confirmed for this period.");
+  const lastRun = metrics.lastSuccessfulRun ? formatDate(metrics.lastSuccessfulRun, language) : (slovak ? "Nepotvrdený" : "Not confirmed");
+  const body = `<p>${statusText}</p>
   <p><strong>${escapeHtml(period)}</strong></p><table role="presentation" width="100%" style="border-collapse:collapse">
   <tr><td style="padding:8px 0;color:#616161">${slovak ? "Monitorované produkty" : "Monitored products"}</td><td>${metrics.products}</td></tr>
   <tr><td style="padding:8px 0;color:#616161">${slovak ? "Vykonané kontroly" : "Checks completed"}</td><td>${metrics.checks}</td></tr>
   <tr><td style="padding:8px 0;color:#616161">${slovak ? "Nové záznamy Safety Gate" : "New Safety Gate records"}</td><td>${metrics.safetyGateRecords}</td></tr>
-  <tr><td style="padding:8px 0;color:#616161">${slovak ? "Nové nálezy" : "New findings"}</td><td><strong>0</strong></td></tr></table>`;
+  <tr><td style="padding:8px 0;color:#616161">${slovak ? "Nové nálezy" : "New findings"}</td><td><strong>${metrics.newFindings}</strong></td></tr>
+  <tr><td style="padding:8px 0;color:#616161">${slovak ? "Otvorené nálezy" : "Open findings"}</td><td>${metrics.openFindings}</td></tr>
+  <tr><td style="padding:8px 0;color:#616161">${slovak ? "Posledný úspešný beh" : "Last successful run"}</td><td>${escapeHtml(lastRun)}</td></tr></table>`;
 
   return {
-    subject: slovak ? "Safety Gate: týždeň bez nových nálezov" : "Safety Gate: a week with no new findings",
+    subject: `Safety Gate: ${title}`,
     htmlContent: emailShell(title, body, slovak ? "Otvoriť prehľad" : "Open dashboard", url),
-    textContent: `${title}\n${period}\n${slovak ? "Monitorované produkty" : "Monitored products"}: ${metrics.products}\n${slovak ? "Vykonané kontroly" : "Checks completed"}: ${metrics.checks}\n${slovak ? "Nové záznamy Safety Gate" : "New Safety Gate records"}: ${metrics.safetyGateRecords}\n${slovak ? "Nové nálezy" : "New findings"}: 0\n\n${url}`,
+    textContent: `${title}\n${statusText}\n${period}\n${slovak ? "Monitorované produkty" : "Monitored products"}: ${metrics.products}\n${slovak ? "Vykonané kontroly" : "Checks completed"}: ${metrics.checks}\n${slovak ? "Nové záznamy Safety Gate" : "New Safety Gate records"}: ${metrics.safetyGateRecords}\n${slovak ? "Nové nálezy" : "New findings"}: ${metrics.newFindings}\n${slovak ? "Otvorené nálezy" : "Open findings"}: ${metrics.openFindings}\n${slovak ? "Posledný úspešný beh" : "Last successful run"}: ${lastRun}\n\n${url}`,
   };
 }
 
@@ -289,14 +307,14 @@ export async function handleImmediateAlertCreated(
   const shop = typeof data.shop === "string" ? data.shop : decodeURIComponent(event.params.shopId);
   const merchantSnapshot = await getMerchantRef(shop).get();
   const settings = readMerchantSettings(shop, (merchantSnapshot.data() || {}) as Record<string, unknown>);
-  if (!settings.emailNotifications || !settings.notificationEmail) {
+  if (!settings.immediateAlertEmails || !settings.notificationEmail) {
     logger.info("Immediate email skipped by merchant settings", { shop, hasRecipient: Boolean(settings.notificationEmail) });
     return;
   }
 
   let content: EmailContent;
   try {
-    content = buildImmediateContent(settings.notificationLanguage, parseAlertDetails(data), event.params.alertId);
+    content = buildImmediateContent(settings.notificationLanguage, parseAlertDetails(data), event.params.alertId, shop);
   } catch (error) {
     logger.error("Immediate email content could not be created", { shop, alertId: event.params.alertId, error });
     return;
@@ -378,36 +396,49 @@ export async function runWeeklyClearSummaries(end = new Date()): Promise<{ sent:
     const data = merchant.data() as Record<string, unknown>;
     const shop = typeof data.shop === "string" ? data.shop : decodeURIComponent(merchant.id);
     const settings = readMerchantSettings(shop, data);
-    if (!settings.emailNotifications || !settings.notificationEmail) {
+    if (!hasCurrentMonitoringEntitlement(data) || !settings.weeklySummaryEmails || !settings.notificationEmail) {
       skipped += 1;
       continue;
     }
-    const alerts = merchant.ref.collection(FIRESTORE_COLLECTIONS.subAlerts)
+    const newFindings = merchant.ref.collection(FIRESTORE_COLLECTIONS.subAlerts)
       .where("createdAt", ">=", Timestamp.fromDate(start))
       .where("createdAt", "<", Timestamp.fromDate(end))
-      .limit(1).get();
-    const [alertSnapshot, productsCount, checksCount] = await Promise.all([
-      alerts,
+      .count().get();
+    const openFindings = merchant.ref.collection(FIRESTORE_COLLECTIONS.subAlerts)
+      .where("status", "==", "active")
+      .count().get();
+    const monitorState = data as Record<string, unknown>;
+    const lastMonitorRunEndValue = monitorState.lastMonitorRunEnd;
+    const lastSuccessfulRun = lastMonitorRunEndValue instanceof Timestamp
+      ? lastMonitorRunEndValue.toDate()
+      : lastMonitorRunEndValue instanceof Date
+        ? lastMonitorRunEndValue
+        : null;
+    const monitoringComplete = monitorState.lastMonitorStatus === "SUCCESS" &&
+      Boolean(lastSuccessfulRun && lastSuccessfulRun >= start && lastSuccessfulRun <= end);
+    const [newFindingsCount, openFindingsCount, productsCount, checksCount] = await Promise.all([
+      newFindings,
+      openFindings,
       merchant.ref.collection(FIRESTORE_COLLECTIONS.subProducts).count().get(),
       merchant.ref.collection(FIRESTORE_COLLECTIONS.subChecks)
         .where("createdAt", ">=", Timestamp.fromDate(start))
         .where("createdAt", "<", Timestamp.fromDate(end))
         .count().get(),
     ]);
-    if (!alertSnapshot.empty) {
-      skipped += 1;
-      continue;
-    }
     try {
-      const content = buildWeeklyContent(settings.notificationLanguage, start, end, {
+      const content = buildWeeklyContent(settings.notificationLanguage, shop, start, end, {
         products: productsCount.data().count,
         checks: checksCount.data().count,
         safetyGateRecords,
+        newFindings: newFindingsCount.data().count,
+        openFindings: openFindingsCount.data().count,
+        monitoringComplete,
+        lastSuccessfulRun,
       });
       const accepted = await createAndSendNotification({
         shop,
-        notificationId: `weekly_clear_summary__${weekKey(end)}`,
-        type: "weekly_clear_summary",
+        notificationId: `weekly_summary__${weekKey(end)}`,
+        type: "weekly_summary",
         recipient: settings.notificationEmail,
         content,
         periodStart: start,
@@ -426,6 +457,13 @@ export async function runWeeklyClearSummaries(end = new Date()): Promise<{ sent:
     }
   }
   return { sent, skipped, failed };
+}
+
+function hasCurrentMonitoringEntitlement(data: Record<string, unknown>): boolean {
+  if (data.subscriptionStatus !== "active" || data.monitoringEntitled !== true) return false;
+  const validUntil = data.subscriptionValidUntil;
+  const expiry = validUntil instanceof Timestamp ? validUntil.toMillis() : validUntil instanceof Date ? validUntil.getTime() : null;
+  return expiry === null || expiry > Date.now();
 }
 
 function secureEquals(actual: string, expected: string): boolean {
@@ -522,5 +560,6 @@ export const emailNotificationTestUtils = {
   escapeHtml,
   normalizeEmail,
   buildImmediateContent,
+  buildWeeklyContent,
   webhookStatus,
 };

@@ -5,20 +5,15 @@ import { useTranslation } from "react-i18next";
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { authenticate } from "../shopify.server";
 import db from "../merchant-db.server";
-import { getBillingStatus, requireActiveBilling } from "../services/billing.server";
+import { getBillingStatus } from "../services/billing.server";
 
 export const headers = (headersArgs: any) => {
   return boundary.headers(headersArgs);
 };
 
 export const loader = async ({ request }: { request: Request }) => {
-  const { billing, session } = await authenticate.admin(request);
-  const billingRedirect = await requireActiveBilling(billing, session.shop, {
-    allowFreeInitialScan: true,
-  });
-  if (billingRedirect) return billingRedirect as never;
-
-  const billingStatus = await getBillingStatus(billing, session.shop);
+  const { billing, session, admin } = await authenticate.admin(request);
+  const billingStatus = await getBillingStatus(billing, session.shop, admin);
 
   const activeAlertsCount = await db.safetyAlert.count({
     where: {
@@ -45,7 +40,7 @@ export default function App() {
         <Link to="/app/evidence">{t('nav.evidence')}</Link>
         <Link to="/app/settings">{t('nav.settings')}</Link>
       </NavMenu>
-      {!billingStatus.hasActivePayment && !billingStatus.freeScanUsed && (
+      {!billingStatus.developmentBypass && billingStatus.billingVerified && !billingStatus.hasActivePayment && !billingStatus.freeScanUsed && (
         <div style={{ padding: "0 var(--s-space-400)", maxWidth: "1200px", margin: "12px auto 0" }}>
           <s-banner tone="info" heading={t("billing.freeScanAvailableHeading")}>
             <s-text>{t("billing.freeScanAvailableDescription")}</s-text>

@@ -1,7 +1,11 @@
 import { FieldPath, FieldValue, Timestamp } from "firebase-admin/firestore";
+import { getFunctions } from "firebase-admin/functions";
+import { randomUUID } from "node:crypto";
 import * as logger from "firebase-functions/logger";
 import { db } from "./firebase-admin.js";
 import { AI_CONFIG, FIRESTORE_COLLECTIONS, MATCHING_THRESHOLDS } from "./safety-gate-config.js";
+import { buildMonitoringCursorValues } from "./monitoring-cursor.js";
+import { monitoringTaskId, scheduledMonitoringRunId } from "./monitoring-task-id.js";
 import { checkProductAgainstAlerts } from "./safety-gate-checker.js";
 import type { ProductInput } from "./safety-gate-checker.schemas.js";
 import { normalizePictures } from "./safety-gate-checker-media.js";
@@ -67,6 +71,30 @@ type MerchantMonitoringWindow = {
 const MONITOR_TEXT_CANDIDATE_LIMIT = 8;
 const MONITOR_IMAGE_CANDIDATE_LIMIT = 5;
 const MAX_ALERTS_PER_PRODUCT = 12;
+const MONITORING_RUNS = "monitoring_runs";
+const MAX_MONITORING_TASK_ATTEMPTS = 8;
+const MONITORING_TASK_QUEUE = getFunctions().taskQueue<MerchantMonitoringTaskPayload>(
+  "locations/europe-west1/functions/merchantMonitoringTask",
+);
+
+export type MerchantMonitoringTaskPayload = {
+  shop: string;
+  runId: string;
+  triggerMode: "scheduled";
+};
+
+function monitoringRunRef(shop: string, runId: string) {
+  return db.collection(FIRESTORE_COLLECTIONS.merchants)
+    .doc(encodeURIComponent(shop))
+    .collection(MONITORING_RUNS)
+    .doc(runId);
+}
+
+function currentEntitlement(data: Record<string, unknown>): boolean {
+  if (data.monitoringEntitled !== true || data.subscriptionStatus !== "active") return false;
+  const validUntil = data.subscriptionValidUntil;
+  return !(validUntil instanceof Timestamp) || validUntil.toMillis() > Date.now();
+}
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -307,11 +335,17 @@ async function loadRapexAlertCandidatesSince(
     .orderBy("meta.record_timestamp", "asc")
     .orderBy(FieldPath.documentId(), "asc");
 
-  if (checkpointRecordTimestamp) {
+  // Older monitor documents may have a timestamp checkpoint from before the
+  // document ID tie-breaker was introduced. Passing an empty string as the
+  // third cursor value is invalid in Firestore. Re-read from the inclusive
+  // alert-date boundary in that case; alert upserts are idempotent, and the
+  // completed run writes the full timestamp + document ID checkpoint.
+  const cursorValues = buildMonitoringCursorValues(checkpointDate, checkpointRecordTimestamp, checkpointDocId);
+  if (cursorValues) {
     query = query.startAfter(
-      Timestamp.fromDate(checkpointDate),
-      checkpointRecordTimestamp,
-      checkpointDocId || "",
+      Timestamp.fromDate(cursorValues[0]),
+      cursorValues[1],
+      cursorValues[2],
     );
   }
 
@@ -569,6 +603,7 @@ export async function runMerchantDeltaMonitoringForShop(params: {
   days?: number;
   limit?: number;
   triggerMode?: "manual" | "scheduled";
+  runId?: string;
 }): Promise<MerchantMonitoringSummary> {
   const shop = params.shop.trim();
   if (!shop) {
@@ -588,6 +623,7 @@ export async function runMerchantDeltaMonitoringForShop(params: {
   const limit = Number.isFinite(params.limit) && (params.limit as number) > 0
     ? Math.min(Math.floor(params.limit as number), 500)
     : 250;
+  const runId = params.runId || randomUUID();
 
   await monitorRef.set(
     {
@@ -642,6 +678,20 @@ export async function runMerchantDeltaMonitoringForShop(params: {
       checkpointDate: monitoringWindow.checkpointDate.toISOString(),
     });
 
+    const runRef = params.runId ? monitoringRunRef(shop, params.runId) : null;
+    if (runRef) {
+      await runRef.set({
+        status: "processing",
+        rapexAlertsScanned: rapexAlerts.length,
+        candidateProducts: candidateProductsByDocId.size,
+        productsScanned: 0,
+        matchesFound: 0,
+        alertsCreated: 0,
+        heartbeatAt: FieldValue.serverTimestamp(),
+        updatedAt: FieldValue.serverTimestamp(),
+      }, { merge: true });
+    }
+
     let matchesFound = 0;
     let alertsCreated = 0;
     let productsScanned = 0;
@@ -661,12 +711,16 @@ export async function runMerchantDeltaMonitoringForShop(params: {
         .collection(FIRESTORE_COLLECTIONS.merchants)
         .doc(encodeURIComponent(shop))
         .collection(FIRESTORE_COLLECTIONS.subChecks)
-        .add({
+        .doc(monitoringTaskId(shop, `${runId}:${candidate.product.data.productId || candidate.product.id}`))
+        .set({
           shop,
           productId: String(candidate.product.data.productId || ""),
           productTitle: String(candidate.product.data.productTitle || candidate.product.data.name || ""),
           isSafe: result.isSafe,
           checkedAt: new Date(result.checkedAt),
+          ...(typeof candidate.product.data.sourceUpdatedAt === "string"
+            ? { sourceUpdatedAt: candidate.product.data.sourceUpdatedAt }
+            : {}),
           createdAt: FieldValue.serverTimestamp(),
           expireAt: Timestamp.fromDate(expireDate),
         });
@@ -703,6 +757,16 @@ export async function runMerchantDeltaMonitoringForShop(params: {
         if (created) {
           alertsCreated += 1;
         }
+      }
+
+      if (runRef && (productsScanned % 5 === 0 || productsScanned === candidateProductsByDocId.size)) {
+        await runRef.set({
+          productsScanned,
+          matchesFound,
+          alertsCreated,
+          heartbeatAt: FieldValue.serverTimestamp(),
+          updatedAt: FieldValue.serverTimestamp(),
+        }, { merge: true });
       }
     }
 
@@ -759,44 +823,178 @@ export async function runMerchantDeltaMonitoringForShop(params: {
   }
 }
 
-export async function runDailyMerchantDeltaMonitoring(): Promise<{
-  shopsProcessed: number;
+async function enqueueMerchantMonitoringTask(payload: MerchantMonitoringTaskPayload): Promise<boolean> {
+  const runRef = monitoringRunRef(payload.shop, payload.runId);
+  const shouldEnqueue = await db.runTransaction(async (transaction) => {
+    const snapshot = await transaction.get(runRef);
+    const status = snapshot.get("status");
+    if (status === "completed" || status === "skipped_unentitled") return false;
+    if (status === "queued" || status === "processing" || status === "retrying") return false;
+
+    transaction.set(runRef, {
+      shop: payload.shop,
+      runId: payload.runId,
+      triggerMode: payload.triggerMode,
+      mode: "delta",
+      status: "queued",
+      createdAt: snapshot.get("createdAt") || FieldValue.serverTimestamp(),
+      queuedAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
+      attemptCount: 0,
+    }, { merge: true });
+    return true;
+  });
+  if (!shouldEnqueue) return false;
+
+  try {
+    await MONITORING_TASK_QUEUE.enqueue(payload, {
+      id: monitoringTaskId(payload.shop, payload.runId),
+      dispatchDeadlineSeconds: 1800,
+    });
+    return true;
+  } catch (error) {
+    if ((error as { code?: string })?.code === "functions/task-already-exists") {
+      return false;
+    }
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    await runRef.set({
+      status: "enqueue_failed",
+      lastError: errorMessage,
+      updatedAt: FieldValue.serverTimestamp(),
+    }, { merge: true });
+    await db.collection(FIRESTORE_COLLECTIONS.merchants).doc(encodeURIComponent(payload.shop)).set({
+      lastMonitorStatus: "FAILURE",
+      lastMonitorRunStart: FieldValue.serverTimestamp(),
+      lastMonitorRunEnd: FieldValue.serverTimestamp(),
+      lastRunMode: "delta",
+      lastError: errorMessage,
+      updatedAt: FieldValue.serverTimestamp(),
+    }, { merge: true });
+    throw error;
+  }
+}
+
+export async function handleMerchantMonitoringTask(
+  payload: MerchantMonitoringTaskPayload,
+  retryCount: number,
+): Promise<void> {
+  const shop = coerceString(payload?.shop);
+  const runId = coerceString(payload?.runId);
+  if (!shop || !runId || payload?.triggerMode !== "scheduled") {
+    throw new Error("Invalid merchant monitoring task payload");
+  }
+
+  const runRef = monitoringRunRef(shop, runId);
+  const merchantRef = db.collection(FIRESTORE_COLLECTIONS.merchants).doc(encodeURIComponent(shop));
+  const claim = await db.runTransaction(async (transaction) => {
+    const snapshot = await transaction.get(runRef);
+    if (!snapshot.exists) return "missing" as const;
+    const status = snapshot.get("status");
+    if (status === "completed" || status === "skipped_unentitled") return "finished" as const;
+    const leaseExpiresAt = snapshot.get("leaseExpiresAt");
+    if (status === "processing" && leaseExpiresAt instanceof Timestamp && leaseExpiresAt.toMillis() > Date.now()) {
+      return "busy" as const;
+    }
+
+    const leaseExpires = Timestamp.fromMillis(Date.now() + 33 * 60 * 1000);
+    transaction.set(runRef, {
+      status: "processing",
+      attemptCount: retryCount + 1,
+      startedAt: snapshot.get("startedAt") || FieldValue.serverTimestamp(),
+      lastAttemptAt: FieldValue.serverTimestamp(),
+      leaseExpiresAt: leaseExpires,
+      updatedAt: FieldValue.serverTimestamp(),
+    }, { merge: true });
+    return "claimed" as const;
+  });
+
+  if (claim === "missing") throw new Error("Merchant monitoring run record is missing");
+  if (claim === "finished") return;
+  if (claim === "busy") throw new Error("Merchant monitoring run is already being processed; retry after its lease expires");
+
+  const merchantSnapshot = await merchantRef.get();
+  if (!merchantSnapshot.exists || !currentEntitlement(merchantSnapshot.data() || {})) {
+    await runRef.set({
+      status: "skipped_unentitled",
+      skippedAt: FieldValue.serverTimestamp(),
+      leaseExpiresAt: FieldValue.delete(),
+      updatedAt: FieldValue.serverTimestamp(),
+    }, { merge: true });
+    return;
+  }
+
+  try {
+    const result = await runMerchantDeltaMonitoringForShop({
+      shop,
+      triggerMode: "scheduled",
+      runId,
+    });
+    await runRef.set({
+      status: "completed",
+      completedAt: FieldValue.serverTimestamp(),
+      leaseExpiresAt: FieldValue.delete(),
+      result,
+      updatedAt: FieldValue.serverTimestamp(),
+    }, { merge: true });
+  } catch (error) {
+    const exhausted = retryCount + 1 >= MAX_MONITORING_TASK_ATTEMPTS;
+    await runRef.set({
+      status: exhausted ? "failed" : "retrying",
+      lastError: error instanceof Error ? error.message : String(error),
+      ...(exhausted ? { failedAt: FieldValue.serverTimestamp() } : {}),
+      leaseExpiresAt: FieldValue.delete(),
+      updatedAt: FieldValue.serverTimestamp(),
+    }, { merge: true });
+    throw error;
+  }
+}
+
+export async function runDailyMerchantDeltaMonitoring(scheduleTime?: string): Promise<{
+  shopsQueued: number;
+  shopsSkippedUnentitled: number;
   failures: Array<{ shop: string; error: string }>;
 }> {
   const merchantsSnapshot = await db
     .collection(FIRESTORE_COLLECTIONS.merchants)
-    .select("shop")
+    .select("shop", "monitoringEntitled", "subscriptionStatus", "subscriptionValidUntil")
     .get();
 
-  const uniqueShops = merchantsSnapshot.docs
-    .map((doc) => {
-      const data = doc.data() as Record<string, unknown>;
-      return coerceString(data.shop) || decodeURIComponent(doc.id);
-    })
-    .filter((shop): shop is string => Boolean(shop));
+  const eligibleShops = merchantsSnapshot.docs.filter((doc) => {
+    const data = doc.data() as Record<string, unknown>;
+    return currentEntitlement(data);
+  }).map((doc) => {
+    const data = doc.data() as Record<string, unknown>;
+    return coerceString(data.shop) || decodeURIComponent(doc.id);
+  }).filter((shop): shop is string => Boolean(shop));
 
   const failures: Array<{ shop: string; error: string }> = [];
 
-  for (const shop of uniqueShops) {
-    try {
-      await runMerchantDeltaMonitoringForShop({
-        shop,
-        triggerMode: "scheduled",
-      });
-    } catch (error) {
-      failures.push({
-        shop,
-        error: error instanceof Error ? error.message : String(error),
-      });
-      logger.error("Scheduled merchant delta monitoring failed", {
-        shop,
-        error: failures[failures.length - 1].error,
-      });
-    }
+  const scheduledAt = scheduleTime ? new Date(scheduleTime) : new Date();
+  const runId = scheduledMonitoringRunId(Number.isNaN(scheduledAt.getTime()) ? new Date() : scheduledAt);
+  let shopsQueued = 0;
+
+  for (let index = 0; index < eligibleShops.length; index += 10) {
+    const batch = eligibleShops.slice(index, index + 10);
+    const results = await Promise.allSettled(batch.map((shop) => enqueueMerchantMonitoringTask({
+      shop,
+      runId,
+      triggerMode: "scheduled",
+    })));
+    results.forEach((result, batchIndex) => {
+      if (result.status === "fulfilled") {
+        if (result.value) shopsQueued += 1;
+        return;
+      }
+      const shop = batch[batchIndex];
+      const errorMessage = result.reason instanceof Error ? result.reason.message : String(result.reason);
+      failures.push({ shop, error: errorMessage });
+      logger.error("Could not enqueue scheduled merchant delta monitoring", { shop, error: errorMessage });
+    });
   }
 
   return {
-    shopsProcessed: uniqueShops.length,
+    shopsQueued,
+    shopsSkippedUnentitled: merchantsSnapshot.size - eligibleShops.length,
     failures,
   };
 }

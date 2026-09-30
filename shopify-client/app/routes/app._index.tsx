@@ -14,6 +14,7 @@ import {
   upsertMerchantProductForMonitoring,
 } from "../services/safety-gate-checker.server";
 import { shopifyProductToProductData } from "../services/safety-gate-product-data";
+import { checkCoversCurrentProductVersion } from "../services/catalog-coverage.server";
 
 type BulkCheckResults = {
   processed: number;
@@ -50,31 +51,32 @@ type ShopifyCatalogProduct = {
   [key: string]: unknown;
 };
 
-async function fetchCurrentCatalogProductIds(admin: any, limit = 300): Promise<string[]> {
-  const productIds: string[] = [];
+async function fetchCurrentCatalogProductVersions(admin: any, limit = 300): Promise<Array<{ id: string; updatedAt: string | null }>> {
+  const productVersions: Array<{ id: string; updatedAt: string | null }> = [];
   let after: string | null = null;
   let hasNextPage = true;
 
-  while (hasNextPage && productIds.length < limit) {
-    const first = Math.min(100, limit - productIds.length);
+  while (hasNextPage && productVersions.length < limit) {
+    const first = Math.min(100, limit - productVersions.length);
     const response: { json: () => Promise<any> } = await admin.graphql(`#graphql
       query dashboardCatalogProductIds($first: Int!, $after: String) {
         products(first: $first, after: $after) {
           pageInfo { hasNextPage endCursor }
-          nodes { id }
+          nodes { id updatedAt }
         }
       }
     `, { variables: { first, after } });
     const payload = await response.json();
     const connection = payload.data?.products;
-    productIds.push(...(connection?.nodes || []).map((product: { id: string }) =>
-      product.id.replace("gid://shopify/Product/", ""),
-    ));
-    hasNextPage = Boolean(connection?.pageInfo?.hasNextPage) && productIds.length < limit;
+    productVersions.push(...(connection?.nodes || []).map((product: { id: string; updatedAt?: string | null }) => ({
+      id: product.id.replace("gid://shopify/Product/", ""),
+      updatedAt: product.updatedAt || null,
+    })));
+    hasNextPage = Boolean(connection?.pageInfo?.hasNextPage) && productVersions.length < limit;
     after = connection?.pageInfo?.endCursor || null;
   }
 
-  return productIds;
+  return productVersions;
 }
 
 async function fetchCurrentCatalogProducts(admin: any, limit = 300): Promise<ShopifyCatalogProduct[]> {
@@ -229,12 +231,7 @@ async function runInitialCatalogScanInBackground(params: { admin: any; shop: str
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { billing, session, admin } = await authenticate.admin(request);
-  const billingRedirect = await requireActiveBilling(billing, session.shop, {
-    allowFreeInitialScan: true,
-  });
-  if (billingRedirect) return billingRedirect as never;
-
-  const billingStatus = await getBillingStatus(billing, session.shop);
+  const billingStatus = await getBillingStatus(billing, session.shop, admin);
 
   const [activeAlerts, totalAlerts, resolvedAlerts, dismissedAlerts, totalChecks, recentAlerts, checkedProductIds, activeAlertRiskSample, storedSettings, recentActivities, lastMonitoringActivityRows, currentCatalogProductIds] = await Promise.all([
     db.safetyAlert.count({
@@ -260,8 +257,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     // Get list of already checked product IDs
     db.safetyCheck.findMany({
       where: { shop: session.shop },
-      select: { productId: true },
-      distinct: ['productId'],
+      orderBy: { checkedAt: "desc" },
+      select: { productId: true, checkedAt: true, sourceUpdatedAt: true },
     }),
     db.safetyAlert.findMany({
       where: { shop: session.shop, status: 'active' },
@@ -281,8 +278,14 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       orderBy: { createdAt: 'desc' },
       take: 25,
     }),
-    fetchCurrentCatalogProductIds(admin),
+    fetchCurrentCatalogProductVersions(admin),
   ]);
+
+  const monitorStateSnapshot = await firestore
+    .collection("merchants")
+    .doc(encodeURIComponent(session.shop))
+    .get();
+  const monitorState = monitorStateSnapshot.exists ? monitorStateSnapshot.data() : null;
 
   let settings = storedSettings;
   if (!settings || settings.emailNotifications === undefined || !settings.notificationEmail) {
@@ -383,24 +386,18 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     console.error("Error getting products count:", e);
   }
 
-  const checkedProductIdSet = new Set(checkedProductIds.map((check: any) => check.productId).filter(Boolean));
-  const coveredProductIds = new Set(checkedProductIdSet);
-  const currentCatalogProductIdSet = new Set(currentCatalogProductIds);
-  const monitoredProducts = currentCatalogProductIds.length > 0
-    ? await firestore.collection("merchants").doc(encodeURIComponent(session.shop)).collection("products").get()
-    : null;
-  monitoredProducts?.forEach((snapshot: any) => {
-    const product = snapshot.data();
-    if (
-      currentCatalogProductIdSet.has(product?.productId) &&
-      (product?.vector_text || product?.vector_image || product?.sourceUpdatedAt)
-    ) {
-      coveredProductIds.add(product.productId);
-    }
-  });
-  const checkedProductCount = currentCatalogProductIds.length > 0
-    ? currentCatalogProductIds.filter((productId) => coveredProductIds.has(productId)).length
-    : 0;
+  const checksByProduct = new Map<string, any[]>();
+  for (const check of checkedProductIds) {
+    if (!check.productId) continue;
+    const productChecks = checksByProduct.get(check.productId) || [];
+    productChecks.push(check);
+    checksByProduct.set(check.productId, productChecks);
+  }
+  const checkedProductCount = currentCatalogProductIds.filter((product) =>
+    (checksByProduct.get(product.id) || []).some((check) =>
+      checkCoversCurrentProductVersion(check, product.updatedAt),
+    ),
+  ).length;
   const uncheckedProductCount = Math.max(0, totalProductsCount - checkedProductCount);
   const criticalActiveAlerts = activeAlertRiskSample.filter((alert: any) => {
     try {
@@ -448,6 +445,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     settings: resolvedSettings,
     billingStatus,
     recentActivities,
+    monitorState: monitorState ? {
+      status: monitorState.lastMonitorStatus || null,
+      lastRunAt: monitorState.lastMonitorRunEnd || null,
+      lastError: monitorState.lastMonitorStatus === "FAILURE" ? monitorState.lastError || null : null,
+    } : null,
     lastMonitoringAt: lastMonitoringActivityRows.find((activity: any) =>
       activity.type === "bulk" || activity.type === "automatic" || activity.action === "check"
     )?.createdAt ?? null,
@@ -471,14 +473,37 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   if (actionType === "importCatalogAndMonitor") {
     const billingRedirect = await requireActiveBilling(billing, session.shop, {
       allowFreeInitialScan: true,
+      admin,
     });
     if (billingRedirect) return billingRedirect as never;
+    const currentBillingStatus = await getBillingStatus(billing, session.shop, admin);
 
-    await db.safetySetting.upsert({
-      where: { shop: session.shop },
-      update: { initialScanStatus: "scanning", initialScanStartedAt: new Date() },
-      create: { shop: session.shop, similarityThreshold: 70, initialScanStatus: "scanning", initialScanStartedAt: new Date() },
+    const merchantRef = firestore.collection("merchants").doc(encodeURIComponent(session.shop));
+    const reserved = await firestore.runTransaction(async (transaction) => {
+      const snapshot = await transaction.get(merchantRef);
+      const settings = (snapshot.data() || {}) as Record<string, unknown>;
+      const previousStartedAt = settings.initialScanStartedAt instanceof Date
+        ? settings.initialScanStartedAt
+        : typeof (settings.initialScanStartedAt as { toDate?: unknown } | undefined)?.toDate === "function"
+          ? (settings.initialScanStartedAt as { toDate: () => Date }).toDate()
+          : null;
+      const reservationIsLive = settings.initialScanStatus === "scanning" &&
+        Boolean(previousStartedAt && Date.now() - previousStartedAt.getTime() < 30 * 60 * 1000);
+      const freeScanAlreadyUsed = settings.freeScanUsed === true &&
+        !currentBillingStatus.hasActivePayment && !currentBillingStatus.developmentBypass;
+      if (reservationIsLive || freeScanAlreadyUsed) return false;
+      transaction.set(merchantRef, {
+        shop: session.shop,
+        similarityThreshold: Number(settings.similarityThreshold || 70),
+        initialScanStatus: "scanning",
+        initialScanStartedAt: new Date(),
+        updatedAt: new Date(),
+      }, { merge: true });
+      return true;
     });
+    if (!reserved) {
+      return json({ success: false, error: "A catalog check is already running or the free initial scan has already been used." }, { status: 409 });
+    }
 
     // The scan can involve embeddings and model matching. Return before the
     // Cloudflare tunnel deadline, while retaining its durable merchant state.
@@ -487,7 +512,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   if (actionType === "bulkCheck") {
-    const billingRedirect = await requireActiveBilling(billing, session.shop);
+    const billingRedirect = await requireActiveBilling(billing, session.shop, { admin });
     if (billingRedirect) return billingRedirect as never;
 
     try {
@@ -528,11 +553,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   if (actionType === "completeOnboarding") {
-    const billingRedirect = await requireActiveBilling(billing, session.shop, {
-      allowFreeInitialScan: true,
-    });
-    if (billingRedirect) return billingRedirect as never;
-
     const similarityThreshold = Number(formData.get("similarityThreshold") || 70);
     const onboardingCompleted = formData.get("onboardingCompleted") === "true";
     const autoDraftHighRisk = formData.get("autoDraftHighRisk") === "true";
@@ -595,7 +615,7 @@ export function ErrorBoundary() {
 }
 
 export default function Index() {
-  const { stats, recentAlerts, settings, billingStatus, recentActivities, lastMonitoringAt } = useLoaderData<typeof loader>();
+  const { stats, recentAlerts, settings, billingStatus, recentActivities, lastMonitoringAt, monitorState } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<ActionResponse>();
   const navigation = useNavigation();
   const shopify = useAppBridge();
@@ -617,7 +637,7 @@ export default function Index() {
       ? "no-action-needed"
       : !hasCompleteCoverage
         ? "coverage-incomplete"
-        : !lastMonitoringAt
+        : monitorState?.status === "FAILURE" || monitorState?.status === "IN_PROGRESS" || !lastMonitoringAt
           ? "monitoring-problem"
           : "no-action-needed";
   const dashboardStatus = {
@@ -680,9 +700,8 @@ export default function Index() {
     const completedWithoutChecks = settings?.initialScanStatus === "completed" &&
       stats.totalProducts > 0 &&
       stats.checkedProducts === 0;
-    const canRetryInitialScan = Boolean(billingStatus?.hasActivePayment) ||
-      !settings?.freeScanUsed ||
-      completedWithoutChecks;
+    const canRetryInitialScan = Boolean(billingStatus?.developmentBypass) ||
+      Boolean(billingStatus?.billingVerified && (billingStatus.hasActivePayment || !settings?.freeScanUsed || completedWithoutChecks));
     const isScanNeeded = stats.totalProducts > 0 &&
       stats.uncheckedProducts > 0 &&
       canRetryInitialScan &&
@@ -697,6 +716,8 @@ export default function Index() {
     }
   }, [
     billingStatus?.hasActivePayment,
+    billingStatus?.billingVerified,
+    billingStatus?.developmentBypass,
     settings?.freeScanUsed,
     settings?.initialScanStatus,
     stats.totalProducts,
@@ -705,9 +726,6 @@ export default function Index() {
     fetcher,
   ]);
 
-  const protectedCount = Math.max(0, stats.checkedProducts - stats.activeAlerts);
-  const actionRequiredCount = stats.activeAlerts;
-  const unprotectedCount = stats.uncheckedProducts;
   const isScanning = isSubmitting || fetcher.state !== "idle" || settings?.initialScanStatus === "scanning";
 
   useEffect(() => {
@@ -733,7 +751,6 @@ export default function Index() {
   // ═══════════════════════════════════════════════════════════════════════════
   // STANDARD DASHBOARD VIEW (Direct access, zero onboarding blocker)
   // ═══════════════════════════════════════════════════════════════════════════
-  const showCoverageBreakdown = !isScanning && (hasCompleteCoverage || stats.activeAlerts > 0);
   const shouldShowPrimaryAction = !isScanning && dashboardState === "review-needed";
 
   return (
@@ -747,11 +764,6 @@ export default function Index() {
           suppressHydrationWarning
         >
           {dashboardStatus.actionLabel}
-        </s-button>
-      ) : null}
-      {!isScanning ? (
-        <s-button slot="secondary-actions" variant="secondary" onClick={() => navigate("/app/evidence")} suppressHydrationWarning>
-          {t("actions.viewEvidence")}
         </s-button>
       ) : null}
 
@@ -795,145 +807,23 @@ export default function Index() {
           </section>
         )}
 
-        {/* After the first scan, show the compact breakdown. During setup the
-            progress panel is the only primary message, so merchants know that
-            the app is working and do not have to choose a second action. */}
-        {showCoverageBreakdown ? <section aria-label={t("dashboard.safetyBreakdown.eyebrow")}>
-          <div style={{ marginBottom: "12px" }}>
-            <p className="admin-eyebrow" style={{ margin: 0 }}>{t("dashboard.safetyBreakdown.eyebrow")}</p>
-            <h2 style={{ margin: "4px 0 0", fontSize: "20px", fontWeight: 600 }}>{t("dashboard.safetyBreakdown.title")}</h2>
-            <p style={{ margin: "4px 0 0", fontSize: "13px", color: "var(--text-subdued)" }}>{t("dashboard.safetyBreakdown.description")}</p>
-          </div>
-
-          <div className="safety-status-grid">
-            {/* 1. Protected Card (Green) */}
-            <div className="safety-status-card safety-status-card--protected">
-              <div>
-                <div className="safety-status-card__top">
-                  <span className="safety-status-card__badge safety-status-card__badge--protected">
-                    🟢 {t("status.protected")}
-                  </span>
-                  <small style={{ color: "var(--text-subdued)", fontSize: "12px" }}>
-                    {stats.totalProducts > 0 ? `${Math.round((protectedCount / Math.max(1, stats.totalProducts)) * 100)}%` : "0%"}
-                  </small>
-                </div>
-                <div className="safety-status-card__value" style={{ color: "#108043" }}>
-                  {protectedCount}
-                </div>
-                <div className="safety-status-card__label">
-                  {t("dashboard.safetyBreakdown.protectedLabel")}
-                </div>
-                <div className="safety-status-card__desc">
-                  {t("dashboard.safetyBreakdown.protectedDesc")}
-                </div>
-              </div>
-              <div className="safety-status-card__action">
-                <s-button
-                  variant="secondary"
-                  onClick={() => navigate("/app/evidence")}
-                >
-                  {t("actions.viewEvidence")}
-                </s-button>
-              </div>
-            </div>
-
-            {/* 2. Action Required Card (Red / Critical) */}
-            <div className="safety-status-card safety-status-card--action">
-              <div>
-                <div className="safety-status-card__top">
-                  <span className="safety-status-card__badge safety-status-card__badge--action">
-                    🔴 {t("status.actionRequired")}
-                  </span>
-                  <small style={{ color: "var(--text-subdued)", fontSize: "12px" }}>
-                    {stats.criticalActiveAlerts > 0 ? `${stats.criticalActiveAlerts} critical` : ""}
-                  </small>
-                </div>
-                <div className="safety-status-card__value" style={{ color: actionRequiredCount > 0 ? "#d82c0d" : "inherit" }}>
-                  {actionRequiredCount}
-                </div>
-                <div className="safety-status-card__label">
-                  {t("dashboard.safetyBreakdown.actionLabel")}
-                </div>
-                <div className="safety-status-card__desc">
-                  {t("dashboard.safetyBreakdown.actionDesc")}
-                </div>
-              </div>
-              <div className="safety-status-card__action">
-                <s-button
-                  variant={actionRequiredCount > 0 ? "primary" : "secondary"}
-                  tone={actionRequiredCount > 0 ? "critical" : undefined}
-                  onClick={() => navigate("/app/alerts?status=active")}
-                >
-                  {t("dashboard.safetyBreakdown.reviewAlertsAction")}
-                </s-button>
-              </div>
-            </div>
-
-            {/* 3. Unprotected Card (Yellow / Amber) */}
-            <div className="safety-status-card safety-status-card--unprotected">
-              <div>
-                <div className="safety-status-card__top">
-                  <span className="safety-status-card__badge safety-status-card__badge--unprotected">
-                    🟡 {t("status.unprotected")}
-                  </span>
-                  <small style={{ color: "var(--text-subdued)", fontSize: "12px" }}>
-                    {unprotectedCount > 0 ? `${unprotectedCount} pending` : "All clear"}
-                  </small>
-                </div>
-                <div className="safety-status-card__value" style={{ color: unprotectedCount > 0 ? "#b98900" : "#108043" }}>
-                  {unprotectedCount}
-                </div>
-                <div className="safety-status-card__label">
-                  {t("dashboard.safetyBreakdown.unprotectedLabel")}
-                </div>
-                <div className="safety-status-card__desc">
-                  {unprotectedCount > 0
-                    ? t("dashboard.safetyBreakdown.unprotectedDesc")
-                    : t("dashboard.safetyBreakdown.unprotectedAllCovered")}
-                </div>
-              </div>
-              <div className="safety-status-card__action">
-                {unprotectedCount > 0 ? (
-                  <s-button
-                    variant="primary"
-                    onClick={() =>
-                      fetcher.submit(
-                        { action: "importCatalogAndMonitor" },
-                        { method: "POST" }
-                      )
-                    }
-                    disabled={isScanning}
-                  >
-                    {t("dashboard.safetyBreakdown.protectRemainingAction", { count: unprotectedCount })}
-                  </s-button>
-                ) : (
-                  <s-button
-                    variant="secondary"
-                    onClick={() =>
-                      fetcher.submit(
-                        { action: "importCatalogAndMonitor" },
-                        { method: "POST" }
-                      )
-                    }
-                    disabled={isScanning}
-                  >
-                    {t("dashboard.safetyBreakdown.scanAllAction")}
-                  </s-button>
-                )}
-              </div>
-            </div>
-          </div>
-        </section> : null}
         {!isScanning ? <>
-        {billingStatus && !billingStatus.hasActivePayment && billingStatus.freeScanUsed && (
+        {billingStatus && !billingStatus.developmentBypass && !billingStatus.billingVerified && (
+          <s-banner tone="warning" heading={t("billing.statusUnverified")}>
+            <s-text>{t("billing.verificationError")}</s-text>
+            <div style={{ marginTop: "var(--s-space-300)" }}>
+              <s-button variant="secondary" onClick={() => window.location.reload()}>{t("actions.retry")}</s-button>
+            </div>
+          </s-banner>
+        )}
+        {billingStatus && !billingStatus.developmentBypass && billingStatus.billingVerified && !billingStatus.hasActivePayment && billingStatus.freeScanUsed && (
           <s-banner tone="warning" heading={t("billing.upgradeRequiredHeading")}>
             <s-text>{t("billing.upgradeRequiredDescription")}</s-text>
             <div style={{ marginTop: "var(--s-space-300)" }}>
               <s-button
                 variant="primary"
-                onClick={() => {
-                  window.open(billingStatus.pricingPlansUrl, "_top");
-                }}
+                onClick={() => billingStatus.pricingPlansUrl && window.open(billingStatus.pricingPlansUrl, "_top")}
+                disabled={!billingStatus.pricingPlansUrl}
                 suppressHydrationWarning
               >
                 {t("billing.upgradePlanButton")}
@@ -941,6 +831,14 @@ export default function Index() {
             </div>
           </s-banner>
         )}
+        {!isScanning && monitorState?.status === "FAILURE" ? (
+          <s-banner tone="critical" heading={t("dashboard.admin.status.monitoringProblem.title")}>
+            <s-text>{t("dashboard.admin.status.monitoringProblem.description")}</s-text>
+            <div style={{ marginTop: "var(--s-space-200)" }}>
+              <s-button variant="primary" href="/app/manual-check">{t("dashboard.admin.status.monitoringProblem.action")}</s-button>
+            </div>
+          </s-banner>
+        ) : null}
         {!isScanning ? <section className={`dashboard-status-panel dashboard-status-panel--${dashboardStatus.tone}`}>
           <div className="dashboard-status-panel__content">
             <p className="admin-eyebrow">{dashboardStatus.eyebrow}</p>
@@ -973,7 +871,7 @@ export default function Index() {
             </div>
             <div className="dashboard-status-panel__fact">
               <span>{t("dashboard.admin.lastSafetyGateUpdateChecked")}</span>
-              <strong>{lastMonitoringAt ? formatRelativeDate(new Date(lastMonitoringAt), t, i18n.language) : t("status.notChecked")}</strong>
+              <strong>{monitorState?.lastRunAt ? formatRelativeDate(new Date(monitorState.lastRunAt), t, i18n.language) : lastMonitoringAt ? formatRelativeDate(new Date(lastMonitoringAt), t, i18n.language) : t("status.notChecked")}</strong>
               <small>{t("dashboard.admin.status.cachedEvidence")}</small>
             </div>
             <div className="dashboard-status-panel__fact">
