@@ -21,7 +21,10 @@ function syncDocument(language) {
 
   document.querySelectorAll("[data-i18n]").forEach((element) => {
     const key = element.dataset.i18n;
-    const value = i18next.t(key);
+    const variables = element.dataset.i18nVariables
+      ? JSON.parse(element.dataset.i18nVariables)
+      : {};
+    const value = i18next.t(key, variables);
 
     if (typeof value !== "string") {
       return;
@@ -84,6 +87,9 @@ function initFormHandler() {
   function showFeedback(state, titleKey, bodyKey, variables = {}) {
     feedback.hidden = false;
     feedback.dataset.state = state;
+    title.dataset.i18n = titleKey;
+    body.dataset.i18n = bodyKey;
+    body.dataset.i18nVariables = JSON.stringify(variables);
     title.textContent = i18next.t(titleKey);
     body.textContent = i18next.t(bodyKey, variables);
   }

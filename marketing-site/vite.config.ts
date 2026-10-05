@@ -13,6 +13,7 @@ export default defineConfig({
       input: {
         main: resolve(rootDir, "index.html"),
         about: resolve(rootDir, "about.html"),
+        privacy: resolve(rootDir, "privacy.html"),
         leads: resolve(rootDir, "leads.html"),
       },
     },
