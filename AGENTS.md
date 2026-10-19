@@ -133,6 +133,59 @@ can be worked on without changing Shopify auth or app routes.
 16. The first dashboard audit is enqueued to `merchantCatalogAuditTask`. Each retryable task imports one Shopify page (up to 100 products), reuses unchanged Firestore embeddings, batches text embeddings in groups of 50, and advances the cursor only after the whole page is persisted. It then checks all indexed Safety Gate history in 500-alert pages, using the merchant monitoring vector shortlist before Gemini. Run state and safe progress counts live under `merchants/{shop}/initial_catalog_runs/{runId}` and on the merchant root; task payloads never include access tokens. The app mirrors its offline Shopify session into private `shopify_sessions` when starting the job, and uninstall / `shop/redact` delete that copy. Product import does not set `lastCheckedAt` or count as a completed safety check.
 17. Prisma remains only for Shopify sessions.
 
+## ZeroRecall domain and application email
+
+### Ownership and traffic flow
+
+- Domain registration stays at Websupport. Authoritative DNS is hosted by Cloudflare using `arturo.ns.cloudflare.com` and `tessa.ns.cloudflare.com`.
+- `https://zerorecall.online` serves Firebase Hosting site `rapex-99a2c`. Its root A record is `199.36.158.100`; root TXT is `hosting-site=rapex-99a2c`. Keep the old Websupport root A/AAAA records removed. HTTP redirects to HTTPS.
+- `www.zerorecall.online` has a DNS-only CNAME to `rapex-99a2c.web.app` and a Firebase custom-domain redirect to `zerorecall.online`. Its certificate provisioning is separate from the root domain; verify its current TLS status before claiming it works.
+- Incoming email: `info@zerorecall.online` → Cloudflare Email Routing → `radoone@gmail.com`. The `info@` routing rule is enabled and the destination is verified. Catch-all is disabled.
+- Outgoing application email: Firebase Functions → Brevo transactional API → recipient. The verified Brevo sender is `ZeroRecall <info@zerorecall.online>` (sender ID `2`). This does not configure Gmail's “Send as” feature. Replies to `info@` follow the Cloudflare incoming route.
+
+### DNS records for email
+
+Keep Cloudflare's incoming-mail records and Brevo's outgoing authentication records together. They serve different purposes. Do not restore Websupport MX records, proxy DKIM CNAMEs, create a second SPF record, or weaken DMARC to `p=none` merely because a provider example uses it.
+
+| Type | Name | Value / purpose |
+| --- | --- | --- |
+| MX | `@` | Cloudflare-managed `route1.mx.cloudflare.net` (43), `route2.mx.cloudflare.net` (72), `route3.mx.cloudflare.net` (62) |
+| TXT | `@` | `v=spf1 include:_spf.mx.cloudflare.net ~all` |
+| TXT | `cf2024-1._domainkey` | Cloudflare-managed DKIM public key; retain it |
+| TXT | `_dmarc` | `v=DMARC1; p=quarantine` |
+| TXT | `@` | Brevo ownership code supplied in Brevo's domain settings; retain it |
+| CNAME | `brevo1._domainkey` | `b1.zerorecall-online.dkim.brevo.com` — DNS only |
+| CNAME | `brevo2._domainkey` | `b2.zerorecall-online.dkim.brevo.com` — DNS only |
+
+Brevo verified `zerorecall.online` and both DKIM records on 19 October 2026. Brevo uses its own envelope/return-path domain for the shared sending pool; the visible From domain authenticates through aligned DKIM. Do not add another root SPF record to match the visible From address.
+
+### Firebase runtime configuration
+
+The following non-secret values are set on all four production functions in project `rapex-99a2c`, region `europe-west1`:
+
+```text
+BREVO_SENDER_EMAIL=info@zerorecall.online
+BREVO_SENDER_NAME=ZeroRecall
+MARKETING_SITE_URL=https://zerorecall.online
+```
+
+- `freeScanRequestAPI`: free-scan confirmation email.
+- `processFreeScanRequestJob`: free-scan report email.
+- `sendImmediateSafetyGateAlertEmail`: newly created merchant alert email.
+- `weeklyClearSafetyGateSummary`: scheduled merchant summary email.
+
+The 19 October change updated only `serviceConfig.environmentVariables` through the Cloud Functions v2 API with an explicit update mask, merging existing environment variables. It preserved deployed code and secret bindings, and all four update operations completed successfully. Do not redeploy unrelated uncommitted backend changes to change an email sender.
+
+A local `firebase/functions/.env.rapex-99a2c` contains the same three non-secret values for subsequent Firebase CLI deployments. Keep this deployment-local file untracked; do not assume it is ignored without checking. Existing `BREVO_API_KEY` and `BREVO_WEBHOOK_SECRET` remain in Google Secret Manager. Never commit, print, or put their values in browser-facing/Vite configuration. Merchant delivery audit state is still updated only by the authenticated Brevo webhook; a test API response must not fabricate merchant notification records.
+
+Relevant implementation: `firebase/functions/src/email-notifications.ts`, `firebase/functions/src/free-scan.ts`, function bindings in `firebase/functions/src/index.ts`, and operational notes in `firebase/functions/EMAIL_NOTIFICATIONS.md`. The visible sender name in the free-scan source was still hardcoded as `Safety Gate Monitor` at this configuration-only change; its From email uses `BREVO_SENDER_EMAIL`. Merchant notifications read `BREVO_SENDER_NAME`.
+
+### Verification and limits of the evidence
+
+- A transactional test sent through the same Brevo API integration from `ZeroRecall <info@zerorecall.online>` was received in the destination Gmail inbox on 19 October 2026. Gmail headers showed `spf=pass`, `dkim=pass` for `zerorecall.online`, and `dmarc=pass`. Brevo reported `delivered` for both authorized test recipients.
+- A separate incoming test to `info@zerorecall.online` was recorded as `Forwarded` to `radoone@gmail.com` by Cloudflare. Testing a forwarding alias from its own destination Gmail account may suppress a separate inbox copy; use another sending address for a clean incoming-mail test.
+- These checks prove the sender integration and routing configuration. They do not prove a complete merchant-alert trigger, weekly scheduler, or free-scan confirmation/worker/report flow. The marketing free-scan form still needs a production Turnstile site key in its build; do not claim it is operational merely because email delivery works.
+
 ## Important product behavior
 
 - The app is not a generic Safety Gate browser. It is a checker for the merchant's own Shopify catalog.
