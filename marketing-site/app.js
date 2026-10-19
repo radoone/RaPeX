@@ -1,14 +1,22 @@
 import i18next from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
+import languages from "../localization/languages.json";
+import authorities from "../localization/authorities.json";
 import en from "./locales/en.json";
-import sk from "./locales/sk.json";
 
-const resources = {
-  en: { translation: en },
-  sk: { translation: sk },
+const catalogs = import.meta.glob(["./locales/??.json", "!./locales/en.json"], { import: "default" });
+const resources = { en: { translation: en } };
+const translationBackend = {
+  type: "backend",
+  read(language, _namespace, callback) {
+    if (language === "en") { callback(null, en); return; }
+    const load = catalogs[`./locales/${language}.json`];
+    if (!load) { callback(new Error("Unsupported language"), false); return; }
+    load().then(data => callback(null, data)).catch(error => callback(error, false));
+  },
 };
 
-const supportedLanguages = Object.keys(resources);
+const supportedLanguages = languages.map(language => language.code);
 
 function setQueryLanguage(language) {
   const url = new URL(window.location.href);
@@ -24,7 +32,8 @@ function syncDocument(language) {
     const variables = element.dataset.i18nVariables
       ? JSON.parse(element.dataset.i18nVariables)
       : {};
-    const value = i18next.t(key, variables);
+    const authority = authorities[language];
+    const value = i18next.t(key, authority ? { ...variables, country: authority.country, authority: authority.name } : variables);
 
     if (typeof value !== "string") {
       return;
@@ -39,7 +48,7 @@ function syncDocument(language) {
       return;
     }
 
-    if (element.dataset.i18nHtml === "true" || (value.includes("<") && value.includes(">"))) {
+    if (element.dataset.i18nHtml === "true") {
       element.innerHTML = value;
     } else {
       element.textContent = value;
@@ -49,6 +58,39 @@ function syncDocument(language) {
   document.querySelectorAll("[data-locale]").forEach((button) => {
     const isActive = button.dataset.locale === language;
     button.setAttribute("aria-pressed", String(isActive));
+  });
+  document.querySelectorAll("[data-language-select]").forEach(select => { select.value = language; });
+  document.querySelectorAll("[data-authority-link]").forEach(link => {
+    link.href = authorities[language]?.url || "https://single-market-economy.ec.europa.eu/single-market/goods/building-blocks/market-surveillance/organisation_en";
+  });
+  document.querySelectorAll("a[href]").forEach(link => {
+    const href = link.getAttribute("href");
+    if (!href || href.startsWith("#")) return;
+    const target = new URL(href, window.location.href);
+    if (target.origin === window.location.origin && /\/(index|about|privacy)\.html$/.test(target.pathname)) {
+      target.searchParams.set("lang", language);
+      link.href = target.pathname + target.search + target.hash;
+    }
+  });
+}
+
+function initLanguageSelectors() {
+  document.querySelectorAll(".lang-switch").forEach(container => {
+    const select = document.createElement("select");
+    select.className = "language-select";
+    select.dataset.languageSelect = "true";
+    select.dataset.i18n = "nav.language";
+    select.dataset.i18nAttr = "aria-label";
+    select.setAttribute("aria-label", "Language");
+    for (const {code, label} of languages) {
+      const option = document.createElement("option");
+      option.value = code;
+      option.textContent = label;
+      option.lang = code;
+      select.append(option);
+    }
+    select.addEventListener("change", () => i18next.changeLanguage(select.value));
+    container.replaceChildren(select);
   });
 }
 
@@ -236,7 +278,7 @@ function initFormHandler() {
       const response = await fetch("/api/free-scan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ domain, email, locale: i18next.resolvedLanguage === "sk" ? "sk" : "en", turnstileToken }),
+        body: JSON.stringify({ domain, email, locale: i18next.resolvedLanguage || "en", turnstileToken }),
       });
       if (!response.ok) {
         if (response.status === 429) {
@@ -262,8 +304,10 @@ function initFormHandler() {
 }
 
 async function initI18n() {
-  await i18next.use(LanguageDetector).init({
+  initLanguageSelectors();
+  await i18next.use(translationBackend).use(LanguageDetector).init({
     resources,
+    partialBundledLanguages: true,
     fallbackLng: "en",
     supportedLngs: supportedLanguages,
     nonExplicitSupportedLngs: true,

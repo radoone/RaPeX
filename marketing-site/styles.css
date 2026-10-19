@@ -1188,3 +1188,24 @@ a {
 .showcase-disclaimer { margin: 25px 0 0; color: var(--text-subtle); font-size: 12px; line-height: 1.5; }
 @media (max-width: 980px) { .showcase-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 650px) { .showcase-grid { grid-template-columns: 1fr; gap: 34px; } .showcase-window { height: auto; min-height: 390px; } .showcase-window__body { padding: 18px; } .showcase-card figcaption { margin-top: 13px; } }
+
+/* Native selector keeps all 24 EU languages reachable without crowding the navigation. */
+.language-select {
+  max-width: 155px;
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-main, #faf9f5);
+  color: var(--text-main);
+  padding: 9px 26px 9px 10px;
+  font: inherit;
+  font-size: 13px;
+  min-height: 38px;
+}
+.language-select:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+@media (max-width: 650px) { .language-select { max-width: 122px; } }
+
+/* Long translated words must not force grid tracks beyond the viewport. */
+.hero-copy, .hero-visual, .about-story > *, .principle-card { min-width: 0; }
+.hero-title, .about-title, .section-title, .privacy-page h1 { overflow-wrap: anywhere; hyphens: auto; }
+.btn { max-width: 100%; white-space: normal; text-align: center; }

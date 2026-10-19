@@ -1,5 +1,7 @@
 # Free scan protection
 
+The public home, about and privacy pages support all 24 official EU languages. Canonical translations live in `localization/catalogs/`; run `npm run localization:build` and `npm run localization:check` from the repository root after edits. The selector preserves language across pages and in free-scan requests. See `localization/README.md` for email localization, sources and verification. The internal scanner is not translated by this change.
+
 The public free-scan form deliberately fails closed until a production Cloudflare Turnstile widget is configured.
 
 1. Create a Turnstile **managed** widget for the marketing site's production hostname in Cloudflare. Restrict its allowed hostnames to the real site. The widget action is `free_scan`.

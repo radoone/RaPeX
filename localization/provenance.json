@@ -1,0 +1,539 @@
+{
+  "createdOn": "2026-10-19",
+  "scope": "Public marketing website and four application email types; internal scanner excluded",
+  "existingLocales": [
+    "en",
+    "sk"
+  ],
+  "newLocales": [
+    {
+      "language": "bg",
+      "status": "translated",
+      "model": "gemini-2.5-flash",
+      "sourceSha256": "19bc51ebd5455f4b931fbcf22c8696daf046491e19df299dc4b58e9e610ba6b8",
+      "usage": {
+        "promptTokenCount": 7234,
+        "candidatesTokenCount": 9447,
+        "totalTokenCount": 16681,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 7234
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 9447
+          }
+        ]
+      }
+    },
+    {
+      "language": "cs",
+      "status": "translated",
+      "model": "gemini-2.5-flash",
+      "sourceSha256": "19bc51ebd5455f4b931fbcf22c8696daf046491e19df299dc4b58e9e610ba6b8",
+      "usage": {
+        "promptTokenCount": 7232,
+        "candidatesTokenCount": 9881,
+        "totalTokenCount": 17113,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 7232
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 9881
+          }
+        ]
+      }
+    },
+    {
+      "language": "da",
+      "status": "translated",
+      "model": "gemini-2.5-flash",
+      "sourceSha256": "19bc51ebd5455f4b931fbcf22c8696daf046491e19df299dc4b58e9e610ba6b8",
+      "usage": {
+        "promptTokenCount": 7232,
+        "candidatesTokenCount": 9355,
+        "totalTokenCount": 16587,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 7232
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 9355
+          }
+        ]
+      }
+    },
+    {
+      "language": "de",
+      "status": "translated",
+      "model": "gemini-2.5-flash",
+      "sourceSha256": "19bc51ebd5455f4b931fbcf22c8696daf046491e19df299dc4b58e9e610ba6b8",
+      "usage": {
+        "promptTokenCount": 7230,
+        "candidatesTokenCount": 9045,
+        "totalTokenCount": 16275,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 7230
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 9045
+          }
+        ]
+      }
+    },
+    {
+      "language": "el",
+      "status": "translated",
+      "model": "gemini-2.5-flash",
+      "sourceSha256": "19bc51ebd5455f4b931fbcf22c8696daf046491e19df299dc4b58e9e610ba6b8",
+      "usage": {
+        "promptTokenCount": 7234,
+        "candidatesTokenCount": 11763,
+        "totalTokenCount": 18997,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 7234
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 11763
+          }
+        ]
+      }
+    },
+    {
+      "language": "es",
+      "status": "translated",
+      "model": "gemini-2.5-flash",
+      "sourceSha256": "19bc51ebd5455f4b931fbcf22c8696daf046491e19df299dc4b58e9e610ba6b8",
+      "usage": {
+        "promptTokenCount": 7230,
+        "candidatesTokenCount": 8635,
+        "totalTokenCount": 15865,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 7230
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 8635
+          }
+        ]
+      }
+    },
+    {
+      "language": "et",
+      "status": "translated",
+      "model": "gemini-2.5-flash",
+      "sourceSha256": "19bc51ebd5455f4b931fbcf22c8696daf046491e19df299dc4b58e9e610ba6b8",
+      "usage": {
+        "promptTokenCount": 7230,
+        "candidatesTokenCount": 10057,
+        "totalTokenCount": 17287,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 7230
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 10057
+          }
+        ]
+      }
+    },
+    {
+      "language": "fi",
+      "status": "translated",
+      "model": "gemini-2.5-flash",
+      "sourceSha256": "19bc51ebd5455f4b931fbcf22c8696daf046491e19df299dc4b58e9e610ba6b8",
+      "usage": {
+        "promptTokenCount": 7232,
+        "candidatesTokenCount": 10589,
+        "totalTokenCount": 17821,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 7232
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 10589
+          }
+        ]
+      }
+    },
+    {
+      "language": "fr",
+      "status": "translated",
+      "model": "gemini-2.5-flash",
+      "sourceSha256": "19bc51ebd5455f4b931fbcf22c8696daf046491e19df299dc4b58e9e610ba6b8",
+      "usage": {
+        "promptTokenCount": 7230,
+        "candidatesTokenCount": 9106,
+        "totalTokenCount": 16336,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 7230
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 9106
+          }
+        ]
+      }
+    },
+    {
+      "language": "ga",
+      "status": "translated",
+      "model": "gemini-2.5-flash",
+      "sourceSha256": "19bc51ebd5455f4b931fbcf22c8696daf046491e19df299dc4b58e9e610ba6b8",
+      "usage": {
+        "promptTokenCount": 7236,
+        "candidatesTokenCount": 11772,
+        "totalTokenCount": 19008,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 7236
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 11772
+          }
+        ]
+      }
+    },
+    {
+      "language": "hr",
+      "status": "translated",
+      "model": "gemini-2.5-flash",
+      "sourceSha256": "19bc51ebd5455f4b931fbcf22c8696daf046491e19df299dc4b58e9e610ba6b8",
+      "usage": {
+        "promptTokenCount": 7232,
+        "candidatesTokenCount": 9061,
+        "totalTokenCount": 16293,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 7232
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 9061
+          }
+        ]
+      }
+    },
+    {
+      "language": "hu",
+      "status": "translated",
+      "model": "gemini-2.5-flash",
+      "sourceSha256": "19bc51ebd5455f4b931fbcf22c8696daf046491e19df299dc4b58e9e610ba6b8",
+      "usage": {
+        "promptTokenCount": 7230,
+        "candidatesTokenCount": 10731,
+        "totalTokenCount": 17961,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 7230
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 10731
+          }
+        ]
+      }
+    },
+    {
+      "language": "it",
+      "status": "translated",
+      "model": "gemini-2.5-flash",
+      "sourceSha256": "19bc51ebd5455f4b931fbcf22c8696daf046491e19df299dc4b58e9e610ba6b8",
+      "usage": {
+        "promptTokenCount": 7230,
+        "candidatesTokenCount": 9123,
+        "totalTokenCount": 16353,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 7230
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 9123
+          }
+        ]
+      }
+    },
+    {
+      "language": "lt",
+      "status": "translated",
+      "model": "gemini-2.5-flash",
+      "sourceSha256": "19bc51ebd5455f4b931fbcf22c8696daf046491e19df299dc4b58e9e610ba6b8",
+      "usage": {
+        "promptTokenCount": 7234,
+        "candidatesTokenCount": 10089,
+        "totalTokenCount": 17323,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 7234
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 10089
+          }
+        ]
+      }
+    },
+    {
+      "language": "lv",
+      "status": "translated",
+      "model": "gemini-2.5-flash",
+      "sourceSha256": "19bc51ebd5455f4b931fbcf22c8696daf046491e19df299dc4b58e9e610ba6b8",
+      "usage": {
+        "promptTokenCount": 7234,
+        "candidatesTokenCount": 11270,
+        "totalTokenCount": 18504,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 7234
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 11270
+          }
+        ]
+      }
+    },
+    {
+      "language": "mt",
+      "status": "translated",
+      "model": "gemini-2.5-flash",
+      "sourceSha256": "19bc51ebd5455f4b931fbcf22c8696daf046491e19df299dc4b58e9e610ba6b8",
+      "usage": {
+        "promptTokenCount": 7232,
+        "candidatesTokenCount": 11620,
+        "totalTokenCount": 18852,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 7232
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 11620
+          }
+        ]
+      }
+    },
+    {
+      "language": "nl",
+      "status": "translated",
+      "model": "gemini-2.5-flash",
+      "sourceSha256": "19bc51ebd5455f4b931fbcf22c8696daf046491e19df299dc4b58e9e610ba6b8",
+      "usage": {
+        "promptTokenCount": 7230,
+        "candidatesTokenCount": 8595,
+        "totalTokenCount": 15825,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 7230
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 8595
+          }
+        ]
+      }
+    },
+    {
+      "language": "pl",
+      "status": "translated",
+      "model": "gemini-2.5-flash",
+      "sourceSha256": "19bc51ebd5455f4b931fbcf22c8696daf046491e19df299dc4b58e9e610ba6b8",
+      "usage": {
+        "promptTokenCount": 7230,
+        "candidatesTokenCount": 9658,
+        "totalTokenCount": 16888,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 7230
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 9658
+          }
+        ]
+      }
+    },
+    {
+      "language": "pt",
+      "status": "translated",
+      "model": "gemini-2.5-flash",
+      "sourceSha256": "19bc51ebd5455f4b931fbcf22c8696daf046491e19df299dc4b58e9e610ba6b8",
+      "usage": {
+        "promptTokenCount": 7234,
+        "candidatesTokenCount": 8690,
+        "totalTokenCount": 15924,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 7234
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 8690
+          }
+        ]
+      }
+    },
+    {
+      "language": "ro",
+      "status": "translated",
+      "model": "gemini-2.5-flash",
+      "sourceSha256": "19bc51ebd5455f4b931fbcf22c8696daf046491e19df299dc4b58e9e610ba6b8",
+      "usage": {
+        "promptTokenCount": 7232,
+        "candidatesTokenCount": 9735,
+        "totalTokenCount": 16967,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 7232
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 9735
+          }
+        ]
+      }
+    },
+    {
+      "language": "sl",
+      "status": "translated",
+      "model": "gemini-2.5-flash",
+      "sourceSha256": "19bc51ebd5455f4b931fbcf22c8696daf046491e19df299dc4b58e9e610ba6b8",
+      "usage": {
+        "promptTokenCount": 7234,
+        "candidatesTokenCount": 9385,
+        "totalTokenCount": 16619,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 7234
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 9385
+          }
+        ]
+      }
+    },
+    {
+      "language": "sv",
+      "status": "translated",
+      "model": "gemini-2.5-flash",
+      "sourceSha256": "19bc51ebd5455f4b931fbcf22c8696daf046491e19df299dc4b58e9e610ba6b8",
+      "usage": {
+        "promptTokenCount": 7232,
+        "candidatesTokenCount": 8737,
+        "totalTokenCount": 15969,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 7232
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 8737
+          }
+        ]
+      }
+    }
+  ],
+  "review": "Machine translations; structural and functional checks plus sample editorial review. Not a native-speaker certification. French finding terminology manually refined."
+}

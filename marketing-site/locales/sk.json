@@ -19,7 +19,8 @@
       "sk": "SK"
     },
     "menu": "Otvoriť menu",
-    "pricing": "Cena"
+    "pricing": "Cena",
+    "home": "Domov"
   },
   "hero": {
     "badge": "BEZPEČNOSŤ PRODUKTOV PRE SHOPIFY",
@@ -137,7 +138,10 @@
     "p3": "Aplikácia poskytuje podklady na preverenie. Nerobí právne posúdenie ani nemení vaše produkty.",
     "linkGpsr": "Nariadenie GPSR na EUR-Lex ↗",
     "linkSafetyGate": "Oficiálny Safety Gate ↗",
-    "linkAuthority": "Slovenská obchodná inšpekcia (SOI) ↗"
+    "linkAuthority": "Národný orgán ({{country}}): {{authority}} ↗",
+    "linkAllAuthorities": "Orgány pre všetky krajiny EÚ ↗",
+    "marketNote": "Jazyk neurčuje rozhodné právo. Obráťte sa na orgán pre trh, na ktorom predávate.",
+    "remedies": "Pri bezpečnostnom stiahnutí GPSR v článku 37 vyžaduje účinnú, bezplatnú a včasnú nápravu, spravidla výber aspoň z dvoch možností: oprava, výmena alebo vrátenie peňazí. Sankcie určujú vnútroštátne pravidlá; požiadavky závisia od produktu a trhu predaja."
   },
   "faq": {
     "eyebrow": "Časté otázky",
@@ -271,5 +275,30 @@
     "scope": "Za jeden obchod. Platba cez Shopify po výbere plánu.",
     "installCta": "Inštalovať zo Shopify App Store",
     "cta": "Pozrieť jednorazový bezplatný sken"
+  },
+  "privacy": {
+    "content01": "Súkromie",
+    "content02": "Ochrana súkromia a uchovávanie údajov",
+    "content03": "Aké údaje používame pri bezplatnom skene a v Shopify aplikácii a ako dlho ich uchovávame.",
+    "content04": "Aktualizované: 19. októbra 2026. Sme nezávislý projekt. Otázky a žiadosti k súkromiu: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+    "content05": "Aké údaje spracúvame",
+    "content06": "<li><strong>Žiadosť o bezplatný sken:</strong> doménu obchodu, váš e-mail, jazyk, stav žiadosti a report. E-mail slúži na potvrdenie žiadosti a doručenie reportu.</li>\n<li><strong>Sken verejného katalógu:</strong> verejné názvy, popisy, značky, kategórie, fotografie a adresy produktov. Môžeme zachytiť aj firemný e-mail z verejných kontaktných stránok. Text meníme na vyhľadávacie vektory na porovnanie so Safety Gate.</li>\n<li><strong>Nainštalovaná Shopify aplikácia:</strong> doménu obchodu, kópie produktov a fotografie, výsledky kontrol, možné zhody, rozhodnutia, nastavenia, e-mailové preferencie a potrebné údaje relácie.</li>\n<li><strong>Technické záznamy:</strong> bezpečnostné a prevádzkové logy na chod, opravy a ochranu služby.</li>",
+    "content07": "Účel a spôsob použitia",
+    "content08": "Potvrdzujeme a vykonávame skeny, porovnávame verejné produkty s upozorneniami Safety Gate Európskej komisie a posielame reporty. Po inštalácii kontrolujeme produkty priebežne a uchovávame históriu rozhodnutí. Údaje používame aj na prevenciu zneužitia a spoľahlivú prevádzku.",
+    "content09": "Verejný firemný e-mail a súhrn skenu môžeme uložiť do interného zoznamu na posúdenie a správu potenciálnych zákazníkov aplikácie. Tento e-mail nepotrebujeme na odoslanie reportu. Možná zhoda je podklad na ľudské posúdenie, nie právny ani bezpečnostný verdikt.",
+    "content10": "Uchovávanie a mazanie",
+    "content11": "<li><strong>Žiadosť o bezplatný sken a report:</strong> naplánované vymazanie 30 dní od vytvorenia žiadosti.</li>\n<li><strong>Záznamy na obmedzenie opakovaných žiadostí a denných limitov:</strong> naplánované vymazanie po 2 dňoch.</li>\n<li><strong>Kópia verejného katalógu a vyhľadávacie vektory:</strong> naplánované vymazanie 90 dní po uložení alebo obnovení záznamu. Ďalší sken obnoví lehotu opätovne použitých záznamov.</li>\n<li><strong>História bezpečnostných kontrol Shopify:</strong> uchováva sa 90 dní. Upozornenia, rozhodnutia a auditná história zostávajú počas inštalácie aplikácie. Po odinštalovaní žiadosť Shopify shop/redact spustí vymazanie údajov aj uložených relácií.</li>\n<li><strong>Prevádzkové logy a záznamy e-mailového poskytovateľa:</strong> podľa nastavení uchovávania Google Cloud a Brevo.</li>",
+    "content12": "Mazanie zabezpečujú expiračné pravidlá databázy. Google Cloud môže záznamy vymazať až po uplynutí uvedenej lehoty.",
+    "content13": "Poskytovatelia a zdroje údajov",
+    "content14": "Shopify zabezpečuje vloženú aplikáciu. Google Cloud a Firebase poskytujú hosting, úložisko, úlohy na pozadí a porovnávanie cez Vertex AI. Brevo posiela potvrdzovacie e-maily, reporty a upozornenia. Cloudflare Turnstile chráni formulár pred automatizovaným zneužitím.",
+    "content15": "Upozornenia pochádzajú z verejného systému Safety Gate Európskej komisie. Poskytovatelia spracúvajú údaje v rozsahu potrebnom na tieto služby.",
+    "content16": "Vaše možnosti a žiadosti",
+    "content17": "Na <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a> môžete požiadať o prístup k údajom skenu či obchodu, ich opravu alebo vymazanie. Môžete tiež namietať proti spracúvaniu.",
+    "content18": "Po odinštalovaní Shopify odošle shop/redact na vymazanie údajov obchodu. Žiadosti o údaje zákazníkov potvrdzujeme; zákaznícke účty ani objednávky neukladáme.",
+    "content19": "Kontakt",
+    "content20": "Kontakt pre ochranu súkromia v ZeroRecall: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+    "metaTitle": "Ochrana súkromia a uchovávanie údajov | ZeroRecall",
+    "metaDescription": "Ako ZeroRecall spracúva a uchováva údaje pri verejných skenoch katalógu a v aplikácii Shopify.",
+    "footer": "Informácie o ochrane súkromia a uchovávaní údajov."
   }
 }

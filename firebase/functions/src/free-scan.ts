@@ -5,11 +5,12 @@ import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import { db } from "./firebase-admin.js";
 import { handleScanPublicShopifyStoreRequest } from "./public-store-scanner.js";
 import { renderVerificationEmail, renderScanReportEmail } from "./email-templates.js";
+import { normalizeEmailLanguage } from "./email-localization.js";
 
 type FreeScanRequest = {
   domain: string;
   email: string;
-  locale: "en" | "sk";
+  locale: string;
   status: "awaiting_verification" | "queued" | "running" | "completed" | "failed";
   createdAt: Timestamp;
   verificationHash?: string;
@@ -159,7 +160,7 @@ export async function handleFreeScanRequest(request: HttpRequest, response: Http
 
   const domain = normalizedDomain(request.body?.domain);
   const email = normalizedEmail(request.body?.email);
-  const locale = request.body?.locale === "sk" ? "sk" : "en";
+  const locale = normalizeEmailLanguage(request.body?.locale);
   if (!domain || !email) {
     response.status(400).json({ error: "Enter a valid myshopify.com domain and email address." });
     return;
@@ -319,7 +320,7 @@ async function runProtectedScanner(domain: string): Promise<ScanResult> {
 async function sendVerificationEmail(
   requestId: string,
   secret: string,
-  data: { domain: string; email: string; locale: "en" | "sk" },
+  data: { domain: string; email: string; locale: string },
 ): Promise<void> {
   const apiKey = (process.env.BREVO_API_KEY || "").trim();
   const senderEmail = (process.env.BREVO_SENDER_EMAIL || "").trim();

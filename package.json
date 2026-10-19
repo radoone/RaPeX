@@ -16,7 +16,9 @@
     "shopify:dev": "npm run dev --workspace=shopify-client",
     "marketing:dev": "vite --config marketing-site/vite.config.ts",
     "marketing:build": "vite build --config marketing-site/vite.config.ts && cp -r marketing-site/dist/* firebase/hosting/",
-    "marketing:preview": "vite preview --config marketing-site/vite.config.ts"
+    "marketing:preview": "vite preview --config marketing-site/vite.config.ts",
+    "localization:build": "node localization/build-locales.mjs",
+    "localization:check": "node --test localization/test-locales.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

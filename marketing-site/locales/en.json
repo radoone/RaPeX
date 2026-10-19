@@ -19,7 +19,8 @@
       "sk": "SK"
     },
     "menu": "Open menu",
-    "pricing": "Pricing"
+    "pricing": "Pricing",
+    "home": "Home"
   },
   "hero": {
     "badge": "PRODUCT SAFETY FOR SHOPIFY",
@@ -137,7 +138,10 @@
     "p3": "The app provides evidence for review. It does not make legal assessments or change your products.",
     "linkGpsr": "GPSR on EUR-Lex ↗",
     "linkSafetyGate": "Official Safety Gate ↗",
-    "linkAuthority": "Slovak Trade Inspection (SOI) ↗"
+    "linkAuthority": "National authority ({{country}}): {{authority}} ↗",
+    "linkAllAuthorities": "Authorities for all EU countries ↗",
+    "marketNote": "Language does not determine the applicable law. Check the authority for the market where you sell.",
+    "remedies": "For a safety recall, GPSR Article 37 requires an effective, free and timely remedy, normally a choice of at least two of repair, replacement or refund. National rules determine sanctions; requirements vary by product and sales market."
   },
   "faq": {
     "eyebrow": "FAQ",
@@ -271,5 +275,30 @@
     "scope": "Per store. Billed through Shopify after choosing a plan.",
     "installCta": "Install from Shopify App Store",
     "cta": "See the one-off free scan"
+  },
+  "privacy": {
+    "content01": "Privacy",
+    "content02": "Privacy and data retention",
+    "content03": "What we process for free scans and the Shopify app, and how long we keep it.",
+    "content04": "Updated: 19 October 2026. We are an independent project. Privacy questions and requests: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+    "content05": "Information we process",
+    "content06": "<li><strong>Free scan request:</strong> store domain, your email, language, request status and report. Your email confirms the request and receives the report.</li>\n<li><strong>Public catalog scan:</strong> public product titles, descriptions, brands, categories, images and URLs. We may also collect the business email on public contact pages. Product text becomes search vectors for comparison with Safety Gate alerts.</li>\n<li><strong>Installed Shopify app:</strong> shop domain, product snapshots and images, check results, possible matches, review decisions, settings, notification preferences and required app session data.</li>\n<li><strong>Technical records:</strong> security and service logs for operation, troubleshooting and protection.</li>",
+    "content07": "Why and how we use it",
+    "content08": "We verify and run scans, compare public products with European Commission Safety Gate alerts and send reports. For installed stores, we run ongoing checks and keep review history. We also prevent abuse and maintain reliable service.",
+    "content09": "We may store public business emails and scan summaries in an internal lead list to assess and manage potential app customers. This email is not needed to send your report. Possible matches support human review, not legal or product-safety determinations.",
+    "content10": "Retention and deletion",
+    "content11": "<li><strong>Free scan request and report record:</strong> scheduled for deletion 30 days after the request.</li>\n<li><strong>Rate-limit and daily usage records:</strong> scheduled for deletion after 2 days.</li>\n<li><strong>Public scan catalog snapshot and search vectors:</strong> scheduled for deletion 90 days after saving or refreshing each record. Later scans restart the timer for reused records.</li>\n<li><strong>Shopify safety-check history:</strong> kept for 90 days. Alerts, decisions and audit history remain while the app is installed. After uninstall, Shopify's shop/redact request triggers deletion of app data and stored sessions.</li>\n<li><strong>Service logs and email-provider records:</strong> retained according to the retention settings and policies of Google Cloud and Brevo.</li>",
+    "content12": "Cloud database expiration policies handle deletion. Google Cloud may remove expired records after the stated deadline.",
+    "content13": "Service providers and data sources",
+    "content14": "Shopify runs the embedded app. Google Cloud and Firebase provide hosting, storage, background jobs and Vertex AI product comparison. Brevo sends confirmation, report and notification emails. Cloudflare Turnstile protects the free-scan form from automated abuse.",
+    "content15": "Alerts come from the European Commission's public Safety Gate system. Providers process information as needed to deliver these services.",
+    "content16": "Your choices and requests",
+    "content17": "Email <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a> to request access, correction or deletion of your scan or store data, or to object to processing.",
+    "content18": "After uninstall, Shopify sends a shop/redact request to delete the store's app data. We acknowledge Shopify customer-data requests; we do not store customer accounts or orders.",
+    "content19": "Contact",
+    "content20": "ZeroRecall privacy contact: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+    "metaTitle": "Privacy and data retention | ZeroRecall",
+    "metaDescription": "How ZeroRecall processes and retains data for public catalog scans and the Shopify app.",
+    "footer": "Privacy and data retention information."
   }
 }

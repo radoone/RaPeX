@@ -2,6 +2,18 @@
 
 final result: passed
 
+## EU language follow-up
+
+Public home/about/privacy and all four email templates now use 24 complete language catalogs. Localization checks passed for 260 web strings and 88 email strings per language, interpolation tokens, privacy links and language alternates. All 28 Functions tests and the two catalog checks passed; Functions build/lint and the public Vite build passed. The public application entry is about 84 kB before compression, with the selected locale loaded separately.
+
+Browser verification covered 72 public page/language combinations at 390px and all 24 home-page languages at 1280px. A Dutch compound word initially forced the hero grid wider than the phone viewport; constraining grid children and allowing long translated titles to wrap resolved it. Final checks found no horizontal overflow, selected-language mismatch or header navigation overlap. A French Home → About → Privacy journey preserved the selected language; switching Privacy to Slovak updated its copy and its Home link.
+
+All 168 email preview states (seven per language) were opened at 390px: no horizontal overflow, failed images or console errors. UI controls also switched the preview to the Greek weekly findings email. Evidence is under `outputs/localization-2026-10-19/`, including `email-browser-checks.json`, `web-sk.png` and `weekly-el.png`. The chosen ivory/forest-green layout and real raster example photo remain intact. The browser was returned to its default viewport and the public web and email preview selectors remain open.
+
+Translations preserve original product names and stored Safety Gate/matcher data. New language catalogs are machine translations with sample editorial review; a native-language review of all text and native Gmail/Outlook testing in every language remain outstanding. Hosting and the four email functions were subsequently deployed on 19 October; see the release note below.
+
+Localization final result: passed
+
 ## Comparison target and evidence
 
 - Selected visual truth: `/Users/radoone/.codex/generated_images/01a1534c-501c-7411-bff0-0468dafa5374/exec-724b723a-ef97-4abc-a0d2-fd76ccc8d516.png` (first displayed concept, selected by the user).
@@ -39,7 +51,7 @@ TypeScript build, Functions ESLint and 25 tests passed, including HTML escaping,
 - [x] HTML, text alternatives and bilingual states rendered.
 - [x] Desktop reference comparison and mobile checks complete.
 - [x] Source documentation and reproducible previews added.
-- [ ] Deploy only the intended Functions changes; current production templates remain unchanged.
+- [x] Deploy only the intended email/free-scan modules; all four production email functions are ACTIVE.
 - [ ] Verify actual Gmail/Outlook rendering and live trigger delivery after deployment.
 
 Follow-up polish: native email-client dark-mode behavior and older Outlook rendering have not been tested. Browser verification does not prove these clients match pixel for pixel. This does not block the local template handoff.
@@ -51,3 +63,7 @@ The user requested images in weekly emails when findings exist. Added a bounded 
 Evidence: `outputs/email-templates/weekly-findings-desktop.png` at 760px and `outputs/email-templates/weekly-findings-mobile.png` at 390px, both browser-rendered full-page screenshots at density 1. Mobile measured document width 390px with the image loaded and both individual detail links present. Preview navigation worked and browser warnings/errors were empty. Inspected both captures directly: same ivory/green typography and table-based email construction; mobile image and text stack without clipping. The initial follow-up capture showed untranslated High/Serious risk labels in the Slovak example; localized these labels and regenerated the previews before final capture. Missing-photo and resolved states are shown alongside the illustrated finding. No remaining actionable P0/P1/P2 issues. Functions build/lint and all 27 backend tests pass. Production deployment and native email-client verification remain outstanding.
 
 final result: passed
+
+## Production release, 19 October 2026
+
+Hosting deploy succeeded for Firebase site `rapex-99a2c`. The custom-domain home page loaded all 24 languages with correct title/heading/lang and no horizontal overflow; French Home → About → Privacy preserved language. The screenshot and check ledger are in `outputs/localization-release-2026-10-19/`. Four function source updates completed ACTIVE with unchanged environment, secrets and triggers. Each release retained its production source/package lock and changed only the five email modules (excluding deployment-local environment files from the upload). A second configuration-only update supplies the hosted app’s verified handle to merchant emails. Production-overlay tests passed 20/20, repository tests 28/28, localization checks 2/2, build/lint passed. This verifies deployment and web rendering; no new recipient email was sent and live merchant/scheduler/free-scan flows were not exercised.
