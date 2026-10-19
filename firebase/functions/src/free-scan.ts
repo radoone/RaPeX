@@ -4,6 +4,7 @@ import * as logger from "firebase-functions/logger";
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import { db } from "./firebase-admin.js";
 import { handleScanPublicShopifyStoreRequest } from "./public-store-scanner.js";
+import { renderVerificationEmail, renderScanReportEmail } from "./email-templates.js";
 
 type FreeScanRequest = {
   domain: string;
@@ -323,19 +324,16 @@ async function sendVerificationEmail(
   const apiKey = (process.env.BREVO_API_KEY || "").trim();
   const senderEmail = (process.env.BREVO_SENDER_EMAIL || "").trim();
   if (!apiKey || !senderEmail) throw new Error("Brevo sender is not configured");
-  const slovak = data.locale === "sk";
   const url = `${MARKETING_SITE_URL}/index.html?lang=${data.locale}#verify=${requestId}.${secret}`;
-  const content = slovak
-    ? `Požiadali ste o bezplatný sken verejného katalógu ${data.domain}.\n\nPotvrďte svoju e-mailovú adresu a spustite sken na tejto stránke:\n${url}\n\nOdkaz platí 30 minút. Ak ste o sken nežiadali, tento e-mail ignorujte.`
-    : `You requested a free public-catalog scan for ${data.domain}.\n\nConfirm your email address and start the scan on this page:\n${url}\n\nThis link expires in 30 minutes. If you did not request a scan, ignore this email.`;
+  const content = renderVerificationEmail(data.locale, data.domain, url, MAX_PRODUCTS);
   const response = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     headers: { "api-key": apiKey, accept: "application/json", "content-type": "application/json" },
     body: JSON.stringify({
-      sender: { name: "Safety Gate Monitor", email: senderEmail },
+      sender: { name: (process.env.BREVO_SENDER_NAME || "ZeroRecall").trim(), email: senderEmail },
+      replyTo: { email: senderEmail },
       to: [{ email: data.email }],
-      subject: slovak ? `Potvrďte sken obchodu ${data.domain}` : `Confirm the scan for ${data.domain}`,
-      textContent: content,
+      ...content,
       tags: ["free-scan-verification"],
     }),
   });
@@ -350,41 +348,15 @@ async function sendReport(requestId: string, data: FreeScanRequest, result: Scan
   const apiKey = (process.env.BREVO_API_KEY || "").trim();
   const senderEmail = (process.env.BREVO_SENDER_EMAIL || "").trim();
   if (!apiKey || !senderEmail) throw new Error("Brevo sender is not configured");
-  const lead = result.lead!;
-  const slovak = data.locale === "sk";
-  const lines = slovak
-    ? [
-      `Bezplatný prehľad verejného katalógu: ${data.domain}`,
-      `Preverených produktov: ${lead.totalProductsScanned} (limit ${MAX_PRODUCTS})`,
-      `Možných zhôd na kontrolu: ${lead.flaggedProductsCount}`,
-      "",
-      "Výsledky sú orientačné. Možnú zhodu overte podľa modelu, fotografie, šarže a oficiálneho záznamu Safety Gate. Nulový počet zhôd nie je potvrdením bezpečnosti celého katalógu.",
-    ]
-    : [
-      `Free public catalog scan: ${data.domain}`,
-      `Products checked: ${lead.totalProductsScanned} (limit ${MAX_PRODUCTS})`,
-      `Potential matches to review: ${lead.flaggedProductsCount}`,
-      "",
-      "These are indicative results. Check any potential match against the model, photo, batch and official Safety Gate record. Zero matches does not certify the safety of your entire catalog.",
-    ];
-  if (lead.matches?.length) {
-    lines.push("", slovak ? "Možné zhody:" : "Potential matches:");
-    for (const match of lead.matches.slice(0, 5)) {
-      lines.push(`- ${match.productTitle || "Product"}`);
-      if (match.productUrl?.startsWith(`https://${data.domain}/`)) lines.push(`  ${match.productUrl}`);
-      const alertId = match.result?.warnings?.[0]?.alertId;
-      if (alertId) lines.push(`  Safety Gate record: ${alertId}`);
-    }
-  }
-  lines.push("", "https://ec.europa.eu/safety-gate-alerts/");
+  const content = renderScanReportEmail(data.locale, data.domain, result.lead!, MARKETING_SITE_URL, MAX_PRODUCTS);
   const response = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     headers: { "api-key": apiKey, accept: "application/json", "content-type": "application/json" },
     body: JSON.stringify({
-      sender: { name: "Safety Gate Monitor", email: senderEmail },
+      sender: { name: (process.env.BREVO_SENDER_NAME || "ZeroRecall").trim(), email: senderEmail },
+      replyTo: { email: senderEmail },
       to: [{ email: data.email }],
-      subject: slovak ? `Výsledok kontroly katalógu: ${data.domain}` : `Catalog scan result: ${data.domain}`,
-      textContent: lines.join("\n"),
+      ...content,
       tags: ["free-scan"],
       headers: { "Idempotency-Key": `free-scan-${requestId}` },
     }),

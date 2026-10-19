@@ -1,0 +1,53 @@
+# ZeroRecall email templates · 19 October 2026
+
+final result: passed
+
+## Comparison target and evidence
+
+- Selected visual truth: `/Users/radoone/.codex/generated_images/01a1534c-501c-7411-bff0-0468dafa5374/exec-724b723a-ef97-4abc-a0d2-fd76ccc8d516.png` (first displayed concept, selected by the user).
+- Source pixels: 1042 × 1509; normalized proportionally to 760 × 1101. No stretching.
+- Implementation: `outputs/email-templates/alert-desktop.png`, 760 × 1346 CSS/pixel width at density 1. The screenshot captures the full email; browser viewport was 760 × 1100.
+- Combined full-view evidence: `outputs/email-templates/design-comparison.png`, source and implementation aligned at the top with equal 760px widths.
+- State: Slovak alert with fictional product and matching score. The implementation labels the entire preview and photograph as illustrative. Production rendering receives actual data and omits the example label.
+- Mobile evidence: `outputs/email-templates/{alert,weekly,verification,report}-sk-mobile.png`, 390px CSS width, viewport 390 × 844, density 1. All fourteen preview routes were opened at this width: both languages, complete/findings/incomplete weekly states and matched/clear scan states. Each measured 390px document width, and both preview images loaded.
+
+## Findings and comparison history
+
+Initial full-view comparison found two P2 differences: the headline had weaker hierarchy than the selected reference, and high-risk text lacked its amber emphasis. Increased desktop heading from 40px to 44px and added semantic amber text for High/Serious risk. Regenerated examples, captured desktop and mobile again and reopened the combined comparison. Both issues are resolved.
+
+Post-fix comparison has no actionable P0/P1/P2 findings. The reference's main hierarchy is retained: identity, warm status pill, large heading, photograph/facts, explanation, primary action, next step and caution. The reference includes decorative icons and a brand dot; the implementation intentionally omits these so essential email information does not depend on extra remote decorative assets. These are omissions, not CSS or SVG approximations. The generated sample bicycle is a real raster asset derived from the selected reference and used only in previews. Production uses a real Safety Gate image when available.
+
+## Required fidelity surfaces
+
+- Typography: Arial/Helvetica system fallbacks, 44px desktop/32px mobile headline, 15–16px body, 12px utility/footer copy. The concept's editorial hierarchy is retained with email-client-safe fonts. No text is rasterized.
+- Spacing/layout: 600px email content column, no nested visual cards, lightweight fact row separators and padded explanation/action areas. At 390px the image/facts stack; content and fallback URLs wrap without horizontal overflow. Full implementation is taller than the concept because it adds source attribution, recipient context, more explicit instructions, and a fallback URL. This is an intentional content requirement, not a clipped layout.
+- Colors: ivory `#faf9f5`, forest `#315e4b`, dark text `#1c2822`, pale sage explanations and amber caution. High/Serious risk is emphasized in amber as in the concept. The CTA is flat color for broad email support.
+- Image fidelity: complete green/wood bicycle on cream matches the sample's art direction without copying an entire UI image. Photo is clearly illustrative in previews and labelled as a Safety Gate source image in real messages. Production does not contain or reference the example raster asset.
+- Copy/content: both SK/EN include identity, dynamic facts, a next action, support contact and text alternative. Incomplete monitoring takes precedence over a zero-finding status. No email certifies product safety. Confirmation copy preserves the existing website confirmation step and 30-minute single-use token. Product links are restricted to the requested shop.
+
+Focused regions were inspected in the combined image (headline, fact table, reason, CTA and footer) and full-size mobile screenshots; a separate magnified crop was unnecessary because labels and text were legible at the equal-width comparison.
+
+## Browser verification and functional checks
+
+Preview index navigation changed the preview iframe to the selected email. Action links and email-preference links were checked in the rendered DOM against their intended routes; fictional Shopify records and the fake confirmation token were not submitted. No preview sends email or queries the database. Browser console logs contained no errors or warnings. Viewport override was reset, and the preview index is left open as a deliverable.
+
+TypeScript build, Functions ESLint and 25 tests passed, including HTML escaping, unsafe image/action URLs, preserving confirmation links, same-shop report links, canonical Safety Gate fields and incomplete-monitoring semantics.
+
+## Implementation checklist and limits
+
+- [x] Four renderers integrated with existing Brevo send paths.
+- [x] HTML, text alternatives and bilingual states rendered.
+- [x] Desktop reference comparison and mobile checks complete.
+- [x] Source documentation and reproducible previews added.
+- [ ] Deploy only the intended Functions changes; current production templates remain unchanged.
+- [ ] Verify actual Gmail/Outlook rendering and live trigger delivery after deployment.
+
+Follow-up polish: native email-client dark-mode behavior and older Outlook rendering have not been tested. Browser verification does not prove these clients match pixel for pixel. This does not block the local template handoff.
+
+## Weekly findings follow-up
+
+The user requested images in weekly emails when findings exist. Added a bounded list in the same established visual system, with product/record names, optional source-labelled Safety Gate thumbnail, risk, similarity, reason, current review state and a link for each finding. Production selects up to five unique entries from tenant-scoped new/active queries, prioritising new findings. No-image entries keep their text and action. SK/EN copy and plain-text detail links are covered by tests. Resolved entries are explicitly marked reviewed rather than actionable.
+
+Evidence: `outputs/email-templates/weekly-findings-desktop.png` at 760px and `outputs/email-templates/weekly-findings-mobile.png` at 390px, both browser-rendered full-page screenshots at density 1. Mobile measured document width 390px with the image loaded and both individual detail links present. Preview navigation worked and browser warnings/errors were empty. Inspected both captures directly: same ivory/green typography and table-based email construction; mobile image and text stack without clipping. The initial follow-up capture showed untranslated High/Serious risk labels in the Slovak example; localized these labels and regenerated the previews before final capture. Missing-photo and resolved states are shown alongside the illustrated finding. No remaining actionable P0/P1/P2 issues. Functions build/lint and all 27 backend tests pass. Production deployment and native email-client verification remain outstanding.
+
+final result: passed

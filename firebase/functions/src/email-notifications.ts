@@ -7,6 +7,8 @@ import type { FirestoreEvent, QueryDocumentSnapshot } from "firebase-functions/v
 import type { Request } from "firebase-functions/v2/https";
 import { db } from "./firebase-admin.js";
 import { FIRESTORE_COLLECTIONS } from "./safety-gate-config.js";
+import { escapeEmailHtml as escapeHtml, renderAlertEmail, renderWeeklyEmail } from "./email-templates.js";
+import type { AlertEmailDetails, EmailContent, WeeklyEmailMetrics, WeeklyEmailFinding } from "./email-templates.js";
 
 export type EmailNotificationType = "immediate_alert" | "weekly_summary";
 export type EmailNotificationStatus = "pending" | "accepted" | "delivered" | "bounced" | "blocked" | "failed";
@@ -25,21 +27,6 @@ type MerchantSettings = {
   notificationLanguage: string;
 };
 
-type AlertEmailDetails = {
-  productTitle: string;
-  productHandle?: string;
-  riskLevel: string;
-  overallSimilarity: number | null;
-  safetyGateProduct: string;
-  reason: string;
-};
-
-type EmailContent = {
-  subject: string;
-  htmlContent: string;
-  textContent: string;
-};
-
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const NOTIFICATION_SUBCOLLECTION = "email_notifications";
 const WEBHOOK_INDEX_COLLECTION = "email_notification_index";
@@ -47,15 +34,6 @@ const APP_TIME_ZONE = "Europe/Bratislava";
 
 function getMerchantRef(shop: string) {
   return db.collection(FIRESTORE_COLLECTIONS.merchants).doc(encodeURIComponent(shop));
-}
-
-function escapeHtml(value: unknown): string {
-  return String(value ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
 }
 
 function normalizeEmail(value: unknown): string | null {
@@ -94,15 +72,19 @@ function parseAlertDetails(data: Record<string, unknown>): AlertEmailDetails {
   const fields = alertDetails.fields && typeof alertDetails.fields === "object"
     ? alertDetails.fields as Record<string, unknown>
     : {};
-  const similarity = Number(warning.overallSimilarity);
+  const similarity = typeof warning.overallSimilarity === "number" ? warning.overallSimilarity : NaN;
 
   return {
     productTitle: String(data.productTitle || "Shopify product"),
     productHandle: typeof data.productHandle === "string" ? data.productHandle : undefined,
-    riskLevel: String(data.riskLevel || warning.riskLevel || fields.risk_level || fields.alert_level || "Unknown"),
+    riskLevel: String(data.riskLevel || warning.riskLevel || fields.level || fields.risk_level || fields.alert_level || "Unknown"),
     overallSimilarity: Number.isFinite(similarity) ? similarity : null,
-    safetyGateProduct: String(fields.product_name || fields.product_description || fields.product_brand || "Safety Gate alert"),
-    reason: String(warning.reasoning || warning.explanation || result.recommendation || "Review the product and Safety Gate record in the app."),
+    safetyGateProduct: String(fields.name || fields.product || fields.product_name || fields.product_description || fields.product_brand || "Safety Gate alert"),
+    safetyGateImage: Array.isArray(fields.pictures) && typeof fields.pictures[0] === "string" ? fields.pictures[0] : typeof fields.product_image === "string" ? fields.product_image : undefined,
+    alertReference: typeof fields.caseNumber === "string" ? fields.caseNumber : typeof fields.alert_number === "string" ? fields.alert_number : undefined,
+    model: typeof fields.type_numberOfModel === "string" ? fields.type_numberOfModel : typeof fields.product_model === "string" ? fields.product_model : undefined,
+    riskType: typeof fields.riskType === "string" ? fields.riskType : undefined,
+    reason: String(warning.reason || warning.reasoning || warning.explanation || result.recommendation || "Review the product and Safety Gate record in the app."),
   };
 }
 
@@ -115,80 +97,35 @@ function shopifyAdminAppUrl(shop: string, path: string, query?: Record<string, s
   return url.toString();
 }
 
-function emailShell(title: string, body: string, actionLabel: string, actionUrl: string): string {
-  return `<!doctype html><html><body style="margin:0;background:#f3f3f3;font-family:-apple-system,BlinkMacSystemFont,'San Francisco','Segoe UI',Roboto,'Helvetica Neue',sans-serif;color:#202223">
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center" style="padding:24px 12px">
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:600px;background:#fff;border-radius:12px;border:1px solid #ddd;overflow:hidden">
-  <tr><td style="padding:24px"><p style="margin:0 0 8px;color:#616161;font-size:13px">SAFETY GATE MONITOR</p><h1 style="font-size:24px;margin:0 0 20px">${title}</h1>${body}
-  <p style="margin:24px 0 0"><a href="${escapeHtml(actionUrl)}" style="display:inline-block;background:#008060;color:#fff;text-decoration:none;padding:12px 18px;border-radius:8px;font-weight:700">${actionLabel}</a></p>
-  </td></tr></table></td></tr></table></body></html>`;
-}
-
 function buildImmediateContent(language: string, details: AlertEmailDetails, alertId: string, shop: string): EmailContent {
-  const slovak = language === "sk";
-  const similarity = details.overallSimilarity === null ? (slovak ? "Neuvedená" : "Not available") : `${Math.round(details.overallSimilarity)}%`;
-  const url = shopifyAdminAppUrl(shop, "app/alerts", { open: alertId });
-  const title = slovak ? "Produkt vyžaduje bezpečnostnú kontrolu" : "A product needs a safety review";
-  const body = `<p>${slovak ? "Našli sme možnú zhodu medzi produktom vo vašom Shopify katalógu a záznamom EÚ Safety Gate." : "We found a possible match between a product in your Shopify catalog and an EU Safety Gate record."}</p>
-  <table role="presentation" width="100%" style="border-collapse:collapse;margin-top:20px">
-  <tr><td style="padding:8px 0;color:#616161">${slovak ? "Shopify produkt" : "Shopify product"}</td><td style="padding:8px 0"><strong>${escapeHtml(details.productTitle)}</strong></td></tr>
-  <tr><td style="padding:8px 0;color:#616161">${slovak ? "Safety Gate zhoda" : "Safety Gate match"}</td><td style="padding:8px 0">${escapeHtml(details.safetyGateProduct)}</td></tr>
-  <tr><td style="padding:8px 0;color:#616161">${slovak ? "Riziko" : "Risk"}</td><td style="padding:8px 0">${escapeHtml(details.riskLevel)}</td></tr>
-  <tr><td style="padding:8px 0;color:#616161">${slovak ? "Celková zhoda" : "Overall match"}</td><td style="padding:8px 0">${similarity}</td></tr></table>
-  <p><strong>${slovak ? "Prečo bola zhoda vytvorená:" : "Why this match was created:"}</strong><br>${escapeHtml(details.reason)}</p>`;
-  const action = slovak ? "Skontrolovať nález" : "Review finding";
-
-  return {
-    subject: slovak ? `Safety Gate nález: ${details.productTitle}` : `Safety Gate finding: ${details.productTitle}`,
-    htmlContent: emailShell(title, body, action, url),
-    textContent: slovak
-      ? `${title}\n\nProdukt: ${details.productTitle}\nSafety Gate zhoda: ${details.safetyGateProduct}\nRiziko: ${details.riskLevel}\nCelková zhoda: ${similarity}\nDôvod: ${details.reason}\n\n${url}`
-      : `${title}\n\nProduct: ${details.productTitle}\nSafety Gate match: ${details.safetyGateProduct}\nRisk: ${details.riskLevel}\nOverall match: ${similarity}\nReason: ${details.reason}\n\n${url}`,
-  };
+  return renderAlertEmail(language, details, shop,
+    shopifyAdminAppUrl(shop, "app/alerts", { open: alertId }), shopifyAdminAppUrl(shop, "app/settings"));
 }
 
-function formatDate(date: Date, language: string): string {
-  return new Intl.DateTimeFormat(language === "sk" ? "sk-SK" : "en-GB", {
-    dateStyle: "medium",
-    timeZone: APP_TIME_ZONE,
-  }).format(date);
+function buildWeeklyContent(language: string, shop: string, start: Date, end: Date, metrics: WeeklyEmailMetrics): EmailContent {
+  return renderWeeklyEmail(language, shop, start, end, metrics,
+    shopifyAdminAppUrl(shop, "app"), shopifyAdminAppUrl(shop, "app/settings"));
 }
 
-function buildWeeklyContent(language: string, shop: string, start: Date, end: Date, metrics: {
-  products: number;
-  checks: number;
-  safetyGateRecords: number;
-  newFindings: number;
-  openFindings: number;
-  monitoringComplete: boolean;
-  lastSuccessfulRun: Date | null;
-}): EmailContent {
-  const slovak = language === "sk";
-  const url = shopifyAdminAppUrl(shop, "app");
-  const period = `${formatDate(start, language)} – ${formatDate(end, language)}`;
-  const title = metrics.monitoringComplete
-    ? (slovak ? "Týždenný prehľad monitoringu" : "Weekly monitoring summary")
-    : (slovak ? "Monitoring nebol celý dokončený" : "Monitoring was incomplete");
-  const statusText = metrics.monitoringComplete
-    ? metrics.newFindings === 0
-      ? (slovak ? "Počas obdobia nevznikol nový nález." : "No new finding was created during this period.")
-      : (slovak ? `Vzniklo ${metrics.newFindings} nových nálezov, ktoré treba skontrolovať.` : `${metrics.newFindings} new findings need review.`)
-    : (slovak ? "Za toto obdobie nevieme potvrdiť úspešný dokončený monitoring." : "A completed monitoring run could not be confirmed for this period.");
-  const lastRun = metrics.lastSuccessfulRun ? formatDate(metrics.lastSuccessfulRun, language) : (slovak ? "Nepotvrdený" : "Not confirmed");
-  const body = `<p>${statusText}</p>
-  <p><strong>${escapeHtml(period)}</strong></p><table role="presentation" width="100%" style="border-collapse:collapse">
-  <tr><td style="padding:8px 0;color:#616161">${slovak ? "Monitorované produkty" : "Monitored products"}</td><td>${metrics.products}</td></tr>
-  <tr><td style="padding:8px 0;color:#616161">${slovak ? "Vykonané kontroly" : "Checks completed"}</td><td>${metrics.checks}</td></tr>
-  <tr><td style="padding:8px 0;color:#616161">${slovak ? "Nové záznamy Safety Gate" : "New Safety Gate records"}</td><td>${metrics.safetyGateRecords}</td></tr>
-  <tr><td style="padding:8px 0;color:#616161">${slovak ? "Nové nálezy" : "New findings"}</td><td><strong>${metrics.newFindings}</strong></td></tr>
-  <tr><td style="padding:8px 0;color:#616161">${slovak ? "Otvorené nálezy" : "Open findings"}</td><td>${metrics.openFindings}</td></tr>
-  <tr><td style="padding:8px 0;color:#616161">${slovak ? "Posledný úspešný beh" : "Last successful run"}</td><td>${escapeHtml(lastRun)}</td></tr></table>`;
-
-  return {
-    subject: `Safety Gate: ${title}`,
-    htmlContent: emailShell(title, body, slovak ? "Otvoriť prehľad" : "Open dashboard", url),
-    textContent: `${title}\n${statusText}\n${period}\n${slovak ? "Monitorované produkty" : "Monitored products"}: ${metrics.products}\n${slovak ? "Vykonané kontroly" : "Checks completed"}: ${metrics.checks}\n${slovak ? "Nové záznamy Safety Gate" : "New Safety Gate records"}: ${metrics.safetyGateRecords}\n${slovak ? "Nové nálezy" : "New findings"}: ${metrics.newFindings}\n${slovak ? "Otvorené nálezy" : "Open findings"}: ${metrics.openFindings}\n${slovak ? "Posledný úspešný beh" : "Last successful run"}: ${lastRun}\n\n${url}`,
-  };
+function buildWeeklyFindings(shop: string, recent: Array<{ id: string; data: Record<string, unknown> }>, open: Array<{ id: string; data: Record<string, unknown> }>): WeeklyEmailFinding[] {
+  const selected = new Map<string, WeeklyEmailFinding>();
+  for (const [records, isNew] of [[recent, true], [open, false]] as const) {
+    for (const record of records) {
+      if (selected.has(record.id)) continue;
+      const { data } = record;
+      const reviewState = data.status === "resolved" || data.status === "dismissed" ? data.status
+        : data.status !== "active" ? "unknown"
+          : data.reviewState === "waiting_for_supplier" || data.reviewState === "contacted_supplier" ? "waiting_for_supplier" : "needs_review";
+      selected.set(record.id, {
+        ...parseAlertDetails(data),
+        url: shopifyAdminAppUrl(shop, "app/alerts", { open: record.id }),
+        reviewState,
+        isNew,
+      });
+      if (selected.size === 5) return [...selected.values()];
+    }
+  }
+  return [...selected.values()];
 }
 
 async function sendBrevoEmail(params: {
@@ -199,7 +136,7 @@ async function sendBrevoEmail(params: {
 }): Promise<string> {
   const apiKey = (process.env.BREVO_API_KEY || "").trim();
   const senderEmail = normalizeEmail(process.env.BREVO_SENDER_EMAIL);
-  const senderName = (process.env.BREVO_SENDER_NAME || "Safety Gate Monitor").trim();
+  const senderName = (process.env.BREVO_SENDER_NAME || "ZeroRecall").trim();
   if (!apiKey) throw new Error("BREVO_API_KEY is not configured");
   if (!senderEmail) throw new Error("BREVO_SENDER_EMAIL is not configured or invalid");
 
@@ -209,6 +146,7 @@ async function sendBrevoEmail(params: {
     body: JSON.stringify({
       sender: { name: senderName, email: senderEmail },
       to: [{ email: params.to }],
+      replyTo: { email: senderEmail, name: senderName },
       subject: sanitizeSubject(params.content.subject),
       htmlContent: params.content.htmlContent,
       textContent: params.content.textContent,
@@ -306,7 +244,12 @@ export async function handleImmediateAlertCreated(
   const data = snapshot.data() as Record<string, unknown>;
   const shop = typeof data.shop === "string" ? data.shop : decodeURIComponent(event.params.shopId);
   const merchantSnapshot = await getMerchantRef(shop).get();
-  const settings = readMerchantSettings(shop, (merchantSnapshot.data() || {}) as Record<string, unknown>);
+  const merchantData = (merchantSnapshot.data() || {}) as Record<string, unknown>;
+  const settings = readMerchantSettings(shop, merchantData);
+  if (!hasCurrentMonitoringEntitlement(merchantData)) {
+    logger.info("Immediate email skipped without a current monitoring entitlement", { shop, alertId: event.params.alertId });
+    return;
+  }
   if (!settings.immediateAlertEmails || !settings.notificationEmail) {
     logger.info("Immediate email skipped by merchant settings", { shop, hasRecipient: Boolean(settings.notificationEmail) });
     return;
@@ -426,6 +369,18 @@ export async function runWeeklyClearSummaries(end = new Date()): Promise<{ sent:
         .count().get(),
     ]);
     try {
+      // Bounded, tenant-scoped previews. Prefer new findings, then older open findings.
+      const [recentPreview, openPreview] = await Promise.all([
+        newFindingsCount.data().count > 0 ? merchant.ref.collection(FIRESTORE_COLLECTIONS.subAlerts)
+          .where("createdAt", ">=", Timestamp.fromDate(start))
+          .where("createdAt", "<", Timestamp.fromDate(end))
+          .orderBy("createdAt", "desc").limit(5).get() : null,
+        openFindingsCount.data().count > 0 ? merchant.ref.collection(FIRESTORE_COLLECTIONS.subAlerts)
+          .where("status", "==", "active").limit(5).get() : null,
+      ]);
+      const findings = buildWeeklyFindings(shop,
+        recentPreview?.docs.map(doc => ({ id: doc.id, data: doc.data() })) || [],
+        openPreview?.docs.map(doc => ({ id: doc.id, data: doc.data() })) || []);
       const content = buildWeeklyContent(settings.notificationLanguage, shop, start, end, {
         products: productsCount.data().count,
         checks: checksCount.data().count,
@@ -434,6 +389,7 @@ export async function runWeeklyClearSummaries(end = new Date()): Promise<{ sent:
         openFindings: openFindingsCount.data().count,
         monitoringComplete,
         lastSuccessfulRun,
+        findings,
       });
       const accepted = await createAndSendNotification({
         shop,
@@ -559,7 +515,10 @@ export type WeeklySchedulerEvent = CloudEvent<{ scheduleTime?: string }>;
 export const emailNotificationTestUtils = {
   escapeHtml,
   normalizeEmail,
+  parseAlertDetails,
   buildImmediateContent,
   buildWeeklyContent,
+  buildWeeklyFindings,
   webhookStatus,
+  hasCurrentMonitoringEntitlement,
 };

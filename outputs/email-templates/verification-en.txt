@@ -1,0 +1,43 @@
+Subject: ZeroRecall: Confirm the scan for ukazka.myshopify.com
+
+One more click. Then we can begin.
+
+You requested a free scan of a public Shopify catalog. Confirm your email and continue to the page to start the scan.
+
+Store: ukazka.myshopify.com
+Scan scope: Up to 100 public products
+Link expires: 30 minutes · single use
+
+https://zerorecall.online/index.html?lang=en#verify=ILLUSTRATIVE_ONLY.NOT_A_REAL_TOKEN
+
+After confirmation and start, we will check the available public catalog. We will email the result when the scan finishes.
+
+If you did not request this scan, ignore this email. The scan will not start without confirmation.
+
+ZeroRecall · Product safety for Shopify
+info@zerorecall.online
+https://zerorecall.online
+
+--- HTML reference (fictional preview data) ---
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>One more click. Then we can begin.</title>
+<style>body,table,td,a{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}table{mso-table-lspace:0pt;mso-table-rspace:0pt}img{border:0;outline:none;text-decoration:none}a:focus{outline:2px solid #315e4b;outline-offset:3px}@media only screen and (max-width:600px){.outer{padding:24px 18px!important}.headline{font-size:32px!important}.stack{display:block!important;width:100%!important;box-sizing:border-box!important}.photo{max-width:100%!important;width:100%!important}.photo-cell{padding:0 0 18px!important}.button{display:block!important}}</style></head>
+<body style="margin:0;padding:0;background:#faf9f5;color:#1c2822;font-family:Arial,Helvetica,sans-serif">
+<div style="display:none;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all">Confirm the scan for ukazka.myshopify.com. Link expires in 30 minutes.</div>
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" bgcolor="#faf9f5"><tr><td class="outer" align="center" style="padding:40px 28px">
+<!--[if mso]><table role="presentation" width="600" align="center"><tr><td><![endif]-->
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:600px"><tr><td>
+<p style="margin:0 0 38px"><a href="https://zerorecall.online" style="font-family:Arial,Helvetica,sans-serif;font-size:23px;letter-spacing:-1px;font-weight:700;color:#1c2822;text-decoration:none">ZeroRecall</a></p>
+<p style="margin:0 0 24px"><span style="display:inline-block;border-radius:24px;padding:10px 16px;background:#e8efe7;color:#315e4b;font-size:13px;font-weight:700;line-height:1.4">Email confirmation</span></p>
+<p style="font:11px Arial,sans-serif;letter-spacing:1px;color:#68726b;margin:0 0 16px">ILLUSTRATIVE PREVIEW · FICTIONAL DATA</p><h1 class="headline" style="margin:0 0 26px;font-size:44px;letter-spacing:-1.5px;line-height:1.12;font-weight:700;color:#15251d">One more click. Then we can begin.</h1>
+<p style="margin:0 0 20px;font-size:16px;line-height:1.6">You requested a free scan of a public Shopify catalog. Confirm your email and continue to the page to start the scan.</p><table width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;font-size:15px;line-height:1.5"><tr><th scope="row" align="left" valign="top" style="width:43%;padding:12px 12px 12px 0;border-bottom:1px solid #dedfd8;font-weight:400;color:#606a64">Store</th><td valign="top" style="padding:12px 0;border-bottom:1px solid #dedfd8;font-weight:600;color:#1c2822;overflow-wrap:anywhere;word-break:break-word">ukazka.myshopify.com</td></tr><tr><th scope="row" align="left" valign="top" style="width:43%;padding:12px 12px 12px 0;border-bottom:1px solid #dedfd8;font-weight:400;color:#606a64">Scan scope</th><td valign="top" style="padding:12px 0;border-bottom:1px solid #dedfd8;font-weight:600;color:#1c2822;overflow-wrap:anywhere;word-break:break-word">Up to 100 public products</td></tr><tr><th scope="row" align="left" valign="top" style="width:43%;padding:12px 12px 12px 0;border-bottom:1px solid #dedfd8;font-weight:400;color:#606a64">Link expires</th><td valign="top" style="padding:12px 0;border-bottom:1px solid #dedfd8;font-weight:600;color:#1c2822;overflow-wrap:anywhere;word-break:break-word">30 minutes · single use</td></tr></table>
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:24px"><tr><td bgcolor="#315e4b" align="center" style="border-radius:8px;mso-padding-alt:18px 24px"><a class="button" href="https://zerorecall.online/index.html?lang=en#verify=ILLUSTRATIVE_ONLY.NOT_A_REAL_TOKEN" style="display:block;padding:18px 24px;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.4;font-weight:700;color:#ffffff;text-decoration:none;border-radius:8px">Confirm email and continue</a></td></tr></table>
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:24px;background:#edf2ec;border-radius:10px"><tr><td style="padding:22px 24px"><h2 style="margin:0 0 7px;font-size:19px;line-height:1.3;color:#315e4b">What happens next</h2><p style="margin:0;font-size:15px;line-height:1.6;color:#46534b">After confirmation and start, we will check the available public catalog. We will email the result when the scan finishes.</p></td></tr></table><div style="margin-top:24px"><p style="margin:0 0 20px;font-size:16px;line-height:1.6">If you did not request this scan, ignore this email. The scan will not start without confirmation.</p></div>
+<p style="margin:24px 0 0;font-size:12px;line-height:1.6;color:#68726b">If the button does not work, open this link:<br><a href="https://zerorecall.online/index.html?lang=en#verify=ILLUSTRATIVE_ONLY.NOT_A_REAL_TOKEN" style="color:#315e4b;overflow-wrap:anywhere;word-break:break-all">https://zerorecall.online/index.html?lang=en#verify=ILLUSTRATIVE_ONLY.NOT_A_REAL_TOKEN</a></p>
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:28px;border-top:1px solid #d9ddd4"><tr><td style="padding-top:20px;font-size:12px;line-height:1.8;color:#68726b">
+<strong style="color:#243b2e">ZeroRecall</strong> · Product safety for Shopify<br>
+This email relates to your one-off scan request.<br>
+<a href="mailto:info@zerorecall.online" style="color:#315e4b">info@zerorecall.online</a> · <a href="https://zerorecall.online" style="color:#315e4b">zerorecall.online</a>
+</td></tr></table>
+</td></tr></table><!--[if mso]></td></tr></table><![endif]-->
+</td></tr></table></body></html>
