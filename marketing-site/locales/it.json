@@ -35,7 +35,7 @@
     "installCta": "Installa dall'App Store di Shopify",
     "exampleCta": "Vedi un esempio di risultato",
     "scanLink": "Oppure prova un audit gratuito del negozio ↓",
-    "reassurance": "Audit gratuito alla tua e-mail: fino a 100 prodotti pubblici.",
+    "reassurance": "Verifica gratuita via e-mail: tutto il catalogo pubblico.",
     "visualCaption": "Illustrazione, non un risultato reale.",
     "mockDemo": "ANTEPRIMA ILLUSTRATIVA",
     "mockEyebrow": "Controllo prodotto",
@@ -153,7 +153,7 @@
     "q3": "L'app modifica i miei prodotti?",
     "a3": "No. Mostra possibili corrispondenze e prove nell'Admin di Shopify. Decidi tu cosa fare.",
     "q4": "Cosa è incluso nella scansione gratuita?",
-    "a4": "Fino a 100 prodotti pubblici e un riepilogo via e-mail delle possibili corrispondenze. Gli elenchi privati sono esclusi; la scansione non è un certificato di sicurezza."
+    "a4": "Tutti i prodotti disponibili nel catalogo pubblico Shopify del negozio e un riepilogo delle possibili corrispondenze via e-mail. Le inserzioni private sono escluse; la scansione non è un certificato di sicurezza."
   },
   "cta": {
     "title": "Inizia con una scansione gratuita",
@@ -220,7 +220,7 @@
   },
   "scan": {
     "eyebrow": "CONTROLLO UNA TANTUM · NESSUNA INSTALLAZIONE",
-    "title": "Scansione gratuita di un massimo di 100 prodotti",
+    "title": "Scansione gratuita di tutto il catalogo pubblico",
     "description": "Inserisci il dominio pubblico del tuo negozio Shopify e l'e-mail. Ti invieremo un link di conferma alla tua e-mail e consegneremo il rapporto completo una volta confermato. Il monitoraggio continuo fa parte dell'app a pagamento.",
     "benefit1": "Solo prodotti pubblici",
     "benefit2": "Possibili corrispondenze da esaminare",

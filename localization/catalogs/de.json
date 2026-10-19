@@ -36,7 +36,7 @@
       "installCta": "Im Shopify App Store installieren",
       "exampleCta": "Ein Beispielergebnis ansehen",
       "scanLink": "Oder probieren Sie einen kostenlosen Shop-Audit ↓",
-      "reassurance": "Kostenloser Audit an Ihre E-Mail: bis zu 100 öffentliche Produkte.",
+      "reassurance": "Kostenlose Prüfung per E-Mail: Ihr gesamter öffentlicher Katalog.",
       "visualCaption": "Illustration, kein echtes Ergebnis.",
       "mockDemo": "ILLUSTRATIVE VORSCHAU",
       "mockEyebrow": "Produktprüfung",
@@ -154,7 +154,7 @@
       "q3": "Ändert die App meine Produkte?",
       "a3": "Nein. Sie zeigt mögliche Übereinstimmungen und Nachweise im Shopify Admin an. Sie entscheiden, was zu tun ist.",
       "q4": "Was ist im kostenlosen Scan enthalten?",
-      "a4": "Bis zu 100 öffentliche Produkte und eine per E-Mail versandte Zusammenfassung möglicher Übereinstimmungen. Private Angebote sind ausgeschlossen; der Scan ist kein Sicherheitszertifikat."
+      "a4": "Alle verfügbaren Produkte im öffentlichen Shopify-Katalog Ihres Shops und eine Zusammenfassung möglicher Übereinstimmungen per E-Mail. Private Angebote sind ausgeschlossen; der Scan ist kein Sicherheitszertifikat."
     },
     "cta": {
       "title": "Beginnen Sie mit einem kostenlosen Scan",
@@ -221,7 +221,7 @@
     },
     "scan": {
       "eyebrow": "EINMALIGE PRÜFUNG · KEINE INSTALLATION",
-      "title": "Kostenloser Scan von bis zu 100 Produkten",
+      "title": "Kostenloser Scan Ihres gesamten öffentlichen Katalogs",
       "description": "Geben Sie Ihre öffentliche Shopify-Shop-Domain und E-Mail-Adresse ein. Wir senden Ihnen einen Bestätigungslink an Ihre E-Mail und liefern den vollständigen Bericht, sobald dieser bestätigt wurde. Die laufende Überwachung ist Teil der kostenpflichtigen App.",
       "benefit1": "Nur öffentliche Produkte",
       "benefit2": "Mögliche Übereinstimmungen zur Überprüfung",
@@ -358,7 +358,6 @@
     "one_more_click_then_we_can_begin": "Noch ein Klick. Dann können wir beginnen.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Sie haben einen kostenlosen Scan eines öffentlichen Shopify-Katalogs angefordert. Bestätigen Sie Ihre E-Mail und fahren Sie mit der Seite fort, um den Scan zu starten.",
     "scan_scope": "Scan-Umfang",
-    "up_to_value_public_products": "Bis zu {{value0}} öffentliche Produkte",
     "link_expires": "Link läuft ab",
     "30_minutes_single_use": "30 Minuten · einmalige Nutzung",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Nach Bestätigung und Start überprüfen wir den verfügbaren öffentlichen Katalog. Wir senden Ihnen das Ergebnis per E-Mail, sobald der Scan abgeschlossen ist.",
@@ -372,7 +371,6 @@
     "possible_matches_to_review": "Mögliche Übereinstimmungen zur Überprüfung",
     "no_matches_found": "Keine Übereinstimmungen gefunden",
     "products_checked": "Produkte geprüft",
-    "one_off_scan_limit": "Einmaliges Scan-Limit",
     "potential_matches_to_review": "Potenzielle Übereinstimmungen zur Überprüfung",
     "these_are_indicative_results_check_any_potential_match_against": "Dies sind indikative Ergebnisse. Überprüfen Sie jede potenzielle Übereinstimmung anhand von Modell, Foto, Charge und offiziellem Safety Gate-Eintrag. Null Übereinstimmungen zertifizieren nicht die Sicherheit Ihres gesamten Katalogs.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Wir haben einen einmaligen Vergleich der verfügbaren öffentlichen Produkte mit der EU Safety Gate-Datenbank abgeschlossen.",
@@ -391,6 +389,7 @@
     "state_waiting_for_supplier": "Warten auf Lieferanten",
     "state_resolved": "Gelöst",
     "state_dismissed": "Abgelehnt",
-    "state_unknown": "Überprüfen Sie die App für den aktuellen Status"
+    "state_unknown": "Überprüfen Sie die App für den aktuellen Status",
+    "entire_public_catalog": "Gesamter öffentlicher Katalog"
   }
 }

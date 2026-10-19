@@ -35,7 +35,7 @@
     "installCta": "Installa mill-Shopify App Store",
     "exampleCta": "Ara riżultat eżempju",
     "scanLink": "Jew ipprova awditjar tal-ħanut b'xejn ↓",
-    "reassurance": "Awditjar b'xejn għall-email tiegħek: sa 100 prodott pubbliku.",
+    "reassurance": "Verifika bla ħlas bl-email: il-katalgu pubbliku kollu tiegħek.",
     "visualCaption": "Illustrazzjoni, mhux riżultat reali.",
     "mockDemo": "PREVIEW ILLUSTRATTIV",
     "mockEyebrow": "Kontroll tal-prodott",
@@ -153,7 +153,7 @@
     "q3": "L-app tibdel il-prodotti tiegħi?",
     "a3": "Le. Turi tqabbil possibbli u evidenza fl-Amministratur ta' Shopify. Int tiddeċiedi x'għandek tagħmel.",
     "q4": "X'inhu inkluż fl-iskannjar b'xejn?",
-    "a4": "Sa 100 prodott pubbliku u sommarju bl-email ta' tqabbil possibbli. Listi privati huma esklużi; l-iskannjar mhuwiex ċertifikat ta' sigurtà."
+    "a4": "Il-prodotti kollha disponibbli fil-katalgu pubbliku Shopify tal-ħanut tiegħek u sommarju ta’ tqabbil possibbli bl-email. Il-listi privati huma esklużi; l-iskennjar mhuwiex ċertifikat tas-sigurtà."
   },
   "cta": {
     "title": "Ibda b'skannjar b'xejn",
@@ -220,7 +220,7 @@
   },
   "scan": {
     "eyebrow": "KONTROLL TA' DARBA · EBDA INSTALLAZZJONI",
-    "title": "Skannjar b'xejn sa 100 prodott",
+    "title": "Skennjar bla ħlas tal-katalgu pubbliku kollu tiegħek",
     "description": "Daħħal id-dominju pubbliku tal-ħanut Shopify tiegħek u l-email. Nibagħtulek link ta' konferma fl-email tiegħek u nwasslu r-rapport komplut ladarba kkonfermat. Il-monitoraġġ kontinwu huwa parti mill-app imħallsa.",
     "benefit1": "Prodotti pubbliċi biss",
     "benefit2": "Tqabbil possibbli biex tirrevedi",

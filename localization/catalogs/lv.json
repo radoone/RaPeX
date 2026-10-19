@@ -36,7 +36,7 @@
       "installCta": "Instalēt no Shopify App Store",
       "exampleCta": "Skatīt rezultāta piemēru",
       "scanLink": "Vai izmēģiniet bezmaksas veikala auditu ↓",
-      "reassurance": "Bezmaksas audits uz jūsu e-pastu: līdz 100 publiskiem produktiem.",
+      "reassurance": "Bezmaksas audits e-pastā: viss publiskais katalogs.",
       "visualCaption": "Ilustrācija, nav reāls rezultāts.",
       "mockDemo": "ILUSTRATĪVS PRIEKŠSKATĪJUMS",
       "mockEyebrow": "Produkta pārbaude",
@@ -154,7 +154,7 @@
       "q3": "Vai lietotne maina manus produktus?",
       "a3": "Nē. Tā parāda iespējamās atbilstības un pierādījumus Shopify administrācijā. Jūs izlemjat, ko darīt.",
       "q4": "Kas ir iekļauts bezmaksas skenēšanā?",
-      "a4": "Līdz 100 publiskiem produktiem un e-pastā nosūtīts iespējamo atbilstību kopsavilkums. Privātie saraksti ir izslēgti; skenēšana nav drošības sertifikāts."
+      "a4": "Visi veikala publiskajā Shopify katalogā pieejamie produkti un iespējamo atbilstību kopsavilkums e-pastā. Privātie piedāvājumi netiek iekļauti; pārbaude nav drošības sertifikāts."
     },
     "cta": {
       "title": "Sāciet ar bezmaksas skenēšanu",
@@ -221,7 +221,7 @@
     },
     "scan": {
       "eyebrow": "VIENREIZĒJA PĀRBAUDE · NAV INSTALĀCIJAS",
-      "title": "Bezmaksas skenēšana līdz 100 produktiem",
+      "title": "Visa publiskā kataloga bezmaksas pārbaude",
       "description": "Ievadiet savu publisko Shopify veikala domēnu un e-pastu. Mēs nosūtīsim apstiprinājuma saiti uz jūsu e-pastu un piegādāsim pilnu ziņojumu pēc apstiprināšanas. Nepārtraukta uzraudzība ir daļa no maksas lietotnes.",
       "benefit1": "Tikai publiski produkti",
       "benefit2": "Iespējamās atbilstības pārskatīšanai",
@@ -358,7 +358,6 @@
     "one_more_click_then_we_can_begin": "Vēl viens klikšķis. Tad mēs varam sākt.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Jūs pieprasījāt bezmaksas publiskā Shopify kataloga skenēšanu. Apstipriniet savu e-pastu un turpiniet uz lapu, lai sāktu skenēšanu.",
     "scan_scope": "Skenēšanas tvērums",
-    "up_to_value_public_products": "Līdz {{value0}} publiskiem produktiem",
     "link_expires": "Saites derīguma termiņš beidzas",
     "30_minutes_single_use": "30 minūtes · vienreizēja lietošana",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Pēc apstiprināšanas un sākšanas mēs pārbaudīsim pieejamo publisko katalogu. Mēs nosūtīsim rezultātu pa e-pastu, kad skenēšana būs pabeigta.",
@@ -372,7 +371,6 @@
     "possible_matches_to_review": "Iespējamās atbilstības pārskatīšanai",
     "no_matches_found": "Nav atrasta atbilstība",
     "products_checked": "Pārbaudītie produkti",
-    "one_off_scan_limit": "Vienreizējās skenēšanas limits",
     "potential_matches_to_review": "Potenciālās atbilstības pārskatīšanai",
     "these_are_indicative_results_check_any_potential_match_against": "Šie ir indikatīvi rezultāti. Pārbaudiet jebkuru potenciālo atbilstību pret modeli, fotoattēlu, partiju un oficiālo Safety Gate ierakstu. Nulle atbilstību nesertificē visa jūsu kataloga drošību.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Mēs pabeidzām vienreizēju pieejamo publisko produktu salīdzināšanu ar ES Safety Gate datubāzi.",
@@ -391,6 +389,7 @@
     "state_waiting_for_supplier": "Gaida piegādātāju",
     "state_resolved": "Atrisināts",
     "state_dismissed": "Atcelts",
-    "state_unknown": "Pārbaudiet lietotni, lai uzzinātu pašreizējo statusu"
+    "state_unknown": "Pārbaudiet lietotni, lai uzzinātu pašreizējo statusu",
+    "entire_public_catalog": "Viss publiskais katalogs"
   }
 }

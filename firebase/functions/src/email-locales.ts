@@ -55,7 +55,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "one_more_click_then_we_can_begin": "One more click. Then we can begin.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "You requested a free scan of a public Shopify catalog. Confirm your email and continue to the page to start the scan.",
     "scan_scope": "Scan scope",
-    "up_to_value_public_products": "Up to {{value0}} public products",
     "link_expires": "Link expires",
     "30_minutes_single_use": "30 minutes · single use",
     "after_confirmation_and_start_we_will_check_the_available_publi": "After confirmation and start, we will check the available public catalog. We will email the result when the scan finishes.",
@@ -69,7 +68,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "possible_matches_to_review": "Possible matches to review",
     "no_matches_found": "No matches found",
     "products_checked": "Products checked",
-    "one_off_scan_limit": "One-off scan limit",
     "potential_matches_to_review": "Potential matches to review",
     "these_are_indicative_results_check_any_potential_match_against": "These are indicative results. Check any potential match against the model, photo, batch and official Safety Gate record. Zero matches does not certify the safety of your entire catalog.",
     "we_completed_a_one_off_comparison_of_available_public_products": "We completed a one-off comparison of available public products against the EU Safety Gate database.",
@@ -88,7 +86,8 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_waiting_for_supplier": "Waiting for supplier",
     "state_resolved": "Resolved",
     "state_dismissed": "Dismissed",
-    "state_unknown": "Check the app for the current status"
+    "state_unknown": "Check the app for the current status",
+    "entire_public_catalog": "Entire public catalog"
   },
   "bg": {
     "serious": "Сериозен",
@@ -145,7 +144,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "one_more_click_then_we_can_begin": "Още едно кликване. Тогава можем да започнем.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Заявихте безплатно сканиране на публичен каталог на Shopify. Потвърдете имейла си и продължете към страницата, за да започнете сканирането.",
     "scan_scope": "Обхват на сканирането",
-    "up_to_value_public_products": "До {{value0}} публични продукта",
     "link_expires": "Линкът изтича",
     "30_minutes_single_use": "30 минути • еднократна употреба",
     "after_confirmation_and_start_we_will_check_the_available_publi": "След потвърждение и стартиране ще проверим наличния публичен каталог. Ще изпратим резултата по имейл, когато сканирането приключи.",
@@ -159,7 +157,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "possible_matches_to_review": "Възможни съвпадения за преглед",
     "no_matches_found": "Няма намерени съвпадения",
     "products_checked": "Проверени продукти",
-    "one_off_scan_limit": "Лимит за еднократно сканиране",
     "potential_matches_to_review": "Потенциални съвпадения за преглед",
     "these_are_indicative_results_check_any_potential_match_against": "Това са индикативни резултати. Проверете всяко потенциално съвпадение спрямо модела, снимката, партидата и официалния запис на Safety Gate. Нулевите съвпадения не сертифицират безопасността на целия ви каталог.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Извършихме еднократно сравнение на наличните публични продукти спрямо базата данни на Safety Gate на ЕС.",
@@ -178,7 +175,8 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_waiting_for_supplier": "В очакване на доставчик",
     "state_resolved": "Разрешено",
     "state_dismissed": "Отхвърлено",
-    "state_unknown": "Проверете приложението за текущия статус"
+    "state_unknown": "Проверете приложението за текущия статус",
+    "entire_public_catalog": "Целият публичен каталог"
   },
   "cs": {
     "serious": "Vážné",
@@ -235,7 +233,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "one_more_click_then_we_can_begin": "Ještě jedno kliknutí. Pak můžeme začít.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Požádali jste o bezplatné skenování veřejného katalogu Shopify. Potvrďte svůj e-mail a pokračujte na stránku pro spuštění skenování.",
     "scan_scope": "Rozsah skenování",
-    "up_to_value_public_products": "Až {{value0}} veřejných produktů",
     "link_expires": "Platnost odkazu vyprší",
     "30_minutes_single_use": "30 minut · jednorázové použití",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Po potvrzení a spuštění zkontrolujeme dostupný veřejný katalog. Výsledek vám zašleme e-mailem, jakmile skenování skončí.",
@@ -249,7 +246,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "possible_matches_to_review": "Možné shody k přezkoumání",
     "no_matches_found": "Žádné shody nebyly nalezeny",
     "products_checked": "Zkontrolované produkty",
-    "one_off_scan_limit": "Limit jednorázového skenování",
     "potential_matches_to_review": "Potenciální shody k přezkoumání",
     "these_are_indicative_results_check_any_potential_match_against": "Jedná se o orientační výsledky. Zkontrolujte jakoukoli potenciální shodu s modelem, fotografií, šarží a oficiálním záznamem Safety Gate. Nula shod necertifikuje bezpečnost celého vašeho katalogu.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Dokončili jsme jednorázové porovnání dostupných veřejných produktů s databází EU Safety Gate.",
@@ -268,7 +264,8 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_waiting_for_supplier": "Čeká se na dodavatele",
     "state_resolved": "Vyřešeno",
     "state_dismissed": "Zamítnuto",
-    "state_unknown": "Zkontrolujte aplikaci pro aktuální stav"
+    "state_unknown": "Zkontrolujte aplikaci pro aktuální stav",
+    "entire_public_catalog": "Celý veřejný katalog"
   },
   "da": {
     "serious": "Alvorlig",
@@ -325,7 +322,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "one_more_click_then_we_can_begin": "Et klik mere. Så kan vi begynde.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Du anmodede om en gratis scanning af et offentligt Shopify-katalog. Bekræft din e-mail og fortsæt til siden for at starte scanningen.",
     "scan_scope": "Scanningsomfang",
-    "up_to_value_public_products": "Op til {{value0}} offentlige produkter",
     "link_expires": "Link udløber",
     "30_minutes_single_use": "30 minutter · engangsbrug",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Efter bekræftelse og start tjekker vi det tilgængelige offentlige katalog. Vi sender resultatet via e-mail, når scanningen er færdig.",
@@ -339,7 +335,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "possible_matches_to_review": "Mulige matches til gennemgang",
     "no_matches_found": "Ingen matches fundet",
     "products_checked": "Produkter tjekket",
-    "one_off_scan_limit": "Engangs scanningsgrænse",
     "potential_matches_to_review": "Potentielle matches til gennemgang",
     "these_are_indicative_results_check_any_potential_match_against": "Disse er vejledende resultater. Tjek ethvert potentielt match mod model, foto, batch og officiel Safety Gate-registrering. Nul matches certificerer ikke sikkerheden af hele dit katalog.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Vi har gennemført en engangssammenligning af tilgængelige offentlige produkter mod EU Safety Gate-databasen.",
@@ -358,7 +353,8 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_waiting_for_supplier": "Venter på leverandør",
     "state_resolved": "Løst",
     "state_dismissed": "Afvist",
-    "state_unknown": "Tjek appen for den aktuelle status"
+    "state_unknown": "Tjek appen for den aktuelle status",
+    "entire_public_catalog": "Hele det offentlige katalog"
   },
   "de": {
     "serious": "Ernsthaft",
@@ -415,7 +411,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "one_more_click_then_we_can_begin": "Noch ein Klick. Dann können wir beginnen.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Sie haben einen kostenlosen Scan eines öffentlichen Shopify-Katalogs angefordert. Bestätigen Sie Ihre E-Mail und fahren Sie mit der Seite fort, um den Scan zu starten.",
     "scan_scope": "Scan-Umfang",
-    "up_to_value_public_products": "Bis zu {{value0}} öffentliche Produkte",
     "link_expires": "Link läuft ab",
     "30_minutes_single_use": "30 Minuten · einmalige Nutzung",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Nach Bestätigung und Start überprüfen wir den verfügbaren öffentlichen Katalog. Wir senden Ihnen das Ergebnis per E-Mail, sobald der Scan abgeschlossen ist.",
@@ -429,7 +424,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "possible_matches_to_review": "Mögliche Übereinstimmungen zur Überprüfung",
     "no_matches_found": "Keine Übereinstimmungen gefunden",
     "products_checked": "Produkte geprüft",
-    "one_off_scan_limit": "Einmaliges Scan-Limit",
     "potential_matches_to_review": "Potenzielle Übereinstimmungen zur Überprüfung",
     "these_are_indicative_results_check_any_potential_match_against": "Dies sind indikative Ergebnisse. Überprüfen Sie jede potenzielle Übereinstimmung anhand von Modell, Foto, Charge und offiziellem Safety Gate-Eintrag. Null Übereinstimmungen zertifizieren nicht die Sicherheit Ihres gesamten Katalogs.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Wir haben einen einmaligen Vergleich der verfügbaren öffentlichen Produkte mit der EU Safety Gate-Datenbank abgeschlossen.",
@@ -448,7 +442,8 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_waiting_for_supplier": "Warten auf Lieferanten",
     "state_resolved": "Gelöst",
     "state_dismissed": "Abgelehnt",
-    "state_unknown": "Überprüfen Sie die App für den aktuellen Status"
+    "state_unknown": "Überprüfen Sie die App für den aktuellen Status",
+    "entire_public_catalog": "Gesamter öffentlicher Katalog"
   },
   "el": {
     "serious": "Σοβαρός",
@@ -505,7 +500,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "one_more_click_then_we_can_begin": "Ένα ακόμα κλικ. Μετά μπορούμε να ξεκινήσουμε.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Ζητήσατε μια δωρεάν σάρωση ενός δημόσιου καταλόγου Shopify. Επιβεβαιώστε το email σας και συνεχίστε στη σελίδα για να ξεκινήσετε τη σάρωση.",
     "scan_scope": "Πεδίο σάρωσης",
-    "up_to_value_public_products": "Έως {{value0}} δημόσια προϊόντα",
     "link_expires": "Ο σύνδεσμος λήγει",
     "30_minutes_single_use": "30 λεπτά · εφάπαξ χρήση",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Μετά την επιβεβαίωση και την έναρξη, θα ελέγξουμε τον διαθέσιμο δημόσιο κατάλογο. Θα σας στείλουμε email με το αποτέλεσμα όταν ολοκληρωθεί η σάρωση.",
@@ -519,7 +513,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "possible_matches_to_review": "Πιθανές αντιστοιχίσεις για έλεγχο",
     "no_matches_found": "Δεν βρέθηκαν αντιστοιχίσεις",
     "products_checked": "Ελεγχθέντα προϊόντα",
-    "one_off_scan_limit": "Όριο εφάπαξ σάρωσης",
     "potential_matches_to_review": "Πιθανές αντιστοιχίσεις για έλεγχο",
     "these_are_indicative_results_check_any_potential_match_against": "Αυτά είναι ενδεικτικά αποτελέσματα. Ελέγξτε κάθε πιθανή αντιστοίχιση έναντι του μοντέλου, της φωτογραφίας, της παρτίδας και της επίσημης καταγραφής Safety Gate. Το μηδέν αντιστοιχίσεις δεν πιστοποιεί την ασφάλεια ολόκληρου του καταλόγου σας.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Ολοκληρώσαμε μια εφάπαξ σύγκριση των διαθέσιμων δημόσιων προϊόντων έναντι της βάσης δεδομένων Safety Gate της ΕΕ.",
@@ -538,7 +531,8 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_waiting_for_supplier": "Αναμονή για προμηθευτή",
     "state_resolved": "Επιλύθηκε",
     "state_dismissed": "Απορρίφθηκε",
-    "state_unknown": "Ελέγξτε την εφαρμογή για την τρέχουσα κατάσταση"
+    "state_unknown": "Ελέγξτε την εφαρμογή για την τρέχουσα κατάσταση",
+    "entire_public_catalog": "Ολόκληρος ο δημόσιος κατάλογος"
   },
   "es": {
     "serious": "Grave",
@@ -595,7 +589,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "one_more_click_then_we_can_begin": "Un clic más. Luego podemos empezar.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Ha solicitado un escaneo gratuito de un catálogo público de Shopify. Confirme su correo electrónico y continúe a la página para iniciar el escaneo.",
     "scan_scope": "Alcance del escaneo",
-    "up_to_value_public_products": "Hasta {{value0}} productos públicos",
     "link_expires": "El enlace caduca",
     "30_minutes_single_use": "30 minutos · un solo uso",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Después de la confirmación y el inicio, comprobaremos el catálogo público disponible. Le enviaremos el resultado por correo electrónico cuando finalice el escaneo.",
@@ -609,7 +602,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "possible_matches_to_review": "Posibles coincidencias para revisar",
     "no_matches_found": "No se encontraron coincidencias",
     "products_checked": "Productos comprobados",
-    "one_off_scan_limit": "Límite de escaneo único",
     "potential_matches_to_review": "Posibles coincidencias para revisar",
     "these_are_indicative_results_check_any_potential_match_against": "Estos son resultados indicativos. Verifique cualquier posible coincidencia con el modelo, la foto, el lote y el registro oficial de Safety Gate. Cero coincidencias no certifica la seguridad de todo su catálogo.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Hemos completado una comparación única de los productos públicos disponibles con la base de datos de Safety Gate de la UE.",
@@ -628,7 +620,8 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_waiting_for_supplier": "Esperando al proveedor",
     "state_resolved": "Resuelto",
     "state_dismissed": "Descartado",
-    "state_unknown": "Consulte la aplicación para conocer el estado actual"
+    "state_unknown": "Consulte la aplicación para conocer el estado actual",
+    "entire_public_catalog": "Todo el catálogo público"
   },
   "et": {
     "serious": "Tõsine",
@@ -685,7 +678,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "one_more_click_then_we_can_begin": "Veel üks klõps. Siis saame alustada.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Te taotlesite avaliku Shopify kataloogi tasuta skaneerimist. Kinnitage oma e-post ja jätkake lehele, et alustada skaneerimist.",
     "scan_scope": "Skaneerimise ulatus",
-    "up_to_value_public_products": "Kuni {{value0}} avalikku toodet",
     "link_expires": "Link aegub",
     "30_minutes_single_use": "30 minutit · ühekordne kasutus",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Pärast kinnitamist ja alustamist kontrollime saadaolevat avalikku kataloogi. Saadame tulemuse e-posti teel, kui skaneerimine lõpeb.",
@@ -699,7 +691,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "possible_matches_to_review": "Võimalikud vasted ülevaatamiseks",
     "no_matches_found": "Vasteid ei leitud",
     "products_checked": "Kontrollitud tooted",
-    "one_off_scan_limit": "Ühekordse skaneerimise piirang",
     "potential_matches_to_review": "Potentsiaalsed vasted ülevaatamiseks",
     "these_are_indicative_results_check_any_potential_match_against": "Need on indikatiivsed tulemused. Kontrollige iga potentsiaalset vastet mudeli, foto, partii ja ametliku Safety Gate'i kirje vastu. Null vastet ei sertifitseeri teie kogu kataloogi ohutust.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Lõpetasime saadaolevate avalike toodete ühekordse võrdluse EL-i Safety Gate'i andmebaasiga.",
@@ -718,7 +709,8 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_waiting_for_supplier": "Ootab tarnijat",
     "state_resolved": "Lahendatud",
     "state_dismissed": "Tagasi lükatud",
-    "state_unknown": "Kontrolli rakendusest praegust olekut"
+    "state_unknown": "Kontrolli rakendusest praegust olekut",
+    "entire_public_catalog": "Kogu avalik kataloog"
   },
   "fi": {
     "serious": "Vakava",
@@ -775,7 +767,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "one_more_click_then_we_can_begin": "Yksi klikkaus vielä. Sitten voimme aloittaa.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Pyysit ilmaista skannausta julkisesta Shopify-luettelosta. Vahvista sähköpostiosoitteesi ja jatka sivulle aloittaaksesi skannauksen.",
     "scan_scope": "Skannauksen laajuus",
-    "up_to_value_public_products": "Jopa {{value0}} julkista tuotetta",
     "link_expires": "Linkki vanhenee",
     "30_minutes_single_use": "30 minuuttia · kertakäyttöinen",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Vahvistuksen ja aloituksen jälkeen tarkistamme saatavilla olevan julkisen luettelon. Lähetämme tuloksen sähköpostitse, kun skannaus on valmis.",
@@ -789,7 +780,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "possible_matches_to_review": "Mahdolliset osumat tarkistettavaksi",
     "no_matches_found": "Osumia ei löytynyt",
     "products_checked": "Tarkistetut tuotteet",
-    "one_off_scan_limit": "Kertaluonteisen skannauksen raja",
     "potential_matches_to_review": "Mahdolliset osumat tarkistettavaksi",
     "these_are_indicative_results_check_any_potential_match_against": "Nämä ovat suuntaa-antavia tuloksia. Tarkista kaikki mahdolliset osumat mallia, kuvaa, erää ja virallista Safety Gate -tietuetta vastaan. Nolla osumaa ei sertifioi koko luettelosi turvallisuutta.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Suoritimme kertaluonteisen vertailun saatavilla olevista julkisista tuotteista EU:n Safety Gate -tietokantaa vastaan.",
@@ -808,7 +798,8 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_waiting_for_supplier": "Odottaa toimittajaa",
     "state_resolved": "Ratkaistu",
     "state_dismissed": "Hylätty",
-    "state_unknown": "Tarkista sovelluksesta nykyinen tila"
+    "state_unknown": "Tarkista sovelluksesta nykyinen tila",
+    "entire_public_catalog": "Koko julkinen tuoteluettelo"
   },
   "fr": {
     "serious": "Grave",
@@ -865,7 +856,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "one_more_click_then_we_can_begin": "Un clic de plus. Ensuite, nous pouvons commencer.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Vous avez demandé un scan gratuit d'un catalogue Shopify public. Confirmez votre e-mail et continuez vers la page pour démarrer le scan.",
     "scan_scope": "Portée du scan",
-    "up_to_value_public_products": "Jusqu'à {{value0}} produits publics",
     "link_expires": "Le lien expire",
     "30_minutes_single_use": "30 minutes · usage unique",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Après confirmation et démarrage, nous vérifierons le catalogue public disponible. Nous vous enverrons le résultat par e-mail une fois le scan terminé.",
@@ -879,7 +869,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "possible_matches_to_review": "Correspondances possibles à examiner",
     "no_matches_found": "Aucune correspondance trouvée",
     "products_checked": "Produits vérifiés",
-    "one_off_scan_limit": "Limite de scan unique",
     "potential_matches_to_review": "Correspondances potentielles à examiner",
     "these_are_indicative_results_check_any_potential_match_against": "Ce sont des résultats indicatifs. Vérifiez toute correspondance potentielle par rapport au modèle, à la photo, au lot et à l'enregistrement officiel Safety Gate. Zéro correspondance ne certifie pas la sécurité de l'ensemble de votre catalogue.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Nous avons effectué une comparaison unique des produits publics disponibles par rapport à la base de données Safety Gate de l'UE.",
@@ -898,7 +887,8 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_waiting_for_supplier": "En attente du fournisseur",
     "state_resolved": "Résolu",
     "state_dismissed": "Ignoré",
-    "state_unknown": "Vérifiez l'application pour le statut actuel"
+    "state_unknown": "Vérifiez l'application pour le statut actuel",
+    "entire_public_catalog": "Tout le catalogue public"
   },
   "ga": {
     "serious": "Tromchúiseach",
@@ -955,7 +945,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "one_more_click_then_we_can_begin": "Cliceáil amháin eile. Ansin is féidir linn tosú.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "D'iarr tú scanadh saor in aisce ar chatalóg phoiblí Shopify. Deimhnigh do ríomhphost agus lean ar aghaidh chuig an leathanach chun an scanadh a thosú.",
     "scan_scope": "Scóip scanadh",
-    "up_to_value_public_products": "Suas le {{value0}} táirge poiblí",
     "link_expires": "Éagann an nasc",
     "30_minutes_single_use": "30 nóiméad · úsáid aonair",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Tar éis deimhniú agus tosú, seiceálfaimid an chatalóg phoiblí atá ar fáil. Seolfaimid ríomhphost chugat leis an toradh nuair a bheidh an scanadh críochnaithe.",
@@ -969,7 +958,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "possible_matches_to_review": "Meaitseálacha féideartha le hathbhreithniú",
     "no_matches_found": "Gan aon mheaitseálacha aimsithe",
     "products_checked": "Táirgí seiceáilte",
-    "one_off_scan_limit": "Teorainn scanadh aon-uaire",
     "potential_matches_to_review": "Meaitseálacha féideartha le hathbhreithniú",
     "these_are_indicative_results_check_any_potential_match_against": "Is torthaí táscacha iad seo. Seiceáil aon mheaitseáil fhéideartha i gcoinne na samhla, an ghrianghraif, an bhaisc agus an taifid oifigiúil Safety Gate. Ní dheimhníonn nialas meaitseálacha sábháilteacht do chatalóige iomláine.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Chríochnaíomar comparáid aon-uaire ar tháirgí poiblí atá ar fáil i gcoinne bhunachar sonraí Safety Gate an AE.",
@@ -988,7 +976,8 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_waiting_for_supplier": "Ag fanacht leis an soláthraí",
     "state_resolved": "Réitithe",
     "state_dismissed": "Díbheite",
-    "state_unknown": "Seiceáil an aip le haghaidh an stádais reatha"
+    "state_unknown": "Seiceáil an aip le haghaidh an stádais reatha",
+    "entire_public_catalog": "An chatalóg phoiblí iomlán"
   },
   "hr": {
     "serious": "Ozbiljno",
@@ -1045,7 +1034,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "one_more_click_then_we_can_begin": "Još jedan klik. Onda možemo početi.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Zatražili ste besplatno skeniranje javnog Shopify kataloga. Potvrdite svoju e-poštu i nastavite na stranicu za početak skeniranja.",
     "scan_scope": "Opseg skeniranja",
-    "up_to_value_public_products": "Do {{value0}} javnih proizvoda",
     "link_expires": "Veza istječe",
     "30_minutes_single_use": "30 minuta · jednokratna upotreba",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Nakon potvrde i početka, provjerit ćemo dostupni javni katalog. Poslat ćemo vam rezultat e-poštom kada skeniranje završi.",
@@ -1059,7 +1047,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "possible_matches_to_review": "Moguća podudaranja za pregled",
     "no_matches_found": "Nema pronađenih podudaranja",
     "products_checked": "Provjereni proizvodi",
-    "one_off_scan_limit": "Ograničenje jednokratnog skeniranja",
     "potential_matches_to_review": "Potencijalna podudaranja za pregled",
     "these_are_indicative_results_check_any_potential_match_against": "Ovo su indikativni rezultati. Provjerite svako potencijalno podudaranje u odnosu na model, fotografiju, seriju i službeni zapis Safety Gate. Nula podudaranja ne potvrđuje sigurnost vašeg cijelog kataloga.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Dovršili smo jednokratnu usporedbu dostupnih javnih proizvoda s bazom podataka EU Safety Gate.",
@@ -1078,7 +1065,8 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_waiting_for_supplier": "Čeka se dobavljač",
     "state_resolved": "Riješeno",
     "state_dismissed": "Odbijeno",
-    "state_unknown": "Provjerite aplikaciju za trenutni status"
+    "state_unknown": "Provjerite aplikaciju za trenutni status",
+    "entire_public_catalog": "Cijeli javni katalog"
   },
   "hu": {
     "serious": "Súlyos",
@@ -1135,7 +1123,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "one_more_click_then_we_can_begin": "Még egy kattintás. Aztán kezdhetjük.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Ingyenes ellenőrzést kért egy nyilvános Shopify katalógusról. Erősítse meg e-mail címét, és folytassa az oldalra az ellenőrzés elindításához.",
     "scan_scope": "Ellenőrzési hatókör",
-    "up_to_value_public_products": "Akár {{value0}} nyilvános termék",
     "link_expires": "A link lejár",
     "30_minutes_single_use": "30 perc · egyszeri használat",
     "after_confirmation_and_start_we_will_check_the_available_publi": "A megerősítés és az indítás után ellenőrizzük az elérhető nyilvános katalógust. Az eredményt e-mailben küldjük el, amint az ellenőrzés befejeződik.",
@@ -1149,7 +1136,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "possible_matches_to_review": "Felülvizsgálatra szoruló lehetséges egyezések",
     "no_matches_found": "Nincs egyezés",
     "products_checked": "Ellenőrzött termékek",
-    "one_off_scan_limit": "Egyszeri ellenőrzési limit",
     "potential_matches_to_review": "Felülvizsgálatra szoruló potenciális egyezések",
     "these_are_indicative_results_check_any_potential_match_against": "Ezek tájékoztató jellegű eredmények. Ellenőrizze az esetleges egyezéseket a modell, a fénykép, a tétel és a hivatalos Safety Gate bejegyzés alapján. A nulla egyezés nem tanúsítja a teljes katalógus biztonságát.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Egyszeri összehasonlítást végeztünk az elérhető nyilvános termékekről az EU Safety Gate adatbázisával.",
@@ -1168,7 +1154,8 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_waiting_for_supplier": "Beszállítóra vár",
     "state_resolved": "Megoldva",
     "state_dismissed": "Elvetve",
-    "state_unknown": "Ellenőrizze az alkalmazásban az aktuális állapotot"
+    "state_unknown": "Ellenőrizze az alkalmazásban az aktuális állapotot",
+    "entire_public_catalog": "A teljes nyilvános katalógus"
   },
   "it": {
     "serious": "Grave",
@@ -1225,7 +1212,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "one_more_click_then_we_can_begin": "Ancora un clic. Poi possiamo iniziare.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Hai richiesto una scansione gratuita di un catalogo pubblico Shopify. Conferma la tua e-mail e continua alla pagina per avviare la scansione.",
     "scan_scope": "Ambito della scansione",
-    "up_to_value_public_products": "Fino a {{value0}} prodotti pubblici",
     "link_expires": "Il link scade",
     "30_minutes_single_use": "30 minuti · uso singolo",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Dopo la conferma e l'avvio, controlleremo il catalogo pubblico disponibile. Ti invieremo il risultato via e-mail al termine della scansione.",
@@ -1239,7 +1225,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "possible_matches_to_review": "Possibili corrispondenze da esaminare",
     "no_matches_found": "Nessuna corrispondenza trovata",
     "products_checked": "Prodotti controllati",
-    "one_off_scan_limit": "Limite di scansione una tantum",
     "potential_matches_to_review": "Potenziali corrispondenze da esaminare",
     "these_are_indicative_results_check_any_potential_match_against": "Questi sono risultati indicativi. Controlla ogni potenziale corrispondenza rispetto al modello, alla foto, al lotto e al record ufficiale Safety Gate. Zero corrispondenze non certifica la sicurezza dell'intero catalogo.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Abbiamo completato un confronto una tantum dei prodotti pubblici disponibili rispetto al database Safety Gate UE.",
@@ -1258,7 +1243,8 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_waiting_for_supplier": "In attesa del fornitore",
     "state_resolved": "Risolto",
     "state_dismissed": "Ignorato",
-    "state_unknown": "Controlla l'app per lo stato attuale"
+    "state_unknown": "Controlla l'app per lo stato attuale",
+    "entire_public_catalog": "Intero catalogo pubblico"
   },
   "lt": {
     "serious": "Rimta",
@@ -1315,7 +1301,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "one_more_click_then_we_can_begin": "Dar vienas paspaudimas. Tada galime pradėti.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Jūs paprašėte nemokamo viešojo Shopify katalogo skenavimo. Patvirtinkite savo el. paštą ir tęskite į puslapį, kad pradėtumėte skenavimą.",
     "scan_scope": "Skenavimo apimtis",
-    "up_to_value_public_products": "Iki {{value0}} viešų produktų",
     "link_expires": "Nuoroda baigia galioti",
     "30_minutes_single_use": "30 minučių · vienkartinis naudojimas",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Po patvirtinimo ir pradžios patikrinsime prieinamą viešą katalogą. Kai skenavimas bus baigtas, atsiųsime rezultatą el. paštu.",
@@ -1329,7 +1314,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "possible_matches_to_review": "Galimi atitikmenys peržiūrai",
     "no_matches_found": "Atitikmenų nerasta",
     "products_checked": "Patikrinti produktai",
-    "one_off_scan_limit": "Vienkartinio skenavimo limitas",
     "potential_matches_to_review": "Galimi atitikmenys peržiūrai",
     "these_are_indicative_results_check_any_potential_match_against": "Tai yra orientaciniai rezultatai. Patikrinkite bet kokį galimą atitikmenį pagal modelį, nuotrauką, partiją ir oficialų Safety Gate įrašą. Nulis atitikmenų nepatvirtina viso jūsų katalogo saugos.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Mes atlikome vienkartinį prieinamų viešų produktų palyginimą su ES Safety Gate duomenų baze.",
@@ -1348,7 +1332,8 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_waiting_for_supplier": "Laukiama tiekėjo",
     "state_resolved": "Išspręsta",
     "state_dismissed": "Atmesta",
-    "state_unknown": "Patikrinkite programėlę, kad sužinotumėte dabartinę būseną"
+    "state_unknown": "Patikrinkite programėlę, kad sužinotumėte dabartinę būseną",
+    "entire_public_catalog": "Visas viešas katalogas"
   },
   "lv": {
     "serious": "Nopietns",
@@ -1405,7 +1390,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "one_more_click_then_we_can_begin": "Vēl viens klikšķis. Tad mēs varam sākt.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Jūs pieprasījāt bezmaksas publiskā Shopify kataloga skenēšanu. Apstipriniet savu e-pastu un turpiniet uz lapu, lai sāktu skenēšanu.",
     "scan_scope": "Skenēšanas tvērums",
-    "up_to_value_public_products": "Līdz {{value0}} publiskiem produktiem",
     "link_expires": "Saites derīguma termiņš beidzas",
     "30_minutes_single_use": "30 minūtes · vienreizēja lietošana",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Pēc apstiprināšanas un sākšanas mēs pārbaudīsim pieejamo publisko katalogu. Mēs nosūtīsim rezultātu pa e-pastu, kad skenēšana būs pabeigta.",
@@ -1419,7 +1403,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "possible_matches_to_review": "Iespējamās atbilstības pārskatīšanai",
     "no_matches_found": "Nav atrasta atbilstība",
     "products_checked": "Pārbaudītie produkti",
-    "one_off_scan_limit": "Vienreizējās skenēšanas limits",
     "potential_matches_to_review": "Potenciālās atbilstības pārskatīšanai",
     "these_are_indicative_results_check_any_potential_match_against": "Šie ir indikatīvi rezultāti. Pārbaudiet jebkuru potenciālo atbilstību pret modeli, fotoattēlu, partiju un oficiālo Safety Gate ierakstu. Nulle atbilstību nesertificē visa jūsu kataloga drošību.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Mēs pabeidzām vienreizēju pieejamo publisko produktu salīdzināšanu ar ES Safety Gate datubāzi.",
@@ -1438,7 +1421,8 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_waiting_for_supplier": "Gaida piegādātāju",
     "state_resolved": "Atrisināts",
     "state_dismissed": "Atcelts",
-    "state_unknown": "Pārbaudiet lietotni, lai uzzinātu pašreizējo statusu"
+    "state_unknown": "Pārbaudiet lietotni, lai uzzinātu pašreizējo statusu",
+    "entire_public_catalog": "Viss publiskais katalogs"
   },
   "mt": {
     "serious": "Serju",
@@ -1495,7 +1479,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "one_more_click_then_we_can_begin": "Klikk waħda oħra. Imbagħad nistgħu nibdew.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Tlabt skannjar b'xejn ta' katalgu pubbliku ta' Shopify. Ikkonferma l-email tiegħek u kompli għall-paġna biex tibda l-iskannjar.",
     "scan_scope": "Ambitu tal-iskannjar",
-    "up_to_value_public_products": "Sa {{value0}} prodotti pubbliċi",
     "link_expires": "Link tiskadi",
     "30_minutes_single_use": "30 minuta · użu wieħed",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Wara l-konferma u l-bidu, aħna niċċekkjaw il-katalgu pubbliku disponibbli. Nibagħtulek ir-riżultat bl-email meta l-iskannjar jintemm.",
@@ -1509,7 +1492,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "possible_matches_to_review": "Tqabbil possibbli biex tirrevedi",
     "no_matches_found": "Ebda tqabbil ma nstab",
     "products_checked": "Prodotti ċċekkjati",
-    "one_off_scan_limit": "Limitu ta' skannjar ta' darba",
     "potential_matches_to_review": "Tqabbil potenzjali biex tirrevedi",
     "these_are_indicative_results_check_any_potential_match_against": "Dawn huma riżultati indikattivi. Iċċekkja kwalunkwe tqabbil potenzjali kontra l-mudell, ir-ritratt, il-lott u r-rekord uffiċjali ta' Safety Gate. Żero tqabbil ma jiċċertifikax is-sigurtà tal-katalgu kollu tiegħek.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Aħna lestejna tqabbil ta' darba ta' prodotti pubbliċi disponibbli kontra d-database ta' Safety Gate tal-UE.",
@@ -1528,7 +1510,8 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_waiting_for_supplier": "Qed jistenna lill-fornitur",
     "state_resolved": "Issolvi",
     "state_dismissed": "Mormi",
-    "state_unknown": "Iċċekkja l-app għall-istatus attwali"
+    "state_unknown": "Iċċekkja l-app għall-istatus attwali",
+    "entire_public_catalog": "Il-katalgu pubbliku kollu"
   },
   "nl": {
     "serious": "Ernstig",
@@ -1585,7 +1568,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "one_more_click_then_we_can_begin": "Nog één klik. Dan kunnen we beginnen.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "U heeft een gratis scan van een openbare Shopify-catalogus aangevraagd. Bevestig uw e-mail en ga verder naar de pagina om de scan te starten.",
     "scan_scope": "Scanbereik",
-    "up_to_value_public_products": "Tot {{value0}} openbare producten",
     "link_expires": "Link verloopt",
     "30_minutes_single_use": "30 minuten · eenmalig gebruik",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Na bevestiging en start controleren we de beschikbare openbare catalogus. We sturen het resultaat per e-mail wanneer de scan is voltooid.",
@@ -1599,7 +1581,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "possible_matches_to_review": "Mogelijke overeenkomsten ter beoordeling",
     "no_matches_found": "Geen overeenkomsten gevonden",
     "products_checked": "Producten gecontroleerd",
-    "one_off_scan_limit": "Eenmalige scanlimiet",
     "potential_matches_to_review": "Potentiële overeenkomsten ter beoordeling",
     "these_are_indicative_results_check_any_potential_match_against": "Dit zijn indicatieve resultaten. Controleer elke potentiële overeenkomst aan de hand van het model, de foto, de batch en het officiële Safety Gate-record. Nul overeenkomsten certificeren de veiligheid van uw gehele catalogus niet.",
     "we_completed_a_one_off_comparison_of_available_public_products": "We hebben een eenmalige vergelijking voltooid van beschikbare openbare producten met de EU Safety Gate-database.",
@@ -1618,7 +1599,8 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_waiting_for_supplier": "Wachten op leverancier",
     "state_resolved": "Opgelost",
     "state_dismissed": "Genegeerd",
-    "state_unknown": "Controleer de app voor de huidige status"
+    "state_unknown": "Controleer de app voor de huidige status",
+    "entire_public_catalog": "De volledige openbare catalogus"
   },
   "pl": {
     "serious": "Poważne",
@@ -1675,7 +1657,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "one_more_click_then_we_can_begin": "Jeszcze jedno kliknięcie. Wtedy możemy zacząć.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Poprosiłeś o darmowe skanowanie publicznego katalogu Shopify. Potwierdź swój e-mail i przejdź do strony, aby rozpocząć skanowanie.",
     "scan_scope": "Zakres skanowania",
-    "up_to_value_public_products": "Do {{value0}} produktów publicznych",
     "link_expires": "Link wygasa",
     "30_minutes_single_use": "30 minut · jednorazowe użycie",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Po potwierdzeniu i rozpoczęciu sprawdzimy dostępny katalog publiczny. Wyślemy wynik e-mailem po zakończeniu skanowania.",
@@ -1689,7 +1670,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "possible_matches_to_review": "Możliwe dopasowania do weryfikacji",
     "no_matches_found": "Nie znaleziono dopasowań",
     "products_checked": "Sprawdzono produktów",
-    "one_off_scan_limit": "Limit jednorazowego skanowania",
     "potential_matches_to_review": "Potencjalne dopasowania do weryfikacji",
     "these_are_indicative_results_check_any_potential_match_against": "Są to wyniki orientacyjne. Sprawdź każde potencjalne dopasowanie pod kątem modelu, zdjęcia, partii i oficjalnego zapisu Safety Gate. Brak dopasowań nie certyfikuje bezpieczeństwa całego katalogu.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Zakończyliśmy jednorazowe porównanie dostępnych produktów publicznych z bazą danych EU Safety Gate.",
@@ -1708,7 +1688,8 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_waiting_for_supplier": "Oczekiwanie na dostawcę",
     "state_resolved": "Rozwiązane",
     "state_dismissed": "Odrzucone",
-    "state_unknown": "Sprawdź aplikację, aby poznać aktualny status"
+    "state_unknown": "Sprawdź aplikację, aby poznać aktualny status",
+    "entire_public_catalog": "Cały publiczny katalog"
   },
   "pt": {
     "serious": "Grave",
@@ -1765,7 +1746,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "one_more_click_then_we_can_begin": "Mais um clique. Depois podemos começar.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Solicitou uma análise gratuita de um catálogo público da Shopify. Confirme o seu e-mail e continue para a página para iniciar a análise.",
     "scan_scope": "Âmbito da análise",
-    "up_to_value_public_products": "Até {{value0}} produtos públicos",
     "link_expires": "Link expira",
     "30_minutes_single_use": "30 minutos · uso único",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Após a confirmação e início, verificaremos o catálogo público disponível. Enviaremos o resultado por e-mail quando a análise terminar.",
@@ -1779,7 +1759,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "possible_matches_to_review": "Possíveis correspondências para rever",
     "no_matches_found": "Nenhuma correspondência encontrada",
     "products_checked": "Produtos verificados",
-    "one_off_scan_limit": "Limite de análise única",
     "potential_matches_to_review": "Potenciais correspondências para rever",
     "these_are_indicative_results_check_any_potential_match_against": "Estes são resultados indicativos. Verifique qualquer potencial correspondência em relação ao modelo, foto, lote e registo oficial do Safety Gate. Zero correspondências não certifica a segurança de todo o seu catálogo.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Concluímos uma comparação única de produtos públicos disponíveis com a base de dados EU Safety Gate.",
@@ -1798,7 +1777,8 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_waiting_for_supplier": "A aguardar fornecedor",
     "state_resolved": "Resolvido",
     "state_dismissed": "Ignorado",
-    "state_unknown": "Verifique a aplicação para o estado atual"
+    "state_unknown": "Verifique a aplicação para o estado atual",
+    "entire_public_catalog": "Todo o catálogo público"
   },
   "ro": {
     "serious": "Serios",
@@ -1855,7 +1835,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "one_more_click_then_we_can_begin": "Încă un clic. Apoi putem începe.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Ați solicitat o scanare gratuită a unui catalog public Shopify. Confirmați-vă e-mailul și continuați la pagină pentru a începe scanarea.",
     "scan_scope": "Domeniul de aplicare al scanării",
-    "up_to_value_public_products": "Până la {{value0}} produse publice",
     "link_expires": "Linkul expiră",
     "30_minutes_single_use": "30 de minute · utilizare unică",
     "after_confirmation_and_start_we_will_check_the_available_publi": "După confirmare și pornire, vom verifica catalogul public disponibil. Vă vom trimite rezultatul prin e-mail când scanarea se va finaliza.",
@@ -1869,7 +1848,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "possible_matches_to_review": "Potriviri posibile de revizuit",
     "no_matches_found": "Nicio potrivire găsită",
     "products_checked": "Produse verificate",
-    "one_off_scan_limit": "Limită scanare unică",
     "potential_matches_to_review": "Potriviri potențiale de revizuit",
     "these_are_indicative_results_check_any_potential_match_against": "Acestea sunt rezultate indicative. Verificați orice potrivire potențială în raport cu modelul, fotografia, lotul și înregistrarea oficială Safety Gate. Zero potriviri nu certifică siguranța întregului dvs. catalog.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Am finalizat o comparație unică a produselor publice disponibile cu baza de date Safety Gate a UE.",
@@ -1888,7 +1866,8 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_waiting_for_supplier": "Așteaptă furnizorul",
     "state_resolved": "Rezolvat",
     "state_dismissed": "Ignorat",
-    "state_unknown": "Verificați aplicația pentru starea curentă"
+    "state_unknown": "Verificați aplicația pentru starea curentă",
+    "entire_public_catalog": "Întregul catalog public"
   },
   "sk": {
     "serious": "Závažná",
@@ -1945,7 +1924,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "one_more_click_then_we_can_begin": "Ešte jedno kliknutie. Potom začneme.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Požiadali ste o bezplatný sken verejného Shopify katalógu. Potvrďte e-mail a pokračujte na stránke k spusteniu skenu.",
     "scan_scope": "Rozsah skenu",
-    "up_to_value_public_products": "Najviac {{value0}} verejných produktov",
     "link_expires": "Platnosť odkazu",
     "30_minutes_single_use": "30 minút · jednorazový odkaz",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Po potvrdení a spustení skontrolujeme dostupný verejný katalóg. Po dokončení skenu vám výsledok pošleme e-mailom.",
@@ -1959,7 +1937,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "possible_matches_to_review": "Možné zhody na preverenie",
     "no_matches_found": "Bez zistených zhôd",
     "products_checked": "Preverené produkty",
-    "one_off_scan_limit": "Limit jednorazového skenu",
     "potential_matches_to_review": "Možné zhody na kontrolu",
     "these_are_indicative_results_check_any_potential_match_against": "Výsledky sú orientačné. Možnú zhodu overte podľa modelu, fotografie, šarže a oficiálneho záznamu Safety Gate. Nulový počet zhôd nie je potvrdením bezpečnosti celého katalógu.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Dokončili sme jednorazové porovnanie dostupných verejných produktov s databázou EÚ Safety Gate.",
@@ -1978,7 +1955,8 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_waiting_for_supplier": "Čaká sa na dodávateľa",
     "state_resolved": "Vyriešené",
     "state_dismissed": "Zamietnuté",
-    "state_unknown": "Aktuálny stav nájdete v aplikácii"
+    "state_unknown": "Aktuálny stav nájdete v aplikácii",
+    "entire_public_catalog": "Celý verejný katalóg"
   },
   "sl": {
     "serious": "Resno",
@@ -2035,7 +2013,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "one_more_click_then_we_can_begin": "Še en klik. Potem lahko začnemo.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Zahtevali ste brezplačno skeniranje javnega kataloga Shopify. Potrdite svojo e-pošto in nadaljujte na stran za začetek skeniranja.",
     "scan_scope": "Obseg skeniranja",
-    "up_to_value_public_products": "Do {{value0}} javnih izdelkov",
     "link_expires": "Povezava poteče",
     "30_minutes_single_use": "30 minut · enkratna uporaba",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Po potrditvi in začetku bomo preverili razpoložljiv javni katalog. Rezultat vam bomo poslali po e-pošti, ko bo skeniranje končano.",
@@ -2049,7 +2026,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "possible_matches_to_review": "Morebitna ujemanja za pregled",
     "no_matches_found": "Ni najdenih ujemanja",
     "products_checked": "Preverjeni izdelki",
-    "one_off_scan_limit": "Omejitev enkratnega skeniranja",
     "potential_matches_to_review": "Potencialna ujemanja za pregled",
     "these_are_indicative_results_check_any_potential_match_against": "To so okvirni rezultati. Vsako potencialno ujemanje preverite glede na model, fotografijo, serijo in uradni zapis Safety Gate. Nič ujemanja ne potrjuje varnosti celotnega kataloga.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Dokončali smo enkratno primerjavo razpoložljivih javnih izdelkov z bazo podatkov EU Safety Gate.",
@@ -2068,7 +2044,8 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_waiting_for_supplier": "Čakanje na dobavitelja",
     "state_resolved": "Rešeno",
     "state_dismissed": "Zavrnjeno",
-    "state_unknown": "Preverite aplikacijo za trenutni status"
+    "state_unknown": "Preverite aplikacijo za trenutni status",
+    "entire_public_catalog": "Celoten javni katalog"
   },
   "sv": {
     "serious": "Allvarlig",
@@ -2125,7 +2102,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "one_more_click_then_we_can_begin": "Ett klick till. Sedan kan vi börja.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Du begärde en gratisskanning av en offentlig Shopify-katalog. Bekräfta din e-post och fortsätt till sidan för att starta skanningen.",
     "scan_scope": "Skanningsomfång",
-    "up_to_value_public_products": "Upp till {{value0}} offentliga produkter",
     "link_expires": "Länken upphör att gälla",
     "30_minutes_single_use": "30 minuter · engångsanvändning",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Efter bekräftelse och start kommer vi att kontrollera den tillgängliga offentliga katalogen. Vi skickar resultatet via e-post när skanningen är klar.",
@@ -2139,7 +2115,6 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "possible_matches_to_review": "Möjliga matchningar att granska",
     "no_matches_found": "Inga matchningar hittades",
     "products_checked": "Kontrollerade produkter",
-    "one_off_scan_limit": "Engångsskanningsgräns",
     "potential_matches_to_review": "Potentiella matchningar att granska",
     "these_are_indicative_results_check_any_potential_match_against": "Dessa är vägledande resultat. Kontrollera alla potentiella matchningar mot modell, foto, batch och officiell Safety Gate-post. Noll matchningar intygar inte säkerheten för hela din katalog.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Vi slutförde en engångsjämförelse av tillgängliga offentliga produkter mot EU Safety Gate-databasen.",
@@ -2158,6 +2133,7 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_waiting_for_supplier": "Väntar på leverantör",
     "state_resolved": "Löst",
     "state_dismissed": "Avfärdad",
-    "state_unknown": "Kontrollera appen för aktuell status"
+    "state_unknown": "Kontrollera appen för aktuell status",
+    "entire_public_catalog": "Hela den offentliga katalogen"
   }
 };

@@ -35,7 +35,7 @@
     "installCta": "Install from Shopify App Store",
     "exampleCta": "See an example result",
     "scanLink": "Or try a free store audit ↓",
-    "reassurance": "Free audit to your email: up to 100 public products.",
+    "reassurance": "Free audit by email: your entire public catalog.",
     "visualCaption": "Illustration, not a real result.",
     "mockDemo": "ILLUSTRATIVE PREVIEW",
     "mockEyebrow": "Product check",
@@ -153,7 +153,7 @@
     "q3": "Does the app change my products?",
     "a3": "No. It shows possible matches and evidence in Shopify Admin. You decide what to do.",
     "q4": "What is included in the free scan?",
-    "a4": "Up to 100 public products and an emailed summary of possible matches. Private listings are excluded; the scan is not a safety certificate."
+    "a4": "All products available in your store’s public Shopify catalog and an emailed summary of possible matches. Private listings are excluded; the scan is not a safety certificate."
   },
   "cta": {
     "title": "Start with a free scan",
@@ -220,7 +220,7 @@
   },
   "scan": {
     "eyebrow": "ONE-OFF CHECK · NO INSTALLATION",
-    "title": "Free scan of up to 100 products",
+    "title": "Free scan of your entire public catalog",
     "description": "Enter your public Shopify store domain and email. We'll send a confirmation link to your email and deliver the complete report once confirmed. Ongoing monitoring is part of the paid app.",
     "benefit1": "Public products only",
     "benefit2": "Possible matches to review",

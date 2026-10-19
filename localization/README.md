@@ -16,7 +16,7 @@ npm run localization:build
 npm run localization:check
 ```
 
-The deterministic build writes `marketing-site/locales/{code}.json` and `firebase/functions/src/email-locales.ts`. It has no network access and makes no model calls. Regenerate after editing canonical catalogs. Translation files preserve `{{value0}}`, `{{checked}}` and other interpolation tokens exactly, along with HTML links and numerical limits.
+The deterministic build writes `marketing-site/locales/{code}.json` and `firebase/functions/src/email-locales.ts`. It has no network access and makes no model calls. Regenerate after editing canonical catalogs. Translation files preserve `{{value0}}`, `{{checked}}` and other interpolation tokens exactly, along with HTML links.
 
 ## Behavior
 
@@ -47,3 +47,5 @@ This produces 168 previews (seven states × 24 languages), with language and tem
 The localized regulatory context references [GPSR 2023/988](https://eur-lex.europa.eu/eli/reg/2023/988/oj), its Article 37 recall remedies, and the [Commission's national authority directory](https://single-market-economy.ec.europa.eu/single-market/goods/building-blocks/market-surveillance/organisation_en). Authority mappings were checked against the Commission's October 2026 country directory and the official BAuA, NKFH and ASAE portals where needed. National sanctions vary by jurisdiction and product; the translation does not invent universal fines or refund deadlines. The Commission's [market surveillance overview](https://single-market-economy.ec.europa.eu/single-market/goods/building-blocks/market-surveillance_en) provides the national penalty-notification reference; it is not a single GPSR penalty schedule.
 
 Hosting and all four email functions were deployed on 19 October 2026. The production home page was checked in all 24 languages, and French home/about/privacy navigation preserved the selected language. Email deployment overlaid only the five email/free-scan modules onto each function’s existing production source archive; existing package locks, unrelated backend code, runtime environment, secret bindings and event triggers were retained. The production-source overlay also passed its 20 tests with the deployed dependency lock. See `outputs/localization-release-2026-10-19/` for sanitized evidence. This does not prove a live merchant trigger, scheduler or complete free-scan delivery. The free-scan form remains unavailable until a production Turnstile site key is supplied to its build.
+
+Full-catalog follow-up: all 24 web and email catalogs now describe the entire public catalog, replacing the 100-product scope. Confirmation/report emails use the shared `entire_public_catalog` string. The five-product finding preview remains a display limit, independent of scan coverage. Existing translation provenance describes the initial translation batch; this follow-up edits the four scope strings per language.

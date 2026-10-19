@@ -36,7 +36,7 @@
       "installCta": "Nainstalovat z Shopify App Store",
       "exampleCta": "Zobrazit příklad výsledku",
       "scanLink": "Nebo vyzkoušejte bezplatný audit obchodu ↓",
-      "reassurance": "Bezplatný audit na váš e-mail: až 100 veřejných produktů.",
+      "reassurance": "Bezplatný audit e-mailem: celý veřejný katalog.",
       "visualCaption": "Ilustrace, ne skutečný výsledek.",
       "mockDemo": "ILUSTRATIVNÍ NÁHLED",
       "mockEyebrow": "Kontrola produktu",
@@ -154,7 +154,7 @@
       "q3": "Mění aplikace mé produkty?",
       "a3": "Ne. Zobrazuje možné shody a důkazy v administraci Shopify. Vy rozhodujete, co dál.",
       "q4": "Co je zahrnuto v bezplatném skenování?",
-      "a4": "Až 100 veřejných produktů a e-mailové shrnutí možných shod. Soukromé záznamy jsou vyloučeny; skenování není bezpečnostní certifikát."
+      "a4": "Všechny dostupné produkty ve veřejném Shopify katalogu vašeho obchodu a souhrn možných shod e-mailem. Soukromé nabídky nekontrolujeme; sken není osvědčením bezpečnosti."
     },
     "cta": {
       "title": "Začněte s bezplatným skenováním",
@@ -221,7 +221,7 @@
     },
     "scan": {
       "eyebrow": "JEDNORÁZOVÁ KONTROLA · BEZ INSTALACE",
-      "title": "Bezplatné skenování až 100 produktů",
+      "title": "Bezplatný sken celého veřejného katalogu",
       "description": "Zadejte doménu vašeho veřejného obchodu Shopify a e-mail. Zašleme vám potvrzovací odkaz na váš e-mail a po potvrzení doručíme kompletní zprávu. Průběžné monitorování je součástí placené aplikace.",
       "benefit1": "Pouze veřejné produkty",
       "benefit2": "Možné shody k přezkoumání",
@@ -358,7 +358,6 @@
     "one_more_click_then_we_can_begin": "Ještě jedno kliknutí. Pak můžeme začít.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Požádali jste o bezplatné skenování veřejného katalogu Shopify. Potvrďte svůj e-mail a pokračujte na stránku pro spuštění skenování.",
     "scan_scope": "Rozsah skenování",
-    "up_to_value_public_products": "Až {{value0}} veřejných produktů",
     "link_expires": "Platnost odkazu vyprší",
     "30_minutes_single_use": "30 minut · jednorázové použití",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Po potvrzení a spuštění zkontrolujeme dostupný veřejný katalog. Výsledek vám zašleme e-mailem, jakmile skenování skončí.",
@@ -372,7 +371,6 @@
     "possible_matches_to_review": "Možné shody k přezkoumání",
     "no_matches_found": "Žádné shody nebyly nalezeny",
     "products_checked": "Zkontrolované produkty",
-    "one_off_scan_limit": "Limit jednorázového skenování",
     "potential_matches_to_review": "Potenciální shody k přezkoumání",
     "these_are_indicative_results_check_any_potential_match_against": "Jedná se o orientační výsledky. Zkontrolujte jakoukoli potenciální shodu s modelem, fotografií, šarží a oficiálním záznamem Safety Gate. Nula shod necertifikuje bezpečnost celého vašeho katalogu.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Dokončili jsme jednorázové porovnání dostupných veřejných produktů s databází EU Safety Gate.",
@@ -391,6 +389,7 @@
     "state_waiting_for_supplier": "Čeká se na dodavatele",
     "state_resolved": "Vyřešeno",
     "state_dismissed": "Zamítnuto",
-    "state_unknown": "Zkontrolujte aplikaci pro aktuální stav"
+    "state_unknown": "Zkontrolujte aplikaci pro aktuální stav",
+    "entire_public_catalog": "Celý veřejný katalog"
   }
 }

@@ -35,7 +35,7 @@
     "installCta": "Installera från Shopify App Store",
     "exampleCta": "Se ett exempelresultat",
     "scanLink": "Eller prova en gratis butiksrevision ↓",
-    "reassurance": "Gratis revision till din e-post: upp till 100 offentliga produkter.",
+    "reassurance": "Gratis granskning via e-post: hela din offentliga katalog.",
     "visualCaption": "Illustration, inte ett verkligt resultat.",
     "mockDemo": "ILLUSTRATIV FÖRHANDSGRANSKNING",
     "mockEyebrow": "Produktkontroll",
@@ -153,7 +153,7 @@
     "q3": "Ändrar appen mina produkter?",
     "a3": "Nej. Den visar möjliga matchningar och bevis i Shopify Admin. Du bestämmer vad du ska göra.",
     "q4": "Vad ingår i gratisskanningen?",
-    "a4": "Upp till 100 offentliga produkter och en sammanfattning av möjliga matchningar via e-post. Privata listningar är exkluderade; skanningen är inte ett säkerhetscertifikat."
+    "a4": "Alla tillgängliga produkter i butikens offentliga Shopify-katalog och en sammanfattning av möjliga matchningar via e-post. Privata listningar ingår inte; skanningen är inget säkerhetscertifikat."
   },
   "cta": {
     "title": "Börja med en gratisskanning",
@@ -220,7 +220,7 @@
   },
   "scan": {
     "eyebrow": "ENGÅNGSKONTROLL · INGEN INSTALLATION",
-    "title": "Gratisskanning av upp till 100 produkter",
+    "title": "Gratis skanning av hela din offentliga katalog",
     "description": "Ange din offentliga Shopify-butiksdomän och e-post. Vi skickar en bekräftelselänk till din e-post och levererar den fullständiga rapporten när den har bekräftats. Pågående övervakning är en del av den betalda appen.",
     "benefit1": "Endast offentliga produkter",
     "benefit2": "Möjliga matchningar att granska",

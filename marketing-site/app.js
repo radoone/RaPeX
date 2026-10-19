@@ -203,7 +203,7 @@ function initFormHandler() {
           return;
         }
         if (status.status === "queued") showFeedback("queued", "scan.queuedTitle", "scan.queuedBody");
-        if (status.status === "running") showFeedback("running", "scan.runningTitle", "scan.runningBody");
+        if (["running", "reporting"].includes(status.status)) showFeedback("running", "scan.runningTitle", "scan.runningBody");
       } catch (error) {
         console.warn("Scan status temporarily unavailable", error);
       }

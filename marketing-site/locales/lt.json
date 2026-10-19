@@ -35,7 +35,7 @@
     "installCta": "Įdiegti iš Shopify App Store",
     "exampleCta": "Peržiūrėti pavyzdinį rezultatą",
     "scanLink": "Arba išbandykite nemokamą parduotuvės auditą ↓",
-    "reassurance": "Nemokamas auditas į jūsų el. paštą: iki 100 viešų produktų.",
+    "reassurance": "Nemokamas auditas el. paštu: visas viešas katalogas.",
     "visualCaption": "Iliustracija, ne tikras rezultatas.",
     "mockDemo": "ILIUSTRACINIS PERŽIŪRA",
     "mockEyebrow": "Produkto patikra",
@@ -153,7 +153,7 @@
     "q3": "Ar programėlė keičia mano produktus?",
     "a3": "Ne. Ji rodo galimus atitikmenis ir įrodymus Shopify administratoriaus skydelyje. Jūs nusprendžiate, ką daryti.",
     "q4": "Kas įtraukta į nemokamą skenavimą?",
-    "a4": "Iki 100 viešų produktų ir el. paštu atsiųsta galimų atitikmenų santrauka. Privatūs sąrašai neįtraukiami; skenavimas nėra saugos sertifikatas."
+    "a4": "Visi parduotuvės viešame Shopify kataloge prieinami produktai ir galimų atitikmenų santrauka el. paštu. Privatūs skelbimai neįtraukiami; tikrinimas nėra saugos sertifikatas."
   },
   "cta": {
     "title": "Pradėkite nuo nemokamo skenavimo",
@@ -220,7 +220,7 @@
   },
   "scan": {
     "eyebrow": "VIENKARTINIS PATIKRINIMAS · NEREIKIA ĮDIEGTI",
-    "title": "Nemokamas iki 100 produktų skenavimas",
+    "title": "Nemokamas viso viešo katalogo tikrinimas",
     "description": "Įveskite savo viešą Shopify parduotuvės domeną ir el. paštą. Atsiųsime patvirtinimo nuorodą į jūsų el. paštą ir pateiksime visą ataskaitą, kai bus patvirtinta. Nuolatinis stebėjimas yra mokamos programėlės dalis.",
     "benefit1": "Tik vieši produktai",
     "benefit2": "Galimi atitikmenys peržiūrai",

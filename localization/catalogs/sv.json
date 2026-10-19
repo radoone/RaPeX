@@ -36,7 +36,7 @@
       "installCta": "Installera från Shopify App Store",
       "exampleCta": "Se ett exempelresultat",
       "scanLink": "Eller prova en gratis butiksrevision ↓",
-      "reassurance": "Gratis revision till din e-post: upp till 100 offentliga produkter.",
+      "reassurance": "Gratis granskning via e-post: hela din offentliga katalog.",
       "visualCaption": "Illustration, inte ett verkligt resultat.",
       "mockDemo": "ILLUSTRATIV FÖRHANDSGRANSKNING",
       "mockEyebrow": "Produktkontroll",
@@ -154,7 +154,7 @@
       "q3": "Ändrar appen mina produkter?",
       "a3": "Nej. Den visar möjliga matchningar och bevis i Shopify Admin. Du bestämmer vad du ska göra.",
       "q4": "Vad ingår i gratisskanningen?",
-      "a4": "Upp till 100 offentliga produkter och en sammanfattning av möjliga matchningar via e-post. Privata listningar är exkluderade; skanningen är inte ett säkerhetscertifikat."
+      "a4": "Alla tillgängliga produkter i butikens offentliga Shopify-katalog och en sammanfattning av möjliga matchningar via e-post. Privata listningar ingår inte; skanningen är inget säkerhetscertifikat."
     },
     "cta": {
       "title": "Börja med en gratisskanning",
@@ -221,7 +221,7 @@
     },
     "scan": {
       "eyebrow": "ENGÅNGSKONTROLL · INGEN INSTALLATION",
-      "title": "Gratisskanning av upp till 100 produkter",
+      "title": "Gratis skanning av hela din offentliga katalog",
       "description": "Ange din offentliga Shopify-butiksdomän och e-post. Vi skickar en bekräftelselänk till din e-post och levererar den fullständiga rapporten när den har bekräftats. Pågående övervakning är en del av den betalda appen.",
       "benefit1": "Endast offentliga produkter",
       "benefit2": "Möjliga matchningar att granska",
@@ -358,7 +358,6 @@
     "one_more_click_then_we_can_begin": "Ett klick till. Sedan kan vi börja.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Du begärde en gratisskanning av en offentlig Shopify-katalog. Bekräfta din e-post och fortsätt till sidan för att starta skanningen.",
     "scan_scope": "Skanningsomfång",
-    "up_to_value_public_products": "Upp till {{value0}} offentliga produkter",
     "link_expires": "Länken upphör att gälla",
     "30_minutes_single_use": "30 minuter · engångsanvändning",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Efter bekräftelse och start kommer vi att kontrollera den tillgängliga offentliga katalogen. Vi skickar resultatet via e-post när skanningen är klar.",
@@ -372,7 +371,6 @@
     "possible_matches_to_review": "Möjliga matchningar att granska",
     "no_matches_found": "Inga matchningar hittades",
     "products_checked": "Kontrollerade produkter",
-    "one_off_scan_limit": "Engångsskanningsgräns",
     "potential_matches_to_review": "Potentiella matchningar att granska",
     "these_are_indicative_results_check_any_potential_match_against": "Dessa är vägledande resultat. Kontrollera alla potentiella matchningar mot modell, foto, batch och officiell Safety Gate-post. Noll matchningar intygar inte säkerheten för hela din katalog.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Vi slutförde en engångsjämförelse av tillgängliga offentliga produkter mot EU Safety Gate-databasen.",
@@ -391,6 +389,7 @@
     "state_waiting_for_supplier": "Väntar på leverantör",
     "state_resolved": "Löst",
     "state_dismissed": "Avfärdad",
-    "state_unknown": "Kontrollera appen för aktuell status"
+    "state_unknown": "Kontrollera appen för aktuell status",
+    "entire_public_catalog": "Hela den offentliga katalogen"
   }
 }

@@ -36,7 +36,7 @@
       "installCta": "Namestite iz trgovine Shopify App Store",
       "exampleCta": "Oglejte si primer rezultata",
       "scanLink": "Ali poskusite brezplačno revizijo trgovine ↓",
-      "reassurance": "Brezplačna revizija na vaš e-poštni naslov: do 100 javnih izdelkov.",
+      "reassurance": "Brezplačen pregled po e-pošti: celoten javni katalog.",
       "visualCaption": "Ilustracija, ne pravi rezultat.",
       "mockDemo": "ILUSTRATIVNI PREDOGLED",
       "mockEyebrow": "Preverjanje izdelka",
@@ -154,7 +154,7 @@
       "q3": "Ali aplikacija spreminja moje izdelke?",
       "a3": "Ne. Prikazuje morebitna ujemanja in dokaze v skrbniku Shopify. Vi se odločite, kaj storiti.",
       "q4": "Kaj vključuje brezplačno skeniranje?",
-      "a4": "Do 100 javnih izdelkov in povzetek morebitnih ujemananj po e-pošti. Zasebni oglasi so izključeni; skeniranje ni varnostni certifikat."
+      "a4": "Vsi razpoložljivi izdelki v javnem katalogu Shopify vaše trgovine in povzetek možnih ujemanj po e-pošti. Zasebne ponudbe so izključene; pregled ni potrdilo o varnosti."
     },
     "cta": {
       "title": "Začnite z brezplačnim skeniranjem",
@@ -221,7 +221,7 @@
     },
     "scan": {
       "eyebrow": "ENKRATNO PREVERJANJE · BREZ NAMESTITVE",
-      "title": "Brezplačno skeniranje do 100 izdelkov",
+      "title": "Brezplačen pregled celotnega javnega kataloga",
       "description": "Vnesite svojo javno domeno trgovine Shopify in e-pošto. Poslali vam bomo potrditveno povezavo na vaš e-poštni naslov in vam dostavili celotno poročilo, ko bo potrjeno. Stalno spremljanje je del plačljive aplikacije.",
       "benefit1": "Samo javni izdelki",
       "benefit2": "Morebitna ujemanja za pregled",
@@ -358,7 +358,6 @@
     "one_more_click_then_we_can_begin": "Še en klik. Potem lahko začnemo.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Zahtevali ste brezplačno skeniranje javnega kataloga Shopify. Potrdite svojo e-pošto in nadaljujte na stran za začetek skeniranja.",
     "scan_scope": "Obseg skeniranja",
-    "up_to_value_public_products": "Do {{value0}} javnih izdelkov",
     "link_expires": "Povezava poteče",
     "30_minutes_single_use": "30 minut · enkratna uporaba",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Po potrditvi in začetku bomo preverili razpoložljiv javni katalog. Rezultat vam bomo poslali po e-pošti, ko bo skeniranje končano.",
@@ -372,7 +371,6 @@
     "possible_matches_to_review": "Morebitna ujemanja za pregled",
     "no_matches_found": "Ni najdenih ujemanja",
     "products_checked": "Preverjeni izdelki",
-    "one_off_scan_limit": "Omejitev enkratnega skeniranja",
     "potential_matches_to_review": "Potencialna ujemanja za pregled",
     "these_are_indicative_results_check_any_potential_match_against": "To so okvirni rezultati. Vsako potencialno ujemanje preverite glede na model, fotografijo, serijo in uradni zapis Safety Gate. Nič ujemanja ne potrjuje varnosti celotnega kataloga.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Dokončali smo enkratno primerjavo razpoložljivih javnih izdelkov z bazo podatkov EU Safety Gate.",
@@ -391,6 +389,7 @@
     "state_waiting_for_supplier": "Čakanje na dobavitelja",
     "state_resolved": "Rešeno",
     "state_dismissed": "Zavrnjeno",
-    "state_unknown": "Preverite aplikacijo za trenutni status"
+    "state_unknown": "Preverite aplikacijo za trenutni status",
+    "entire_public_catalog": "Celoten javni katalog"
   }
 }

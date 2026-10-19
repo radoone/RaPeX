@@ -535,5 +535,12 @@
       }
     }
   ],
-  "review": "Machine translations; structural and functional checks plus sample editorial review. Not a native-speaker certification. French finding terminology manually refined."
+  "review": "Machine translations; structural and functional checks plus sample editorial review. Not a native-speaker certification. French finding terminology manually refined.",
+  "updates": [
+    {
+      "date": "2026-10-19",
+      "change": "Entire public catalog replaces 100-product free-scan scope in all 24 languages",
+      "method": "Edited scope strings; no runtime translation calls; no native-speaker review claimed"
+    }
+  ]
 }

@@ -1,0 +1,55 @@
+{
+  "functions": [
+    {
+      "function": "freeScanRequestAPI",
+      "state": "ACTIVE",
+      "revision": "freescanrequestapi-00005-xug",
+      "runtime": "nodejs22",
+      "updateTime": "2026-10-19T21:12:45.934408693Z",
+      "retryPolicy": null,
+      "senderConfigured": true
+    },
+    {
+      "function": "processFreeScanRequestJob",
+      "state": "ACTIVE",
+      "revision": "processfreescanrequestjob-00007-raz",
+      "runtime": "nodejs22",
+      "updateTime": "2026-10-19T21:12:56.840919199Z",
+      "retryPolicy": "RETRY_POLICY_RETRY",
+      "senderConfigured": true
+    },
+    {
+      "function": "freeScanCatalogTask",
+      "state": "ACTIVE",
+      "revision": "freescancatalogtask-00001-yiz",
+      "runtime": "nodejs22",
+      "updateTime": "2026-10-19T21:11:17.703031250Z",
+      "retryPolicy": null,
+      "senderConfigured": true
+    }
+  ],
+  "queue": {
+    "state": "RUNNING",
+    "rateLimits": {
+      "maxBurstSize": 10,
+      "maxConcurrentDispatches": 2,
+      "maxDispatchesPerSecond": 1.0
+    },
+    "retryConfig": {
+      "maxAttempts": 8,
+      "maxBackoff": "300s",
+      "maxDoublings": 4,
+      "maxRetryDuration": "86400s",
+      "minBackoff": "30s"
+    }
+  },
+  "validation": {
+    "repositoryTests": 35,
+    "productionOverlayTests": 27,
+    "localeTests": 2,
+    "catalogFixtureProducts": 10051,
+    "authenticatedQueueSmokeHTTP": 204,
+    "realCatalogAndEmailTested": false,
+    "publicFormProductionTurnstileKeyConfigured": false
+  }
+}

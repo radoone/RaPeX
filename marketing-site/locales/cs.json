@@ -35,7 +35,7 @@
     "installCta": "Nainstalovat z Shopify App Store",
     "exampleCta": "Zobrazit příklad výsledku",
     "scanLink": "Nebo vyzkoušejte bezplatný audit obchodu ↓",
-    "reassurance": "Bezplatný audit na váš e-mail: až 100 veřejných produktů.",
+    "reassurance": "Bezplatný audit e-mailem: celý veřejný katalog.",
     "visualCaption": "Ilustrace, ne skutečný výsledek.",
     "mockDemo": "ILUSTRATIVNÍ NÁHLED",
     "mockEyebrow": "Kontrola produktu",
@@ -153,7 +153,7 @@
     "q3": "Mění aplikace mé produkty?",
     "a3": "Ne. Zobrazuje možné shody a důkazy v administraci Shopify. Vy rozhodujete, co dál.",
     "q4": "Co je zahrnuto v bezplatném skenování?",
-    "a4": "Až 100 veřejných produktů a e-mailové shrnutí možných shod. Soukromé záznamy jsou vyloučeny; skenování není bezpečnostní certifikát."
+    "a4": "Všechny dostupné produkty ve veřejném Shopify katalogu vašeho obchodu a souhrn možných shod e-mailem. Soukromé nabídky nekontrolujeme; sken není osvědčením bezpečnosti."
   },
   "cta": {
     "title": "Začněte s bezplatným skenováním",
@@ -220,7 +220,7 @@
   },
   "scan": {
     "eyebrow": "JEDNORÁZOVÁ KONTROLA · BEZ INSTALACE",
-    "title": "Bezplatné skenování až 100 produktů",
+    "title": "Bezplatný sken celého veřejného katalogu",
     "description": "Zadejte doménu vašeho veřejného obchodu Shopify a e-mail. Zašleme vám potvrzovací odkaz na váš e-mail a po potvrzení doručíme kompletní zprávu. Průběžné monitorování je součástí placené aplikace.",
     "benefit1": "Pouze veřejné produkty",
     "benefit2": "Možné shody k přezkoumání",

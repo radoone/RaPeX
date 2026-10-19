@@ -36,7 +36,7 @@
       "installCta": "Install from Shopify App Store",
       "exampleCta": "See an example result",
       "scanLink": "Or try a free store audit ↓",
-      "reassurance": "Free audit to your email: up to 100 public products.",
+      "reassurance": "Free audit by email: your entire public catalog.",
       "visualCaption": "Illustration, not a real result.",
       "mockDemo": "ILLUSTRATIVE PREVIEW",
       "mockEyebrow": "Product check",
@@ -154,7 +154,7 @@
       "q3": "Does the app change my products?",
       "a3": "No. It shows possible matches and evidence in Shopify Admin. You decide what to do.",
       "q4": "What is included in the free scan?",
-      "a4": "Up to 100 public products and an emailed summary of possible matches. Private listings are excluded; the scan is not a safety certificate."
+      "a4": "All products available in your store’s public Shopify catalog and an emailed summary of possible matches. Private listings are excluded; the scan is not a safety certificate."
     },
     "cta": {
       "title": "Start with a free scan",
@@ -221,7 +221,7 @@
     },
     "scan": {
       "eyebrow": "ONE-OFF CHECK · NO INSTALLATION",
-      "title": "Free scan of up to 100 products",
+      "title": "Free scan of your entire public catalog",
       "description": "Enter your public Shopify store domain and email. We'll send a confirmation link to your email and deliver the complete report once confirmed. Ongoing monitoring is part of the paid app.",
       "benefit1": "Public products only",
       "benefit2": "Possible matches to review",
@@ -358,7 +358,6 @@
     "one_more_click_then_we_can_begin": "One more click. Then we can begin.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "You requested a free scan of a public Shopify catalog. Confirm your email and continue to the page to start the scan.",
     "scan_scope": "Scan scope",
-    "up_to_value_public_products": "Up to {{value0}} public products",
     "link_expires": "Link expires",
     "30_minutes_single_use": "30 minutes · single use",
     "after_confirmation_and_start_we_will_check_the_available_publi": "After confirmation and start, we will check the available public catalog. We will email the result when the scan finishes.",
@@ -372,7 +371,6 @@
     "possible_matches_to_review": "Possible matches to review",
     "no_matches_found": "No matches found",
     "products_checked": "Products checked",
-    "one_off_scan_limit": "One-off scan limit",
     "potential_matches_to_review": "Potential matches to review",
     "these_are_indicative_results_check_any_potential_match_against": "These are indicative results. Check any potential match against the model, photo, batch and official Safety Gate record. Zero matches does not certify the safety of your entire catalog.",
     "we_completed_a_one_off_comparison_of_available_public_products": "We completed a one-off comparison of available public products against the EU Safety Gate database.",
@@ -391,6 +389,7 @@
     "state_waiting_for_supplier": "Waiting for supplier",
     "state_resolved": "Resolved",
     "state_dismissed": "Dismissed",
-    "state_unknown": "Check the app for the current status"
+    "state_unknown": "Check the app for the current status",
+    "entire_public_catalog": "Entire public catalog"
   }
 }

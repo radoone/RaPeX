@@ -36,7 +36,7 @@
       "installCta": "Installa mill-Shopify App Store",
       "exampleCta": "Ara riżultat eżempju",
       "scanLink": "Jew ipprova awditjar tal-ħanut b'xejn ↓",
-      "reassurance": "Awditjar b'xejn għall-email tiegħek: sa 100 prodott pubbliku.",
+      "reassurance": "Verifika bla ħlas bl-email: il-katalgu pubbliku kollu tiegħek.",
       "visualCaption": "Illustrazzjoni, mhux riżultat reali.",
       "mockDemo": "PREVIEW ILLUSTRATTIV",
       "mockEyebrow": "Kontroll tal-prodott",
@@ -154,7 +154,7 @@
       "q3": "L-app tibdel il-prodotti tiegħi?",
       "a3": "Le. Turi tqabbil possibbli u evidenza fl-Amministratur ta' Shopify. Int tiddeċiedi x'għandek tagħmel.",
       "q4": "X'inhu inkluż fl-iskannjar b'xejn?",
-      "a4": "Sa 100 prodott pubbliku u sommarju bl-email ta' tqabbil possibbli. Listi privati huma esklużi; l-iskannjar mhuwiex ċertifikat ta' sigurtà."
+      "a4": "Il-prodotti kollha disponibbli fil-katalgu pubbliku Shopify tal-ħanut tiegħek u sommarju ta’ tqabbil possibbli bl-email. Il-listi privati huma esklużi; l-iskennjar mhuwiex ċertifikat tas-sigurtà."
     },
     "cta": {
       "title": "Ibda b'skannjar b'xejn",
@@ -221,7 +221,7 @@
     },
     "scan": {
       "eyebrow": "KONTROLL TA' DARBA · EBDA INSTALLAZZJONI",
-      "title": "Skannjar b'xejn sa 100 prodott",
+      "title": "Skennjar bla ħlas tal-katalgu pubbliku kollu tiegħek",
       "description": "Daħħal id-dominju pubbliku tal-ħanut Shopify tiegħek u l-email. Nibagħtulek link ta' konferma fl-email tiegħek u nwasslu r-rapport komplut ladarba kkonfermat. Il-monitoraġġ kontinwu huwa parti mill-app imħallsa.",
       "benefit1": "Prodotti pubbliċi biss",
       "benefit2": "Tqabbil possibbli biex tirrevedi",
@@ -358,7 +358,6 @@
     "one_more_click_then_we_can_begin": "Klikk waħda oħra. Imbagħad nistgħu nibdew.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Tlabt skannjar b'xejn ta' katalgu pubbliku ta' Shopify. Ikkonferma l-email tiegħek u kompli għall-paġna biex tibda l-iskannjar.",
     "scan_scope": "Ambitu tal-iskannjar",
-    "up_to_value_public_products": "Sa {{value0}} prodotti pubbliċi",
     "link_expires": "Link tiskadi",
     "30_minutes_single_use": "30 minuta · użu wieħed",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Wara l-konferma u l-bidu, aħna niċċekkjaw il-katalgu pubbliku disponibbli. Nibagħtulek ir-riżultat bl-email meta l-iskannjar jintemm.",
@@ -372,7 +371,6 @@
     "possible_matches_to_review": "Tqabbil possibbli biex tirrevedi",
     "no_matches_found": "Ebda tqabbil ma nstab",
     "products_checked": "Prodotti ċċekkjati",
-    "one_off_scan_limit": "Limitu ta' skannjar ta' darba",
     "potential_matches_to_review": "Tqabbil potenzjali biex tirrevedi",
     "these_are_indicative_results_check_any_potential_match_against": "Dawn huma riżultati indikattivi. Iċċekkja kwalunkwe tqabbil potenzjali kontra l-mudell, ir-ritratt, il-lott u r-rekord uffiċjali ta' Safety Gate. Żero tqabbil ma jiċċertifikax is-sigurtà tal-katalgu kollu tiegħek.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Aħna lestejna tqabbil ta' darba ta' prodotti pubbliċi disponibbli kontra d-database ta' Safety Gate tal-UE.",
@@ -391,6 +389,7 @@
     "state_waiting_for_supplier": "Qed jistenna lill-fornitur",
     "state_resolved": "Issolvi",
     "state_dismissed": "Mormi",
-    "state_unknown": "Iċċekkja l-app għall-istatus attwali"
+    "state_unknown": "Iċċekkja l-app għall-istatus attwali",
+    "entire_public_catalog": "Il-katalgu pubbliku kollu"
   }
 }

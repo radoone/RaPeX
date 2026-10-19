@@ -36,7 +36,7 @@
       "installCta": "Installi Shopify App Store'ist",
       "exampleCta": "Vaata näidistulemust",
       "scanLink": "Või proovi tasuta poe auditit ↓",
-      "reassurance": "Tasuta audit teie e-posti aadressile: kuni 100 avalikku toodet.",
+      "reassurance": "Tasuta audit e-postiga: kogu avalik kataloog.",
       "visualCaption": "Illustratsioon, mitte tegelik tulemus.",
       "mockDemo": "ILLUSTREERIV EELVAADE",
       "mockEyebrow": "Toote kontroll",
@@ -154,7 +154,7 @@
       "q3": "Kas rakendus muudab minu tooteid?",
       "a3": "Ei. See näitab võimalikke vasteid ja tõendeid Shopify adminis. Teie otsustate, mida teha.",
       "q4": "Mida sisaldab tasuta skaneerimine?",
-      "a4": "Kuni 100 avalikku toodet ja e-posti teel saadetud kokkuvõte võimalikest vastetest. Privaatsed kuulutused on välja arvatud; skaneerimine ei ole ohutussertifikaat."
+      "a4": "Kõik poe avalikus Shopify kataloogis saadaolevad tooted ja võimalike vastete kokkuvõte e-postiga. Privaatsed tooted on välja jäetud; skannimine ei ole ohutussertifikaat."
     },
     "cta": {
       "title": "Alusta tasuta skaneerimisega",
@@ -221,7 +221,7 @@
     },
     "scan": {
       "eyebrow": "ÜHEKORDNE KONTROLL · INSTALLIMIST POLE",
-      "title": "Kuni 100 toote tasuta skaneerimine",
+      "title": "Kogu avaliku kataloogi tasuta skannimine",
       "description": "Sisestage oma avaliku Shopify poe domeen ja e-posti aadress. Saadame teie e-posti aadressile kinnituslingi ja edastame täieliku aruande pärast kinnitamist. Pidev jälgimine on osa tasulisest rakendusest.",
       "benefit1": "Ainult avalikud tooted",
       "benefit2": "Võimalikud vasted ülevaatamiseks",
@@ -358,7 +358,6 @@
     "one_more_click_then_we_can_begin": "Veel üks klõps. Siis saame alustada.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Te taotlesite avaliku Shopify kataloogi tasuta skaneerimist. Kinnitage oma e-post ja jätkake lehele, et alustada skaneerimist.",
     "scan_scope": "Skaneerimise ulatus",
-    "up_to_value_public_products": "Kuni {{value0}} avalikku toodet",
     "link_expires": "Link aegub",
     "30_minutes_single_use": "30 minutit · ühekordne kasutus",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Pärast kinnitamist ja alustamist kontrollime saadaolevat avalikku kataloogi. Saadame tulemuse e-posti teel, kui skaneerimine lõpeb.",
@@ -372,7 +371,6 @@
     "possible_matches_to_review": "Võimalikud vasted ülevaatamiseks",
     "no_matches_found": "Vasteid ei leitud",
     "products_checked": "Kontrollitud tooted",
-    "one_off_scan_limit": "Ühekordse skaneerimise piirang",
     "potential_matches_to_review": "Potentsiaalsed vasted ülevaatamiseks",
     "these_are_indicative_results_check_any_potential_match_against": "Need on indikatiivsed tulemused. Kontrollige iga potentsiaalset vastet mudeli, foto, partii ja ametliku Safety Gate'i kirje vastu. Null vastet ei sertifitseeri teie kogu kataloogi ohutust.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Lõpetasime saadaolevate avalike toodete ühekordse võrdluse EL-i Safety Gate'i andmebaasiga.",
@@ -391,6 +389,7 @@
     "state_waiting_for_supplier": "Ootab tarnijat",
     "state_resolved": "Lahendatud",
     "state_dismissed": "Tagasi lükatud",
-    "state_unknown": "Kontrolli rakendusest praegust olekut"
+    "state_unknown": "Kontrolli rakendusest praegust olekut",
+    "entire_public_catalog": "Kogu avalik kataloog"
   }
 }

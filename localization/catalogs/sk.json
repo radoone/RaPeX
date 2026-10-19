@@ -36,7 +36,7 @@
       "installCta": "Inštalovať zo Shopify App Store",
       "exampleCta": "Pozrieť ukážku výsledku",
       "scanLink": "Alebo si vyskúšajte bezplatný audit ↓",
-      "reassurance": "Bezplatný audit na váš e-mail: do 100 verejných produktov.",
+      "reassurance": "Bezplatný audit e-mailom: celý verejný katalóg.",
       "visualCaption": "Ilustračná ukážka, nie skutočný výsledok.",
       "mockDemo": "ILUSTRAČNÁ UKÁŽKA",
       "mockEyebrow": "Kontrola produktu",
@@ -154,7 +154,7 @@
       "q3": "Mení aplikácia moje produkty?",
       "a3": "Nie. Ukáže možné zhody a podklady v Shopify Admine. O ďalšom kroku rozhodnete vy.",
       "q4": "Čo obsahuje bezplatný sken?",
-      "a4": "Najviac 100 verejných produktov a súhrn možných zhôd e-mailom. Súkromné ponuky nekontrolujeme; sken nie je osvedčením bezpečnosti."
+      "a4": "Všetky dostupné produkty vo verejnom Shopify katalógu vášho obchodu a súhrn možných zhôd e-mailom. Súkromné ponuky nekontrolujeme; sken nie je osvedčením bezpečnosti."
     },
     "cta": {
       "title": "Začnite bezplatným skenom",
@@ -221,8 +221,8 @@
     },
     "scan": {
       "eyebrow": "JEDNORAZOVÁ KONTROLA BEZ INŠTALÁCIE",
-      "title": "Bezplatný sken do 100 produktov",
-      "description": "Zadáte doménu verejného Shopify obchodu a e-mail. Na váš e-mail zašleme potvrdzovací odkaz a po potvrdení vám obratom doručíme kompletný report. Priebežné sledovanie je súčasťou platenej aplikácie.",
+      "title": "Bezplatný sken celého verejného katalógu",
+      "description": "Zadáte doménu verejného Shopify obchodu a e-mail. Po potvrdení e-mailu spustíme sken celého verejného katalógu. Report vám pošleme po dokončení. Priebežné sledovanie je súčasťou platenej aplikácie.",
       "benefit1": "Len verejné produkty",
       "benefit2": "Možné zhody na preverenie",
       "benefit3": "Produkty nemeníme",
@@ -358,7 +358,6 @@
     "one_more_click_then_we_can_begin": "Ešte jedno kliknutie. Potom začneme.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Požiadali ste o bezplatný sken verejného Shopify katalógu. Potvrďte e-mail a pokračujte na stránke k spusteniu skenu.",
     "scan_scope": "Rozsah skenu",
-    "up_to_value_public_products": "Najviac {{value0}} verejných produktov",
     "link_expires": "Platnosť odkazu",
     "30_minutes_single_use": "30 minút · jednorazový odkaz",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Po potvrdení a spustení skontrolujeme dostupný verejný katalóg. Po dokončení skenu vám výsledok pošleme e-mailom.",
@@ -372,7 +371,6 @@
     "possible_matches_to_review": "Možné zhody na preverenie",
     "no_matches_found": "Bez zistených zhôd",
     "products_checked": "Preverené produkty",
-    "one_off_scan_limit": "Limit jednorazového skenu",
     "potential_matches_to_review": "Možné zhody na kontrolu",
     "these_are_indicative_results_check_any_potential_match_against": "Výsledky sú orientačné. Možnú zhodu overte podľa modelu, fotografie, šarže a oficiálneho záznamu Safety Gate. Nulový počet zhôd nie je potvrdením bezpečnosti celého katalógu.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Dokončili sme jednorazové porovnanie dostupných verejných produktov s databázou EÚ Safety Gate.",
@@ -391,6 +389,7 @@
     "state_waiting_for_supplier": "Čaká sa na dodávateľa",
     "state_resolved": "Vyriešené",
     "state_dismissed": "Zamietnuté",
-    "state_unknown": "Aktuálny stav nájdete v aplikácii"
+    "state_unknown": "Aktuálny stav nájdete v aplikácii",
+    "entire_public_catalog": "Celý verejný katalóg"
   }
 }

@@ -36,7 +36,7 @@
       "installCta": "Instalar desde Shopify App Store",
       "exampleCta": "Ver un ejemplo de resultado",
       "scanLink": "O pruebe una auditoría de tienda gratuita ↓",
-      "reassurance": "Auditoría gratuita a su correo electrónico: hasta 100 productos públicos.",
+      "reassurance": "Auditoría gratuita por correo: todo su catálogo público.",
       "visualCaption": "Ilustración, no un resultado real.",
       "mockDemo": "VISTA PREVIA ILUSTRATIVA",
       "mockEyebrow": "Comprobación de producto",
@@ -154,7 +154,7 @@
       "q3": "¿La aplicación cambia mis productos?",
       "a3": "No. Muestra posibles coincidencias y pruebas en Shopify Admin. Usted decide qué hacer.",
       "q4": "¿Qué incluye el escaneo gratuito?",
-      "a4": "Hasta 100 productos públicos y un resumen por correo electrónico de posibles coincidencias. Las listas privadas están excluidas; el escaneo no es un certificado de seguridad."
+      "a4": "Todos los productos disponibles en el catálogo público de Shopify de su tienda y un resumen de posibles coincidencias por correo. Se excluyen los anuncios privados; el análisis no es un certificado de seguridad."
     },
     "cta": {
       "title": "Empiece con un escaneo gratuito",
@@ -221,7 +221,7 @@
     },
     "scan": {
       "eyebrow": "COMPROBACIÓN ÚNICA · SIN INSTALACIÓN",
-      "title": "Escaneo gratuito de hasta 100 productos",
+      "title": "Análisis gratuito de todo su catálogo público",
       "description": "Introduzca el dominio público de su tienda Shopify y su correo electrónico. Le enviaremos un enlace de confirmación a su correo electrónico y le entregaremos el informe completo una vez confirmado. La monitorización continua forma parte de la aplicación de pago.",
       "benefit1": "Solo productos públicos",
       "benefit2": "Posibles coincidencias para revisar",
@@ -358,7 +358,6 @@
     "one_more_click_then_we_can_begin": "Un clic más. Luego podemos empezar.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Ha solicitado un escaneo gratuito de un catálogo público de Shopify. Confirme su correo electrónico y continúe a la página para iniciar el escaneo.",
     "scan_scope": "Alcance del escaneo",
-    "up_to_value_public_products": "Hasta {{value0}} productos públicos",
     "link_expires": "El enlace caduca",
     "30_minutes_single_use": "30 minutos · un solo uso",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Después de la confirmación y el inicio, comprobaremos el catálogo público disponible. Le enviaremos el resultado por correo electrónico cuando finalice el escaneo.",
@@ -372,7 +371,6 @@
     "possible_matches_to_review": "Posibles coincidencias para revisar",
     "no_matches_found": "No se encontraron coincidencias",
     "products_checked": "Productos comprobados",
-    "one_off_scan_limit": "Límite de escaneo único",
     "potential_matches_to_review": "Posibles coincidencias para revisar",
     "these_are_indicative_results_check_any_potential_match_against": "Estos son resultados indicativos. Verifique cualquier posible coincidencia con el modelo, la foto, el lote y el registro oficial de Safety Gate. Cero coincidencias no certifica la seguridad de todo su catálogo.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Hemos completado una comparación única de los productos públicos disponibles con la base de datos de Safety Gate de la UE.",
@@ -391,6 +389,7 @@
     "state_waiting_for_supplier": "Esperando al proveedor",
     "state_resolved": "Resuelto",
     "state_dismissed": "Descartado",
-    "state_unknown": "Consulte la aplicación para conocer el estado actual"
+    "state_unknown": "Consulte la aplicación para conocer el estado actual",
+    "entire_public_catalog": "Todo el catálogo público"
   }
 }

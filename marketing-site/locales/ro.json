@@ -35,7 +35,7 @@
     "installCta": "Instalați din Shopify App Store",
     "exampleCta": "Vedeți un exemplu de rezultat",
     "scanLink": "Sau încercați un audit gratuit al magazinului ↓",
-    "reassurance": "Audit gratuit la e-mailul dvs.: până la 100 de produse publice.",
+    "reassurance": "Audit gratuit prin e-mail: întregul catalog public.",
     "visualCaption": "Ilustrație, nu un rezultat real.",
     "mockDemo": "PREVIZUALIZARE ILUSTRATIVĂ",
     "mockEyebrow": "Verificare produs",
@@ -153,7 +153,7 @@
     "q3": "Aplicația modifică produsele mele?",
     "a3": "Nu. Afișează posibile potriviri și dovezi în Shopify Admin. Dvs. decideți ce să faceți.",
     "q4": "Ce este inclus în scanarea gratuită?",
-    "a4": "Până la 100 de produse publice și un rezumat prin e-mail al posibilelor potriviri. Listările private sunt excluse; scanarea nu este un certificat de siguranță."
+    "a4": "Toate produsele disponibile în catalogul public Shopify al magazinului și un rezumat al posibilelor potriviri prin e-mail. Listările private sunt excluse; scanarea nu este un certificat de siguranță."
   },
   "cta": {
     "title": "Începeți cu o scanare gratuită",
@@ -220,7 +220,7 @@
   },
   "scan": {
     "eyebrow": "VERIFICARE UNICĂ · FĂRĂ INSTALARE",
-    "title": "Scanare gratuită a până la 100 de produse",
+    "title": "Scanare gratuită a întregului catalog public",
     "description": "Introduceți domeniul public al magazinului dvs. Shopify și adresa de e-mail. Vă vom trimite un link de confirmare la adresa de e-mail și vom livra raportul complet odată confirmat. Monitorizarea continuă face parte din aplicația plătită.",
     "benefit1": "Doar produse publice",
     "benefit2": "Posibile potriviri de revizuit",

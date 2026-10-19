@@ -35,7 +35,7 @@
     "installCta": "Namestite iz trgovine Shopify App Store",
     "exampleCta": "Oglejte si primer rezultata",
     "scanLink": "Ali poskusite brezplačno revizijo trgovine ↓",
-    "reassurance": "Brezplačna revizija na vaš e-poštni naslov: do 100 javnih izdelkov.",
+    "reassurance": "Brezplačen pregled po e-pošti: celoten javni katalog.",
     "visualCaption": "Ilustracija, ne pravi rezultat.",
     "mockDemo": "ILUSTRATIVNI PREDOGLED",
     "mockEyebrow": "Preverjanje izdelka",
@@ -153,7 +153,7 @@
     "q3": "Ali aplikacija spreminja moje izdelke?",
     "a3": "Ne. Prikazuje morebitna ujemanja in dokaze v skrbniku Shopify. Vi se odločite, kaj storiti.",
     "q4": "Kaj vključuje brezplačno skeniranje?",
-    "a4": "Do 100 javnih izdelkov in povzetek morebitnih ujemananj po e-pošti. Zasebni oglasi so izključeni; skeniranje ni varnostni certifikat."
+    "a4": "Vsi razpoložljivi izdelki v javnem katalogu Shopify vaše trgovine in povzetek možnih ujemanj po e-pošti. Zasebne ponudbe so izključene; pregled ni potrdilo o varnosti."
   },
   "cta": {
     "title": "Začnite z brezplačnim skeniranjem",
@@ -220,7 +220,7 @@
   },
   "scan": {
     "eyebrow": "ENKRATNO PREVERJANJE · BREZ NAMESTITVE",
-    "title": "Brezplačno skeniranje do 100 izdelkov",
+    "title": "Brezplačen pregled celotnega javnega kataloga",
     "description": "Vnesite svojo javno domeno trgovine Shopify in e-pošto. Poslali vam bomo potrditveno povezavo na vaš e-poštni naslov in vam dostavili celotno poročilo, ko bo potrjeno. Stalno spremljanje je del plačljive aplikacije.",
     "benefit1": "Samo javni izdelki",
     "benefit2": "Morebitna ujemanja za pregled",

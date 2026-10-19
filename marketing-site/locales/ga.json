@@ -35,7 +35,7 @@
     "installCta": "Suiteáil ó Shopify App Store",
     "exampleCta": "Féach ar shampla de thoradh",
     "scanLink": "Nó bain triail as iniúchadh stórais saor in aisce ↓",
-    "reassurance": "Iniúchadh saor in aisce chuig do ríomhphost: suas le 100 táirge poiblí.",
+    "reassurance": "Iniúchadh saor in aisce trí ríomhphost: do chatalóg phoiblí iomlán.",
     "visualCaption": "Léaráid, ní toradh fíor é.",
     "mockDemo": "RÉAMHAMHARC LÉIRITHEACH",
     "mockEyebrow": "Seiceáil táirge",
@@ -153,7 +153,7 @@
     "q3": "An athraíonn an aip mo tháirgí?",
     "a3": "Ní hea. Taispeánann sé meaitseálacha féideartha agus fianaise i Riarachán Shopify. Cinntíonn tú cad atá le déanamh.",
     "q4": "Cad atá san áireamh sa scanadh saor in aisce?",
-    "a4": "Suas le 100 táirge poiblí agus achoimre ríomhphoist ar mheaitseálacha féideartha. Tá liostaí príobháideacha eisiata; ní deimhniú sábháilteachta é an scanadh."
+    "a4": "Gach táirge atá ar fáil i gcatalóg phoiblí Shopify do shiopa agus achoimre ar mheaitseálacha féideartha trí ríomhphost. Ní áirítear liostuithe príobháideacha; ní deimhniú sábháilteachta é an scanadh."
   },
   "cta": {
     "title": "Tosaigh le scanadh saor in aisce",
@@ -220,7 +220,7 @@
   },
   "scan": {
     "eyebrow": "SEICEÁIL AON-uaire · GAN SUITEÁIL",
-    "title": "Scanadh saor in aisce ar suas le 100 táirge",
+    "title": "Scanadh saor in aisce ar do chatalóg phoiblí iomlán",
     "description": "Cuir isteach do fhearann stórais Shopify poiblí agus ríomhphost. Seolfaimid nasc deimhnithe chuig do ríomhphost agus seachadfaimid an tuarascáil iomlán nuair a bheidh sé deimhnithe. Tá monatóireacht leanúnach mar chuid den aip íoctha.",
     "benefit1": "Táirgí poiblí amháin",
     "benefit2": "Meaitseálacha féideartha le hathbhreithniú",

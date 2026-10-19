@@ -36,7 +36,7 @@
       "installCta": "Installer fra Shopify App Store",
       "exampleCta": "Se et eksempelresultat",
       "scanLink": "Eller prøv en gratis butiksrevision ↓",
-      "reassurance": "Gratis revision til din e-mail: op til 100 offentlige produkter.",
+      "reassurance": "Gratis gennemgang via e-mail: hele dit offentlige katalog.",
       "visualCaption": "Illustration, ikke et reelt resultat.",
       "mockDemo": "ILLUSTRATIV FORHÅNDSVISNING",
       "mockEyebrow": "Produkttjek",
@@ -154,7 +154,7 @@
       "q3": "Ændrer appen mine produkter?",
       "a3": "Nej. Den viser mulige matches og beviser i Shopify Admin. Du beslutter, hvad du skal gøre.",
       "q4": "Hvad er inkluderet i den gratis scanning?",
-      "a4": "Op til 100 offentlige produkter og en e-mailet oversigt over mulige matches. Private fortegnelser er udelukket; scanningen er ikke et sikkerhedscertifikat."
+      "a4": "Alle tilgængelige produkter i butikkens offentlige Shopify-katalog og en oversigt over mulige match via e-mail. Private opslag er udelukket; scanningen er ikke et sikkerhedscertifikat."
     },
     "cta": {
       "title": "Start med en gratis scanning",
@@ -221,7 +221,7 @@
     },
     "scan": {
       "eyebrow": "ENGANGSTJEK · INGEN INSTALLATION",
-      "title": "Gratis scanning af op til 100 produkter",
+      "title": "Gratis scanning af hele dit offentlige katalog",
       "description": "Indtast dit offentlige Shopify-butiksdomæne og e-mail. Vi sender et bekræftelseslink til din e-mail og leverer den komplette rapport, når den er bekræftet. Løbende overvågning er en del af den betalte app.",
       "benefit1": "Kun offentlige produkter",
       "benefit2": "Mulige matches til gennemgang",
@@ -358,7 +358,6 @@
     "one_more_click_then_we_can_begin": "Et klik mere. Så kan vi begynde.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Du anmodede om en gratis scanning af et offentligt Shopify-katalog. Bekræft din e-mail og fortsæt til siden for at starte scanningen.",
     "scan_scope": "Scanningsomfang",
-    "up_to_value_public_products": "Op til {{value0}} offentlige produkter",
     "link_expires": "Link udløber",
     "30_minutes_single_use": "30 minutter · engangsbrug",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Efter bekræftelse og start tjekker vi det tilgængelige offentlige katalog. Vi sender resultatet via e-mail, når scanningen er færdig.",
@@ -372,7 +371,6 @@
     "possible_matches_to_review": "Mulige matches til gennemgang",
     "no_matches_found": "Ingen matches fundet",
     "products_checked": "Produkter tjekket",
-    "one_off_scan_limit": "Engangs scanningsgrænse",
     "potential_matches_to_review": "Potentielle matches til gennemgang",
     "these_are_indicative_results_check_any_potential_match_against": "Disse er vejledende resultater. Tjek ethvert potentielt match mod model, foto, batch og officiel Safety Gate-registrering. Nul matches certificerer ikke sikkerheden af hele dit katalog.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Vi har gennemført en engangssammenligning af tilgængelige offentlige produkter mod EU Safety Gate-databasen.",
@@ -391,6 +389,7 @@
     "state_waiting_for_supplier": "Venter på leverandør",
     "state_resolved": "Løst",
     "state_dismissed": "Afvist",
-    "state_unknown": "Tjek appen for den aktuelle status"
+    "state_unknown": "Tjek appen for den aktuelle status",
+    "entire_public_catalog": "Hele det offentlige katalog"
   }
 }

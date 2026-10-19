@@ -36,7 +36,7 @@
       "installCta": "Telepítés a Shopify App Store-ból",
       "exampleCta": "Példa eredmény megtekintése",
       "scanLink": "Vagy próbáljon ki egy ingyenes áruház auditot ↓",
-      "reassurance": "Ingyenes audit az e-mail címére: akár 100 nyilvános termék.",
+      "reassurance": "Ingyenes ellenőrzés e-mailben: a teljes nyilvános katalógus.",
       "visualCaption": "Illusztráció, nem valós eredmény.",
       "mockDemo": "ILLUSZTRATÍV ELŐNÉZET",
       "mockEyebrow": "Termékellenőrzés",
@@ -154,7 +154,7 @@
       "q3": "Módosítja az alkalmazás a termékeimet?",
       "a3": "Nem. Lehetséges egyezéseket és bizonyítékokat mutat a Shopify Adminban. Ön dönti el, mit tegyen.",
       "q4": "Mit tartalmaz az ingyenes ellenőrzés?",
-      "a4": "Akár 100 nyilvános termék és a lehetséges egyezések e-mailben küldött összefoglalója. A privát listák ki vannak zárva; az ellenőrzés nem biztonsági tanúsítvány."
+      "a4": "Az áruház nyilvános Shopify-katalógusában elérhető összes termék és a lehetséges egyezések összefoglalója e-mailben. A privát listázások nem részei az ellenőrzésnek; az ellenőrzés nem biztonsági tanúsítvány."
     },
     "cta": {
       "title": "Kezdje egy ingyenes ellenőrzéssel",
@@ -221,7 +221,7 @@
     },
     "scan": {
       "eyebrow": "EGYSZERI ELLENŐRZÉS · NINCS TELEPÍTÉS",
-      "title": "Ingyenes ellenőrzés akár 100 termékre",
+      "title": "A teljes nyilvános katalógus ingyenes ellenőrzése",
       "description": "Adja meg nyilvános Shopify áruházának domainjét és e-mail címét. E-mailben küldünk egy megerősítő linket, és a megerősítés után elküldjük a teljes jelentést. A folyamatos felügyelet a fizetős alkalmazás része.",
       "benefit1": "Csak nyilvános termékek",
       "benefit2": "Felülvizsgálatra szoruló lehetséges egyezések",
@@ -358,7 +358,6 @@
     "one_more_click_then_we_can_begin": "Még egy kattintás. Aztán kezdhetjük.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Ingyenes ellenőrzést kért egy nyilvános Shopify katalógusról. Erősítse meg e-mail címét, és folytassa az oldalra az ellenőrzés elindításához.",
     "scan_scope": "Ellenőrzési hatókör",
-    "up_to_value_public_products": "Akár {{value0}} nyilvános termék",
     "link_expires": "A link lejár",
     "30_minutes_single_use": "30 perc · egyszeri használat",
     "after_confirmation_and_start_we_will_check_the_available_publi": "A megerősítés és az indítás után ellenőrizzük az elérhető nyilvános katalógust. Az eredményt e-mailben küldjük el, amint az ellenőrzés befejeződik.",
@@ -372,7 +371,6 @@
     "possible_matches_to_review": "Felülvizsgálatra szoruló lehetséges egyezések",
     "no_matches_found": "Nincs egyezés",
     "products_checked": "Ellenőrzött termékek",
-    "one_off_scan_limit": "Egyszeri ellenőrzési limit",
     "potential_matches_to_review": "Felülvizsgálatra szoruló potenciális egyezések",
     "these_are_indicative_results_check_any_potential_match_against": "Ezek tájékoztató jellegű eredmények. Ellenőrizze az esetleges egyezéseket a modell, a fénykép, a tétel és a hivatalos Safety Gate bejegyzés alapján. A nulla egyezés nem tanúsítja a teljes katalógus biztonságát.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Egyszeri összehasonlítást végeztünk az elérhető nyilvános termékekről az EU Safety Gate adatbázisával.",
@@ -391,6 +389,7 @@
     "state_waiting_for_supplier": "Beszállítóra vár",
     "state_resolved": "Megoldva",
     "state_dismissed": "Elvetve",
-    "state_unknown": "Ellenőrizze az alkalmazásban az aktuális állapotot"
+    "state_unknown": "Ellenőrizze az alkalmazásban az aktuális állapotot",
+    "entire_public_catalog": "A teljes nyilvános katalógus"
   }
 }

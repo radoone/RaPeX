@@ -35,7 +35,7 @@
     "installCta": "Zainstaluj ze sklepu Shopify App Store",
     "exampleCta": "Zobacz przykładowy wynik",
     "scanLink": "Lub wypróbuj darmowy audyt sklepu ↓",
-    "reassurance": "Darmowy audyt na Twój e-mail: do 100 produktów publicznych.",
+    "reassurance": "Bezpłatny audyt e-mailem: cały publiczny katalog.",
     "visualCaption": "Ilustracja, nie jest to prawdziwy wynik.",
     "mockDemo": "PRZYKŁADOWY PODGLĄD",
     "mockEyebrow": "Sprawdzenie produktu",
@@ -153,7 +153,7 @@
     "q3": "Czy aplikacja zmienia moje produkty?",
     "a3": "Nie. Pokazuje możliwe dopasowania i dowody w panelu administracyjnym Shopify. Ty decydujesz, co zrobić.",
     "q4": "Co zawiera darmowe skanowanie?",
-    "a4": "Do 100 produktów publicznych i podsumowanie możliwych dopasowań wysłane e-mailem. Prywatne oferty są wykluczone; skanowanie nie jest certyfikatem bezpieczeństwa."
+    "a4": "Wszystkie dostępne produkty w publicznym katalogu Shopify sklepu i podsumowanie możliwych dopasowań e-mailem. Oferty prywatne są wyłączone; skanowanie nie jest certyfikatem bezpieczeństwa."
   },
   "cta": {
     "title": "Rozpocznij od darmowego skanowania",
@@ -220,7 +220,7 @@
   },
   "scan": {
     "eyebrow": "JEDNORAZOWA KONTROLA · BEZ INSTALACJI",
-    "title": "Darmowe skanowanie do 100 produktów",
+    "title": "Bezpłatne skanowanie całego publicznego katalogu",
     "description": "Wprowadź publiczną domenę swojego sklepu Shopify i adres e-mail. Wyślemy link potwierdzający na Twój e-mail i dostarczymy pełny raport po potwierdzeniu. Ciągłe monitorowanie jest częścią płatnej aplikacji.",
     "benefit1": "Tylko produkty publiczne",
     "benefit2": "Możliwe dopasowania do weryfikacji",

@@ -35,7 +35,7 @@
     "installCta": "Instalar desde Shopify App Store",
     "exampleCta": "Ver un ejemplo de resultado",
     "scanLink": "O pruebe una auditoría de tienda gratuita ↓",
-    "reassurance": "Auditoría gratuita a su correo electrónico: hasta 100 productos públicos.",
+    "reassurance": "Auditoría gratuita por correo: todo su catálogo público.",
     "visualCaption": "Ilustración, no un resultado real.",
     "mockDemo": "VISTA PREVIA ILUSTRATIVA",
     "mockEyebrow": "Comprobación de producto",
@@ -153,7 +153,7 @@
     "q3": "¿La aplicación cambia mis productos?",
     "a3": "No. Muestra posibles coincidencias y pruebas en Shopify Admin. Usted decide qué hacer.",
     "q4": "¿Qué incluye el escaneo gratuito?",
-    "a4": "Hasta 100 productos públicos y un resumen por correo electrónico de posibles coincidencias. Las listas privadas están excluidas; el escaneo no es un certificado de seguridad."
+    "a4": "Todos los productos disponibles en el catálogo público de Shopify de su tienda y un resumen de posibles coincidencias por correo. Se excluyen los anuncios privados; el análisis no es un certificado de seguridad."
   },
   "cta": {
     "title": "Empiece con un escaneo gratuito",
@@ -220,7 +220,7 @@
   },
   "scan": {
     "eyebrow": "COMPROBACIÓN ÚNICA · SIN INSTALACIÓN",
-    "title": "Escaneo gratuito de hasta 100 productos",
+    "title": "Análisis gratuito de todo su catálogo público",
     "description": "Introduzca el dominio público de su tienda Shopify y su correo electrónico. Le enviaremos un enlace de confirmación a su correo electrónico y le entregaremos el informe completo una vez confirmado. La monitorización continua forma parte de la aplicación de pago.",
     "benefit1": "Solo productos públicos",
     "benefit2": "Posibles coincidencias para revisar",

@@ -178,11 +178,11 @@ export function renderWeeklyEmail(language: string, shop: string, start: Date, e
   };
 }
 
-export function renderVerificationEmail(language: string, domain: string, url: string, maxProducts = 100): EmailContent {
+export function renderVerificationEmail(language: string, domain: string, url: string): EmailContent {
   language = normalizeEmailLanguage(language);
   const title = emailText(language, "one_more_click_then_we_can_begin");
   const intro = emailText(language, "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_");
-  const rows: Array<[string, string]> = [[emailText(language, "store"), domain], [emailText(language, "scan_scope"), emailText(language, "up_to_value_public_products", { value0: maxProducts })], [emailText(language, "link_expires"), emailText(language, "30_minutes_single_use")]];
+  const rows: Array<[string, string]> = [[emailText(language, "store"), domain], [emailText(language, "scan_scope"), emailText(language, "entire_public_catalog")], [emailText(language, "link_expires"), emailText(language, "30_minutes_single_use")]];
   const next = emailText(language, "after_confirmation_and_start_we_will_check_the_available_publi");
   const ignore = emailText(language, "if_you_did_not_request_this_scan_ignore_this_email_the_scan_wi");
   return {
@@ -192,11 +192,11 @@ export function renderVerificationEmail(language: string, domain: string, url: s
   };
 }
 
-export function renderScanReportEmail(language: string, domain: string, lead: { totalProductsScanned: number; flaggedProductsCount: number; matches?: ScanEmailMatch[] }, homeUrl = HOME, maxProducts = 100): EmailContent {
+export function renderScanReportEmail(language: string, domain: string, lead: { totalProductsScanned: number; flaggedProductsCount: number; matches?: ScanEmailMatch[] }, homeUrl = HOME): EmailContent {
   language = normalizeEmailLanguage(language);
   const title = emailText(language, "your_scan_results_are_ready");
   const status = lead.flaggedProductsCount > 0 ? (emailText(language, "possible_matches_to_review")) : (emailText(language, "no_matches_found"));
-  const rows: Array<[string, string]> = [[emailText(language, "store"), domain], [emailText(language, "products_checked"), String(lead.totalProductsScanned)], [emailText(language, "one_off_scan_limit"), String(maxProducts)], [emailText(language, "potential_matches_to_review"), String(lead.flaggedProductsCount)]];
+  const rows: Array<[string, string]> = [[emailText(language, "store"), domain], [emailText(language, "products_checked"), String(lead.totalProductsScanned)], [emailText(language, "scan_scope"), emailText(language, "entire_public_catalog")], [emailText(language, "potential_matches_to_review"), String(lead.flaggedProductsCount)]];
   const caveat = emailText(language, "these_are_indicative_results_check_any_potential_match_against");
   const intro = emailText(language, "we_completed_a_one_off_comparison_of_available_public_products");
   const matches = (lead.matches || []).slice(0, 5).map(match => {

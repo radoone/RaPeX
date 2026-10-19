@@ -35,7 +35,7 @@
     "installCta": "Im Shopify App Store installieren",
     "exampleCta": "Ein Beispielergebnis ansehen",
     "scanLink": "Oder probieren Sie einen kostenlosen Shop-Audit ↓",
-    "reassurance": "Kostenloser Audit an Ihre E-Mail: bis zu 100 öffentliche Produkte.",
+    "reassurance": "Kostenlose Prüfung per E-Mail: Ihr gesamter öffentlicher Katalog.",
     "visualCaption": "Illustration, kein echtes Ergebnis.",
     "mockDemo": "ILLUSTRATIVE VORSCHAU",
     "mockEyebrow": "Produktprüfung",
@@ -153,7 +153,7 @@
     "q3": "Ändert die App meine Produkte?",
     "a3": "Nein. Sie zeigt mögliche Übereinstimmungen und Nachweise im Shopify Admin an. Sie entscheiden, was zu tun ist.",
     "q4": "Was ist im kostenlosen Scan enthalten?",
-    "a4": "Bis zu 100 öffentliche Produkte und eine per E-Mail versandte Zusammenfassung möglicher Übereinstimmungen. Private Angebote sind ausgeschlossen; der Scan ist kein Sicherheitszertifikat."
+    "a4": "Alle verfügbaren Produkte im öffentlichen Shopify-Katalog Ihres Shops und eine Zusammenfassung möglicher Übereinstimmungen per E-Mail. Private Angebote sind ausgeschlossen; der Scan ist kein Sicherheitszertifikat."
   },
   "cta": {
     "title": "Beginnen Sie mit einem kostenlosen Scan",
@@ -220,7 +220,7 @@
   },
   "scan": {
     "eyebrow": "EINMALIGE PRÜFUNG · KEINE INSTALLATION",
-    "title": "Kostenloser Scan von bis zu 100 Produkten",
+    "title": "Kostenloser Scan Ihres gesamten öffentlichen Katalogs",
     "description": "Geben Sie Ihre öffentliche Shopify-Shop-Domain und E-Mail-Adresse ein. Wir senden Ihnen einen Bestätigungslink an Ihre E-Mail und liefern den vollständigen Bericht, sobald dieser bestätigt wurde. Die laufende Überwachung ist Teil der kostenpflichtigen App.",
     "benefit1": "Nur öffentliche Produkte",
     "benefit2": "Mögliche Übereinstimmungen zur Überprüfung",

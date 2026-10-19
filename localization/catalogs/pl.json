@@ -36,7 +36,7 @@
       "installCta": "Zainstaluj ze sklepu Shopify App Store",
       "exampleCta": "Zobacz przykładowy wynik",
       "scanLink": "Lub wypróbuj darmowy audyt sklepu ↓",
-      "reassurance": "Darmowy audyt na Twój e-mail: do 100 produktów publicznych.",
+      "reassurance": "Bezpłatny audyt e-mailem: cały publiczny katalog.",
       "visualCaption": "Ilustracja, nie jest to prawdziwy wynik.",
       "mockDemo": "PRZYKŁADOWY PODGLĄD",
       "mockEyebrow": "Sprawdzenie produktu",
@@ -154,7 +154,7 @@
       "q3": "Czy aplikacja zmienia moje produkty?",
       "a3": "Nie. Pokazuje możliwe dopasowania i dowody w panelu administracyjnym Shopify. Ty decydujesz, co zrobić.",
       "q4": "Co zawiera darmowe skanowanie?",
-      "a4": "Do 100 produktów publicznych i podsumowanie możliwych dopasowań wysłane e-mailem. Prywatne oferty są wykluczone; skanowanie nie jest certyfikatem bezpieczeństwa."
+      "a4": "Wszystkie dostępne produkty w publicznym katalogu Shopify sklepu i podsumowanie możliwych dopasowań e-mailem. Oferty prywatne są wyłączone; skanowanie nie jest certyfikatem bezpieczeństwa."
     },
     "cta": {
       "title": "Rozpocznij od darmowego skanowania",
@@ -221,7 +221,7 @@
     },
     "scan": {
       "eyebrow": "JEDNORAZOWA KONTROLA · BEZ INSTALACJI",
-      "title": "Darmowe skanowanie do 100 produktów",
+      "title": "Bezpłatne skanowanie całego publicznego katalogu",
       "description": "Wprowadź publiczną domenę swojego sklepu Shopify i adres e-mail. Wyślemy link potwierdzający na Twój e-mail i dostarczymy pełny raport po potwierdzeniu. Ciągłe monitorowanie jest częścią płatnej aplikacji.",
       "benefit1": "Tylko produkty publiczne",
       "benefit2": "Możliwe dopasowania do weryfikacji",
@@ -358,7 +358,6 @@
     "one_more_click_then_we_can_begin": "Jeszcze jedno kliknięcie. Wtedy możemy zacząć.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Poprosiłeś o darmowe skanowanie publicznego katalogu Shopify. Potwierdź swój e-mail i przejdź do strony, aby rozpocząć skanowanie.",
     "scan_scope": "Zakres skanowania",
-    "up_to_value_public_products": "Do {{value0}} produktów publicznych",
     "link_expires": "Link wygasa",
     "30_minutes_single_use": "30 minut · jednorazowe użycie",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Po potwierdzeniu i rozpoczęciu sprawdzimy dostępny katalog publiczny. Wyślemy wynik e-mailem po zakończeniu skanowania.",
@@ -372,7 +371,6 @@
     "possible_matches_to_review": "Możliwe dopasowania do weryfikacji",
     "no_matches_found": "Nie znaleziono dopasowań",
     "products_checked": "Sprawdzono produktów",
-    "one_off_scan_limit": "Limit jednorazowego skanowania",
     "potential_matches_to_review": "Potencjalne dopasowania do weryfikacji",
     "these_are_indicative_results_check_any_potential_match_against": "Są to wyniki orientacyjne. Sprawdź każde potencjalne dopasowanie pod kątem modelu, zdjęcia, partii i oficjalnego zapisu Safety Gate. Brak dopasowań nie certyfikuje bezpieczeństwa całego katalogu.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Zakończyliśmy jednorazowe porównanie dostępnych produktów publicznych z bazą danych EU Safety Gate.",
@@ -391,6 +389,7 @@
     "state_waiting_for_supplier": "Oczekiwanie na dostawcę",
     "state_resolved": "Rozwiązane",
     "state_dismissed": "Odrzucone",
-    "state_unknown": "Sprawdź aplikację, aby poznać aktualny status"
+    "state_unknown": "Sprawdź aplikację, aby poznać aktualny status",
+    "entire_public_catalog": "Cały publiczny katalog"
   }
 }

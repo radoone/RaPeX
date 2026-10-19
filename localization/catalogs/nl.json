@@ -36,7 +36,7 @@
       "installCta": "Installeren vanuit de Shopify App Store",
       "exampleCta": "Bekijk een voorbeeldresultaat",
       "scanLink": "Of probeer een gratis winkelaudit ↓",
-      "reassurance": "Gratis audit naar uw e-mail: tot 100 openbare producten.",
+      "reassurance": "Gratis controle per e-mail: uw volledige openbare catalogus.",
       "visualCaption": "Illustratie, geen echt resultaat.",
       "mockDemo": "ILLUSTRATIEVE VOORBEELD",
       "mockEyebrow": "Productcontrole",
@@ -154,7 +154,7 @@
       "q3": "Wijzigt de app mijn producten?",
       "a3": "Nee. Het toont mogelijke overeenkomsten en bewijsmateriaal in Shopify Admin. U beslist wat u moet doen.",
       "q4": "Wat is inbegrepen in de gratis scan?",
-      "a4": "Tot 100 openbare producten en een per e-mail verzonden samenvatting van mogelijke overeenkomsten. Privévermeldingen zijn uitgesloten; de scan is geen veiligheidscertificaat."
+      "a4": "Alle beschikbare producten in de openbare Shopify-catalogus van uw winkel en een samenvatting van mogelijke overeenkomsten per e-mail. Privévermeldingen zijn uitgesloten; de scan is geen veiligheidscertificaat."
     },
     "cta": {
       "title": "Begin met een gratis scan",
@@ -221,7 +221,7 @@
     },
     "scan": {
       "eyebrow": "EENMALIGE CONTROLE · GEEN INSTALLATIE",
-      "title": "Gratis scan van maximaal 100 producten",
+      "title": "Gratis scan van uw volledige openbare catalogus",
       "description": "Voer uw openbare Shopify-winkeldomein en e-mailadres in. We sturen een bevestigingslink naar uw e-mail en leveren het volledige rapport zodra dit is bevestigd. Doorlopende monitoring is onderdeel van de betaalde app.",
       "benefit1": "Alleen openbare producten",
       "benefit2": "Mogelijke overeenkomsten ter beoordeling",
@@ -358,7 +358,6 @@
     "one_more_click_then_we_can_begin": "Nog één klik. Dan kunnen we beginnen.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "U heeft een gratis scan van een openbare Shopify-catalogus aangevraagd. Bevestig uw e-mail en ga verder naar de pagina om de scan te starten.",
     "scan_scope": "Scanbereik",
-    "up_to_value_public_products": "Tot {{value0}} openbare producten",
     "link_expires": "Link verloopt",
     "30_minutes_single_use": "30 minuten · eenmalig gebruik",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Na bevestiging en start controleren we de beschikbare openbare catalogus. We sturen het resultaat per e-mail wanneer de scan is voltooid.",
@@ -372,7 +371,6 @@
     "possible_matches_to_review": "Mogelijke overeenkomsten ter beoordeling",
     "no_matches_found": "Geen overeenkomsten gevonden",
     "products_checked": "Producten gecontroleerd",
-    "one_off_scan_limit": "Eenmalige scanlimiet",
     "potential_matches_to_review": "Potentiële overeenkomsten ter beoordeling",
     "these_are_indicative_results_check_any_potential_match_against": "Dit zijn indicatieve resultaten. Controleer elke potentiële overeenkomst aan de hand van het model, de foto, de batch en het officiële Safety Gate-record. Nul overeenkomsten certificeren de veiligheid van uw gehele catalogus niet.",
     "we_completed_a_one_off_comparison_of_available_public_products": "We hebben een eenmalige vergelijking voltooid van beschikbare openbare producten met de EU Safety Gate-database.",
@@ -391,6 +389,7 @@
     "state_waiting_for_supplier": "Wachten op leverancier",
     "state_resolved": "Opgelost",
     "state_dismissed": "Genegeerd",
-    "state_unknown": "Controleer de app voor de huidige status"
+    "state_unknown": "Controleer de app voor de huidige status",
+    "entire_public_catalog": "De volledige openbare catalogus"
   }
 }

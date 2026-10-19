@@ -36,7 +36,7 @@
       "installCta": "Suiteáil ó Shopify App Store",
       "exampleCta": "Féach ar shampla de thoradh",
       "scanLink": "Nó bain triail as iniúchadh stórais saor in aisce ↓",
-      "reassurance": "Iniúchadh saor in aisce chuig do ríomhphost: suas le 100 táirge poiblí.",
+      "reassurance": "Iniúchadh saor in aisce trí ríomhphost: do chatalóg phoiblí iomlán.",
       "visualCaption": "Léaráid, ní toradh fíor é.",
       "mockDemo": "RÉAMHAMHARC LÉIRITHEACH",
       "mockEyebrow": "Seiceáil táirge",
@@ -154,7 +154,7 @@
       "q3": "An athraíonn an aip mo tháirgí?",
       "a3": "Ní hea. Taispeánann sé meaitseálacha féideartha agus fianaise i Riarachán Shopify. Cinntíonn tú cad atá le déanamh.",
       "q4": "Cad atá san áireamh sa scanadh saor in aisce?",
-      "a4": "Suas le 100 táirge poiblí agus achoimre ríomhphoist ar mheaitseálacha féideartha. Tá liostaí príobháideacha eisiata; ní deimhniú sábháilteachta é an scanadh."
+      "a4": "Gach táirge atá ar fáil i gcatalóg phoiblí Shopify do shiopa agus achoimre ar mheaitseálacha féideartha trí ríomhphost. Ní áirítear liostuithe príobháideacha; ní deimhniú sábháilteachta é an scanadh."
     },
     "cta": {
       "title": "Tosaigh le scanadh saor in aisce",
@@ -221,7 +221,7 @@
     },
     "scan": {
       "eyebrow": "SEICEÁIL AON-uaire · GAN SUITEÁIL",
-      "title": "Scanadh saor in aisce ar suas le 100 táirge",
+      "title": "Scanadh saor in aisce ar do chatalóg phoiblí iomlán",
       "description": "Cuir isteach do fhearann stórais Shopify poiblí agus ríomhphost. Seolfaimid nasc deimhnithe chuig do ríomhphost agus seachadfaimid an tuarascáil iomlán nuair a bheidh sé deimhnithe. Tá monatóireacht leanúnach mar chuid den aip íoctha.",
       "benefit1": "Táirgí poiblí amháin",
       "benefit2": "Meaitseálacha féideartha le hathbhreithniú",
@@ -358,7 +358,6 @@
     "one_more_click_then_we_can_begin": "Cliceáil amháin eile. Ansin is féidir linn tosú.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "D'iarr tú scanadh saor in aisce ar chatalóg phoiblí Shopify. Deimhnigh do ríomhphost agus lean ar aghaidh chuig an leathanach chun an scanadh a thosú.",
     "scan_scope": "Scóip scanadh",
-    "up_to_value_public_products": "Suas le {{value0}} táirge poiblí",
     "link_expires": "Éagann an nasc",
     "30_minutes_single_use": "30 nóiméad · úsáid aonair",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Tar éis deimhniú agus tosú, seiceálfaimid an chatalóg phoiblí atá ar fáil. Seolfaimid ríomhphost chugat leis an toradh nuair a bheidh an scanadh críochnaithe.",
@@ -372,7 +371,6 @@
     "possible_matches_to_review": "Meaitseálacha féideartha le hathbhreithniú",
     "no_matches_found": "Gan aon mheaitseálacha aimsithe",
     "products_checked": "Táirgí seiceáilte",
-    "one_off_scan_limit": "Teorainn scanadh aon-uaire",
     "potential_matches_to_review": "Meaitseálacha féideartha le hathbhreithniú",
     "these_are_indicative_results_check_any_potential_match_against": "Is torthaí táscacha iad seo. Seiceáil aon mheaitseáil fhéideartha i gcoinne na samhla, an ghrianghraif, an bhaisc agus an taifid oifigiúil Safety Gate. Ní dheimhníonn nialas meaitseálacha sábháilteacht do chatalóige iomláine.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Chríochnaíomar comparáid aon-uaire ar tháirgí poiblí atá ar fáil i gcoinne bhunachar sonraí Safety Gate an AE.",
@@ -391,6 +389,7 @@
     "state_waiting_for_supplier": "Ag fanacht leis an soláthraí",
     "state_resolved": "Réitithe",
     "state_dismissed": "Díbheite",
-    "state_unknown": "Seiceáil an aip le haghaidh an stádais reatha"
+    "state_unknown": "Seiceáil an aip le haghaidh an stádais reatha",
+    "entire_public_catalog": "An chatalóg phoiblí iomlán"
   }
 }

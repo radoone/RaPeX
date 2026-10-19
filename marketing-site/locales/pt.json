@@ -35,7 +35,7 @@
     "installCta": "Instalar da Shopify App Store",
     "exampleCta": "Ver um exemplo de resultado",
     "scanLink": "Ou experimente uma auditoria gratuita à loja ↓",
-    "reassurance": "Auditoria gratuita para o seu e-mail: até 100 produtos públicos.",
+    "reassurance": "Auditoria gratuita por e-mail: todo o catálogo público.",
     "visualCaption": "Ilustração, não um resultado real.",
     "mockDemo": "PRÉ-VISUALIZAÇÃO ILUSTRATIVA",
     "mockEyebrow": "Verificação de produto",
@@ -153,7 +153,7 @@
     "q3": "A aplicação altera os meus produtos?",
     "a3": "Não. Mostra possíveis correspondências e provas no Shopify Admin. Você decide o que fazer.",
     "q4": "O que está incluído na análise gratuita?",
-    "a4": "Até 100 produtos públicos e um resumo por e-mail de possíveis correspondências. Listagens privadas são excluídas; a análise não é um certificado de segurança."
+    "a4": "Todos os produtos disponíveis no catálogo público Shopify da sua loja e um resumo das possíveis correspondências por e-mail. As listagens privadas estão excluídas; a análise não é um certificado de segurança."
   },
   "cta": {
     "title": "Comece com uma análise gratuita",
@@ -220,7 +220,7 @@
   },
   "scan": {
     "eyebrow": "VERIFICAÇÃO ÚNICA · SEM INSTALAÇÃO",
-    "title": "Análise gratuita de até 100 produtos",
+    "title": "Análise gratuita de todo o seu catálogo público",
     "description": "Introduza o domínio público da sua loja Shopify e e-mail. Enviaremos um link de confirmação para o seu e-mail e entregaremos o relatório completo assim que confirmado. A monitorização contínua faz parte da aplicação paga.",
     "benefit1": "Apenas produtos públicos",
     "benefit2": "Possíveis correspondências para rever",

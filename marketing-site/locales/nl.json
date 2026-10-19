@@ -35,7 +35,7 @@
     "installCta": "Installeren vanuit de Shopify App Store",
     "exampleCta": "Bekijk een voorbeeldresultaat",
     "scanLink": "Of probeer een gratis winkelaudit ↓",
-    "reassurance": "Gratis audit naar uw e-mail: tot 100 openbare producten.",
+    "reassurance": "Gratis controle per e-mail: uw volledige openbare catalogus.",
     "visualCaption": "Illustratie, geen echt resultaat.",
     "mockDemo": "ILLUSTRATIEVE VOORBEELD",
     "mockEyebrow": "Productcontrole",
@@ -153,7 +153,7 @@
     "q3": "Wijzigt de app mijn producten?",
     "a3": "Nee. Het toont mogelijke overeenkomsten en bewijsmateriaal in Shopify Admin. U beslist wat u moet doen.",
     "q4": "Wat is inbegrepen in de gratis scan?",
-    "a4": "Tot 100 openbare producten en een per e-mail verzonden samenvatting van mogelijke overeenkomsten. Privévermeldingen zijn uitgesloten; de scan is geen veiligheidscertificaat."
+    "a4": "Alle beschikbare producten in de openbare Shopify-catalogus van uw winkel en een samenvatting van mogelijke overeenkomsten per e-mail. Privévermeldingen zijn uitgesloten; de scan is geen veiligheidscertificaat."
   },
   "cta": {
     "title": "Begin met een gratis scan",
@@ -220,7 +220,7 @@
   },
   "scan": {
     "eyebrow": "EENMALIGE CONTROLE · GEEN INSTALLATIE",
-    "title": "Gratis scan van maximaal 100 producten",
+    "title": "Gratis scan van uw volledige openbare catalogus",
     "description": "Voer uw openbare Shopify-winkeldomein en e-mailadres in. We sturen een bevestigingslink naar uw e-mail en leveren het volledige rapport zodra dit is bevestigd. Doorlopende monitoring is onderdeel van de betaalde app.",
     "benefit1": "Alleen openbare producten",
     "benefit2": "Mogelijke overeenkomsten ter beoordeling",

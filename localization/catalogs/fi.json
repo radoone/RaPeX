@@ -36,7 +36,7 @@
       "installCta": "Asenna Shopify App Storesta",
       "exampleCta": "Katso esimerkkilöytö",
       "scanLink": "Tai kokeile ilmaista kaupan auditointia ↓",
-      "reassurance": "Ilmainen auditointi sähköpostiisi: jopa 100 julkista tuotetta.",
+      "reassurance": "Maksuton tarkistus sähköpostitse: koko julkinen tuoteluettelo.",
       "visualCaption": "Kuvitus, ei todellinen tulos.",
       "mockDemo": "HAVAINNOLLINEN ESIMERKKI",
       "mockEyebrow": "Tuotetarkistus",
@@ -154,7 +154,7 @@
       "q3": "Muuttaako sovellus tuotteitani?",
       "a3": "Ei. Se näyttää mahdolliset osumat ja todisteet Shopify Adminissa. Sinä päätät, mitä tehdä.",
       "q4": "Mitä sisältyy ilmaiseen skannaukseen?",
-      "a4": "Jopa 100 julkista tuotetta ja sähköpostitse lähetetty yhteenveto mahdollisista osumista. Yksityiset listaukset on suljettu pois; skannaus ei ole turvallisuussertifikaatti."
+      "a4": "Kaikki kaupan julkisessa Shopify-tuoteluettelossa saatavilla olevat tuotteet ja yhteenveto mahdollisista osumista sähköpostitse. Yksityiset listaukset eivät sisälly tarkistukseen; tarkistus ei ole turvallisuustodistus."
     },
     "cta": {
       "title": "Aloita ilmaisella skannauksella",
@@ -221,7 +221,7 @@
     },
     "scan": {
       "eyebrow": "KERTAKUONTAINEN TARKISTUS · EI ASENNUSTA",
-      "title": "Ilmainen skannaus jopa 100 tuotteesta",
+      "title": "Koko julkisen tuoteluettelon maksuton tarkistus",
       "description": "Anna julkinen Shopify-kauppasi verkkotunnus ja sähköpostiosoite. Lähetämme vahvistuslinkin sähköpostiisi ja toimitamme täydellisen raportin vahvistuksen jälkeen. Jatkuva valvonta on osa maksullista sovellusta.",
       "benefit1": "Vain julkiset tuotteet",
       "benefit2": "Mahdolliset osumat tarkistettavaksi",
@@ -358,7 +358,6 @@
     "one_more_click_then_we_can_begin": "Yksi klikkaus vielä. Sitten voimme aloittaa.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Pyysit ilmaista skannausta julkisesta Shopify-luettelosta. Vahvista sähköpostiosoitteesi ja jatka sivulle aloittaaksesi skannauksen.",
     "scan_scope": "Skannauksen laajuus",
-    "up_to_value_public_products": "Jopa {{value0}} julkista tuotetta",
     "link_expires": "Linkki vanhenee",
     "30_minutes_single_use": "30 minuuttia · kertakäyttöinen",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Vahvistuksen ja aloituksen jälkeen tarkistamme saatavilla olevan julkisen luettelon. Lähetämme tuloksen sähköpostitse, kun skannaus on valmis.",
@@ -372,7 +371,6 @@
     "possible_matches_to_review": "Mahdolliset osumat tarkistettavaksi",
     "no_matches_found": "Osumia ei löytynyt",
     "products_checked": "Tarkistetut tuotteet",
-    "one_off_scan_limit": "Kertaluonteisen skannauksen raja",
     "potential_matches_to_review": "Mahdolliset osumat tarkistettavaksi",
     "these_are_indicative_results_check_any_potential_match_against": "Nämä ovat suuntaa-antavia tuloksia. Tarkista kaikki mahdolliset osumat mallia, kuvaa, erää ja virallista Safety Gate -tietuetta vastaan. Nolla osumaa ei sertifioi koko luettelosi turvallisuutta.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Suoritimme kertaluonteisen vertailun saatavilla olevista julkisista tuotteista EU:n Safety Gate -tietokantaa vastaan.",
@@ -391,6 +389,7 @@
     "state_waiting_for_supplier": "Odottaa toimittajaa",
     "state_resolved": "Ratkaistu",
     "state_dismissed": "Hylätty",
-    "state_unknown": "Tarkista sovelluksesta nykyinen tila"
+    "state_unknown": "Tarkista sovelluksesta nykyinen tila",
+    "entire_public_catalog": "Koko julkinen tuoteluettelo"
   }
 }

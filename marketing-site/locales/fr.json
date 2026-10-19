@@ -35,7 +35,7 @@
     "installCta": "Installer depuis l'App Store Shopify",
     "exampleCta": "Voir un exemple de résultat",
     "scanLink": "Ou essayez un audit gratuit de votre boutique ↓",
-    "reassurance": "Audit gratuit par e-mail : jusqu'à 100 produits publics.",
+    "reassurance": "Audit gratuit par e-mail : tout votre catalogue public.",
     "visualCaption": "Illustration, pas un résultat réel.",
     "mockDemo": "APERÇU ILLUSTRATIF",
     "mockEyebrow": "Vérification du produit",
@@ -153,7 +153,7 @@
     "q3": "L'application modifie-t-elle mes produits ?",
     "a3": "Non. Elle affiche les correspondances possibles et les preuves dans l'administration Shopify. Vous décidez quoi faire.",
     "q4": "Qu'est-ce qui est inclus dans le scan gratuit ?",
-    "a4": "Jusqu'à 100 produits publics et un résumé par e-mail des correspondances possibles. Les listes privées sont exclues ; le scan n'est pas un certificat de sécurité."
+    "a4": "Tous les produits disponibles dans le catalogue public Shopify de votre boutique et un résumé des correspondances possibles par e-mail. Les fiches privées sont exclues ; cette analyse ne constitue pas un certificat de sécurité."
   },
   "cta": {
     "title": "Commencez par un scan gratuit",
@@ -220,7 +220,7 @@
   },
   "scan": {
     "eyebrow": "VÉRIFICATION UNIQUE · PAS D'INSTALLATION",
-    "title": "Analyse gratuite de 100 produits maximum",
+    "title": "Analyse gratuite de tout votre catalogue public",
     "description": "Entrez le domaine public de votre boutique Shopify et votre e-mail. Nous vous enverrons un lien de confirmation par e-mail et vous livrerons le rapport complet une fois confirmé. La surveillance continue fait partie de l'application payante.",
     "benefit1": "Produits publics uniquement",
     "benefit2": "Correspondances possibles à examiner",

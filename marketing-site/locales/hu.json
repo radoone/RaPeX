@@ -35,7 +35,7 @@
     "installCta": "Telepítés a Shopify App Store-ból",
     "exampleCta": "Példa eredmény megtekintése",
     "scanLink": "Vagy próbáljon ki egy ingyenes áruház auditot ↓",
-    "reassurance": "Ingyenes audit az e-mail címére: akár 100 nyilvános termék.",
+    "reassurance": "Ingyenes ellenőrzés e-mailben: a teljes nyilvános katalógus.",
     "visualCaption": "Illusztráció, nem valós eredmény.",
     "mockDemo": "ILLUSZTRATÍV ELŐNÉZET",
     "mockEyebrow": "Termékellenőrzés",
@@ -153,7 +153,7 @@
     "q3": "Módosítja az alkalmazás a termékeimet?",
     "a3": "Nem. Lehetséges egyezéseket és bizonyítékokat mutat a Shopify Adminban. Ön dönti el, mit tegyen.",
     "q4": "Mit tartalmaz az ingyenes ellenőrzés?",
-    "a4": "Akár 100 nyilvános termék és a lehetséges egyezések e-mailben küldött összefoglalója. A privát listák ki vannak zárva; az ellenőrzés nem biztonsági tanúsítvány."
+    "a4": "Az áruház nyilvános Shopify-katalógusában elérhető összes termék és a lehetséges egyezések összefoglalója e-mailben. A privát listázások nem részei az ellenőrzésnek; az ellenőrzés nem biztonsági tanúsítvány."
   },
   "cta": {
     "title": "Kezdje egy ingyenes ellenőrzéssel",
@@ -220,7 +220,7 @@
   },
   "scan": {
     "eyebrow": "EGYSZERI ELLENŐRZÉS · NINCS TELEPÍTÉS",
-    "title": "Ingyenes ellenőrzés akár 100 termékre",
+    "title": "A teljes nyilvános katalógus ingyenes ellenőrzése",
     "description": "Adja meg nyilvános Shopify áruházának domainjét és e-mail címét. E-mailben küldünk egy megerősítő linket, és a megerősítés után elküldjük a teljes jelentést. A folyamatos felügyelet a fizetős alkalmazás része.",
     "benefit1": "Csak nyilvános termékek",
     "benefit2": "Felülvizsgálatra szoruló lehetséges egyezések",

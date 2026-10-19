@@ -36,7 +36,7 @@
       "installCta": "Instalați din Shopify App Store",
       "exampleCta": "Vedeți un exemplu de rezultat",
       "scanLink": "Sau încercați un audit gratuit al magazinului ↓",
-      "reassurance": "Audit gratuit la e-mailul dvs.: până la 100 de produse publice.",
+      "reassurance": "Audit gratuit prin e-mail: întregul catalog public.",
       "visualCaption": "Ilustrație, nu un rezultat real.",
       "mockDemo": "PREVIZUALIZARE ILUSTRATIVĂ",
       "mockEyebrow": "Verificare produs",
@@ -154,7 +154,7 @@
       "q3": "Aplicația modifică produsele mele?",
       "a3": "Nu. Afișează posibile potriviri și dovezi în Shopify Admin. Dvs. decideți ce să faceți.",
       "q4": "Ce este inclus în scanarea gratuită?",
-      "a4": "Până la 100 de produse publice și un rezumat prin e-mail al posibilelor potriviri. Listările private sunt excluse; scanarea nu este un certificat de siguranță."
+      "a4": "Toate produsele disponibile în catalogul public Shopify al magazinului și un rezumat al posibilelor potriviri prin e-mail. Listările private sunt excluse; scanarea nu este un certificat de siguranță."
     },
     "cta": {
       "title": "Începeți cu o scanare gratuită",
@@ -221,7 +221,7 @@
     },
     "scan": {
       "eyebrow": "VERIFICARE UNICĂ · FĂRĂ INSTALARE",
-      "title": "Scanare gratuită a până la 100 de produse",
+      "title": "Scanare gratuită a întregului catalog public",
       "description": "Introduceți domeniul public al magazinului dvs. Shopify și adresa de e-mail. Vă vom trimite un link de confirmare la adresa de e-mail și vom livra raportul complet odată confirmat. Monitorizarea continuă face parte din aplicația plătită.",
       "benefit1": "Doar produse publice",
       "benefit2": "Posibile potriviri de revizuit",
@@ -358,7 +358,6 @@
     "one_more_click_then_we_can_begin": "Încă un clic. Apoi putem începe.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Ați solicitat o scanare gratuită a unui catalog public Shopify. Confirmați-vă e-mailul și continuați la pagină pentru a începe scanarea.",
     "scan_scope": "Domeniul de aplicare al scanării",
-    "up_to_value_public_products": "Până la {{value0}} produse publice",
     "link_expires": "Linkul expiră",
     "30_minutes_single_use": "30 de minute · utilizare unică",
     "after_confirmation_and_start_we_will_check_the_available_publi": "După confirmare și pornire, vom verifica catalogul public disponibil. Vă vom trimite rezultatul prin e-mail când scanarea se va finaliza.",
@@ -372,7 +371,6 @@
     "possible_matches_to_review": "Potriviri posibile de revizuit",
     "no_matches_found": "Nicio potrivire găsită",
     "products_checked": "Produse verificate",
-    "one_off_scan_limit": "Limită scanare unică",
     "potential_matches_to_review": "Potriviri potențiale de revizuit",
     "these_are_indicative_results_check_any_potential_match_against": "Acestea sunt rezultate indicative. Verificați orice potrivire potențială în raport cu modelul, fotografia, lotul și înregistrarea oficială Safety Gate. Zero potriviri nu certifică siguranța întregului dvs. catalog.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Am finalizat o comparație unică a produselor publice disponibile cu baza de date Safety Gate a UE.",
@@ -391,6 +389,7 @@
     "state_waiting_for_supplier": "Așteaptă furnizorul",
     "state_resolved": "Rezolvat",
     "state_dismissed": "Ignorat",
-    "state_unknown": "Verificați aplicația pentru starea curentă"
+    "state_unknown": "Verificați aplicația pentru starea curentă",
+    "entire_public_catalog": "Întregul catalog public"
   }
 }

@@ -36,7 +36,7 @@
       "installCta": "Instalar da Shopify App Store",
       "exampleCta": "Ver um exemplo de resultado",
       "scanLink": "Ou experimente uma auditoria gratuita à loja ↓",
-      "reassurance": "Auditoria gratuita para o seu e-mail: até 100 produtos públicos.",
+      "reassurance": "Auditoria gratuita por e-mail: todo o catálogo público.",
       "visualCaption": "Ilustração, não um resultado real.",
       "mockDemo": "PRÉ-VISUALIZAÇÃO ILUSTRATIVA",
       "mockEyebrow": "Verificação de produto",
@@ -154,7 +154,7 @@
       "q3": "A aplicação altera os meus produtos?",
       "a3": "Não. Mostra possíveis correspondências e provas no Shopify Admin. Você decide o que fazer.",
       "q4": "O que está incluído na análise gratuita?",
-      "a4": "Até 100 produtos públicos e um resumo por e-mail de possíveis correspondências. Listagens privadas são excluídas; a análise não é um certificado de segurança."
+      "a4": "Todos os produtos disponíveis no catálogo público Shopify da sua loja e um resumo das possíveis correspondências por e-mail. As listagens privadas estão excluídas; a análise não é um certificado de segurança."
     },
     "cta": {
       "title": "Comece com uma análise gratuita",
@@ -221,7 +221,7 @@
     },
     "scan": {
       "eyebrow": "VERIFICAÇÃO ÚNICA · SEM INSTALAÇÃO",
-      "title": "Análise gratuita de até 100 produtos",
+      "title": "Análise gratuita de todo o seu catálogo público",
       "description": "Introduza o domínio público da sua loja Shopify e e-mail. Enviaremos um link de confirmação para o seu e-mail e entregaremos o relatório completo assim que confirmado. A monitorização contínua faz parte da aplicação paga.",
       "benefit1": "Apenas produtos públicos",
       "benefit2": "Possíveis correspondências para rever",
@@ -358,7 +358,6 @@
     "one_more_click_then_we_can_begin": "Mais um clique. Depois podemos começar.",
     "you_requested_a_free_scan_of_a_public_shopify_catalog_confirm_": "Solicitou uma análise gratuita de um catálogo público da Shopify. Confirme o seu e-mail e continue para a página para iniciar a análise.",
     "scan_scope": "Âmbito da análise",
-    "up_to_value_public_products": "Até {{value0}} produtos públicos",
     "link_expires": "Link expira",
     "30_minutes_single_use": "30 minutos · uso único",
     "after_confirmation_and_start_we_will_check_the_available_publi": "Após a confirmação e início, verificaremos o catálogo público disponível. Enviaremos o resultado por e-mail quando a análise terminar.",
@@ -372,7 +371,6 @@
     "possible_matches_to_review": "Possíveis correspondências para rever",
     "no_matches_found": "Nenhuma correspondência encontrada",
     "products_checked": "Produtos verificados",
-    "one_off_scan_limit": "Limite de análise única",
     "potential_matches_to_review": "Potenciais correspondências para rever",
     "these_are_indicative_results_check_any_potential_match_against": "Estes são resultados indicativos. Verifique qualquer potencial correspondência em relação ao modelo, foto, lote e registo oficial do Safety Gate. Zero correspondências não certifica a segurança de todo o seu catálogo.",
     "we_completed_a_one_off_comparison_of_available_public_products": "Concluímos uma comparação única de produtos públicos disponíveis com a base de dados EU Safety Gate.",
@@ -391,6 +389,7 @@
     "state_waiting_for_supplier": "A aguardar fornecedor",
     "state_resolved": "Resolvido",
     "state_dismissed": "Ignorado",
-    "state_unknown": "Verifique a aplicação para o estado atual"
+    "state_unknown": "Verifique a aplicação para o estado atual",
+    "entire_public_catalog": "Todo o catálogo público"
   }
 }

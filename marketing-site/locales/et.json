@@ -35,7 +35,7 @@
     "installCta": "Installi Shopify App Store'ist",
     "exampleCta": "Vaata näidistulemust",
     "scanLink": "Või proovi tasuta poe auditit ↓",
-    "reassurance": "Tasuta audit teie e-posti aadressile: kuni 100 avalikku toodet.",
+    "reassurance": "Tasuta audit e-postiga: kogu avalik kataloog.",
     "visualCaption": "Illustratsioon, mitte tegelik tulemus.",
     "mockDemo": "ILLUSTREERIV EELVAADE",
     "mockEyebrow": "Toote kontroll",
@@ -153,7 +153,7 @@
     "q3": "Kas rakendus muudab minu tooteid?",
     "a3": "Ei. See näitab võimalikke vasteid ja tõendeid Shopify adminis. Teie otsustate, mida teha.",
     "q4": "Mida sisaldab tasuta skaneerimine?",
-    "a4": "Kuni 100 avalikku toodet ja e-posti teel saadetud kokkuvõte võimalikest vastetest. Privaatsed kuulutused on välja arvatud; skaneerimine ei ole ohutussertifikaat."
+    "a4": "Kõik poe avalikus Shopify kataloogis saadaolevad tooted ja võimalike vastete kokkuvõte e-postiga. Privaatsed tooted on välja jäetud; skannimine ei ole ohutussertifikaat."
   },
   "cta": {
     "title": "Alusta tasuta skaneerimisega",
@@ -220,7 +220,7 @@
   },
   "scan": {
     "eyebrow": "ÜHEKORDNE KONTROLL · INSTALLIMIST POLE",
-    "title": "Kuni 100 toote tasuta skaneerimine",
+    "title": "Kogu avaliku kataloogi tasuta skannimine",
     "description": "Sisestage oma avaliku Shopify poe domeen ja e-posti aadress. Saadame teie e-posti aadressile kinnituslingi ja edastame täieliku aruande pärast kinnitamist. Pidev jälgimine on osa tasulisest rakendusest.",
     "benefit1": "Ainult avalikud tooted",
     "benefit2": "Võimalikud vasted ülevaatamiseks",

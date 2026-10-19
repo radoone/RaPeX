@@ -13,3 +13,5 @@ The public free-scan form deliberately fails closed until a production Cloudflar
 Local Vite development uses Cloudflare's official dummy site key. The Firebase emulator may use the matching dummy secret; deployed Functions reject that secret. A Vite-only preview has no `/api/free-scan` backend, so it cannot complete a scan.
 
 Requests are limited to one per store and email per 24 hours, one per IP per hour, 50 requests per UTC day, and 20 confirmed scans per UTC day. These budgets are intentionally conservative for the free public service. A request must be confirmed within 30 minutes; an unconfirmed request never runs the costly scanner.
+
+Confirmed requests scan the entire available public catalog, 50 products per durable Cloud Task, until an empty page is returned. There is no total product ceiling. The report is submitted only after all pages complete; failures retry and cannot be reported as an all-clear. Existing request/day limits stay in force. Copy in all 24 languages describes the full public catalog. Private, unpublished and inaccessible products are excluded.

@@ -35,7 +35,7 @@
     "installCta": "Asenna Shopify App Storesta",
     "exampleCta": "Katso esimerkkilöytö",
     "scanLink": "Tai kokeile ilmaista kaupan auditointia ↓",
-    "reassurance": "Ilmainen auditointi sähköpostiisi: jopa 100 julkista tuotetta.",
+    "reassurance": "Maksuton tarkistus sähköpostitse: koko julkinen tuoteluettelo.",
     "visualCaption": "Kuvitus, ei todellinen tulos.",
     "mockDemo": "HAVAINNOLLINEN ESIMERKKI",
     "mockEyebrow": "Tuotetarkistus",
@@ -153,7 +153,7 @@
     "q3": "Muuttaako sovellus tuotteitani?",
     "a3": "Ei. Se näyttää mahdolliset osumat ja todisteet Shopify Adminissa. Sinä päätät, mitä tehdä.",
     "q4": "Mitä sisältyy ilmaiseen skannaukseen?",
-    "a4": "Jopa 100 julkista tuotetta ja sähköpostitse lähetetty yhteenveto mahdollisista osumista. Yksityiset listaukset on suljettu pois; skannaus ei ole turvallisuussertifikaatti."
+    "a4": "Kaikki kaupan julkisessa Shopify-tuoteluettelossa saatavilla olevat tuotteet ja yhteenveto mahdollisista osumista sähköpostitse. Yksityiset listaukset eivät sisälly tarkistukseen; tarkistus ei ole turvallisuustodistus."
   },
   "cta": {
     "title": "Aloita ilmaisella skannauksella",
@@ -220,7 +220,7 @@
   },
   "scan": {
     "eyebrow": "KERTAKUONTAINEN TARKISTUS · EI ASENNUSTA",
-    "title": "Ilmainen skannaus jopa 100 tuotteesta",
+    "title": "Koko julkisen tuoteluettelon maksuton tarkistus",
     "description": "Anna julkinen Shopify-kauppasi verkkotunnus ja sähköpostiosoite. Lähetämme vahvistuslinkin sähköpostiisi ja toimitamme täydellisen raportin vahvistuksen jälkeen. Jatkuva valvonta on osa maksullista sovellusta.",
     "benefit1": "Vain julkiset tuotteet",
     "benefit2": "Mahdolliset osumat tarkistettavaksi",

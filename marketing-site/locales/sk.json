@@ -35,7 +35,7 @@
     "installCta": "Inštalovať zo Shopify App Store",
     "exampleCta": "Pozrieť ukážku výsledku",
     "scanLink": "Alebo si vyskúšajte bezplatný audit ↓",
-    "reassurance": "Bezplatný audit na váš e-mail: do 100 verejných produktov.",
+    "reassurance": "Bezplatný audit e-mailom: celý verejný katalóg.",
     "visualCaption": "Ilustračná ukážka, nie skutočný výsledok.",
     "mockDemo": "ILUSTRAČNÁ UKÁŽKA",
     "mockEyebrow": "Kontrola produktu",
@@ -153,7 +153,7 @@
     "q3": "Mení aplikácia moje produkty?",
     "a3": "Nie. Ukáže možné zhody a podklady v Shopify Admine. O ďalšom kroku rozhodnete vy.",
     "q4": "Čo obsahuje bezplatný sken?",
-    "a4": "Najviac 100 verejných produktov a súhrn možných zhôd e-mailom. Súkromné ponuky nekontrolujeme; sken nie je osvedčením bezpečnosti."
+    "a4": "Všetky dostupné produkty vo verejnom Shopify katalógu vášho obchodu a súhrn možných zhôd e-mailom. Súkromné ponuky nekontrolujeme; sken nie je osvedčením bezpečnosti."
   },
   "cta": {
     "title": "Začnite bezplatným skenom",
@@ -220,8 +220,8 @@
   },
   "scan": {
     "eyebrow": "JEDNORAZOVÁ KONTROLA BEZ INŠTALÁCIE",
-    "title": "Bezplatný sken do 100 produktov",
-    "description": "Zadáte doménu verejného Shopify obchodu a e-mail. Na váš e-mail zašleme potvrdzovací odkaz a po potvrdení vám obratom doručíme kompletný report. Priebežné sledovanie je súčasťou platenej aplikácie.",
+    "title": "Bezplatný sken celého verejného katalógu",
+    "description": "Zadáte doménu verejného Shopify obchodu a e-mail. Po potvrdení e-mailu spustíme sken celého verejného katalógu. Report vám pošleme po dokončení. Priebežné sledovanie je súčasťou platenej aplikácie.",
     "benefit1": "Len verejné produkty",
     "benefit2": "Možné zhody na preverenie",
     "benefit3": "Produkty nemeníme",

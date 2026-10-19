@@ -35,7 +35,7 @@
     "installCta": "Instalēt no Shopify App Store",
     "exampleCta": "Skatīt rezultāta piemēru",
     "scanLink": "Vai izmēģiniet bezmaksas veikala auditu ↓",
-    "reassurance": "Bezmaksas audits uz jūsu e-pastu: līdz 100 publiskiem produktiem.",
+    "reassurance": "Bezmaksas audits e-pastā: viss publiskais katalogs.",
     "visualCaption": "Ilustrācija, nav reāls rezultāts.",
     "mockDemo": "ILUSTRATĪVS PRIEKŠSKATĪJUMS",
     "mockEyebrow": "Produkta pārbaude",
@@ -153,7 +153,7 @@
     "q3": "Vai lietotne maina manus produktus?",
     "a3": "Nē. Tā parāda iespējamās atbilstības un pierādījumus Shopify administrācijā. Jūs izlemjat, ko darīt.",
     "q4": "Kas ir iekļauts bezmaksas skenēšanā?",
-    "a4": "Līdz 100 publiskiem produktiem un e-pastā nosūtīts iespējamo atbilstību kopsavilkums. Privātie saraksti ir izslēgti; skenēšana nav drošības sertifikāts."
+    "a4": "Visi veikala publiskajā Shopify katalogā pieejamie produkti un iespējamo atbilstību kopsavilkums e-pastā. Privātie piedāvājumi netiek iekļauti; pārbaude nav drošības sertifikāts."
   },
   "cta": {
     "title": "Sāciet ar bezmaksas skenēšanu",
@@ -220,7 +220,7 @@
   },
   "scan": {
     "eyebrow": "VIENREIZĒJA PĀRBAUDE · NAV INSTALĀCIJAS",
-    "title": "Bezmaksas skenēšana līdz 100 produktiem",
+    "title": "Visa publiskā kataloga bezmaksas pārbaude",
     "description": "Ievadiet savu publisko Shopify veikala domēnu un e-pastu. Mēs nosūtīsim apstiprinājuma saiti uz jūsu e-pastu un piegādāsim pilnu ziņojumu pēc apstiprināšanas. Nepārtraukta uzraudzība ir daļa no maksas lietotnes.",
     "benefit1": "Tikai publiski produkti",
     "benefit2": "Iespējamās atbilstības pārskatīšanai",
