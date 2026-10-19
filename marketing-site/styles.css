@@ -1,5 +1,5 @@
 /* 
- * Safety Gate Monitor – Clean, Minimalist, High-Trust Marketing Stylesheet
+ * ZeroRecall – Clean, Minimalist, High-Trust Marketing Stylesheet
  * Strictly eliminates AI-slop decorations, neon glows, and card-in-card clutter.
  */
 
@@ -1005,7 +1005,11 @@ a {
 .hero-section { padding: 66px 0 34px; text-align: left; }
 .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.02fr); align-items: center; gap: clamp(30px, 5vw, 78px); }
 .hero-copy { max-width: 575px; }
-.hero-title { font-size: clamp(44px, 4.9vw, 72px); letter-spacing: -.035em; word-spacing: .08em; line-height: 1.02; margin: 16px 0 24px; }
+.hero-title { font-size: clamp(40px, 4.2vw, 60px); letter-spacing: -.035em; word-spacing: .03em; line-height: 1.08; margin: 16px 0 20px; }
+.hero-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 28px; margin: 0 0 26px; padding-left: 18px; color: var(--text-muted); font-size: 13px; line-height: 1.45; }
+.hero-summary li::marker { color: var(--text-main); font-weight: 700; }
+.scan-unavailable-actions:not([hidden]) { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-top: 20px; }
+#free-scan { scroll-margin-top: 24px; }
 .hero-subtitle { font-size: clamp(17px, 1.6vw, 20px); line-height: 1.52; margin: 0 0 28px; }
 .hero-actions { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
 .hero-reassurance { border-left: 2px solid #b4cdb8; color: var(--text-subtle); font-size: 14px; margin: 30px 0 0; max-width: 430px; padding-left: 13px; }
@@ -1046,7 +1050,7 @@ a {
 .example-decision strong { color: var(--primary); white-space: nowrap; }
 .example-decision p { margin: 0; color: var(--text-muted); }
 .example-disclaimer { color: var(--text-subtle); font-size: 12px; margin: 12px 0 0; }
-.finding-preview { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 22px; padding: 20px 22px; margin-top: 30px; background: #fff; border: 1px solid var(--border); border-left: 4px solid #b56d45; border-radius: 10px; }
+.finding-preview { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 22px; padding: 20px 22px; margin-top: 30px; background: #fff; border: 1px solid var(--border); border-radius: 10px; }
 .finding-preview__status { color: #7e3c23; background: #f9ede6; border-radius: 100px; padding: 7px 12px; font-size: 12px; font-weight: 700; white-space: nowrap; }
 .finding-preview strong { display: block; font-size: 17px; }
 .finding-preview p { color: var(--text-muted); font-size: 14px; margin: 3px 0 0; }
@@ -1075,7 +1079,7 @@ a {
 .quiet-section { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 70px; border-bottom: 1px solid var(--border); }
 .quiet-section__copy { font-size: 18px; line-height: 1.6; color: var(--text-muted); }
 .quiet-section__note { font-size: 13px; color: var(--text-subtle); border-left: 2px solid #b4cdb8; padding-left: 13px; }
-.workflow-card { border: 0; border-left: 2px solid var(--border); border-radius: 0; padding: 4px 0 4px 23px; background: transparent; }
+.workflow-card { border: 0; border-left: 1px solid var(--border); border-radius: 0; padding: 4px 0 4px 23px; background: transparent; }
 .step-num { font-size: 12px; letter-spacing: .1em; }
 .step-title { font-size: 20px; }
 .step-desc, .faq-answer { font-size: 15px; }
@@ -1117,8 +1121,9 @@ a {
   .brand-text { font-size: 14px; line-height: 1.15; }
   .nav-actions { margin-left: auto; gap: 7px; }
   .nav-actions > .btn { display: none; }
-  .hero-section { padding: 48px 0 28px; }
-  .hero-title { font-size: clamp(42px, 11vw, 56px); }
+  .hero-section { padding: 34px 0 28px; }
+  .hero-title { font-size: clamp(34px, 8vw, 44px); }
+  .hero-summary { font-size: 12px; column-gap: 22px; }
   .hero-actions { align-items: stretch; flex-direction: column; gap: 17px; }
   .hero-actions .btn { width: 100%; }
   .hero-visual img { aspect-ratio: 1.2 / 1; }

@@ -103,7 +103,10 @@ function initFormHandler() {
     const sitekey = import.meta.env.VITE_TURNSTILE_SITE_KEY || (import.meta.env.DEV ? "1x00000000000000000000AA" : "");
     if (!sitekey || (import.meta.env.PROD && sitekey === "1x00000000000000000000AA")) {
       submitBtn.disabled = true;
-      showFeedback("error", "scan.requestErrorTitle", "scan.challengeUnavailable");
+      form.hidden = true;
+      const alternatives = document.getElementById("scan-unavailable-actions");
+      if (alternatives) alternatives.hidden = false;
+      showFeedback("error", "scan.unavailableTitle", "scan.unavailableBody");
       return;
     }
     try {

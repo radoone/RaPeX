@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "Monitoring bezpečnosti produktov pre Shopify | Safety Gate Monitor",
+    "title": "Monitoring bezpečnosti produktov pre Shopify | ZeroRecall",
     "description": "Porovnáme Shopify produkty s upozorneniami Safety Gate. Možné zhody preveríte vy."
   },
   "nav": {
@@ -8,10 +8,11 @@
     "gpsr": "Pravidlá EÚ",
     "faq": "Časté otázky",
     "about": "O nás",
-    "homeLabel": "Domovská stránka Safety Gate Monitor",
+    "homeLabel": "Domovská stránka ZeroRecall",
     "primaryLabel": "Hlavná navigácia",
     "officialRapex": "Oficiálny portál EÚ ↗",
     "freeScan": "Bezplatný sken",
+    "installApp": "Inštalovať aplikáciu",
     "language": "Jazyk",
     "locales": {
       "en": "EN",
@@ -22,17 +23,18 @@
   },
   "hero": {
     "badge": "BEZPEČNOSŤ PRODUKTOV PRE SHOPIFY",
-    "title": "Venujte sa obchodu. Produkty preveríme za vás.",
-    "subtitle": "Po inštalácii porovnávame vaše produkty s upozorneniami Safety Gate na nebezpečné výrobky. Novú možnú zhodu oznámime hneď e-mailom; ak nepribudne žiadna, pošleme týždenný prehľad.",
+    "title": "Preverte produkty v databáze nebezpečných výrobkov EÚ.",
+    "subtitle": "ZeroRecall porovnáva produkty z vášho Shopify obchodu s oficiálnymi upozorneniami Safety Gate. Pri možnej zhode dostanete e-mail a podklady na preverenie.",
     "inputPlaceholder": "vas-obchod.myshopify.com",
     "emailPlaceholder": "vas-email@obchod.sk",
     "ctaButton": "Bezplatný sken",
     "subtext": "Bez platobnej karty • Výsledok e-mailom",
     "successTitle": "Sken beží",
     "successBody": "Preverujeme verejné produkty. Výsledok po dokončení pošleme e-mailom.",
-    "exampleCta": "Ukážka výsledku",
-    "scanLink": "Bezplatný sken ↓",
-    "reassurance": "Len verejné produkty. Bez prístupu do Shopify Adminu.",
+    "installCta": "Inštalovať zo Shopify App Store",
+    "exampleCta": "Pozrieť ukážku výsledku",
+    "scanLink": "Alebo si vyskúšajte bezplatný audit ↓",
+    "reassurance": "Bezplatný audit na váš e-mail: do 100 verejných produktov.",
     "visualCaption": "Ilustračná ukážka, nie skutočný výsledok.",
     "mockDemo": "ILUSTRAČNÁ UKÁŽKA",
     "mockEyebrow": "Kontrola produktu",
@@ -41,8 +43,12 @@
     "mockYourProduct": "Váš produkt",
     "mockProductName": "Detské odrážadlo",
     "mockAlert": "Upozornenie Safety Gate",
-    "mockAlertName": "Podobná kategória produktu",
-    "mockReason": "Pred rozhodnutím porovnajte model a šaržu."
+    "mockAlertName": "Podobný výrobok v upozornení EÚ",
+    "mockReason": "Pred rozhodnutím porovnajte model a šaržu.",
+    "flowLabel": "Ako služba funguje",
+    "flowCatalog": "Váš Shopify katalóg",
+    "flowCompare": "Porovnanie s databázou EÚ",
+    "flowResult": "Upozornenie na možnú zhodu"
   },
   "showcase": {
     "eyebrow": "ILUSTRAČNÉ UKÁŽKY",
@@ -115,13 +121,13 @@
   },
   "workflow": {
     "eyebrow": "Ako to funguje",
-    "title": "Ako preveríte produkty",
-    "step1Title": "1. Bezplatný sken",
-    "step1Desc": "Porovnáme najviac 100 verejných produktov s upozorneniami Safety Gate.",
-    "step2Title": "2. Porovnanie produktov",
-    "step2Desc": "Preverte fotografie, model a šaržu. Možná zhoda ešte nepotvrdzuje nebezpečný produkt.",
-    "step3Title": "3. Vaše rozhodnutie",
-    "step3Desc": "Po inštalácii riešite zhody a zaznamenávate rozhodnutia v Shopify Admine."
+    "title": "Od vášho produktu k jasnému ďalšiemu kroku",
+    "step1Title": "Porovnáme produkty",
+    "step1Desc": "Názov, značku, model a fotografie porovnáme s upozorneniami EÚ na nebezpečné výrobky.",
+    "step2Title": "Upozorníme na možnú zhodu",
+    "step2Desc": "E-mailom dostanete výsledok a podklady, podľa ktorých môžete zhodu preveriť.",
+    "step3Title": "Rozhodnete, čo ďalej",
+    "step3Desc": "Porovnáte model, fotografie a šaržu. V aplikácii zaznamenáte výsledok preverenia."
   },
   "compliance": {
     "eyebrow": "Právny rámec",
@@ -151,7 +157,7 @@
     "button": "Bezplatný sken"
   },
   "about": {
-    "metaTitle": "O Safety Gate Monitor – Monitoring bezpečnosti produktov pre Shopify",
+    "metaTitle": "O ZeroRecall – Monitoring bezpečnosti produktov pre Shopify",
     "metaDescription": "Pomáhame Shopify obchodníkom preverovať možné zhody s nebezpečnými výrobkami v Safety Gate.",
     "eyebrow": "O nás",
     "title": "Viac času na obchod. Viac pokoja.",
@@ -178,7 +184,7 @@
     "ctaButton": "Bezplatný sken",
     "contactTitle": "Máte otázku?",
     "contactBody": "Sme nezávislý projekt. Napíšte nám o aplikácii, skene alebo svojich údajoch.",
-    "contactLink": "Napísať na radoone@radoone.eu"
+    "contactLink": "Napísať na radoone@gmail.com"
   },
   "footer": {
     "text": "Viac pokoja vďaka priebežnej kontrole Shopify produktov.",
@@ -209,9 +215,9 @@
     "findingAction": "Porovnať model a šaržu →"
   },
   "scan": {
-    "eyebrow": "ZAČNITE VEREJNÝM KATALÓGOM",
-    "title": "Bezplatný sken produktov",
-    "description": "Preveríme najviac 100 verejných produktov. Výsledok pošleme e-mailom. Bez prihlásenia a platobnej karty.",
+    "eyebrow": "JEDNORAZOVÁ KONTROLA BEZ INŠTALÁCIE",
+    "title": "Bezplatný sken do 100 produktov",
+    "description": "Zadáte doménu verejného Shopify obchodu a e-mail. Na váš e-mail zašleme potvrdzovací odkaz a po potvrdení vám obratom doručíme kompletný report. Priebežné sledovanie je súčasťou platenej aplikácie.",
     "benefit1": "Len verejné produkty",
     "benefit2": "Možné zhody na preverenie",
     "benefit3": "Produkty nemeníme",
@@ -220,8 +226,8 @@
     "privacyNote": "Sken spustíme po potvrdení e-mailu. Výsledok pošleme na tú istú adresu.",
     "challengeRequired": "Pred odoslaním dokončite overenie proti robotom.",
     "challengeUnavailable": "Overenie proti robotom je nedostupné. Sken sa nespustil; skúste neskôr.",
-    "verifyEmailTitle": "Skontrolujte svoj e-mail",
-    "verifyEmailBody": "Otvorte odkaz a potvrďte sken na stránke. Odkaz platí 30 minút.",
+    "verifyEmailTitle": "Skontrolujte si e-mailovú schránku",
+    "verifyEmailBody": "Poslali sme vám e-mail s potvrdzovacím odkazom pre spustenie auditu. Odkaz platí 30 minút.",
     "confirmTitle": "Potvrďte e-mail a spustite sken",
     "confirmBody": "Preveríme verejný Shopify katalóg. Výsledok pošleme e-mailom.",
     "confirmButton": "Potvrdiť a spustiť sken",
@@ -246,7 +252,10 @@
     "failedBody": "Katalóg sa nepodarilo preveriť. Skontrolujte doménu a skúste neskôr.",
     "requestErrorTitle": "Požiadavka nebola odoslaná",
     "requestErrorBody": "Služba je nedostupná. Sken sa nespustil; skúste neskôr.",
-    "rateLimitBody": "Pre tento obchod alebo pripojenie už bola nedávno odoslaná žiadosť. Skúste neskôr."
+    "rateLimitBody": "Pre tento obchod alebo pripojenie už bola nedávno odoslaná žiadosť. Skúste neskôr.",
+    "unavailableTitle": "Bezplatný sken je momentálne nedostupný",
+    "unavailableBody": "Sken teraz nie je možné spustiť. Pozrite si ukážku výsledku alebo nám napíšte.",
+    "contactLink": "Kontaktovať nás"
   },
   "quiet": {
     "eyebrow": "VIAC POKOJA PRE VÁŠ OBCHOD",
@@ -255,11 +264,12 @@
     "note": "Vy sa venujete obchodu. Žiadny nový nález však neznamená záruku bezpečnosti produktov."
   },
   "pricing": {
-    "eyebrow": "JEDNODUCHÁ CENA",
-    "title": "Jedna mesačná cena",
-    "body": "Rovnaké funkcie pre každý Shopify obchod.",
+    "eyebrow": "PRIEBEŽNÉ SLEDOVANIE PO INŠTALÁCII",
+    "title": "Kontrola pokračuje aj po prvom skene",
+    "body": "Aplikácia v Shopify sleduje nové upozornenia Safety Gate a zmenené produkty. Pri novej možnej zhode pošle e-mail. Ak žiadna nepribudne, dostanete týždenný prehľad.",
     "period": "/ mesiac",
     "scope": "Za jeden obchod. Platba cez Shopify po výbere plánu.",
-    "cta": "Bezplatný sken"
+    "installCta": "Inštalovať zo Shopify App Store",
+    "cta": "Pozrieť jednorazový bezplatný sken"
   }
 }
