@@ -17,7 +17,7 @@ If you only remember one sentence, remember this:
 
 - The public marketing brand is **ZeroRecall**, with canonical URL `https://zerorecall.online`; Safety Gate remains the name of the official EU data source.
 - Marketing sources live in `marketing-site/`; build with `npm run marketing:build` and deploy only Firebase Hosting for website-only releases. The Firebase site ID remains `rapex-99a2c`.
-- Until `info@zerorecall.online` forwarding is active and verified, marketing contact links use `radoone@gmail.com`. Custom-domain DNS and HTTPS provisioning must be verified separately from a successful Hosting deployment.
+- ZeroRecall application email uses the authenticated Brevo sender `info@zerorecall.online` (`BREVO_SENDER_EMAIL`) with `BREVO_SENDER_NAME=ZeroRecall`. Cloudflare Email Routing forwards incoming `info@` mail to `radoone@gmail.com`; keep Cloudflare MX/SPF and Brevo DKIM records together. Marketing contact links currently use `radoone@gmail.com`. Custom-domain DNS and HTTPS provisioning must be verified separately from a successful Hosting deployment.
 
 - `RAPEX` is the older name used across the codebase and Firestore collection names.
 - `Safety Gate` is the current public name of the EU system.
