@@ -1,0 +1,17 @@
+{
+  "requestId": "3c61d15c280c44ef847b",
+  "testKind": "owner_notification_only_no_catalog_scan",
+  "ownerNotice": "accepted",
+  "messageId": "<202610210813.96432920095@smtp-relay.mailin.fr>",
+  "events": [
+    {
+      "event": "delivered",
+      "date": "2026-10-21T10:13:46.000+02:00"
+    },
+    {
+      "event": "requests",
+      "date": "2026-10-21T10:13:45.500+02:00"
+    }
+  ],
+  "testRecordTtlHours": 24
+}

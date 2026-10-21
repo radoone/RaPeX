@@ -142,6 +142,7 @@ function initFormHandler() {
   }
 
   async function loadChallenge() {
+    submitBtn.disabled = true;
     const sitekey = import.meta.env.VITE_TURNSTILE_SITE_KEY || (import.meta.env.DEV ? "1x00000000000000000000AA" : "");
     if (!sitekey || (import.meta.env.PROD && sitekey === "1x00000000000000000000AA")) {
       submitBtn.disabled = true;
@@ -169,7 +170,7 @@ function initFormHandler() {
           if (!requestSubmitted) submitBtn.disabled = false;
           if (feedback.dataset.state === "error") feedback.hidden = true;
         },
-        "expired-callback": () => { turnstileToken = ""; },
+        "expired-callback": () => { turnstileToken = ""; submitBtn.disabled = true; },
         "error-callback": () => {
           turnstileToken = "";
           if (requestSubmitted) return;
@@ -287,7 +288,7 @@ function initFormHandler() {
           showFeedback("error", "scan.requestErrorTitle", "scan.requestErrorBody");
         }
         resetChallenge();
-        submitBtn.disabled = false;
+        submitBtn.disabled = true;
         return;
       }
       const request = await response.json();
@@ -298,7 +299,7 @@ function initFormHandler() {
       console.error("Could not request free scan", error);
       showFeedback("error", "scan.requestErrorTitle", "scan.requestErrorBody");
       resetChallenge();
-      submitBtn.disabled = false;
+      submitBtn.disabled = true;
     }
   });
 }

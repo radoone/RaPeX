@@ -18,6 +18,7 @@ import { handleCheckProductSafetyRequest } from "./safety-gate-http.js";
 import { handleScanPublicShopifyStoreRequest } from "./public-store-scanner.js";
 import { handleFreeScanRequest, processFreeScanRequest } from "./free-scan.js";
 import { handleFreeScanCatalogTask } from "./free-scan-worker.js";
+import { handleFreeScanOwnerCreated } from "./free-scan-owner-notification.js";
 import {
   handleBrevoWebhook,
   handleImmediateAlertCreated,
@@ -427,4 +428,10 @@ export const freeScanCatalogTask = onTaskDispatched(
     secrets: ["GOOGLE_API_KEY", "BREVO_API_KEY"],
   },
   async request => handleFreeScanCatalogTask(request.data, request.context.retryCount),
+);
+
+
+export const notifyFreeScanOwner = onDocumentCreated(
+  { document: "free_scan_requests/{requestId}", region: "europe-west1", memory: "256MiB", timeoutSeconds: 60, maxInstances: 2, retry: true, secrets: ["BREVO_API_KEY"] },
+  async event => handleFreeScanOwnerCreated(event.params.requestId),
 );

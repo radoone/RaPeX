@@ -72,7 +72,7 @@ function note(title: string, text: string, warning = false): string {
 
 function shell(options: {
   language: string; title: string; preheader: string; status: string; warning?: boolean;
-  body: string; action: string; url: string; after?: string; settingsUrl?: string;
+  body: string; action: string; url: string; after?: string; settingsUrl?: string; footerText?: string;
 }): string {
   const language = normalizeEmailLanguage(options.language);
   const actionUrl = httpsUrl(options.url);
@@ -95,7 +95,7 @@ ${options.after || ""}
 <p style="margin:24px 0 0;font-size:12px;line-height:1.6;color:#68726b">${emailText(language, "if_the_button_does_not_work_open_this_link")}<br><a href="${escapeEmailHtml(actionUrl)}" style="color:${GREEN};overflow-wrap:anywhere;word-break:break-all">${escapeEmailHtml(actionUrl)}</a></p>
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:28px;border-top:1px solid #d9ddd4"><tr><td style="padding-top:20px;font-size:12px;line-height:1.8;color:#68726b">
 <strong style="color:#243b2e">ZeroRecall</strong> · ${emailText(language, "product_safety_for_shopify")}<br>
-${settings ? (emailText(language, "you_receive_this_email_based_on_your_store_s_notification_sett")) : (emailText(language, "this_email_relates_to_your_one_off_scan_request"))}<br>
+${options.footerText ? escapeEmailHtml(options.footerText) : settings ? emailText(language, "you_receive_this_email_based_on_your_store_s_notification_sett") : emailText(language, "this_email_relates_to_your_one_off_scan_request")}<br>
 ${settings ? `<a href="${escapeEmailHtml(settings)}" style="color:${GREEN}">${emailText(language, "email_preferences")}</a> · ` : ""}<a href="mailto:info@zerorecall.online" style="color:${GREEN}">info@zerorecall.online</a> · <a href="${HOME}" style="color:${GREEN}">zerorecall.online</a>
 </td></tr></table>
 </td></tr></table><!--[if mso]></td></tr></table><![endif]-->
@@ -212,5 +212,23 @@ export function renderScanReportEmail(language: string, domain: string, lead: { 
     subject: `ZeroRecall: ${emailText(language, "catalog_scan_result")} – ${domain}`,
     htmlContent: shell({ language, title, status, warning: lead.flaggedProductsCount > 0, preheader: `${domain} · ${lead.totalProductsScanned} ${emailText(language, "products_checked_2")} · ${status}`, body: paragraph(intro) + facts(rows) + matchesHtml + note(emailText(language, "how_to_interpret_the_result"), caveat, lead.flaggedProductsCount > 0) + official, action: emailText(language, "explore_ongoing_monitoring"), url: `${home.replace(/\/$/, "")}/?lang=${normalizeEmailLanguage(language)}#how-it-works`, after: note(emailText(language, "what_comes_next"), next) }),
     textContent: `${title}\n\n${intro}\n\n${rows.map(([label, value]) => `${label}: ${value}`).join("\n")}\n\n${matches.map(match => `${match.title}${match.url ? `\n${match.url}` : ""}${match.reference ? `\nSafety Gate: ${match.reference}` : ""}`).join("\n\n")}\n\n${caveat}\n\n${SAFETY_GATE}\n\n${next}\n${home}${plainFooter(language)}`,
+  };
+}
+
+
+/** Internal owner notification: request receipt, never a confirmation token or a scan result. */
+export function renderFreeScanOwnerEmail(data: { domain: string; email: string; requestedAt: Date }): EmailContent {
+  const title = "Nová žiadosť o bezplatný sken";
+  const rows: Array<[string, string]> = [
+    ["Obchod", data.domain], ["E-mail žiadateľa", data.email],
+    ["Prijaté", new Intl.DateTimeFormat("sk", { dateStyle: "medium", timeStyle: "short", timeZone: "Europe/Bratislava" }).format(data.requestedAt)],
+    ["Rozsah", "Celý dostupný verejný katalóg"],
+  ];
+  const explanation = "Na webe pribudla nová žiadosť. Sken sa spustí až po potvrdení e-mailu žiadateľom. Toto upozornenie nepotvrdzuje dokončenie skenu ani doručenie jeho reportu.";
+  const url = `https://${data.domain}/`;
+  return {
+    subject: `ZeroRecall: nová žiadosť o sken – ${data.domain}`,
+    htmlContent: shell({ language: "sk", title, preheader: `${data.domain} · nová žiadosť`, status: "Žiadosť prijatá", body: paragraph(explanation) + facts(rows), action: "Otvoriť obchod", url, footerText: "Interné upozornenie pre prevádzkovateľa ZeroRecall." }),
+    textContent: `${title}\n\n${explanation}\n\n${rows.map(([label, value]) => `${label}: ${value}`).join("\n")}\n\n${url}${plainFooter("sk")}`,
   };
 }
