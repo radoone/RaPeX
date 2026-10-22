@@ -2,7 +2,33 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";
 
-const { freeScanTestUtils } = await import("../lib/free-scan.js");
+const { freeScanTestUtils, sendFreeScanReport } = await import("../lib/free-scan.js");
+
+test("report submission retries accept only provider-confirmed idempotency duplicates", async () => {
+  const originalFetch = global.fetch;
+  const originalKey = process.env.BREVO_API_KEY;
+  const originalSender = process.env.BREVO_SENDER_EMAIL;
+  process.env.BREVO_API_KEY = "unit-test-placeholder";
+  process.env.BREVO_SENDER_EMAIL = "info@example.com";
+  const data = { locale: "en", domain: "example.myshopify.com", email: "merchant@example.com" };
+  const result = { success: true, lead: { totalProductsScanned: 2, flaggedProductsCount: 0, matches: [] } };
+  try {
+    global.fetch = async (_url, options) => {
+      assert.equal(JSON.parse(options.body).headers["Idempotency-Key"], "free-scan-test-request");
+      assert.ok(options.signal);
+      return { ok: false, status: 400, json: async () => ({ code: "duplicate_parameter", message: "idempotency key already used" }) };
+    };
+    await sendFreeScanReport("test-request", data, result);
+    global.fetch = async () => ({ ok: false, status: 400, json: async () => ({ code: "duplicate_parameter", message: "recipient invalid" }) });
+    await assert.rejects(sendFreeScanReport("test-request", data, result), /rejected/);
+    global.fetch = async () => ({ ok: true, status: 201, json: async () => ({}) });
+    await assert.rejects(sendFreeScanReport("test-request", data, result), /acceptance/);
+  } finally {
+    global.fetch = originalFetch;
+    if (originalKey === undefined) delete process.env.BREVO_API_KEY; else process.env.BREVO_API_KEY = originalKey;
+    if (originalSender === undefined) delete process.env.BREVO_SENDER_EMAIL; else process.env.BREVO_SENDER_EMAIL = originalSender;
+  }
+});
 
 test("public scan accepts only a Shopify-hosted catalog domain", () => {
   assert.equal(freeScanTestUtils.normalizedDomain(" HTTPS://Example-Store.myshopify.com/ "), "example-store.myshopify.com");

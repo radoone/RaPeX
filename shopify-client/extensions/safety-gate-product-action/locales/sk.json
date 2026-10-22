@@ -1,0 +1,22 @@
+{
+  "runCheck": "Spustiť kontrolu",
+  "openReview": "Otvoriť preverenie",
+  "close": "Zavrieť",
+  "again": "Skontrolovať znova",
+  "done": "Hotovo",
+  "checking": "Prebieha kontrola…",
+  "needsReview": "Vyžaduje preverenie",
+  "noMatch": "Nenašla sa pravdepodobná zhoda",
+  "resolved": "Rozhodnutie zaznamenané",
+  "unchecked": "Neskontrolované",
+  "checkFailed": "Kontrola produktu zlyhala",
+  "loadFailed": "Stav kontroly sa nepodarilo načítať",
+  "unavailable": "Sledovanie Safety Gate momentálne nie je dostupné.",
+  "loading": "Načítava sa stav kontroly produktu…",
+  "description": "Porovnajte tento Shopify produkt so záznamami Safety Gate a preverte možné zhody.",
+  "details": "Odporúčanie a podrobnosti",
+  "reason": "Dôvod",
+  "checked": "Posledná kontrola",
+  "risk": "Úroveň rizika",
+  "name": "Spustiť kontrolu Safety Gate"
+}

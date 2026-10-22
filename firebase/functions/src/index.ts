@@ -17,6 +17,8 @@ import {
 import { handleCheckProductSafetyRequest } from "./safety-gate-http.js";
 import { handleScanPublicShopifyStoreRequest } from "./public-store-scanner.js";
 import { handleFreeScanRequest, processFreeScanRequest } from "./free-scan.js";
+import { handleFreeScanCatalogTask } from "./free-scan-worker.js";
+import { handleFreeScanOwnerCreated } from "./free-scan-owner-notification.js";
 import {
   handleBrevoWebhook,
   handleImmediateAlertCreated,
@@ -394,7 +396,7 @@ export const scanPublicShopifyStoreAPI = onRequest(
   handleScanPublicShopifyStoreRequest,
 );
 
-// Public marketing-site intake. Expensive scans run only after a bounded request is queued.
+// Public marketing-site intake. Confirmed scans continue through durable catalog-page tasks.
 export const freeScanRequestAPI = onRequest(
   { region: "europe-west1", maxInstances: 10, secrets: ["TURNSTILE_SECRET_KEY", "BREVO_API_KEY"] },
   handleFreeScanRequest,
@@ -403,6 +405,7 @@ export const freeScanRequestAPI = onRequest(
 export const processFreeScanRequestJob = onDocumentUpdated(
   {
     document: "free_scan_requests/{requestId}",
+    retry: true,
     region: "europe-west1",
     memory: "1GiB",
     timeoutSeconds: 540,
@@ -414,4 +417,21 @@ export const processFreeScanRequestJob = onDocumentUpdated(
       await processFreeScanRequest(event.params.requestId);
     }
   },
+);
+
+
+export const freeScanCatalogTask = onTaskDispatched(
+  {
+    region: "europe-west1", memory: "1GiB", timeoutSeconds: 1800, maxInstances: 2,
+    rateLimits: { maxConcurrentDispatches: 2, maxDispatchesPerSecond: 1 },
+    retryConfig: { maxAttempts: 8, maxRetrySeconds: 86400, minBackoffSeconds: 30, maxBackoffSeconds: 300, maxDoublings: 4 },
+    secrets: ["GOOGLE_API_KEY", "BREVO_API_KEY"],
+  },
+  async request => handleFreeScanCatalogTask(request.data, request.context.retryCount),
+);
+
+
+export const notifyFreeScanOwner = onDocumentCreated(
+  { document: "free_scan_requests/{requestId}", region: "europe-west1", memory: "256MiB", timeoutSeconds: 60, maxInstances: 2, retry: true, secrets: ["BREVO_API_KEY"] },
+  async event => handleFreeScanOwnerCreated(event.params.requestId),
 );

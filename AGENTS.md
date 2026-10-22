@@ -15,6 +15,11 @@ If you only remember one sentence, remember this:
 
 ## Naming
 
+- The public marketing brand is **ZeroRecall**, with canonical URL `https://zerorecall.online`; Safety Gate remains the name of the official EU data source.
+- The Shopify app local display brand is **ZeroRecall** too. Keep the existing technical app handle `safety-gate-monitor-eu` and client ID so installed-app URLs, billing links and email deep links stay valid. On 20 October 2026, Shopify release `zerorecall-api-2026-07-20261020` upgraded both product extensions to supported API `2026-07` and completed the public rename; the ZeroRecall Shopify sidebar and heading were browser-verified. The release used scoped sources under `outputs/shopify-api-release-2026-10-20/source`: committed extension logic plus the supported SDK/config and explicit Preact JSX pragma, preserving other uncommitted extension UX changes locally. The hosted web app and Firebase backend were not redeployed.
+- Marketing sources live in `marketing-site/`; build with `npm run marketing:build` and deploy only Firebase Hosting for website-only releases. The Firebase site ID remains `rapex-99a2c`.
+- ZeroRecall application email uses the authenticated Brevo sender `info@zerorecall.online` (`BREVO_SENDER_EMAIL`) with `BREVO_SENDER_NAME=ZeroRecall`. Cloudflare Email Routing forwards incoming `info@` mail to `radoone@gmail.com`; keep Cloudflare MX/SPF and Brevo DKIM records together. Public marketing contact links use `info@zerorecall.online`, including localized privacy and About pages. Custom-domain DNS and HTTPS provisioning must be verified separately from a successful Hosting deployment.
+
 - `RAPEX` is the older name used across the codebase and Firestore collection names.
 - `Safety Gate` is the current public name of the EU system.
 - In practice, both names refer to the same project context in this repository.
@@ -53,12 +58,12 @@ Main collections:
 - `rapex_alerts`: imported Safety Gate records
 - `rapex_alert_images`: per-image embedding documents for recent Safety Gate alerts (lightweight, stores only image metadata + vector without duplicated alert fields)
 - `rapex_meta/loader_state`: loader checkpoint and run status
-- `rapex_match_cache`: short-lived cache for AI match determinations with 30-day Firestore TTL (`expireAt`)
+- `merchant_match_cache`: short-lived cache for AI match determinations with a 30-day Firestore TTL (`expireAt`)
 - `merchants`: tenant root documents storing per-shop settings and monitor state
 - `merchants/{shop}/products`: per-shop Shopify product snapshots with vector embeddings
 - `merchants/{shop}/alerts`: per-shop alert records for matched Shopify products
 - `merchants/{shop}/alerts/{alertId}/decision_events`: immutable merchant decisions with actor, timestamp, outcome, and workflow state
-- `merchants/{shop}/checks`: per-shop check history
+- `merchants/{shop}/checks`: per-shop check history with a 90-day Firestore TTL (`expireAt`)
 - `merchants/{shop}/activity_logs`: per-shop activity audit trail
 - `merchants/{shop}/webhook_errors`: per-shop webhook error log
 - `shopify_sessions`: private Shopify OAuth sessions when the hosted Firestore session adapter is enabled; uninstall and `shop/redact` webhooks must delete these documents
@@ -129,6 +134,65 @@ can be worked on without changing Shopify auth or app routes.
 16. The first dashboard audit is enqueued to `merchantCatalogAuditTask`. Each retryable task imports one Shopify page (up to 100 products), reuses unchanged Firestore embeddings, batches text embeddings in groups of 50, and advances the cursor only after the whole page is persisted. It then checks all indexed Safety Gate history in 500-alert pages, using the merchant monitoring vector shortlist before Gemini. Run state and safe progress counts live under `merchants/{shop}/initial_catalog_runs/{runId}` and on the merchant root; task payloads never include access tokens. The app mirrors its offline Shopify session into private `shopify_sessions` when starting the job, and uninstall / `shop/redact` delete that copy. Product import does not set `lastCheckedAt` or count as a completed safety check.
 17. Prisma remains only for Shopify sessions.
 
+## ZeroRecall domain and application email
+
+### Ownership and traffic flow
+
+- Domain registration stays at Websupport. Authoritative DNS is hosted by Cloudflare using `arturo.ns.cloudflare.com` and `tessa.ns.cloudflare.com`.
+- `https://zerorecall.online` serves Firebase Hosting site `rapex-99a2c`. Its root A record is `199.36.158.100`; root TXT is `hosting-site=rapex-99a2c`. Keep the old Websupport root A/AAAA records removed. HTTP redirects to HTTPS.
+- `www.zerorecall.online` has a DNS-only CNAME to `rapex-99a2c.web.app` and a Firebase custom-domain redirect to `zerorecall.online`. Its certificate provisioning is separate from the root domain; verify its current TLS status before claiming it works.
+- Incoming email: `info@zerorecall.online` → Cloudflare Email Routing → `radoone@gmail.com`. The `info@` routing rule is enabled and the destination is verified. Catch-all is disabled.
+- Outgoing application email: Firebase Functions → Brevo transactional API → recipient. The verified Brevo sender is `ZeroRecall <info@zerorecall.online>` (sender ID `2`). This does not configure Gmail's “Send as” feature. Replies to `info@` follow the Cloudflare incoming route.
+
+### DNS records for email
+
+Keep Cloudflare's incoming-mail records and Brevo's outgoing authentication records together. They serve different purposes. Do not restore Websupport MX records, proxy DKIM CNAMEs, create a second SPF record, or weaken DMARC to `p=none` merely because a provider example uses it.
+
+| Type | Name | Value / purpose |
+| --- | --- | --- |
+| MX | `@` | Cloudflare-managed `route1.mx.cloudflare.net` (43), `route2.mx.cloudflare.net` (72), `route3.mx.cloudflare.net` (62) |
+| TXT | `@` | `v=spf1 include:_spf.mx.cloudflare.net ~all` |
+| TXT | `cf2024-1._domainkey` | Cloudflare-managed DKIM public key; retain it |
+| TXT | `_dmarc` | `v=DMARC1; p=quarantine` |
+| TXT | `@` | Brevo ownership code supplied in Brevo's domain settings; retain it |
+| CNAME | `brevo1._domainkey` | `b1.zerorecall-online.dkim.brevo.com` — DNS only |
+| CNAME | `brevo2._domainkey` | `b2.zerorecall-online.dkim.brevo.com` — DNS only |
+
+Brevo verified `zerorecall.online` and both DKIM records on 19 October 2026. Brevo uses its own envelope/return-path domain for the shared sending pool; the visible From domain authenticates through aligned DKIM. Do not add another root SPF record to match the visible From address.
+
+### Firebase runtime configuration
+
+The following non-secret values are set on all four production functions in project `rapex-99a2c`, region `europe-west1`:
+
+```text
+BREVO_SENDER_EMAIL=info@zerorecall.online
+BREVO_SENDER_NAME=ZeroRecall
+MARKETING_SITE_URL=https://zerorecall.online
+```
+
+- `freeScanRequestAPI`: free-scan confirmation email.
+- `processFreeScanRequestJob`: free-scan report email.
+- `sendImmediateSafetyGateAlertEmail`: newly created merchant alert email.
+- `weeklyClearSafetyGateSummary`: scheduled merchant summary email.
+
+The 19 October change updated only `serviceConfig.environmentVariables` through the Cloud Functions v2 API with an explicit update mask, merging existing environment variables. It preserved deployed code and secret bindings, and all four update operations completed successfully. Do not redeploy unrelated uncommitted backend changes to change an email sender.
+
+A local `firebase/functions/.env.rapex-99a2c` contains the same three non-secret values for subsequent Firebase CLI deployments. Keep this deployment-local file untracked; do not assume it is ignored without checking. Existing `BREVO_API_KEY` and `BREVO_WEBHOOK_SECRET` remain in Google Secret Manager. Never commit, print, or put their values in browser-facing/Vite configuration. Merchant delivery audit state is still updated only by the authenticated Brevo webhook; a test API response must not fabricate merchant notification records.
+
+Relevant implementation: `firebase/functions/src/email-notifications.ts`, `firebase/functions/src/free-scan.ts`, function bindings in `firebase/functions/src/index.ts`, and operational notes in `firebase/functions/EMAIL_NOTIFICATIONS.md`. The visible sender name in the free-scan source was still hardcoded as `Safety Gate Monitor` at this configuration-only change; its From email uses `BREVO_SENDER_EMAIL`. Merchant notifications read `BREVO_SENDER_NAME`.
+
+The subsequent 19 October email-template implementation moves alert, weekly-summary, free-scan confirmation and scan-report content into the pure renderers in `firebase/functions/src/email-templates.ts`. All four support Slovak/English HTML and plain text, the chosen ivory/forest-green design, real dynamic facts and clear next actions. Both send paths now read `BREVO_SENDER_NAME` (default `ZeroRecall`) and set Reply-To. Optional alert imagery is from the actual Safety Gate record, never the fictional preview asset. Generate examples with `firebase/functions/scripts/render-email-previews.mjs` after building Functions; the output under `outputs/email-templates/` is explicitly illustrative and never sends mail. Keep incomplete-monitoring and no-new-findings states distinct, preserve confirmation tokens, and restrict free-scan product links to the requested shop. See `EMAIL_NOTIFICATIONS.md` and the root `design-qa.md` for validation and deployment limits. The email templates and EU localization were deployed on 19 October 2026; see the scoped-release note below.
+
+Weekly email previews include up to five individual findings with actual Safety Gate images when available, matcher reasons, current decision states and authenticated detail links. Fetch at most five new and five active alert documents from the current merchant's own subcollection, deduplicate and prioritise new entries; older open findings can still appear during a week with zero new findings. Never label a resolved/dismissed finding as needing review, and never insert the fictional preview photograph into real messages.
+
+Public ZeroRecall home/about/privacy pages and all four email types now have local-source support for the 24 official EU languages. `localization/catalogs/{code}.json` is canonical; run root `npm run localization:build` and `npm run localization:check` after changes. Generated outputs are `marketing-site/locales/*.json` and `firebase/functions/src/email-locales.ts`. The website lazy-loads the selected language, preserves `lang` across public pages and passes it to free-scan requests. `normalizeEmailLanguage` accepts supported base/regional locales and falls back to English. Merchant email still follows `notificationLanguage`. Do not translate product identifiers or rewrite stored source/matcher facts during delivery. The internal scanner is excluded. See `localization/README.md` for provenance, authority references, tests and the distinction between local source readiness and production deployment.
+
+### Verification and limits of the evidence
+
+- A transactional test sent through the same Brevo API integration from `ZeroRecall <info@zerorecall.online>` was received in the destination Gmail inbox on 19 October 2026. Gmail headers showed `spf=pass`, `dkim=pass` for `zerorecall.online`, and `dmarc=pass`. Brevo reported `delivered` for both authorized test recipients.
+- A separate incoming test to `info@zerorecall.online` was recorded as `Forwarded` to `radoone@gmail.com` by Cloudflare. Testing a forwarding alias from its own destination Gmail account may suppress a separate inbox copy; use another sending address for a clean incoming-mail test.
+- These checks prove the sender integration and routing configuration. They do not prove a complete merchant-alert trigger, weekly scheduler, or free-scan confirmation/worker/report flow. The marketing free-scan form still needs a production Turnstile site key in its build; do not claim it is operational merely because email delivery works.
+
 ## Important product behavior
 
 - The app is not a generic Safety Gate browser. It is a checker for the merchant's own Shopify catalog.
@@ -165,7 +229,8 @@ can be worked on without changing Shopify auth or app routes.
 - Merchant email preferences live on `merchants/{shop}` as `emailNotifications`, `immediateAlertEmails`, `weeklySummaryEmails`, `notificationEmail`, `notificationLanguage`, and `notificationEmailSource`. Legacy `emailNotifications` migrates to both new preferences. They default to enabled with the Shopify contact email when the authenticated app can retrieve it, and remain editable/disableable in Settings. Delivery lifecycle is stored in `merchants/{shop}/email_notifications`; Brevo delivery webhooks, authenticated with a bearer secret, are the only source that marks an email delivered in the audit trail. Immediate and weekly email sends require a current cached monitoring entitlement.
 - On first dashboard visit, begin the catalog import and full Safety Gate monitoring automatically when coverage is incomplete. While it runs, show only the progress state; after it completes, show either the action queue or an all-clear status. Do not mark an initial scan as consumed when Shopify returns zero catalog products, so a later visit can retry it.
 - The first catalog audit runs as a Firebase Cloud Task rather than fire-and-forget work in the Shopify request process. Keep its import and alert cursors durable and idempotent, show progress from Firestore, and mark the free scan consumed only after a non-empty catalog has completed all-history monitoring. If Shopify returns zero products, leave the free scan available for a later retry.
-- The marketing-site free scan accepts only public `*.myshopify.com` domains through the Firebase Hosting `/api/free-scan` rewrite. `freeScanRequestAPI` requires a server-verified Cloudflare Turnstile token, rate limits by IP/domain/email plus a global daily budget, and sends a single-use 30-minute email confirmation link through Brevo. A confirmed request is preflighted for a nonempty public JSON catalog before its Firestore `free_scan_requests` status changes to `queued`; `processFreeScanRequestJob` triggers on that status update, scans up to 100 public products using the protected public-store scanner, then submits a report through Brevo. The page polls status while open, but email delivery is the primary result path. Never enable Cloudflare's test keys in production, and do not claim a scan succeeded before the worker finishes or Brevo accepts the report. This one-off free scan is separate from the installed app's ongoing monitoring and Monday all-clear emails.
+- The marketing-site free scan accepts only public `*.myshopify.com` domains through the Firebase Hosting `/api/free-scan` rewrite. `freeScanRequestAPI` requires a server-verified Cloudflare Turnstile token, rate limits by IP/domain/email plus a global daily budget, and sends a single-use 30-minute email confirmation link through Brevo. A confirmed request is preflighted for a nonempty public JSON catalog before its Firestore `free_scan_requests` status changes to `queued`; `processFreeScanRequestJob` triggers on that status update, scans the entire available public catalog through durable `freeScanCatalogTask` pages using the shared scanner engine, then submits a report through Brevo. The page polls status while open, but email delivery is the primary result path. Never enable Cloudflare's test keys in production, and do not claim a scan succeeded before the worker finishes or Brevo accepts the report. This one-off free scan is separate from the installed app's ongoing monitoring and Monday all-clear emails.
+- Free scan request records expire after 30 days; free-scan rate-limit records expire after 2 days. Public scan lead documents and product snapshots/search vectors expire 90 days after the latest scan. Merchant check history and AI match cache expire after 90 and 30 days respectively. These Firestore TTL policies use `expireAt`; deletion can occur after, not exactly at, the expiration timestamp. Merchant alerts, decisions, and audit history remain until the store's Shopify `shop/redact` purge runs after uninstall.
 
 ## Technical Standards & Lessons Learned
 
@@ -281,8 +346,42 @@ Use this summary if you need a compact mental model:
 
 "`rapex` is a monorepo where Firebase imports EU Safety Gate alerts into Firestore, and a Shopify app checks merchant products against that dataset, then records and displays product safety alerts."
 
+## EU localization release, 19 October 2026
+
+Firebase Hosting and the four email functions are deployed with all 24 languages. Because production backend sources differed from the repository, release archives were based on each function’s existing deployed source and replaced only `email-notifications`, `email-templates`, `email-localization`, `email-locales` and `free-scan` TypeScript/compiled modules. Cloud Functions v2 updates used the explicit `buildConfig.source` mask; package locks, unrelated code, triggers and runtime settings were preserved. The overlay passed 20 tests against the production dependency lock; repository Functions tests passed 28 tests. The two merchant-email functions also receive `SHOPIFY_APP_HANDLE=safety-gate-monitor-eu`, verified against the hosted app and Shopify configuration. Future CLI releases must preserve this value along with sender settings and secrets. The public production selector was verified in all 24 languages, with French navigation across all three pages. Full live email-trigger/scheduler and free-scan flows remain separate verification boundaries; the public free-scan form is still unavailable without a production Turnstile build key. Sanitized deployment evidence is in `outputs/localization-release-2026-10-19/`.
+
+## Full public catalog scans
+
+Free marketing scans now traverse the entire available public Shopify catalog, with no 100-product or 10,000-product ceiling. Confirmation/rate limits remain in `free-scan.ts`. `processFreeScanRequestJob` only enqueues a stable request/page task and retries enqueue failures. `freeScanCatalogTask` processes 50-product pages through the existing batch-embedding/cache → KNN → targeted matcher engine exported as `scanPublicCatalogProducts`; it never invokes isolated model checks for every product. Root `nextPage`, cumulative counts, `catalogComplete`, and per-product receipts under `free_scan_requests/{id}/products` are committed transactionally. A retry after a committed page repairs the continuation enqueue without repeating counts. Receipt `expireAt` follows the request's 30-day expiry; shared lead/product vectors retain their 90-day expiry. Completion requires an actual empty catalog page, successful checks for every fetched unseen product, and Brevo report acceptance. Fetch/embedding/matcher failures never count as clear or completed. Reports preview up to five findings while counts cover the full catalog; request product receipts retain matched-product references. The internal protected scanner keeps its existing explicit limits and stays separate from the public flow.
+
+The queue permits two concurrent tasks, eight attempts and a 30-minute dispatch deadline. Payloads contain only request ID and page index, never email addresses, confirmation secrets or API keys. The runtime service account needs Cloud Tasks enqueue permission; task invocation remains authenticated. Public form availability still depends on a real Turnstile build key; deploying the full-catalog worker does not configure that key.
+
+
+## Temporary owner E2E access, 20 October 2026
+
+The owner explicitly authorized testing the full flow without a paid subscription. Only `merchants/rozlicnytovar.myshopify.com` has a temporary cached access grant (`planHandle=temporary-owner-e2e-test`, `testAccessGrant.paidSubscription=false`) expiring **21 October 2026 at 07:07:49 UTC / 09:07:49 Europe/Bratislava**. It is not proof of a Shopify subscription; `billingVerifiedAt` was not fabricated. Backend entitlement guards enforce `subscriptionValidUntil`. Original fields and a guarded rollback script are under `outputs/e2e-test-2026-10-20/`; do not extend access or apply it to other merchants without owner authorization.
+
+Draft product `12362851549448` (MOXY / ZeroRecall E2E TEST) triggered the real Shopify create webhook, Cloud Task, matcher (98% overall, 100% image), alert `y9FElVwv7Pqhzh0JwRfy`, and automatic immediate email. Gmail inbox receipt was verified at 09:10; notification audit status was `accepted`, not webhook-confirmed `delivered`. The product remains draft and the finding remains needs review for owner workflow testing.
+
+## Turnstile activation and owner notices, 21 October 2026
+
+The existing Managed Cloudflare widget now allows `zerorecall.online` in addition to its earlier hosts. The matching production `TURNSTILE_SECRET_KEY` version 1 was verified against the widget without rotation. The public site key is retained in tracked `marketing-site/.env.production`; it is public browser configuration, not a secret. Production builds must retain it. Submit stays disabled until the widget callback supplies verification and is disabled again on expiry/reset. Cloudflare's test keys remain prohibited in production.
+
+`notifyFreeScanOwner` is a separate retrying Firestore creation trigger for valid `free_scan_requests/{requestId}` documents. It sends to `FREE_SCAN_OWNER_EMAIL=radoone@gmail.com` from the existing authenticated ZeroRecall sender, including domain, applicant email and request time in Slovak. It reports receipt of a request before customer confirmation, not a completed scan. A transaction lease plus accepted-state check and provider idempotency key avoid normal duplicate sends; a failed owner notice retries independently of the visitor's confirmation/scan. The request's `ownerNotification` contains acceptance/message ID, never a fabricated delivered state. Confirmation tokens and hashes must never appear in owner mail. No Shopify application or other existing Functions code was redeployed for this addition.
+
+The owner-notification-only production fixture was accepted by the new trigger and Brevo reported it delivered on 21 October. The public form was rendered with the real site key; automated Chrome verification returned Cloudflare 300030 and requires manual browser verification. Do not claim an accepted public request or complete confirmation/scan/report journey from the independent owner-mail test. See `outputs/turnstile-owner-release-2026-10-21/`.
+
+
 ## Marketing conversion paths, 22 October 2026
 
 The marketing home page keeps two visible entry points: a primary one-off free catalog check (`#free-scan`) and a secondary outlined Shopify installation button. Installation also remains prominent in the navigation (including mobile), in the paid monitoring section (`#pricing`), and at the final CTA. Preserve `https://apps.shopify.com/safety-gate-checker` while its listing is being prepared; do not hide installation merely because the listing is not yet public. `#example` now targets the single illustrative comparison in the hero. Keep one request form and its existing confirmation, Turnstile and status API behavior. The widget uses the supported compact size so the form fits narrow screens. Only errors after a visitor attempts a request scroll into view; background widget failures must not jump away from the hero.
 
 Public contact is `info@zerorecall.online`, and the author is identified as Radovan Stas, founder of ZeroRecall. The free check is distinct from the paid Shopify application's ongoing monitoring and decision history. Legal detail is expandable and retains official country/EU links. Canonical web translations remain in `localization/catalogs/`; regenerating web catalogs must not change email copy for a marketing-only release. The implementation and browser QA are recorded locally under `outputs/marketing-conversion-2026-10-22/`. The complete request/confirmation/catalog/report path was verified against the unchanged production service using an owner-authorized public catalog. Hosting-only release artifacts are prepared under `outputs/marketing-release-2026-10-22/`; verify production after deployment.
+
+## Consolidated source review, 22 October 2026
+
+Keep all deployable email/localization and durable free-scan sources tracked, including generated `email-locales.ts`; private browser evidence, deployment archives and runtime `.env.*` files stay local. The marketing release `bb77539` is deployed and the public form completed a real 297-product catalog scan through a received report. The App Store listing remains unpublished; preserve the existing installation URL.
+
+Identifier comparisons in the merchant review modal require full equality after trimming/case normalization. A model prefix or partial barcode is not an identifier match, and Shopify product type is a category, not a model. Missing identifiers remain unspecified. Production Firestore credential failures must throw rather than return an empty alert queue or pretend a write succeeded. CSV exports authenticate the shop and neutralize formula-leading merchant text.
+
+Shopify extensions use `shopify.i18n.translate` with English/Slovak locale resources and the supported `2026-07` API. Use guarded `globalThis` event listeners in the extension sandbox, not unguarded `window`. A report retry may treat a provider-confirmed duplicate idempotency key as already submitted; it must never infer delivered status from acceptance.

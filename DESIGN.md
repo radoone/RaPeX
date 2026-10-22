@@ -131,7 +131,7 @@ The palette balances Shopify's trusted merchant emerald, high-visibility risk in
 ## Typography
 
 **Display & Body Font:** `-apple-system, BlinkMacSystemFont, "San Francisco", "Segoe UI", Roboto, "Helvetica Neue", sans-serif`  
-**Marketing Display Font:** `"Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif`
+**Marketing Display Font:** `"Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif` (used for editorial numerals and small callout marks)
 
 **Character:** Clean, highly legible, modern administrative typography optimized for dense product tables, legal recall case numbers, and rapid scanning.
 

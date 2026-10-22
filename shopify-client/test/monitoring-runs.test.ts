@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { summarizeMonitoringRun } from "../app/services/monitoring-runs";
+import { summarizeMonitoringRun, toIsoString } from "../app/services/monitoring-runs";
 
 describe("summarizeMonitoringRun", () => {
+  it("serializes the dashboard's Firestore run timestamp and rejects invalid dates", () => {
+    expect(toIsoString({ toDate: () => new Date("2026-10-15T08:00:00Z") })).toBe("2026-10-15T08:00:00.000Z");
+    expect(toIsoString(new Date("invalid"))).toBeNull();
+    expect(toIsoString(null)).toBeNull();
+  });
   it("returns only merchant-safe progress and normalizes Firestore timestamps", () => {
     const result = summarizeMonitoringRun("daily-1", {
       status: "completed",

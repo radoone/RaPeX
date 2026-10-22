@@ -11,10 +11,9 @@ import {
   AlertDetailModal,
 } from "../components";
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request, url }: LoaderFunctionArgs) => {
   const { session, admin } = await authenticate.admin(request);
 
-  const url = new URL(request.url);
   const openAlertId = url.searchParams.get("open") || null;
   const page = parseInt(url.searchParams.get("page") || "1");
   const pageSize = 25;
@@ -312,19 +311,16 @@ export default function AlertsPage() {
                 ? t("alerts.admin.criticalBannerDescription", { count: stats.criticalActive })
                 : t("alerts.admin.warningBannerDescription")}
             </s-text>
-            <div style={{ marginTop: "var(--s-space-200)", display: "flex", gap: "var(--s-space-200)", alignItems: "center" }}>
-              {alerts.length > 0 && (
+            {alerts.length > 0 && (
+              <div style={{ marginTop: "var(--s-space-200)" }}>
                 <s-button
                   variant="primary"
                   commandFor={`alert-detail-${(alerts.find((a: any) => a.status === 'active') || alerts[0]).id}`}
                 >
-                  {t("actions.reviewDecision")}
+                  {t("actions.openFirstMatch")}
                 </s-button>
-              )}
-              <s-button variant={alerts.length > 0 ? "secondary" : "primary"} onClick={() => applyFilters({ status: ["active"] })}>
-                {t("actions.reviewAlerts")}
-              </s-button>
-            </div>
+              </div>
+            )}
           </s-banner>
         )}
 

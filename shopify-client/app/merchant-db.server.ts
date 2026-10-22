@@ -169,7 +169,7 @@ async function withCredentialFallback<T>(operation: () => Promise<T>, fallback: 
   try {
     return await operation();
   } catch (error) {
-    if (isFirestoreCredentialError(error)) {
+    if (process.env.NODE_ENV !== "production" && isFirestoreCredentialError(error)) {
       logCredentialWarningOnce();
       return fallback;
     }

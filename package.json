@@ -21,8 +21,8 @@
     "marketing:preview": "vite preview --config marketing-site/vite.config.ts"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.1",
-    "eslint": "^9.39.1",
+    "@eslint/js": "^9.39.5",
+    "eslint": "^9.39.5",
     "patch-package": "^8.0.1",
     "react-router": "7.18.2"
   },

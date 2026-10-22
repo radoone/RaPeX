@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-16T09:28:00.000Z",
-  "title": "Design System: Safety Gate Monitor",
+  "generatedAt": "2026-10-15T08:13:04.185380Z",
+  "title": "Design System: ZeroRecall",
   "extensions": {
     "colorMeta": {
       "primary": {
@@ -170,12 +170,12 @@
   ],
   "narrative": {
     "northStar": "The Vigilant Guardian & Native Shopify Cockpit",
-    "overview": "Safety Gate Monitor's design system unifies high-stakes EU regulatory protection with effortless, zero-friction merchant workflow. Inside the Shopify Admin, the interface feels 100% native: calm, restrained, and structured around Shopify Polaris design tokens and web components.",
+    "overview": "ZeroRecall uses native Shopify Polaris components to help merchants compare their products with possible Safety Gate matches, record decisions and follow monitoring progress. Public pages explain the service in plain language with a visible free check and installation choice.",
     "keyCharacteristics": [
-      "Polaris Native Ergonomics",
-      "Triage-First Hierarchy",
-      "Side-by-Side Clarity",
-      "Audit-Proof Record"
+      "Native Shopify controls",
+      "Review-first hierarchy",
+      "Side-by-side evidence",
+      "Recorded merchant decisions"
     ],
     "rules": [
       {
@@ -185,7 +185,7 @@
       },
       {
         "name": "The Native Surface Rule",
-        "body": "In Shopify Admin routes, all container backgrounds must inherit either --surface (#ffffff) or --surface-subdued (#f6f6f7) to guarantee visual unity with the host admin OS.",
+        "body": "In Shopify Admin routes, all container backgrounds must inherit either `--surface` (#ffffff) or `--surface-subdued` (#f6f6f7) to guarantee visual unity with the host admin OS.",
         "section": "colors"
       },
       {
@@ -195,22 +195,22 @@
       },
       {
         "name": "The Crisp-Border Rule",
-        "body": "Every surface has an explicit 1px border. Shadows never float unbordered in administrative screens.",
+        "body": "Every surface has an explicit 1px border (`--border` or `--border-subdued`). Shadows never float unbordered in administrative screens.",
         "section": "elevation"
       }
     ],
     "dos": [
-      "Do use Polaris Web Components with s- prefix for all interactive Shopify Admin primitives.",
-      "Do provide side-by-side visual comparisons between the Shopify product and the Safety Gate recall alert.",
-      "Do use explicit percentage indicators (overallSimilarity & imageSimilarity) alongside merchant recommendations.",
-      "Do maintain full keyboard accessibility and WCAG 2.1 AA color contrast across all severity chips.",
-      "Do localize all merchant-facing text through the 24 EU locale files."
+      "**Do** use Polaris Web Components with `s-` prefix for all interactive Shopify Admin primitives.",
+      "**Do** provide side-by-side visual comparisons between the Shopify product and the Safety Gate recall alert.",
+      "**Do** use explicit percentage indicators (`overallSimilarity` & `imageSimilarity`) alongside merchant recommendations.",
+      "**Do** maintain full keyboard accessibility and WCAG 2.1 AA color contrast across all severity chips.",
+      "**Do** localize all merchant-facing text through the 24 EU locale files."
     ],
     "donts": [
-      "Don't use alarmist, panic-inducing copy; focus on proactive peace of mind, clear risk facts, and definitive next steps.",
-      "Don't use raw unformatted JSON or technical model debug scores in merchant-facing views.",
-      "Don't mutate Shopify product catalog status directly without merchant review action.",
-      "Don't mix non-Polaris UI component libraries into the embedded Shopify admin shell."
+      "**Don't** use alarmist, panic-inducing copy; focus on proactive peace of mind, clear risk facts, and definitive next steps.",
+      "**Don't** use raw unformatted JSON or technical model debug scores in merchant-facing views.",
+      "**Don't** mutate Shopify product catalog status directly without merchant review action.",
+      "**Don't** mix non-Polaris UI component libraries into the embedded Shopify admin shell."
     ]
   }
 }

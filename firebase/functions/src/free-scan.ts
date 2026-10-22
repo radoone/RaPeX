@@ -3,13 +3,16 @@ import { URL, URLSearchParams } from "node:url";
 import * as logger from "firebase-functions/logger";
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import { db } from "./firebase-admin.js";
-import { handleScanPublicShopifyStoreRequest } from "./public-store-scanner.js";
+import { getFunctions } from "firebase-admin/functions";
+import { freeScanPageTaskId, type FreeScanPage } from "./free-scan-catalog.js";
+import { renderVerificationEmail, renderScanReportEmail } from "./email-templates.js";
+import { normalizeEmailLanguage } from "./email-localization.js";
 
 type FreeScanRequest = {
   domain: string;
   email: string;
-  locale: "en" | "sk";
-  status: "awaiting_verification" | "queued" | "running" | "completed" | "failed";
+  locale: string;
+  status: "awaiting_verification" | "queued" | "running" | "reporting" | "completed" | "failed";
   createdAt: Timestamp;
   verificationHash?: string;
   verificationExpiresAt?: Timestamp;
@@ -48,7 +51,6 @@ const LIMITS = "free_scan_limits";
 const DAY_MS = 24 * 60 * 60 * 1000;
 const HOUR_MS = 60 * 60 * 1000;
 const VERIFY_MS = 30 * 60 * 1000;
-const MAX_PRODUCTS = 100;
 const DAILY_REQUEST_LIMIT = 50;
 const DAILY_SCAN_LIMIT = 20;
 const TEST_TURNSTILE_SECRET = "1x0000000000000000000000000000000AA";
@@ -158,7 +160,7 @@ export async function handleFreeScanRequest(request: HttpRequest, response: Http
 
   const domain = normalizedDomain(request.body?.domain);
   const email = normalizedEmail(request.body?.email);
-  const locale = request.body?.locale === "sk" ? "sk" : "en";
+  const locale = normalizeEmailLanguage(request.body?.locale);
   if (!domain || !email) {
     response.status(400).json({ error: "Enter a valid myshopify.com domain and email address." });
     return;
@@ -292,50 +294,24 @@ async function confirmFreeScan(
   response.status(202).json({ id: confirmation.requestId, status: "queued" });
 }
 
-async function runProtectedScanner(domain: string): Promise<ScanResult> {
-  let statusCode = 200;
-  let payload: ScanResult = {};
-  await handleScanPublicShopifyStoreRequest(
-    {
-      method: "POST",
-      body: { domain, maxProducts: MAX_PRODUCTS, similarityThreshold: 80 },
-      headers: { "x-api-key": process.env.SAFETY_GATE_API_KEY || "" },
-      query: {},
-    },
-    {
-      set: () => undefined,
-      status(code: number) { statusCode = code; return this; },
-      json(value: unknown) { payload = value as ScanResult; },
-      send: () => undefined,
-    },
-  );
-  if (statusCode !== 200 || !payload.success || !payload.lead) {
-    throw new Error(`Scanner failed (${statusCode}): ${payload.error || "unknown error"}`);
-  }
-  return payload;
-}
-
 async function sendVerificationEmail(
   requestId: string,
   secret: string,
-  data: { domain: string; email: string; locale: "en" | "sk" },
+  data: { domain: string; email: string; locale: string },
 ): Promise<void> {
   const apiKey = (process.env.BREVO_API_KEY || "").trim();
   const senderEmail = (process.env.BREVO_SENDER_EMAIL || "").trim();
   if (!apiKey || !senderEmail) throw new Error("Brevo sender is not configured");
-  const slovak = data.locale === "sk";
   const url = `${MARKETING_SITE_URL}/index.html?lang=${data.locale}#verify=${requestId}.${secret}`;
-  const content = slovak
-    ? `Požiadali ste o bezplatný sken verejného katalógu ${data.domain}.\n\nPotvrďte svoju e-mailovú adresu a spustite sken na tejto stránke:\n${url}\n\nOdkaz platí 30 minút. Ak ste o sken nežiadali, tento e-mail ignorujte.`
-    : `You requested a free public-catalog scan for ${data.domain}.\n\nConfirm your email address and start the scan on this page:\n${url}\n\nThis link expires in 30 minutes. If you did not request a scan, ignore this email.`;
+  const content = renderVerificationEmail(data.locale, data.domain, url);
   const response = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     headers: { "api-key": apiKey, accept: "application/json", "content-type": "application/json" },
     body: JSON.stringify({
-      sender: { name: "Safety Gate Monitor", email: senderEmail },
+      sender: { name: (process.env.BREVO_SENDER_NAME || "ZeroRecall").trim(), email: senderEmail },
+      replyTo: { email: senderEmail },
       to: [{ email: data.email }],
-      subject: slovak ? `Potvrďte sken obchodu ${data.domain}` : `Confirm the scan for ${data.domain}`,
-      textContent: content,
+      ...content,
       tags: ["free-scan-verification"],
     }),
   });
@@ -346,82 +322,48 @@ async function sendVerificationEmail(
   }
 }
 
-async function sendReport(requestId: string, data: FreeScanRequest, result: ScanResult): Promise<void> {
+export async function sendFreeScanReport(requestId: string, data: FreeScanRequest, result: ScanResult): Promise<void> {
   const apiKey = (process.env.BREVO_API_KEY || "").trim();
   const senderEmail = (process.env.BREVO_SENDER_EMAIL || "").trim();
   if (!apiKey || !senderEmail) throw new Error("Brevo sender is not configured");
-  const lead = result.lead!;
-  const slovak = data.locale === "sk";
-  const lines = slovak
-    ? [
-      `Bezplatný prehľad verejného katalógu: ${data.domain}`,
-      `Preverených produktov: ${lead.totalProductsScanned} (limit ${MAX_PRODUCTS})`,
-      `Možných zhôd na kontrolu: ${lead.flaggedProductsCount}`,
-      "",
-      "Výsledky sú orientačné. Možnú zhodu overte podľa modelu, fotografie, šarže a oficiálneho záznamu Safety Gate. Nulový počet zhôd nie je potvrdením bezpečnosti celého katalógu.",
-    ]
-    : [
-      `Free public catalog scan: ${data.domain}`,
-      `Products checked: ${lead.totalProductsScanned} (limit ${MAX_PRODUCTS})`,
-      `Potential matches to review: ${lead.flaggedProductsCount}`,
-      "",
-      "These are indicative results. Check any potential match against the model, photo, batch and official Safety Gate record. Zero matches does not certify the safety of your entire catalog.",
-    ];
-  if (lead.matches?.length) {
-    lines.push("", slovak ? "Možné zhody:" : "Potential matches:");
-    for (const match of lead.matches.slice(0, 5)) {
-      lines.push(`- ${match.productTitle || "Product"}`);
-      if (match.productUrl?.startsWith(`https://${data.domain}/`)) lines.push(`  ${match.productUrl}`);
-      const alertId = match.result?.warnings?.[0]?.alertId;
-      if (alertId) lines.push(`  Safety Gate record: ${alertId}`);
-    }
-  }
-  lines.push("", "https://ec.europa.eu/safety-gate-alerts/");
+  const content = renderScanReportEmail(data.locale, data.domain, result.lead!, MARKETING_SITE_URL);
   const response = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     headers: { "api-key": apiKey, accept: "application/json", "content-type": "application/json" },
     body: JSON.stringify({
-      sender: { name: "Safety Gate Monitor", email: senderEmail },
+      sender: { name: (process.env.BREVO_SENDER_NAME || "ZeroRecall").trim(), email: senderEmail },
+      replyTo: { email: senderEmail },
       to: [{ email: data.email }],
-      subject: slovak ? `Výsledok kontroly katalógu: ${data.domain}` : `Catalog scan result: ${data.domain}`,
-      textContent: lines.join("\n"),
+      ...content,
       tags: ["free-scan"],
       headers: { "Idempotency-Key": `free-scan-${requestId}` },
     }),
+    signal: globalThis.AbortSignal.timeout(20_000),
   });
+  const delivery = await response.json() as { messageId?: unknown; code?: string; message?: string };
+  // A retry after provider acceptance may receive a duplicate-key response.
+  // This confirms submission only; inbox delivery remains a separate state.
+  if (!response.ok && delivery.code === "duplicate_parameter" && /idempotenc/i.test(delivery.message || "")) return;
   if (!response.ok) throw new Error(`Brevo rejected report (${response.status})`);
-  const delivery = await response.json() as { messageId?: unknown };
   if (typeof delivery.messageId !== "string" || !delivery.messageId) {
     throw new Error("Brevo did not confirm report acceptance");
   }
 }
 
-export async function processFreeScanRequest(requestId: string): Promise<void> {
-  const requestRef = db.collection(REQUESTS).doc(requestId);
-  let data: FreeScanRequest | undefined;
-  const claimed = await db.runTransaction(async (transaction) => {
-    const snapshot = await transaction.get(requestRef);
-    if (!snapshot.exists || snapshot.get("status") !== "queued") return false;
-    data = snapshot.data() as FreeScanRequest;
-    transaction.update(requestRef, { status: "running", updatedAt: FieldValue.serverTimestamp() });
-    return true;
-  });
-  if (!claimed || !data) return;
+export async function enqueueFreeScanCatalogPage(payload: FreeScanPage): Promise<void> {
   try {
-    const result = await runProtectedScanner(data.domain);
-    const checkedProducts = result.lead!.totalProductsScanned;
-    if (checkedProducts === 0) throw new Error("The public catalog returned no products");
-    await sendReport(requestId, data, result);
-    await requestRef.update({
-      status: "completed",
-      checkedProducts,
-      possibleMatches: result.lead!.flaggedProductsCount,
-      updatedAt: FieldValue.serverTimestamp(),
+    await getFunctions().taskQueue<FreeScanPage>("locations/europe-west1/functions/freeScanCatalogTask").enqueue(payload, {
+      id: freeScanPageTaskId(payload), dispatchDeadlineSeconds: 1800,
     });
   } catch (error) {
-    logger.error("Free scan failed", { requestId, domain: data.domain, error });
-    await requestRef.update({ status: "failed", updatedAt: FieldValue.serverTimestamp() });
+    if ((error as { code?: string }).code !== "functions/task-already-exists") throw error;
   }
+}
+
+export async function processFreeScanRequest(requestId: string): Promise<void> {
+  const snapshot = await db.collection(REQUESTS).doc(requestId).get();
+  if (!snapshot.exists || !["queued", "running", "reporting"].includes(snapshot.get("status"))) return;
+  await enqueueFreeScanCatalogPage({ requestId, pageIndex: Number(snapshot.get("nextPage") || 0) });
 }
 
 export const freeScanTestUtils = {

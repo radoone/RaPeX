@@ -16,6 +16,7 @@ import {
 } from "../services/safety-gate-checker.server";
 import { checkCoversCurrentProductVersion } from "../services/catalog-coverage.server";
 import { getRecentMonitoringRuns } from "../services/monitoring-runs.server";
+import { toIsoString } from "../services/monitoring-runs";
 import { mirrorOfflineSessionForCatalogAudit } from "../services/catalog-audit-session.server";
 
 type BulkCheckResults = {
@@ -305,7 +306,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     recentMonitoringRuns,
     monitorState: monitorState ? {
       status: monitorState.lastMonitorStatus || null,
-      lastRunAt: monitorState.lastMonitorRunEnd || null,
+      lastRunAt: toIsoString(monitorState.lastMonitorRunEnd),
       lastError: monitorState.lastMonitorStatus === "FAILURE" ? monitorState.lastError || null : null,
     } : null,
     lastMonitoringAt: lastMonitoringActivityRows.find((activity: any) =>
@@ -417,7 +418,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
       return json({
         success: true,
-        message: `Monitoring scanned ${monitoring.productsScanned} products against ${monitoring.rapexAlertsScanned} new RAPEX alerts and created ${monitoring.alertsCreated} alerts`,
+        message: `Monitoring scanned ${monitoring.productsScanned} products against ${monitoring.rapexAlertsScanned} new Safety Gate alerts and created ${monitoring.alertsCreated} alerts`,
         results,
       });
     } catch (error) {
@@ -503,6 +504,8 @@ export default function Index() {
   const isSubmitting = fetcher.state === "submitting";
   const monitoredProductLabel = `${stats.checkedProducts}/${stats.totalProducts || 0}`;
   const hasCompleteCoverage = stats.totalProducts > 0 && stats.checkedProducts >= stats.totalProducts;
+  const confirmedMonitoringAt = monitorState?.lastRunAt || lastMonitoringAt;
+  const hasConfirmedMonitoring = Boolean(confirmedMonitoringAt);
   const coveragePercent = stats.totalProducts > 0
     ? Math.min(100, Math.round((stats.checkedProducts / stats.totalProducts) * 100))
     : 0;
@@ -531,7 +534,9 @@ export default function Index() {
       actionHref: recentAlerts[0]?.id
         ? `/app/alerts?status=active&open=${encodeURIComponent(recentAlerts[0].id)}`
         : "/app/alerts?status=active",
-      actionLabel: t("actions.reviewAlerts"),
+      actionLabel: stats.activeAlerts === 1
+        ? t("actions.reviewOneMatch")
+        : t("actions.reviewMultipleMatches", { count: stats.activeAlerts }),
     },
     "coverage-incomplete": {
       tone: "warning",
@@ -769,7 +774,7 @@ export default function Index() {
               </s-button>
               {stats.uncheckedProducts > 0 && (
                 <s-button variant="secondary" onClick={() => navigate("/app/manual-check")}>
-                  {t("dashboard.admin.protectRemainingProducts", { count: stats.uncheckedProducts })}
+                  {t("actions.protectRemainingProducts", { count: stats.uncheckedProducts })}
                 </s-button>
               )}
               <s-button variant="secondary" onClick={() => navigate("/app/evidence")}>
@@ -790,74 +795,16 @@ export default function Index() {
             </div>
             <div className="dashboard-status-panel__fact">
               <span>{t("dashboard.admin.lastSafetyGateUpdateChecked")}</span>
-              <strong>{monitorState?.lastRunAt ? formatRelativeDate(new Date(monitorState.lastRunAt), t, i18n.language) : lastMonitoringAt ? formatRelativeDate(new Date(lastMonitoringAt), t, i18n.language) : t("status.notChecked")}</strong>
-              <small>{t("dashboard.admin.status.cachedEvidence")}</small>
+              <strong>{confirmedMonitoringAt ? formatRelativeDate(new Date(confirmedMonitoringAt), t, i18n.language) : t("status.notChecked")}</strong>
+              <small>{hasConfirmedMonitoring ? t("dashboard.admin.status.cachedEvidence") : t("dashboard.admin.status.monitoringNotConfirmed")}</small>
             </div>
             <div className="dashboard-status-panel__fact">
               <span>{t("dashboard.admin.nextAutomaticCheck")}</span>
-              <strong>{t("dashboard.admin.dailyAtTime")}</strong>
-              <small>{t("dashboard.admin.status.deltaMonitoring")}</small>
+              <strong>{hasConfirmedMonitoring ? t("dashboard.admin.dailyAtTime") : t("dashboard.admin.dailyAtTimePlanned")}</strong>
+              <small>{hasConfirmedMonitoring ? t("dashboard.admin.status.deltaMonitoring") : t("dashboard.admin.status.monitoringNotConfirmed")}</small>
             </div>
           </div>
         </section> : null}
-
-        {!isScanning ? <s-section heading={t("dashboard.admin.monitoringRunHistoryTitle")}>
-          {recentMonitoringRuns.length === 0 ? (
-            <s-text>{t("dashboard.admin.monitoringRunHistoryEmpty")}</s-text>
-          ) : (
-            <div className="monitoring-run-list" aria-label={t("dashboard.admin.monitoringRunHistoryTitle")}>
-              {recentMonitoringRuns.map((run) => {
-                const statusKey = ["queued", "processing", "retrying", "completed", "failed", "enqueue_failed", "skipped_unentitled"].includes(run.status)
-                  ? run.status
-                  : "unknown";
-                const tone = run.status === "completed" ? "success" :
-                  run.status === "failed" || run.status === "enqueue_failed" ? "critical" :
-                    run.status === "skipped_unentitled" ? "warning" : "info";
-                return (
-                  <div className="monitoring-run-list__row" key={run.id}>
-                    <div className="monitoring-run-list__summary">
-                      <s-badge tone={tone}>{t(`dashboard.admin.monitoringRunStatus.${statusKey}`)}</s-badge>
-                      <span>{t("dashboard.admin.monitoringRunProgress", {
-                        products: run.productsScanned,
-                        alerts: run.alertsCreated,
-                      })}</span>
-                    </div>
-                    <small>
-                      {run.updatedAt
-                        ? formatRelativeDate(new Date(run.updatedAt), t, i18n.language)
-                        : t("dashboard.admin.monitoringRunDateUnknown")}
-                    </small>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </s-section> : null}
-
-        <section className="protection-value-panel" aria-label={t("dashboard.admin.proofGridLabel")}>
-          <div className="protection-value-panel__content">
-            <p className="admin-eyebrow">{t("dashboard.admin.protectionEyebrow")}</p>
-            <h2 className="protection-value-panel__title">{t("dashboard.admin.protectionTitle")}</h2>
-            <p className="protection-value-panel__description">{t("dashboard.admin.protectionDescription")}</p>
-          </div>
-          <div className="protection-proof-grid">
-            <div className="protection-proof-item protection-proof-item--primary">
-              <span>{t("dashboard.admin.valueMetrics.productsCovered")}</span>
-              <strong>{stats.checkedProducts}/{stats.totalProducts || 0}</strong>
-              <small>{t("dashboard.admin.productsCoveredShort")}</small>
-            </div>
-            <div className="protection-proof-item">
-              <span>{t("dashboard.admin.valueMetrics.checksRun")}</span>
-              <strong>{stats.totalChecks}</strong>
-              <small>{t("dashboard.admin.allTimeChecksDescription")}</small>
-            </div>
-            <div className="protection-proof-item">
-              <span>{t("dashboard.admin.valueMetrics.decisionsRecorded")}</span>
-              <strong>{closedDecisions}</strong>
-              <small>{t("dashboard.admin.auditHistoryKept")}</small>
-            </div>
-          </div>
-        </section>
 
         <div className="admin-section-grid">
           {/* Left Column: Merchant decision queue */}
@@ -904,7 +851,16 @@ export default function Index() {
                     <div className="admin-alert-row__content">
                       <div className="admin-alert-row__meta">
                         <h3>{alert.productTitle}</h3>
-                        <p>{alert.riskDescription || t("dashboard.admin.fallbackAlertDescription")}</p>
+                        {alert.riskDescription ? (
+                          <p>
+                            <span className="admin-helper" style={{ display: "block", marginBottom: "2px", fontWeight: 600 }}>
+                              {t("dashboard.admin.riskInAlert")}:
+                            </span>
+                            {alert.riskDescription}
+                          </p>
+                        ) : (
+                          <p>{t("dashboard.admin.fallbackAlertDescription")}</p>
+                        )}
                         <p className="admin-alert-row__next-action">
                           {t("dashboard.admin.recommendedAction")}
                         </p>
@@ -1005,6 +961,62 @@ export default function Index() {
             )}
           </section>
         </div>
+
+        <section className="protection-value-panel" aria-label={t("dashboard.admin.proofGridLabel")}>
+          <div className="protection-value-panel__content">
+            <p className="admin-eyebrow">{t("dashboard.admin.protectionEyebrow")}</p>
+            <h2 className="protection-value-panel__title">{t("dashboard.admin.protectionTitle")}</h2>
+            <p className="protection-value-panel__description">{t("dashboard.admin.protectionDescription")}</p>
+          </div>
+          <div className="protection-proof-grid">
+            <div className="protection-proof-item protection-proof-item--primary">
+              <span>{t("dashboard.admin.valueMetrics.productsCovered")}</span>
+              <strong>{stats.checkedProducts}/{stats.totalProducts || 0}</strong>
+              <small>{t("dashboard.admin.productsCoveredShort")}</small>
+            </div>
+            <div className="protection-proof-item">
+              <span>{t("dashboard.admin.valueMetrics.checksRun")}</span>
+              <strong>{stats.totalChecks}</strong>
+              <small>{t("dashboard.admin.checksCompletedDescription")}</small>
+            </div>
+            <div className="protection-proof-item">
+              <span>{t("dashboard.admin.valueMetrics.decisionsRecorded")}</span>
+              <strong>{closedDecisions}</strong>
+              <small>{t("dashboard.admin.auditHistoryKept")}</small>
+            </div>
+          </div>
+        </section>
+
+        {!isScanning && recentMonitoringRuns.length > 0 ? (
+          <s-section heading={t("dashboard.admin.monitoringRunHistoryTitle")}>
+            <div className="monitoring-run-list" aria-label={t("dashboard.admin.monitoringRunHistoryTitle")}>
+              {recentMonitoringRuns.map((run) => {
+                const statusKey = ["queued", "processing", "retrying", "completed", "failed", "enqueue_failed", "skipped_unentitled"].includes(run.status)
+                  ? run.status
+                  : "unknown";
+                const tone = run.status === "completed" ? "success" :
+                  run.status === "failed" || run.status === "enqueue_failed" ? "critical" :
+                    run.status === "skipped_unentitled" ? "warning" : "info";
+                return (
+                  <div className="monitoring-run-list__row" key={run.id}>
+                    <div className="monitoring-run-list__summary">
+                      <s-badge tone={tone}>{t(`dashboard.admin.monitoringRunStatus.${statusKey}`)}</s-badge>
+                      <span>{t("dashboard.admin.monitoringRunProgress", {
+                        products: run.productsScanned,
+                        alerts: run.alertsCreated,
+                      })}</span>
+                    </div>
+                    <small>
+                      {run.updatedAt
+                        ? formatRelativeDate(new Date(run.updatedAt), t, i18n.language)
+                        : t("dashboard.admin.monitoringRunDateUnknown")}
+                    </small>
+                  </div>
+                );
+              })}
+            </div>
+          </s-section>
+        ) : null}
         </> : null}
       </div>
     </s-page>

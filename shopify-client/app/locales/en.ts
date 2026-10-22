@@ -17,7 +17,7 @@ const en = {
         "planFreeUsedDescription": "Your free initial scan has finished. Choose a plan to start ongoing monitoring and keep exporting the audit trail.",
         "planFreeAvailableDescription": "One free initial Safety Gate catalog scan is available.",
         "statusLabel": "Current Plan",
-        "statusActivePro": "Safety Gate Pro (Active)",
+        "statusActivePro": "ZeroRecall Pro (Active)",
         "statusFreeUsed": "Free Scan Used",
         "statusFreeAvailable": "Free Initial Scan",
         "statusDevelopmentBypass": "Development preview (billing bypassed)",
@@ -26,7 +26,7 @@ const en = {
         "pricingUnavailable": "Shopify pricing is not configured for this app."
       },
       "dashboard": {
-        "title": "Safety Gate EU",
+        "title": "ZeroRecall",
         "liveScan": {
           "eyebrow": "Automated Safety Audit",
           "heading": "Free catalog safety audit in progress...",
@@ -211,11 +211,13 @@ const en = {
           "monitoringStatusNeedsReview": "{{count}} product needs a merchant decision",
           "monitoringStatusNeedsReview_plural": "{{count}} products need merchant decisions",
           "monitoringStatusAllClear": "Catalog monitoring is running",
-          "monitoringStatusDescription": "Safety Gate Monitor checks your catalog against new EU Safety Gate updates, highlights products needing review, and keeps evidence for audit reports.",
+          "monitoringStatusDescription": "ZeroRecall checks your catalog against new EU Safety Gate updates, highlights products needing review, and keeps evidence for audit reports.",
           "productsMonitored": "Products with saved checks",
           "lastSafetyGateUpdateChecked": "Last Safety Gate update checked",
           "nextAutomaticCheck": "Next automatic check",
           "dailyAtTime": "Daily at 03:47 Europe/Bratislava",
+          "dailyAtTimePlanned": "Scheduled (daily at 03:47)",
+          "riskInAlert": "Risk described in Safety Gate alert",
           "auditReport": "Audit report",
           "status": {
             "factsLabel": "Current monitoring facts",
@@ -223,15 +225,17 @@ const en = {
             "none": "None",
             "cachedEvidence": "Cached evidence is reused",
             "deltaMonitoring": "Only new Safety Gate alerts are checked",
+            "monitoringNotConfirmed": "Monitoring not yet confirmed",
+            "scheduledPlanned": "Scheduled run",
             "reviewNeeded": {
               "eyebrow": "Review needed",
-              "title": "{{count}} product needs review",
-              "title_plural": "{{count}} products need review",
+              "title": "{{count}} possible match needs review",
+              "title_plural": "{{count}} possible matches need review",
               "description": "Potential Safety Gate matches need a merchant decision. Review the matches first; check results for other products remain available in the catalog.",
               "criticalEyebrow": "Urgent review",
-              "criticalTitle": "{{count}} serious-risk product needs review",
-              "criticalTitle_plural": "{{count}} serious-risk products need review",
-              "criticalDescription": "Review these products before continuing sales. Compare the product and Safety Gate evidence, then record your decision."
+              "criticalTitle": "{{count}} possible match with a serious-risk alert needs review",
+              "criticalTitle_plural": "{{count}} possible matches with a serious-risk alert need review",
+              "criticalDescription": "Review these possible matches before continuing sales. Compare the product and Safety Gate evidence, then record your decision."
             },
             "coverageIncomplete": {
               "eyebrow": "Coverage incomplete",
@@ -250,7 +254,7 @@ const en = {
               "title": "No action needed",
               "description": "No products in your monitored catalog currently match EU Safety Gate alerts. Monitoring continues in the background and only new alerts or changed products need work.",
               "emptyCatalogTitle": "No products to monitor yet",
-              "emptyCatalogDescription": "Add products to your Shopify catalog and Safety Gate Monitor will be ready to cover them.",
+              "emptyCatalogDescription": "Add products to your Shopify catalog and ZeroRecall will be ready to cover them.",
               "action": "View catalog coverage"
             }
           },
@@ -268,7 +272,7 @@ const en = {
           "daily": "Daily",
           "withReadOnlyShopifyAccess": "Read-only Shopify access",
           "valueProofEyebrow": "Coverage action",
-          "valueProofTitle": "What Safety Gate Monitor keeps doing",
+          "valueProofTitle": "What ZeroRecall keeps doing",
           "valueProofDescription": "Show the team that the subscription is not a one-time scan: catalog coverage, checks, decisions, and read-only Shopify access stay active.",
           "valueProofTitleComplete": "Every current product has a recorded check",
           "valueProofTitleIncomplete": "{{count}} products have a recorded check",
@@ -341,7 +345,7 @@ const en = {
       },
       "settings": {
         "title": "Monitoring Settings",
-        "subtitle": "Control how Safety Gate Monitor watches your Shopify catalog.",
+        "subtitle": "Control how ZeroRecall watches your Shopify catalog.",
         "threshold": {
           "title": "Monitoring mode",
           "howItWorks": "How this works",
@@ -400,6 +404,9 @@ const en = {
         "settings": "Settings",
         "viewAlerts": "View alerts",
         "reviewAlerts": "Review alerts",
+        "reviewOneMatch": "Review 1 match",
+        "reviewMultipleMatches": "Review {{count}} matches",
+        "openFirstMatch": "Open first match",
         "dashboard": "Dashboard",
         "tryAgain": "Try again",
         "retry": "Retry",
@@ -442,7 +449,7 @@ const en = {
         "resolved": "Resolved",
         "dismissed": "Dismissed",
         "notChecked": "Not checked",
-        "safe": "Safe",
+        "safe": "No match found",
         "unsafe": "Needs review",
         "updated": "Updated",
         "flagged": "flagged",
@@ -470,7 +477,21 @@ const en = {
           "chooseOutcome": "Choose an outcome",
           "noteLabel": "What did you check? (optional)",
           "noteRequiredLabel": "What did you check? (required)",
-          "otherNoteRequired": "Add a note to explain the other outcome."
+          "otherNoteRequired": "Add a note to explain the other outcome.",
+          "identifiersHeading": "Side-by-side identifier comparison",
+          "identifiers": {
+            "field": "Identifier",
+            "yourProduct": "Your Shopify product",
+            "safetyGate": "Safety Gate alert",
+            "result": "Comparison",
+            "match": "Match",
+            "mismatch": "Discrepancy",
+            "notSpecified": "not specified",
+            "brand": "Brand",
+            "model": "Model",
+            "barcode": "Barcode (GTIN/EAN)",
+            "batch": "Batch / Lot"
+          }
         },
         "yourProduct": "Your Shopify product",
         "editInShopify": "Edit Product in Shopify",
@@ -589,7 +610,7 @@ const en = {
           "current": "Review queue"
         },
         "meta": {
-          "active": "{{count}} active",
+          "active": "{{count}} to review",
           "total": "{{count}} total"
         },
         "metrics": {
@@ -662,10 +683,10 @@ const en = {
           "actionNeededTitle": "{{count}} active alert still needs a decision",
           "actionNeededTitle_plural": "{{count}} active alerts still need a decision",
           "actionNeededDescription": "Review matches, dismiss false positives, or resolve confirmed risks so the alert queue stays actionable.",
-          "criticalBannerTitle": "{{count}} active alert includes high-risk products",
-          "criticalBannerTitle_plural": "{{count}} active alerts include high-risk products",
-          "criticalBannerDescription": "{{count}} active alert is marked high or serious risk. Resolve those products first.",
-          "criticalBannerDescription_plural": "{{count}} active alerts are marked high or serious risk. Resolve those products first.",
+          "criticalBannerTitle": "{{count}} high-risk match needs review",
+          "criticalBannerTitle_plural": "{{count}} high-risk matches need review",
+          "criticalBannerDescription": "{{count}} active match is marked high or serious risk in Safety Gate. Resolve those matches first.",
+          "criticalBannerDescription_plural": "{{count}} active matches are marked high or serious risk in Safety Gate. Resolve those matches first.",
           "warningBannerTitle": "{{count}} active alert still needs review",
           "warningBannerTitle_plural": "{{count}} active alerts still need review",
           "warningBannerDescription": "Use this queue for real decisions only: resolve confirmed risks and dismiss false positives quickly.",
@@ -736,7 +757,7 @@ const en = {
           "all": "All ({{count}})",
           "unprotected": "Not checked ({{count}})",
           "needsReview": "Needs review ({{count}})",
-          "safe": "Safe ({{count}})"
+          "safe": "No match found ({{count}})"
         },
         "catalogue": {
           "accessibilityLabel": "Product catalogue table",
@@ -757,7 +778,7 @@ const en = {
           "totalChecks": "{{count}} total",
           "firstCheck": "Run your first check",
           "status": {
-            "safe": "Safe",
+            "safe": "No match found",
             "unsafe": "Needs review",
             "reviewed": "Reviewed",
             "notChecked": "Not checked"
@@ -841,7 +862,7 @@ const en = {
         "download": "Download CSV",
         "viewHistory": "View audit trail",
         "eyebrow": "Export-ready record",
-        "heading": "Your product safety decisions",
+        "heading": "Findings and decisions",
         "description": "Review the complete record before exporting a CSV for your team, supplier, or audit.",
         "summaryLabel": "Audit report summary",
         "total": "Recorded findings",
@@ -963,16 +984,19 @@ const en = {
           "autoDraftDescription": "Automatically mark products for priority review when they match Safety Gate alerts with serious risk (threshold >= 95%)."
         },
         "notifications": {
-        "enabledTitle": "Email safety alerts",
+          "enabledTitle": "Email safety alerts",
           "enabledDescription": "Choose whether you receive urgent findings, a weekly summary, or both.",
           "immediateTitle": "New findings",
           "immediateDescription": "Email me as soon as a product needs review.",
           "weeklyTitle": "Weekly monitoring summary",
-          "weeklyDescription": "Send a Monday summary with new findings, open cases, and the last successful run.",
+          "weeklyDescription": "Monday monitoring summary: confirms when no new findings occurred, or summarizes open cases needing review.",
           "emailLabel": "Notification email",
           "emailHelp": "Initially taken from Shopify. You can use a different address.",
           "languageLabel": "Email language",
-          "invalidEmail": "Enter a valid email address before enabling email notifications."
+          "invalidEmail": "Enter a valid email address before enabling email notifications.",
+          "noRecipientHeading": "No email recipient configured",
+          "noRecipientDescription": "Email notifications are enabled, but no address is specified. No messages will be delivered until an email is entered.",
+          "useShopifyEmail": "Use store contact email ({{email}})"
         },
         "exclusions": {
           "eyebrow": "Filtering rules",

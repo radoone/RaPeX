@@ -33,19 +33,20 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const envDefault = Number(process.env.SAFETY_GATE_SIMILARITY_THRESHOLD || "0");
   const fallbackDefault = Number.isFinite(envDefault) ? envDefault : 70;
 
+  const shopifyContactEmail = await getShopifyContactEmail(admin).catch((error) => {
+    console.warn("Could not load Shopify contact email for notifications", error);
+    return null;
+  });
+
   if (!settings || settings.emailNotifications === undefined || settings.immediateAlertEmails === undefined || settings.weeklySummaryEmails === undefined || !settings.notificationEmail) {
-    const shopifyEmail = await getShopifyContactEmail(admin).catch((error) => {
-      console.warn("Could not load Shopify contact email for notifications", error);
-      return null;
-    });
     settings = await db.safetySetting.upsert({
       where: { shop: session.shop },
       update: {
         ...(settings?.emailNotifications === undefined ? { emailNotifications: true } : {}),
         ...(settings?.immediateAlertEmails === undefined ? { immediateAlertEmails: settings?.emailNotifications !== false } : {}),
         ...(settings?.weeklySummaryEmails === undefined ? { weeklySummaryEmails: settings?.emailNotifications !== false } : {}),
-        ...(!settings?.notificationEmail && shopifyEmail ? {
-          notificationEmail: shopifyEmail,
+        ...(!settings?.notificationEmail && shopifyContactEmail ? {
+          notificationEmail: shopifyContactEmail,
           notificationEmailSource: "shopify" as const,
         } : {}),
         ...(!settings?.notificationLanguage ? { notificationLanguage: "en" } : {}),
@@ -57,7 +58,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         emailNotifications: true,
         immediateAlertEmails: true,
         weeklySummaryEmails: true,
-        notificationEmail: shopifyEmail,
+        notificationEmail: shopifyContactEmail,
         notificationEmailSource: "shopify",
         notificationLanguage: "en",
         excludeVendors: null,
@@ -73,7 +74,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       emailNotifications: true,
       immediateAlertEmails: true,
       weeklySummaryEmails: true,
-      notificationEmail: null,
+      notificationEmail: shopifyContactEmail,
       notificationEmailSource: "shopify",
       notificationLanguage: "en",
       excludeVendors: null,
@@ -81,6 +82,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     },
     envDefault: fallbackDefault,
     billingStatus,
+    shopifyContactEmail,
   });
 };
 
@@ -164,7 +166,7 @@ export function ErrorBoundary() {
 }
 
 export default function Settings() {
-  const { settings, envDefault, billingStatus } = useLoaderData<typeof loader>();
+  const { settings, envDefault, billingStatus, shopifyContactEmail } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
   const { t } = useTranslation();
@@ -312,12 +314,31 @@ export default function Settings() {
                 </div>
 
                 <div className="admin-form-block" style={{ gap: '20px', display: 'flex', flexDirection: 'column' }}>
+                  {((immediateAlertEmails || weeklySummaryEmails) && !notificationEmail.trim()) && (
+                    <s-banner tone="warning" heading={t("settings.notifications.noRecipientHeading")}>
+                      <p>{t("settings.notifications.noRecipientDescription")}</p>
+                      {shopifyContactEmail && (
+                        <div style={{ marginTop: '8px' }}>
+                          <s-button type="button" onClick={() => setNotificationEmail(shopifyContactEmail)}>
+                            {t("settings.notifications.useShopifyEmail", { email: shopifyContactEmail })}
+                          </s-button>
+                        </div>
+                      )}
+                    </s-banner>
+                  )}
+
                   <div className="admin-checkbox-group">
                     <label style={{ display: 'flex', alignItems: 'flex-start', cursor: 'pointer', gap: '10px' }}>
                       <input
                         type="checkbox"
                         checked={immediateAlertEmails}
-                        onChange={(e) => setImmediateAlertEmails(e.target.checked)}
+                        onChange={(e) => {
+                          const checked = e.target.checked;
+                          setImmediateAlertEmails(checked);
+                          if (checked && !notificationEmail.trim() && shopifyContactEmail) {
+                            setNotificationEmail(shopifyContactEmail);
+                          }
+                        }}
                         style={{ marginTop: '3px', transform: 'scale(1.15)' }}
                       />
                       <div>
@@ -330,7 +351,13 @@ export default function Settings() {
                       <input
                         type="checkbox"
                         checked={weeklySummaryEmails}
-                        onChange={(e) => setWeeklySummaryEmails(e.target.checked)}
+                        onChange={(e) => {
+                          const checked = e.target.checked;
+                          setWeeklySummaryEmails(checked);
+                          if (checked && !notificationEmail.trim() && shopifyContactEmail) {
+                            setNotificationEmail(shopifyContactEmail);
+                          }
+                        }}
                         style={{ marginTop: '3px', transform: 'scale(1.15)' }}
                       />
                       <div>
@@ -340,14 +367,27 @@ export default function Settings() {
                       </div>
                     </label>
                   </div>
-                  <s-text-field
-                    label={t("settingsAdmin.notifications.emailLabel")}
-                    type="email"
-                    value={notificationEmail}
-                    disabled={(!immediateAlertEmails && !weeklySummaryEmails) || undefined}
-                    onChange={(event: any) => setNotificationEmail(event.currentTarget.value)}
-                    helpText={t("settingsAdmin.notifications.emailHelp")}
-                  />
+                  <div>
+                    <s-text-field
+                      label={t("settingsAdmin.notifications.emailLabel")}
+                      type="email"
+                      value={notificationEmail}
+                      disabled={(!immediateAlertEmails && !weeklySummaryEmails) || undefined}
+                      onChange={(event: any) => setNotificationEmail(event.currentTarget.value)}
+                      helpText={t("settingsAdmin.notifications.emailHelp")}
+                    />
+                    {shopifyContactEmail && notificationEmail.trim().toLowerCase() !== shopifyContactEmail.toLowerCase() && (
+                      <div style={{ marginTop: '6px' }}>
+                        <s-button
+                          type="button"
+                          variant="secondary"
+                          onClick={() => setNotificationEmail(shopifyContactEmail)}
+                        >
+                          {t("settings.notifications.useShopifyEmail", { email: shopifyContactEmail })}
+                        </s-button>
+                      </div>
+                    )}
+                  </div>
                   <s-select
                     label={t("settingsAdmin.notifications.languageLabel")}
                     value={notificationLanguage}

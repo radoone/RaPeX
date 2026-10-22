@@ -1,5 +1,5 @@
 import * as logger from "firebase-functions/logger";
-import { FieldValue } from "firebase-admin/firestore";
+import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import { db } from "./firebase-admin.js";
 import { checkProductAgainstAlerts } from "./safety-gate-checker.js";
 import type { ProductInput, SafetyCheckResult } from "./safety-gate-checker.schemas.js";
@@ -20,6 +20,8 @@ type ResponseShape = {
   json(payload: unknown): void;
   send(payload: string): void;
 };
+
+const PUBLIC_SCAN_RETENTION_MS = 90 * 86400_000;
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -171,12 +173,16 @@ async function loadCachedProductVectors(
     const docRefs = chunkIds.map((id) => productsCol.doc(encodeURIComponent(id)));
     try {
       const snapshots = await db.getAll(...docRefs);
+      const refreshBatch = db.batch();
+      let refreshCount = 0;
       for (let j = 0; j < snapshots.length; j++) {
         const snap = snapshots[j];
         if (snap.exists) {
           const data = snap.data();
           const vector = asVectorArray(data?.vector_text);
           if (vector && vector.length > 0) {
+            refreshBatch.set(docRefs[j], { expireAt: Timestamp.fromMillis(Date.now() + PUBLIC_SCAN_RETENTION_MS) }, { merge: true });
+            refreshCount += 1;
             result.set(chunkIds[j], {
               vector,
               embeddingText: data?.embeddingText,
@@ -185,6 +191,7 @@ async function loadCachedProductVectors(
           }
         }
       }
+      if (refreshCount) await refreshBatch.commit();
     } catch (err) {
       logger.warn(`Failed to batch load cached product vectors from Firestore:`, err);
     }
@@ -234,6 +241,7 @@ async function saveProductVectors(
           vector_text: FieldValue.vector(item.vector),
           sourceUpdatedAt: item.sourceUpdatedAt || null,
           updatedAt: FieldValue.serverTimestamp(),
+          expireAt: Timestamp.fromMillis(Date.now() + PUBLIC_SCAN_RETENTION_MS),
         },
         { merge: true }
       );
@@ -267,6 +275,7 @@ async function updateScanProgress(
           status: progress.stage === "error" ? "error" : isTerminal ? "review_needed" : "scanning",
           scanProgress: progress,
           updatedAt: new Date().toISOString(),
+          expireAt: Timestamp.fromMillis(Date.now() + PUBLIC_SCAN_RETENTION_MS),
         },
         { merge: true }
       );
@@ -401,6 +410,253 @@ function computeScore(
     highestSimilarity,
     summary: `Found ${flaggedCount} product(s) matching Safety Gate alerts (${seriousRiskCount} serious violations, highest similarity ${highestSimilarity}%).`,
   };
+}
+
+/** Shared bounded batch engine. Public full-catalog jobs never publish a page as a complete lead. */
+export async function scanPublicCatalogProducts(domain: string, rawProducts: any[], similarityThreshold = 80, persistLead = false, contactEmail?: string | null) {
+  const progress: typeof updateScanProgress = persistLead ? updateScanProgress : async () => undefined;
+  await progress(domain, {
+    stage: "embedding",
+    percent: 25,
+    message: `Stiahnutých ${rawProducts.length} produktov. Načítavam embeddingy z Firestore cache...`,
+  });
+
+  // 2. Build product inputs and prepare text representation for batch vectorization
+  const productInputs = rawProducts.map((raw) => shopifyRawToProductInput(raw, domain));
+  const embeddingTexts = productInputs.map((p) =>
+    buildEmbeddingText({
+      brand: p.brand,
+      model: p.model,
+      category: p.category,
+      title: p.name,
+      description: p.description,
+    })
+  );
+
+  // 3. Batch embed texts with Firestore vector cache lookup
+  logger.info(`Checking Firestore for existing product embeddings for ${domain}...`);
+  const cachedMap = await loadCachedProductVectors(
+    domain,
+    productInputs.map((p) => p.productId || "").filter(Boolean)
+  );
+
+  const allVectors: Array<number[] | undefined> = new Array(productInputs.length);
+  const toEmbedIndices: number[] = [];
+  const toEmbedTexts: string[] = [];
+
+  for (let i = 0; i < productInputs.length; i++) {
+    const p = productInputs[i];
+    const text = embeddingTexts[i];
+    const raw = rawProducts[i];
+    const prodId = p.productId || String(raw?.id || raw?.handle || i);
+    const cached = cachedMap.get(prodId);
+
+    if (
+      cached &&
+      (cached.embeddingText === text || (raw.updated_at && cached.sourceUpdatedAt === raw.updated_at))
+    ) {
+      allVectors[i] = cached.vector;
+    } else {
+      toEmbedIndices.push(i);
+      toEmbedTexts.push(text);
+    }
+  }
+
+  const cachedCount = productInputs.length - toEmbedIndices.length;
+  logger.info(
+    `Embedding status for ${domain}: ${cachedCount} loaded from Firestore cache, ${toEmbedIndices.length} new items to embed.`
+  );
+
+  if (toEmbedTexts.length > 0) {
+    await progress(domain, {
+      stage: "embedding",
+      percent: 45,
+      message: `Generujem vektorové embeddingy pre ${toEmbedTexts.length} nových položiek (${cachedCount} načítaných z cache)...`,
+    });
+
+    const newlyEmbeddedToSave: Array<{
+      productId: string;
+      handle?: string;
+      title: string;
+      pInput: ProductInput;
+      embeddingText: string;
+      vector: number[];
+      sourceUpdatedAt?: string;
+    }> = [];
+
+    const EMBED_BATCH_SIZE = 50;
+    const PARALLEL_BATCHES = 5;
+    for (let i = 0; i < toEmbedTexts.length; i += EMBED_BATCH_SIZE * PARALLEL_BATCHES) {
+      const batchSliceTexts: string[][] = [];
+      const batchSliceIndices: number[][] = [];
+
+      for (let b = 0; b < PARALLEL_BATCHES; b++) {
+        const start = i + b * EMBED_BATCH_SIZE;
+        if (start >= toEmbedTexts.length) break;
+        const end = Math.min(start + EMBED_BATCH_SIZE, toEmbedTexts.length);
+        batchSliceTexts.push(toEmbedTexts.slice(start, end));
+        batchSliceIndices.push(toEmbedIndices.slice(start, end));
+      }
+
+      const results = await Promise.all(batchSliceTexts.map((chunk) => embedTexts(chunk)));
+
+      for (let b = 0; b < results.length; b++) {
+        const vectors = results[b];
+        const textChunk = batchSliceTexts[b];
+        const indexChunk = batchSliceIndices[b];
+
+        for (let j = 0; j < vectors.length; j++) {
+          const globalProdIdx = indexChunk[j];
+          const vec = vectors[j];
+          allVectors[globalProdIdx] = vec;
+
+          if (vec && vec.length > 0) {
+            newlyEmbeddedToSave.push({
+              productId: productInputs[globalProdIdx].productId || String(rawProducts[globalProdIdx]?.id || globalProdIdx),
+              handle: rawProducts[globalProdIdx]?.handle,
+              title: productInputs[globalProdIdx].name,
+              pInput: productInputs[globalProdIdx],
+              embeddingText: textChunk[j],
+              vector: vec,
+              sourceUpdatedAt: rawProducts[globalProdIdx]?.updated_at,
+            });
+          }
+        }
+      }
+    }
+
+    if (newlyEmbeddedToSave.length > 0) {
+      logger.info(
+        `Saving ${newlyEmbeddedToSave.length} new product embeddings to Firestore (rapex_leads/${domain}/products)...`
+      );
+      await saveProductVectors(domain, newlyEmbeddedToSave);
+    }
+  }
+
+  // 4. Fast Firestore KNN Retrieval to filter candidates (Cosine Distance <= 0.22)
+  logger.info(`Running fast Firestore vector nearest-neighbor search for candidate alerts...`);
+  await progress(domain, {
+    stage: "vector_search",
+    percent: 65,
+    message: `Vektorové KNN vyhľadávanie v 32 000 Safety Gate záznamoch pre ${productInputs.length} produktov...`,
+  });
+
+  const candidatePairs: Array<{
+    productInput: ProductInput;
+    raw: any;
+    candidateAlerts: NormalizedAlert[];
+  }> = [];
+
+  const KNN_CONCURRENCY = 16;
+  for (let i = 0; i < productInputs.length; i += KNN_CONCURRENCY) {
+    const chunk = productInputs.slice(i, i + KNN_CONCURRENCY);
+    await Promise.all(
+      chunk.map(async (pInput, idx) => {
+        const globalIdx = i + idx;
+        const vector = allVectors[globalIdx];
+        if (!vector || vector.length === 0) throw new Error("Scan incomplete: product embedding is missing");
+
+        const candidateAlerts = await retrieveAlertsForVector(vector, 6);
+        if (candidateAlerts.length > 0) {
+          candidatePairs.push({
+            productInput: pInput,
+            raw: rawProducts[globalIdx],
+            candidateAlerts,
+          });
+        }
+      })
+    );
+  }
+
+  logger.info(
+    `Vector pre-filtering complete: ${candidatePairs.length} / ${productInputs.length} products require AI evaluation.`
+  );
+
+  // 5. Targeted LLM evaluation (Gemini 2.5 Flash) ONLY on candidate pairs
+  await progress(domain, {
+    stage: "ai_evaluating",
+    percent: 80,
+    message: `Multimodálna AI analýza (Gemini 2.5 Flash) pre ${candidatePairs.length} rizikových kandidátov...`,
+  });
+
+  const matches: any[] = [];
+  const LLM_CONCURRENCY = 3;
+  let candidateCheckFailures = 0;
+
+  for (let i = 0; i < candidatePairs.length; i += LLM_CONCURRENCY) {
+    const chunk = candidatePairs.slice(i, i + LLM_CONCURRENCY);
+    await Promise.all(
+      chunk.map(async (candidate) => {
+        try {
+          const checkResult = await checkProductAgainstAlerts(
+            candidate.productInput,
+            candidate.candidateAlerts
+          );
+
+          const filteredWarnings = checkResult.warnings.filter(
+            (w) => (w.overallSimilarity || 0) >= similarityThreshold
+          );
+
+          if (filteredWarnings.length > 0) {
+            matches.push({
+              productId: candidate.raw.id ? String(candidate.raw.id) : candidate.productInput.productId,
+              productTitle: candidate.raw.title,
+              productUrl: candidate.raw.handle ? `https://${domain}/products/${candidate.raw.handle}` : `https://${domain}/search?q=${encodeURIComponent(candidate.raw.title || "")}`,
+              productImage: candidate.productInput.imageUrl,
+              vendor: candidate.productInput.brand,
+              productType: candidate.productInput.category,
+              result: {
+                ...checkResult,
+                warnings: filteredWarnings,
+                isSafe: false,
+              },
+            });
+          }
+        } catch (checkErr) {
+          candidateCheckFailures += 1;
+          logger.warn(`Candidate AI check failed for ${candidate.raw.title}:`, checkErr);
+        }
+      })
+    );
+  }
+
+  if (candidateCheckFailures > 0) {
+    throw new Error(`Scan incomplete: ${candidateCheckFailures} candidate product check(s) failed`);
+  }
+
+  // 6. Compute score and save lead document in Firestore
+  const scoreResult = computeScore(rawProducts.length, matches);
+  const now = new Date().toISOString();
+
+  const leadDoc = {
+    domain,
+    storeUrl: `https://${domain}`,
+    status: matches.length > 0 ? "review_needed" : "new",
+    leadScore: scoreResult.leadScore,
+    priorityLevel: scoreResult.priorityLevel,
+    totalProductsScanned: rawProducts.length,
+    flaggedProductsCount: matches.length,
+    totalWarningsCount: scoreResult.totalWarningsCount,
+    seriousRiskCount: scoreResult.seriousRiskCount,
+    highestSimilarity: scoreResult.highestSimilarity,
+    summary: scoreResult.summary,
+    matches,
+    contactEmail: contactEmail || undefined,
+    expireAt: Timestamp.fromMillis(Date.now() + PUBLIC_SCAN_RETENTION_MS),
+    scannedAt: now,
+    updatedAt: now,
+    scanProgress: {
+      stage: "completed",
+      percent: 100,
+      message: `Sken dokončený. Preverených ${rawProducts.length} produktov, zistených ${matches.length} záchytov.`,
+    },
+  };
+
+  if (persistLead) await db.collection("rapex_leads").doc(encodeURIComponent(domain)).set(leadDoc, { merge: true });
+
+  logger.info(`Completed scan for ${domain}: score=${leadDoc.leadScore}, flagged=${leadDoc.flaggedProductsCount}`);
+
+  return leadDoc;
 }
 
 export async function handleScanPublicShopifyStoreRequest(
@@ -539,245 +795,7 @@ async function enrichLeadMatches(matches: any[], leadDomain?: string): Promise<a
 
     logger.info(`Fetched ${rawProducts.length} products from ${domain}, contactEmail: ${contactEmail}`);
 
-    await updateScanProgress(domain, {
-      stage: "embedding",
-      percent: 25,
-      message: `Stiahnutých ${rawProducts.length} produktov. Načítavam embeddingy z Firestore cache...`,
-    });
-
-    // 2. Build product inputs and prepare text representation for batch vectorization
-    const productInputs = rawProducts.map((raw) => shopifyRawToProductInput(raw, domain));
-    const embeddingTexts = productInputs.map((p) =>
-      buildEmbeddingText({
-        brand: p.brand,
-        model: p.model,
-        category: p.category,
-        title: p.name,
-        description: p.description,
-      })
-    );
-
-    // 3. Batch embed texts with Firestore vector cache lookup
-    logger.info(`Checking Firestore for existing product embeddings for ${domain}...`);
-    const cachedMap = await loadCachedProductVectors(
-      domain,
-      productInputs.map((p) => p.productId || "").filter(Boolean)
-    );
-
-    const allVectors: Array<number[] | undefined> = new Array(productInputs.length);
-    const toEmbedIndices: number[] = [];
-    const toEmbedTexts: string[] = [];
-
-    for (let i = 0; i < productInputs.length; i++) {
-      const p = productInputs[i];
-      const text = embeddingTexts[i];
-      const raw = rawProducts[i];
-      const prodId = p.productId || String(raw?.id || raw?.handle || i);
-      const cached = cachedMap.get(prodId);
-
-      if (
-        cached &&
-        (cached.embeddingText === text || (raw.updated_at && cached.sourceUpdatedAt === raw.updated_at))
-      ) {
-        allVectors[i] = cached.vector;
-      } else {
-        toEmbedIndices.push(i);
-        toEmbedTexts.push(text);
-      }
-    }
-
-    const cachedCount = productInputs.length - toEmbedIndices.length;
-    logger.info(
-      `Embedding status for ${domain}: ${cachedCount} loaded from Firestore cache, ${toEmbedIndices.length} new items to embed.`
-    );
-
-    if (toEmbedTexts.length > 0) {
-      await updateScanProgress(domain, {
-        stage: "embedding",
-        percent: 45,
-        message: `Generujem vektorové embeddingy pre ${toEmbedTexts.length} nových položiek (${cachedCount} načítaných z cache)...`,
-      });
-
-      const newlyEmbeddedToSave: Array<{
-        productId: string;
-        handle?: string;
-        title: string;
-        pInput: ProductInput;
-        embeddingText: string;
-        vector: number[];
-        sourceUpdatedAt?: string;
-      }> = [];
-
-      const EMBED_BATCH_SIZE = 50;
-      const PARALLEL_BATCHES = 5;
-      for (let i = 0; i < toEmbedTexts.length; i += EMBED_BATCH_SIZE * PARALLEL_BATCHES) {
-        const batchSliceTexts: string[][] = [];
-        const batchSliceIndices: number[][] = [];
-
-        for (let b = 0; b < PARALLEL_BATCHES; b++) {
-          const start = i + b * EMBED_BATCH_SIZE;
-          if (start >= toEmbedTexts.length) break;
-          const end = Math.min(start + EMBED_BATCH_SIZE, toEmbedTexts.length);
-          batchSliceTexts.push(toEmbedTexts.slice(start, end));
-          batchSliceIndices.push(toEmbedIndices.slice(start, end));
-        }
-
-        const results = await Promise.all(batchSliceTexts.map((chunk) => embedTexts(chunk)));
-
-        for (let b = 0; b < results.length; b++) {
-          const vectors = results[b];
-          const textChunk = batchSliceTexts[b];
-          const indexChunk = batchSliceIndices[b];
-
-          for (let j = 0; j < vectors.length; j++) {
-            const globalProdIdx = indexChunk[j];
-            const vec = vectors[j];
-            allVectors[globalProdIdx] = vec;
-
-            if (vec && vec.length > 0) {
-              newlyEmbeddedToSave.push({
-                productId: productInputs[globalProdIdx].productId || String(rawProducts[globalProdIdx]?.id || globalProdIdx),
-                handle: rawProducts[globalProdIdx]?.handle,
-                title: productInputs[globalProdIdx].name,
-                pInput: productInputs[globalProdIdx],
-                embeddingText: textChunk[j],
-                vector: vec,
-                sourceUpdatedAt: rawProducts[globalProdIdx]?.updated_at,
-              });
-            }
-          }
-        }
-      }
-
-      if (newlyEmbeddedToSave.length > 0) {
-        logger.info(
-          `Saving ${newlyEmbeddedToSave.length} new product embeddings to Firestore (rapex_leads/${domain}/products)...`
-        );
-        await saveProductVectors(domain, newlyEmbeddedToSave);
-      }
-    }
-
-    // 4. Fast Firestore KNN Retrieval to filter candidates (Cosine Distance <= 0.22)
-    logger.info(`Running fast Firestore vector nearest-neighbor search for candidate alerts...`);
-    await updateScanProgress(domain, {
-      stage: "vector_search",
-      percent: 65,
-      message: `Vektorové KNN vyhľadávanie v 32 000 Safety Gate záznamoch pre ${productInputs.length} produktov...`,
-    });
-
-    const candidatePairs: Array<{
-      productInput: ProductInput;
-      raw: any;
-      candidateAlerts: NormalizedAlert[];
-    }> = [];
-
-    const KNN_CONCURRENCY = 16;
-    for (let i = 0; i < productInputs.length; i += KNN_CONCURRENCY) {
-      const chunk = productInputs.slice(i, i + KNN_CONCURRENCY);
-      await Promise.all(
-        chunk.map(async (pInput, idx) => {
-          const globalIdx = i + idx;
-          const vector = allVectors[globalIdx];
-          if (!vector || vector.length === 0) return;
-
-          const candidateAlerts = await retrieveAlertsForVector(vector, 6);
-          if (candidateAlerts.length > 0) {
-            candidatePairs.push({
-              productInput: pInput,
-              raw: rawProducts[globalIdx],
-              candidateAlerts,
-            });
-          }
-        })
-      );
-    }
-
-    logger.info(
-      `Vector pre-filtering complete: ${candidatePairs.length} / ${productInputs.length} products require AI evaluation.`
-    );
-
-    // 5. Targeted LLM evaluation (Gemini 2.5 Flash) ONLY on candidate pairs
-    await updateScanProgress(domain, {
-      stage: "ai_evaluating",
-      percent: 80,
-      message: `Multimodálna AI analýza (Gemini 2.5 Flash) pre ${candidatePairs.length} rizikových kandidátov...`,
-    });
-
-    const matches: any[] = [];
-    const LLM_CONCURRENCY = 3;
-    let candidateCheckFailures = 0;
-
-    for (let i = 0; i < candidatePairs.length; i += LLM_CONCURRENCY) {
-      const chunk = candidatePairs.slice(i, i + LLM_CONCURRENCY);
-      await Promise.all(
-        chunk.map(async (candidate) => {
-          try {
-            const checkResult = await checkProductAgainstAlerts(
-              candidate.productInput,
-              candidate.candidateAlerts
-            );
-
-            const filteredWarnings = checkResult.warnings.filter(
-              (w) => (w.overallSimilarity || 0) >= similarityThreshold
-            );
-
-            if (filteredWarnings.length > 0) {
-              matches.push({
-                productId: candidate.raw.id ? String(candidate.raw.id) : candidate.productInput.productId,
-                productTitle: candidate.raw.title,
-                productUrl: candidate.raw.handle ? `https://${domain}/products/${candidate.raw.handle}` : `https://${domain}/search?q=${encodeURIComponent(candidate.raw.title || "")}`,
-                productImage: candidate.productInput.imageUrl,
-                vendor: candidate.productInput.brand,
-                productType: candidate.productInput.category,
-                result: {
-                  ...checkResult,
-                  warnings: filteredWarnings,
-                  isSafe: false,
-                },
-              });
-            }
-          } catch (checkErr) {
-            candidateCheckFailures += 1;
-            logger.warn(`Candidate AI check failed for ${candidate.raw.title}:`, checkErr);
-          }
-        })
-      );
-    }
-
-    if (candidateCheckFailures > 0) {
-      throw new Error(`Scan incomplete: ${candidateCheckFailures} candidate product check(s) failed`);
-    }
-
-    // 6. Compute score and save lead document in Firestore
-    const scoreResult = computeScore(rawProducts.length, matches);
-    const now = new Date().toISOString();
-
-    const leadDoc = {
-      domain,
-      storeUrl: `https://${domain}`,
-      status: matches.length > 0 ? "review_needed" : "new",
-      leadScore: scoreResult.leadScore,
-      priorityLevel: scoreResult.priorityLevel,
-      totalProductsScanned: rawProducts.length,
-      flaggedProductsCount: matches.length,
-      totalWarningsCount: scoreResult.totalWarningsCount,
-      seriousRiskCount: scoreResult.seriousRiskCount,
-      highestSimilarity: scoreResult.highestSimilarity,
-      summary: scoreResult.summary,
-      matches,
-      contactEmail: contactEmail || undefined,
-      scannedAt: now,
-      updatedAt: now,
-      scanProgress: {
-        stage: "completed",
-        percent: 100,
-        message: `Sken dokončený. Preverených ${rawProducts.length} produktov, zistených ${matches.length} záchytov.`,
-      },
-    };
-
-    await db.collection("rapex_leads").doc(encodeURIComponent(domain)).set(leadDoc, { merge: true });
-
-    logger.info(`Completed scan for ${domain}: score=${leadDoc.leadScore}, flagged=${leadDoc.flaggedProductsCount}`);
+    const leadDoc = await scanPublicCatalogProducts(domain, rawProducts, similarityThreshold, true, contactEmail);
 
     response.status(200).json({
       success: true,

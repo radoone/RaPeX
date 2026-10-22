@@ -1861,6 +1861,39 @@ s-clickable s-icon {
 }
 
 .review-modal__points span { color: var(--text-subdued); text-align: right; }
+
+.review-modal__identifiers-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-top: 10px;
+  border: 1px solid var(--border-subdued);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.review-modal__identifiers-table th,
+.review-modal__identifiers-table td {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-subdued);
+}
+
+.review-modal__identifiers-table th {
+  background: var(--surface-subdued);
+  font-weight: 600;
+  color: var(--text-subdued);
+  font-size: 12px;
+}
+
+.review-modal__identifiers-table tr:last-child td {
+  border-bottom: none;
+}
+
+.review-modal__val-empty {
+  color: var(--text-subdued);
+  font-style: italic;
+}
 .review-modal__reason {
   display: -webkit-box;
   -webkit-box-orient: vertical;

@@ -132,10 +132,9 @@ async function planCatalogChecksForManualCheck(params: {
   };
 }
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request, url }: LoaderFunctionArgs) => {
   const { admin, billing, session } = await authenticate.admin(request);
   const billingStatus = await getBillingStatus(billing, session.shop, admin);
-  const url = new URL(request.url);
   const search = url.searchParams.get("search")?.trim() || "";
 
   const productsResponse = await admin.graphql(`

@@ -4,8 +4,7 @@ import { useLoaderData } from "react-router";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const url = new URL(request.url);
+export const loader = async ({ url }: LoaderFunctionArgs) => {
   if (url.searchParams.get("billingError") === "1") {
     return json({ target: null, verificationError: true });
   }

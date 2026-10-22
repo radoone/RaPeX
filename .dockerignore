@@ -1,5 +1,6 @@
 .git
 .playwright-cli
+outputs
 node_modules
 **/node_modules
 **/build

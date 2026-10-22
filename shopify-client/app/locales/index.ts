@@ -67,7 +67,25 @@ function deepMerge<T extends Record<string, unknown>>(base: T, override: Record<
   return output as T;
 }
 
-export const localizedResources = {
+// Retain the existing translations while adapting legacy `_plural` keys to
+// i18next's current Intl plural categories (including Slovak few/many).
+function normalizePlurals(value: Record<string, unknown>): Record<string, unknown> {
+  const output: Record<string, unknown> = {};
+  for (const [key, entry] of Object.entries(value)) {
+    output[key] = entry && typeof entry === "object" && !Array.isArray(entry)
+      ? normalizePlurals(entry as Record<string, unknown>)
+      : entry;
+  }
+  for (const [key, entry] of Object.entries(value)) {
+    if (!key.endsWith("_plural") || typeof entry !== "string") continue;
+    const base = key.slice(0, -"_plural".length);
+    if (typeof value[base] === "string") output[`${base}_one`] ??= value[base];
+    for (const category of ["few", "many", "other"]) output[`${base}_${category}`] ??= entry;
+  }
+  return output;
+}
+
+const mergedResources = {
   ...resources,
   ...Object.fromEntries(
     Object.entries(coreLocales).map(([code, translation]) => [
@@ -76,3 +94,9 @@ export const localizedResources = {
     ]),
   ),
 };
+
+export const localizedResources = Object.fromEntries(
+  Object.entries(mergedResources).map(([code, resource]) => [code, {
+    translation: normalizePlurals(resource.translation),
+  }]),
+);

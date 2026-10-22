@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { AlertBadge } from "./AlertBadge";
 import { StatusBadge } from "./StatusBadge";
 import type { ResolutionType } from "./AlertTable";
+import { compareProductIdentifiers } from "../services/product-identifiers";
 
 interface AlertDetailModalProps {
   alert: any;
@@ -118,10 +119,12 @@ export function AlertDetailModal({
   const firstPicture = pictures[0];
   const safetyImage = typeof firstPicture === "string" ? firstPicture : firstPicture?.url || firstPicture?.src;
   const safetyBrand = fields.brand || fields.product_brand;
+  const safetyTitle = fields.name || fields.product || fields.product_name || fields.product_description || safetyBrand || t("analysis.reviewLayout.possibleMatch");
   const safetyModel = fields.type_numberOfModel || fields.product_model_type || fields.product_model || fields.model;
   const safetyCategory = fields.category || fields.product_category;
-  const safetyTitle = fields.name || fields.product || fields.product_name || [safetyBrand, safetyCategory].filter(Boolean).join(" · ") || t("analysis.reviewLayout.unnamedRecord");
-  const caseNumber = fields.caseNumber || fields.alert_number || primaryWarning?.alertId;
+  const rawCaseNumber = fields.caseNumber || fields.alert_number;
+  const isOfficialCaseNumber = Boolean(rawCaseNumber && (!rawCaseNumber.includes("-") || !rawCaseNumber.match(/^[0-9a-f]{8}-[0-9a-f]{4}/i)));
+  const caseNumber = isOfficialCaseNumber ? rawCaseNumber : null;
   const safetyUrl = fields.url || fields.rapex_url || fields.reference;
   const isSafe = parsed?.isSafe === true;
   const overallSimilarity = typeof primaryWarning?.overallSimilarity === "number" ? primaryWarning.overallSimilarity : null;
@@ -145,6 +148,41 @@ export function AlertDetailModal({
     const action = isDismissOutcome ? onDismiss : onResolve;
     action?.(alert.id, selectedOutcome, auditNote.trim() || undefined);
   };
+
+  const merchantBrand = alert.productVendor || alert.brand || null;
+  const merchantModel = alert.model || null;
+  const merchantBarcode = alert.barcode || alert.productBarcode || alert.gtin || alert.ean || null;
+  const merchantBatch = alert.batchNumber || alert.batch || null;
+
+  const safetyBarcode = fields.barcode || fields.product_barcode || null;
+  const safetyBatch = fields.batchNumber || fields.batch_number || null;
+
+  const identifierRows = [
+    {
+      label: t("analysis.reviewLayout.identifiers.brand"),
+      merchantVal: merchantBrand,
+      safetyVal: safetyBrand,
+      status: compareProductIdentifiers(merchantBrand, safetyBrand),
+    },
+    {
+      label: t("analysis.reviewLayout.identifiers.model"),
+      merchantVal: merchantModel,
+      safetyVal: safetyModel,
+      status: compareProductIdentifiers(merchantModel, safetyModel),
+    },
+    {
+      label: t("analysis.reviewLayout.identifiers.barcode"),
+      merchantVal: merchantBarcode,
+      safetyVal: safetyBarcode,
+      status: compareProductIdentifiers(merchantBarcode, safetyBarcode),
+    },
+    {
+      label: t("analysis.reviewLayout.identifiers.batch"),
+      merchantVal: merchantBatch,
+      safetyVal: safetyBatch,
+      status: compareProductIdentifiers(merchantBatch, safetyBatch),
+    },
+  ];
 
   function getWarningImages(warning: any): any[] {
     const warningFields = warning.alertDetails?.fields || {};
@@ -213,6 +251,52 @@ export function AlertDetailModal({
                   {safetyUrl && <s-link href={safetyUrl} target="_blank">{t("analysis.viewOnSafetyGate")}</s-link>}
                 </div>
               </div>
+            </div>
+
+            <div style={{ marginTop: "16px" }}>
+              <div className="review-modal__section-heading" style={{ marginBottom: "8px" }}>
+                <h4>{t("analysis.reviewLayout.identifiersHeading")}</h4>
+              </div>
+              <table className="review-modal__identifiers-table">
+                <thead>
+                  <tr>
+                    <th>{t("analysis.reviewLayout.identifiers.field")}</th>
+                    <th>{t("analysis.reviewLayout.identifiers.yourProduct")}</th>
+                    <th>{t("analysis.reviewLayout.identifiers.safetyGate")}</th>
+                    <th>{t("analysis.reviewLayout.identifiers.result")}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {identifierRows.map((row, idx) => (
+                    <tr key={idx}>
+                      <td><strong>{row.label}</strong></td>
+                      <td>
+                        {row.merchantVal ? (
+                          <span>{row.merchantVal}</span>
+                        ) : (
+                          <span className="review-modal__val-empty">{t("analysis.reviewLayout.identifiers.notSpecified")}</span>
+                        )}
+                      </td>
+                      <td>
+                        {row.safetyVal ? (
+                          <span>{row.safetyVal}</span>
+                        ) : (
+                          <span className="review-modal__val-empty">{t("analysis.reviewLayout.identifiers.notSpecified")}</span>
+                        )}
+                      </td>
+                      <td>
+                        {row.status === "match" ? (
+                          <s-badge tone="success">{t("analysis.reviewLayout.identifiers.match")}</s-badge>
+                        ) : row.status === "mismatch" ? (
+                          <s-badge tone="critical">{t("analysis.reviewLayout.identifiers.mismatch")}</s-badge>
+                        ) : (
+                          <s-badge tone="subdued">{t("analysis.reviewLayout.identifiers.notSpecified")}</s-badge>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </section>
 

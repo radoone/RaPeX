@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Internal Lead Scanner | Safety Gate Monitor</title>
+    <title>Internal Lead Scanner | ZeroRecall</title>
     <link rel="stylesheet" href="./styles.css" />
     <style>
       .admin-container {
@@ -398,7 +398,7 @@
       let currentLeads = [];
 
       const apiKeyInput = document.getElementById("api-key-input");
-      const savedKey = localStorage.getItem("rapex_scanner_api_key") || "cc940932d645c8523e764868cd8c162ef2c9947a1da4d189792ea651c70c99b2";
+      const savedKey = localStorage.getItem("rapex_scanner_api_key") || "";
       if (savedKey) apiKeyInput.value = savedKey;
 
       apiKeyInput.addEventListener("input", (e) => {
@@ -796,8 +796,8 @@
           : `Overenie bezpečnosti sortimentu pre ${domain} (EU Safety Gate / RAPEX audit)`;
 
         const sampleText = flaggedCount > 0
-          ? `Dobrý deň,\n\npočas automatického compliance auditu vášho e-shopu ${domain} voči oficiálnej databáze nebezpečných nepotravinových výrobkov Európskej únie (Safety Gate / RAPEX) náš systém identifikoval ${flaggedCount} produkt(y), ktoré sa zhodujú s bezpečnostnými varovaniami EÚ.\n\nPodľa nariadenia GPSR sú predajcovia povinní zabezpečiť stiahnutie dotknutých šarží.\n\nAk chcete automatizovať monitoring celého vášho katalógu, môžete si vyskúšať našu oficiálnu Shopify aplikáciu:\n👉 https://apps.shopify.com/safety-gate-checker\n\nS pozdravom,\nSafety Gate Compliance Tím`
-          : `Dobrý deň,\n\nkontaktujem vás z tímu Safety Gate Monitor. Preverili sme váš e-shop ${domain} voči oficiálnej databáze nebezpečných nepotravinových výrobkov EÚ (Safety Gate / RAPEX).\n\nVáš sortiment spĺňa bezpečnostné normy. Pre nepretržitý denný monitoring novovzniknutých európskych stiahnutí z trhu vám odporúčame našu Shopify aplikáciu:\n👉 https://apps.shopify.com/safety-gate-checker\n\nS pozdravom,\nSafety Gate Compliance Tím`;
+          ? `Dobrý deň,\n\npri kontrole verejného katalógu ${domain} sme našli ${flaggedCount} produkt(y) s možnou podobnosťou s výrobkami v databáze Safety Gate Európskej komisie. Ide o podnet na preverenie, nie o potvrdenie, že váš výrobok je nebezpečný.\n\nPred ďalším rozhodnutím treba porovnať konkrétny model, fotografiu, označenie a šaržu s oficiálnym záznamom. Radi vám poskytneme konkrétne podklady.\n\nZeroRecall umožňuje aj priebežné sledovanie nových upozornení a zmien produktov:\nhttps://zerorecall.online/?lang=sk#pricing\n\nS pozdravom,\nRadovan Staš, ZeroRecall\ninfo@zerorecall.online`
+          : `Dobrý deň,\n\nkontaktujem vás zo ZeroRecall. Pri jednorazovej kontrole verejného katalógu ${domain} sme nenašli možné zhody s databázou Safety Gate. Tento výsledok nepotvrdzuje bezpečnosť sortimentu a týka sa iba produktov dostupných v čase kontroly.\n\nZeroRecall porovnáva produkty Shopify obchodu s upozorneniami Safety Gate Európskej komisie a pri možnej zhode posiela podklady na preverenie.\n\nPriebežné sledovanie a aplikácia:\nhttps://zerorecall.online/?lang=sk#pricing\n\nS pozdravom,\nRadovan Staš, ZeroRecall\ninfo@zerorecall.online`;
 
         document.getElementById("modal-body").value = sampleText;
         document.getElementById("outreach-modal").classList.add("active");

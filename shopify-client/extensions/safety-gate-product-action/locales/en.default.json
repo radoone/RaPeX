@@ -1,3 +1,22 @@
 {
+  "runCheck": "Run check",
+  "openReview": "Open review",
+  "close": "Close",
+  "again": "Check again",
+  "done": "Done",
+  "checking": "Checking…",
+  "needsReview": "Needs review",
+  "noMatch": "No likely match detected",
+  "resolved": "Decision recorded",
+  "unchecked": "Not checked",
+  "checkFailed": "Product safety check failed",
+  "loadFailed": "Failed to load Safety Gate status",
+  "unavailable": "Safety Gate monitoring is unavailable right now.",
+  "loading": "Loading product safety status…",
+  "description": "Compare this Shopify product with EU Safety Gate records and review any possible matches.",
+  "details": "Recommendation & details",
+  "reason": "Reason",
+  "checked": "Last checked",
+  "risk": "Risk level",
   "name": "Run Safety Gate check"
 }

@@ -2,9 +2,8 @@ import type { LoaderFunctionArgs } from "react-router";
 import { getProductSafetyStatus } from "../services/product-safety-admin.server";
 import { authenticate } from "../shopify.server";
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request, url }: LoaderFunctionArgs) => {
   const { session, cors } = await authenticate.admin(request);
-  const url = new URL(request.url);
   const productId = url.searchParams.get("productId");
 
   if (!productId) {

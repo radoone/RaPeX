@@ -1,6 +1,7 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { data as json, isRouteErrorResponse, useLoaderData, useNavigate, useRouteError } from "react-router";
 import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { authenticate } from "../shopify.server";
 import db from "../merchant-db.server";
@@ -64,19 +65,54 @@ export default function AuditReportPage() {
   const { records, generatedAt } = useLoaderData<typeof loader>();
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [exporting, setExporting] = useState(false);
+  const [exportFailed, setExportFailed] = useState(false);
+  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+  useEffect(() => () => { if (downloadUrl) URL.revokeObjectURL(downloadUrl); }, [downloadUrl]);
   const active = records.filter((record: any) => record.status === "active").length;
   const documented = records.filter((record: any) => record.status !== "active").length;
+
+  async function downloadReport() {
+    if (exporting) return;
+    setExporting(true);
+    setExportFailed(false);
+    try {
+      // Fetch within the authenticated app so App Bridge can attach a session
+      // token. A new window has neither that token nor reliable iframe cookies.
+      const response = await fetch("/app/audit-report.csv");
+      if (!response.ok || !response.headers.get("Content-Type")?.startsWith("text/csv")) {
+        throw new Error("Audit report download failed");
+      }
+      const blob = await response.blob();
+      if (blob.size === 0) throw new Error("Audit report was empty");
+      const objectUrl = URL.createObjectURL(blob);
+      setDownloadUrl(objectUrl);
+      const anchor = document.createElement("a");
+      anchor.href = objectUrl;
+      anchor.download = `safety-gate-audit-report-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+    } catch {
+      setExportFailed(true);
+    } finally {
+      setExporting(false);
+    }
+  }
 
   return (
     <s-page size="large" className="page-shell">
       <s-heading slot="title" size="large">{t("auditReport.title")}</s-heading>
-      <s-button slot="primary-action" variant="primary" onClick={() => window.open("/app/audit-report.csv", "_blank", "noopener,noreferrer")}>{t("auditReport.download")}</s-button>
+      <s-button slot="primary-action" variant="primary" disabled={exporting} loading={exporting} onClick={downloadReport}>{t("auditReport.download")}</s-button>
       <s-button slot="secondary-actions" variant="secondary" onClick={() => navigate("/app/evidence")}>
         {t("auditReport.viewHistory")}
       </s-button>
       <div className="admin-stack">
+        {exportFailed ? <s-banner tone="critical" heading={t("errors.apiError")}><s-text>{t("actions.retry")}</s-text></s-banner> : null}
         <section className="admin-card">
           <div className="admin-card__header"><div><p className="admin-eyebrow">{t("auditReport.eyebrow")}</p><h2 className="admin-card__title">{t("auditReport.heading")}</h2><p className="admin-card__description">{t("auditReport.description")}</p></div></div>
+          <s-button variant="secondary" disabled={exporting} loading={exporting} onClick={downloadReport}>{t("auditReport.download")}</s-button>
+          {downloadUrl ? <p><a href={downloadUrl} download={`safety-gate-audit-report-${new Date().toISOString().slice(0, 10)}.csv`}>{t("auditReport.download")}</a></p> : null}
           <div className="audit-report-summary" aria-label={t("auditReport.summaryLabel")}>
             <div><span>{t("auditReport.total")}</span><strong>{records.length}</strong></div>
             <div><span>{t("auditReport.needsReview")}</span><strong>{active}</strong></div>

@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "0f8c446d88af9f13ac49947a87c47207"
-name = "Safety Gate Monitor"
+name = "ZeroRecall"
 application_url = "https://safety-gate-shopify-29849753697.europe-west1.run.app"
 embedded = true
 handle = "safety-gate-monitor-eu"

@@ -8,8 +8,8 @@ export type MonitoringRunSummary = {
   attemptCount: number;
 };
 
-function toIsoString(value: unknown): string | null {
-  if (value instanceof Date) return value.toISOString();
+export function toIsoString(value: unknown): string | null {
+  if (value instanceof Date) return Number.isNaN(value.getTime()) ? null : value.toISOString();
   if (value && typeof value === "object" && "toDate" in value && typeof (value as { toDate?: unknown }).toDate === "function") {
     const date = (value as { toDate: () => Date }).toDate();
     return Number.isNaN(date.getTime()) ? null : date.toISOString();

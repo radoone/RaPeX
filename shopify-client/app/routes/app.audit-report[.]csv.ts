@@ -1,11 +1,7 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { authenticate } from "../shopify.server";
 import db from "../merchant-db.server";
-
-function csvCell(value: unknown): string {
-  const text = value === null || value === undefined ? "" : String(value);
-  return `"${text.replace(/"/g, '""')}"`;
-}
+import { csvCell } from "../services/audit-csv";
 
 function parsePrimaryWarning(checkResult: string | null | undefined) {
   try {
@@ -48,6 +44,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return new Response(csvContent, {
     headers: {
       "Content-Type": "text/csv; charset=utf-8",
+      "Content-Length": String(Buffer.byteLength(csvContent)),
       "Content-Disposition": `attachment; filename="safety-gate-audit-report-${date}.csv"`,
       "Cache-Control": "no-store",
     },

@@ -114,3 +114,9 @@ ui-debug.log
 pglite-debug.log
 /artifacts
 .impeccable/config.local.json
+
+# Local browser evidence and deployment-only runtime configuration
+.playwright-cli/
+/outputs/
+/firebase/functions/.env.*
+/shopify-client/extensions/*/manifest.json
