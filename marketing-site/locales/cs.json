@@ -23,19 +23,19 @@
     "home": "Domů"
   },
   "hero": {
-    "badge": "BEZPEČNOST PRODUKTŮ PRO SHOPIFY",
-    "title": "Zkontrolujte své produkty proti bezpečnostním upozorněním EU.",
-    "subtitle": "ZeroRecall porovnává produkty ve vašem obchodě Shopify s oficiálními upozorněními Safety Gate o nebezpečných produktech. Obdržíte e-mail a důkazy k přezkoumání, když najdeme možnou shodu.",
+    "badge": "PRO SHOPIFY OBCHODY PRODÁVAJÍCÍ V EU",
+    "title": "Upozorníme vás na možné shody s nebezpečnými výrobky.",
+    "subtitle": "ZeroRecall porovnává produkty vašeho Shopify obchodu s databází Safety Gate Evropské komise. Při možné shodě dostanete e-mail a podklady k prověření — bez ručního prohledávání upozornění.",
     "inputPlaceholder": "vas-obchod.myshopify.com",
     "emailPlaceholder": "vas-email@obchod.com",
-    "ctaButton": "Bezplatné skenování",
+    "ctaButton": "Bezplatná kontrola",
     "subtext": "Bez kreditní karty • Výsledky e-mailem",
     "successTitle": "Skenování probíhá",
     "successBody": "Kontrolujeme veřejné produkty. Výsledek vám zašleme e-mailem, jakmile skenování skončí.",
     "installCta": "Nainstalovat z Shopify App Store",
     "exampleCta": "Zobrazit příklad výsledku",
-    "scanLink": "Nebo vyzkoušejte bezplatný audit obchodu ↓",
-    "reassurance": "Bezplatný audit e-mailem: celý veřejný katalog.",
+    "scanLink": "Bezplatně prověřit můj obchod",
+    "reassurance": "Jednorázová kontrola bez instalace a platební karty. Výsledek e-mailem.",
     "visualCaption": "Ilustrace, ne skutečný výsledek.",
     "mockDemo": "ILUSTRATIVNÍ NÁHLED",
     "mockEyebrow": "Kontrola produktu",
@@ -141,7 +141,8 @@
     "linkAuthority": "Národní úřad ({{country}}): {{authority}} ↗",
     "linkAllAuthorities": "Úřady pro všechny země EU ↗",
     "marketNote": "Jazyk neurčuje platné právo. Zkontrolujte úřad pro trh, kde prodáváte.",
-    "remedies": "V případě stažení z trhu z bezpečnostních důvodů vyžaduje článek 37 GPSR účinnou, bezplatnou a včasnou nápravu, obvykle výběr alespoň dvou z možností opravy, výměny nebo vrácení peněz. Národní pravidla určují sankce; požadavky se liší podle produktu a prodejního trhu."
+    "remedies": "V případě stažení z trhu z bezpečnostních důvodů vyžaduje článek 37 GPSR účinnou, bezplatnou a včasnou nápravu, obvykle výběr alespoň dvou z možností opravy, výměny nebo vrácení peněz. Národní pravidla určují sankce; požadavky se liší podle produktu a prodejního trhu.",
+    "detailsLabel": "Právní kontext a oficiální zdroje"
   },
   "faq": {
     "eyebrow": "Často kladené dotazy",
@@ -153,12 +154,14 @@
     "q3": "Mění aplikace mé produkty?",
     "a3": "Ne. Zobrazuje možné shody a důkazy v administraci Shopify. Vy rozhodujete, co dál.",
     "q4": "Co je zahrnuto v bezplatném skenování?",
-    "a4": "Všechny dostupné produkty ve veřejném Shopify katalogu vašeho obchodu a souhrn možných shod e-mailem. Soukromé nabídky nekontrolujeme; sken není osvědčením bezpečnosti."
+    "a4": "Všechny dostupné produkty ve veřejném Shopify katalogu vašeho obchodu a souhrn možných shod e-mailem. Soukromé nabídky nekontrolujeme; sken není osvědčením bezpečnosti.",
+    "q5": "Co když se nenajdou žádné možné shody?",
+    "a5": "V reportu uvidíte počet prověřených produktů a informaci, že se při této kontrole nenašly možné shody. Nejde o potvrzení bezpečnosti výrobků. Nová upozornění mohou přibýt později."
   },
   "cta": {
-    "title": "Začněte s bezplatným skenováním",
-    "subtitle": "Zkontrolujte veřejné produkty. Výsledek obdržíte e-mailem.",
-    "button": "Bezplatné skenování"
+    "title": "Začněte bezplatnou kontrolou",
+    "subtitle": "Prověřte veřejné produkty. Výsledek dostanete e-mailem.",
+    "button": "Bezplatná kontrola"
   },
   "about": {
     "metaTitle": "O ZeroRecall – Monitorování bezpečnosti produktů pro Shopify",
@@ -185,10 +188,11 @@
     "scopeLink": "Oficiální Safety Gate ↗",
     "ctaTitle": "Soustřeďte se na svůj obchod s větší důvěrou",
     "ctaSubtitle": "Začněte s bezplatným skenováním veřejných produktů.",
-    "ctaButton": "Bezplatné skenování",
+    "ctaButton": "Bezplatná kontrola",
     "contactTitle": "Máte dotaz?",
     "contactBody": "Jsme nezávislý projekt. Napište nám o aplikaci, skenování nebo vašich datech.",
-    "contactLink": "Napište na radoone@gmail.com"
+    "contactLink": "Napište na info@zerorecall.online",
+    "founderRole": "Zakladatel ZeroRecall"
   },
   "footer": {
     "text": "Klid s průběžnými kontrolami produktů Shopify.",
@@ -220,8 +224,8 @@
   },
   "scan": {
     "eyebrow": "JEDNORÁZOVÁ KONTROLA · BEZ INSTALACE",
-    "title": "Bezplatný sken celého veřejného katalogu",
-    "description": "Zadejte doménu vašeho veřejného obchodu Shopify a e-mail. Zašleme vám potvrzovací odkaz na váš e-mail a po potvrzení doručíme kompletní zprávu. Průběžné monitorování je součástí placené aplikace.",
+    "title": "Bezplatná kontrola celého veřejného katalogu",
+    "description": "Zadejte doménu Shopify obchodu a e-mail. Po potvrzení e-mailu jednorázově prověříme všechny dostupné veřejné produkty. Výsledek pošleme po dokončení.",
     "benefit1": "Pouze veřejné produkty",
     "benefit2": "Možné shody k přezkoumání",
     "benefit3": "Vaše produkty zůstanou nezměněny",
@@ -231,7 +235,7 @@
     "challengeRequired": "Před odesláním dokončete kontrolu robota.",
     "challengeUnavailable": "Kontrola robota není k dispozici. Skenování nebylo spuštěno; zkuste to později.",
     "verifyEmailTitle": "Zkontrolujte svou doručenou poštu",
-    "verifyEmailBody": "Poslali jsme vám e-mail s potvrzovacím odkazem pro zahájení auditu. Odkaz je platný 30 minut.",
+    "verifyEmailBody": "Poslali jsme vám e-mail s odkazem pro potvrzení a spuštění kontroly. Odkaz platí 30 minut.",
     "confirmTitle": "Potvrďte svůj e-mail a spusťte skenování",
     "confirmBody": "Zkontrolujeme veřejný katalog Shopify a výsledek zašleme e-mailem.",
     "confirmButton": "Potvrdit a spustit skenování",
@@ -259,7 +263,8 @@
     "rateLimitBody": "Požadavek byl nedávno odeslán pro tento obchod nebo připojení. Zkuste to později.",
     "unavailableTitle": "Bezplatné skenování je momentálně nedostupné",
     "unavailableBody": "Momentálně nemůžeme spustit skenování. Podívejte se na příklad výsledku nebo nás kontaktujte.",
-    "contactLink": "Kontaktujte nás"
+    "contactLink": "Kontaktujte nás",
+    "domainHelp": "V administraci Shopify otevřete Nastavení → Domény a zkopírujte adresu končící na .myshopify.com. Zadejte ji místo vlastní domény obchodu."
   },
   "quiet": {
     "eyebrow": "VÍCE KLIDU",
@@ -270,7 +275,7 @@
   "pricing": {
     "eyebrow": "PRŮBĚŽNÉ MONITOROVÁNÍ PO INSTALACI",
     "title": "Pokračujte v kontrole po prvním skenování",
-    "body": "Aplikace Shopify monitoruje nová upozornění Safety Gate a změněné produkty. E-mailem vás upozorní na nové možné shody, nebo zašle týdenní aktualizaci, pokud žádné nejsou.",
+    "body": "Bezplatná kontrola prověří veřejný katalog jednorázově. Placená Shopify aplikace pak sleduje nová upozornění Safety Gate i změněné produkty, posílá e-maily při nových možných shodách a uchovává vaše rozhodnutí.",
     "period": "/ měsíc",
     "scope": "Za obchod. Fakturováno přes Shopify po výběru plánu.",
     "installCta": "Nainstalovat z Shopify App Store",
@@ -280,7 +285,7 @@
     "content01": "Soukromí",
     "content02": "Soukromí a uchovávání dat",
     "content03": "Co zpracováváme pro bezplatné skenování a aplikaci Shopify a jak dlouho to uchováváme.",
-    "content04": "Aktualizováno: 19. října 2026. Jsme nezávislý projekt. Dotazy a požadavky týkající se soukromí: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+    "content04": "Aktualizováno: 19. října 2026. Jsme nezávislý projekt. Dotazy a požadavky týkající se soukromí: <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>.",
     "content05": "Informace, které zpracováváme",
     "content06": "<li><strong>Požadavek na bezplatné skenování:</strong> doména obchodu, váš e-mail, jazyk, stav požadavku a zpráva. Váš e-mail potvrdí požadavek a obdrží zprávu.</li>\n<li><strong>Skenování veřejného katalogu:</strong> veřejné názvy produktů, popisy, značky, kategorie, obrázky a URL. Můžeme také shromažďovat obchodní e-mail na veřejných kontaktních stránkách. Text produktu se stává vyhledávacími vektory pro porovnání s upozorněními Safety Gate.</li>\n<li><strong>Nainstalovaná aplikace Shopify:</strong> doména obchodu, snímky produktů a obrázky, výsledky kontrol, možné shody, rozhodnutí o přezkoumání, nastavení, předvolby oznámení a požadovaná data relace aplikace.</li>\n<li><strong>Technické záznamy:</strong> bezpečnostní a servisní protokoly pro provoz, řešení problémů a ochranu.</li>",
     "content07": "Proč a jak je používáme",
@@ -293,10 +298,10 @@
     "content14": "Shopify provozuje vloženou aplikaci. Google Cloud a Firebase poskytují hosting, úložiště, úlohy na pozadí a porovnávání produktů Vertex AI. Brevo zasílá potvrzovací, reportovací a oznamovací e-maily. Cloudflare Turnstile chrání formulář bezplatného skenování před automatizovaným zneužitím.",
     "content15": "Upozornění pocházejí z veřejného systému Safety Gate Evropské komise. Poskytovatelé zpracovávají informace podle potřeby k poskytování těchto služeb.",
     "content16": "Vaše volby a požadavky",
-    "content17": "Napište na <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a> a požádejte o přístup, opravu nebo odstranění vašich dat ze skenování nebo obchodu, nebo vznést námitku proti zpracování.",
+    "content17": "Napište na <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a> a požádejte o přístup, opravu nebo odstranění vašich dat ze skenování nebo obchodu, nebo vznést námitku proti zpracování.",
     "content18": "Po odinstalaci Shopify odešle požadavek shop/redact na odstranění dat aplikace obchodu. Potvrzujeme požadavky na zákaznická data Shopify; neukládáme zákaznické účty ani objednávky.",
     "content19": "Kontakt",
-    "content20": "Kontakt na ochranu soukromí ZeroRecall: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+    "content20": "Kontakt na ochranu soukromí ZeroRecall: <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>.",
     "metaTitle": "Soukromí a uchovávání dat | ZeroRecall",
     "metaDescription": "Jak ZeroRecall zpracovává a uchovává data pro skenování veřejného katalogu a aplikaci Shopify.",
     "footer": "Informace o soukromí a uchovávání dat."

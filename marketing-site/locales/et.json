@@ -23,9 +23,9 @@
     "home": "Avaleht"
   },
   "hero": {
-    "badge": "TOOTE OHUTUS SHOPIFY JAOKS",
-    "title": "Kontrolli oma tooteid EL-i ohutusteatiste vastu.",
-    "subtitle": "ZeroRecall võrdleb teie Shopify poe tooteid ametlike Safety Gate'i hoiatustega ohtlike toodete kohta. Saate e-kirja ja tõendid ülevaatamiseks, kui leiame võimaliku vaste.",
+    "badge": "ELIS MÜÜVATELE SHOPIFY POODIDELE",
+    "title": "Saage teavitus võimalikest vastetest ohtlike toodetega.",
+    "subtitle": "ZeroRecall võrdleb teie Shopify poe tooteid Euroopa Komisjoni Safety Gate’i andmebaasiga. Võimaliku vaste korral saate e-kirja ja andmed kontrollimiseks, ilma et peaksite teateid käsitsi läbi otsima.",
     "inputPlaceholder": "teie-pood.myshopify.com",
     "emailPlaceholder": "teie-e-post@pood.com",
     "ctaButton": "Tasuta skaneerimine",
@@ -34,8 +34,8 @@
     "successBody": "Kontrollime avalikke tooteid. Saadame tulemuse e-posti teel, kui skaneerimine lõpeb.",
     "installCta": "Installi Shopify App Store'ist",
     "exampleCta": "Vaata näidistulemust",
-    "scanLink": "Või proovi tasuta poe auditit ↓",
-    "reassurance": "Tasuta audit e-postiga: kogu avalik kataloog.",
+    "scanLink": "Kontrolli minu poodi tasuta",
+    "reassurance": "Ühekordne kontroll ilma paigaldamise ja maksekaardita. Tulemus e-postiga.",
     "visualCaption": "Illustratsioon, mitte tegelik tulemus.",
     "mockDemo": "ILLUSTREERIV EELVAADE",
     "mockEyebrow": "Toote kontroll",
@@ -141,7 +141,8 @@
     "linkAuthority": "Riiklik asutus ({{country}}): {{authority}} ↗",
     "linkAllAuthorities": "Kõigi EL-i riikide asutused ↗",
     "marketNote": "Keel ei määra kohaldatavat õigust. Kontrollige asutust turu kohta, kus te müüte.",
-    "remedies": "Ohutuse tagasikutsumise korral nõuab GPSR artikkel 37 tõhusat, tasuta ja õigeaegset abinõu, tavaliselt valikut vähemalt kahest: parandamine, asendamine või tagasimakse. Riiklikud reeglid määravad sanktsioonid; nõuded varieeruvad toote ja müügituru järgi."
+    "remedies": "Ohutuse tagasikutsumise korral nõuab GPSR artikkel 37 tõhusat, tasuta ja õigeaegset abinõu, tavaliselt valikut vähemalt kahest: parandamine, asendamine või tagasimakse. Riiklikud reeglid määravad sanktsioonid; nõuded varieeruvad toote ja müügituru järgi.",
+    "detailsLabel": "Õiguslik taust ja ametlikud allikad"
   },
   "faq": {
     "eyebrow": "KKK",
@@ -153,7 +154,9 @@
     "q3": "Kas rakendus muudab minu tooteid?",
     "a3": "Ei. See näitab võimalikke vasteid ja tõendeid Shopify adminis. Teie otsustate, mida teha.",
     "q4": "Mida sisaldab tasuta skaneerimine?",
-    "a4": "Kõik poe avalikus Shopify kataloogis saadaolevad tooted ja võimalike vastete kokkuvõte e-postiga. Privaatsed tooted on välja jäetud; skannimine ei ole ohutussertifikaat."
+    "a4": "Kõik poe avalikus Shopify kataloogis saadaolevad tooted ja võimalike vastete kokkuvõte e-postiga. Privaatsed tooted on välja jäetud; skannimine ei ole ohutussertifikaat.",
+    "q5": "Mis saab siis, kui võimalikke vasteid ei leita?",
+    "a5": "Aruanne näitab kontrollitud toodete arvu ja seda, et selle kontrolli käigus võimalikke vasteid ei leitud. See ei tõenda toodete ohutust. Uusi teateid võib lisanduda hiljem."
   },
   "cta": {
     "title": "Alusta tasuta skaneerimisega",
@@ -188,7 +191,8 @@
     "ctaButton": "Tasuta skaneerimine",
     "contactTitle": "Kas teil on küsimus?",
     "contactBody": "Oleme sõltumatu projekt. Kirjutage meile rakenduse, skaneerimise või teie andmete kohta.",
-    "contactLink": "E-post radoone@gmail.com"
+    "contactLink": "E-post info@zerorecall.online",
+    "founderRole": "ZeroRecalli asutaja"
   },
   "footer": {
     "text": "Muretu meel pidevate Shopify tootekontrollidega.",
@@ -220,8 +224,8 @@
   },
   "scan": {
     "eyebrow": "ÜHEKORDNE KONTROLL · INSTALLIMIST POLE",
-    "title": "Kogu avaliku kataloogi tasuta skannimine",
-    "description": "Sisestage oma avaliku Shopify poe domeen ja e-posti aadress. Saadame teie e-posti aadressile kinnituslingi ja edastame täieliku aruande pärast kinnitamist. Pidev jälgimine on osa tasulisest rakendusest.",
+    "title": "Kogu avaliku kataloogi tasuta kontroll",
+    "description": "Sisestage Shopify domeen ja e-posti aadress. Pärast e-posti kinnitamist kontrollime üks kord kõiki saadaolevaid avalikke tooteid. Saadame tulemuse pärast kontrolli lõppu.",
     "benefit1": "Ainult avalikud tooted",
     "benefit2": "Võimalikud vasted ülevaatamiseks",
     "benefit3": "Teie tooted jäävad muutmata",
@@ -231,7 +235,7 @@
     "challengeRequired": "Enne esitamist täitke roboti kontroll.",
     "challengeUnavailable": "Roboti kontroll pole saadaval. Skaneerimist pole alustatud; proovige hiljem uuesti.",
     "verifyEmailTitle": "Kontrolli oma postkasti",
-    "verifyEmailBody": "Saatsime teile e-kirja kinnituslingiga auditi alustamiseks. Link kehtib 30 minutit.",
+    "verifyEmailBody": "Saatsime teile e-kirja kinnitamislingiga kontrolli alustamiseks. Link kehtib 30 minutit.",
     "confirmTitle": "Kinnita oma e-post ja alusta skaneerimist",
     "confirmBody": "Kontrollime avalikku Shopify kataloogi ja saadame tulemuse e-posti teel.",
     "confirmButton": "Kinnita ja alusta skaneerimist",
@@ -259,7 +263,8 @@
     "rateLimitBody": "Selle poe või ühenduse jaoks saadeti hiljuti taotlus. Proovige hiljem uuesti.",
     "unavailableTitle": "Tasuta skaneerimine pole praegu saadaval",
     "unavailableBody": "Me ei saa praegu skaneerimist alustada. Vaadake näidistulemust või võtke meiega ühendust.",
-    "contactLink": "Võta meiega ühendust"
+    "contactLink": "Võta meiega ühendust",
+    "domainHelp": "Avage Shopify halduses Seaded → Domeenid ja kopeerige aadress lõpuga .myshopify.com. Kasutage seda oma kohandatud domeeni asemel."
   },
   "quiet": {
     "eyebrow": "ROHKEM MEELERAHU",
@@ -270,7 +275,7 @@
   "pricing": {
     "eyebrow": "PIDEV JÄLGIMINE PÄRAST INSTALLIMIST",
     "title": "Jätka kontrollimist pärast esimest skaneerimist",
-    "body": "Shopify rakendus jälgib uusi Safety Gate'i hoiatusi ja muudetud tooteid. See saadab teile e-kirja uute võimalike vastete kohta või iganädalase uuenduse, kui neid pole.",
+    "body": "Tasuta kontroll hõlmab avalikku kataloogi üks kord. Tasuline Shopify rakendus jälgib seejärel uusi Safety Gate’i teateid ja muudetud tooteid, saadab uute võimalike vastete kohta e-kirju ning säilitab teie otsused.",
     "period": "/ kuu",
     "scope": "Poe kohta. Arveldatakse Shopify kaudu pärast plaani valimist.",
     "installCta": "Installi Shopify App Store'ist",
@@ -280,7 +285,7 @@
     "content01": "Privaatsus",
     "content02": "Privaatsus ja andmete säilitamine",
     "content03": "Mida me töötleme tasuta skaneerimiste ja Shopify rakenduse jaoks ning kui kaua me seda säilitame.",
-    "content04": "Uuendatud: 19. oktoober 2026. Oleme sõltumatu projekt. Privaatsusküsimused ja -taotlused: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+    "content04": "Uuendatud: 19. oktoober 2026. Oleme sõltumatu projekt. Privaatsusküsimused ja -taotlused: <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>.",
     "content05": "Teave, mida me töötleme",
     "content06": "<li><strong>Tasuta skaneerimise taotlus:</strong> poe domeen, teie e-post, keel, taotluse staatus ja aruanne. Teie e-post kinnitab taotluse ja saab aruande.</li>\n<li><strong>Avaliku kataloogi skaneerimine:</strong> avalikud tootenimed, kirjeldused, kaubamärgid, kategooriad, pildid ja URL-id. Võime koguda ka äri e-posti avalikelt kontaktlehtedelt. Tootetekstist saavad otsinguvektorid võrdlemiseks Safety Gate'i hoiatustega.</li>\n<li><strong>Installitud Shopify rakendus:</strong> poe domeen, toote hetktõmmised ja pildid, kontrollitulemused, võimalikud vasted, ülevaatamise otsused, seaded, teavituste eelistused ja nõutavad rakenduse sessiooni andmed.</li>\n<li><strong>Tehnilised kirjed:</strong> turva- ja teenuselogid tööks, tõrkeotsinguks ja kaitseks.</li>",
     "content07": "Miks ja kuidas me seda kasutame",
@@ -293,10 +298,10 @@
     "content14": "Shopify käitab manustatud rakendust. Google Cloud ja Firebase pakuvad hostimist, salvestusruumi, taustatöid ja Vertex AI tootevõrdlust. Brevo saadab kinnitus-, aruande- ja teavituse-e-kirju. Cloudflare Turnstile kaitseb tasuta skaneerimise vormi automatiseeritud kuritarvitamise eest.",
     "content15": "Hoiatused pärinevad Euroopa Komisjoni avalikust Safety Gate'i süsteemist. Teenusepakkujad töötlevad teavet vastavalt vajadusele nende teenuste osutamiseks.",
     "content16": "Teie valikud ja taotlused",
-    "content17": "Saatke e-kiri aadressile <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>, et taotleda oma skaneerimise või poe andmete juurdepääsu, parandamist või kustutamist või esitada vastuväiteid töötlemisele.",
+    "content17": "Saatke e-kiri aadressile <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>, et taotleda oma skaneerimise või poe andmete juurdepääsu, parandamist või kustutamist või esitada vastuväiteid töötlemisele.",
     "content18": "Pärast desinstallimist saadab Shopify poe/redigeerimise taotluse poe rakenduse andmete kustutamiseks. Me tunnustame Shopify kliendiandmete taotlusi; me ei salvesta kliendikontosid ega tellimusi.",
     "content19": "Kontakt",
-    "content20": "ZeroRecall privaatsuskontakt: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+    "content20": "ZeroRecall privaatsuskontakt: <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>.",
     "metaTitle": "Privaatsus ja andmete säilitamine | ZeroRecall",
     "metaDescription": "Kuidas ZeroRecall töötleb ja säilitab andmeid avaliku kataloogi skaneerimiste ja Shopify rakenduse jaoks.",
     "footer": "Privaatsus ja andmete säilitamise teave."

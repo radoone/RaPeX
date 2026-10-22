@@ -24,9 +24,9 @@
       "home": "Baile"
     },
     "hero": {
-      "badge": "SÁBHÁILTEACHT TÁIRGÍ DO SHOPIFY",
-      "title": "Seiceáil do tháirgí i gcoinne foláirimh sábháilteachta an AE.",
-      "subtitle": "Déanann ZeroRecall comparáid idir táirgí i do stór Shopify agus foláirimh oifigiúla Safety Gate faoi tháirgí contúirteacha. Faigh ríomhphost agus fianaise le hathbhreithniú nuair a aimsímid meaitseáil fhéideartha.",
+      "badge": "DO SHIOPAÍ SHOPIFY A DHÍOLANN SAN AE",
+      "title": "Faigh foláirimh faoi mheaitseálacha féideartha le táirgí contúirteacha.",
+      "subtitle": "Déanann ZeroRecall comparáid idir táirgí do shiopa Shopify agus bunachar Safety Gate an Choimisiúin Eorpaigh. Má aimsítear meaitseáil fhéideartha, gheobhaidh tú ríomhphost agus sonraí lena scrúdú, gan foláirimh a chuardach de láimh.",
       "inputPlaceholder": "do-stór.myshopify.com",
       "emailPlaceholder": "do-ríomhphost@stór.com",
       "ctaButton": "Scanadh saor in aisce",
@@ -35,8 +35,8 @@
       "successBody": "Táimid ag seiceáil táirgí poiblí. Seolfaimid ríomhphost chugat leis an toradh nuair a bheidh an scanadh críochnaithe.",
       "installCta": "Suiteáil ó Shopify App Store",
       "exampleCta": "Féach ar shampla de thoradh",
-      "scanLink": "Nó bain triail as iniúchadh stórais saor in aisce ↓",
-      "reassurance": "Iniúchadh saor in aisce trí ríomhphost: do chatalóg phoiblí iomlán.",
+      "scanLink": "Seiceáil mo shiopa saor in aisce",
+      "reassurance": "Seiceáil aonuaire gan suiteáil ná cárta íocaíochta. Toradh trí ríomhphost.",
       "visualCaption": "Léaráid, ní toradh fíor é.",
       "mockDemo": "RÉAMHAMHARC LÉIRITHEACH",
       "mockEyebrow": "Seiceáil táirge",
@@ -142,7 +142,8 @@
       "linkAuthority": "Údarás náisiúnta ({{country}}): {{authority}} ↗",
       "linkAllAuthorities": "Údaráis do gach tír AE ↗",
       "marketNote": "Ní chinneann an teanga an dlí is infheidhme. Seiceáil an t-údarás don mhargadh ina ndíolann tú.",
-      "remedies": "I gcás aisghairm sábháilteachta, éilíonn Airteagal 37 den GPSR leigheas éifeachtach, saor in aisce agus tráthúil, de ghnáth rogha de dhá cheann ar a laghad de dheisiú, athsholáthar nó aisíoc. Cinneann rialacha náisiúnta smachtbhannaí; athraíonn na ceanglais de réir táirge agus margaidh díolacháin."
+      "remedies": "I gcás aisghairm sábháilteachta, éilíonn Airteagal 37 den GPSR leigheas éifeachtach, saor in aisce agus tráthúil, de ghnáth rogha de dhá cheann ar a laghad de dheisiú, athsholáthar nó aisíoc. Cinneann rialacha náisiúnta smachtbhannaí; athraíonn na ceanglais de réir táirge agus margaidh díolacháin.",
+      "detailsLabel": "Comhthéacs dlíthiúil agus foinsí oifigiúla"
     },
     "faq": {
       "eyebrow": "Ceisteanna Coitianta",
@@ -154,7 +155,9 @@
       "q3": "An athraíonn an aip mo tháirgí?",
       "a3": "Ní hea. Taispeánann sé meaitseálacha féideartha agus fianaise i Riarachán Shopify. Cinntíonn tú cad atá le déanamh.",
       "q4": "Cad atá san áireamh sa scanadh saor in aisce?",
-      "a4": "Gach táirge atá ar fáil i gcatalóg phoiblí Shopify do shiopa agus achoimre ar mheaitseálacha féideartha trí ríomhphost. Ní áirítear liostuithe príobháideacha; ní deimhniú sábháilteachta é an scanadh."
+      "a4": "Gach táirge atá ar fáil i gcatalóg phoiblí Shopify do shiopa agus achoimre ar mheaitseálacha féideartha trí ríomhphost. Ní áirítear liostuithe príobháideacha; ní deimhniú sábháilteachta é an scanadh.",
+      "q5": "Cad a tharlaíonn mura n-aimsítear meaitseálacha féideartha?",
+      "a5": "Taispeánfaidh an tuairisc líon na dtáirgí a seiceáladh agus nár aimsíodh meaitseálacha féideartha sa tseiceáil seo. Ní deimhniú sábháilteachta táirgí é seo. D’fhéadfadh foláirimh nua teacht níos déanaí."
     },
     "cta": {
       "title": "Tosaigh le scanadh saor in aisce",
@@ -189,7 +192,8 @@
       "ctaButton": "Scanadh saor in aisce",
       "contactTitle": "An bhfuil ceist agat?",
       "contactBody": "Is tionscadal neamhspleách muid. Scríobh chugainn faoin aip, scanadh nó do shonraí.",
-      "contactLink": "Seol ríomhphost chuig radoone@gmail.com"
+      "contactLink": "Seol ríomhphost chuig info@zerorecall.online",
+      "founderRole": "Bunaitheoir ZeroRecall"
     },
     "footer": {
       "text": "Suaimhneas intinne le seiceálacha táirgí Shopify leanúnacha.",
@@ -221,8 +225,8 @@
     },
     "scan": {
       "eyebrow": "SEICEÁIL AON-uaire · GAN SUITEÁIL",
-      "title": "Scanadh saor in aisce ar do chatalóg phoiblí iomlán",
-      "description": "Cuir isteach do fhearann stórais Shopify poiblí agus ríomhphost. Seolfaimid nasc deimhnithe chuig do ríomhphost agus seachadfaimid an tuarascáil iomlán nuair a bheidh sé deimhnithe. Tá monatóireacht leanúnach mar chuid den aip íoctha.",
+      "title": "Seiceáil saor in aisce ar do chatalóg phoiblí iomlán",
+      "description": "Cuir isteach d’fhearann Shopify agus do ríomhphost. Tar éis an ríomhphost a dheimhniú, seiceálfaimid gach táirge poiblí atá ar fáil uair amháin. Seolfaimid an toradh nuair a bheidh sé réidh.",
       "benefit1": "Táirgí poiblí amháin",
       "benefit2": "Meaitseálacha féideartha le hathbhreithniú",
       "benefit3": "Fanann do tháirgí gan athrú",
@@ -232,7 +236,7 @@
       "challengeRequired": "Comhlánaigh an seiceáil róbait sula gcuirtear isteach é.",
       "challengeUnavailable": "Níl an seiceáil róbait ar fáil. Níl aon scanadh tosaithe; bain triail as níos déanaí.",
       "verifyEmailTitle": "Seiceáil do bhosca isteach",
-      "verifyEmailBody": "Sheolamar ríomhphost chugat le nasc deimhnithe chun an t-iniúchadh a thosú. Tá an nasc bailí ar feadh 30 nóiméad.",
+      "verifyEmailBody": "Sheolamar ríomhphost chugat le nasc deimhnithe chun an tseiceáil a thosú. Rachaidh an nasc in éag i gceann 30 nóiméad.",
       "confirmTitle": "Deimhnigh do ríomhphost agus cuir tús leis an scanadh",
       "confirmBody": "Seiceálfaimid an chatalóg phoiblí Shopify agus seolfaimid ríomhphost chugat leis an toradh.",
       "confirmButton": "Deimhnigh agus cuir tús leis an scanadh",
@@ -260,7 +264,8 @@
       "rateLimitBody": "Seoladh iarratas le déanaí don stór nó don nasc seo. Bain triail as níos déanaí.",
       "unavailableTitle": "Níl an scanadh saor in aisce ar fáil faoi láthair",
       "unavailableBody": "Ní féidir linn scanadh a thosú faoi láthair. Féach ar shampla de thoradh nó déan teagmháil linn.",
-      "contactLink": "Déan teagmháil linn"
+      "contactLink": "Déan teagmháil linn",
+      "domainHelp": "I riarachán Shopify, oscail Socruithe → Fearainn agus cóipeáil an seoladh a chríochnaíonn le .myshopify.com. Úsáid é sin in áit d’fhearainn shaincheaptha."
     },
     "quiet": {
       "eyebrow": "NÍOS MÓ SUAIMHNEAS INTINNE",
@@ -271,7 +276,7 @@
     "pricing": {
       "eyebrow": "MONATÓIREACHT LEANÚNACH TAR ÉIS NA SUITEÁLA",
       "title": "Lean ar aghaidh ag seiceáil tar éis do chéad scanadh",
-      "body": "Déanann an aip Shopify monatóireacht ar fholáirimh nua Safety Gate agus ar tháirgí athraithe. Seolann sé ríomhphost chugat faoi mheaitseálacha féideartha nua, nó seolann sé nuashonrú seachtainiúil nuair nach mbíonn aon cheann ann.",
+      "body": "Clúdaíonn an tseiceáil saor in aisce do chatalóg phoiblí uair amháin. Ansin déanann an aip íoctha Shopify monatóireacht ar fholáirimh nua Safety Gate agus táirgí athraithe, seolann sí ríomhphoist faoi mheaitseálacha féideartha nua agus coimeádann sí do chinntí.",
       "period": "/ mí",
       "scope": "In aghaidh an stórais. Billeáilte trí Shopify tar éis plean a roghnú.",
       "installCta": "Suiteáil ó Shopify App Store",
@@ -281,7 +286,7 @@
       "content01": "Príobháideacht",
       "content02": "Príobháideacht agus coinneáil sonraí",
       "content03": "Cad a phróiseálaimid le haghaidh scananna saor in aisce agus an aip Shopify, agus cé chomh fada is a choinnímid é.",
-      "content04": "Nuashonraithe: 19 Deireadh Fómhair 2026. Is tionscadal neamhspleách muid. Ceisteanna agus iarratais príobháideachta: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+      "content04": "Nuashonraithe: 19 Deireadh Fómhair 2026. Is tionscadal neamhspleách muid. Ceisteanna agus iarratais príobháideachta: <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>.",
       "content05": "Faisnéis a phróiseálaimid",
       "content06": "<li><strong>Iarratas ar scanadh saor in aisce:</strong> fearann stórais, do ríomhphost, teanga, stádas iarratais agus tuarascáil. Deimhníonn do ríomhphost an t-iarratas agus faigheann sé an tuarascáil.</li>\n<li><strong>Scanadh catalóige poiblí:</strong> teidil táirgí poiblí, tuairiscí, brandaí, catagóirí, íomhánna agus URLanna. Féadfaimid an ríomhphost gnó a bhailiú ar leathanaigh teagmhála poiblí freisin. Éiríonn téacs táirge ina veicteoirí cuardaigh le haghaidh comparáide le foláirimh Safety Gate.</li>\n<li><strong>Aip Shopify suiteáilte:</strong> fearann siopa, snapshots táirgí agus íomhánna, torthaí seiceála, meaitseálacha féideartha, cinntí athbhreithnithe, socruithe, sainroghanna fógraí agus sonraí seisiúin aipeanna riachtanacha.</li>\n<li><strong>Taifid theicniúla:</strong> logaí slándála agus seirbhíse le haghaidh oibríochta, fabhtcheartaithe agus cosanta.</li>",
       "content07": "Cén fáth agus conas a úsáidimid é",
@@ -294,10 +299,10 @@
       "content14": "Ritheann Shopify an aip leabaithe. Soláthraíonn Google Cloud agus Firebase óstáil, stóráil, poist chúlra agus comparáid táirgí Vertex AI. Seolann Brevo ríomhphoist deimhnithe, tuarascála agus fógraí. Cosnaíonn Cloudflare Turnstile an fhoirm scanadh saor in aisce ó mhí-úsáid uathoibrithe.",
       "content15": "Tagann foláirimh ó chóras poiblí Safety Gate an Choimisiúin Eorpaigh. Próiseálann soláthraithe faisnéis de réir mar is gá chun na seirbhísí seo a sheachadadh.",
       "content16": "Do roghanna agus iarratais",
-      "content17": "Seol ríomhphost chuig <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a> chun rochtain, ceartú nó scriosadh do shonraí scanadh nó stórais a iarraidh, nó chun agóid a dhéanamh i gcoinne próiseála.",
+      "content17": "Seol ríomhphost chuig <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a> chun rochtain, ceartú nó scriosadh do shonraí scanadh nó stórais a iarraidh, nó chun agóid a dhéanamh i gcoinne próiseála.",
       "content18": "Tar éis díshuiteáil, seolann Shopify iarratas siopa/redact chun sonraí aipeanna an stórais a scriosadh. Admhaímid iarratais sonraí custaiméirí Shopify; ní stórálaimid cuntais custaiméirí nó orduithe.",
       "content19": "Teagmháil",
-      "content20": "Teagmháil príobháideachta ZeroRecall: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+      "content20": "Teagmháil príobháideachta ZeroRecall: <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>.",
       "metaTitle": "Príobháideacht agus coinneáil sonraí | ZeroRecall",
       "metaDescription": "Conas a phróiseálann agus a choinníonn ZeroRecall sonraí le haghaidh scananna catalóige poiblí agus an aip Shopify.",
       "footer": "Faisnéis príobháideachta agus coinneála sonraí."

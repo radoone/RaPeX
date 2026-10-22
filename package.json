@@ -8,6 +8,8 @@
     "shopify-client"
   ],
   "scripts": {
+    "localization:build": "node localization/build-locales.mjs",
+    "localization:check": "node --test localization/test-locales.mjs",
     "postinstall": "patch-package",
     "build": "npm run build --workspaces",
     "test": "npm run test --workspaces",

@@ -23,9 +23,9 @@
     "home": "Hem"
   },
   "hero": {
-    "badge": "PRODUKTSÄKERHET FÖR SHOPIFY",
-    "title": "Kontrollera dina produkter mot EU:s säkerhetsvarningar.",
-    "subtitle": "ZeroRecall jämför produkter i din Shopify-butik med officiella Safety Gate-varningar om farliga produkter. Få ett e-postmeddelande och bevis att granska när vi hittar en möjlig matchning.",
+    "badge": "FÖR SHOPIFY-BUTIKER SOM SÄLJER I EU",
+    "title": "Få aviseringar om möjliga matchningar med farliga produkter.",
+    "subtitle": "ZeroRecall jämför produkterna i din Shopify-butik med EU-kommissionens Safety Gate-databas. Vid en möjlig matchning får du ett mejl och underlag att granska, utan att söka igenom varningarna manuellt.",
     "inputPlaceholder": "din-butik.myshopify.com",
     "emailPlaceholder": "din-e-post@butik.com",
     "ctaButton": "Gratisskanning",
@@ -34,8 +34,8 @@
     "successBody": "Vi kontrollerar offentliga produkter. Vi skickar resultatet via e-post när skanningen är klar.",
     "installCta": "Installera från Shopify App Store",
     "exampleCta": "Se ett exempelresultat",
-    "scanLink": "Eller prova en gratis butiksrevision ↓",
-    "reassurance": "Gratis granskning via e-post: hela din offentliga katalog.",
+    "scanLink": "Kontrollera min butik gratis",
+    "reassurance": "Engångskontroll utan installation eller betalkort. Resultat via e-post.",
     "visualCaption": "Illustration, inte ett verkligt resultat.",
     "mockDemo": "ILLUSTRATIV FÖRHANDSGRANSKNING",
     "mockEyebrow": "Produktkontroll",
@@ -141,7 +141,8 @@
     "linkAuthority": "Nationell myndighet ({{country}}): {{authority}} ↗",
     "linkAllAuthorities": "Myndigheter för alla EU-länder ↗",
     "marketNote": "Språk avgör inte tillämplig lag. Kontrollera myndigheten för den marknad där du säljer.",
-    "remedies": "Vid en säkerhetsåterkallelse kräver GPSR artikel 37 ett effektivt, kostnadsfritt och snabbt avhjälpande, normalt ett val mellan minst två av reparation, utbyte eller återbetalning. Nationella regler bestämmer sanktioner; kraven varierar beroende på produkt och försäljningsmarknad."
+    "remedies": "Vid en säkerhetsåterkallelse kräver GPSR artikel 37 ett effektivt, kostnadsfritt och snabbt avhjälpande, normalt ett val mellan minst två av reparation, utbyte eller återbetalning. Nationella regler bestämmer sanktioner; kraven varierar beroende på produkt och försäljningsmarknad.",
+    "detailsLabel": "Juridisk bakgrund och officiella källor"
   },
   "faq": {
     "eyebrow": "FAQ",
@@ -153,7 +154,9 @@
     "q3": "Ändrar appen mina produkter?",
     "a3": "Nej. Den visar möjliga matchningar och bevis i Shopify Admin. Du bestämmer vad du ska göra.",
     "q4": "Vad ingår i gratisskanningen?",
-    "a4": "Alla tillgängliga produkter i butikens offentliga Shopify-katalog och en sammanfattning av möjliga matchningar via e-post. Privata listningar ingår inte; skanningen är inget säkerhetscertifikat."
+    "a4": "Alla tillgängliga produkter i butikens offentliga Shopify-katalog och en sammanfattning av möjliga matchningar via e-post. Privata listningar ingår inte; skanningen är inget säkerhetscertifikat.",
+    "q5": "Vad händer om inga möjliga matchningar hittas?",
+    "a5": "Rapporten visar antalet kontrollerade produkter och att inga möjliga matchningar hittades vid denna kontroll. Det är inget intyg om produktsäkerhet. Nya varningar kan tillkomma senare."
   },
   "cta": {
     "title": "Börja med en gratisskanning",
@@ -188,7 +191,8 @@
     "ctaButton": "Gratisskanning",
     "contactTitle": "Har du en fråga?",
     "contactBody": "Vi är ett oberoende projekt. Skriv till oss om appen, en skanning eller dina data.",
-    "contactLink": "E-posta radoone@gmail.com"
+    "contactLink": "E-posta info@zerorecall.online",
+    "founderRole": "Grundare av ZeroRecall"
   },
   "footer": {
     "text": "Lugn och ro med pågående Shopify-produktkontroller.",
@@ -220,8 +224,8 @@
   },
   "scan": {
     "eyebrow": "ENGÅNGSKONTROLL · INGEN INSTALLATION",
-    "title": "Gratis skanning av hela din offentliga katalog",
-    "description": "Ange din offentliga Shopify-butiksdomän och e-post. Vi skickar en bekräftelselänk till din e-post och levererar den fullständiga rapporten när den har bekräftats. Pågående övervakning är en del av den betalda appen.",
+    "title": "Gratis kontroll av hela din offentliga katalog",
+    "description": "Ange din Shopify-domän och e-postadress. När du har bekräftat din e-post kontrollerar vi alla tillgängliga offentliga produkter en gång. Vi mejlar resultatet när kontrollen är klar.",
     "benefit1": "Endast offentliga produkter",
     "benefit2": "Möjliga matchningar att granska",
     "benefit3": "Dina produkter förblir oförändrade",
@@ -231,7 +235,7 @@
     "challengeRequired": "Slutför botkontrollen innan du skickar in.",
     "challengeUnavailable": "Botkontrollen är inte tillgänglig. Ingen skanning har startat; försök senare.",
     "verifyEmailTitle": "Kontrollera din inkorg",
-    "verifyEmailBody": "Vi skickade ett e-postmeddelande med en bekräftelselänk för att starta revisionen. Länken är giltig i 30 minuter.",
+    "verifyEmailBody": "Vi har skickat ett mejl med en bekräftelselänk för att starta kontrollen. Länken gäller i 30 minuter.",
     "confirmTitle": "Bekräfta din e-post och starta skanningen",
     "confirmBody": "Vi kommer att kontrollera den offentliga Shopify-katalogen och skicka resultatet via e-post.",
     "confirmButton": "Bekräfta och starta skanning",
@@ -259,7 +263,8 @@
     "rateLimitBody": "En förfrågan skickades nyligen för denna butik eller anslutning. Försök senare.",
     "unavailableTitle": "Gratisskanningen är för närvarande inte tillgänglig",
     "unavailableBody": "Vi kan inte starta en skanning just nu. Se ett exempelresultat eller kontakta oss.",
-    "contactLink": "Kontakta oss"
+    "contactLink": "Kontakta oss",
+    "domainHelp": "Öppna Inställningar → Domäner i Shopify-admin och kopiera adressen som slutar på .myshopify.com. Använd den i stället för din anpassade domän."
   },
   "quiet": {
     "eyebrow": "MER LUGN OCH RO",
@@ -270,7 +275,7 @@
   "pricing": {
     "eyebrow": "PÅGÅENDE ÖVERVAKNING EFTER INSTALLATION",
     "title": "Fortsätt kontrollera efter din första skanning",
-    "body": "Shopify-appen övervakar nya Safety Gate-varningar och ändrade produkter. Den skickar e-post till dig om nya möjliga matchningar, eller skickar en veckouppdatering när det inte finns några.",
+    "body": "Den kostnadsfria kontrollen granskar din offentliga katalog en gång. Den betalda Shopify-appen följer sedan nya Safety Gate-varningar och ändrade produkter, mejlar om nya möjliga matchningar och sparar dina beslut.",
     "period": "/ månad",
     "scope": "Per butik. Faktureras via Shopify efter att du har valt en plan.",
     "installCta": "Installera från Shopify App Store",
@@ -280,7 +285,7 @@
     "content01": "Integritet",
     "content02": "Integritet och datalagring",
     "content03": "Vad vi behandlar för gratisskanningar och Shopify-appen, och hur länge vi behåller det.",
-    "content04": "Uppdaterad: 19 oktober 2026. Vi är ett oberoende projekt. Integritetsfrågor och förfrågningar: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+    "content04": "Uppdaterad: 19 oktober 2026. Vi är ett oberoende projekt. Integritetsfrågor och förfrågningar: <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>.",
     "content05": "Information vi behandlar",
     "content06": "<li><strong>Gratisskanningsförfrågan:</strong> butiksdomän, din e-post, språk, förfrågningsstatus och rapport. Din e-post bekräftar förfrågan och tar emot rapporten.</li>\n<li><strong>Offentlig katalogskanning:</strong> offentliga produkttitlar, beskrivningar, varumärken, kategorier, bilder och URL:er. Vi kan också samla in företagets e-post på offentliga kontaktsidor. Produkttext blir sökvektorer för jämförelse med Safety Gate-varningar.</li>\n<li><strong>Installerad Shopify-app:</strong> butiksdomän, produktögonblicksbilder och bilder, kontrollresultat, möjliga matchningar, granskningsbeslut, inställningar, meddelandeinställningar och nödvändig app-sessionsdata.</li>\n<li><strong>Tekniska poster:</strong> säkerhets- och tjänsteloggar för drift, felsökning och skydd.</li>",
     "content07": "Varför och hur vi använder det",
@@ -293,10 +298,10 @@
     "content14": "Shopify driver den inbäddade appen. Google Cloud och Firebase tillhandahåller hosting, lagring, bakgrundsjobb och Vertex AI produktjämförelse. Brevo skickar bekräftelse-, rapport- och meddelande-e-postmeddelanden. Cloudflare Turnstile skyddar gratisskanningsformuläret från automatiserat missbruk.",
     "content15": "Varningar kommer från Europeiska kommissionens offentliga Safety Gate-system. Leverantörer behandlar information vid behov för att leverera dessa tjänster.",
     "content16": "Dina val och förfrågningar",
-    "content17": "E-posta <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a> för att begära åtkomst, korrigering eller radering av din skannings- eller butiksdata, eller för att invända mot behandling.",
+    "content17": "E-posta <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a> för att begära åtkomst, korrigering eller radering av din skannings- eller butiksdata, eller för att invända mot behandling.",
     "content18": "Efter avinstallation skickar Shopify en butiks-/redigeringsförfrågan för att radera butikens appdata. Vi bekräftar Shopifys kunddataförfrågningar; vi lagrar inte kundkonton eller beställningar.",
     "content19": "Kontakt",
-    "content20": "ZeroRecall integritetskontakt: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+    "content20": "ZeroRecall integritetskontakt: <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>.",
     "metaTitle": "Integritet och datalagring | ZeroRecall",
     "metaDescription": "Hur ZeroRecall behandlar och lagrar data för offentliga katalogskanningar och Shopify-appen.",
     "footer": "Information om integritet och datalagring."

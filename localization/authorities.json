@@ -1,0 +1,170 @@
+{
+  "bg": {
+    "country": "България",
+    "name": "КЗП",
+    "url": "https://kzp.bg/",
+    "source": "https://single-market-economy.ec.europa.eu/document/download/6fc4ff54-46c7-4549-af1b-5b09dc7b5841_en?filename=R-MSA_by_COUNTRY.pdf",
+    "verifiedOn": "2026-10-19"
+  },
+  "cs": {
+    "country": "Česko",
+    "name": "ČOI",
+    "url": "https://coi.gov.cz/",
+    "source": "https://single-market-economy.ec.europa.eu/document/download/6fc4ff54-46c7-4549-af1b-5b09dc7b5841_en?filename=R-MSA_by_COUNTRY.pdf",
+    "verifiedOn": "2026-10-19"
+  },
+  "da": {
+    "country": "Danmark",
+    "name": "Sikkerhedsstyrelsen",
+    "url": "https://www.sik.dk/",
+    "source": "https://single-market-economy.ec.europa.eu/document/download/6fc4ff54-46c7-4549-af1b-5b09dc7b5841_en?filename=R-MSA_by_COUNTRY.pdf",
+    "verifiedOn": "2026-10-19"
+  },
+  "de": {
+    "country": "Deutschland",
+    "name": "BAuA",
+    "url": "https://www.baua.de/",
+    "source": "https://www.baua.de/DE/Themen/Monitoring-Evaluation/Marktueberwachung-Produktsicherheit/Marktueberwachung",
+    "verifiedOn": "2026-10-19"
+  },
+  "el": {
+    "country": "Ελλάδα",
+    "name": "Γενική Γραμματεία Εμπορίου",
+    "url": "https://gge.mindev.gov.gr/",
+    "source": "https://single-market-economy.ec.europa.eu/document/download/6fc4ff54-46c7-4549-af1b-5b09dc7b5841_en?filename=R-MSA_by_COUNTRY.pdf",
+    "verifiedOn": "2026-10-19"
+  },
+  "es": {
+    "country": "España",
+    "name": "Ministerio de Consumo",
+    "url": "https://www.consumo.gob.es/",
+    "source": "https://single-market-economy.ec.europa.eu/document/download/6fc4ff54-46c7-4549-af1b-5b09dc7b5841_en?filename=R-MSA_by_COUNTRY.pdf",
+    "verifiedOn": "2026-10-19"
+  },
+  "et": {
+    "country": "Eesti",
+    "name": "TTJA",
+    "url": "https://ttja.ee/",
+    "source": "https://single-market-economy.ec.europa.eu/document/download/6fc4ff54-46c7-4549-af1b-5b09dc7b5841_en?filename=R-MSA_by_COUNTRY.pdf",
+    "verifiedOn": "2026-10-19"
+  },
+  "fi": {
+    "country": "Suomi",
+    "name": "Tukes",
+    "url": "https://tukes.fi/",
+    "source": "https://single-market-economy.ec.europa.eu/document/download/6fc4ff54-46c7-4549-af1b-5b09dc7b5841_en?filename=R-MSA_by_COUNTRY.pdf",
+    "verifiedOn": "2026-10-19"
+  },
+  "fr": {
+    "country": "France",
+    "name": "DGCCRF",
+    "url": "https://www.economie.gouv.fr/dgccrf",
+    "source": "https://single-market-economy.ec.europa.eu/document/download/6fc4ff54-46c7-4549-af1b-5b09dc7b5841_en?filename=R-MSA_by_COUNTRY.pdf",
+    "verifiedOn": "2026-10-19"
+  },
+  "ga": {
+    "country": "Éire",
+    "name": "CCPC",
+    "url": "https://www.ccpc.ie/",
+    "source": "https://single-market-economy.ec.europa.eu/document/download/6fc4ff54-46c7-4549-af1b-5b09dc7b5841_en?filename=R-MSA_by_COUNTRY.pdf",
+    "verifiedOn": "2026-10-19"
+  },
+  "en": {
+    "country": "Ireland",
+    "name": "CCPC",
+    "url": "https://www.ccpc.ie/",
+    "source": "https://single-market-economy.ec.europa.eu/document/download/6fc4ff54-46c7-4549-af1b-5b09dc7b5841_en?filename=R-MSA_by_COUNTRY.pdf",
+    "verifiedOn": "2026-10-19"
+  },
+  "hr": {
+    "country": "Hrvatska",
+    "name": "Državni inspektorat",
+    "url": "https://dirh.gov.hr/",
+    "source": "https://single-market-economy.ec.europa.eu/document/download/6fc4ff54-46c7-4549-af1b-5b09dc7b5841_en?filename=R-MSA_by_COUNTRY.pdf",
+    "verifiedOn": "2026-10-19"
+  },
+  "hu": {
+    "country": "Magyarország",
+    "name": "NKFH",
+    "url": "https://nkfh.gov.hu/",
+    "source": "https://nkfh.gov.hu/hasznos/termekbiztonsag/termekbiztonsag",
+    "verifiedOn": "2026-10-19"
+  },
+  "it": {
+    "country": "Italia",
+    "name": "MIMIT",
+    "url": "https://www.mimit.gov.it/",
+    "source": "https://single-market-economy.ec.europa.eu/document/download/6fc4ff54-46c7-4549-af1b-5b09dc7b5841_en?filename=R-MSA_by_COUNTRY.pdf",
+    "verifiedOn": "2026-10-19"
+  },
+  "lt": {
+    "country": "Lietuva",
+    "name": "VVTAT",
+    "url": "https://vvtat.lrv.lt/",
+    "source": "https://single-market-economy.ec.europa.eu/document/download/6fc4ff54-46c7-4549-af1b-5b09dc7b5841_en?filename=R-MSA_by_COUNTRY.pdf",
+    "verifiedOn": "2026-10-19"
+  },
+  "lv": {
+    "country": "Latvija",
+    "name": "PTAC",
+    "url": "https://www.ptac.gov.lv/",
+    "source": "https://single-market-economy.ec.europa.eu/document/download/6fc4ff54-46c7-4549-af1b-5b09dc7b5841_en?filename=R-MSA_by_COUNTRY.pdf",
+    "verifiedOn": "2026-10-19"
+  },
+  "mt": {
+    "country": "Malta",
+    "name": "MCCAA",
+    "url": "https://mccaa.org.mt/",
+    "source": "https://single-market-economy.ec.europa.eu/document/download/6fc4ff54-46c7-4549-af1b-5b09dc7b5841_en?filename=R-MSA_by_COUNTRY.pdf",
+    "verifiedOn": "2026-10-19"
+  },
+  "nl": {
+    "country": "Nederland",
+    "name": "NVWA",
+    "url": "https://www.nvwa.nl/",
+    "source": "https://single-market-economy.ec.europa.eu/document/download/6fc4ff54-46c7-4549-af1b-5b09dc7b5841_en?filename=R-MSA_by_COUNTRY.pdf",
+    "verifiedOn": "2026-10-19"
+  },
+  "pl": {
+    "country": "Polska",
+    "name": "UOKiK",
+    "url": "https://uokik.gov.pl/",
+    "source": "https://single-market-economy.ec.europa.eu/document/download/6fc4ff54-46c7-4549-af1b-5b09dc7b5841_en?filename=R-MSA_by_COUNTRY.pdf",
+    "verifiedOn": "2026-10-19"
+  },
+  "pt": {
+    "country": "Portugal",
+    "name": "ASAE",
+    "url": "https://www.asae.gov.pt/",
+    "source": "https://www.asae.gov.pt/inspecao-fiscalizacao/resultados-operacionais/resultados-operacionais.aspx",
+    "verifiedOn": "2026-10-19"
+  },
+  "ro": {
+    "country": "România",
+    "name": "ANPC",
+    "url": "https://anpc.ro/",
+    "source": "https://single-market-economy.ec.europa.eu/document/download/6fc4ff54-46c7-4549-af1b-5b09dc7b5841_en?filename=R-MSA_by_COUNTRY.pdf",
+    "verifiedOn": "2026-10-19"
+  },
+  "sk": {
+    "country": "Slovensko",
+    "name": "SOI",
+    "url": "https://www.soi.sk/",
+    "source": "https://single-market-economy.ec.europa.eu/document/download/6fc4ff54-46c7-4549-af1b-5b09dc7b5841_en?filename=R-MSA_by_COUNTRY.pdf",
+    "verifiedOn": "2026-10-19"
+  },
+  "sl": {
+    "country": "Slovenija",
+    "name": "Tržni inšpektorat",
+    "url": "https://www.gov.si/drzavni-organi/organi-v-sestavi/trzni-inspektorat/",
+    "source": "https://single-market-economy.ec.europa.eu/document/download/6fc4ff54-46c7-4549-af1b-5b09dc7b5841_en?filename=R-MSA_by_COUNTRY.pdf",
+    "verifiedOn": "2026-10-19"
+  },
+  "sv": {
+    "country": "Sverige",
+    "name": "Konsumentverket",
+    "url": "https://www.konsumentverket.se/",
+    "source": "https://single-market-economy.ec.europa.eu/document/download/6fc4ff54-46c7-4549-af1b-5b09dc7b5841_en?filename=R-MSA_by_COUNTRY.pdf",
+    "verifiedOn": "2026-10-19"
+  }
+}

@@ -24,19 +24,19 @@
       "home": "Home"
     },
     "hero": {
-      "badge": "PRODUCT SAFETY FOR SHOPIFY",
-      "title": "Check your products against EU safety alerts.",
-      "subtitle": "ZeroRecall compares products in your Shopify store with official Safety Gate alerts about dangerous products. Get an email and evidence to review when we find a possible match.",
+      "badge": "FOR SHOPIFY STORES SELLING IN THE EU",
+      "title": "Get alerted to possible matches with dangerous products.",
+      "subtitle": "ZeroRecall compares products in your Shopify store with the European Commission’s Safety Gate database. Get an email and evidence to review a possible match, without manually searching alerts.",
       "inputPlaceholder": "your-store.myshopify.com",
       "emailPlaceholder": "your-email@store.com",
-      "ctaButton": "Free scan",
+      "ctaButton": "Free check",
       "subtext": "No credit card • Results by email",
       "successTitle": "Scan running",
       "successBody": "We are checking public products. We will email the result when the scan finishes.",
       "installCta": "Install from Shopify App Store",
       "exampleCta": "See an example result",
-      "scanLink": "Or try a free store audit ↓",
-      "reassurance": "Free audit by email: your entire public catalog.",
+      "scanLink": "Check my store for free",
+      "reassurance": "One-off check. No installation or payment card. Results by email.",
       "visualCaption": "Illustration, not a real result.",
       "mockDemo": "ILLUSTRATIVE PREVIEW",
       "mockEyebrow": "Product check",
@@ -142,7 +142,8 @@
       "linkAuthority": "National authority ({{country}}): {{authority}} ↗",
       "linkAllAuthorities": "Authorities for all EU countries ↗",
       "marketNote": "Language does not determine the applicable law. Check the authority for the market where you sell.",
-      "remedies": "For a safety recall, GPSR Article 37 requires an effective, free and timely remedy, normally a choice of at least two of repair, replacement or refund. National rules determine sanctions; requirements vary by product and sales market."
+      "remedies": "For a safety recall, GPSR Article 37 requires an effective, free and timely remedy, normally a choice of at least two of repair, replacement or refund. National rules determine sanctions; requirements vary by product and sales market.",
+      "detailsLabel": "Legal context and official sources"
     },
     "faq": {
       "eyebrow": "FAQ",
@@ -154,12 +155,14 @@
       "q3": "Does the app change my products?",
       "a3": "No. It shows possible matches and evidence in Shopify Admin. You decide what to do.",
       "q4": "What is included in the free scan?",
-      "a4": "All products available in your store’s public Shopify catalog and an emailed summary of possible matches. Private listings are excluded; the scan is not a safety certificate."
+      "a4": "All products available in your store’s public Shopify catalog and an emailed summary of possible matches. Private listings are excluded; the scan is not a safety certificate.",
+      "q5": "What if no possible matches are found?",
+      "a5": "Your report will show the number of checked products and that no possible matches were found in this check. This does not certify product safety. New alerts can appear later."
     },
     "cta": {
-      "title": "Start with a free scan",
+      "title": "Start with a free check",
       "subtitle": "Check public products. Receive the result by email.",
-      "button": "Free scan"
+      "button": "Free check"
     },
     "about": {
       "metaTitle": "About ZeroRecall – Product Safety Monitoring for Shopify",
@@ -186,10 +189,11 @@
       "scopeLink": "Official Safety Gate ↗",
       "ctaTitle": "Focus on your store with more confidence",
       "ctaSubtitle": "Start with a free scan of public products.",
-      "ctaButton": "Free scan",
+      "ctaButton": "Free check",
       "contactTitle": "Have a question?",
       "contactBody": "We are an independent project. Write to us about the app, a scan or your data.",
-      "contactLink": "Email radoone@gmail.com"
+      "contactLink": "Email info@zerorecall.online",
+      "founderRole": "Founder of ZeroRecall"
     },
     "footer": {
       "text": "Peace of mind with ongoing Shopify product checks.",
@@ -221,8 +225,8 @@
     },
     "scan": {
       "eyebrow": "ONE-OFF CHECK · NO INSTALLATION",
-      "title": "Free scan of your entire public catalog",
-      "description": "Enter your public Shopify store domain and email. We'll send a confirmation link to your email and deliver the complete report once confirmed. Ongoing monitoring is part of the paid app.",
+      "title": "Free check of your entire public catalog",
+      "description": "Enter your Shopify domain and email. Confirm your email to start a one-off check of all available public products. We will email the result when it is ready.",
       "benefit1": "Public products only",
       "benefit2": "Possible matches to review",
       "benefit3": "Your products stay unchanged",
@@ -232,7 +236,7 @@
       "challengeRequired": "Complete the bot check before submitting.",
       "challengeUnavailable": "The bot check is unavailable. No scan has started; try later.",
       "verifyEmailTitle": "Check your inbox",
-      "verifyEmailBody": "We sent you an email with a confirmation link to start the audit. The link is valid for 30 minutes.",
+      "verifyEmailBody": "We sent you an email with a confirmation link to start the check. The link expires in 30 minutes.",
       "confirmTitle": "Confirm your email and start the scan",
       "confirmBody": "We will check the public Shopify catalog and email the result.",
       "confirmButton": "Confirm and start scan",
@@ -260,7 +264,8 @@
       "rateLimitBody": "A request was recently sent for this store or connection. Try later.",
       "unavailableTitle": "The free scan is currently unavailable",
       "unavailableBody": "We cannot start a scan right now. See an example result or contact us.",
-      "contactLink": "Contact us"
+      "contactLink": "Contact us",
+      "domainHelp": "In Shopify Admin, open Settings → Domains and copy the address ending in .myshopify.com. Use that address instead of your custom domain."
     },
     "quiet": {
       "eyebrow": "MORE PEACE OF MIND",
@@ -271,7 +276,7 @@
     "pricing": {
       "eyebrow": "ONGOING MONITORING AFTER INSTALLATION",
       "title": "Keep checking after your first scan",
-      "body": "The Shopify app monitors new Safety Gate alerts and changed products. It emails you about new possible matches, or sends a weekly update when there are none.",
+      "body": "A free check covers your public catalog once. The paid Shopify app keeps monitoring new Safety Gate alerts and changed products, emails you about new possible matches and keeps your review decisions.",
       "period": "/ month",
       "scope": "Per store. Billed through Shopify after choosing a plan.",
       "installCta": "Install from Shopify App Store",
@@ -281,7 +286,7 @@
       "content01": "Privacy",
       "content02": "Privacy and data retention",
       "content03": "What we process for free scans and the Shopify app, and how long we keep it.",
-      "content04": "Updated: 19 October 2026. We are an independent project. Privacy questions and requests: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+      "content04": "Updated: 19 October 2026. We are an independent project. Privacy questions and requests: <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>.",
       "content05": "Information we process",
       "content06": "<li><strong>Free scan request:</strong> store domain, your email, language, request status and report. Your email confirms the request and receives the report.</li>\n<li><strong>Public catalog scan:</strong> public product titles, descriptions, brands, categories, images and URLs. We may also collect the business email on public contact pages. Product text becomes search vectors for comparison with Safety Gate alerts.</li>\n<li><strong>Installed Shopify app:</strong> shop domain, product snapshots and images, check results, possible matches, review decisions, settings, notification preferences and required app session data.</li>\n<li><strong>Technical records:</strong> security and service logs for operation, troubleshooting and protection.</li>",
       "content07": "Why and how we use it",
@@ -294,10 +299,10 @@
       "content14": "Shopify runs the embedded app. Google Cloud and Firebase provide hosting, storage, background jobs and Vertex AI product comparison. Brevo sends confirmation, report and notification emails. Cloudflare Turnstile protects the free-scan form from automated abuse.",
       "content15": "Alerts come from the European Commission's public Safety Gate system. Providers process information as needed to deliver these services.",
       "content16": "Your choices and requests",
-      "content17": "Email <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a> to request access, correction or deletion of your scan or store data, or to object to processing.",
+      "content17": "Email <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a> to request access, correction or deletion of your scan or store data, or to object to processing.",
       "content18": "After uninstall, Shopify sends a shop/redact request to delete the store's app data. We acknowledge Shopify customer-data requests; we do not store customer accounts or orders.",
       "content19": "Contact",
-      "content20": "ZeroRecall privacy contact: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+      "content20": "ZeroRecall privacy contact: <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>.",
       "metaTitle": "Privacy and data retention | ZeroRecall",
       "metaDescription": "How ZeroRecall processes and retains data for public catalog scans and the Shopify app.",
       "footer": "Privacy and data retention information."

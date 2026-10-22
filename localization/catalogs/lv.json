@@ -24,9 +24,9 @@
       "home": "Sākums"
     },
     "hero": {
-      "badge": "PRODUKTU DROŠĪBA SHOPIFY VEIKALIEM",
-      "title": "Pārbaudiet savus produktus atbilstoši ES drošības brīdinājumiem.",
-      "subtitle": "ZeroRecall salīdzina jūsu Shopify veikala produktus ar oficiālajiem Safety Gate brīdinājumiem par bīstamiem produktiem. Saņemiet e-pastu un pierādījumus pārskatīšanai, ja atrodam iespējamu atbilstību.",
+      "badge": "SHOPIFY VEIKALIEM, KAS PĀRDOD ES",
+      "title": "Saņemiet paziņojumus par iespējamām atbilstībām bīstamiem izstrādājumiem.",
+      "subtitle": "ZeroRecall salīdzina jūsu Shopify veikala produktus ar Eiropas Komisijas Safety Gate datubāzi. Iespējamas atbilstības gadījumā saņemat e-pastu un pārbaudāmu informāciju, neveicot manuālu meklēšanu brīdinājumos.",
       "inputPlaceholder": "jūsu-veikals.myshopify.com",
       "emailPlaceholder": "jūsu-e-pasts@veikals.com",
       "ctaButton": "Bezmaksas skenēšana",
@@ -35,8 +35,8 @@
       "successBody": "Mēs pārbaudām publiskos produktus. Mēs nosūtīsim rezultātu pa e-pastu, kad skenēšana būs pabeigta.",
       "installCta": "Instalēt no Shopify App Store",
       "exampleCta": "Skatīt rezultāta piemēru",
-      "scanLink": "Vai izmēģiniet bezmaksas veikala auditu ↓",
-      "reassurance": "Bezmaksas audits e-pastā: viss publiskais katalogs.",
+      "scanLink": "Pārbaudīt manu veikalu bez maksas",
+      "reassurance": "Vienreizēja pārbaude bez instalēšanas un maksājumu kartes. Rezultāts e-pastā.",
       "visualCaption": "Ilustrācija, nav reāls rezultāts.",
       "mockDemo": "ILUSTRATĪVS PRIEKŠSKATĪJUMS",
       "mockEyebrow": "Produkta pārbaude",
@@ -142,7 +142,8 @@
       "linkAuthority": "Valsts iestāde ({{country}}): {{authority}} ↗",
       "linkAllAuthorities": "Visu ES valstu iestādes ↗",
       "marketNote": "Valoda nenosaka piemērojamos tiesību aktus. Pārbaudiet iestādi tirgū, kurā pārdodat.",
-      "remedies": "Drošības atsaukšanas gadījumā GPSR 37. pants prasa efektīvu, bezmaksas un savlaicīgu tiesiskās aizsardzības līdzekli, parasti izvēli starp vismaz diviem no šiem: remonts, nomaiņa vai atmaksa. Valstu noteikumi nosaka sankcijas; prasības atšķiras atkarībā no produkta un pārdošanas tirgus."
+      "remedies": "Drošības atsaukšanas gadījumā GPSR 37. pants prasa efektīvu, bezmaksas un savlaicīgu tiesiskās aizsardzības līdzekli, parasti izvēli starp vismaz diviem no šiem: remonts, nomaiņa vai atmaksa. Valstu noteikumi nosaka sankcijas; prasības atšķiras atkarībā no produkta un pārdošanas tirgus.",
+      "detailsLabel": "Juridiskais konteksts un oficiālie avoti"
     },
     "faq": {
       "eyebrow": "BUJ",
@@ -154,7 +155,9 @@
       "q3": "Vai lietotne maina manus produktus?",
       "a3": "Nē. Tā parāda iespējamās atbilstības un pierādījumus Shopify administrācijā. Jūs izlemjat, ko darīt.",
       "q4": "Kas ir iekļauts bezmaksas skenēšanā?",
-      "a4": "Visi veikala publiskajā Shopify katalogā pieejamie produkti un iespējamo atbilstību kopsavilkums e-pastā. Privātie piedāvājumi netiek iekļauti; pārbaude nav drošības sertifikāts."
+      "a4": "Visi veikala publiskajā Shopify katalogā pieejamie produkti un iespējamo atbilstību kopsavilkums e-pastā. Privātie piedāvājumi netiek iekļauti; pārbaude nav drošības sertifikāts.",
+      "q5": "Kas notiek, ja iespējamās atbilstības netiek atrastas?",
+      "a5": "Pārskatā būs norādīts pārbaudīto produktu skaits un tas, ka šajā pārbaudē iespējamās atbilstības netika atrastas. Tas neapliecina produktu drošumu. Vēlāk var parādīties jauni brīdinājumi."
     },
     "cta": {
       "title": "Sāciet ar bezmaksas skenēšanu",
@@ -189,7 +192,8 @@
       "ctaButton": "Bezmaksas skenēšana",
       "contactTitle": "Vai jums ir jautājums?",
       "contactBody": "Mēs esam neatkarīgs projekts. Rakstiet mums par lietotni, skenēšanu vai jūsu datiem.",
-      "contactLink": "Sūtīt e-pastu uz radoone@gmail.com"
+      "contactLink": "Sūtīt e-pastu uz info@zerorecall.online",
+      "founderRole": "ZeroRecall dibinātājs"
     },
     "footer": {
       "text": "Miers ar nepārtrauktām Shopify produktu pārbaudēm.",
@@ -222,7 +226,7 @@
     "scan": {
       "eyebrow": "VIENREIZĒJA PĀRBAUDE · NAV INSTALĀCIJAS",
       "title": "Visa publiskā kataloga bezmaksas pārbaude",
-      "description": "Ievadiet savu publisko Shopify veikala domēnu un e-pastu. Mēs nosūtīsim apstiprinājuma saiti uz jūsu e-pastu un piegādāsim pilnu ziņojumu pēc apstiprināšanas. Nepārtraukta uzraudzība ir daļa no maksas lietotnes.",
+      "description": "Ievadiet Shopify domēnu un e-pastu. Pēc e-pasta apstiprināšanas vienreiz pārbaudīsim visus pieejamos publiskos produktus. Rezultātu nosūtīsim pēc pārbaudes pabeigšanas.",
       "benefit1": "Tikai publiski produkti",
       "benefit2": "Iespējamās atbilstības pārskatīšanai",
       "benefit3": "Jūsu produkti paliek nemainīgi",
@@ -232,7 +236,7 @@
       "challengeRequired": "Pirms iesniegšanas pabeidziet bota pārbaudi.",
       "challengeUnavailable": "Bota pārbaude nav pieejama. Skenēšana nav sākta; mēģiniet vēlāk.",
       "verifyEmailTitle": "Pārbaudiet savu iesūtni",
-      "verifyEmailBody": "Mēs nosūtījām jums e-pastu ar apstiprinājuma saiti, lai sāktu auditu. Saite ir derīga 30 minūtes.",
+      "verifyEmailBody": "Nosūtījām e-pastu ar apstiprinājuma saiti pārbaudes sākšanai. Saite ir derīga 30 minūtes.",
       "confirmTitle": "Apstipriniet savu e-pastu un sāciet skenēšanu",
       "confirmBody": "Mēs pārbaudīsim publisko Shopify katalogu un nosūtīsim rezultātu pa e-pastu.",
       "confirmButton": "Apstiprināt un sākt skenēšanu",
@@ -260,7 +264,8 @@
       "rateLimitBody": "Nesen tika nosūtīts pieprasījums šim veikalam vai savienojumam. Mēģiniet vēlāk.",
       "unavailableTitle": "Bezmaksas skenēšana pašlaik nav pieejama",
       "unavailableBody": "Mēs pašlaik nevaram sākt skenēšanu. Skatiet rezultāta piemēru vai sazinieties ar mums.",
-      "contactLink": "Sazinieties ar mums"
+      "contactLink": "Sazinieties ar mums",
+      "domainHelp": "Shopify administrācijas panelī atveriet Iestatījumi → Domēni un nokopējiet adresi, kas beidzas ar .myshopify.com. Izmantojiet to sava pielāgotā domēna vietā."
     },
     "quiet": {
       "eyebrow": "VAIRĀK MIERA",
@@ -271,7 +276,7 @@
     "pricing": {
       "eyebrow": "NEPĀRTRAUKTA UZRAUDZĪBA PĒC INSTALĒŠANAS",
       "title": "Turpiniet pārbaudīt pēc pirmās skenēšanas",
-      "body": "Shopify lietotne uzrauga jaunus Safety Gate brīdinājumus un mainītus produktus. Tā nosūta jums e-pastu par jaunām iespējamām atbilstībām vai nosūta iknedēļas atjauninājumu, ja tādu nav.",
+      "body": "Bezmaksas pārbaude aptver publisko katalogu vienu reizi. Maksas Shopify lietotne pēc tam uzrauga jaunus Safety Gate brīdinājumus un mainītos produktus, nosūta e-pastus par jaunām iespējamām atbilstībām un saglabā jūsu lēmumus.",
       "period": "/ mēnesī",
       "scope": "Par veikalu. Rēķins tiek izrakstīts caur Shopify pēc plāna izvēles.",
       "installCta": "Instalēt no Shopify App Store",
@@ -281,7 +286,7 @@
       "content01": "Privātums",
       "content02": "Privātums un datu glabāšana",
       "content03": "Ko mēs apstrādājam bezmaksas skenēšanai un Shopify lietotnei, un cik ilgi mēs to glabājam.",
-      "content04": "Atjaunināts: 2026. gada 19. oktobris. Mēs esam neatkarīgs projekts. Privātuma jautājumi un pieprasījumi: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+      "content04": "Atjaunināts: 2026. gada 19. oktobris. Mēs esam neatkarīgs projekts. Privātuma jautājumi un pieprasījumi: <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>.",
       "content05": "Informācija, ko mēs apstrādājam",
       "content06": "<li><strong>Bezmaksas skenēšanas pieprasījums:</strong> veikala domēns, jūsu e-pasts, valoda, pieprasījuma statuss un ziņojums. Jūsu e-pasts apstiprina pieprasījumu un saņem ziņojumu.</li>\n<li><strong>Publiskā kataloga skenēšana:</strong> publisko produktu nosaukumi, apraksti, zīmoli, kategorijas, attēli un URL. Mēs varam arī apkopot uzņēmuma e-pastu publiskajās kontaktu lapās. Produkta teksts kļūst par meklēšanas vektoriem salīdzināšanai ar Safety Gate brīdinājumiem.</li>\n<li><strong>Instalētā Shopify lietotne:</strong> veikala domēns, produktu momentuzņēmumi un attēli, pārbaudes rezultāti, iespējamās atbilstības, pārskatīšanas lēmumi, iestatījumi, paziņojumu preferences un nepieciešamie lietotnes sesijas dati.</li>\n<li><strong>Tehniskie ieraksti:</strong> drošības un pakalpojumu žurnāli darbībai, problēmu novēršanai un aizsardzībai.</li>",
       "content07": "Kāpēc un kā mēs to izmantojam",
@@ -294,10 +299,10 @@
       "content14": "Shopify vada iegulto lietotni. Google Cloud un Firebase nodrošina mitināšanu, glabāšanu, fona darbus un Vertex AI produktu salīdzināšanu. Brevo sūta apstiprinājuma, ziņojuma un paziņojumu e-pastus. Cloudflare Turnstile aizsargā bezmaksas skenēšanas veidlapu no automatizētas ļaunprātīgas izmantošanas.",
       "content15": "Brīdinājumi nāk no Eiropas Komisijas publiskās Safety Gate sistēmas. Pakalpojumu sniedzēji apstrādā informāciju, kā nepieciešams, lai sniegtu šos pakalpojumus.",
       "content16": "Jūsu izvēles un pieprasījumi",
-      "content17": "Sūtiet e-pastu uz <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>, lai pieprasītu piekļuvi, labošanu vai dzēšanu jūsu skenēšanas vai veikala datiem, vai iebilstu pret apstrādi.",
+      "content17": "Sūtiet e-pastu uz <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>, lai pieprasītu piekļuvi, labošanu vai dzēšanu jūsu skenēšanas vai veikala datiem, vai iebilstu pret apstrādi.",
       "content18": "Pēc atinstalēšanas Shopify nosūta veikala/redakcijas pieprasījumu, lai dzēstu veikala lietotnes datus. Mēs atzīstam Shopify klientu datu pieprasījumus; mēs neglabājam klientu kontus vai pasūtījumus.",
       "content19": "Kontakti",
-      "content20": "ZeroRecall privātuma kontaktpersona: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+      "content20": "ZeroRecall privātuma kontaktpersona: <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>.",
       "metaTitle": "Privātums un datu glabāšana | ZeroRecall",
       "metaDescription": "Kā ZeroRecall apstrādā un glabā datus publisko katalogu skenēšanai un Shopify lietotnei.",
       "footer": "Privātuma un datu glabāšanas informācija."

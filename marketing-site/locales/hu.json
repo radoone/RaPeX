@@ -23,9 +23,9 @@
     "home": "Kezdőlap"
   },
   "hero": {
-    "badge": "TERMÉKBIZTONSÁG SHOPIFY-HOZ",
-    "title": "Ellenőrizze termékeit az EU biztonsági riasztásaival szemben.",
-    "subtitle": "A ZeroRecall összehasonlítja a Shopify áruházában lévő termékeket a veszélyes termékekre vonatkozó hivatalos Safety Gate riasztásokkal. E-mailt és bizonyítékokat kap, ha lehetséges egyezést találunk.",
+    "badge": "AZ EU-BAN ÉRTÉKESÍTŐ SHOPIFY-ÁRUHÁZAKNAK",
+    "title": "Értesüljön a veszélyes termékekkel való lehetséges egyezésekről.",
+    "subtitle": "A ZeroRecall összehasonlítja Shopify-áruháza termékeit az Európai Bizottság Safety Gate adatbázisával. Lehetséges egyezés esetén e-mailt és ellenőrizhető adatokat kap, a riasztások kézi keresése nélkül.",
     "inputPlaceholder": "az-ön-áruháza.myshopify.com",
     "emailPlaceholder": "az-ön-e-mailje@áruház.com",
     "ctaButton": "Ingyenes ellenőrzés",
@@ -34,8 +34,8 @@
     "successBody": "Nyilvános termékeket ellenőrzünk. Az eredményt e-mailben küldjük el, amint az ellenőrzés befejeződik.",
     "installCta": "Telepítés a Shopify App Store-ból",
     "exampleCta": "Példa eredmény megtekintése",
-    "scanLink": "Vagy próbáljon ki egy ingyenes áruház auditot ↓",
-    "reassurance": "Ingyenes ellenőrzés e-mailben: a teljes nyilvános katalógus.",
+    "scanLink": "Áruházam ingyenes ellenőrzése",
+    "reassurance": "Egyszeri ellenőrzés telepítés és bankkártya nélkül. Eredmény e-mailben.",
     "visualCaption": "Illusztráció, nem valós eredmény.",
     "mockDemo": "ILLUSZTRATÍV ELŐNÉZET",
     "mockEyebrow": "Termékellenőrzés",
@@ -141,7 +141,8 @@
     "linkAuthority": "Nemzeti hatóság ({{country}}): {{authority}} ↗",
     "linkAllAuthorities": "Minden EU-ország hatóságai ↗",
     "marketNote": "A nyelv nem határozza meg az alkalmazandó jogot. Ellenőrizze a hatóságot azon a piacon, ahol értékesít.",
-    "remedies": "Termékvisszahívás esetén a GPSR 37. cikke hatékony, ingyenes és időben történő jogorvoslatot ír elő, általában legalább két lehetőség közül választhat: javítás, csere vagy visszatérítés. A nemzeti szabályok határozzák meg a szankciókat; a követelmények termékenként és értékesítési piaconként eltérőek."
+    "remedies": "Termékvisszahívás esetén a GPSR 37. cikke hatékony, ingyenes és időben történő jogorvoslatot ír elő, általában legalább két lehetőség közül választhat: javítás, csere vagy visszatérítés. A nemzeti szabályok határozzák meg a szankciókat; a követelmények termékenként és értékesítési piaconként eltérőek.",
+    "detailsLabel": "Jogi háttér és hivatalos források"
   },
   "faq": {
     "eyebrow": "GYIK",
@@ -153,7 +154,9 @@
     "q3": "Módosítja az alkalmazás a termékeimet?",
     "a3": "Nem. Lehetséges egyezéseket és bizonyítékokat mutat a Shopify Adminban. Ön dönti el, mit tegyen.",
     "q4": "Mit tartalmaz az ingyenes ellenőrzés?",
-    "a4": "Az áruház nyilvános Shopify-katalógusában elérhető összes termék és a lehetséges egyezések összefoglalója e-mailben. A privát listázások nem részei az ellenőrzésnek; az ellenőrzés nem biztonsági tanúsítvány."
+    "a4": "Az áruház nyilvános Shopify-katalógusában elérhető összes termék és a lehetséges egyezések összefoglalója e-mailben. A privát listázások nem részei az ellenőrzésnek; az ellenőrzés nem biztonsági tanúsítvány.",
+    "q5": "Mi történik, ha nincs lehetséges egyezés?",
+    "a5": "A jelentés megmutatja az ellenőrzött termékek számát és azt, hogy ebben az ellenőrzésben nem találtunk lehetséges egyezést. Ez nem tanúsítja a termékek biztonságát. Később új riasztások jelenhetnek meg."
   },
   "cta": {
     "title": "Kezdje egy ingyenes ellenőrzéssel",
@@ -188,7 +191,8 @@
     "ctaButton": "Ingyenes ellenőrzés",
     "contactTitle": "Kérdése van?",
     "contactBody": "Független projekt vagyunk. Írjon nekünk az alkalmazásról, egy ellenőrzésről vagy az adatairól.",
-    "contactLink": "E-mail: radoone@gmail.com"
+    "contactLink": "E-mail: info@zerorecall.online",
+    "founderRole": "A ZeroRecall alapítója"
   },
   "footer": {
     "text": "Nyugalom a folyamatos Shopify termékellenőrzésekkel.",
@@ -221,7 +225,7 @@
   "scan": {
     "eyebrow": "EGYSZERI ELLENŐRZÉS · NINCS TELEPÍTÉS",
     "title": "A teljes nyilvános katalógus ingyenes ellenőrzése",
-    "description": "Adja meg nyilvános Shopify áruházának domainjét és e-mail címét. E-mailben küldünk egy megerősítő linket, és a megerősítés után elküldjük a teljes jelentést. A folyamatos felügyelet a fizetős alkalmazás része.",
+    "description": "Adja meg Shopify-domainjét és e-mail-címét. Az e-mail megerősítése után egyszer ellenőrizzük az összes elérhető nyilvános terméket. Az eredményt a befejezés után küldjük el.",
     "benefit1": "Csak nyilvános termékek",
     "benefit2": "Felülvizsgálatra szoruló lehetséges egyezések",
     "benefit3": "Termékei változatlanok maradnak",
@@ -231,7 +235,7 @@
     "challengeRequired": "A beküldés előtt töltse ki a bot ellenőrzést.",
     "challengeUnavailable": "A bot ellenőrzés nem elérhető. Nem indult ellenőrzés; próbálja meg később.",
     "verifyEmailTitle": "Ellenőrizze postaládáját",
-    "verifyEmailBody": "E-mailt küldtünk Önnek egy megerősítő linkkel az audit elindításához. A link 30 percig érvényes.",
+    "verifyEmailBody": "E-mailt küldtünk az ellenőrzés indításához szükséges megerősítő hivatkozással. A hivatkozás 30 percig érvényes.",
     "confirmTitle": "Erősítse meg e-mail címét, és indítsa el az ellenőrzést",
     "confirmBody": "Ellenőrizzük a nyilvános Shopify katalógust, és e-mailben elküldjük az eredményt.",
     "confirmButton": "Megerősítés és ellenőrzés indítása",
@@ -259,7 +263,8 @@
     "rateLimitBody": "Nemrégiben kérés érkezett ehhez az áruházhoz vagy kapcsolathoz. Próbálja meg később.",
     "unavailableTitle": "Az ingyenes ellenőrzés jelenleg nem elérhető",
     "unavailableBody": "Jelenleg nem tudunk ellenőrzést indítani. Tekintsen meg egy példa eredményt, vagy lépjen kapcsolatba velünk.",
-    "contactLink": "Lépjen kapcsolatba velünk"
+    "contactLink": "Lépjen kapcsolatba velünk",
+    "domainHelp": "A Shopify adminfelületén nyissa meg a Beállítások → Domainek menüt, és másolja ki a .myshopify.com végződésű címet. Ezt használja az egyéni domain helyett."
   },
   "quiet": {
     "eyebrow": "TÖBB NYUGALOM",
@@ -270,7 +275,7 @@
   "pricing": {
     "eyebrow": "FOLYAMATOS FELÜGYELET TELEPÍTÉS UTÁN",
     "title": "Folytassa az ellenőrzést az első ellenőrzés után",
-    "body": "A Shopify alkalmazás figyeli az új Safety Gate riasztásokat és a megváltozott termékeket. E-mailben értesíti Önt az új lehetséges egyezésekről, vagy heti frissítést küld, ha nincsenek ilyenek.",
+    "body": "Az ingyenes ellenőrzés egyszer vizsgálja át a nyilvános katalógust. A fizetős Shopify-alkalmazás ezután figyeli az új Safety Gate-riasztásokat és a módosított termékeket, e-mailt küld az új lehetséges egyezésekről, és megőrzi döntéseit.",
     "period": "/ hónap",
     "scope": "Áruházanként. A Shopify-on keresztül számlázva a csomag kiválasztása után.",
     "installCta": "Telepítés a Shopify App Store-ból",
@@ -280,7 +285,7 @@
     "content01": "Adatvédelem",
     "content02": "Adatvédelem és adatmegőrzés",
     "content03": "Amit feldolgozunk az ingyenes ellenőrzésekhez és a Shopify alkalmazáshoz, és mennyi ideig őrizzük meg.",
-    "content04": "Frissítve: 2026. október 19. Független projekt vagyunk. Adatvédelmi kérdések és kérések: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+    "content04": "Frissítve: 2026. október 19. Független projekt vagyunk. Adatvédelmi kérdések és kérések: <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>.",
     "content05": "Általunk feldolgozott információk",
     "content06": "<li><strong>Ingyenes ellenőrzési kérés:</strong> áruház domain, az Ön e-mail címe, nyelv, kérés állapota és jelentés. E-mailje megerősíti a kérést, és megkapja a jelentést.</li>\n<li><strong>Nyilvános katalógus ellenőrzés:</strong> nyilvános terméknevek, leírások, márkák, kategóriák, képek és URL-ek. Gyűjthetünk üzleti e-mail címeket is a nyilvános kapcsolattartó oldalakról. A termékszövegek keresési vektorokká válnak a Safety Gate riasztásokkal való összehasonlításhoz.</li>\n<li><strong>Telepített Shopify alkalmazás:</strong> áruház domain, termék pillanatképek és képek, ellenőrzési eredmények, lehetséges egyezések, felülvizsgálati döntések, beállítások, értesítési preferenciák és szükséges alkalmazás munkamenet adatok.</li>\n<li><strong>Technikai rekordok:</strong> biztonsági és szolgáltatási naplók működéshez, hibaelhárításhoz és védelemhez.</li>",
     "content07": "Miért és hogyan használjuk",
@@ -293,10 +298,10 @@
     "content14": "A Shopify futtatja a beágyazott alkalmazást. A Google Cloud és a Firebase biztosítja a tárhelyet, a tárolást, a háttérfeladatokat és a Vertex AI termékösszehasonlítást. A Brevo küldi a megerősítő, jelentés és értesítő e-maileket. A Cloudflare Turnstile védi az ingyenes ellenőrzési űrlapot az automatizált visszaélések ellen.",
     "content15": "A riasztások az Európai Bizottság nyilvános Safety Gate rendszeréből származnak. A szolgáltatók feldolgozzák az információkat a szolgáltatások nyújtásához szükséges mértékben.",
     "content16": "Az Ön választásai és kérései",
-    "content17": "E-mailben küldjön üzenetet a <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a> címre, ha hozzáférést, javítást vagy törlést kér az ellenőrzési vagy áruházadataihoz, vagy ha tiltakozik a feldolgozás ellen.",
+    "content17": "E-mailben küldjön üzenetet a <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a> címre, ha hozzáférést, javítást vagy törlést kér az ellenőrzési vagy áruházadataihoz, vagy ha tiltakozik a feldolgozás ellen.",
     "content18": "Az eltávolítás után a Shopify shop/redact kérést küld az áruház alkalmazásadatainak törlésére. Tudomásul vesszük a Shopify ügyféladatokra vonatkozó kéréseit; nem tárolunk ügyfélfiókokat vagy rendeléseket.",
     "content19": "Kapcsolat",
-    "content20": "ZeroRecall adatvédelmi kapcsolattartó: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+    "content20": "ZeroRecall adatvédelmi kapcsolattartó: <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>.",
     "metaTitle": "Adatvédelem és adatmegőrzés | ZeroRecall",
     "metaDescription": "Hogyan dolgozza fel és őrzi meg a ZeroRecall az adatokat a nyilvános katalógus ellenőrzésekhez és a Shopify alkalmazáshoz.",
     "footer": "Adatvédelem és adatmegőrzési információk."

@@ -23,9 +23,9 @@
     "home": "Etusivu"
   },
   "hero": {
-    "badge": "TUOTETURVALLISUUS SHOPIFYLLE",
-    "title": "Tarkista tuotteesi EU:n turvallisuushälytyksiä vastaan.",
-    "subtitle": "ZeroRecall vertaa Shopify-kauppasi tuotteita virallisiin Safety Gate -hälytyksiin vaarallisista tuotteista. Saat sähköpostin ja todisteet tarkistettavaksi, kun löydämme mahdollisen osuman.",
+    "badge": "EU:SSA MYYVILLE SHOPIFY-KAUPOILLE",
+    "title": "Saat ilmoituksen mahdollisista vastaavuuksista vaarallisten tuotteiden kanssa.",
+    "subtitle": "ZeroRecall vertaa Shopify-kauppasi tuotteita Euroopan komission Safety Gate -tietokantaan. Mahdollisesta vastaavuudesta saat sähköpostin ja tarkistettavat tiedot ilman ilmoitusten käsin läpikäyntiä.",
     "inputPlaceholder": "kauppasi.myshopify.com",
     "emailPlaceholder": "sähköpostisi@kauppa.com",
     "ctaButton": "Ilmainen skannaus",
@@ -34,8 +34,8 @@
     "successBody": "Tarkistamme julkisia tuotteita. Lähetämme tuloksen sähköpostitse, kun skannaus on valmis.",
     "installCta": "Asenna Shopify App Storesta",
     "exampleCta": "Katso esimerkkilöytö",
-    "scanLink": "Tai kokeile ilmaista kaupan auditointia ↓",
-    "reassurance": "Maksuton tarkistus sähköpostitse: koko julkinen tuoteluettelo.",
+    "scanLink": "Tarkista kauppani ilmaiseksi",
+    "reassurance": "Kertatarkistus ilman asennusta tai maksukorttia. Tulos sähköpostitse.",
     "visualCaption": "Kuvitus, ei todellinen tulos.",
     "mockDemo": "HAVAINNOLLINEN ESIMERKKI",
     "mockEyebrow": "Tuotetarkistus",
@@ -141,7 +141,8 @@
     "linkAuthority": "Kansallinen viranomainen ({{country}}): {{authority}} ↗",
     "linkAllAuthorities": "Kaikkien EU-maiden viranomaiset ↗",
     "marketNote": "Kieli ei määritä sovellettavaa lakia. Tarkista viranomainen markkinoilta, joilla myyt.",
-    "remedies": "Turvallisuustakaisinvedon osalta GPSR:n 37 artikla edellyttää tehokasta, maksutonta ja oikea-aikaista korjausta, yleensä valintaa vähintään kahdesta: korjaus, vaihto tai hyvitys. Kansalliset säännöt määräävät seuraamukset; vaatimukset vaihtelevat tuotteen ja myyntimarkkinoiden mukaan."
+    "remedies": "Turvallisuustakaisinvedon osalta GPSR:n 37 artikla edellyttää tehokasta, maksutonta ja oikea-aikaista korjausta, yleensä valintaa vähintään kahdesta: korjaus, vaihto tai hyvitys. Kansalliset säännöt määräävät seuraamukset; vaatimukset vaihtelevat tuotteen ja myyntimarkkinoiden mukaan.",
+    "detailsLabel": "Oikeudellinen tausta ja viralliset lähteet"
   },
   "faq": {
     "eyebrow": "UKK",
@@ -153,7 +154,9 @@
     "q3": "Muuttaako sovellus tuotteitani?",
     "a3": "Ei. Se näyttää mahdolliset osumat ja todisteet Shopify Adminissa. Sinä päätät, mitä tehdä.",
     "q4": "Mitä sisältyy ilmaiseen skannaukseen?",
-    "a4": "Kaikki kaupan julkisessa Shopify-tuoteluettelossa saatavilla olevat tuotteet ja yhteenveto mahdollisista osumista sähköpostitse. Yksityiset listaukset eivät sisälly tarkistukseen; tarkistus ei ole turvallisuustodistus."
+    "a4": "Kaikki kaupan julkisessa Shopify-tuoteluettelossa saatavilla olevat tuotteet ja yhteenveto mahdollisista osumista sähköpostitse. Yksityiset listaukset eivät sisälly tarkistukseen; tarkistus ei ole turvallisuustodistus.",
+    "q5": "Entä jos mahdollisia vastaavuuksia ei löydy?",
+    "a5": "Raportti näyttää tarkistettujen tuotteiden määrän ja sen, ettei tässä tarkistuksessa löytynyt mahdollisia vastaavuuksia. Se ei ole todistus tuoteturvallisuudesta. Uusia ilmoituksia voi tulla myöhemmin."
   },
   "cta": {
     "title": "Aloita ilmaisella skannauksella",
@@ -188,7 +191,8 @@
     "ctaButton": "Ilmainen skannaus",
     "contactTitle": "Onko sinulla kysyttävää?",
     "contactBody": "Olemme itsenäinen projekti. Kirjoita meille sovelluksesta, skannauksesta tai tiedoistasi.",
-    "contactLink": "Lähetä sähköpostia osoitteeseen radoone@gmail.com"
+    "contactLink": "Lähetä sähköpostia osoitteeseen info@zerorecall.online",
+    "founderRole": "ZeroRecallin perustaja"
   },
   "footer": {
     "text": "Mielenrauhaa jatkuvilla Shopify-tuotetarkistuksilla.",
@@ -220,8 +224,8 @@
   },
   "scan": {
     "eyebrow": "KERTAKUONTAINEN TARKISTUS · EI ASENNUSTA",
-    "title": "Koko julkisen tuoteluettelon maksuton tarkistus",
-    "description": "Anna julkinen Shopify-kauppasi verkkotunnus ja sähköpostiosoite. Lähetämme vahvistuslinkin sähköpostiisi ja toimitamme täydellisen raportin vahvistuksen jälkeen. Jatkuva valvonta on osa maksullista sovellusta.",
+    "title": "Koko julkisen tuoteluettelon ilmainen tarkistus",
+    "description": "Anna Shopify-verkkotunnuksesi ja sähköpostisi. Vahvistettuasi sähköpostin tarkistamme kerran kaikki saatavilla olevat julkiset tuotteet. Lähetämme tuloksen tarkistuksen valmistuttua.",
     "benefit1": "Vain julkiset tuotteet",
     "benefit2": "Mahdolliset osumat tarkistettavaksi",
     "benefit3": "Tuotteesi pysyvät ennallaan",
@@ -231,7 +235,7 @@
     "challengeRequired": "Suorita bottitarkistus ennen lähettämistä.",
     "challengeUnavailable": "Bottitarkistus ei ole käytettävissä. Skannausta ei ole aloitettu; yritä myöhemmin.",
     "verifyEmailTitle": "Tarkista postilaatikkosi",
-    "verifyEmailBody": "Lähetimme sinulle sähköpostin, jossa on vahvistuslinkki auditoinnin aloittamiseksi. Linkki on voimassa 30 minuuttia.",
+    "verifyEmailBody": "Lähetimme sähköpostin, jonka vahvistuslinkillä voit aloittaa tarkistuksen. Linkki on voimassa 30 minuuttia.",
     "confirmTitle": "Vahvista sähköpostisi ja aloita skannaus",
     "confirmBody": "Tarkistamme julkisen Shopify-luettelon ja lähetämme tuloksen sähköpostitse.",
     "confirmButton": "Vahvista ja aloita skannaus",
@@ -259,7 +263,8 @@
     "rateLimitBody": "Pyyntö lähetettiin äskettäin tälle kaupalle tai yhteydelle. Yritä myöhemmin.",
     "unavailableTitle": "Ilmainen skannaus ei ole tällä hetkellä käytettävissä",
     "unavailableBody": "Emme voi aloittaa skannausta juuri nyt. Katso esimerkkilöytö tai ota meihin yhteyttä.",
-    "contactLink": "Ota meihin yhteyttä"
+    "contactLink": "Ota meihin yhteyttä",
+    "domainHelp": "Avaa Shopify-hallinnassa Asetukset → Verkkotunnukset ja kopioi osoite, joka päättyy .myshopify.com. Käytä sitä oman verkkotunnuksesi sijaan."
   },
   "quiet": {
     "eyebrow": "LISÄÄ MIELENRAUHAA",
@@ -270,7 +275,7 @@
   "pricing": {
     "eyebrow": "JATKUVA VALVONTA ASENNUKSEN JÄLKEEN",
     "title": "Jatka tarkistusta ensimmäisen skannauksen jälkeen",
-    "body": "Shopify-sovellus valvoo uusia Safety Gate -hälytyksiä ja muuttuneita tuotteita. Se lähettää sinulle sähköpostia uusista mahdollisista osumista tai viikoittaisen päivityksen, kun niitä ei ole.",
+    "body": "Ilmainen tarkistus kattaa julkisen tuoteluettelosi kerran. Maksullinen Shopify-sovellus seuraa tämän jälkeen uusia Safety Gate -ilmoituksia ja muuttuneita tuotteita, lähettää sähköpostia uusista mahdollisista vastaavuuksista ja tallentaa päätöksesi.",
     "period": "/ kuukausi",
     "scope": "Per kauppa. Laskutetaan Shopifyn kautta suunnitelman valinnan jälkeen.",
     "installCta": "Asenna Shopify App Storesta",
@@ -280,7 +285,7 @@
     "content01": "Tietosuoja",
     "content02": "Tietosuoja ja tietojen säilytys",
     "content03": "Mitä käsittelemme ilmaisia skannauksia ja Shopify-sovellusta varten ja kuinka kauan säilytämme sitä.",
-    "content04": "Päivitetty: 19. lokakuuta 2026. Olemme itsenäinen projekti. Tietosuojaa koskevat kysymykset ja pyynnöt: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+    "content04": "Päivitetty: 19. lokakuuta 2026. Olemme itsenäinen projekti. Tietosuojaa koskevat kysymykset ja pyynnöt: <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>.",
     "content05": "Käsittelemämme tiedot",
     "content06": "<li><strong>Ilmainen skannauspyyntö:</strong> kaupan verkkotunnus, sähköpostiosoitteesi, kieli, pyynnön tila ja raportti. Sähköpostiosoitteesi vahvistaa pyynnön ja vastaanottaa raportin.</li>\n<li><strong>Julkisen luettelon skannaus:</strong> julkisten tuotteiden nimet, kuvaukset, tuotemerkit, kategoriat, kuvat ja URL-osoitteet. Voimme myös kerätä yrityksen sähköpostiosoitteen julkisilta yhteystietosivuilta. Tuotetekstistä tulee hakukenttiä vertailua varten Safety Gate -hälytyksiin.</li>\n<li><strong>Asennettu Shopify-sovellus:</strong> kaupan verkkotunnus, tuotekuvat ja -kuvat, tarkistustulokset, mahdolliset osumat, tarkistuspäätökset, asetukset, ilmoitusasetukset ja vaaditut sovelluksen istuntotiedot.</li>\n<li><strong>Tekniset tiedot:</strong> turvallisuus- ja palvelulokit toimintaa, vianmääritystä ja suojausta varten.</li>",
     "content07": "Miksi ja miten käytämme sitä",
@@ -293,10 +298,10 @@
     "content14": "Shopify ylläpitää upotettua sovellusta. Google Cloud ja Firebase tarjoavat isännöinnin, tallennustilan, taustatyöt ja Vertex AI -tuotevertailun. Brevo lähettää vahvistus-, raportti- ja ilmoitussähköpostit. Cloudflare Turnstile suojaa ilmaisen skannauksen lomakkeen automaattiselta väärinkäytöltä.",
     "content15": "Hälytykset tulevat Euroopan komission julkisesta Safety Gate -järjestelmästä. Palveluntarjoajat käsittelevät tietoja tarpeen mukaan näiden palvelujen toimittamiseksi.",
     "content16": "Valintasi ja pyyntösi",
-    "content17": "Lähetä sähköpostia osoitteeseen <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a> pyytääksesi pääsyä, korjausta tai poistamista skannaus- tai kauppatietoihisi tai vastustaaksesi käsittelyä.",
+    "content17": "Lähetä sähköpostia osoitteeseen <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a> pyytääksesi pääsyä, korjausta tai poistamista skannaus- tai kauppatietoihisi tai vastustaaksesi käsittelyä.",
     "content18": "Asennuksen poistamisen jälkeen Shopify lähettää shop/redact-pyynnön kaupan sovellustietojen poistamiseksi. Hyväksymme Shopifyn asiakastietopyynnöt; emme tallenna asiakastilejä tai tilauksia.",
     "content19": "Yhteystiedot",
-    "content20": "ZeroRecallin tietosuojayhteyshenkilö: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+    "content20": "ZeroRecallin tietosuojayhteyshenkilö: <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>.",
     "metaTitle": "Tietosuoja ja tietojen säilytys | ZeroRecall",
     "metaDescription": "Miten ZeroRecall käsittelee ja säilyttää tietoja julkisten luetteloiden skannauksia ja Shopify-sovellusta varten.",
     "footer": "Tietosuoja- ja tietojen säilytystiedot."

@@ -24,9 +24,9 @@
       "home": "Startpagina"
     },
     "hero": {
-      "badge": "PRODUCTVEILIGHEID VOOR SHOPIFY",
-      "title": "Controleer uw producten op EU-veiligheidswaarschuwingen.",
-      "subtitle": "ZeroRecall vergelijkt producten in uw Shopify-winkel met officiële Safety Gate-waarschuwingen over gevaarlijke producten. Ontvang een e-mail en bewijsmateriaal ter beoordeling wanneer we een mogelijke overeenkomst vinden.",
+      "badge": "VOOR SHOPIFY-WINKELS DIE IN DE EU VERKOPEN",
+      "title": "Ontvang meldingen van mogelijke overeenkomsten met gevaarlijke producten.",
+      "subtitle": "ZeroRecall vergelijkt producten in je Shopify-winkel met de Safety Gate-database van de Europese Commissie. Bij een mogelijke overeenkomst krijg je een e-mail en informatie om te beoordelen, zonder zelf waarschuwingen te doorzoeken.",
       "inputPlaceholder": "uw-winkel.myshopify.com",
       "emailPlaceholder": "uw-email@winkel.com",
       "ctaButton": "Gratis scan",
@@ -35,8 +35,8 @@
       "successBody": "We controleren openbare producten. We sturen het resultaat per e-mail wanneer de scan is voltooid.",
       "installCta": "Installeren vanuit de Shopify App Store",
       "exampleCta": "Bekijk een voorbeeldresultaat",
-      "scanLink": "Of probeer een gratis winkelaudit ↓",
-      "reassurance": "Gratis controle per e-mail: uw volledige openbare catalogus.",
+      "scanLink": "Mijn winkel gratis controleren",
+      "reassurance": "Eenmalige controle zonder installatie of betaalkaart. Resultaat per e-mail.",
       "visualCaption": "Illustratie, geen echt resultaat.",
       "mockDemo": "ILLUSTRATIEVE VOORBEELD",
       "mockEyebrow": "Productcontrole",
@@ -142,7 +142,8 @@
       "linkAuthority": "Nationale autoriteit ({{country}}): {{authority}} ↗",
       "linkAllAuthorities": "Autoriteiten voor alle EU-landen ↗",
       "marketNote": "De taal bepaalt niet de toepasselijke wetgeving. Controleer de autoriteit voor de markt waar u verkoopt.",
-      "remedies": "Voor een veiligheidsterugroepactie vereist GPSR Artikel 37 een effectieve, gratis en tijdige oplossing, normaal gesproken een keuze uit ten minste twee van reparatie, vervanging of terugbetaling. Nationale regels bepalen sancties; vereisten variëren per product en verkoopmarkt."
+      "remedies": "Voor een veiligheidsterugroepactie vereist GPSR Artikel 37 een effectieve, gratis en tijdige oplossing, normaal gesproken een keuze uit ten minste twee van reparatie, vervanging of terugbetaling. Nationale regels bepalen sancties; vereisten variëren per product en verkoopmarkt.",
+      "detailsLabel": "Juridische context en officiële bronnen"
     },
     "faq": {
       "eyebrow": "Veelgestelde vragen",
@@ -154,7 +155,9 @@
       "q3": "Wijzigt de app mijn producten?",
       "a3": "Nee. Het toont mogelijke overeenkomsten en bewijsmateriaal in Shopify Admin. U beslist wat u moet doen.",
       "q4": "Wat is inbegrepen in de gratis scan?",
-      "a4": "Alle beschikbare producten in de openbare Shopify-catalogus van uw winkel en een samenvatting van mogelijke overeenkomsten per e-mail. Privévermeldingen zijn uitgesloten; de scan is geen veiligheidscertificaat."
+      "a4": "Alle beschikbare producten in de openbare Shopify-catalogus van uw winkel en een samenvatting van mogelijke overeenkomsten per e-mail. Privévermeldingen zijn uitgesloten; de scan is geen veiligheidscertificaat.",
+      "q5": "Wat als er geen mogelijke overeenkomsten worden gevonden?",
+      "a5": "Het rapport toont het aantal gecontroleerde producten en dat bij deze controle geen mogelijke overeenkomsten zijn gevonden. Dit is geen bewijs van productveiligheid. Later kunnen nieuwe waarschuwingen verschijnen."
     },
     "cta": {
       "title": "Begin met een gratis scan",
@@ -189,7 +192,8 @@
       "ctaButton": "Gratis scan",
       "contactTitle": "Heeft u een vraag?",
       "contactBody": "Wij zijn een onafhankelijk project. Schrijf ons over de app, een scan of uw gegevens.",
-      "contactLink": "E-mail radoone@gmail.com"
+      "contactLink": "E-mail info@zerorecall.online",
+      "founderRole": "Oprichter van ZeroRecall"
     },
     "footer": {
       "text": "Gemoedsrust met doorlopende Shopify-productcontroles.",
@@ -221,8 +225,8 @@
     },
     "scan": {
       "eyebrow": "EENMALIGE CONTROLE · GEEN INSTALLATIE",
-      "title": "Gratis scan van uw volledige openbare catalogus",
-      "description": "Voer uw openbare Shopify-winkeldomein en e-mailadres in. We sturen een bevestigingslink naar uw e-mail en leveren het volledige rapport zodra dit is bevestigd. Doorlopende monitoring is onderdeel van de betaalde app.",
+      "title": "Gratis controle van je volledige openbare catalogus",
+      "description": "Vul je Shopify-domein en e-mailadres in. Na bevestiging van je e-mail controleren we eenmalig alle beschikbare openbare producten. We mailen het resultaat zodra de controle klaar is.",
       "benefit1": "Alleen openbare producten",
       "benefit2": "Mogelijke overeenkomsten ter beoordeling",
       "benefit3": "Uw producten blijven ongewijzigd",
@@ -232,7 +236,7 @@
       "challengeRequired": "Voltooi de botcontrole voordat u indient.",
       "challengeUnavailable": "De botcontrole is niet beschikbaar. Er is geen scan gestart; probeer het later opnieuw.",
       "verifyEmailTitle": "Controleer uw inbox",
-      "verifyEmailBody": "We hebben u een e-mail gestuurd met een bevestigingslink om de audit te starten. De link is 30 minuten geldig.",
+      "verifyEmailBody": "We hebben je een e-mail gestuurd met een bevestigingslink om de controle te starten. De link verloopt na 30 minuten.",
       "confirmTitle": "Bevestig uw e-mail en start de scan",
       "confirmBody": "We controleren de openbare Shopify-catalogus en sturen het resultaat per e-mail.",
       "confirmButton": "Bevestigen en scan starten",
@@ -260,7 +264,8 @@
       "rateLimitBody": "Er is onlangs een verzoek verzonden voor deze winkel of verbinding. Probeer het later opnieuw.",
       "unavailableTitle": "De gratis scan is momenteel niet beschikbaar",
       "unavailableBody": "We kunnen nu geen scan starten. Bekijk een voorbeeldresultaat of neem contact met ons op.",
-      "contactLink": "Neem contact met ons op"
+      "contactLink": "Neem contact met ons op",
+      "domainHelp": "Open in het Shopify-beheercentrum Instellingen → Domeinen en kopieer het adres dat eindigt op .myshopify.com. Gebruik dit in plaats van je eigen domein."
     },
     "quiet": {
       "eyebrow": "MEER GEMOEDSRUST",
@@ -271,7 +276,7 @@
     "pricing": {
       "eyebrow": "DOORLOPENDE MONITORING NA INSTALLATIE",
       "title": "Blijf controleren na uw eerste scan",
-      "body": "De Shopify-app monitort nieuwe Safety Gate-waarschuwingen en gewijzigde producten. Het e-mailt u over nieuwe mogelijke overeenkomsten, of stuurt een wekelijkse update wanneer er geen zijn.",
+      "body": "De gratis controle bekijkt je openbare catalogus één keer. De betaalde Shopify-app volgt daarna nieuwe Safety Gate-waarschuwingen en gewijzigde producten, mailt over nieuwe mogelijke overeenkomsten en bewaart je beslissingen.",
       "period": "/ maand",
       "scope": "Per winkel. Gefactureerd via Shopify na het kiezen van een abonnement.",
       "installCta": "Installeren vanuit de Shopify App Store",
@@ -281,7 +286,7 @@
       "content01": "Privacy",
       "content02": "Privacy en gegevensbewaring",
       "content03": "Wat we verwerken voor gratis scans en de Shopify-app, en hoe lang we het bewaren.",
-      "content04": "Bijgewerkt: 19 oktober 2026. Wij zijn een onafhankelijk project. Privacyvragen en -verzoeken: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+      "content04": "Bijgewerkt: 19 oktober 2026. Wij zijn een onafhankelijk project. Privacyvragen en -verzoeken: <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>.",
       "content05": "Informatie die we verwerken",
       "content06": "<li><strong>Verzoek om gratis scan:</strong> winkeldomein, uw e-mail, taal, verzoekstatus en rapport. Uw e-mail bevestigt het verzoek en ontvangt het rapport.</li>\n<li><strong>Openbare catalogusscan:</strong> openbare producttitels, beschrijvingen, merken, categorieën, afbeeldingen en URL's. We kunnen ook het zakelijke e-mailadres op openbare contactpagina's verzamelen. Producttekst wordt zoekvectoren voor vergelijking met Safety Gate-waarschuwingen.</li>\n<li><strong>Geïnstalleerde Shopify-app:</strong> winkeldomein, productmomentopnamen en afbeeldingen, controleresultaten, mogelijke overeenkomsten, beoordelingsbeslissingen, instellingen, meldingsvoorkeuren en vereiste app-sessiegegevens.</li>\n<li><strong>Technische records:</strong> beveiligings- en servicelogboeken voor werking, probleemoplossing en bescherming.</li>",
       "content07": "Waarom en hoe we het gebruiken",
@@ -294,10 +299,10 @@
       "content14": "Shopify beheert de ingebedde app. Google Cloud en Firebase bieden hosting, opslag, achtergrondtaken en Vertex AI productvergelijking. Brevo verzendt bevestigings-, rapport- en meldings-e-mails. Cloudflare Turnstile beschermt het gratis scanformulier tegen geautomatiseerd misbruik.",
       "content15": "Waarschuwingen komen van het openbare Safety Gate-systeem van de Europese Commissie. Providers verwerken informatie zoals nodig om deze services te leveren.",
       "content16": "Uw keuzes en verzoeken",
-      "content17": "E-mail <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a> om toegang, correctie of verwijdering van uw scan- of winkelgegevens aan te vragen, of om bezwaar te maken tegen de verwerking.",
+      "content17": "E-mail <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a> om toegang, correctie of verwijdering van uw scan- of winkelgegevens aan te vragen, of om bezwaar te maken tegen de verwerking.",
       "content18": "Na deïnstallatie stuurt Shopify een shop/redact-verzoek om de app-gegevens van de winkel te verwijderen. We erkennen Shopify-klantgegevensverzoeken; we slaan geen klantaccounts of bestellingen op.",
       "content19": "Contact",
-      "content20": "ZeroRecall privacycontact: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+      "content20": "ZeroRecall privacycontact: <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>.",
       "metaTitle": "Privacy en gegevensbewaring | ZeroRecall",
       "metaDescription": "Hoe ZeroRecall gegevens verwerkt en bewaart voor openbare catalogusscans en de Shopify-app.",
       "footer": "Informatie over privacy en gegevensbewaring."

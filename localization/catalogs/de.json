@@ -24,9 +24,9 @@
       "home": "Startseite"
     },
     "hero": {
-      "badge": "PRODUKTSICHERHEIT FÜR SHOPIFY",
-      "title": "Überprüfen Sie Ihre Produkte auf EU-Sicherheitswarnungen.",
-      "subtitle": "ZeroRecall vergleicht Produkte in Ihrem Shopify-Shop mit offiziellen Safety Gate-Warnungen zu gefährlichen Produkten. Erhalten Sie eine E-Mail und Nachweise zur Überprüfung, wenn wir eine mögliche Übereinstimmung finden.",
+      "badge": "FÜR SHOPIFY-SHOPS MIT VERKAUF IN DER EU",
+      "title": "Wir melden mögliche Übereinstimmungen mit gefährlichen Produkten.",
+      "subtitle": "ZeroRecall vergleicht Produkte Ihres Shopify-Shops mit der Safety-Gate-Datenbank der Europäischen Kommission. Bei einer möglichen Übereinstimmung erhalten Sie eine E-Mail mit Prüfunterlagen — ohne Warnmeldungen manuell zu durchsuchen.",
       "inputPlaceholder": "ihr-shop.myshopify.com",
       "emailPlaceholder": "ihre-email@shop.com",
       "ctaButton": "Kostenloser Scan",
@@ -35,8 +35,8 @@
       "successBody": "Wir überprüfen öffentliche Produkte. Wir senden Ihnen das Ergebnis per E-Mail, sobald der Scan abgeschlossen ist.",
       "installCta": "Im Shopify App Store installieren",
       "exampleCta": "Ein Beispielergebnis ansehen",
-      "scanLink": "Oder probieren Sie einen kostenlosen Shop-Audit ↓",
-      "reassurance": "Kostenlose Prüfung per E-Mail: Ihr gesamter öffentlicher Katalog.",
+      "scanLink": "Meinen Shop kostenlos prüfen",
+      "reassurance": "Einmalige Prüfung. Ohne Installation oder Kreditkarte. Ergebnis per E-Mail.",
       "visualCaption": "Illustration, kein echtes Ergebnis.",
       "mockDemo": "ILLUSTRATIVE VORSCHAU",
       "mockEyebrow": "Produktprüfung",
@@ -142,7 +142,8 @@
       "linkAuthority": "Nationale Behörde ({{country}}): {{authority}} ↗",
       "linkAllAuthorities": "Behörden für alle EU-Länder ↗",
       "marketNote": "Die Sprache bestimmt nicht das anwendbare Recht. Überprüfen Sie die Behörde für den Markt, in dem Sie verkaufen.",
-      "remedies": "Bei einem Sicherheitsrückruf verlangt Artikel 37 der GPSR eine wirksame, kostenlose und rechtzeitige Abhilfe, normalerweise eine Auswahl von mindestens zwei Optionen: Reparatur, Ersatz oder Rückerstattung. Nationale Vorschriften bestimmen Sanktionen; die Anforderungen variieren je nach Produkt und Verkaufsmarkt."
+      "remedies": "Bei einem Sicherheitsrückruf verlangt Artikel 37 der GPSR eine wirksame, kostenlose und rechtzeitige Abhilfe, normalerweise eine Auswahl von mindestens zwei Optionen: Reparatur, Ersatz oder Rückerstattung. Nationale Vorschriften bestimmen Sanktionen; die Anforderungen variieren je nach Produkt und Verkaufsmarkt.",
+      "detailsLabel": "Rechtlicher Kontext und offizielle Quellen"
     },
     "faq": {
       "eyebrow": "FAQ",
@@ -154,7 +155,9 @@
       "q3": "Ändert die App meine Produkte?",
       "a3": "Nein. Sie zeigt mögliche Übereinstimmungen und Nachweise im Shopify Admin an. Sie entscheiden, was zu tun ist.",
       "q4": "Was ist im kostenlosen Scan enthalten?",
-      "a4": "Alle verfügbaren Produkte im öffentlichen Shopify-Katalog Ihres Shops und eine Zusammenfassung möglicher Übereinstimmungen per E-Mail. Private Angebote sind ausgeschlossen; der Scan ist kein Sicherheitszertifikat."
+      "a4": "Alle verfügbaren Produkte im öffentlichen Shopify-Katalog Ihres Shops und eine Zusammenfassung möglicher Übereinstimmungen per E-Mail. Private Angebote sind ausgeschlossen; der Scan ist kein Sicherheitszertifikat.",
+      "q5": "Was passiert, wenn keine möglichen Übereinstimmungen gefunden werden?",
+      "a5": "Der Bericht zeigt die Anzahl geprüfter Produkte und dass bei dieser Prüfung keine möglichen Übereinstimmungen gefunden wurden. Dies ist kein Nachweis der Produktsicherheit. Neue Warnmeldungen können später hinzukommen."
     },
     "cta": {
       "title": "Beginnen Sie mit einem kostenlosen Scan",
@@ -189,7 +192,8 @@
       "ctaButton": "Kostenloser Scan",
       "contactTitle": "Haben Sie eine Frage?",
       "contactBody": "Wir sind ein unabhängiges Projekt. Schreiben Sie uns über die App, einen Scan oder Ihre Daten.",
-      "contactLink": "E-Mail radoone@gmail.com"
+      "contactLink": "E-Mail info@zerorecall.online",
+      "founderRole": "Gründer von ZeroRecall"
     },
     "footer": {
       "text": "Sorgenfreiheit durch laufende Shopify-Produktprüfungen.",
@@ -221,8 +225,8 @@
     },
     "scan": {
       "eyebrow": "EINMALIGE PRÜFUNG · KEINE INSTALLATION",
-      "title": "Kostenloser Scan Ihres gesamten öffentlichen Katalogs",
-      "description": "Geben Sie Ihre öffentliche Shopify-Shop-Domain und E-Mail-Adresse ein. Wir senden Ihnen einen Bestätigungslink an Ihre E-Mail und liefern den vollständigen Bericht, sobald dieser bestätigt wurde. Die laufende Überwachung ist Teil der kostenpflichtigen App.",
+      "title": "Kostenlose Prüfung Ihres gesamten öffentlichen Katalogs",
+      "description": "Geben Sie Ihre Shopify-Domain und E-Mail-Adresse ein. Nach der E-Mail-Bestätigung prüfen wir einmalig alle verfügbaren öffentlichen Produkte. Das Ergebnis erhalten Sie nach Abschluss per E-Mail.",
       "benefit1": "Nur öffentliche Produkte",
       "benefit2": "Mögliche Übereinstimmungen zur Überprüfung",
       "benefit3": "Ihre Produkte bleiben unverändert",
@@ -232,7 +236,7 @@
       "challengeRequired": "Schließen Sie die Bot-Überprüfung ab, bevor Sie absenden.",
       "challengeUnavailable": "Die Bot-Überprüfung ist nicht verfügbar. Es wurde kein Scan gestartet; versuchen Sie es später erneut.",
       "verifyEmailTitle": "Posteingang prüfen",
-      "verifyEmailBody": "Wir haben Ihnen eine E-Mail mit einem Bestätigungslink gesendet, um den Audit zu starten. Der Link ist 30 Minuten gültig.",
+      "verifyEmailBody": "Wir haben Ihnen eine E-Mail mit einem Bestätigungslink zum Starten der Prüfung gesendet. Der Link ist 30 Minuten gültig.",
       "confirmTitle": "Bestätigen Sie Ihre E-Mail und starten Sie den Scan",
       "confirmBody": "Wir werden den öffentlichen Shopify-Katalog überprüfen und das Ergebnis per E-Mail senden.",
       "confirmButton": "Bestätigen und Scan starten",
@@ -260,7 +264,8 @@
       "rateLimitBody": "Für diesen Shop oder diese Verbindung wurde kürzlich eine Anfrage gesendet. Versuchen Sie es später erneut.",
       "unavailableTitle": "Der kostenlose Scan ist derzeit nicht verfügbar",
       "unavailableBody": "Wir können derzeit keinen Scan starten. Sehen Sie sich ein Beispielergebnis an oder kontaktieren Sie uns.",
-      "contactLink": "Kontaktieren Sie uns"
+      "contactLink": "Kontaktieren Sie uns",
+      "domainHelp": "Öffnen Sie im Shopify-Adminbereich Einstellungen → Domains und kopieren Sie die Adresse mit der Endung .myshopify.com. Verwenden Sie diese statt Ihrer eigenen Shop-Domain."
     },
     "quiet": {
       "eyebrow": "MEHR SORGENFREIHEIT",
@@ -271,7 +276,7 @@
     "pricing": {
       "eyebrow": "LAUFENDE ÜBERWACHUNG NACH DER INSTALLATION",
       "title": "Nach dem ersten Scan weiter prüfen",
-      "body": "Die Shopify-App überwacht neue Safety Gate-Warnungen und geänderte Produkte. Sie sendet Ihnen E-Mails über neue mögliche Übereinstimmungen oder ein wöchentliches Update, wenn keine vorhanden sind.",
+      "body": "Die kostenlose Prüfung erfasst Ihren öffentlichen Katalog einmalig. Die kostenpflichtige Shopify-App überwacht anschließend neue Safety-Gate-Warnmeldungen und geänderte Produkte, informiert per E-Mail über neue mögliche Übereinstimmungen und speichert Ihre Prüfentscheidungen.",
       "period": "/ Monat",
       "scope": "Pro Shop. Abrechnung über Shopify nach Auswahl eines Plans.",
       "installCta": "Im Shopify App Store installieren",
@@ -281,7 +286,7 @@
       "content01": "Datenschutz",
       "content02": "Datenschutz und Datenaufbewahrung",
       "content03": "Was wir für kostenlose Scans und die Shopify-App verarbeiten und wie lange wir es aufbewahren.",
-      "content04": "Aktualisiert: 19. Oktober 2026. Wir sind ein unabhängiges Projekt. Datenschutzfragen und -anfragen: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+      "content04": "Aktualisiert: 19. Oktober 2026. Wir sind ein unabhängiges Projekt. Datenschutzfragen und -anfragen: <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>.",
       "content05": "Informationen, die wir verarbeiten",
       "content06": "<li><strong>Anfrage für kostenlosen Scan:</strong> Shop-Domain, Ihre E-Mail, Sprache, Anfragestatus und Bericht. Ihre E-Mail bestätigt die Anfrage und empfängt den Bericht.</li>\n<li><strong>Öffentlicher Katalog-Scan:</strong> öffentliche Produkttitel, Beschreibungen, Marken, Kategorien, Bilder und URLs. Wir können auch die geschäftliche E-Mail auf öffentlichen Kontaktseiten erfassen. Produkttext wird zu Suchvektoren für den Vergleich mit Safety Gate-Warnungen.</li>\n<li><strong>Installierte Shopify-App:</strong> Shop-Domain, Produkt-Snapshots und -Bilder, Prüfergebnisse, mögliche Übereinstimmungen, Überprüfungsentscheidungen, Einstellungen, Benachrichtigungseinstellungen und erforderliche App-Sitzungsdaten.</li>\n<li><strong>Technische Aufzeichnungen:</strong> Sicherheits- und Dienstprotokolle für Betrieb, Fehlerbehebung und Schutz.</li>",
       "content07": "Warum und wie wir es verwenden",
@@ -294,10 +299,10 @@
       "content14": "Shopify betreibt die eingebettete App. Google Cloud und Firebase bieten Hosting, Speicherung, Hintergrundaufgaben und Vertex AI Produktvergleich. Brevo sendet Bestätigungs-, Berichts- und Benachrichtigungs-E-Mails. Cloudflare Turnstile schützt das Formular für kostenlose Scans vor automatisiertem Missbrauch.",
       "content15": "Warnungen stammen aus dem öffentlichen Safety Gate-System der Europäischen Kommission. Anbieter verarbeiten Informationen nach Bedarf, um diese Dienste bereitzustellen.",
       "content16": "Ihre Wahlmöglichkeiten und Anfragen",
-      "content17": "Senden Sie eine E-Mail an <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>, um Zugang, Korrektur oder Löschung Ihrer Scan- oder Shop-Daten anzufordern oder der Verarbeitung zu widersprechen.",
+      "content17": "Senden Sie eine E-Mail an <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>, um Zugang, Korrektur oder Löschung Ihrer Scan- oder Shop-Daten anzufordern oder der Verarbeitung zu widersprechen.",
       "content18": "Nach der Deinstallation sendet Shopify eine shop/redact-Anfrage, um die App-Daten des Shops zu löschen. Wir bestätigen Shopify-Kundendatenanfragen; wir speichern keine Kundenkonten oder Bestellungen.",
       "content19": "Kontakt",
-      "content20": "ZeroRecall Datenschutz-Kontakt: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+      "content20": "ZeroRecall Datenschutz-Kontakt: <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>.",
       "metaTitle": "Datenschutz und Datenaufbewahrung | ZeroRecall",
       "metaDescription": "Wie ZeroRecall Daten für öffentliche Katalog-Scans und die Shopify-App verarbeitet und aufbewahrt.",
       "footer": "Informationen zu Datenschutz und Datenaufbewahrung."

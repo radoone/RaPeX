@@ -23,9 +23,9 @@
     "home": "Pagrindinis"
   },
   "hero": {
-    "badge": "PRODUKTŲ SAUGA SHOPIFY PARDUOTUVĖMS",
-    "title": "Patikrinkite savo produktus pagal ES saugos įspėjimus.",
-    "subtitle": "ZeroRecall palygina jūsų Shopify parduotuvės produktus su oficialiais Safety Gate įspėjimais apie pavojingus produktus. Gausite el. laišką ir įrodymus peržiūrai, kai rasime galimą atitikmenį.",
+    "badge": "ES PARDUODANČIOMS SHOPIFY PARDUOTUVĖMS",
+    "title": "Gaukite pranešimus apie galimus sutapimus su pavojingais gaminiais.",
+    "subtitle": "ZeroRecall lygina jūsų Shopify parduotuvės produktus su Europos Komisijos Safety Gate duomenų baze. Radę galimą sutapimą, atsiunčiame el. laišką ir duomenis patikrai, kad nereikėtų įspėjimų ieškoti rankiniu būdu.",
     "inputPlaceholder": "jūsų-parduotuvė.myshopify.com",
     "emailPlaceholder": "jūsų-el.paštas@parduotuvė.com",
     "ctaButton": "Nemokamas skenavimas",
@@ -34,8 +34,8 @@
     "successBody": "Tikriname viešus produktus. Kai skenavimas bus baigtas, atsiųsime rezultatą el. paštu.",
     "installCta": "Įdiegti iš Shopify App Store",
     "exampleCta": "Peržiūrėti pavyzdinį rezultatą",
-    "scanLink": "Arba išbandykite nemokamą parduotuvės auditą ↓",
-    "reassurance": "Nemokamas auditas el. paštu: visas viešas katalogas.",
+    "scanLink": "Nemokamai patikrinti mano parduotuvę",
+    "reassurance": "Vienkartinė patikra be diegimo ir mokėjimo kortelės. Rezultatas el. paštu.",
     "visualCaption": "Iliustracija, ne tikras rezultatas.",
     "mockDemo": "ILIUSTRACINIS PERŽIŪRA",
     "mockEyebrow": "Produkto patikra",
@@ -141,7 +141,8 @@
     "linkAuthority": "Nacionalinė institucija ({{country}}): {{authority}} ↗",
     "linkAllAuthorities": "Visų ES šalių institucijos ↗",
     "marketNote": "Kalba nenustato taikytinos teisės. Patikrinkite instituciją rinkai, kurioje parduodate.",
-    "remedies": "Dėl saugos atšaukimo, GPSR 37 straipsnis reikalauja veiksmingos, nemokamos ir savalaikės priemonės, paprastai pasirinkimo iš bent dviejų: taisymo, pakeitimo ar pinigų grąžinimo. Nacionalinės taisyklės nustato sankcijas; reikalavimai skiriasi priklausomai nuo produkto ir pardavimo rinkos."
+    "remedies": "Dėl saugos atšaukimo, GPSR 37 straipsnis reikalauja veiksmingos, nemokamos ir savalaikės priemonės, paprastai pasirinkimo iš bent dviejų: taisymo, pakeitimo ar pinigų grąžinimo. Nacionalinės taisyklės nustato sankcijas; reikalavimai skiriasi priklausomai nuo produkto ir pardavimo rinkos.",
+    "detailsLabel": "Teisinis kontekstas ir oficialūs šaltiniai"
   },
   "faq": {
     "eyebrow": "DUK",
@@ -153,7 +154,9 @@
     "q3": "Ar programėlė keičia mano produktus?",
     "a3": "Ne. Ji rodo galimus atitikmenis ir įrodymus Shopify administratoriaus skydelyje. Jūs nusprendžiate, ką daryti.",
     "q4": "Kas įtraukta į nemokamą skenavimą?",
-    "a4": "Visi parduotuvės viešame Shopify kataloge prieinami produktai ir galimų atitikmenų santrauka el. paštu. Privatūs skelbimai neįtraukiami; tikrinimas nėra saugos sertifikatas."
+    "a4": "Visi parduotuvės viešame Shopify kataloge prieinami produktai ir galimų atitikmenų santrauka el. paštu. Privatūs skelbimai neįtraukiami; tikrinimas nėra saugos sertifikatas.",
+    "q5": "Kas nutinka, jei galimų sutapimų nerandama?",
+    "a5": "Ataskaitoje pateikiamas patikrintų produktų skaičius ir nurodoma, kad per šią patikrą galimų sutapimų nerasta. Tai nėra produktų saugos patvirtinimas. Naujų įspėjimų gali atsirasti vėliau."
   },
   "cta": {
     "title": "Pradėkite nuo nemokamo skenavimo",
@@ -188,7 +191,8 @@
     "ctaButton": "Nemokamas skenavimas",
     "contactTitle": "Turite klausimų?",
     "contactBody": "Esame nepriklausomas projektas. Rašykite mums apie programėlę, skenavimą ar jūsų duomenis.",
-    "contactLink": "Rašykite el. paštu radoone@gmail.com"
+    "contactLink": "Rašykite el. paštu info@zerorecall.online",
+    "founderRole": "ZeroRecall įkūrėjas"
   },
   "footer": {
     "text": "Ramybė su nuolatiniais Shopify produktų patikrinimais.",
@@ -220,8 +224,8 @@
   },
   "scan": {
     "eyebrow": "VIENKARTINIS PATIKRINIMAS · NEREIKIA ĮDIEGTI",
-    "title": "Nemokamas viso viešo katalogo tikrinimas",
-    "description": "Įveskite savo viešą Shopify parduotuvės domeną ir el. paštą. Atsiųsime patvirtinimo nuorodą į jūsų el. paštą ir pateiksime visą ataskaitą, kai bus patvirtinta. Nuolatinis stebėjimas yra mokamos programėlės dalis.",
+    "title": "Nemokama viso viešo katalogo patikra",
+    "description": "Įveskite Shopify domeną ir el. pašto adresą. Patvirtinus el. paštą, vieną kartą patikrinsime visus prieinamus viešus produktus. Rezultatą atsiųsime baigę patikrą.",
     "benefit1": "Tik vieši produktai",
     "benefit2": "Galimi atitikmenys peržiūrai",
     "benefit3": "Jūsų produktai lieka nepakeisti",
@@ -231,7 +235,7 @@
     "challengeRequired": "Prieš pateikdami užpildykite roboto patikrą.",
     "challengeUnavailable": "Roboto patikra nepasiekiama. Skenavimas nepradėtas; bandykite vėliau.",
     "verifyEmailTitle": "Patikrinkite savo pašto dėžutę",
-    "verifyEmailBody": "Išsiuntėme jums el. laišką su patvirtinimo nuoroda, kad pradėtumėte auditą. Nuoroda galioja 30 minučių.",
+    "verifyEmailBody": "Išsiuntėme el. laišką su patvirtinimo nuoroda patikrai pradėti. Nuoroda galioja 30 minučių.",
     "confirmTitle": "Patvirtinkite savo el. paštą ir pradėkite skenavimą",
     "confirmBody": "Patikrinsime viešą Shopify katalogą ir atsiųsime rezultatą el. paštu.",
     "confirmButton": "Patvirtinti ir pradėti skenavimą",
@@ -259,7 +263,8 @@
     "rateLimitBody": "Užklausa šiai parduotuvei ar prisijungimui neseniai buvo išsiųsta. Bandykite vėliau.",
     "unavailableTitle": "Nemokamas skenavimas šiuo metu nepasiekiamas",
     "unavailableBody": "Šiuo metu negalime pradėti skenavimo. Peržiūrėkite pavyzdinį rezultatą arba susisiekite su mumis.",
-    "contactLink": "Susisiekite su mumis"
+    "contactLink": "Susisiekite su mumis",
+    "domainHelp": "Shopify administravimo srityje atverkite Nustatymai → Domenai ir nukopijuokite adresą, kuris baigiasi .myshopify.com. Naudokite jį vietoje savo pasirinktinio domeno."
   },
   "quiet": {
     "eyebrow": "DAUGIAU RAMYBĖS",
@@ -270,7 +275,7 @@
   "pricing": {
     "eyebrow": "NUOLATINIS STEBĖJIMAS PO ĮDIEGIMO",
     "title": "Tęskite tikrinimą po pirmojo skenavimo",
-    "body": "Shopify programėlė stebi naujus Safety Gate įspėjimus ir pakeistus produktus. Ji siunčia jums el. laiškus apie naujus galimus atitikmenis arba siunčia savaitinį atnaujinimą, kai jų nėra.",
+    "body": "Nemokama patikra apima viešą katalogą vieną kartą. Mokama Shopify programėlė vėliau stebi naujus Safety Gate įspėjimus ir pakeistus produktus, siunčia el. laiškus apie naujus galimus sutapimus ir išsaugo jūsų sprendimus.",
     "period": "/ mėn.",
     "scope": "Vienai parduotuvei. Apmokestinama per Shopify pasirinkus planą.",
     "installCta": "Įdiegti iš Shopify App Store",
@@ -280,7 +285,7 @@
     "content01": "Privatumas",
     "content02": "Privatumas ir duomenų saugojimas",
     "content03": "Ką mes apdorojame nemokamiems skenavimams ir Shopify programėlei, ir kiek laiko tai saugome.",
-    "content04": "Atnaujinta: 2026 m. spalio 19 d. Esame nepriklausomas projektas. Privatumo klausimai ir užklausos: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+    "content04": "Atnaujinta: 2026 m. spalio 19 d. Esame nepriklausomas projektas. Privatumo klausimai ir užklausos: <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>.",
     "content05": "Informacija, kurią apdorojame",
     "content06": "<li><strong>Nemokamo skenavimo užklausa:</strong> parduotuvės domenas, jūsų el. paštas, kalba, užklausos būsena ir ataskaita. Jūsų el. paštas patvirtina užklausą ir gauna ataskaitą.</li>\n<li><strong>Viešojo katalogo skenavimas:</strong> viešų produktų pavadinimai, aprašymai, prekės ženklai, kategorijos, vaizdai ir URL. Taip pat galime rinkti verslo el. paštą viešuose kontaktų puslapiuose. Produkto tekstas tampa paieškos vektoriais palyginimui su Safety Gate įspėjimais.</li>\n<li><strong>Įdiegta Shopify programėlė:</strong> parduotuvės domenas, produktų momentinės nuotraukos ir vaizdai, patikrinimų rezultatai, galimi atitikmenys, peržiūros sprendimai, nustatymai, pranešimų nuostatos ir reikalingi programėlės sesijos duomenys.</li>\n<li><strong>Techniniai įrašai:</strong> saugos ir paslaugų žurnalai veikimui, trikčių šalinimui ir apsaugai.</li>",
     "content07": "Kodėl ir kaip mes tai naudojame",
@@ -293,10 +298,10 @@
     "content14": "Shopify valdo įterptąją programėlę. Google Cloud ir Firebase teikia prieglobą, saugojimą, foninius darbus ir Vertex AI produktų palyginimą. Brevo siunčia patvirtinimo, ataskaitos ir pranešimų el. laiškus. Cloudflare Turnstile apsaugo nemokamo skenavimo formą nuo automatizuoto piktnaudžiavimo.",
     "content15": "Įspėjimai gaunami iš Europos Komisijos viešosios Safety Gate sistemos. Teikėjai apdoroja informaciją, kaip reikia, kad teiktų šias paslaugas.",
     "content16": "Jūsų pasirinkimai ir užklausos",
-    "content17": "Rašykite el. paštu <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>, kad paprašytumėte prieigos, pataisymo ar ištrynimo jūsų skenavimo ar parduotuvės duomenų, arba prieštarautumėte apdorojimui.",
+    "content17": "Rašykite el. paštu <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>, kad paprašytumėte prieigos, pataisymo ar ištrynimo jūsų skenavimo ar parduotuvės duomenų, arba prieštarautumėte apdorojimui.",
     "content18": "Po pašalinimo, Shopify siunčia parduotuvės/redagavimo užklausą, kad ištrintų parduotuvės programėlės duomenis. Mes pripažįstame Shopify klientų duomenų užklausas; mes nesaugome klientų paskyrų ar užsakymų.",
     "content19": "Susisiekite",
-    "content20": "ZeroRecall privatumo kontaktas: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+    "content20": "ZeroRecall privatumo kontaktas: <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>.",
     "metaTitle": "Privatumas ir duomenų saugojimas | ZeroRecall",
     "metaDescription": "Kaip ZeroRecall apdoroja ir saugo duomenis viešų katalogų skenavimams ir Shopify programėlei.",
     "footer": "Privatumo ir duomenų saugojimo informacija."

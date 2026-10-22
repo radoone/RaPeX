@@ -23,9 +23,9 @@
     "home": "Početna"
   },
   "hero": {
-    "badge": "SIGURNOST PROIZVODA ZA SHOPIFY",
-    "title": "Provjerite svoje proizvode u odnosu na sigurnosna upozorenja EU-a.",
-    "subtitle": "ZeroRecall uspoređuje proizvode u vašoj Shopify trgovini sa službenim upozorenjima Safety Gate o opasnim proizvodima. Primite e-poštu i dokaze za pregled kada pronađemo moguće podudaranje.",
+    "badge": "ZA SHOPIFY TRGOVINE KOJE PRODAJU U EU-U",
+    "title": "Primajte upozorenja o mogućim podudaranjima s opasnim proizvodima.",
+    "subtitle": "ZeroRecall uspoređuje proizvode vaše Shopify trgovine s bazom Safety Gate Europske komisije. Kod mogućeg podudaranja dobivate e-poruku i podatke za provjeru, bez ručnog pretraživanja upozorenja.",
     "inputPlaceholder": "vaša-trgovina.myshopify.com",
     "emailPlaceholder": "vaša-e-pošta@trgovina.com",
     "ctaButton": "Besplatno skeniranje",
@@ -34,8 +34,8 @@
     "successBody": "Provjeravamo javne proizvode. Poslat ćemo vam rezultat e-poštom kada skeniranje završi.",
     "installCta": "Instalirajte iz Shopify App Storea",
     "exampleCta": "Pogledajte primjer rezultata",
-    "scanLink": "Ili isprobajte besplatnu reviziju trgovine ↓",
-    "reassurance": "Besplatna provjera e-poštom: cijeli javni katalog.",
+    "scanLink": "Besplatno provjerite moju trgovinu",
+    "reassurance": "Jednokratna provjera bez instalacije i platne kartice. Rezultat e-poštom.",
     "visualCaption": "Ilustracija, nije stvarni rezultat.",
     "mockDemo": "ILUSTRATIVNI PREGLED",
     "mockEyebrow": "Provjera proizvoda",
@@ -141,7 +141,8 @@
     "linkAuthority": "Nacionalno tijelo ({{country}}): {{authority}} ↗",
     "linkAllAuthorities": "Tijela za sve zemlje EU ↗",
     "marketNote": "Jezik ne određuje primjenjivo pravo. Provjerite tijelo za tržište na kojem prodajete.",
-    "remedies": "Za opoziv sigurnosti, članak 37. GPSR-a zahtijeva učinkovit, besplatan i pravovremen lijek, obično izbor od najmanje dva: popravak, zamjenu ili povrat novca. Nacionalna pravila određuju sankcije; zahtjevi se razlikuju ovisno o proizvodu i tržištu prodaje."
+    "remedies": "Za opoziv sigurnosti, članak 37. GPSR-a zahtijeva učinkovit, besplatan i pravovremen lijek, obično izbor od najmanje dva: popravak, zamjenu ili povrat novca. Nacionalna pravila određuju sankcije; zahtjevi se razlikuju ovisno o proizvodu i tržištu prodaje.",
+    "detailsLabel": "Pravni okvir i službeni izvori"
   },
   "faq": {
     "eyebrow": "Česta pitanja",
@@ -153,7 +154,9 @@
     "q3": "Mijenja li aplikacija moje proizvode?",
     "a3": "Ne. Prikazuje moguća podudaranja i dokaze u Shopify Adminu. Vi odlučujete što ćete učiniti.",
     "q4": "Što je uključeno u besplatno skeniranje?",
-    "a4": "Svi dostupni proizvodi u javnom Shopify katalogu vaše trgovine i sažetak mogućih podudaranja e-poštom. Privatni oglasi nisu uključeni; skeniranje nije potvrda sigurnosti."
+    "a4": "Svi dostupni proizvodi u javnom Shopify katalogu vaše trgovine i sažetak mogućih podudaranja e-poštom. Privatni oglasi nisu uključeni; skeniranje nije potvrda sigurnosti.",
+    "q5": "Što ako se ne pronađu moguća podudaranja?",
+    "a5": "Izvješće prikazuje broj provjerenih proizvoda i da u ovoj provjeri nisu pronađena moguća podudaranja. Time se ne potvrđuje sigurnost proizvoda. Nova upozorenja mogu se pojaviti kasnije."
   },
   "cta": {
     "title": "Započnite s besplatnim skeniranjem",
@@ -188,7 +191,8 @@
     "ctaButton": "Besplatno skeniranje",
     "contactTitle": "Imate pitanje?",
     "contactBody": "Mi smo neovisan projekt. Pišite nam o aplikaciji, skeniranju ili vašim podacima.",
-    "contactLink": "Pošaljite e-poštu na radoone@gmail.com"
+    "contactLink": "Pošaljite e-poštu na info@zerorecall.online",
+    "founderRole": "Osnivač ZeroRecalla"
   },
   "footer": {
     "text": "Mir uz stalne provjere proizvoda Shopify.",
@@ -220,8 +224,8 @@
   },
   "scan": {
     "eyebrow": "JEDNOKRATNA PROVJERA · BEZ INSTALACIJE",
-    "title": "Besplatno skeniranje cijelog javnog kataloga",
-    "description": "Unesite svoju javnu domenu Shopify trgovine i e-poštu. Poslat ćemo vam potvrdnu vezu na vašu e-poštu i dostaviti cjelovito izvješće nakon potvrde. Stalno praćenje dio je plaćene aplikacije.",
+    "title": "Besplatna provjera cijelog javnog kataloga",
+    "description": "Unesite Shopify domenu i e-adresu. Nakon potvrde e-adrese jednokratno provjeravamo sve dostupne javne proizvode. Rezultat šaljemo po završetku.",
     "benefit1": "Samo javni proizvodi",
     "benefit2": "Moguća podudaranja za pregled",
     "benefit3": "Vaši proizvodi ostaju nepromijenjeni",
@@ -231,7 +235,7 @@
     "challengeRequired": "Dovršite provjeru bota prije slanja.",
     "challengeUnavailable": "Provjera bota nije dostupna. Skeniranje nije započelo; pokušajte kasnije.",
     "verifyEmailTitle": "Provjerite svoju pristiglu poštu",
-    "verifyEmailBody": "Poslali smo vam e-poštu s potvrdnom vezom za početak revizije. Veza vrijedi 30 minuta.",
+    "verifyEmailBody": "Poslali smo vam e-poruku s poveznicom za potvrdu i pokretanje provjere. Poveznica vrijedi 30 minuta.",
     "confirmTitle": "Potvrdite svoju e-poštu i započnite skeniranje",
     "confirmBody": "Provjerit ćemo javni Shopify katalog i poslati rezultat e-poštom.",
     "confirmButton": "Potvrdi i započni skeniranje",
@@ -259,7 +263,8 @@
     "rateLimitBody": "Za ovu trgovinu ili vezu nedavno je poslan zahtjev. Pokušajte kasnije.",
     "unavailableTitle": "Besplatno skeniranje trenutno nije dostupno",
     "unavailableBody": "Trenutno ne možemo započeti skeniranje. Pogledajte primjer rezultata ili nas kontaktirajte.",
-    "contactLink": "Kontaktirajte nas"
+    "contactLink": "Kontaktirajte nas",
+    "domainHelp": "U Shopify administraciji otvorite Postavke → Domene i kopirajte adresu koja završava na .myshopify.com. Upotrijebite je umjesto vlastite domene trgovine."
   },
   "quiet": {
     "eyebrow": "VIŠE MIRA",
@@ -270,7 +275,7 @@
   "pricing": {
     "eyebrow": "STALNO PRAĆENJE NAKON INSTALACIJE",
     "title": "Nastavite provjeravati nakon prvog skeniranja",
-    "body": "Shopify aplikacija prati nova upozorenja Safety Gate i promijenjene proizvode. Šalje vam e-poštu o novim mogućim podudaranjima ili šalje tjedno ažuriranje kada ih nema.",
+    "body": "Besplatna provjera obuhvaća javni katalog jednom. Plaćena Shopify aplikacija zatim prati nova upozorenja Safety Gate i izmijenjene proizvode, šalje e-poruke o novim mogućim podudaranjima i čuva vaše odluke.",
     "period": "/ mjesec",
     "scope": "Po trgovini. Naplaćuje se putem Shopifyja nakon odabira plana.",
     "installCta": "Instalirajte iz Shopify App Storea",
@@ -280,7 +285,7 @@
     "content01": "Privatnost",
     "content02": "Privatnost i zadržavanje podataka",
     "content03": "Što obrađujemo za besplatna skeniranja i Shopify aplikaciju, i koliko dugo to čuvamo.",
-    "content04": "Ažurirano: 19. listopada 2026. Mi smo neovisan projekt. Pitanja i zahtjevi vezani uz privatnost: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+    "content04": "Ažurirano: 19. listopada 2026. Mi smo neovisan projekt. Pitanja i zahtjevi vezani uz privatnost: <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>.",
     "content05": "Informacije koje obrađujemo",
     "content06": "<li><strong>Zahtjev za besplatno skeniranje:</strong> domena trgovine, vaša e-pošta, jezik, status zahtjeva i izvješće. Vaša e-pošta potvrđuje zahtjev i prima izvješće.</li>\n<li><strong>Skeniranje javnog kataloga:</strong> javni nazivi proizvoda, opisi, marke, kategorije, slike i URL-ovi. Također možemo prikupljati poslovnu e-poštu na javnim stranicama za kontakt. Tekst proizvoda postaje vektor pretraživanja za usporedbu s upozorenjima Safety Gate.</li>\n<li><strong>Instalirana Shopify aplikacija:</strong> domena trgovine, snimke proizvoda i slike, rezultati provjera, moguća podudaranja, odluke o pregledu, postavke, preferencije obavijesti i potrebni podaci o sesiji aplikacije.</li>\n<li><strong>Tehnički zapisi:</strong> sigurnosni i servisni zapisi za rad, rješavanje problema i zaštitu.</li>",
     "content07": "Zašto i kako ih koristimo",
@@ -293,10 +298,10 @@
     "content14": "Shopify pokreće ugrađenu aplikaciju. Google Cloud i Firebase pružaju hosting, pohranu, pozadinske poslove i usporedbu proizvoda Vertex AI. Brevo šalje e-poštu za potvrdu, izvješće i obavijesti. Cloudflare Turnstile štiti obrazac za besplatno skeniranje od automatizirane zlouporabe.",
     "content15": "Upozorenja dolaze iz javnog sustava Safety Gate Europske komisije. Pružatelji obrađuju informacije prema potrebi za pružanje ovih usluga.",
     "content16": "Vaši izbori i zahtjevi",
-    "content17": "Pošaljite e-poštu na <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a> kako biste zatražili pristup, ispravak ili brisanje vaših podataka o skeniranju ili trgovini, ili kako biste se usprotivili obradi.",
+    "content17": "Pošaljite e-poštu na <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a> kako biste zatražili pristup, ispravak ili brisanje vaših podataka o skeniranju ili trgovini, ili kako biste se usprotivili obradi.",
     "content18": "Nakon deinstalacije, Shopify šalje zahtjev za shop/redact za brisanje podataka aplikacije trgovine. Priznajemo zahtjeve za podacima kupaca Shopifyja; ne pohranjujemo korisničke račune ili narudžbe.",
     "content19": "Kontakt",
-    "content20": "ZeroRecall kontakt za privatnost: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+    "content20": "ZeroRecall kontakt za privatnost: <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>.",
     "metaTitle": "Privatnost i zadržavanje podataka | ZeroRecall",
     "metaDescription": "Kako ZeroRecall obrađuje i zadržava podatke za skeniranje javnog kataloga i Shopify aplikaciju.",
     "footer": "Informacije o privatnosti i zadržavanju podataka."

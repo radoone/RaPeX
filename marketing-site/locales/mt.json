@@ -23,9 +23,9 @@
     "home": "Home"
   },
   "hero": {
-    "badge": "SIGURTÀ TAL-PRODOTT GĦAL SHOPIFY",
-    "title": "Iċċekkja l-prodotti tiegħek kontra twissijiet ta' sigurtà tal-UE.",
-    "subtitle": "ZeroRecall tqabbel il-prodotti fil-ħanut Shopify tiegħek ma' twissijiet uffiċjali ta' Safety Gate dwar prodotti perikolużi. Ikseb email u evidenza biex tirrevedi meta nsibu tqabbil possibbli.",
+    "badge": "GĦAL ĦWIENET SHOPIFY LI JBIGĦU FL-UE",
+    "title": "Irċievi twissijiet dwar tqabbil possibbli ma’ prodotti perikolużi.",
+    "subtitle": "ZeroRecall iqabbel il-prodotti tal-ħanut Shopify tiegħek mad-database Safety Gate tal-Kummissjoni Ewropea. Meta jinstab tqabbil possibbli, tirċievi email u informazzjoni biex tivverifikah, mingħajr ma tfittex it-twissijiet manwalment.",
     "inputPlaceholder": "your-store.myshopify.com",
     "emailPlaceholder": "your-email@store.com",
     "ctaButton": "Skannjar b'xejn",
@@ -34,8 +34,8 @@
     "successBody": "Qed niċċekkjaw prodotti pubbliċi. Nibagħtulek ir-riżultat bl-email meta l-iskannjar jintemm.",
     "installCta": "Installa mill-Shopify App Store",
     "exampleCta": "Ara riżultat eżempju",
-    "scanLink": "Jew ipprova awditjar tal-ħanut b'xejn ↓",
-    "reassurance": "Verifika bla ħlas bl-email: il-katalgu pubbliku kollu tiegħek.",
+    "scanLink": "Iċċekkja l-ħanut tiegħi bla ħlas",
+    "reassurance": "Verifika ta’ darba mingħajr installazzjoni jew karta tal-ħlas. Riżultat bl-email.",
     "visualCaption": "Illustrazzjoni, mhux riżultat reali.",
     "mockDemo": "PREVIEW ILLUSTRATTIV",
     "mockEyebrow": "Kontroll tal-prodott",
@@ -141,7 +141,8 @@
     "linkAuthority": "Awtorità nazzjonali ({{country}}): {{authority}} ↗",
     "linkAllAuthorities": "Awtoritajiet għall-pajjiżi kollha tal-UE ↗",
     "marketNote": "Il-lingwa ma tiddeterminax il-liġi applikabbli. Iċċekkja l-awtorità għas-suq fejn tbigħ.",
-    "remedies": "Għal recall ta' sigurtà, l-Artikolu 37 tal-GPSR jirrikjedi rimedju effettiv, bla ħlas u f'waqtu, normalment għażla ta' mill-inqas tnejn minn tiswija, sostituzzjoni jew rifużjoni. Ir-regoli nazzjonali jiddeterminaw is-sanzjonijiet; ir-rekwiżiti jvarjaw skont il-prodott u s-suq tal-bejgħ."
+    "remedies": "Għal recall ta' sigurtà, l-Artikolu 37 tal-GPSR jirrikjedi rimedju effettiv, bla ħlas u f'waqtu, normalment għażla ta' mill-inqas tnejn minn tiswija, sostituzzjoni jew rifużjoni. Ir-regoli nazzjonali jiddeterminaw is-sanzjonijiet; ir-rekwiżiti jvarjaw skont il-prodott u s-suq tal-bejgħ.",
+    "detailsLabel": "Kuntest legali u sorsi uffiċjali"
   },
   "faq": {
     "eyebrow": "FAQ",
@@ -153,7 +154,9 @@
     "q3": "L-app tibdel il-prodotti tiegħi?",
     "a3": "Le. Turi tqabbil possibbli u evidenza fl-Amministratur ta' Shopify. Int tiddeċiedi x'għandek tagħmel.",
     "q4": "X'inhu inkluż fl-iskannjar b'xejn?",
-    "a4": "Il-prodotti kollha disponibbli fil-katalgu pubbliku Shopify tal-ħanut tiegħek u sommarju ta’ tqabbil possibbli bl-email. Il-listi privati huma esklużi; l-iskennjar mhuwiex ċertifikat tas-sigurtà."
+    "a4": "Il-prodotti kollha disponibbli fil-katalgu pubbliku Shopify tal-ħanut tiegħek u sommarju ta’ tqabbil possibbli bl-email. Il-listi privati huma esklużi; l-iskennjar mhuwiex ċertifikat tas-sigurtà.",
+    "q5": "X’jiġri jekk ma jinstab ebda tqabbil possibbli?",
+    "a5": "Ir-rapport juri n-numru ta’ prodotti ċċekkjati u li ma nstab ebda tqabbil possibbli f’din il-verifika. Dan ma jiċċertifikax is-sikurezza tal-prodotti. Jistgħu jidhru twissijiet ġodda aktar tard."
   },
   "cta": {
     "title": "Ibda b'skannjar b'xejn",
@@ -188,7 +191,8 @@
     "ctaButton": "Skannjar b'xejn",
     "contactTitle": "Għandek mistoqsija?",
     "contactBody": "Aħna proġett indipendenti. Iktbilna dwar l-app, skannjar jew id-dejta tiegħek.",
-    "contactLink": "Ibgħat email lil radoone@gmail.com"
+    "contactLink": "Ibgħat email lil info@zerorecall.online",
+    "founderRole": "Fundatur ta’ ZeroRecall"
   },
   "footer": {
     "text": "Serħan il-moħħ b'kontrolli kontinwi tal-prodotti Shopify.",
@@ -220,8 +224,8 @@
   },
   "scan": {
     "eyebrow": "KONTROLL TA' DARBA · EBDA INSTALLAZZJONI",
-    "title": "Skennjar bla ħlas tal-katalgu pubbliku kollu tiegħek",
-    "description": "Daħħal id-dominju pubbliku tal-ħanut Shopify tiegħek u l-email. Nibagħtulek link ta' konferma fl-email tiegħek u nwasslu r-rapport komplut ladarba kkonfermat. Il-monitoraġġ kontinwu huwa parti mill-app imħallsa.",
+    "title": "Verifika bla ħlas tal-katalgu pubbliku kollu tiegħek",
+    "description": "Daħħal id-dominju Shopify u l-email tiegħek. Wara l-konferma tal-email, niċċekkjaw darba l-prodotti pubbliċi kollha disponibbli. Nibagħtu r-riżultat meta jkun lest.",
     "benefit1": "Prodotti pubbliċi biss",
     "benefit2": "Tqabbil possibbli biex tirrevedi",
     "benefit3": "Il-prodotti tiegħek jibqgħu mhux mibdula",
@@ -231,7 +235,7 @@
     "challengeRequired": "Imla l-kontroll tal-bot qabel ma tissottometti.",
     "challengeUnavailable": "Il-kontroll tal-bot mhux disponibbli. Ebda skannjar ma beda; ipprova aktar tard.",
     "verifyEmailTitle": "Iċċekkja l-inbox tiegħek",
-    "verifyEmailBody": "Bajna email b'link ta' konferma biex tibda l-awditjar. Il-link hija valida għal 30 minuta.",
+    "verifyEmailBody": "Bgħatnielek email b’link ta’ konferma biex tibda l-verifika. Il-link jiskadi fi 30 minuta.",
     "confirmTitle": "Ikkonferma l-email tiegħek u ibda l-iskannjar",
     "confirmBody": "Aħna niċċekkjaw il-katalgu pubbliku ta' Shopify u nibagħtu r-riżultat bl-email.",
     "confirmButton": "Ikkonferma u ibda l-iskannjar",
@@ -259,7 +263,8 @@
     "rateLimitBody": "Talba ntbagħtet reċentement għal dan il-ħanut jew konnessjoni. Ipprova aktar tard.",
     "unavailableTitle": "L-iskannjar b'xejn bħalissa mhux disponibbli",
     "unavailableBody": "Ma nistgħux nibdew skannjar bħalissa. Ara riżultat eżempju jew ikkuntattjana.",
-    "contactLink": "Ikkuntattjana"
+    "contactLink": "Ikkuntattjana",
+    "domainHelp": "Fl-amministrazzjoni Shopify, iftaħ Settings → Domains u kkopja l-indirizz li jispiċċa b’.myshopify.com. Uża dan minflok id-dominju personalizzat tiegħek."
   },
   "quiet": {
     "eyebrow": "AKTAR SERĦAN IL-MOĦĦ",
@@ -270,7 +275,7 @@
   "pricing": {
     "eyebrow": "MONITORAĠĠ KONTINWU WARA L-INSTALLAZZJONI",
     "title": "Kompli ċċekkja wara l-ewwel skannjar tiegħek",
-    "body": "L-app Shopify tissorvelja twissijiet ġodda ta' Safety Gate u prodotti mibdula. Tibagħtulek email dwar tqabbil possibbli ġdid, jew tibgħat aġġornament ta' kull ġimgħa meta ma jkunx hemm.",
+    "body": "Il-verifika bla ħlas tkopri l-katalgu pubbliku darba biss. L-app Shopify bi ħlas imbagħad issegwi twissijiet ġodda Safety Gate u prodotti mibdula, tibgħat emails dwar tqabbil possibbli ġdid u żżomm id-deċiżjonijiet tiegħek.",
     "period": "/ xahar",
     "scope": "Għal kull ħanut. Ibbilljat permezz ta' Shopify wara li tagħżel pjan.",
     "installCta": "Installa mill-Shopify App Store",
@@ -280,7 +285,7 @@
     "content01": "Privatezza",
     "content02": "Privatezza u żamma tad-dejta",
     "content03": "X'nipproċessaw għal skannjar b'xejn u l-app Shopify, u kemm inżommuha.",
-    "content04": "Aġġornat: 19 ta' Ottubru 2026. Aħna proġett indipendenti. Mistoqsijiet u talbiet dwar il-privatezza: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+    "content04": "Aġġornat: 19 ta' Ottubru 2026. Aħna proġett indipendenti. Mistoqsijiet u talbiet dwar il-privatezza: <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>.",
     "content05": "Informazzjoni li nipproċessaw",
     "content06": "<li><strong>Talba għal skannjar b'xejn:</strong> dominju tal-ħanut, l-email tiegħek, lingwa, status tat-talba u rapport. L-email tiegħek tikkonferma t-talba u tirċievi r-rapport.</li>\n<li><strong>Skannjar tal-katalgu pubbliku:</strong> titli tal-prodotti pubbliċi, deskrizzjonijiet, marki, kategoriji, stampi u URLs. Nistgħu wkoll niġbru l-email tan-negozju fuq paġni ta' kuntatt pubbliċi. It-test tal-prodott isir vetturi ta' tfittxija għat-tqabbil ma' twissijiet ta' Safety Gate.</li>\n<li><strong>App Shopify installata:</strong> dominju tal-ħanut, snapshots u stampi tal-prodotti, riżultati tal-kontroll, tqabbil possibbli, deċiżjonijiet ta' reviżjoni, settings, preferenzi ta' notifika u dejta meħtieġa tas-sessjoni tal-app.</li>\n<li><strong>Rekords tekniċi:</strong> logs ta' sigurtà u servizz għall-operazzjoni, issolvi l-problemi u protezzjoni.</li>",
     "content07": "Għaliex u kif nużawha",
@@ -293,10 +298,10 @@
     "content14": "Shopify tmexxi l-app inkorporata. Google Cloud u Firebase jipprovdu hosting, ħażna, xogħlijiet fl-isfond u tqabbil tal-prodotti Vertex AI. Brevo tibgħat emails ta' konferma, rapport u notifika. Cloudflare Turnstile jipproteġi l-formola tal-iskannjar b'xejn minn abbuż awtomatizzat.",
     "content15": "Twissijiet ġejjin mis-sistema pubblika Safety Gate tal-Kummissjoni Ewropea. Il-fornituri jipproċessaw l-informazzjoni kif meħtieġ biex iwasslu dawn is-servizzi.",
     "content16": "L-għażliet u t-talbiet tiegħek",
-    "content17": "Ibgħat email lil <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a> biex titlob aċċess, korrezzjoni jew tħassir tad-dejta tal-iskannjar jew tal-ħanut tiegħek, jew biex topponi l-ipproċessar.",
+    "content17": "Ibgħat email lil <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a> biex titlob aċċess, korrezzjoni jew tħassir tad-dejta tal-iskannjar jew tal-ħanut tiegħek, jew biex topponi l-ipproċessar.",
     "content18": "Wara d-diżinstallazzjoni, Shopify tibgħat talba shop/redact biex tħassar id-dejta tal-app tal-ħanut. Aħna nirrikonoxxu t-talbiet tad-dejta tal-klijenti ta' Shopify; ma naħżnux kontijiet jew ordnijiet tal-klijenti.",
     "content19": "Kuntatt",
-    "content20": "Kuntatt tal-privatezza ta' ZeroRecall: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+    "content20": "Kuntatt tal-privatezza ta' ZeroRecall: <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>.",
     "metaTitle": "Privatezza u żamma tad-dejta | ZeroRecall",
     "metaDescription": "Kif ZeroRecall tipproċessa u żżomm id-dejta għal skannjar tal-katalgu pubbliku u l-app Shopify.",
     "footer": "Informazzjoni dwar il-privatezza u ż-żamma tad-dejta."

@@ -23,9 +23,9 @@
     "home": "Home"
   },
   "hero": {
-    "badge": "SICUREZZA DEL PRODOTTO PER SHOPIFY",
-    "title": "Controlla i tuoi prodotti rispetto agli avvisi di sicurezza UE.",
-    "subtitle": "ZeroRecall confronta i prodotti nel tuo negozio Shopify con gli avvisi ufficiali Safety Gate sui prodotti pericolosi. Ricevi un'e-mail e le prove da esaminare quando troviamo una possibile corrispondenza.",
+    "badge": "PER I NEGOZI SHOPIFY CHE VENDONO NELL’UE",
+    "title": "Ricevi avvisi sulle possibili corrispondenze con prodotti pericolosi.",
+    "subtitle": "ZeroRecall confronta i prodotti del tuo negozio Shopify con la banca dati Safety Gate della Commissione europea. In caso di possibile corrispondenza, ricevi un’e-mail e gli elementi da verificare, senza cercare manualmente tra gli avvisi.",
     "inputPlaceholder": "il-tuo-negozio.myshopify.com",
     "emailPlaceholder": "la-tua-email@negozio.com",
     "ctaButton": "Scansione gratuita",
@@ -34,8 +34,8 @@
     "successBody": "Stiamo controllando i prodotti pubblici. Ti invieremo il risultato via e-mail al termine della scansione.",
     "installCta": "Installa dall'App Store di Shopify",
     "exampleCta": "Vedi un esempio di risultato",
-    "scanLink": "Oppure prova un audit gratuito del negozio ↓",
-    "reassurance": "Verifica gratuita via e-mail: tutto il catalogo pubblico.",
+    "scanLink": "Controlla gratis il mio negozio",
+    "reassurance": "Controllo singolo, senza installazione né carta di pagamento. Risultato via e-mail.",
     "visualCaption": "Illustrazione, non un risultato reale.",
     "mockDemo": "ANTEPRIMA ILLUSTRATIVA",
     "mockEyebrow": "Controllo prodotto",
@@ -141,7 +141,8 @@
     "linkAuthority": "Autorità nazionale ({{country}}): {{authority}} ↗",
     "linkAllAuthorities": "Autorità per tutti i paesi UE ↗",
     "marketNote": "La lingua non determina la legge applicabile. Controlla l'autorità per il mercato in cui vendi.",
-    "remedies": "Per un richiamo di sicurezza, l'articolo 37 del GPSR richiede un rimedio efficace, gratuito e tempestivo, normalmente una scelta di almeno due tra riparazione, sostituzione o rimborso. Le norme nazionali determinano le sanzioni; i requisiti variano in base al prodotto e al mercato di vendita."
+    "remedies": "Per un richiamo di sicurezza, l'articolo 37 del GPSR richiede un rimedio efficace, gratuito e tempestivo, normalmente una scelta di almeno due tra riparazione, sostituzione o rimborso. Le norme nazionali determinano le sanzioni; i requisiti variano in base al prodotto e al mercato di vendita.",
+    "detailsLabel": "Contesto giuridico e fonti ufficiali"
   },
   "faq": {
     "eyebrow": "FAQ",
@@ -153,7 +154,9 @@
     "q3": "L'app modifica i miei prodotti?",
     "a3": "No. Mostra possibili corrispondenze e prove nell'Admin di Shopify. Decidi tu cosa fare.",
     "q4": "Cosa è incluso nella scansione gratuita?",
-    "a4": "Tutti i prodotti disponibili nel catalogo pubblico Shopify del negozio e un riepilogo delle possibili corrispondenze via e-mail. Le inserzioni private sono escluse; la scansione non è un certificato di sicurezza."
+    "a4": "Tutti i prodotti disponibili nel catalogo pubblico Shopify del negozio e un riepilogo delle possibili corrispondenze via e-mail. Le inserzioni private sono escluse; la scansione non è un certificato di sicurezza.",
+    "q5": "E se non vengono trovate possibili corrispondenze?",
+    "a5": "Il report indica il numero di prodotti controllati e che non sono state trovate possibili corrispondenze in questo controllo. Non certifica la sicurezza dei prodotti. Nuovi avvisi possono comparire in seguito."
   },
   "cta": {
     "title": "Inizia con una scansione gratuita",
@@ -188,7 +191,8 @@
     "ctaButton": "Scansione gratuita",
     "contactTitle": "Hai una domanda?",
     "contactBody": "Siamo un progetto indipendente. Scrivici sull'app, una scansione o i tuoi dati.",
-    "contactLink": "Invia un'e-mail a radoone@gmail.com"
+    "contactLink": "Invia un'e-mail a info@zerorecall.online",
+    "founderRole": "Fondatore di ZeroRecall"
   },
   "footer": {
     "text": "Tranquillità con controlli continui dei prodotti Shopify.",
@@ -220,8 +224,8 @@
   },
   "scan": {
     "eyebrow": "CONTROLLO UNA TANTUM · NESSUNA INSTALLAZIONE",
-    "title": "Scansione gratuita di tutto il catalogo pubblico",
-    "description": "Inserisci il dominio pubblico del tuo negozio Shopify e l'e-mail. Ti invieremo un link di conferma alla tua e-mail e consegneremo il rapporto completo una volta confermato. Il monitoraggio continuo fa parte dell'app a pagamento.",
+    "title": "Controllo gratuito dell’intero catalogo pubblico",
+    "description": "Inserisci il dominio Shopify e la tua e-mail. Dopo la conferma dell’e-mail, controlliamo una volta tutti i prodotti pubblici disponibili. Ti invieremo il risultato al termine.",
     "benefit1": "Solo prodotti pubblici",
     "benefit2": "Possibili corrispondenze da esaminare",
     "benefit3": "I tuoi prodotti rimangono invariati",
@@ -231,7 +235,7 @@
     "challengeRequired": "Completa il controllo bot prima di inviare.",
     "challengeUnavailable": "Il controllo bot non è disponibile. Nessuna scansione è iniziata; riprova più tardi.",
     "verifyEmailTitle": "Controlla la tua casella di posta",
-    "verifyEmailBody": "Ti abbiamo inviato un'e-mail con un link di conferma per avviare l'audit. Il link è valido per 30 minuti.",
+    "verifyEmailBody": "Ti abbiamo inviato un’e-mail con un link di conferma per avviare il controllo. Il link scade tra 30 minuti.",
     "confirmTitle": "Conferma la tua e-mail e avvia la scansione",
     "confirmBody": "Controlleremo il catalogo pubblico di Shopify e ti invieremo il risultato via e-mail.",
     "confirmButton": "Conferma e avvia scansione",
@@ -259,7 +263,8 @@
     "rateLimitBody": "Una richiesta è stata inviata di recente per questo negozio o connessione. Riprova più tardi.",
     "unavailableTitle": "La scansione gratuita non è attualmente disponibile",
     "unavailableBody": "Non possiamo avviare una scansione in questo momento. Vedi un esempio di risultato o contattaci.",
-    "contactLink": "Contattaci"
+    "contactLink": "Contattaci",
+    "domainHelp": "Nel pannello di controllo Shopify apri Impostazioni → Domini e copia l’indirizzo che termina con .myshopify.com. Usa questo indirizzo anziché il dominio personalizzato."
   },
   "quiet": {
     "eyebrow": "MAGGIORE TRANQUILLITÀ",
@@ -270,7 +275,7 @@
   "pricing": {
     "eyebrow": "MONITORAGGIO CONTINUO DOPO L'INSTALLAZIONE",
     "title": "Continua a controllare dopo la prima scansione",
-    "body": "L'app Shopify monitora i nuovi avvisi Safety Gate e i prodotti modificati. Ti invia un'e-mail per nuove possibili corrispondenze, o invia un aggiornamento settimanale quando non ce ne sono.",
+    "body": "Il controllo gratuito verifica il catalogo pubblico una sola volta. L’app Shopify a pagamento monitora poi i nuovi avvisi Safety Gate e i prodotti modificati, invia e-mail sulle nuove possibili corrispondenze e conserva le tue decisioni.",
     "period": "/ mese",
     "scope": "Per negozio. Fatturato tramite Shopify dopo aver scelto un piano.",
     "installCta": "Installa dall'App Store di Shopify",
@@ -280,7 +285,7 @@
     "content01": "Privacy",
     "content02": "Privacy e conservazione dei dati",
     "content03": "Cosa elaboriamo per le scansioni gratuite e l'app Shopify, e per quanto tempo lo conserviamo.",
-    "content04": "Aggiornato: 19 ottobre 2026. Siamo un progetto indipendente. Domande e richieste sulla privacy: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+    "content04": "Aggiornato: 19 ottobre 2026. Siamo un progetto indipendente. Domande e richieste sulla privacy: <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>.",
     "content05": "Informazioni che elaboriamo",
     "content06": "<li><strong>Richiesta di scansione gratuita:</strong> dominio del negozio, la tua e-mail, lingua, stato della richiesta e rapporto. La tua e-mail conferma la richiesta e riceve il rapporto.</li>\n<li><strong>Scansione del catalogo pubblico:</strong> titoli, descrizioni, marchi, categorie, immagini e URL dei prodotti pubblici. Potremmo anche raccogliere l'e-mail aziendale sulle pagine di contatto pubbliche. Il testo del prodotto diventa vettori di ricerca per il confronto con gli avvisi Safety Gate.</li>\n<li><strong>App Shopify installata:</strong> dominio del negozio, snapshot e immagini dei prodotti, risultati dei controlli, possibili corrispondenze, decisioni di revisione, impostazioni, preferenze di notifica e dati di sessione dell'app richiesti.</li>\n<li><strong>Record tecnici:</strong> log di sicurezza e di servizio per il funzionamento, la risoluzione dei problemi e la protezione.</li>",
     "content07": "Perché e come lo usiamo",
@@ -293,10 +298,10 @@
     "content14": "Shopify esegue l'app incorporata. Google Cloud e Firebase forniscono hosting, archiviazione, processi in background e confronto dei prodotti Vertex AI. Brevo invia e-mail di conferma, rapporto e notifica. Cloudflare Turnstile protegge il modulo di scansione gratuita dagli abusi automatizzati.",
     "content15": "Gli avvisi provengono dal sistema pubblico Safety Gate della Commissione Europea. I fornitori elaborano le informazioni come necessario per fornire questi servizi.",
     "content16": "Le tue scelte e richieste",
-    "content17": "Invia un'e-mail a <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a> per richiedere l'accesso, la correzione o l'eliminazione dei tuoi dati di scansione o del negozio, o per opporti al trattamento.",
+    "content17": "Invia un'e-mail a <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a> per richiedere l'accesso, la correzione o l'eliminazione dei tuoi dati di scansione o del negozio, o per opporti al trattamento.",
     "content18": "Dopo la disinstallazione, Shopify invia una richiesta shop/redact per eliminare i dati dell'app del negozio. Riconosciamo le richieste di dati dei clienti di Shopify; non archiviamo account o ordini dei clienti.",
     "content19": "Contatto",
-    "content20": "Contatto privacy ZeroRecall: <a href=\"mailto:radoone@gmail.com\">radoone@gmail.com</a>.",
+    "content20": "Contatto privacy ZeroRecall: <a href=\"mailto:info@zerorecall.online\">info@zerorecall.online</a>.",
     "metaTitle": "Privacy e conservazione dei dati | ZeroRecall",
     "metaDescription": "Come ZeroRecall elabora e conserva i dati per le scansioni del catalogo pubblico e l'app Shopify.",
     "footer": "Informazioni sulla privacy e sulla conservazione dei dati."
