@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
-import { emailIdempotencyKey } from "./email-delivery.js";
+import { EMAIL_AMBIGUITY_WINDOW_MS, EMAIL_MAX_ATTEMPTS, emailIdempotencyKey } from "./email-delivery.js";
 import { db } from "./firebase-admin.js";
 import { renderFreeScanOwnerEmail } from "./email-templates.js";
 
@@ -54,12 +54,18 @@ export async function handleFreeScanOwnerCreated(requestId: string): Promise<voi
   await deliverOwnerNotification({
     claim: () => db.runTransaction(async transaction => {
       const snapshot = await transaction.get(ref);
-      if (!snapshot.exists || snapshot.get("ownerNotification.status") === "accepted") return null;
+      if (!snapshot.exists || ["accepted", "operator_review"].includes(snapshot.get("ownerNotification.status"))) return null;
+      const firstAttemptAt = snapshot.get("ownerNotification.firstAttemptAt");
+      const attempts = Number(snapshot.get("ownerNotification.attempts") || 0);
+      if (attempts >= EMAIL_MAX_ATTEMPTS || (firstAttemptAt instanceof Timestamp && Date.now() - firstAttemptAt.toMillis() >= EMAIL_AMBIGUITY_WINDOW_MS)) {
+        transaction.update(ref, { "ownerNotification.status": "operator_review", "ownerNotification.leaseUntil": FieldValue.delete() });
+        return null;
+      }
       const leaseUntil = snapshot.get("ownerNotification.leaseUntil");
       if (leaseUntil instanceof Timestamp && leaseUntil.toMillis() > Date.now()) throw new Error("Owner notification is already being submitted");
       const data = snapshot.data()!;
       if (!/^[a-z0-9][a-z0-9-]{1,60}\.myshopify\.com$/.test(String(data.domain)) || !/^[^\s@,]+@[^\s@,]+\.[^\s@,]+$/.test(String(data.email)) || !(data.createdAt instanceof Timestamp)) return null;
-      transaction.update(ref, { ownerNotification: { status: "sending", leaseId, leaseUntil: Timestamp.fromMillis(Date.now() + 90_000) } });
+      transaction.update(ref, { ownerNotification: { status: "sending", leaseId, attempts: attempts + 1, firstAttemptAt: firstAttemptAt || Timestamp.now(), leaseUntil: Timestamp.fromMillis(Date.now() + 90_000) } });
       return { domain: data.domain, email: data.email, requestedAt: data.createdAt.toDate() };
     }),
     send: data => sendFreeScanOwnerEmail(requestId, data),
@@ -71,7 +77,7 @@ export async function handleFreeScanOwnerCreated(requestId: string): Promise<voi
     fail: () => db.runTransaction(async transaction => {
       const snapshot = await transaction.get(ref);
       if (!snapshot.exists || snapshot.get("ownerNotification.leaseId") !== leaseId) return;
-      transaction.update(ref, { ownerNotification: { status: "retry", updatedAt: FieldValue.serverTimestamp() } });
+      transaction.update(ref, { "ownerNotification.status": "retry", "ownerNotification.leaseUntil": FieldValue.delete(), "ownerNotification.updatedAt": FieldValue.serverTimestamp() });
     }),
   });
 }

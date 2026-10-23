@@ -217,13 +217,18 @@ function stateTask(shop: string, runId: string, data: Record<string, unknown>): 
   return { shop, runId, phase, pageIndex };
 }
 
-async function setRootProgress(shop: string, values: Record<string, unknown>): Promise<void> {
-  await merchantRef(shop).set({ ...values, updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+async function setRootProgress(shop: string, values: Record<string, unknown>, runId: string): Promise<void> {
+  await db.runTransaction(async transaction => {
+    const merchant = await transaction.get(merchantRef(shop));
+    if (merchant.exists && !merchant.get("installationRetiredAt") && merchant.get("initialScanRunId") === runId) transaction.set(merchantRef(shop), { ...values, updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+  });
 }
 
 async function completeAudit(shop: string, run: DocumentReference): Promise<void> {
   const activityRef = merchantRef(shop).collection(FIRESTORE_COLLECTIONS.subActivityLogs).doc();
   await db.runTransaction(async (transaction) => {
+    const merchant = await transaction.get(merchantRef(shop));
+    if (!merchant.exists || merchant.get("installationRetiredAt") || merchant.get("initialScanRunId") !== run.id) return;
     transaction.set(run, {
       status: "completed",
       completedAt: FieldValue.serverTimestamp(),
@@ -252,8 +257,14 @@ export async function handleMerchantCatalogAuditTask(payload: MerchantCatalogAud
   const runId = typeof payload?.runId === "string" ? payload.runId.trim() : "";
   if (!shop || !/^[a-zA-Z0-9_-]{8,100}$/.test(runId)) throw new Error("Invalid catalog audit task payload");
   const ref = runRef(shop, runId);
+  const setRun = async (data: Record<string, unknown>) => db.runTransaction(async transaction => {
+    const merchant = await transaction.get(merchantRef(shop));
+    if (merchant.exists && !merchant.get("installationRetiredAt") && merchant.get("initialScanRunId") === runId) transaction.set(ref, data, { merge: true });
+  });
   const claim = await db.runTransaction(async (transaction) => {
     const snapshot = await transaction.get(ref);
+    const merchant = await transaction.get(merchantRef(shop));
+    if (!merchant.exists || merchant.get("installationRetiredAt") || merchant.get("initialScanRunId") !== runId) return { kind: "finished" as const };
     if (!snapshot.exists) return { kind: "missing" as const };
     const data = snapshot.data() || {};
     if (data.status === "completed" || data.status === "failed") return { kind: "finished" as const };
@@ -282,7 +293,7 @@ export async function handleMerchantCatalogAuditTask(payload: MerchantCatalogAud
 
   const merchantSnapshot = await merchantRef(shop).get();
   if (!merchantSnapshot.exists || merchantSnapshot.get("initialScanRunId") !== runId) {
-    await ref.set({ status: "cancelled", leaseExpiresAt: FieldValue.delete(), updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+    await setRun({ status: "cancelled", leaseExpiresAt: FieldValue.delete(), updatedAt: FieldValue.serverTimestamp() });
     return;
   }
 
@@ -296,27 +307,27 @@ export async function handleMerchantCatalogAuditTask(payload: MerchantCatalogAud
       const fetched = Number(data.productsFetched || 0) + page.products.length;
       const imported = Number(data.productsImported || 0) + page.products.length;
       if (!page.products.length && fetched === 0) {
-        await ref.set({ status: "failed", failureCode: "empty_catalog", failedAt: FieldValue.serverTimestamp(), leaseExpiresAt: FieldValue.delete(), updatedAt: FieldValue.serverTimestamp() }, { merge: true });
-        await setRootProgress(shop, { initialScanStatus: "failed", initialScanFailureCode: "empty_catalog" });
+        await setRun({ status: "failed", failureCode: "empty_catalog", failedAt: FieldValue.serverTimestamp(), leaseExpiresAt: FieldValue.delete(), updatedAt: FieldValue.serverTimestamp() });
+        await setRootProgress(shop, { initialScanStatus: "failed", initialScanFailureCode: "empty_catalog" }, runId);
         return;
       }
       if (page.hasNextPage) {
         if (!page.endCursor) throw new Error("Shopify catalog page did not include its next cursor");
         next = { shop, runId, phase: "import", pageIndex: payload.pageIndex + 1 };
-        await ref.set({
+        await setRun({
           phase: next.phase, pageIndex: next.pageIndex, cursor: page.endCursor,
           productsFetched: fetched, productsImported: imported, status: "queued",
           leaseExpiresAt: FieldValue.delete(), heartbeatAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp(),
-        }, { merge: true });
-        await setRootProgress(shop, { initialScanStatus: "scanning", initialScanProductsFetched: fetched, initialScanProductsImported: imported });
+        });
+        await setRootProgress(shop, { initialScanStatus: "scanning", initialScanProductsFetched: fetched, initialScanProductsImported: imported }, runId);
       } else {
         next = { shop, runId, phase: "monitor", pageIndex: 0 };
-        await ref.set({
+        await setRun({
           phase: next.phase, pageIndex: 0, cursor: FieldValue.delete(),
           productsFetched: fetched, productsImported: imported, status: "queued",
           leaseExpiresAt: FieldValue.delete(), heartbeatAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp(),
-        }, { merge: true });
-        await setRootProgress(shop, { initialScanStatus: "scanning", initialScanProductsFetched: fetched, initialScanProductsImported: imported });
+        });
+        await setRootProgress(shop, { initialScanStatus: "scanning", initialScanProductsFetched: fetched, initialScanProductsImported: imported }, runId);
       }
     } else {
       const result = await runMerchantDeltaMonitoringForShop({
@@ -326,41 +337,42 @@ export async function handleMerchantCatalogAuditTask(payload: MerchantCatalogAud
         triggerMode: "manual",
         runId: `${runId}-monitor-${payload.pageIndex}`,
         monitoringRunCollection: "initial_catalog_monitoring_pages",
+        checkpointScope: `catalog-${runId}`,
       });
       const alertsScanned = Number(data.rapexAlertsScanned || 0) + result.rapexAlertsScanned;
       const productsScanned = Number(data.productsScanned || 0) + result.productsScanned;
       const alertsCreated = Number(data.alertsCreated || 0) + result.alertsCreated;
-      if (result.rapexAlertsScanned === ALERT_PAGE_SIZE) {
+      if (result.hasMore) {
         next = { shop, runId, phase: "monitor", pageIndex: payload.pageIndex + 1 };
-        await ref.set({
+        await setRun({
           phase: next.phase, pageIndex: next.pageIndex, status: "queued",
           rapexAlertsScanned: alertsScanned, productsScanned, alertsCreated,
           lastMonitorCheckpoint: result.checkpoint, leaseExpiresAt: FieldValue.delete(),
           heartbeatAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp(),
-        }, { merge: true });
+        });
       } else {
-        await ref.set({
+        await setRun({
           rapexAlertsScanned: alertsScanned, productsScanned, alertsCreated,
           lastMonitorCheckpoint: result.checkpoint, leaseExpiresAt: FieldValue.delete(),
           heartbeatAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp(),
-        }, { merge: true });
+        });
         await completeAudit(shop, ref);
         logger.info("Initial Shopify catalog audit completed", { shop, runId, productsImported: data.productsImported, productsScanned, alertsScanned, alertsCreated });
         return;
       }
-      await setRootProgress(shop, { initialScanStatus: "scanning", initialScanProductsScanned: productsScanned, initialScanAlertsScanned: alertsScanned });
+      await setRootProgress(shop, { initialScanStatus: "scanning", initialScanProductsScanned: productsScanned, initialScanAlertsScanned: alertsScanned }, runId);
     }
     if (next) await enqueue(next);
   } catch (error) {
     const exhausted = retryCount + 1 >= MAX_TASK_ATTEMPTS;
-    await ref.set({
+    await setRun({
       status: exhausted ? "failed" : "retrying",
       ...(exhausted ? { failedAt: FieldValue.serverTimestamp(), failureCode: "task_failed" } : {}),
       leaseExpiresAt: FieldValue.delete(),
       heartbeatAt: FieldValue.serverTimestamp(),
       updatedAt: FieldValue.serverTimestamp(),
-    }, { merge: true });
-    if (exhausted) await setRootProgress(shop, { initialScanStatus: "failed", initialScanFailureCode: "task_failed" });
+    });
+    if (exhausted) await setRootProgress(shop, { initialScanStatus: "failed", initialScanFailureCode: "task_failed" }, runId);
     logger.error("Initial Shopify catalog audit task failed", { shop, runId, phase: payload.phase, pageIndex: payload.pageIndex, attempt: retryCount + 1, error: error instanceof Error ? error.message : String(error) });
     throw error;
   }

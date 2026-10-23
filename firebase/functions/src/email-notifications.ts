@@ -422,7 +422,7 @@ function hasCurrentMonitoringEntitlement(data: Record<string, unknown>): boolean
   if (data.subscriptionStatus !== "active" || data.monitoringEntitled !== true) return false;
   const validUntil = data.subscriptionValidUntil;
   const expiry = validUntil instanceof Timestamp ? validUntil.toMillis() : validUntil instanceof Date ? validUntil.getTime() : null;
-  return expiry === null || expiry > Date.now();
+  return expiry !== null && Number.isFinite(expiry) && expiry > Date.now();
 }
 
 function secureEquals(actual: string, expected: string): boolean {
@@ -487,12 +487,20 @@ export async function handleBrevoWebhook(request: Request, response: ResponseSha
     response.status(202).json({ ignored: true });
     return;
   }
-  await notificationRef.set({
-    status,
-    providerEvent: String(body.event || ""),
-    providerEventAt: typeof body.ts_event === "number" ? Timestamp.fromMillis(body.ts_event * 1000) : FieldValue.serverTimestamp(),
-    updatedAt: FieldValue.serverTimestamp(),
-  }, { merge: true });
+  const eventAt = typeof body.ts_event === "number" && Number.isFinite(body.ts_event)
+    ? Timestamp.fromMillis(body.ts_event * 1000) : null;
+  await db.runTransaction(async (transaction) => {
+    const latest = await transaction.get(notificationRef);
+    if (!latest.exists) return;
+    const previousAt = latest.get("providerEventAt");
+    // Undated or older events cannot overwrite an established provider state.
+    if (previousAt instanceof Timestamp && (!eventAt || eventAt.toMillis() < previousAt.toMillis())) return;
+    if (["delivered", "bounced", "blocked"].includes(String(latest.get("status"))) && status === "accepted") return;
+    transaction.set(notificationRef, {
+      status, providerEvent: String(body.event || ""),
+      providerEventAt: eventAt || FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp(),
+    }, { merge: true });
+  });
   if (status === "delivered") {
     const activityRef = getMerchantRef(index.shop)
       .collection(FIRESTORE_COLLECTIONS.subActivityLogs)

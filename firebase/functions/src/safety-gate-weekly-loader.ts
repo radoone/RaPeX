@@ -184,9 +184,12 @@ export async function ingestWeeklyNotification(
     existingData = snap.data();
   }
 
-  // Generate text embedding if missing
+  const contentHash = createHash("sha256").update(JSON.stringify(fields)).digest("hex");
+  const previousHash = (existingData?.meta as Record<string, unknown> | undefined)?.content_hash;
+  const contentChanged = previousHash !== contentHash;
+  // A changed source must never keep an old text embedding.
   let vectorText = existingData?.vector_text as unknown;
-  if (!vectorText) {
+  if (!vectorText || contentChanged) {
     const textToEmbed = buildEmbeddingText({
       brand: notification.brand,
       model: notification.type_numberOfModel || notification.product,
@@ -195,14 +198,13 @@ export async function ingestWeeklyNotification(
       description: notification.description || notification.danger,
     });
     const embedding = await embedText(textToEmbed);
-    if (embedding?.length) {
-      vectorText = FieldValue.vector(embedding);
-    }
+    if (!embedding?.length) throw new Error(`Safety Gate text embedding unavailable: ${docId}`);
+    vectorText = FieldValue.vector(embedding);
   }
 
   // Embed images
   let imagesEmbeddedCount = 0;
-  let primaryImageVector = existingData?.vector_image as unknown;
+  let primaryImageVector: unknown;
 
   if (notification.pictures.length > 0) {
     for (let i = 0; i < notification.pictures.length; i++) {
@@ -211,6 +213,7 @@ export async function ingestWeeklyNotification(
       const imgDocRef = db.collection(FIRESTORE_COLLECTIONS.alertImages).doc(imageDocId);
       const imgSnap = await imgDocRef.get();
 
+      if (i === 0 && imgSnap.exists) primaryImageVector = imgSnap.get("vector_image");
       if (!imgSnap.exists) {
         const imgVector = await embedImage(imgUrl);
         if (imgVector?.length) {
@@ -236,11 +239,14 @@ export async function ingestWeeklyNotification(
     }
   }
 
+  const revisionTimestamp = contentChanged ? new Date().toISOString()
+    : String((existingData?.meta as Record<string, unknown> | undefined)?.record_timestamp || new Date().toISOString());
   const alertDocData: Record<string, unknown> = {
     meta: {
       datasetid: "ec.europa.eu-safety-gate",
       recordid: docId,
-      record_timestamp: new Date().toISOString(),
+      record_timestamp: revisionTimestamp,
+      content_hash: contentHash,
       alert_date: Timestamp.fromDate(alertDate),
       ingested_at: existingData ? (existingData.meta as any)?.ingested_at || FieldValue.serverTimestamp() : FieldValue.serverTimestamp(),
       updated_at: FieldValue.serverTimestamp(),
@@ -251,15 +257,26 @@ export async function ingestWeeklyNotification(
   if (vectorText) {
     alertDocData.vector_text = vectorText;
   }
-  if (primaryImageVector) {
-    alertDocData.vector_image = primaryImageVector;
+  alertDocData.vector_image = primaryImageVector || FieldValue.delete();
+  await db.runTransaction(async (transaction) => {
+    const latest = await transaction.get(docRef);
+    transaction.set(docRef, alertDocData, { merge: true });
+    if (latest.get("meta.content_hash") !== contentHash) {
+      // Immutable change journal: corrections to old publications are not hidden by alert_date.
+      const changeId = `${revisionTimestamp}_${docId}_${contentHash.slice(0, 12)}`;
+      transaction.set(db.collection("rapex_changes").doc(changeId), {
+        alertId: docId, contentHash, changedAt: FieldValue.serverTimestamp(),
+      });
+    }
+  });
+  const oldPictures = ((existingData?.fields as Record<string, unknown> | undefined)?.pictures || []) as string[];
+  for (const url of oldPictures) {
+    if (!notification.pictures.includes(url)) await db.collection(FIRESTORE_COLLECTIONS.alertImages).doc(buildAlertImageDocId(docId, url)).delete();
   }
-
-  await docRef.set(alertDocData, { merge: true });
 
   return {
     created: !existingDocId,
-    updated: Boolean(existingDocId),
+    updated: Boolean(existingDocId) && contentChanged,
     imagesEmbedded: imagesEmbeddedCount,
   };
 }

@@ -22,7 +22,7 @@ test('scheduled renewal works without Admin session; provider outage preserves o
  Object.assign(process.env,{SHOPIFY_PARTNER_ORG_ID:'123',SHOPIFY_PARTNER_API_TOKEN:'unit-test-placeholder',SHOPIFY_APP_GID:'gid://shopify/App/1'});
  let state={shopifyShopId:shop,monitoringEntitled:true,subscriptionValidUntil:Timestamp.fromMillis(Date.now()-1000)};
  const ref={};const snap=()=>({id:'example.myshopify.com',ref,exists:true,get:key=>state[key]});
- const query={where(){return this;},orderBy(){return this;},limit(n){assert.equal(n,100);return this;},get:async()=>({docs:[snap()]})};
+ const query={where(){return this;},orderBy(){return this;},limit(n){assert.equal(n,100);return this;},get:async()=>({docs:[snap()],size:1})};
  db.collection=()=>query;db.runTransaction=async fn=>fn({get:async()=>snap(),update:(_ref,value)=>{state={...state,...value};}});
  try{
   global.fetch=async()=>({ok:true,json:async()=>({data:{activeSubscription:contract}})});

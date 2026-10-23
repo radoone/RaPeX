@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { FieldPath, FieldValue, Timestamp } from "firebase-admin/firestore";
 import { firestore } from "./firestore.server";
 import { getAlertDecisionTransition, type AlertDecisionAction } from "./services/alert-decision";
@@ -476,6 +477,45 @@ const safetyAlert = {
 
     const countSnapshot = await withCredentialFallback(() => baseQuery.count().get(), null as any);
     return countSnapshot?.data()?.count ?? 0;
+  },
+
+  /** Same stable product/source identity as Firebase background checks. Preserve merchant decisions. */
+  async recordMatches(input: {
+    shop: string; productId: string; productTitle: string; productHandle?: string;
+    sourceUpdatedAt?: string; checkResult: string;
+  }): Promise<Array<SafetyAlertRecord & { created: boolean }>> {
+    const result = JSON.parse(input.checkResult);
+    const findings: Array<SafetyAlertRecord & { created: boolean }> = [];
+    for (const warning of result.warnings) {
+      if (typeof warning.alertId !== "string" || !warning.alertId) throw new Error("Finding is missing its Safety Gate source");
+      const merchantRef = getMerchantDocRef(input.shop);
+      const alerts = merchantRef.collection(SUBCOLLECTIONS.alerts);
+      const id = `finding_${createHash("sha256").update(`${input.productId}\0${warning.alertId}`).digest("hex")}`;
+      const ref = alerts.doc(id);
+      findings.push(await firestore.runTransaction(async transaction => {
+        const [merchant, product, current, legacy] = await Promise.all([
+          transaction.get(merchantRef), transaction.get(merchantRef.collection(SUBCOLLECTIONS.products).doc(encodeURIComponent(input.productId))),
+          transaction.get(ref), transaction.get(alerts.where("productId", "==", input.productId)),
+        ]);
+        if (!merchant.exists || merchant.get("installationRetiredAt") || !product.exists || product.get("deletedAt") || (input.sourceUpdatedAt && product.get("sourceUpdatedAt") !== input.sourceUpdatedAt)) throw new Error("Product changed during the check; refresh and retry");
+        if (current.exists) return { ...convertSafetyAlert(current.id, current.data() || {}, input.shop), created: false };
+        const existing = legacy.docs.find(doc => {
+          const stored = JSON.parse(String(doc.get("checkResult")));
+          return stored.warnings?.some((item: { alertId?: string }) => item.alertId === warning.alertId);
+        });
+        if (existing) return { ...convertSafetyAlert(existing.id, existing.data(), input.shop), created: false };
+        const now = new Date();
+        const data = sanitizeForFirestore({
+          shop: input.shop, productId: input.productId, productTitle: input.productTitle, productHandle: input.productHandle || null,
+          sourceAlertId: warning.alertId, checkResult: JSON.stringify({ ...result, warnings: [warning], isSafe: false }),
+          status: "active", reviewState: "needs_review", warningsCount: 1, riskLevel: warning.riskLevel || "Unknown",
+          createdAt: now, updatedAt: now, notes: null, resolvedAt: null, dismissedAt: null, dismissedBy: null, resolutionType: null,
+        }) as Record<string, unknown>;
+        transaction.create(ref, data);
+        return { ...convertSafetyAlert(id, data, input.shop), created: true };
+      }));
+    }
+    return findings;
   },
 
   async create(options: CreateOptions<Omit<SafetyAlertRecord, "id" | "createdAt" | "updatedAt">>): Promise<SafetyAlertRecord> {
@@ -962,6 +1002,14 @@ export async function purgeMerchantShopData(shop: string): Promise<{
   activityLogs: number;
 }> {
   const shopRef = getMerchantDocRef(shop);
+  // Retire the installation before enumerating/deleting descendants so in-flight
+  // Firebase workers cannot repopulate a subtree while recursiveDelete runs.
+  await firestore.runTransaction(async transaction => {
+    const current = await transaction.get(shopRef);
+    if (current.exists) transaction.update(shopRef, {
+      installationRetiredAt: FieldValue.serverTimestamp(), monitoringEntitled: false, subscriptionStatus: "inactive",
+    });
+  });
   await firestore.recursiveDelete(shopRef);
 
   return {

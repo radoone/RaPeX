@@ -1,12 +1,13 @@
-import { FieldPath, FieldValue, Timestamp } from "firebase-admin/firestore";
+import { FieldPath, FieldValue, Timestamp, type DocumentReference } from "firebase-admin/firestore";
 import { getFunctions } from "firebase-admin/functions";
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import * as logger from "firebase-functions/logger";
 import { db } from "./firebase-admin.js";
 import { AI_CONFIG, FIRESTORE_COLLECTIONS, MATCHING_THRESHOLDS } from "./safety-gate-config.js";
+import { recallWithinThreshold } from "./vector-recall.js";
 import { buildMonitoringCursorValues } from "./monitoring-cursor.js";
 import { monitoringTaskId, scheduledMonitoringRunId } from "./monitoring-task-id.js";
-import { isProductChangeSupersededByDeletion } from "./product-lifecycle.js";
+import { canApplyProductVersion, installationKey, isProductChangeSupersededByDeletion } from "./product-lifecycle.js";
 import { checkProductAgainstAlerts, checkProductSafety } from "./safety-gate-checker.js";
 import type { ProductInput } from "./safety-gate-checker.schemas.js";
 import { normalizePictures } from "./safety-gate-checker-media.js";
@@ -26,6 +27,7 @@ type MerchantMonitoringSummary = {
     days: number | null;
     checkpointDate: string;
   };
+  hasMore: boolean;
   productsScanned: number;
   rapexAlertsScanned: number;
   matchesFound: number;
@@ -33,6 +35,7 @@ type MerchantMonitoringSummary = {
   checkpoint: {
     lastRapexAlertDate: string | null;
     lastRapexRecordTimestamp: string | null;
+    lastRapexAlertDocId: string | null;
   };
 };
 
@@ -71,7 +74,6 @@ type MerchantMonitoringWindow = {
 
 const MONITOR_TEXT_CANDIDATE_LIMIT = 8;
 const MONITOR_IMAGE_CANDIDATE_LIMIT = 5;
-const MAX_ALERTS_PER_PRODUCT = 12;
 const MONITORING_RUNS = "monitoring_runs";
 const MAX_MONITORING_TASK_ATTEMPTS = 8;
 const MONITORING_TASK_QUEUE = getFunctions().taskQueue<MerchantMonitoringTaskPayload>(
@@ -84,11 +86,14 @@ const PRODUCT_CHANGE_TASK_QUEUE = getFunctions().taskQueue<ShopifyProductChangeT
 export type MerchantMonitoringTaskPayload = {
   shop: string;
   runId: string;
-  triggerMode: "scheduled";
+  triggerMode: "scheduled" | "manual";
+  installation?: string;
+  checkpointScope?: string;
 };
 
 export type ShopifyProductChangeTaskPayload = {
   operation?: "upsert" | "delete";
+  installation?: string;
   shop: string;
   productId: string;
   productTitle?: string;
@@ -106,9 +111,9 @@ function monitoringRunRef(shop: string, runId: string, collection = MONITORING_R
 }
 
 function currentEntitlement(data: Record<string, unknown>): boolean {
-  if (data.monitoringEntitled !== true || data.subscriptionStatus !== "active") return false;
+  if (data.installationRetiredAt || data.monitoringEntitled !== true || data.subscriptionStatus !== "active") return false;
   const validUntil = data.subscriptionValidUntil;
-  return !(validUntil instanceof Timestamp) || validUntil.toMillis() > Date.now();
+  return validUntil instanceof Timestamp && validUntil.toMillis() > Date.now();
 }
 
 const CORS_HEADERS = {
@@ -161,15 +166,6 @@ function asVectorArray(value: unknown): number[] | undefined {
   }
 
   return undefined;
-}
-
-function isMissingVectorIndexError(error: unknown): boolean {
-  if (!(error instanceof Error)) {
-    return false;
-  }
-
-  const message = error.message || "";
-  return message.includes("FAILED_PRECONDITION") && message.includes("Missing vector index configuration");
 }
 
 function normalizeAlertDate(value: unknown): Date | null {
@@ -410,71 +406,23 @@ async function findCandidateProductsForAlert(
     .doc(encodeURIComponent(shop))
     .collection(FIRESTORE_COLLECTIONS.subProducts);
 
-  if (alertCandidate.textVector?.length) {
-    try {
-      const textSnapshot = await collection
-        .findNearest({
-          vectorField: "vector_text",
-          queryVector: alertCandidate.textVector,
-          limit: MONITOR_TEXT_CANDIDATE_LIMIT,
-          distanceMeasure: "COSINE",
-          distanceResultField: "text_distance",
-        })
-        .get();
-
-      for (const doc of textSnapshot.docs) {
-        const distance = doc.get("text_distance");
-        if (distance != null && distance > MATCHING_THRESHOLDS.textDistance) {
-          continue;
-        }
-        candidates.set(doc.id, {
-          id: doc.id,
-          data: doc.data() as Record<string, unknown>,
-        });
-      }
-    } catch (error) {
-      if (!isMissingVectorIndexError(error)) {
-        throw error;
-      }
-      logger.warn("Skipping merchant text vector retrieval because Firestore index is not ready", {
-        shop,
-        alertId: alertCandidate.alert.id,
-        vectorField: "vector_text",
-      });
-    }
-  }
-
-  if (alertCandidate.imageVector?.length) {
-    try {
-      const imageSnapshot = await collection
-        .findNearest({
-          vectorField: "vector_image",
-          queryVector: alertCandidate.imageVector,
-          limit: MONITOR_IMAGE_CANDIDATE_LIMIT,
-          distanceMeasure: "COSINE",
-          distanceResultField: "image_distance",
-        })
-        .get();
-
-      for (const doc of imageSnapshot.docs) {
-        const distance = doc.get("image_distance");
-        if (distance != null && distance > MATCHING_THRESHOLDS.imageDistance) {
-          continue;
-        }
-        candidates.set(doc.id, {
-          id: doc.id,
-          data: doc.data() as Record<string, unknown>,
-        });
-      }
-    } catch (error) {
-      if (!isMissingVectorIndexError(error)) {
-        throw error;
-      }
-      logger.warn("Skipping merchant image vector retrieval because Firestore index is not ready", {
-        shop,
-        alertId: alertCandidate.alert.id,
-        vectorField: "vector_image",
-      });
+  if (!alertCandidate.textVector?.length) throw new Error("Safety Gate text vector is unavailable");
+  for (const [field, vector, initialLimit, maxDistance] of [
+    ["vector_text", alertCandidate.textVector, MONITOR_TEXT_CANDIDATE_LIMIT, MATCHING_THRESHOLDS.textDistance],
+    ["vector_image", alertCandidate.imageVector, MONITOR_IMAGE_CANDIDATE_LIMIT, MATCHING_THRESHOLDS.imageDistance],
+  ] as const) {
+    if (!vector?.length) continue;
+    const docs = await recallWithinThreshold({
+      initialLimit, maxDistance,
+      fetch: async (limit) => (await collection.findNearest({
+        vectorField: field, queryVector: vector, limit, distanceMeasure: "COSINE", distanceResultField: "distance",
+      }).get()).docs,
+      distance: (doc) => doc.get("distance"),
+    });
+    for (const doc of docs) {
+      const data = doc.data() as Record<string, unknown>;
+      if (data.deletedAt) continue;
+      candidates.set(doc.id, { id: doc.id, data });
     }
   }
 
@@ -487,57 +435,53 @@ async function upsertAlertForProduct(params: {
   productTitle: string;
   productHandle?: string;
   resultJson: string;
+  sourceUpdatedAt?: string;
+  installation?: string;
   warningsCount: number;
   riskLevel: string;
-}): Promise<boolean> {
+}): Promise<number> {
   const alertsCollection = db
     .collection(FIRESTORE_COLLECTIONS.merchants)
     .doc(encodeURIComponent(params.shop))
     .collection(FIRESTORE_COLLECTIONS.subAlerts);
 
-  const query = await alertsCollection
-    .where("productId", "==", params.productId)
-    .where("status", "==", "active")
-    .limit(1)
-    .get();
-
-  if (!query.empty) {
-    const existing = query.docs[0];
-    await existing.ref.set(
-      {
-        checkResult: params.resultJson,
-        warningsCount: params.warningsCount,
-        riskLevel: params.riskLevel,
-        updatedAt: FieldValue.serverTimestamp(),
-        resolvedAt: null,
-        dismissedAt: null,
-        dismissedBy: null,
-        resolutionType: null,
-        status: "active",
-      },
-      { merge: true },
-    );
-    return false;
+  const result = JSON.parse(params.resultJson);
+  let created = 0;
+  // A finding is a product/source pair, not a mutable bucket for all product warnings.
+  for (const warning of result.warnings) {
+    if (!warning.alertId) throw new Error("Finding is missing its Safety Gate source ID");
+    const id = createHash("sha256").update(`${params.productId}\0${warning.alertId}`).digest("hex");
+    const ref = alertsCollection.doc(`finding_${id}`);
+    const merchantRef = db.collection(FIRESTORE_COLLECTIONS.merchants).doc(encodeURIComponent(params.shop));
+    const productRef = merchantRef.collection(FIRESTORE_COLLECTIONS.subProducts).doc(encodeURIComponent(params.productId));
+    const wasCreated = await db.runTransaction(async (transaction) => {
+      const [merchant, product, current, legacy] = await Promise.all([
+        transaction.get(merchantRef), transaction.get(productRef), transaction.get(ref),
+        transaction.get(alertsCollection.where("productId", "==", params.productId)),
+      ]);
+      if (!merchant.exists || merchant.get("installationRetiredAt") || product.get("deletedAt")) return false;
+      if (params.sourceUpdatedAt && product.get("sourceUpdatedAt") !== params.sourceUpdatedAt) return false;
+      if (params.installation && installationKey(merchant.data() || {}) !== params.installation) return false;
+      if (current.exists) return false; // Preserve original evidence and every merchant decision.
+      const existingPair = legacy.docs.some((doc) => {
+        try { return JSON.parse(String(doc.get("checkResult"))).warnings?.some((w: { alertId?: string }) => w.alertId === warning.alertId); }
+        catch { throw new Error("Stored finding evidence cannot be read"); }
+      });
+      if (existingPair) return false; // Preserve pre-migration findings, including reviewed history.
+      transaction.create(ref, {
+        shop: params.shop, productId: params.productId, productTitle: params.productTitle,
+        productHandle: params.productHandle || null, sourceAlertId: warning.alertId,
+        checkResult: JSON.stringify({ ...result, warnings: [warning], isSafe: false }),
+        status: "active", reviewState: "needs_review", warningsCount: 1,
+        riskLevel: warning.riskLevel || params.riskLevel,
+        createdAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp(),
+        dismissedAt: null, dismissedBy: null, resolvedAt: null, resolutionType: null, notes: null,
+      });
+      return true;
+    });
+    if (wasCreated) created += 1;
   }
-
-  await alertsCollection.add({
-    shop: params.shop,
-    productId: params.productId,
-    productTitle: params.productTitle,
-    productHandle: params.productHandle || null,
-    checkResult: params.resultJson,
-    status: "active",
-    riskLevel: params.riskLevel,
-    warningsCount: params.warningsCount,
-    createdAt: FieldValue.serverTimestamp(),
-    updatedAt: FieldValue.serverTimestamp(),
-    dismissedAt: null,
-    dismissedBy: null,
-    resolvedAt: null,
-    resolutionType: null,
-    notes: null,
-  });
-  return true;
+  return created;
 }
 
 export async function upsertMerchantProduct(
@@ -563,6 +507,8 @@ export async function upsertMerchantProduct(
     .collection(FIRESTORE_COLLECTIONS.subProducts)
     .doc(encodeURIComponent(productId));
 
+  const initialMerchant = await merchantRef.get();
+  if (!initialMerchant.exists || initialMerchant.get("installationRetiredAt")) throw new Error("Merchant installation is missing or retired");
   const existingSnapshot = await docRef.get();
   const existingData = (existingSnapshot.data() as Record<string, unknown> | undefined) || {};
   const existingSourceUpdatedAt =
@@ -572,7 +518,7 @@ export async function upsertMerchantProduct(
     existingSnapshot.exists &&
       existingSourceUpdatedAt &&
       incomingSourceUpdatedAt &&
-      existingSourceUpdatedAt === incomingSourceUpdatedAt,
+      existingData.embeddingVersion === 2 && existingSourceUpdatedAt === incomingSourceUpdatedAt && Boolean(asVectorArray(existingData.vector_text)?.length),
   );
 
   const [vectorText, vectorImage] = await Promise.all([
@@ -584,10 +530,14 @@ export async function upsertMerchantProduct(
       : embedImage(primaryImage),
   ]);
 
+  if (!canReuseCachedVectors && textContent && !vectorText?.length) {
+    throw new Error(`Text embedding unavailable for Shopify product ${productId}`);
+  }
   const payload: Record<string, unknown> = {
     shop,
     productId,
     productTitle: input.productTitle,
+    embeddingVersion: 2,
     name: input.product.name,
     category: input.product.category,
     description: input.product.description,
@@ -599,15 +549,17 @@ export async function upsertMerchantProduct(
     ...(input.product.brand ? { brand: input.product.brand } : {}),
     ...(input.product.model ? { model: input.product.model } : {}),
     ...(input.sourceUpdatedAt ? { sourceUpdatedAt: input.sourceUpdatedAt } : {}),
-    ...(vectorText?.length ? { vector_text: FieldValue.vector(vectorText) } : {}),
-    ...(vectorImage?.length ? { vector_image: FieldValue.vector(vectorImage) } : {}),
+    ...(!canReuseCachedVectors ? { vector_text: vectorText?.length ? FieldValue.vector(vectorText) : FieldValue.delete() } : {}),
+    ...(!canReuseCachedVectors ? { vector_image: vectorImage?.length ? FieldValue.vector(vectorImage) : FieldValue.delete() } : {}),
   };
 
   await db.runTransaction(async (transaction) => {
     const latest = await transaction.get(docRef);
-    const latestVersion = latest.get("sourceUpdatedAt");
-    if (typeof latestVersion === "string" && incomingSourceUpdatedAt &&
-      Date.parse(latestVersion) > Date.parse(incomingSourceUpdatedAt)) return;
+    const merchant = await transaction.get(merchantRef);
+    if (initialMerchant.exists && (!merchant.exists || installationKey(merchant.data() || {}) !== installationKey(initialMerchant.data() || {}))) {
+      throw new Error("Merchant installation changed during product import");
+    }
+    if (incomingSourceUpdatedAt && !canApplyProductVersion(latest.data() || {}, incomingSourceUpdatedAt)) return;
     transaction.set(docRef, {
       ...payload,
       createdAt: latest.exists ? latest.get("createdAt") || FieldValue.serverTimestamp() : FieldValue.serverTimestamp(),
@@ -651,6 +603,8 @@ export async function upsertMerchantProductsBatch(
   if (prepared.some((item) => item.shop !== shop)) throw new Error("A product batch must belong to one shop");
 
   const merchantRef = db.collection(FIRESTORE_COLLECTIONS.merchants).doc(encodeURIComponent(shop));
+  const initialMerchant = await merchantRef.get();
+  if (!initialMerchant.exists || initialMerchant.get("installationRetiredAt")) throw new Error("Merchant installation is missing or retired");
   const existingSnapshots = await Promise.all(prepared.map((item) => merchantRef
     .collection(FIRESTORE_COLLECTIONS.subProducts)
     .doc(encodeURIComponent(item.productId))
@@ -661,7 +615,7 @@ export async function upsertMerchantProductsBatch(
     return existing.exists &&
       typeof existingData.sourceUpdatedAt === "string" &&
       Boolean(item.input.sourceUpdatedAt) &&
-      existingData.sourceUpdatedAt === item.input.sourceUpdatedAt;
+      existingData.embeddingVersion === 2 && existingData.sourceUpdatedAt === item.input.sourceUpdatedAt && Boolean(asVectorArray(existingData.vector_text)?.length);
   });
 
   const textVectors: Array<number[] | undefined> = new Array(prepared.length);
@@ -682,7 +636,7 @@ export async function upsertMerchantProductsBatch(
     indexes.forEach((index, vectorIndex) => { imageVectors[index] = vectors[vectorIndex]; });
   }
 
-  const batch = db.batch();
+  const writes: Array<{ ref: DocumentReference; payload: Record<string, unknown>; version?: string }> = [];
   let embedded = 0;
   prepared.forEach((item, index) => {
     if (!reusable[index] && item.text && !textVectors[index]?.length) {
@@ -695,6 +649,8 @@ export async function upsertMerchantProductsBatch(
       shop,
       productId: item.productId,
       productTitle: item.input.productTitle,
+      embeddingVersion: 2,
+      ...(item.input.sourceUpdatedAt ? { deletedAt: FieldValue.delete(), deletedSourceUpdatedAt: FieldValue.delete() } : {}),
       name: item.input.product.name,
       category: item.input.product.category,
       description: item.input.product.description,
@@ -710,10 +666,20 @@ export async function upsertMerchantProductsBatch(
       ...(changedSource ? { vector_image: imageVectors[index]?.length ? FieldValue.vector(imageVectors[index]!) : FieldValue.delete() } : {}),
     };
     if (textVectors[index]?.length) embedded += 1;
-    batch.set(docRef, payload, { merge: true });
+    writes.push({ ref: docRef, payload, version: item.input.sourceUpdatedAt });
   });
-  batch.set(merchantRef, { shop, updatedAt: FieldValue.serverTimestamp() }, { merge: true });
-  await batch.commit();
+  await db.runTransaction(async (transaction) => {
+    const merchant = await transaction.get(merchantRef);
+    const latest = await Promise.all(writes.map((write) => transaction.get(write.ref)));
+    if (initialMerchant.exists && (!merchant.exists || installationKey(merchant.data() || {}) !== installationKey(initialMerchant.data() || {}))) {
+      throw new Error("Merchant installation changed during catalog import");
+    }
+    writes.forEach((write, index) => {
+      if (write.version && !canApplyProductVersion(latest[index].data() || {}, write.version)) return;
+      transaction.set(write.ref, write.payload, { merge: true });
+    });
+    transaction.set(merchantRef, { shop, updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+  });
   return { imported: prepared.length, embedded };
 }
 
@@ -726,6 +692,7 @@ export async function runMerchantDeltaMonitoringForShop(params: {
   triggerMode?: "manual" | "scheduled";
   runId?: string;
   monitoringRunCollection?: string;
+  checkpointScope?: string;
 }): Promise<MerchantMonitoringSummary> {
   const shop = params.shop.trim();
   if (!shop) {
@@ -735,7 +702,17 @@ export async function runMerchantDeltaMonitoringForShop(params: {
   const monitorRef = db
     .collection(FIRESTORE_COLLECTIONS.merchants)
     .doc(encodeURIComponent(shop));
-  const currentState = await getMonitorState(shop);
+  const merchantState = await getMonitorState(shop);
+  if (!merchantState || (merchantState as unknown as Record<string, unknown>).installationRetiredAt) throw new Error("Merchant installation is missing or retired");
+  const checkpointRef = params.checkpointScope
+    ? monitorRef.collection("monitor_checkpoints").doc(params.checkpointScope)
+    : monitorRef;
+  const scopedState = params.checkpointScope ? (await checkpointRef.get()).data() : merchantState;
+  const currentState = { ...merchantState,
+    lastRapexAlertDate: scopedState?.lastRapexAlertDate || null,
+    lastRapexRecordTimestamp: scopedState?.lastRapexRecordTimestamp || null,
+    lastRapexAlertDocId: scopedState?.lastRapexAlertDocId || null,
+  } as MerchantMonitorStateDocument;
   const forceFullScan = Boolean(params.forceFullScan);
   const monitoringWindow = resolveMonitoringWindow({
     currentState,
@@ -754,22 +731,19 @@ export async function runMerchantDeltaMonitoringForShop(params: {
   if (runRef) {
     const completedRun = await runRef.get();
     const completedSummary = completedRun.get("completedSummary");
-    if (completedRun.get("status") === "completed" && completedSummary && typeof completedSummary === "object") {
+    if (completedSummary && typeof completedSummary === "object") {
       return completedSummary as MerchantMonitoringSummary;
     }
   }
 
-  await monitorRef.set(
-    {
-      shop,
-      updatedAt: FieldValue.serverTimestamp(),
-      createdAt: currentState?.createdAt || FieldValue.serverTimestamp(),
-      lastMonitorRunStart: FieldValue.serverTimestamp(),
-      lastMonitorStatus: "IN_PROGRESS",
-      lastRunMode: monitoringWindow.mode,
-    } satisfies MerchantMonitorStateDocument,
-    { merge: true },
-  );
+  await db.runTransaction(async (transaction) => {
+    const current = await transaction.get(monitorRef);
+    if (!current.exists || installationKey(current.data() || {}) !== installationKey(merchantState as unknown as Record<string, unknown>)) throw new Error("Merchant installation changed before monitoring");
+    transaction.set(monitorRef, {
+      updatedAt: FieldValue.serverTimestamp(), lastMonitorRunStart: FieldValue.serverTimestamp(),
+      lastMonitorStatus: "IN_PROGRESS", lastRunMode: monitoringWindow.mode,
+    }, { merge: true });
+  });
 
   try {
     const rapexAlertCandidates = await loadRapexAlertCandidatesSince(
@@ -780,6 +754,22 @@ export async function runMerchantDeltaMonitoringForShop(params: {
         : null,
       monitoringWindow.strategy === "since-last-check" ? currentState?.lastRapexAlertDocId : null,
     );
+    const dateCandidates = [...rapexAlertCandidates];
+    let changesQuery = db.collection("rapex_changes").orderBy("changedAt", "asc").orderBy(FieldPath.documentId(), "asc");
+    const savedChange = scopedState?.lastRapexChangeId;
+    if (typeof savedChange === "string" && savedChange && scopedState?.lastRapexChangeAt instanceof Timestamp) changesQuery = changesQuery.startAfter(scopedState.lastRapexChangeAt, savedChange);
+    const changes = params.checkpointScope ? null : await changesQuery.limit(limit).get();
+    if (changes) {
+      const seen = new Set(rapexAlertCandidates.map((candidate) => candidate.alert.id));
+      const snapshots = await Promise.all(changes.docs.map((change) => db.collection(FIRESTORE_COLLECTIONS.alerts).doc(String(change.get("alertId"))).get()));
+      for (const snapshot of snapshots) {
+        if (!snapshot.exists) throw new Error("Safety Gate change references a missing source");
+        if (seen.has(snapshot.id)) continue;
+        const data = snapshot.data()!;
+        rapexAlertCandidates.push({ alert: normalizeRapexAlert(snapshot.id, data), textVector: asVectorArray(data.vector_text), imageVector: asVectorArray(data.vector_image) });
+        seen.add(snapshot.id);
+      }
+    }
     const rapexAlerts = rapexAlertCandidates.map((candidate) => candidate.alert);
     const candidateProductsByDocId = new Map<
       string,
@@ -794,9 +784,7 @@ export async function runMerchantDeltaMonitoringForShop(params: {
           alerts: new Map<string, NormalizedAlert>(),
         };
 
-        if (existing.alerts.size < MAX_ALERTS_PER_PRODUCT) {
-          existing.alerts.set(alertCandidate.alert.id, alertCandidate.alert);
-        }
+        existing.alerts.set(alertCandidate.alert.id, alertCandidate.alert);
 
         candidateProductsByDocId.set(productCandidate.id, existing);
       }
@@ -835,42 +823,35 @@ export async function runMerchantDeltaMonitoringForShop(params: {
         productInput,
         Array.from(candidate.alerts.values()),
       );
+      const threshold = Number((await db.collection("merchant_settings").doc(encodeURIComponent(shop)).get()).get("similarityThreshold") || 0);
+      if (threshold > 0) {
+        result.warnings = result.warnings.filter((warning) => warning.overallSimilarity >= threshold);
+        result.isSafe = result.warnings.length === 0;
+      }
       productsScanned += 1;
 
       const expireDate = new Date();
       expireDate.setDate(expireDate.getDate() + AI_CONFIG.checkHistoryTtlDays);
 
-      await db
-        .collection(FIRESTORE_COLLECTIONS.merchants)
-        .doc(encodeURIComponent(shop))
-        .collection(FIRESTORE_COLLECTIONS.subChecks)
-        .doc(monitoringTaskId(shop, `${runId}:${candidate.product.data.productId || candidate.product.id}`))
-        .set({
-          shop,
-          productId: String(candidate.product.data.productId || ""),
+      const productRef = monitorRef.collection(FIRESTORE_COLLECTIONS.subProducts).doc(candidate.product.id);
+      const applied = await db.runTransaction(async (transaction) => {
+        const [product, merchant] = await Promise.all([transaction.get(productRef), transaction.get(monitorRef)]);
+        if (!merchant.exists || installationKey(merchant.data() || {}) !== installationKey(merchantState as unknown as Record<string, unknown>)) throw new Error("Merchant installation changed during monitoring");
+        if (!product.exists || product.get("deletedAt") || product.get("sourceUpdatedAt") !== candidate.product.data.sourceUpdatedAt) return false;
+        transaction.set(monitorRef.collection(FIRESTORE_COLLECTIONS.subChecks)
+          .doc(monitoringTaskId(shop, `${runId}:${candidate.product.data.productId || candidate.product.id}`)), {
+          shop, productId: String(candidate.product.data.productId || ""),
           productTitle: String(candidate.product.data.productTitle || candidate.product.data.name || ""),
-          isSafe: result.isSafe,
-          checkedAt: new Date(result.checkedAt),
-          ...(typeof candidate.product.data.sourceUpdatedAt === "string"
-            ? { sourceUpdatedAt: candidate.product.data.sourceUpdatedAt }
-            : {}),
-          createdAt: FieldValue.serverTimestamp(),
-          expireAt: Timestamp.fromDate(expireDate),
+          isSafe: result.isSafe, checkedAt: new Date(result.checkedAt),
+          ...(typeof candidate.product.data.sourceUpdatedAt === "string" ? { sourceUpdatedAt: candidate.product.data.sourceUpdatedAt } : {}),
+          createdAt: FieldValue.serverTimestamp(), expireAt: Timestamp.fromDate(expireDate),
         });
-
-      await db
-        .collection(FIRESTORE_COLLECTIONS.merchants)
-        .doc(encodeURIComponent(shop))
-        .collection(FIRESTORE_COLLECTIONS.subProducts)
-        .doc(candidate.product.id)
-        .set(
-          {
-            updatedAt: FieldValue.serverTimestamp(),
-            lastDeltaCheckAt: FieldValue.serverTimestamp(),
-            lastCheckedAt: FieldValue.serverTimestamp(),
-          },
-          { merge: true },
-        );
+        transaction.set(productRef, {
+          updatedAt: FieldValue.serverTimestamp(), lastDeltaCheckAt: FieldValue.serverTimestamp(), lastCheckedAt: FieldValue.serverTimestamp(),
+        }, { merge: true });
+        return true;
+      });
+      if (!applied) continue;
 
       if (!result.isSafe && result.warnings.length > 0) {
         matchesFound += result.warnings.length;
@@ -880,6 +861,8 @@ export async function runMerchantDeltaMonitoringForShop(params: {
           productTitle: String(candidate.product.data.productTitle || candidate.product.data.name || ""),
           productHandle: coerceString(candidate.product.data.productHandle),
           resultJson: JSON.stringify(result),
+          sourceUpdatedAt: coerceString(candidate.product.data.sourceUpdatedAt),
+          installation: installationKey((currentState || {}) as unknown as Record<string, unknown>),
           warningsCount: result.warnings.length,
           riskLevel:
             result.warnings[0]?.alertDetails?.fields?.alert_level ||
@@ -888,7 +871,7 @@ export async function runMerchantDeltaMonitoringForShop(params: {
             "Unknown",
         });
         if (created) {
-          alertsCreated += 1;
+          alertsCreated += created;
         }
       }
 
@@ -903,7 +886,7 @@ export async function runMerchantDeltaMonitoringForShop(params: {
       }
     }
 
-    const latestAlert = rapexAlerts.at(-1);
+    const latestAlert = dateCandidates.at(-1)?.alert;
     const summary: MerchantMonitoringSummary = {
       shop,
       mode: monitoringWindow.mode,
@@ -912,6 +895,7 @@ export async function runMerchantDeltaMonitoringForShop(params: {
         days: monitoringWindow.days,
         checkpointDate: monitoringWindow.checkpointDate.toISOString(),
       },
+      hasMore: dateCandidates.length >= limit || (changes?.size || 0) >= limit,
       productsScanned,
       rapexAlertsScanned: rapexAlerts.length,
       matchesFound,
@@ -919,6 +903,7 @@ export async function runMerchantDeltaMonitoringForShop(params: {
       checkpoint: {
         lastRapexAlertDate: latestAlert?.meta.alert_date || normalizeAlertDate(currentState?.lastRapexAlertDate)?.toISOString() || null,
         lastRapexRecordTimestamp: latestAlert?.meta.record_timestamp || currentState?.lastRapexRecordTimestamp || null,
+        lastRapexAlertDocId: latestAlert?.id || currentState?.lastRapexAlertDocId || null,
       },
     };
 
@@ -938,10 +923,27 @@ export async function runMerchantDeltaMonitoringForShop(params: {
         lastRapexAlertDocId: latestAlert?.id || currentState?.lastRapexAlertDocId || null,
       } satisfies Partial<MerchantMonitorStateDocument>;
     await db.runTransaction(async (transaction) => {
-      transaction.set(monitorRef, checkpointUpdate, { merge: true });
+      const merchant = await transaction.get(monitorRef);
+      const checkpoint = await transaction.get(checkpointRef);
+      if (!merchant.exists || installationKey(merchant.data() || {}) !== installationKey(merchantState as unknown as Record<string, unknown>)) throw new Error("Merchant installation changed during monitoring");
+      const savedDate = normalizeAlertDate(checkpoint.get("lastRapexAlertDate"))?.getTime() || 0;
+      const nextDate = normalizeAlertDate(checkpointUpdate.lastRapexAlertDate)?.getTime() || 0;
+      const savedTuple = `${String(checkpoint.get("lastRapexRecordTimestamp") || "")}:${String(checkpoint.get("lastRapexAlertDocId") || "")}`;
+      const nextTuple = `${checkpointUpdate.lastRapexRecordTimestamp || ""}:${checkpointUpdate.lastRapexAlertDocId || ""}`;
+      if (changes?.docs.length) {
+        const lastChange = changes.docs.at(-1)!;
+        const previousTime = merchant.get("lastRapexChangeAt");
+        const nextTime = lastChange.get("changedAt");
+        if (!(nextTime instanceof Timestamp)) throw new Error("Safety Gate change has no committed timestamp");
+        if (!(previousTime instanceof Timestamp) || nextTime.valueOf() > previousTime.valueOf() || (nextTime.valueOf() === previousTime.valueOf() && lastChange.id > String(merchant.get("lastRapexChangeId") || ""))) {
+          transaction.set(monitorRef, { lastRapexChangeId: lastChange.id, lastRapexChangeAt: lastChange.get("changedAt") }, { merge: true });
+        }
+      }
+      if (nextDate > savedDate || (nextDate === savedDate && nextTuple >= savedTuple)) transaction.set(checkpointRef, checkpointUpdate, { merge: true });
+      transaction.set(monitorRef, { lastMonitorStatus: summary.hasMore ? "IN_PROGRESS" : "SUCCESS", updatedAt: FieldValue.serverTimestamp() }, { merge: true });
       if (runRef) {
         transaction.set(runRef, {
-          status: "completed",
+          status: params.monitoringRunCollection === "initial_catalog_monitoring_pages" ? "completed" : "page_processed",
           completedSummary: summary,
           completedAt: FieldValue.serverTimestamp(),
           leaseExpiresAt: FieldValue.delete(),
@@ -952,26 +954,32 @@ export async function runMerchantDeltaMonitoringForShop(params: {
 
     return summary;
   } catch (error) {
-    await monitorRef.set(
-      {
+    await db.runTransaction(async (transaction) => {
+      const merchant = await transaction.get(monitorRef);
+      if (merchant.exists && installationKey(merchant.data() || {}) === installationKey(merchantState as unknown as Record<string, unknown>)) transaction.set(monitorRef, {
         updatedAt: FieldValue.serverTimestamp(),
         lastMonitorRunEnd: FieldValue.serverTimestamp(),
         lastMonitorStatus: "FAILURE",
         lastError: error instanceof Error ? error.message : String(error),
-      } satisfies Partial<MerchantMonitorStateDocument>,
-      { merge: true },
-    );
+      } satisfies Partial<MerchantMonitorStateDocument>, { merge: true });
+    });
     throw error;
   }
 }
 
 async function enqueueMerchantMonitoringTask(payload: MerchantMonitoringTaskPayload): Promise<boolean> {
+  const installation = await db.collection(FIRESTORE_COLLECTIONS.merchants).doc(encodeURIComponent(payload.shop)).get();
+  if (!installation.exists) return false;
+  payload = { ...payload, installation: installationKey(installation.data() || {}) };
   const runRef = monitoringRunRef(payload.shop, payload.runId);
   const shouldEnqueue = await db.runTransaction(async (transaction) => {
     const snapshot = await transaction.get(runRef);
+    const merchant = await transaction.get(db.collection(FIRESTORE_COLLECTIONS.merchants).doc(encodeURIComponent(payload.shop)));
+    if (!merchant.exists || merchant.get("installationRetiredAt") || installationKey(merchant.data() || {}) !== payload.installation) return false;
     const status = snapshot.get("status");
     if (status === "completed" || status === "skipped_unentitled") return false;
-    if (status === "queued" || status === "processing" || status === "retrying") return false;
+    if (status === "processing" || status === "retrying") return false;
+    if (status === "queued") return true;
 
     transaction.set(runRef, {
       shop: payload.shop,
@@ -990,7 +998,7 @@ async function enqueueMerchantMonitoringTask(payload: MerchantMonitoringTaskPayl
 
   try {
     await MONITORING_TASK_QUEUE.enqueue(payload, {
-      id: monitoringTaskId(payload.shop, payload.runId),
+      id: monitoringTaskId(payload.shop, `${payload.runId}:${payload.installation}`),
       dispatchDeadlineSeconds: 1800,
     });
     return true;
@@ -999,19 +1007,13 @@ async function enqueueMerchantMonitoringTask(payload: MerchantMonitoringTaskPayl
       return false;
     }
     const errorMessage = error instanceof Error ? error.message : String(error);
-    await runRef.set({
-      status: "enqueue_failed",
-      lastError: errorMessage,
-      updatedAt: FieldValue.serverTimestamp(),
-    }, { merge: true });
-    await db.collection(FIRESTORE_COLLECTIONS.merchants).doc(encodeURIComponent(payload.shop)).set({
-      lastMonitorStatus: "FAILURE",
-      lastMonitorRunStart: FieldValue.serverTimestamp(),
-      lastMonitorRunEnd: FieldValue.serverTimestamp(),
-      lastRunMode: "delta",
-      lastError: errorMessage,
-      updatedAt: FieldValue.serverTimestamp(),
-    }, { merge: true });
+    await db.runTransaction(async (transaction) => {
+      const merchantRef = db.collection(FIRESTORE_COLLECTIONS.merchants).doc(encodeURIComponent(payload.shop));
+      const merchant = await transaction.get(merchantRef);
+      if (!merchant.exists || installationKey(merchant.data() || {}) !== payload.installation) return;
+      transaction.set(runRef, { status: "enqueue_failed", lastError: errorMessage, updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+      transaction.set(merchantRef, { lastMonitorStatus: "FAILURE", lastError: errorMessage, updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+    });
     throw error;
   }
 }
@@ -1022,14 +1024,22 @@ export async function handleMerchantMonitoringTask(
 ): Promise<void> {
   const shop = coerceString(payload?.shop);
   const runId = coerceString(payload?.runId);
-  if (!shop || !runId || payload?.triggerMode !== "scheduled") {
+  if (!shop || !runId || !["scheduled", "manual"].includes(payload?.triggerMode)) {
     throw new Error("Invalid merchant monitoring task payload");
   }
 
   const runRef = monitoringRunRef(shop, runId);
   const merchantRef = db.collection(FIRESTORE_COLLECTIONS.merchants).doc(encodeURIComponent(shop));
+  const merchantSnapshot = await merchantRef.get();
+  if (!merchantSnapshot.exists || merchantSnapshot.get("installationRetiredAt") || (payload.installation && payload.installation !== installationKey(merchantSnapshot.data() || {}))) return;
+  const setRun = async (data: Record<string, unknown>) => db.runTransaction(async (transaction) => {
+    const merchant = await transaction.get(merchantRef);
+    if (merchant.exists && installationKey(merchant.data() || {}) === installationKey(merchantSnapshot.data() || {})) transaction.set(runRef, data, { merge: true });
+  });
   const claim = await db.runTransaction(async (transaction) => {
     const snapshot = await transaction.get(runRef);
+    const merchant = await transaction.get(merchantRef);
+    if (!merchant.exists || installationKey(merchant.data() || {}) !== installationKey(merchantSnapshot.data() || {})) return "finished" as const;
     if (!snapshot.exists) return "missing" as const;
     const status = snapshot.get("status");
     if (status === "completed" || status === "skipped_unentitled") return "finished" as const;
@@ -1054,39 +1064,43 @@ export async function handleMerchantMonitoringTask(
   if (claim === "finished") return;
   if (claim === "busy") throw new Error("Merchant monitoring run is already being processed; retry after its lease expires");
 
-  const merchantSnapshot = await merchantRef.get();
-  if (!merchantSnapshot.exists || !currentEntitlement(merchantSnapshot.data() || {})) {
-    await runRef.set({
+  if (!merchantSnapshot.exists || (payload.installation && payload.installation !== installationKey(merchantSnapshot.data() || {})) || !currentEntitlement(merchantSnapshot.data() || {})) {
+    await setRun({
       status: "skipped_unentitled",
       skippedAt: FieldValue.serverTimestamp(),
       leaseExpiresAt: FieldValue.delete(),
       updatedAt: FieldValue.serverTimestamp(),
-    }, { merge: true });
+    });
     return;
   }
 
   try {
     const result = await runMerchantDeltaMonitoringForShop({
       shop,
-      triggerMode: "scheduled",
+      triggerMode: payload.triggerMode,
+      checkpointScope: payload.checkpointScope,
       runId,
     });
-    await runRef.set({
+    if (result.hasMore) {
+      const nextRunId = `continued-${monitoringTaskId(shop, JSON.stringify({ ...result.checkpoint, changes: (await merchantRef.get()).get("lastRapexChangeId") }))}`;
+      await enqueueMerchantMonitoringTask({ shop, runId: nextRunId, triggerMode: payload.triggerMode, ...(payload.checkpointScope ? { checkpointScope: payload.checkpointScope } : {}) });
+    }
+    await setRun({
       status: "completed",
       completedAt: FieldValue.serverTimestamp(),
       leaseExpiresAt: FieldValue.delete(),
       result,
       updatedAt: FieldValue.serverTimestamp(),
-    }, { merge: true });
+    });
   } catch (error) {
     const exhausted = retryCount + 1 >= MAX_MONITORING_TASK_ATTEMPTS;
-    await runRef.set({
+    await setRun({
       status: exhausted ? "failed" : "retrying",
       lastError: error instanceof Error ? error.message : String(error),
       ...(exhausted ? { failedAt: FieldValue.serverTimestamp() } : {}),
       leaseExpiresAt: FieldValue.delete(),
       updatedAt: FieldValue.serverTimestamp(),
-    }, { merge: true });
+    });
     throw error;
   }
 }
@@ -1112,7 +1126,7 @@ export async function runDailyMerchantDeltaMonitoring(scheduleTime?: string): Pr
   const failures: Array<{ shop: string; error: string }> = [];
 
   const scheduledAt = scheduleTime ? new Date(scheduleTime) : new Date();
-  const runId = scheduledMonitoringRunId(Number.isNaN(scheduledAt.getTime()) ? new Date() : scheduledAt);
+  const runId = `${scheduledMonitoringRunId(Number.isNaN(scheduledAt.getTime()) ? new Date() : scheduledAt)}-${monitoringTaskId("schedule", Number.isNaN(scheduledAt.getTime()) ? new Date().toISOString() : scheduledAt.toISOString()).slice(-12)}`;
   let shopsQueued = 0;
 
   for (let index = 0; index < eligibleShops.length; index += 10) {
@@ -1143,8 +1157,8 @@ export async function runDailyMerchantDeltaMonitoring(scheduleTime?: string): Pr
 
 function productChangeJobId(payload: ShopifyProductChangeTaskPayload): string {
   return monitoringTaskId(payload.shop, payload.operation === "delete"
-    ? `product-delete:${payload.productId}`
-    : `product:${payload.productId}:${payload.sourceUpdatedAt}`);
+    ? `product-delete:${payload.productId}:${payload.sourceUpdatedAt}:${payload.installation || "legacy"}`
+    : `product:${payload.productId}:${payload.sourceUpdatedAt}:${payload.installation || "legacy"}`);
 }
 
 function productChangeJobRef(shop: string, jobId: string) {
@@ -1173,7 +1187,7 @@ export async function handleStartShopifyProductChangeRequest(
     const operation = body.operation === "delete" ? "delete" : "upsert";
     const product = body.product as ProductInput | undefined;
     const threshold = Number(body.similarityThreshold ?? 0);
-    if (!shop || !productId || (operation === "upsert" && (!productTitle || !sourceUpdatedAt || !product?.name || !product.category || !product.description))) {
+    if (!shop || !productId || !sourceUpdatedAt || !Number.isFinite(Date.parse(sourceUpdatedAt)) || (operation === "upsert" && (!productTitle || !sourceUpdatedAt || !product?.name || !product.category || !product.description))) {
       return response.status(400).json({ error: "shop, product identity, sourceUpdatedAt and normalized product fields are required" });
     }
     const payload: ShopifyProductChangeTaskPayload = {
@@ -1188,6 +1202,8 @@ export async function handleStartShopifyProductChangeRequest(
     };
     const merchantRef = db.collection(FIRESTORE_COLLECTIONS.merchants).doc(encodeURIComponent(shop));
     const merchantSnapshot = await merchantRef.get();
+    if (!merchantSnapshot.exists) return response.status(409).json({ error: "Merchant installation is missing" });
+    payload.installation = installationKey(merchantSnapshot.data() || {});
     if (operation !== "delete" && !currentEntitlement((merchantSnapshot.data() || {}) as Record<string, unknown>)) {
       return response.status(200).json({ success: true, queued: false, reason: "no_current_entitlement" });
     }
@@ -1196,7 +1212,8 @@ export async function handleStartShopifyProductChangeRequest(
     const jobRef = productChangeJobRef(shop, jobId);
     const shouldEnqueue = await db.runTransaction(async (transaction) => {
       const snapshot = await transaction.get(jobRef);
-      if (["queued", "processing", "completed"].includes(String(snapshot.get("status")))) return false;
+      if (["processing", "completed"].includes(String(snapshot.get("status")))) return false;
+      if (snapshot.get("status") === "queued") return true;
       transaction.set(jobRef, {
         shop,
         productId,
@@ -1241,35 +1258,41 @@ export async function handleShopifyProductChangeTask(
   const jobSnapshot = await jobRef.get();
   if (jobSnapshot.get("status") === "completed") return;
   const merchantSnapshot = await merchantRef.get();
+  if (!merchantSnapshot.exists || (payload.installation && payload.installation !== installationKey(merchantSnapshot.data() || {}))) return;
+  const setJob = async (data: Record<string, unknown>) => db.runTransaction(async (transaction) => {
+    const merchant = await transaction.get(merchantRef);
+    if (merchant.exists && installationKey(merchant.data() || {}) === installationKey(merchantSnapshot.data() || {})) {
+      transaction.set(jobRef, data, { merge: true });
+    }
+  });
   if (payload.operation !== "delete" && !currentEntitlement((merchantSnapshot.data() || {}) as Record<string, unknown>)) {
-    await jobRef.set({ status: "skipped_unentitled", updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+    await setJob({ status: "skipped_unentitled", updatedAt: FieldValue.serverTimestamp() });
     return;
   }
 
-  await jobRef.set({ status: "processing", attemptCount: retryCount + 1, startedAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+  await setJob({ status: "processing", attemptCount: retryCount + 1, startedAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp() });
   try {
     const productRef = merchantRef.collection(FIRESTORE_COLLECTIONS.subProducts).doc(encodeURIComponent(payload.productId));
     if (payload.operation === "delete") {
       const now = FieldValue.serverTimestamp();
-      const productSnapshot = await productRef.get();
-      const alertSnapshot = await merchantRef.collection(FIRESTORE_COLLECTIONS.subAlerts)
-        .where("productId", "==", payload.productId)
-        .get();
-      const batch = db.batch();
-      if (productSnapshot.exists) {
-        batch.set(productRef, {
-          deletedAt: now,
-          deletedSourceUpdatedAt: payload.sourceUpdatedAt || null,
-          updatedAt: now,
+      await db.runTransaction(async (transaction) => {
+        const [product, merchant, alerts] = await Promise.all([
+          transaction.get(productRef), transaction.get(merchantRef),
+          transaction.get(merchantRef.collection(FIRESTORE_COLLECTIONS.subAlerts).where("productId", "==", payload.productId)),
+        ]);
+        if (!merchant.exists || installationKey(merchant.data() || {}) !== installationKey(merchantSnapshot.data() || {})) return;
+        const incoming = payload.sourceUpdatedAt;
+        if (!incoming || !canApplyProductVersion(product.data() || {}, incoming)) return;
+        transaction.set(productRef, {
+          shop, productId: payload.productId, deletedAt: now,
+          deletedSourceUpdatedAt: incoming, updatedAt: now,
+          vector_text: FieldValue.delete(), vector_image: FieldValue.delete(),
         }, { merge: true });
-      }
-      alertSnapshot.docs.forEach((document) => batch.set(document.ref, {
-        productDeleted: true,
-        productDeletedAt: now,
-        updatedAt: now,
-      }, { merge: true }));
-      if (productSnapshot.exists || !alertSnapshot.empty) await batch.commit();
-      await jobRef.set({ status: "completed", completedAt: now, updatedAt: now }, { merge: true });
+        alerts.docs.forEach((document) => transaction.set(document.ref, {
+          productDeleted: true, productDeletedAt: now, updatedAt: now,
+        }, { merge: true }));
+      });
+      await setJob({ status: "completed", completedAt: now, updatedAt: now });
       return;
     }
 
@@ -1279,7 +1302,7 @@ export async function handleShopifyProductChangeTask(
     const existingProduct = await productRef.get();
     const existingVersion = existingProduct.get("sourceUpdatedAt");
     if (typeof existingVersion === "string" && Date.parse(existingVersion) > Date.parse(payload.sourceUpdatedAt)) {
-      await jobRef.set({ status: "superseded", updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+      await setJob({ status: "superseded", updatedAt: FieldValue.serverTimestamp() });
       return;
     }
     if (isProductChangeSupersededByDeletion(
@@ -1287,7 +1310,7 @@ export async function handleShopifyProductChangeTask(
       existingProduct.get("deletedSourceUpdatedAt"),
       payload.sourceUpdatedAt,
     )) {
-      await jobRef.set({ status: "superseded", updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+      await setJob({ status: "superseded", updatedAt: FieldValue.serverTimestamp() });
       return;
     }
     await upsertMerchantProduct({
@@ -1300,7 +1323,7 @@ export async function handleShopifyProductChangeTask(
     });
     const currentProduct = await productRef.get();
     if (currentProduct.get("sourceUpdatedAt") !== payload.sourceUpdatedAt) {
-      await jobRef.set({ status: "superseded", updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+      await setJob({ status: "superseded", updatedAt: FieldValue.serverTimestamp() });
       return;
     }
 
@@ -1317,7 +1340,7 @@ export async function handleShopifyProductChangeTask(
         isSafe: filteredWarnings.length === 0,
       };
       resultJson = JSON.stringify(filteredResult);
-      await jobRef.set({ status: "analyzed", resultJson, updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+      await setJob({ status: "analyzed", resultJson, updatedAt: FieldValue.serverTimestamp() });
     }
     const result = JSON.parse(resultJson) as {
       isSafe: boolean;
@@ -1327,7 +1350,11 @@ export async function handleShopifyProductChangeTask(
     const productKey = `${jobId}`;
     const expireDate = new Date();
     expireDate.setDate(expireDate.getDate() + AI_CONFIG.checkHistoryTtlDays);
-    await merchantRef.collection(FIRESTORE_COLLECTIONS.subChecks).doc(productKey).set({
+    const committed = await db.runTransaction(async (transaction) => {
+      const [latest, merchant] = await Promise.all([transaction.get(productRef), transaction.get(merchantRef)]);
+      if (!merchant.exists || installationKey(merchant.data() || {}) !== installationKey(merchantSnapshot.data() || {})) return false;
+      if (!latest.exists || !canApplyProductVersion(latest.data() || {}, payload.sourceUpdatedAt!) || latest.get("sourceUpdatedAt") !== payload.sourceUpdatedAt) return false;
+      transaction.set(merchantRef.collection(FIRESTORE_COLLECTIONS.subChecks).doc(productKey), {
       shop,
       productId: payload.productId,
       productTitle: payload.productTitle,
@@ -1337,14 +1364,17 @@ export async function handleShopifyProductChangeTask(
       createdAt: FieldValue.serverTimestamp(),
       expireAt: Timestamp.fromDate(expireDate),
     }, { merge: true });
-
-    await productRef.set({
-      deletedAt: FieldValue.delete(),
-      deletedSourceUpdatedAt: FieldValue.delete(),
-      lastImmediateCheckAt: FieldValue.serverTimestamp(),
-      lastCheckedAt: FieldValue.serverTimestamp(),
-      updatedAt: FieldValue.serverTimestamp(),
-    }, { merge: true });
+      transaction.set(productRef, {
+        deletedAt: FieldValue.delete(), deletedSourceUpdatedAt: FieldValue.delete(),
+        lastImmediateCheckAt: FieldValue.serverTimestamp(), lastCheckedAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp(),
+      }, { merge: true });
+      return true;
+    });
+    if (!committed) {
+      // Do not recreate a job under a purged tenant.
+      if ((await merchantRef.get()).exists) await setJob({ status: "superseded", updatedAt: FieldValue.serverTimestamp() });
+      return;
+    }
 
     if (!result.isSafe && result.warnings.length > 0) {
       const warning = result.warnings[0];
@@ -1354,28 +1384,18 @@ export async function handleShopifyProductChangeTask(
         productTitle: payload.productTitle,
         productHandle: payload.productHandle,
         resultJson,
+        sourceUpdatedAt: payload.sourceUpdatedAt,
+        installation: installationKey(merchantSnapshot.data() || {}),
         warningsCount: result.warnings.length,
         riskLevel: warning.alertDetails?.fields?.alert_level || warning.alertDetails?.fields?.risk_level || warning.riskLevel || "Unknown",
       });
-    } else {
-      const activeAlerts = await merchantRef.collection(FIRESTORE_COLLECTIONS.subAlerts)
-        .where("productId", "==", payload.productId)
-        .where("status", "==", "active")
-        .get();
-      const batch = db.batch();
-      activeAlerts.docs.forEach((document) => batch.set(document.ref, {
-        status: "resolved",
-        resolvedAt: FieldValue.serverTimestamp(),
-        resolutionType: "automatic_product_update",
-        updatedAt: FieldValue.serverTimestamp(),
-      }, { merge: true }));
-      if (!activeAlerts.empty) await batch.commit();
     }
+    // A negative technical check does not override a merchant's recorded decision.
 
-    await jobRef.set({ status: "completed", completedAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+    await setJob({ status: "completed", completedAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp() });
     logger.info("Shopify product change processed", { shop, productId: payload.productId, sourceUpdatedAt: payload.sourceUpdatedAt, isSafe: result.isSafe });
   } catch (error) {
-    await jobRef.set({ status: "retrying", lastError: error instanceof Error ? error.message : String(error), updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+    await setJob({ status: "retrying", lastError: error instanceof Error ? error.message : String(error), updatedAt: FieldValue.serverTimestamp() });
     throw error;
   }
 }
@@ -1484,14 +1504,20 @@ export async function handleRunMerchantDeltaMonitoringRequest(
         : requestedDays;
     const limit = coercePositiveInteger(request.body?.limit);
 
+    const checkpointScope = forceFullScan || days ? `manual-${randomUUID()}` : undefined;
     const result = await runMerchantDeltaMonitoringForShop({
       shop,
       forceFullScan,
       days,
+      ...(checkpointScope ? { checkpointScope } : {}),
       limit,
       triggerMode: "manual",
     });
 
+    if (result.hasMore) await enqueueMerchantMonitoringTask({
+      shop, runId: `manual-continuation-${randomUUID()}`, triggerMode: "manual",
+      ...(checkpointScope ? { checkpointScope } : {}),
+    });
     response.status(200).json({ success: true, result });
   } catch (error) {
     response.status(500).json({

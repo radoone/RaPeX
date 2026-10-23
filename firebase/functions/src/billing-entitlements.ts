@@ -23,8 +23,12 @@ export async function refreshShopifyEntitlements(): Promise<{ verified: number; 
   const token = process.env.SHOPIFY_PARTNER_API_TOKEN;
   const appId = process.env.SHOPIFY_APP_GID;
   if (!org || !token || !appId) throw new Error("Partner billing verification is not configured");
-  const due = await db.collection("merchants").where("billingRefreshAfter", "<=", Timestamp.now()).orderBy("billingRefreshAfter").limit(100).get();
+  const startedAt = Date.now();
+  const cutoff = Timestamp.fromMillis(startedAt);
   let verified = 0, failed = 0;
+  for (;;) {
+  const due = await db.collection("merchants").where("billingRefreshAfter", "<=", cutoff).orderBy("billingRefreshAfter").limit(100).get();
+  if (!due.size) break;
   for (let index = 0; index < due.docs.length; index += 5) {
     await Promise.all(due.docs.slice(index, index + 5).map(async merchant => {
       const shopId = merchant.get("shopifyShopId");
@@ -55,6 +59,12 @@ export async function refreshShopifyEntitlements(): Promise<{ verified: number; 
         logger.error("Scheduled subscription verification failed", { merchantId: merchant.id });
       }
     }));
+  }
+  if (due.size < 100) break;
+  if (Date.now() - startedAt > 7 * 60_000) {
+    logger.error("Subscription verification capacity exceeded; oldest-due work remains for the next run");
+    break;
+  }
   }
   return { verified, failed };
 }

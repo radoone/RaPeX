@@ -50,6 +50,10 @@ test("only send email for a current, active monitoring entitlement", () => {
   assert.equal(emailNotificationTestUtils.hasCurrentMonitoringEntitlement({
     subscriptionStatus: "active",
     monitoringEntitled: true,
+  }), false);
+  assert.equal(emailNotificationTestUtils.hasCurrentMonitoringEntitlement({
+    subscriptionStatus: "active", monitoringEntitled: true,
+    subscriptionValidUntil: new Date(Date.now() + 60_000),
   }), true);
   assert.equal(emailNotificationTestUtils.hasCurrentMonitoringEntitlement({
     subscriptionStatus: "active",

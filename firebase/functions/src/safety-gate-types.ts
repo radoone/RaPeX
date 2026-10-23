@@ -123,6 +123,8 @@ export interface MerchantDocument {
   lastRapexAlertDate?: Timestamp | null;
   lastRapexRecordTimestamp?: string | null;
   lastRapexAlertDocId?: string | null;
+  lastRapexChangeId?: string | null;
+  lastRapexChangeAt?: Timestamp | null;
   lastProductsScanned?: number;
   lastAlertsCreated?: number;
   lastMatchesFound?: number;

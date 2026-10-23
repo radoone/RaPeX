@@ -1,4 +1,4 @@
-import axios from "axios";
+import { downloadPublicImage } from "./public-image.js";
 import { AI_CONFIG } from "./safety-gate-config.js";
 import type { ProductInput } from "./safety-gate-checker.schemas.js";
 import type { EncodedImage } from "./safety-gate-checker.types.js";
@@ -70,10 +70,7 @@ export async function prepareImageMedia(imageUrl: string): Promise<EncodedImage 
   const trimmed = imageUrl.trim();
 
   try {
-    const response = await axios.get(trimmed, {
-      responseType: "arraybuffer",
-      timeout: IMAGE_TIMEOUT_MS,
-    });
+    const response = await downloadPublicImage(trimmed, IMAGE_TIMEOUT_MS);
 
     if (response.data && response.data.byteLength > MAX_IMAGE_BYTES) {
       console.warn(`Skipping image exceeding 5MB: ${trimmed}`);

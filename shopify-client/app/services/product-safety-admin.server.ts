@@ -295,63 +295,20 @@ export async function runProductSafetyCheck(input: {
   let alertId: string | null = null;
   let alertCreated = false;
 
+  let reviewResult = safetyResult;
   if (!safetyResult.isSafe && safetyResult.warnings.length > 0) {
-    const riskLevel = getRiskLevel(safetyResult);
-    const existingActiveAlert = await db.safetyAlert.findFirst({
-      where: { shop: input.shop, productId, status: "active" },
+    const findings = await db.safetyAlert.recordMatches({
+      shop: input.shop, productId, productTitle: input.productTitle,
+      productHandle: input.productHandle, sourceUpdatedAt: input.sourceUpdatedAt,
+      checkResult: JSON.stringify(safetyResult),
     });
-
-    if (existingActiveAlert) {
-      const updated = await db.safetyAlert.update({
-        where: { id: existingActiveAlert.id, shop: input.shop },
-        data: {
-          checkResult: JSON.stringify(safetyResult),
-          riskLevel,
-          warningsCount: safetyResult.warnings.length,
-          status: "active",
-          reviewState: "needs_review",
-          resolvedAt: null,
-          dismissedAt: null,
-          dismissedBy: null,
-          resolutionType: null,
-          notes: null,
-        },
-      });
-      alertId = updated.id;
-    } else {
-      const created = await db.safetyAlert.create({
-        data: {
-          productId,
-          productTitle: input.productTitle,
-          productHandle: input.productHandle,
-          shop: input.shop,
-          checkResult: JSON.stringify(safetyResult),
-          status: "active",
-          reviewState: "needs_review",
-          riskLevel,
-          warningsCount: safetyResult.warnings.length,
-        },
-      });
-      alertId = created.id;
-      alertCreated = true;
-    }
-  } else {
-    const existingActiveAlert = await db.safetyAlert.findFirst({
-      where: { shop: input.shop, productId, status: "active" },
-    });
-
-    if (existingActiveAlert) {
-      const resolved = await db.safetyAlert.update({
-        where: { id: existingActiveAlert.id, shop: input.shop },
-        data: {
-          status: "resolved",
-          resolvedAt: new Date(),
-          notes: "Manual re-check marked product as safe.",
-        },
-      });
-      alertId = resolved.id;
-    }
+    const selected = findings.find(finding => finding.status === "active") || findings[0];
+    alertId = selected?.id || null;
+    alertCreated = findings.some(finding => finding.created);
+    // The decision modal must show the evidence for the exact finding it changes.
+    if (selected) reviewResult = JSON.parse(selected.checkResult) as SafetyCheckResult;
   }
+  // A technical recheck never replaces recorded evidence or resolves a merchant decision.
 
   await db.safetyCheck.create({
     data: {
@@ -386,7 +343,7 @@ export async function runProductSafetyCheck(input: {
   return {
     alertCreated,
     alertId,
-    result: safetyResult,
+    result: reviewResult,
     status,
   };
 }

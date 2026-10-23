@@ -85,7 +85,7 @@ export function createNoAlertsResult(productImagesProvided = 0): SafetyCheckResu
   return {
     isSafe: true,
     warnings: [],
-    recommendation: "No recent Safety Gate alerts found. Product appears safe based on available data.",
+    recommendation: "No matching Safety Gate candidates found in the available data.",
     checkedAt: new Date().toISOString(),
     analysis: createDefaultAnalysis(0, productImagesProvided),
   };
@@ -94,13 +94,7 @@ export function createNoAlertsResult(productImagesProvided = 0): SafetyCheckResu
 export function createUnavailableAnalysisResult(
   analysis: SafetyCheckAnalysis,
 ): SafetyCheckResult {
-  return {
-    isSafe: true,
-    warnings: [],
-    recommendation: "Unable to analyze product against Safety Gate alerts at this time.",
-    checkedAt: new Date().toISOString(),
-    analysis,
-  };
+  throw new Error(`Safety Gate analysis unavailable (${analysis.candidateAlertsConsidered} candidates); retry the check`);
 }
 
 function clampScore(value: number | undefined | null): number {
@@ -190,35 +184,24 @@ function enrichReason(
 export function parseAnalysisMatches(
   analysisResponse: AnalysisResponseShape,
 ): AnalysisMatchCandidate[] {
-  if (Array.isArray(analysisResponse.output)) {
-    return analysisResponse.output as AnalysisMatchCandidate[];
+  let parsed: unknown = analysisResponse.output;
+  if (parsed == null) {
+    try { parsed = JSON.parse(analysisResponse.text); }
+    catch { throw new Error("Invalid Safety Gate model response; retry the check"); }
   }
-
-  if (analysisResponse.output && typeof analysisResponse.output === "object") {
-    const objectValues = Object.values(analysisResponse.output as Record<string, unknown>);
-    if (objectValues.every((value) => value && typeof value === "object")) {
-      return objectValues as AnalysisMatchCandidate[];
-    }
+  if (!Array.isArray(parsed) && parsed && typeof parsed === "object") {
+    const values = Object.values(parsed);
+    if (!values.length) throw new Error("Invalid empty Safety Gate model object");
+    parsed = values;
   }
-
-  try {
-    const parsed = JSON.parse(analysisResponse.text);
-    if (Array.isArray(parsed)) {
-      return parsed as AnalysisMatchCandidate[];
-    }
-
-    if (parsed && typeof parsed === "object") {
-      const objectValues = Object.values(parsed as Record<string, unknown>);
-      if (objectValues.every((value) => value && typeof value === "object")) {
-        return objectValues as AnalysisMatchCandidate[];
-      }
-    }
-
-    return [];
-  } catch (error) {
-    console.error("Failed to parse Gemini response:", error);
-    return [];
+  if (!Array.isArray(parsed) || parsed.some((value) =>
+    !value || typeof value !== "object" ||
+    typeof value.alertId !== "string" || !value.alertId.trim() ||
+    !Number.isFinite(value.textSimilarity ?? value.overallSimilarity) ||
+    (value.imageSimilarity != null && !Number.isFinite(value.imageSimilarity)))) {
+    throw new Error("Invalid Safety Gate match structure; retry the check");
   }
+  return parsed as AnalysisMatchCandidate[];
 }
 
 function mapRiskLevel(databaseRiskLevel: string): string {
@@ -376,10 +359,7 @@ export function buildSafetyCheckResult(
     .map((match): MatchResult | null => {
       const alert = findMatchedAlert(alerts, match.alertId);
       if (!alert) {
-        console.warn("Ignoring Safety Gate match for unknown alert candidate", {
-          alertId: match.alertId,
-        });
-        return null;
+        throw new Error("Safety Gate model referenced an unknown candidate; retry the check");
       }
 
       const alertDetails = buildAlertDetails(alert);

@@ -97,6 +97,7 @@ function buildMatchCacheKey(product: ProductInput, alerts: NormalizedAlert[]): {
   const productFingerprint = buildProductFingerprint(product);
   const alertSignature = buildAlertSignature(alerts);
   const docId = hashValue({
+    reliabilityVersion: 2,
     shop,
     productId,
     productFingerprint,
@@ -327,7 +328,19 @@ async function analyzeProductMatches(product: ProductInput, alerts: NormalizedAl
 export async function checkProductAgainstAlerts(
   product: ProductInput,
   candidateAlerts: NormalizedAlert[],
-) {
+): Promise<SafetyCheckResult> {
+  if (candidateAlerts.length > 12) {
+    const batches: SafetyCheckResult[] = [];
+    for (let offset = 0; offset < candidateAlerts.length; offset += 12) {
+      batches.push(await checkProductAgainstAlerts(product, candidateAlerts.slice(offset, offset + 12)));
+    }
+    const warnings = batches.flatMap((result) => result.warnings);
+    return {
+      ...batches[0], warnings, isSafe: warnings.length === 0,
+      checkedAt: new Date().toISOString(),
+      analysis: { ...batches[0].analysis!, candidateAlertsConsidered: candidateAlerts.length },
+    };
+  }
   const productImageCount = getProductImageUrls(product).length;
 
   if (candidateAlerts.length === 0) {

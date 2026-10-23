@@ -1,3 +1,4 @@
+import { recallWithinThreshold } from "./vector-recall.js";
 import { defineFirestoreRetriever } from "@genkit-ai/firebase";
 import { vertexAI } from "@genkit-ai/google-genai";
 import { getFirestore, Timestamp } from "firebase-admin/firestore";
@@ -18,7 +19,6 @@ export const ALERT_LOOKBACK_DAYS = 365;
 
 const RAG_TEXT_LIMIT = 12;
 const RAG_IMAGE_LIMIT = 6;
-const MAX_RAG_ALERTS = 12;
 const VECTOR_TEXT_FIELD = "vector_text";
 const VECTOR_IMAGE_FIELD = "vector_image";
 const TEXT_VECTOR_DIMENSIONS = 1536;
@@ -66,11 +66,12 @@ async function getCachedMerchantProductVectors(product: ProductInput): Promise<{
   }
 
   const data = snapshot.data() as Record<string, unknown>;
+  if (data.deletedAt || data.embeddingVersion !== 2) return null;
   const cachedSourceUpdatedAt =
     typeof data.sourceUpdatedAt === "string" ? data.sourceUpdatedAt.trim() : undefined;
   const requestedSourceUpdatedAt = product.sourceUpdatedAt?.trim();
 
-  if (requestedSourceUpdatedAt && cachedSourceUpdatedAt && cachedSourceUpdatedAt !== requestedSourceUpdatedAt) {
+  if (requestedSourceUpdatedAt && cachedSourceUpdatedAt !== requestedSourceUpdatedAt) {
     return null;
   }
 
@@ -91,19 +92,15 @@ async function retrieveAlertsFromCachedVectors(product: ProductInput): Promise<N
   const seen = new Set<string>();
 
   if (cachedVectors.textVector?.length) {
-    try {
-      const snapshot = await db
-        .collection(FIRESTORE_COLLECTIONS.alerts)
-        .findNearest({
-          vectorField: VECTOR_TEXT_FIELD,
-          queryVector: cachedVectors.textVector,
-          limit: RAG_TEXT_LIMIT,
-          distanceMeasure: "COSINE",
-          distanceResultField: "distance",
-        })
-        .get();
-
-      for (const document of snapshot.docs) {
+    const docs = await recallWithinThreshold({
+        initialLimit: RAG_TEXT_LIMIT, maxDistance: MATCHING_THRESHOLDS.textDistance,
+        fetch: async (limit) => (await db.collection(FIRESTORE_COLLECTIONS.alerts).findNearest({
+          vectorField: VECTOR_TEXT_FIELD, queryVector: cachedVectors.textVector!, limit,
+          distanceMeasure: "COSINE", distanceResultField: "distance",
+        }).get()).docs,
+        distance: (doc) => doc.get("distance"),
+      });
+for (const document of docs) {
         const normalized = normalizeRetrieverDocument({
           content: [],
           metadata: {
@@ -118,25 +115,18 @@ async function retrieveAlertsFromCachedVectors(product: ProductInput): Promise<N
         seen.add(normalized.id);
         candidates.push(normalized);
       }
-    } catch (error) {
-      console.warn("Cached text vector query failed; falling back to live embedding query", error);
-    }
   }
 
   if (cachedVectors.imageVector?.length) {
-    try {
-      const snapshot = await db
-        .collection(FIRESTORE_COLLECTIONS.alertImages)
-        .findNearest({
-          vectorField: VECTOR_IMAGE_FIELD,
-          queryVector: cachedVectors.imageVector,
-          limit: RAG_IMAGE_LIMIT,
-          distanceMeasure: "COSINE",
-          distanceResultField: "distance",
-        })
-        .get();
-
-      for (const document of snapshot.docs) {
+    const docs = await recallWithinThreshold({
+        initialLimit: RAG_IMAGE_LIMIT, maxDistance: MATCHING_THRESHOLDS.imageDistance,
+        fetch: async (limit) => (await db.collection(FIRESTORE_COLLECTIONS.alertImages).findNearest({
+          vectorField: VECTOR_IMAGE_FIELD, queryVector: cachedVectors.imageVector!, limit,
+          distanceMeasure: "COSINE", distanceResultField: "distance",
+        }).get()).docs,
+        distance: (doc) => doc.get("distance"),
+      });
+for (const document of docs) {
         const normalized = normalizeRetrieverDocument({
           content: [],
           metadata: {
@@ -151,9 +141,6 @@ async function retrieveAlertsFromCachedVectors(product: ProductInput): Promise<N
         seen.add(normalized.id);
         candidates.push(normalized);
       }
-    } catch (error) {
-      console.warn("Cached image vector query failed; falling back to live embedding query", error);
-    }
   }
 
   candidates.sort((left, right) => {
@@ -164,7 +151,7 @@ async function retrieveAlertsFromCachedVectors(product: ProductInput): Promise<N
     return leftDistance - rightDistance;
   });
 
-  return candidates.slice(0, MAX_RAG_ALERTS);
+  return candidates;
 }
 
 function toVertexInlineMedia(encodedImage: { url: string; contentType?: string }) {
@@ -356,26 +343,25 @@ export async function retrieveAlertsWithRag(product: ProductInput): Promise<Norm
   const activeImageRetriever = ensureImageRetriever();
 
   if (!activeTextRetriever && !activeImageRetriever) {
-    return [];
+    throw new Error("Safety Gate retrieval is unavailable");
   }
 
+  if (!activeTextRetriever) throw new Error("Safety Gate text retrieval is unavailable");
+
   if (activeTextRetriever) {
-    try {
-      const textQuery = buildEmbeddingText({
+    const textQuery = buildEmbeddingText({
         brand: product.brand,
         model: product.model,
         category: product.category,
         title: product.name,
         description: product.description,
       });
-
-      const result = await functionsAi.retrieve({
-        retriever: activeTextRetriever,
-        query: textQuery,
-        options: { limit: RAG_TEXT_LIMIT },
+const result = await recallWithinThreshold({
+        initialLimit: RAG_TEXT_LIMIT, maxDistance: MATCHING_THRESHOLDS.textDistance,
+        fetch: async (limit) => functionsAi.retrieve({ retriever: activeTextRetriever, query: textQuery, options: { limit } }),
+        distance: (doc) => normalizeRetrieverDocument(doc)?.distance,
       });
-
-      for (const document of result || []) {
+for (const document of result || []) {
         const normalized = normalizeRetrieverDocument(document);
         if (!normalized || seen.has(normalized.id) || (normalized.distance != null && normalized.distance > MATCHING_THRESHOLDS.textDistance)) {
           continue;
@@ -384,9 +370,6 @@ export async function retrieveAlertsWithRag(product: ProductInput): Promise<Norm
         seen.add(normalized.id);
         candidates.push(normalized);
       }
-    } catch (error) {
-      console.warn("Text retriever query failed; falling back to DB scan", error);
-    }
   }
 
   if (activeImageRetriever) {
@@ -397,14 +380,12 @@ export async function retrieveAlertsWithRag(product: ProductInput): Promise<Norm
       }
       const vertexInlineMedia = toVertexInlineMedia(encodedImage);
 
-      try {
-        const result = await functionsAi.retrieve({
-          retriever: activeImageRetriever,
-          query: { content: [{ media: vertexInlineMedia }] },
-          options: { limit: RAG_IMAGE_LIMIT },
+      const result = await recallWithinThreshold({
+          initialLimit: RAG_IMAGE_LIMIT, maxDistance: MATCHING_THRESHOLDS.imageDistance,
+          fetch: async (limit) => functionsAi.retrieve({ retriever: activeImageRetriever, query: { content: [{ media: vertexInlineMedia }] }, options: { limit } }),
+          distance: (doc) => normalizeRetrieverDocument(doc)?.distance,
         });
-
-        for (const document of result || []) {
+for (const document of result || []) {
           const normalized = normalizeRetrieverDocument(document);
           if (!normalized || seen.has(normalized.id) || (normalized.distance != null && normalized.distance > MATCHING_THRESHOLDS.imageDistance)) {
             continue;
@@ -413,9 +394,6 @@ export async function retrieveAlertsWithRag(product: ProductInput): Promise<Norm
           seen.add(normalized.id);
           candidates.push(normalized);
         }
-      } catch (error) {
-        console.warn("Image retriever query failed; continuing without image recall", error);
-      }
     }
   }
 
@@ -427,7 +405,7 @@ export async function retrieveAlertsWithRag(product: ProductInput): Promise<Norm
     return leftDistance - rightDistance;
   });
 
-  const hydrated = await hydrateAlertsIfMissing(candidates.slice(0, MAX_RAG_ALERTS));
+  const hydrated = await hydrateAlertsIfMissing(candidates);
   return hydrated;
 }
 
@@ -445,18 +423,16 @@ export async function retrieveAlertsForVector(
   const seen = new Set<string>();
 
   try {
-    const snapshot = await db
-      .collection(FIRESTORE_COLLECTIONS.alerts)
-      .findNearest({
-        vectorField: VECTOR_TEXT_FIELD,
-        queryVector,
-        limit,
-        distanceMeasure: "COSINE",
-        distanceResultField: "distance",
-      })
-      .get();
+    const docs = await recallWithinThreshold({
+      initialLimit: limit, maxDistance,
+      fetch: async (queryLimit) => (await db.collection(FIRESTORE_COLLECTIONS.alerts).findNearest({
+        vectorField: VECTOR_TEXT_FIELD, queryVector, limit: queryLimit,
+        distanceMeasure: "COSINE", distanceResultField: "distance",
+      }).get()).docs,
+      distance: (doc) => doc.get("distance"),
+    });
 
-    for (const document of snapshot.docs) {
+    for (const document of docs) {
       const normalized = normalizeRetrieverDocument({
         content: [],
         metadata: {

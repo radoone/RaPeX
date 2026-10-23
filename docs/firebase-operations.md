@@ -1,0 +1,35 @@
+# Firebase correctness and operations
+
+The 23 October 2026 hardening keeps Firestore, Cloud Tasks, vector retrieval and targeted Gemini analysis. The public API and 24-language email/report flows remain compatible.
+
+## Correctness rules
+
+- A missing index, unavailable model, invalid model JSON, unknown source ID or unavailable required text embedding is an incomplete check. Throw and retry; never write a successful check, resolve a merchant finding, send a completed report or advance a cursor on that path. Matcher cache keys include reliability version 2 so old ambiguous clean results are not reused.
+- Vector recall expands bounded KNN queries until the distance threshold is exhausted. If the Firestore 1,000-result boundary is still saturated, fail with an explicit incomplete-coverage error and notify operations. This boundary still requires partitioned retrieval for catalogs with more than 1,000 near-identical candidates; it is not silently treated as complete. AI receives at most 12 candidates per call and all selected batches must finish.
+- Findings use `finding_<sha256(productId + NUL + sourceAlertId)>` under the shop's alerts subcollection. Each product/source pair has independent evidence and notification identity. Both background and manual checks create transactionally, preserve decisions and recognize legacy findings. A technical recheck never automatically resolves a merchant decision. A manual modal must show the exact finding it changes.
+- Product versions and deletion tombstones are checked transactionally after embedding/model calls. Deletion removes searchable vectors, including when a product was not imported yet. Different deletion events have different task IDs. Imports require an existing installation. An installation is marked `installationRetiredAt` before recursive deletion; worker writes and run progress must respect that fence and the installation's `createdAt` identity.
+- Text embedding and source version are committed together. `embeddingVersion: 2` is required for reuse of merchant vectors. Changed or unavailable images cannot leave an old image vector attached to new product facts. Batch imports keep batch text embedding rather than per-product model loops.
+- Weekly XML imports hash source facts, recompute changed text vectors, remove obsolete image references and preserve the revision timestamp on unchanged imports. An atomic `rapex_changes` journal records new/corrected sources using server commit timestamps. Daily monitoring has an independent timestamp/document-ID journal cursor, so an old publication's correction is checked. The publication date remains unchanged.
+- Page continuations have durable run records and distinct cursor-based IDs, including the alert document ID as a tie-breaker. Completed page results can be replayed after an enqueue failure. Catalog/history/windowed checks use separate `monitor_checkpoints` scopes. An inclusive extra empty page is acceptable; skipped sources are not.
+- Owner email attempts retain their earliest submission time, lease and attempt count. Stop for operator review after the conservative 25-minute ambiguity window. Older/undated delivery events cannot overwrite a newer provider status. Only authenticated provider events prove delivery. Billing/email entitlement requires a finite future expiry; billing renewal drains due records in 100-record pages within a seven-minute budget and reports remaining capacity pressure.
+- Image transport requires public HTTPS and port 443, rejects private DNS resolutions, validates redirects and applies a 5 MB transfer cap. It is shared by image embeddings and matching media.
+
+## Recovery and alerting
+
+`python3 firebase/functions/scripts/configure-protection.py` reconciles the default database's PITR/deletion protection, daily seven-day backups, weekly Sunday 28-day backups and the Cloud Monitoring error-log alert to `info@zerorecall.online`. Run it from the repository root with an authorized gcloud account. Credentials are not saved or printed. Recovery adds storage/backup charges. A scheduled backup is not proof that its first backup already exists.
+
+The hourly `checkBackendHealth` function runs at minute 17 in Europe/Bratislava using `safety-gate-backend-health` with `roles/datastore.viewer`. It reads source freshness, scan backlog, entitled merchant monitoring freshness and exhausted email attempts, and logs structured `backend_health` diagnostics. Its scheduler invocation must be verified, not inferred from deployment success. The service remains private. The error-log alert watches relevant Cloud Run services. Configuration alone does not prove receipt of an incident email.
+
+For an incident: inspect the affected run and queue attempts; fix the cause and resume with stable IDs. Never grant monitoring access to bypass subscription verification, reset checkpoints past incomplete work, or mark email delivered manually. Expired leases can retry; ambiguous email acceptance requires review.
+
+Restore into a new named database in the existing location. Verify the operation and compare bounded counts/source evidence before using recovered data. Never restore over the live database during a drill. Remove the temporary restored database after verification; disable deletion protection only on that temporary database. Native backups do not include TTL policies, so reconcile rules/indexes/TTL/IAM separately. Database deletion protection does not protect individual documents from incorrect writes.
+
+## Release and rollback
+
+The scoped release tool is `firebase/functions/scripts/scoped-hardening-release.py`: `prepare`, `refresh`, `validate`, `deploy [function names...]`, `check`. It snapshots each deployed source/configuration privately, overlays reviewed modules and required dependencies, compiles against each function's preserved production lockfile and patches only `buildConfig.source`. It refuses changed source after validation and verifies environment/secret/trigger/runtime preservation. Snapshots and signed upload URLs must never be committed.
+
+Deploy the new health scheduler independently with its read-only service account; the canonical declaration is in `src/index.ts`. The Shopify host must also receive the manual-finding/deletion-fence changes. Website Hosting and Shopify extensions need no release for this backend change.
+
+Rollback uses the saved previous function sources or previous Cloud Run image with the same runtime settings. It must not remove the new source journal, findings, merchant decisions or backups. Rolling back to the old unsafe matching behavior should be an emergency exception, not normal recovery.
+
+Validation and live release evidence live locally in `outputs/firebase-hardening-2026-10-23/`. Shopify App Store registration, listing/plan availability and the real subscribed installation journey remain separate launch gates. Do not bypass them.

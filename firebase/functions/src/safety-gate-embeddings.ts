@@ -1,4 +1,4 @@
-import axios from "axios";
+import { downloadPublicImage } from "./public-image.js";
 import * as logger from "firebase-functions/logger";
 import { embeddingsAi } from "./firebase-admin.js";
 import { SAFETY_GATE_CONFIG } from "./safety-gate-config.js";
@@ -28,10 +28,7 @@ async function fetchImageAsBase64(
   }
 
   try {
-    const response = await axios.get(url, {
-      responseType: "arraybuffer",
-      timeout: SAFETY_GATE_CONFIG.imageFetchTimeoutMs,
-    });
+    const response = await downloadPublicImage(url, SAFETY_GATE_CONFIG.imageFetchTimeoutMs);
 
     const base64 = Buffer.from(response.data, "binary").toString("base64");
     let contentType =

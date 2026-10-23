@@ -449,3 +449,10 @@ export const refreshShopifyBillingEntitlements = onSchedule(
     logger.info("Scheduled billing verification completed", await refreshShopifyEntitlements());
   },
 );
+
+/** Read-only operational probe, separate from merchant monitoring. */
+export const checkBackendHealth = onSchedule({
+  region: "europe-west1", schedule: "17 * * * *", timeZone: "Europe/Bratislava",
+  serviceAccount: "safety-gate-backend-health@rapex-99a2c.iam.gserviceaccount.com",
+  timeoutSeconds: 300, memory: "256MiB", maxInstances: 1,
+}, async () => { await (await import("./backend-health.js")).checkBackendHealth(); });
