@@ -1,3 +1,4 @@
+import { LocalDateTime } from "../components/LocalDateTime";
 import { useEffect, useRef } from "react";
 import { randomUUID } from "node:crypto";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
@@ -1135,11 +1136,7 @@ export default function Index() {
                         <div className="admin-inline-meta">
                           <AlertBadge alertType={alert.alertType} />
                           <span>
-                            {formatRelativeDate(
-                              alert.createdAt,
-                              t,
-                              i18n.language,
-                            )}
+                            <LocalDateTime value={alert.createdAt} format={(date) => formatRelativeDate(date, t, i18n.language)} />
                           </span>
                         </div>
                       </div>
@@ -1213,11 +1210,7 @@ export default function Index() {
                         </div>
                         <small>
                           {run.updatedAt
-                            ? formatRelativeDate(
-                                new Date(run.updatedAt),
-                                t,
-                                i18n.language,
-                              )
+                            ? <LocalDateTime value={run.updatedAt} format={(date) => formatRelativeDate(date, t, i18n.language)} />
                             : t("dashboard.admin.monitoringRunDateUnknown")}
                         </small>
                       </div>

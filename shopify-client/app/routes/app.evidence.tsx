@@ -1,3 +1,4 @@
+import { LocalDateTime } from "../components/LocalDateTime";
 import type { LoaderFunctionArgs } from "react-router";
 import {
   data as json,
@@ -131,9 +132,7 @@ export default function EvidencePage() {
                     <p className="admin-helper">
                       {t("workspace.when")}:{" "}
                       {event.createdAt &&
-                        new Date(event.createdAt).toLocaleString(
-                          i18n.language,
-                        )}{" "}
+                        <LocalDateTime value={event.createdAt} locale={i18n.language} />}{" "}
                       · {t("workspace.who")}:{" "}
                       {event.actorId || t("common.unknown")}
                     </p>

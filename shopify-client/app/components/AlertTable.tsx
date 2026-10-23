@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { LocalDateTime, useHydrated } from "./LocalDateTime";
 import { localizeRisk } from "./AlertBadge";
 
 interface Alert {
@@ -450,6 +451,7 @@ function AlertRow({
     alert.productId?.replace("gid://shopify/Product/", "") || "";
   const createdDate = new Date(alert.createdAt);
   const [observedAt] = useState(() => Date.now());
+  const hydrated = useHydrated();
   const warningsLabel = t("dashboard.recentAlerts.matchCount", {
     count: alert.warningsCount,
   });
@@ -575,8 +577,8 @@ function AlertRow({
       {/* Date Cell */}
       <s-table-cell>
         <s-text suppressHydrationWarning>
-          {formatRelativeDate(createdDate, t, dateLocale)}
-          {alert.status === "active" &&
+          <LocalDateTime value={createdDate} format={(date) => formatRelativeDate(date, t, dateLocale)} />
+          {hydrated && alert.status === "active" &&
             observedAt - createdDate.getTime() >= 7 * 86400000 && (
               <span className="admin-helper">
                 {t("workspace.oldest", {

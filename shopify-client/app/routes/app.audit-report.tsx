@@ -1,3 +1,4 @@
+import { LocalDateTime } from "../components/LocalDateTime";
 import type { LoaderFunctionArgs } from "react-router";
 import {
   Form,
@@ -122,8 +123,8 @@ export default function AuditReportPage() {
           {scope.from && scope.to && (
             <p>
               {t("workspace.scope", {
-                from: new Date(scope.from).toLocaleDateString(i18n.language),
-                to: new Date(scope.to).toLocaleDateString(i18n.language),
+                from: new Date(scope.from).toLocaleDateString(i18n.language, { timeZone: "UTC" }),
+                to: new Date(scope.to).toLocaleDateString(i18n.language, { timeZone: "UTC" }),
               })}
             </p>
           )}
@@ -188,9 +189,7 @@ export default function AuditReportPage() {
             </div>
           </div>
           <p className="audit-report-generated">
-            {t("auditReport.generated", {
-              date: new Date(generatedAt).toLocaleString(i18n.language),
-            })}
+            <LocalDateTime value={generatedAt} locale={i18n.language} render={(date) => t("auditReport.generated", { date })} />
           </p>
         </section>
         <section className="admin-card">
@@ -257,9 +256,7 @@ export default function AuditReportPage() {
                       </s-table-cell>
                       <s-table-cell>
                         {record.createdAt &&
-                          new Date(record.createdAt).toLocaleString(
-                            i18n.language,
-                          )}
+                          <LocalDateTime value={record.createdAt} locale={i18n.language} />}
                       </s-table-cell>
                     </s-table-row>
                   ))}

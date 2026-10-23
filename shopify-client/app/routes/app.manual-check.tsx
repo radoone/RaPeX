@@ -1,3 +1,4 @@
+import { LocalDateTime } from "../components/LocalDateTime";
 import { useState, useCallback, useEffect, useMemo } from "react";
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "react-router";
 import {
@@ -940,7 +941,7 @@ export default function ManualCheckPage() {
               title={t("manualCheck.coverage.lastRun")}
               value={
                 lastRunAt
-                  ? formatRelativeDate(new Date(lastRunAt), t, dateLocale)
+                  ? <LocalDateTime value={lastRunAt} format={(date) => formatRelativeDate(date, t, dateLocale)} />
                   : t("status.notChecked")
               }
               description={lastRunResult}
@@ -1296,7 +1297,7 @@ export default function ManualCheckPage() {
                                 )}
                               {lastCheck && (
                                 <span className="admin-helper">
-                                  {formatRelativeDate(lastCheck, t, dateLocale)}
+                                  <LocalDateTime value={lastCheck} format={(date) => formatRelativeDate(date, t, dateLocale)} />
                                 </span>
                               )}
                             </>

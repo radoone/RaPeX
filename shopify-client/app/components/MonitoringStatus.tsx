@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { LocalDateTime } from "./LocalDateTime";
 import { monitoringState } from "../services/monitoring-state";
 export function MonitoringStatus({
   billing,
@@ -28,7 +29,7 @@ export function MonitoringStatus({
           <span className="admin-helper">{t("workspace.lastSuccess")}</span>
           <p>
             {lastSuccess
-              ? new Date(lastSuccess).toLocaleString(i18n.language)
+              ? <LocalDateTime value={lastSuccess} locale={i18n.language} />
               : t("workspace.neverRun")}
           </p>
         </div>
