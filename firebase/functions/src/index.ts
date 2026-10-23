@@ -385,7 +385,7 @@ export const checkProductSafetyAPI = onRequest(
   {
     region: "europe-west1",
     memory: "512MiB",
-    timeoutSeconds: 120, // Longer timeout for AI processing
+    timeoutSeconds: 240, // Allow both bounded multimodal matcher batches to complete
     invoker: "public", // Allow unauthenticated access at platform level; API key enforced in code
     secrets: ["GOOGLE_API_KEY", "SAFETY_GATE_API_KEY"],
   },

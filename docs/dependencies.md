@@ -47,3 +47,11 @@ Official compatibility references: [Shopify template changelog](https://github.c
 ## Scoped production release
 
 `firebase/functions/scripts/scoped-dependency-release.py` snapshots every deployed function separately, replaces only its package manifest/lockfile with the reviewed canonical Functions tree, validates compilation and preserves source hashes. Its deploy step refuses a function whose deployment changed since the snapshot. It preserves service configuration, secrets and triggers through the existing scoped release helper; use a private, fresh `ZERO_RECALL_RELEASE_DIR`. Release in small batches to respect regional Cloud Build concurrency. The original sources and configuration remain private rollback inputs.
+
+## Production verification follow-ups
+
+React 19 exposed a server/browser time-zone hydration mismatch on the monitoring timestamp. Commit `7a2b9d1` adds stable UTC initial date markup and browser-local formatting after hydration across dashboard, catalog, queue, history and reports, with two cross-time-zone SSR regression tests (59 Shopify tests total). The production dashboard subsequently loaded without React hydration errors.
+
+An uncached image control exposed the previous synchronous API deadline (120 seconds), while the hosted app itself allowed only 60 seconds. Bounded multimodal matching may need two batches and source-image downloads. Set `checkProductSafetyAPI` to 240 seconds and the hosted Shopify service to 300 seconds so the host can wait for the API plus authentication/response work. These are intentional timeout changes; other runtime settings, secrets, identities, scaling and triggers remain preserved. Text-only verification alone is insufficient for this path.
+
+Shopify CLI 4 uses `app deploy --allow-updates --no-input`, not the removed `--force` flag. Both the product block and product action rendered after the 2026-10 extension release; inspection did not run a merchant check or change a review decision.
