@@ -69,6 +69,7 @@ export const manualSafetyGateWeeklyLoader = onRequest(
   {
     region: "europe-west1",
     memory: "1GiB",
+    maxInstances: 1,
     timeoutSeconds: 540,
     secrets: ["GOOGLE_API_KEY", "SAFETY_GATE_API_KEY"],
   },
@@ -443,7 +444,7 @@ export const notifyFreeScanOwner = onDocumentCreated(
 
 // Refresh verified Partner contracts even when merchants leave Shopify Admin closed.
 export const refreshShopifyBillingEntitlements = onSchedule(
-  { region: "europe-west1", schedule: "every 60 minutes", timeoutSeconds: 540, serviceAccount: "safety-gate-shopify-runtime@rapex-99a2c.iam.gserviceaccount.com", secrets: ["SHOPIFY_PARTNER_API_TOKEN"] },
+  { region: "europe-west1", schedule: "every 60 minutes", timeoutSeconds: 540, maxInstances: 1, serviceAccount: "safety-gate-shopify-runtime@rapex-99a2c.iam.gserviceaccount.com", secrets: ["SHOPIFY_PARTNER_API_TOKEN"] },
   async () => {
     const { refreshShopifyEntitlements } = await import("./billing-entitlements.js");
     logger.info("Scheduled billing verification completed", await refreshShopifyEntitlements());

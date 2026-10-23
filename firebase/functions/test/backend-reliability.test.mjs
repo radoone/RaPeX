@@ -231,3 +231,21 @@ test('retiring an installation fences an in-flight worker before recursive delet
   })(input);
   assert.equal([...db.rows.keys()].some(key => key.includes('/checks/') || key.includes('/alerts/')), false);
 });
+
+test('global source retrieval keeps a bounded shortlist and propagates provider failures', async () => {
+  let broken = false, calls = 0;
+  const retrieve = fn('safety-gate-checker-retrieval', 'retrieveAlertsWithRag', {
+    retrieveAlertsFromCachedVectors: async () => [], ensureTextRetriever: () => ({}), ensureImageRetriever: () => null,
+    buildEmbeddingText: () => 'Specific model', RAG_TEXT_LIMIT: 12, RAG_IMAGE_LIMIT: 6,
+    getProductImageUrls: () => [], MATCHING_THRESHOLDS: { textDistance: .38 },
+    normalizeRetrieverDocument: doc => doc, hydrateAlertsIfMissing: async rows => rows,
+    functionsAi: { retrieve: async ({ options }) => {
+      calls++; if (broken) throw new Error('retrieval provider unavailable');
+      return Array.from({ length: options.limit }, (_, id) => ({ id: String(id), distance: .1 }));
+    } },
+  });
+  const rows = await retrieve(input.product);
+  assert.equal(rows.length, 12); assert.equal(calls, 1);
+  broken = true;
+  await assert.rejects(retrieve(input.product), /provider unavailable/);
+});

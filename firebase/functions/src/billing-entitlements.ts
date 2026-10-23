@@ -30,6 +30,10 @@ export async function refreshShopifyEntitlements(): Promise<{ verified: number; 
   const due = await db.collection("merchants").where("billingRefreshAfter", "<=", cutoff).orderBy("billingRefreshAfter").limit(100).get();
   if (!due.size) break;
   for (let index = 0; index < due.docs.length; index += 5) {
+    if (Date.now() - startedAt > 7 * 60_000) {
+      logger.error("Subscription verification capacity exceeded; oldest-due work remains for the next run");
+      return { verified, failed };
+    }
     await Promise.all(due.docs.slice(index, index + 5).map(async merchant => {
       const shopId = merchant.get("shopifyShopId");
       try {

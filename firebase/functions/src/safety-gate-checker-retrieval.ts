@@ -1,4 +1,3 @@
-import { recallWithinThreshold } from "./vector-recall.js";
 import { defineFirestoreRetriever } from "@genkit-ai/firebase";
 import { vertexAI } from "@genkit-ai/google-genai";
 import { getFirestore, Timestamp } from "firebase-admin/firestore";
@@ -17,6 +16,7 @@ import { buildEmbeddingText } from "./safety-gate-embeddings.js";
 
 export const ALERT_LOOKBACK_DAYS = 365;
 
+// Product-to-source recall is a bounded global shortlist; all selected candidates are evaluated.
 const RAG_TEXT_LIMIT = 12;
 const RAG_IMAGE_LIMIT = 6;
 const VECTOR_TEXT_FIELD = "vector_text";
@@ -92,14 +92,7 @@ async function retrieveAlertsFromCachedVectors(product: ProductInput): Promise<N
   const seen = new Set<string>();
 
   if (cachedVectors.textVector?.length) {
-    const docs = await recallWithinThreshold({
-        initialLimit: RAG_TEXT_LIMIT, maxDistance: MATCHING_THRESHOLDS.textDistance,
-        fetch: async (limit) => (await db.collection(FIRESTORE_COLLECTIONS.alerts).findNearest({
-          vectorField: VECTOR_TEXT_FIELD, queryVector: cachedVectors.textVector!, limit,
-          distanceMeasure: "COSINE", distanceResultField: "distance",
-        }).get()).docs,
-        distance: (doc) => doc.get("distance"),
-      });
+    const docs = (await db.collection(FIRESTORE_COLLECTIONS.alerts).findNearest({vectorField: VECTOR_TEXT_FIELD, queryVector: cachedVectors.textVector!, limit: RAG_TEXT_LIMIT, distanceMeasure: "COSINE", distanceResultField: "distance"}).get()).docs;
 for (const document of docs) {
         const normalized = normalizeRetrieverDocument({
           content: [],
@@ -118,14 +111,7 @@ for (const document of docs) {
   }
 
   if (cachedVectors.imageVector?.length) {
-    const docs = await recallWithinThreshold({
-        initialLimit: RAG_IMAGE_LIMIT, maxDistance: MATCHING_THRESHOLDS.imageDistance,
-        fetch: async (limit) => (await db.collection(FIRESTORE_COLLECTIONS.alertImages).findNearest({
-          vectorField: VECTOR_IMAGE_FIELD, queryVector: cachedVectors.imageVector!, limit,
-          distanceMeasure: "COSINE", distanceResultField: "distance",
-        }).get()).docs,
-        distance: (doc) => doc.get("distance"),
-      });
+    const docs = (await db.collection(FIRESTORE_COLLECTIONS.alertImages).findNearest({vectorField: VECTOR_IMAGE_FIELD, queryVector: cachedVectors.imageVector!, limit: RAG_IMAGE_LIMIT, distanceMeasure: "COSINE", distanceResultField: "distance"}).get()).docs;
 for (const document of docs) {
         const normalized = normalizeRetrieverDocument({
           content: [],
@@ -356,11 +342,7 @@ export async function retrieveAlertsWithRag(product: ProductInput): Promise<Norm
         title: product.name,
         description: product.description,
       });
-const result = await recallWithinThreshold({
-        initialLimit: RAG_TEXT_LIMIT, maxDistance: MATCHING_THRESHOLDS.textDistance,
-        fetch: async (limit) => functionsAi.retrieve({ retriever: activeTextRetriever, query: textQuery, options: { limit } }),
-        distance: (doc) => normalizeRetrieverDocument(doc)?.distance,
-      });
+const result = await functionsAi.retrieve({retriever: activeTextRetriever, query: textQuery, options: {limit: RAG_TEXT_LIMIT}});
 for (const document of result || []) {
         const normalized = normalizeRetrieverDocument(document);
         if (!normalized || seen.has(normalized.id) || (normalized.distance != null && normalized.distance > MATCHING_THRESHOLDS.textDistance)) {
@@ -380,11 +362,7 @@ for (const document of result || []) {
       }
       const vertexInlineMedia = toVertexInlineMedia(encodedImage);
 
-      const result = await recallWithinThreshold({
-          initialLimit: RAG_IMAGE_LIMIT, maxDistance: MATCHING_THRESHOLDS.imageDistance,
-          fetch: async (limit) => functionsAi.retrieve({ retriever: activeImageRetriever, query: { content: [{ media: vertexInlineMedia }] }, options: { limit } }),
-          distance: (doc) => normalizeRetrieverDocument(doc)?.distance,
-        });
+      const result = await functionsAi.retrieve({retriever: activeImageRetriever, query: {content: [{media: vertexInlineMedia}]}, options: {limit: RAG_IMAGE_LIMIT}});
 for (const document of result || []) {
           const normalized = normalizeRetrieverDocument(document);
           if (!normalized || seen.has(normalized.id) || (normalized.distance != null && normalized.distance > MATCHING_THRESHOLDS.imageDistance)) {
@@ -423,14 +401,7 @@ export async function retrieveAlertsForVector(
   const seen = new Set<string>();
 
   try {
-    const docs = await recallWithinThreshold({
-      initialLimit: limit, maxDistance,
-      fetch: async (queryLimit) => (await db.collection(FIRESTORE_COLLECTIONS.alerts).findNearest({
-        vectorField: VECTOR_TEXT_FIELD, queryVector, limit: queryLimit,
-        distanceMeasure: "COSINE", distanceResultField: "distance",
-      }).get()).docs,
-      distance: (doc) => doc.get("distance"),
-    });
+    const docs = (await db.collection(FIRESTORE_COLLECTIONS.alerts).findNearest({vectorField: VECTOR_TEXT_FIELD, queryVector, limit, distanceMeasure: "COSINE", distanceResultField: "distance"}).get()).docs;
 
     for (const document of docs) {
       const normalized = normalizeRetrieverDocument({

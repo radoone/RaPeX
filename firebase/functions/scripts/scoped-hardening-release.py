@@ -12,6 +12,13 @@ base = f'https://cloudfunctions.googleapis.com/v2/projects/{project}/locations/e
 names = ['checkProductSafetyAPI', 'upsertMerchantProductAPI', 'startShopifyProductChangeAPI', 'shopifyProductChangeTask', 'merchantMonitoringTask', 'runMerchantDeltaMonitoringAPI', 'dailyMerchantDeltaMonitoring', 'merchantCatalogAuditTask', 'startMerchantCatalogAuditAPI', 'dailyRapexDeltaLoader', 'manualSafetyGateWeeklyLoader', 'scanPublicShopifyStoreAPI', 'freeScanCatalogTask', 'processFreeScanRequestJob', 'sendImmediateSafetyGateAlertEmail', 'weeklyClearSafetyGateSummary', 'brevoEmailWebhook', 'notifyFreeScanOwner', 'backfillRecentRapexEmbeddings', 'manualRapexLoader', 'backfillHistoricalRapexAlerts', 'refreshShopifyBillingEntitlements']
 modules = ['safety-gate-checker', 'safety-gate-checker-results', 'safety-gate-checker-retrieval', 'safety-gate-checker-media', 'safety-gate-embeddings', 'safety-gate-weekly-loader', 'safety-gate-types', 'merchant-monitoring', 'merchant-catalog-audit', 'product-lifecycle', 'vector-recall', 'public-image', 'email-notifications', 'free-scan-owner-notification', 'billing-entitlements', 'safety-gate-checker.types', 'safety-gate-checker.schemas', 'scripts/test-product-matching', 'monitoring-task-id']
 
+if os.environ.get('ZERO_RECALL_RELEASE_FUNCTIONS'):
+    names = os.environ['ZERO_RECALL_RELEASE_FUNCTIONS'].split(',')
+if os.environ.get('ZERO_RECALL_RELEASE_MODULES'):
+    modules = os.environ['ZERO_RECALL_RELEASE_MODULES'].split(',')
+
+intended_limits = {'manualSafetyGateWeeklyLoader': 1, 'refreshShopifyBillingEntitlements': 1}
+
 def token(): return subprocess.check_output(['gcloud', 'auth', 'print-access-token'], text=True).strip()
 def call(url, body=None, method=None):
     req = urllib.request.Request(url, data=None if body is None else json.dumps(body).encode(), headers={'Authorization': 'Bearer '+token(), 'Content-Type': 'application/json'}, method=method)
@@ -100,7 +107,8 @@ def deploy():
         payload = output.getvalue(); (root/(name+'-release.zip')).write_bytes(payload)
         upload = call(base+'/functions:generateUploadUrl', {})
         with urllib.request.urlopen(urllib.request.Request(upload['uploadUrl'], data=payload, method='PUT', headers={'Content-Type':'application/zip'}), timeout=180) as response: assert response.status == 200
-        operation = call(base+'/functions/'+name+'?updateMask=buildConfig.source', {'buildConfig':{'source':{'storageSource':upload['storageSource']}}}, 'PATCH')
+        before = json.loads((root/(name+'-before.json')).read_text())
+        operation = call(base+'/functions/'+name+'?updateMask=buildConfig.source,serviceConfig.maxInstanceCount', {'buildConfig':{'source':{'storageSource':upload['storageSource']}},'serviceConfig':{'maxInstanceCount':intended_limits.get(name,before['serviceConfig'].get('maxInstanceCount',0))}}, 'PATCH')
         operations[name] = operation['name']; private_json(root/'operations.json',operations)
         print(name+': build started',flush=True)
 
@@ -113,10 +121,16 @@ def check():
         before = json.loads((root/(name+'-before.json')).read_text()); after = call(base+'/functions/'+name)
         assert after['state'] == 'ACTIVE', name
         for field in ['environmentVariables','secretEnvironmentVariables','serviceAccountEmail','ingressSettings','timeoutSeconds','availableMemory','maxInstanceCount']:
-            assert before['serviceConfig'].get(field) == after['serviceConfig'].get(field), name+' configuration changed: '+field
-        assert before.get('eventTrigger') == after.get('eventTrigger'), name+' trigger changed'
+            old, new = before['serviceConfig'].get(field), after['serviceConfig'].get(field)
+            if field == 'maxInstanceCount': old, new = intended_limits.get(name,old or 0), new or 0
+            assert old == new, name+' configuration changed: '+field
+        def trigger(value):
+            data = dict(value or {})
+            if 'eventFilters' in data: data['eventFilters'] = sorted(data['eventFilters'],key=lambda item: json.dumps(item,sort_keys=True))
+            return data
+        assert trigger(before.get('eventTrigger')) == trigger(after.get('eventTrigger')), name+' trigger changed'
         private_json(root/(name+'-after.json'), after)
-        result[name] = {'state':'ACTIVE','revision':after['serviceConfig'].get('revision'), 'configurationPreserved':True}
+        result[name] = {'state':'ACTIVE','revision':after['serviceConfig'].get('revision'), 'configurationPreserved':True, 'intentionalInstanceLimit':intended_limits.get(name)}
     private_json(root/'verification.json',result)
     print(json.dumps(result,indent=2))
 
