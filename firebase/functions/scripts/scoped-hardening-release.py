@@ -30,7 +30,9 @@ def digest(data): return hashlib.sha256(data).hexdigest()
 def prepare():
     manifest = {}
     for name in names:
-        function = call(base+'/functions/'+name); private_json(root/(name+'-before.json'), function)
+        function = call(base+'/functions/'+name)
+        assert function.get('state') == 'ACTIVE', name+' must finish its previous operation before snapshotting'
+        private_json(root/(name+'-before.json'), function)
         source = function['buildConfig']['source']['storageSource']; q = urllib.parse.quote
         url = 'https://storage.googleapis.com/storage/v1/b/'+q(source['bucket'], safe='')+'/o/'+q(source['object'], safe='')+'?alt=media&generation='+source['generation']
         with urllib.request.urlopen(urllib.request.Request(url, headers={'Authorization':'Bearer '+token()}), timeout=120) as response: raw = response.read()

@@ -249,3 +249,42 @@ test('global source retrieval keeps a bounded shortlist and propagates provider 
   broken = true;
   await assert.rejects(retrieve(input.product), /provider unavailable/);
 });
+
+test('daily monitoring applies the merchant-root review threshold', async () => {
+  const db = fixture(); db.rows.get(merchantPath).similarityThreshold = 90;
+  const summary = await monitor(db, [candidate(1)], async () => ({ isSafe: false, warnings: [{ alertId: 'A1', overallSimilarity: 80 }], checkedAt: new Date().toISOString() }))({ shop });
+  assert.equal(summary.matchesFound, 0);
+  assert.equal([...db.rows.keys()].some(key => key.includes('/alerts/')), false);
+});
+
+test('a source photograph alone cannot produce a merchant-image similarity score', () => {
+  const alert = { id: 'A', meta: { recordid: 'A', alert_date: '', ingested_at: '' }, fields: { name: 'Example', level: 'High' } };
+  const result = buildSafetyCheckResult([{ alertId: 'A', textSimilarity: 90, imageSimilarity: 99 }], [alert], { ...analysis, mode: 'with-image', scoringMode: 'image-first', productImagesUsed: 0, alertImagesUsed: 1 });
+  assert.equal(result.warnings[0].overallSimilarity, 90);
+  assert.equal(result.warnings[0].imageSimilarity, undefined);
+  assert.equal(result.warnings[0].scoreBreakdown.visualWeight, 0);
+  assert.equal(result.analysis.scoringMode, 'text-only');
+});
+
+test('global retrieval preserves official evidence and source revisions for cache invalidation', () => {
+  const normalize = fn('safety-gate-checker-retrieval', 'normalizeRetrieverDocument', { normalizeTimestamp: value => String(value || ''), normalizePictures: fields => fields.pictures || [] });
+  const first = normalize({ metadata: { meta: { recordid: 'A', alert_date: '2020-01-01', record_timestamp: '2026-10-22' }, fields: { caseNumber: 'SR/12345/26', category: 'Toys', name: 'Example', type_numberOfModel: 'M1', url: 'https://ec.europa.eu/safety-gate-alerts/record/A' }, distance: .1 } });
+  assert.equal(first.fields.caseNumber, 'SR/12345/26');
+  assert.equal(first.fields.type_numberOfModel, 'M1');
+  assert.equal(first.fields.url, 'https://ec.europa.eu/safety-gate-alerts/record/A');
+  const signature = fn('safety-gate-checker', 'buildAlertSignature');
+  assert.notEqual(signature([first]), signature([{ ...first, meta: { ...first.meta, record_timestamp: '2026-10-23' } }]));
+});
+
+test('monitoring progress cannot recreate an orphaned run after the tenant is purged', async () => {
+  const db = fixture(), transact = db.runTransaction;
+  let purged = false;
+  db.runTransaction = async callback => {
+    const result = await transact(callback);
+    if (!purged && [...db.rows.keys()].some(key => key.includes('/checks/'))) { purged = true; db.rows.clear(); }
+    return result;
+  };
+  await assert.rejects(monitor(db, [candidate(1)])({ shop, runId: 'purged-progress' }), /installation changed/);
+  assert.equal(purged, true);
+  assert.equal(db.rows.size, 0);
+});

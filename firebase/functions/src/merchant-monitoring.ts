@@ -728,6 +728,15 @@ export async function runMerchantDeltaMonitoringForShop(params: {
     ? monitoringRunRef(shop, params.runId, params.monitoringRunCollection)
     : null;
 
+  const setProgress = async (values: Record<string, unknown>) => {
+    if (!runRef) return;
+    await db.runTransaction(async transaction => {
+      const merchant = await transaction.get(monitorRef);
+      if (!merchant.exists || installationKey(merchant.data() || {}) !== installationKey(merchantState as unknown as Record<string, unknown>)) throw new Error("Merchant installation changed during progress update");
+      transaction.set(runRef, values, { merge: true });
+    });
+  };
+
   if (runRef) {
     const completedRun = await runRef.get();
     const completedSummary = completedRun.get("completedSummary");
@@ -801,7 +810,7 @@ export async function runMerchantDeltaMonitoringForShop(params: {
     });
 
     if (runRef) {
-      await runRef.set({
+      await setProgress({
         status: "processing",
         rapexAlertsScanned: rapexAlerts.length,
         candidateProducts: candidateProductsByDocId.size,
@@ -810,7 +819,7 @@ export async function runMerchantDeltaMonitoringForShop(params: {
         alertsCreated: 0,
         heartbeatAt: FieldValue.serverTimestamp(),
         updatedAt: FieldValue.serverTimestamp(),
-      }, { merge: true });
+      });
     }
 
     let matchesFound = 0;
@@ -823,7 +832,7 @@ export async function runMerchantDeltaMonitoringForShop(params: {
         productInput,
         Array.from(candidate.alerts.values()),
       );
-      const threshold = Number((await db.collection("merchant_settings").doc(encodeURIComponent(shop)).get()).get("similarityThreshold") || 0);
+      const threshold = Number((merchantState as unknown as Record<string, unknown>).similarityThreshold || 0);
       if (threshold > 0) {
         result.warnings = result.warnings.filter((warning) => warning.overallSimilarity >= threshold);
         result.isSafe = result.warnings.length === 0;
@@ -876,13 +885,13 @@ export async function runMerchantDeltaMonitoringForShop(params: {
       }
 
       if (runRef && (productsScanned % 5 === 0 || productsScanned === candidateProductsByDocId.size)) {
-        await runRef.set({
+        await setProgress({
           productsScanned,
           matchesFound,
           alertsCreated,
           heartbeatAt: FieldValue.serverTimestamp(),
           updatedAt: FieldValue.serverTimestamp(),
-        }, { merge: true });
+        });
       }
     }
 
@@ -969,7 +978,7 @@ export async function runMerchantDeltaMonitoringForShop(params: {
 
 async function enqueueMerchantMonitoringTask(payload: MerchantMonitoringTaskPayload): Promise<boolean> {
   const installation = await db.collection(FIRESTORE_COLLECTIONS.merchants).doc(encodeURIComponent(payload.shop)).get();
-  if (!installation.exists) return false;
+  if (!installation.exists || installation.get("installationRetiredAt") || (payload.installation && payload.installation !== installationKey(installation.data() || {}))) return false;
   payload = { ...payload, installation: installationKey(installation.data() || {}) };
   const runRef = monitoringRunRef(payload.shop, payload.runId);
   const shouldEnqueue = await db.runTransaction(async (transaction) => {
@@ -1083,7 +1092,7 @@ export async function handleMerchantMonitoringTask(
     });
     if (result.hasMore) {
       const nextRunId = `continued-${monitoringTaskId(shop, JSON.stringify({ ...result.checkpoint, changes: (await merchantRef.get()).get("lastRapexChangeId") }))}`;
-      await enqueueMerchantMonitoringTask({ shop, runId: nextRunId, triggerMode: payload.triggerMode, ...(payload.checkpointScope ? { checkpointScope: payload.checkpointScope } : {}) });
+      await enqueueMerchantMonitoringTask({ shop, runId: nextRunId, triggerMode: payload.triggerMode, installation: installationKey(merchantSnapshot.data() || {}), ...(payload.checkpointScope ? { checkpointScope: payload.checkpointScope } : {}) });
     }
     await setRun({
       status: "completed",
@@ -1212,6 +1221,8 @@ export async function handleStartShopifyProductChangeRequest(
     const jobRef = productChangeJobRef(shop, jobId);
     const shouldEnqueue = await db.runTransaction(async (transaction) => {
       const snapshot = await transaction.get(jobRef);
+      const merchant = await transaction.get(merchantRef);
+      if (!merchant.exists || merchant.get("installationRetiredAt") || installationKey(merchant.data() || {}) !== payload.installation) return false;
       if (["processing", "completed"].includes(String(snapshot.get("status")))) return false;
       if (snapshot.get("status") === "queued") return true;
       transaction.set(jobRef, {
@@ -1234,7 +1245,10 @@ export async function handleStartShopifyProductChangeRequest(
         });
       } catch (error) {
         if ((error as { code?: string })?.code !== "functions/task-already-exists") {
-          await jobRef.set({ status: "enqueue_failed", lastError: error instanceof Error ? error.message : String(error), updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+          await db.runTransaction(async transaction => {
+            const merchant = await transaction.get(merchantRef);
+            if (merchant.exists && installationKey(merchant.data() || {}) === payload.installation) transaction.set(jobRef, { status: "enqueue_failed", lastError: error instanceof Error ? error.message : String(error), updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+          });
           throw error;
         }
       }

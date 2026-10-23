@@ -97,7 +97,7 @@ function buildMatchCacheKey(product: ProductInput, alerts: NormalizedAlert[]): {
   const productFingerprint = buildProductFingerprint(product);
   const alertSignature = buildAlertSignature(alerts);
   const docId = hashValue({
-    reliabilityVersion: 2,
+    reliabilityVersion: 3,
     shop,
     productId,
     productFingerprint,
@@ -288,8 +288,8 @@ async function analyzeProductMatches(product: ProductInput, alerts: NormalizedAl
         ? { ...promptInput, productImages: [], alertImages: [] }
         : promptInput;
     const analysis: SafetyCheckAnalysis = {
-      mode: attempt.promptType === "text" ? "text-only" : "with-image",
-      scoringMode: attempt.promptType === "text" ? "text-only" : "image-first",
+      mode: input.productImages.length + input.alertImages.length > 0 ? "with-image" : "text-only",
+      scoringMode: attempt.promptType !== "text" && input.productImages.length > 0 && input.alertImages.length > 0 ? "image-first" : "text-only",
       productImagesProvided: promptInput.analysis.productImagesProvided,
       productImagesUsed: input.productImages.length,
       alertImagesUsed: input.alertImages.length,

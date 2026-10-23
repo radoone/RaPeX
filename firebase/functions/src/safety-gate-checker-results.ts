@@ -355,6 +355,8 @@ export function buildSafetyCheckResult(
   alerts: NormalizedAlert[],
   analysis: SafetyCheckAnalysis,
 ): SafetyCheckResult {
+  // A visual comparison requires an image from both sides, not merely a source photograph.
+  analysis = { ...analysis, scoringMode: analysis.scoringMode === "image-first" && analysis.productImagesUsed > 0 && analysis.alertImagesUsed > 0 ? "image-first" : "text-only" };
   const warnings = matches
     .map((match): MatchResult | null => {
       const alert = findMatchedAlert(alerts, match.alertId);
@@ -371,7 +373,7 @@ export function buildSafetyCheckResult(
           ? "image-first"
           : "text-only";
       const textSimilarity = getTextSimilarity(match);
-      const imageSimilarity = getImageSimilarity(match);
+      const imageSimilarity = scoringMode === "image-first" ? getImageSimilarity(match) : undefined;
       const overallSimilarity = computeOverallSimilarity(
         imageSimilarity,
         textSimilarity,
