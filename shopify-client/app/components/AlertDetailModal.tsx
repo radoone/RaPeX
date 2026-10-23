@@ -5,6 +5,7 @@ import { AlertBadge } from "./AlertBadge";
 import { StatusBadge } from "./StatusBadge";
 import type { ResolutionType } from "./AlertTable";
 import { compareProductIdentifiers } from "../services/product-identifiers";
+import { openReviewModalWhenReady } from "../services/review-modal";
 
 interface AlertDetailModalProps {
   alert: any;
@@ -48,21 +49,9 @@ export function AlertDetailModal({
   }, []);
 
   useEffect(() => {
-    if (!isHydrated || !openOnMount || !alert) return;
-    const triggerOpen = () => {
-      const modal = document.getElementById(modalId) as HTMLElement & { showOverlay?: () => void; show?: () => void };
-      if (modal?.showOverlay) {
-        modal.showOverlay();
-      } else if (modal?.show) {
-        modal.show();
-      }
-      const triggerBtn = document.querySelector(`[commandFor="${modalId}"]`) as HTMLElement;
-      triggerBtn?.click();
-    };
-    triggerOpen();
-    const timer = setTimeout(triggerOpen, 150);
-    return () => clearTimeout(timer);
-  }, [alert, isHydrated, modalId, openOnMount]);
+    if (!isHydrated || !openOnMount || !alert?.id) return;
+    return openReviewModalWhenReady(modalId, document, customElements);
+  }, [alert?.id, isHydrated, modalId, openOnMount]);
 
   // Close lightbox
   const closeLightbox = useCallback(() => {

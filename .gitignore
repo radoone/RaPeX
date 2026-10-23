@@ -120,3 +120,4 @@ pglite-debug.log
 /outputs/
 /firebase/functions/.env.*
 /shopify-client/extensions/*/manifest.json
+/firebase/hosting/leads.html
