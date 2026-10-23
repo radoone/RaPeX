@@ -1,51 +1,82 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { authenticate } from "../shopify.server";
-import db from "../merchant-db.server";
 import { csvCell } from "../services/audit-csv";
-
-function parsePrimaryWarning(checkResult: string | null | undefined) {
-  try {
-    const parsed = checkResult ? JSON.parse(checkResult) : null;
-    const warning = Array.isArray(parsed?.warnings) ? parsed.warnings[0] : null;
-    return {
-      alertType: warning?.alertType || warning?.alertDetails?.fields?.alert_type || "",
-      riskLevel: warning?.alertDetails?.fields?.alert_level || warning?.alertDetails?.fields?.risk_level || warning?.riskLevel || "",
-      overallSimilarity: typeof warning?.overallSimilarity === "number" ? warning.overallSimilarity : "",
-      safetyGateAlert: warning?.alertDetails?.fields?.alert_number || warning?.alertId || "",
-      recommendation: parsed?.recommendation || "",
-    };
-  } catch {
-    return { alertType: "", riskLevel: "", overallSimilarity: "", safetyGateAlert: "", recommendation: "" };
-  }
-}
-
-export async function loader({ request }: LoaderFunctionArgs) {
+import {
+  reviewRecords,
+  reviewFilters,
+} from "../services/review-records.server";
+export async function loader({ request, url }: LoaderFunctionArgs) {
   const { session } = await authenticate.admin(request);
-  const batchSize = 500;
-  const alerts: any[] = [];
-  for (let skip = 0; ; skip += batchSize) {
-    const batch = await db.safetyAlert.findMany({
-      where: { shop: session.shop },
-      orderBy: { createdAt: "desc" },
-      skip,
-      take: batchSize,
-    });
-    alerts.push(...batch);
-    if (batch.length < batchSize) break;
-  }
-
-  const headers = ["Product", "Shopify product ID", "Status", "Resolution", "Risk level", "Alert type", "Overall match", "Safety Gate alert", "Detected at", "Resolved at", "Dismissed at", "Audit notes", "Recommendation"];
-  const rows = alerts.map((alert) => {
-    const warning = parsePrimaryWarning(alert.checkResult);
-    return [alert.productTitle, alert.productId, alert.status, alert.resolutionType, warning.riskLevel || alert.riskLevel, warning.alertType, warning.overallSimilarity, warning.safetyGateAlert, alert.createdAt?.toISOString?.() || alert.createdAt, alert.resolvedAt?.toISOString?.() || alert.resolvedAt, alert.dismissedAt?.toISOString?.() || alert.dismissedAt, alert.notes, warning.recommendation].map(csvCell).join(",");
+  const { records, generatedAt } = await reviewRecords(
+    session.shop,
+    reviewFilters(url),
+  );
+  const headers = [
+    "Shop",
+    "Generated at",
+    "Record type",
+    "Product",
+    "Shopify product ID",
+    "Status",
+    "Resolution",
+    "Safety Gate case",
+    "Official source",
+    "Risk level",
+    "Why matched",
+    "Detected at",
+    "Decision at",
+    "Recorded by",
+    "Review notes",
+  ];
+  const rows = records.flatMap((record) => {
+    const base = [
+      session.shop,
+      generatedAt,
+      "finding",
+      record.productTitle,
+      record.productId,
+      record.status,
+      record.resolutionType,
+      record.caseNumber,
+      record.url,
+      record.riskLevel,
+      record.reason,
+      record.createdAt,
+    ];
+    return [
+      [
+        ...base,
+        record.resolvedAt || record.dismissedAt,
+        record.decisions[0]?.actorId,
+        record.notes,
+      ],
+      ...record.decisions.map((event: any) => [
+        session.shop,
+        generatedAt,
+        "decision",
+        record.productTitle,
+        record.productId,
+        event.reviewState,
+        event.resolutionType,
+        record.caseNumber,
+        record.url,
+        record.riskLevel,
+        record.reason,
+        record.createdAt,
+        event.createdAt,
+        event.actorId,
+        event.notes,
+      ]),
+    ];
   });
-  const date = new Date().toISOString().slice(0, 10);
-  const csvContent = "\uFEFF" + [headers.map(csvCell).join(","), ...rows].join("\r\n");
-  return new Response(csvContent, {
+  const csv =
+    "\uFEFF" +
+    [headers, ...rows].map((row) => row.map(csvCell).join(",")).join("\r\n");
+  return new Response(csv, {
     headers: {
       "Content-Type": "text/csv; charset=utf-8",
-      "Content-Length": String(Buffer.byteLength(csvContent)),
-      "Content-Disposition": `attachment; filename="safety-gate-audit-report-${date}.csv"`,
+      "Content-Length": String(Buffer.byteLength(csv)),
+      "Content-Disposition": `attachment; filename="zerorecall-checks-decisions-${generatedAt.slice(0, 10)}.csv"`,
       "Cache-Control": "no-store",
     },
   });

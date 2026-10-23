@@ -4,6 +4,10 @@ import { useTranslation } from "react-i18next";
 import { AlertBadge } from "./AlertBadge";
 import { StatusBadge } from "./StatusBadge";
 import type { ResolutionType } from "./AlertTable";
+import {
+  officialSource,
+  isWaitingForSupplier,
+} from "../services/review-evidence";
 import { compareProductIdentifiers } from "../services/product-identifiers";
 import { openReviewModalWhenReady } from "../services/review-modal";
 
@@ -17,8 +21,16 @@ interface AlertDetailModalProps {
     createdAt: Date | string;
   }>;
   modalId: string;
-  onDismiss?: (alertId: string, resolutionType?: ResolutionType, notes?: string) => void;
-  onResolve?: (alertId: string, resolutionType?: ResolutionType, notes?: string) => void;
+  onDismiss?: (
+    alertId: string,
+    resolutionType?: ResolutionType,
+    notes?: string,
+  ) => void;
+  onResolve?: (
+    alertId: string,
+    resolutionType?: ResolutionType,
+    notes?: string,
+  ) => void;
   onReactivate?: (alertId: string) => void;
   isLoading?: boolean;
   openOnMount?: boolean;
@@ -38,7 +50,9 @@ export function AlertDetailModal({
   const [isHydrated, setIsHydrated] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [auditNote, setAuditNote] = useState("");
-  const [selectedOutcome, setSelectedOutcome] = useState<ResolutionType | "">("");
+  const [selectedOutcome, setSelectedOutcome] = useState<ResolutionType | "">(
+    "",
+  );
   const lightboxDialogRef = useRef<HTMLDialogElement>(null);
   const reactivateBtnRef = useRef<HTMLElement>(null);
 
@@ -95,35 +109,57 @@ export function AlertDetailModal({
     if (!btn || !alert) return;
 
     const handleClick = () => onReactivate?.(alert.id);
-    btn.addEventListener('click', handleClick);
-    return () => btn.removeEventListener('click', handleClick);
+    btn.addEventListener("click", handleClick);
+    return () => btn.removeEventListener("click", handleClick);
   }, [alert, onReactivate]);
 
   if (!alert || !isHydrated) return null;
 
-  const warnings: any[] = Array.isArray(parsed?.warnings) ? parsed.warnings : [];
+  const warnings: any[] = Array.isArray(parsed?.warnings)
+    ? parsed.warnings
+    : [];
   const primaryWarning = warnings[0];
   const fields = primaryWarning?.alertDetails?.fields || {};
   const pictures = primaryWarning ? getWarningImages(primaryWarning) : [];
   const firstPicture = pictures[0];
-  const safetyImage = typeof firstPicture === "string" ? firstPicture : firstPicture?.url || firstPicture?.src;
+  const safetyImage =
+    typeof firstPicture === "string"
+      ? firstPicture
+      : firstPicture?.url || firstPicture?.src;
   const safetyBrand = fields.brand || fields.product_brand;
-  const safetyTitle = fields.name || fields.product || fields.product_name || fields.product_description || safetyBrand || t("analysis.reviewLayout.possibleMatch");
-  const safetyModel = fields.type_numberOfModel || fields.product_model_type || fields.product_model || fields.model;
-  const safetyCategory = fields.category || fields.product_category;
-  const rawCaseNumber = fields.caseNumber || fields.alert_number;
-  const isOfficialCaseNumber = Boolean(rawCaseNumber && (!rawCaseNumber.includes("-") || !rawCaseNumber.match(/^[0-9a-f]{8}-[0-9a-f]{4}/i)));
-  const caseNumber = isOfficialCaseNumber ? rawCaseNumber : null;
-  const safetyUrl = fields.url || fields.rapex_url || fields.reference;
+  const safetyTitle =
+    fields.name ||
+    fields.product ||
+    fields.product_name ||
+    fields.product_description ||
+    safetyBrand ||
+    t("analysis.reviewLayout.possibleMatch");
+  const safetyModel =
+    fields.type_numberOfModel ||
+    fields.product_model_type ||
+    fields.product_model ||
+    fields.model;
+  const { caseNumber, url: safetyUrl } = officialSource(fields);
   const isSafe = parsed?.isSafe === true;
-  const overallSimilarity = typeof primaryWarning?.overallSimilarity === "number" ? primaryWarning.overallSimilarity : null;
-  const imageSimilarity = typeof primaryWarning?.imageSimilarity === "number" ? primaryWarning.imageSimilarity : null;
+  const overallSimilarity =
+    typeof primaryWarning?.overallSimilarity === "number"
+      ? primaryWarning.overallSimilarity
+      : null;
+  const imageSimilarity =
+    typeof primaryWarning?.imageSimilarity === "number"
+      ? primaryWarning.imageSimilarity
+      : null;
   const isActive = alert.status === "active";
-  const isDismissOutcome = selectedOutcome === "false_positive" || selectedOutcome === "not_my_product";
+  const isDismissOutcome =
+    selectedOutcome === "false_positive" ||
+    selectedOutcome === "not_my_product";
   const needsOtherNote = selectedOutcome === "other";
-  const canRecordDecision = Boolean(selectedOutcome && (!needsOtherNote || auditNote.trim()));
+  const canRecordDecision = Boolean(
+    selectedOutcome && (!needsOtherNote || auditNote.trim()),
+  );
   const outcomeLabels: Record<ResolutionType, string> = {
     verified_safe: t("resolveActions.verifiedSafe"),
+    match_not_confirmed: t("workspace.matchNotConfirmed"),
     removed_from_sale: t("resolveActions.removedFromSale"),
     modified_product: t("resolveActions.modifiedProduct"),
     contacted_supplier: t("resolveActions.contactedSupplier"),
@@ -131,16 +167,19 @@ export function AlertDetailModal({
     not_my_product: t("resolveActions.notMyProduct"),
     other: t("resolveActions.other"),
   };
-  const recordedOutcome = alert.resolutionType ? outcomeLabels[alert.resolutionType as ResolutionType] : null;
+  const recordedOutcome = alert.resolutionType
+    ? outcomeLabels[alert.resolutionType as ResolutionType]
+    : null;
   const recordDecision = () => {
     if (!canRecordDecision || !selectedOutcome || isLoading) return;
     const action = isDismissOutcome ? onDismiss : onResolve;
     action?.(alert.id, selectedOutcome, auditNote.trim() || undefined);
   };
 
-  const merchantBrand = alert.productVendor || alert.brand || null;
+  const merchantBrand = alert.brand || null;
   const merchantModel = alert.model || null;
-  const merchantBarcode = alert.barcode || alert.productBarcode || alert.gtin || alert.ean || null;
+  const merchantBarcode =
+    alert.barcode || alert.productBarcode || alert.gtin || alert.ean || null;
   const merchantBatch = alert.batchNumber || alert.batch || null;
 
   const safetyBarcode = fields.barcode || fields.product_barcode || null;
@@ -175,11 +214,18 @@ export function AlertDetailModal({
 
   function getWarningImages(warning: any): any[] {
     const warningFields = warning.alertDetails?.fields || {};
-    const images = Array.isArray(warningFields.pictures) ? [...warningFields.pictures] : [];
+    const images = Array.isArray(warningFields.pictures)
+      ? [...warningFields.pictures]
+      : [];
     if (images.length === 0) {
       if (warningFields.product_image) images.push(warningFields.product_image);
       if (typeof warningFields.product_other_images === "string") {
-        images.push(...warningFields.product_other_images.split(",").map((item: string) => item.trim()).filter(Boolean));
+        images.push(
+          ...warningFields.product_other_images
+            .split(",")
+            .map((item: string) => item.trim())
+            .filter(Boolean),
+        );
       }
     }
     return images;
@@ -190,67 +236,169 @@ export function AlertDetailModal({
       <s-modal
         id={modalId}
         heading={t("analysis.modalHeading")}
-        accessibilityLabel={t("analysis.modalAccessibilityLabel", { title: alert.productTitle })}
+        accessibilityLabel={t("analysis.modalAccessibilityLabel", {
+          title: alert.productTitle,
+        })}
         size="large"
       >
         <div className="review-modal">
           <div className="review-modal__summary">
             <div>
-              <div className="review-modal__eyebrow">{t("analysis.reviewLayout.possibleMatch")}</div>
+              <div className="review-modal__eyebrow">
+                {t("analysis.reviewLayout.possibleMatch")}
+              </div>
               <h2 className="review-modal__title">{alert.productTitle}</h2>
               <p className="review-modal__intro">
                 {isActive
-                  ? isSafe ? t("analysis.sections.whatHappenedSafe") : t("analysis.sections.whatHappenedRisk")
+                  ? isSafe
+                    ? t("analysis.sections.whatHappenedSafe")
+                    : t("analysis.sections.whatHappenedRisk")
                   : t("analysis.sections.whatHappenedReviewed")}
               </p>
             </div>
             <div className="review-modal__badges">
-              <StatusBadge status={alert.status} />
-              {alert.riskLevel && <AlertBadge alertLevel={alert.riskLevel} showSeverity />}
-              {overallSimilarity !== null && <s-badge tone="info">{t("analysis.overallMatchShort", { count: overallSimilarity })}</s-badge>}
+              {isWaitingForSupplier(alert) ? (
+                <s-badge tone="warning">{t("workspace.waiting")}</s-badge>
+              ) : (
+                <StatusBadge status={alert.status} />
+              )}
+              {alert.riskLevel && (
+                <AlertBadge alertLevel={alert.riskLevel} showSeverity />
+              )}
             </div>
           </div>
 
-          <section className="review-modal__section" aria-label={t("analysis.reviewLayout.compareHeading")}>
+          <section
+            className="review-modal__section"
+            aria-label={t("analysis.reviewLayout.compareHeading")}
+          >
             <div className="review-modal__section-heading">
               <h3>{t("analysis.reviewLayout.compareHeading")}</h3>
               <span>{t("analysis.reviewLayout.compareHint")}</span>
             </div>
             <div className="review-modal__comparison">
               <div className="review-modal__product-card">
-                <span className="review-modal__card-label">{t("analysis.yourProduct")}</span>
-                <button type="button" className="review-modal__image-button" onClick={() => alert.productImage && setSelectedImage(alert.productImage)} disabled={!alert.productImage} aria-label={t("analysis.openProductImage", { title: alert.productTitle })}>
-                  {alert.productImage ? <img src={alert.productImage} alt={alert.productTitle} /> : <span>{t("analysis.reviewLayout.noImage")}</span>}
+                <span className="review-modal__card-label">
+                  {t("analysis.yourProduct")}
+                </span>
+                <button
+                  type="button"
+                  className="review-modal__image-button"
+                  onClick={() =>
+                    alert.productImage && setSelectedImage(alert.productImage)
+                  }
+                  disabled={!alert.productImage}
+                  aria-label={t("analysis.openProductImage", {
+                    title: alert.productTitle,
+                  })}
+                >
+                  {alert.productImage ? (
+                    <img src={alert.productImage} alt={alert.productTitle} />
+                  ) : (
+                    <span>{t("analysis.reviewLayout.noImage")}</span>
+                  )}
                 </button>
                 <div className="review-modal__card-details">
                   <strong>{alert.productTitle}</strong>
-                  {(alert.productVendor || alert.productType) && <span>{[alert.productVendor, alert.productType].filter(Boolean).join(" · ")}</span>}
-                  <s-link href={`https://${alert.shop}/admin/products/${alert.productId}`} target="_blank">{t("analysis.editInShopify")}</s-link>
+                  {(alert.productVendor || alert.productType) && (
+                    <span>
+                      {[alert.productVendor, alert.productType]
+                        .filter(Boolean)
+                        .join(" · ")}
+                    </span>
+                  )}
+                  <s-link
+                    href={`https://${alert.shop}/admin/products/${alert.productId}`}
+                    target="_blank"
+                  >
+                    {t("analysis.editInShopify")}
+                  </s-link>
                 </div>
               </div>
               <div className="review-modal__product-card review-modal__product-card--safety">
                 <span className="review-modal__card-label">Safety Gate</span>
-                <button type="button" className="review-modal__image-button" onClick={() => safetyImage && setSelectedImage(safetyImage)} disabled={!safetyImage} aria-label={t("analysis.enlargedSafetyAlert")}>
-                  {safetyImage ? <img src={safetyImage} alt={safetyTitle} /> : <span>{t("analysis.reviewLayout.noImage")}</span>}
+                <button
+                  type="button"
+                  className="review-modal__image-button"
+                  onClick={() => safetyImage && setSelectedImage(safetyImage)}
+                  disabled={!safetyImage}
+                  aria-label={t("analysis.enlargedSafetyAlert")}
+                >
+                  {safetyImage ? (
+                    <img src={safetyImage} alt={safetyTitle} />
+                  ) : (
+                    <span>{t("analysis.reviewLayout.noImage")}</span>
+                  )}
                 </button>
                 <div className="review-modal__card-details">
                   <strong>{safetyTitle}</strong>
-                  {(safetyBrand || safetyModel) && <span>{[safetyBrand, safetyModel].filter(Boolean).join(" · ")}</span>}
-                  {caseNumber && <span>{t("analysis.alertNumber", { number: caseNumber })}</span>}
-                  {safetyUrl && <s-link href={safetyUrl} target="_blank">{t("analysis.viewOnSafetyGate")}</s-link>}
+                  {(safetyBrand || safetyModel) && (
+                    <span>
+                      {[safetyBrand, safetyModel].filter(Boolean).join(" · ")}
+                    </span>
+                  )}
+                  {caseNumber && (
+                    <span>
+                      {t("analysis.alertNumber", { number: caseNumber })}
+                    </span>
+                  )}
+                  {safetyUrl ? (
+                    <s-link href={safetyUrl} target="_blank">
+                      {t("analysis.viewOnSafetyGate")}
+                    </s-link>
+                  ) : (
+                    <span className="admin-helper">
+                      {t("workspace.sourceMissing")}
+                    </span>
+                  )}
+                  {!caseNumber && (
+                    <span className="admin-helper">
+                      {t("workspace.referenceMissing")}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
 
+            <section
+              className="review-evidence-summary"
+              aria-label={t("workspace.whyMatch")}
+            >
+              <h3>{t("workspace.whyMatch")}</h3>
+              <p>
+                {primaryWarning?.reason?.split(/(?<=[.!?])\s+/)[0] ||
+                  t("analysis.reviewLayout.possibleMatch")}
+              </p>
+              {identifierRows.some((row) => row.status === "unspecified") && (
+                <p className="admin-note">
+                  {t("workspace.missingIdentifiers")}
+                </p>
+              )}
+              {(fields.danger ||
+                fields.alert_description ||
+                primaryWarning?.riskLegalProvision) && (
+                <p>
+                  <strong>{t("workspace.sourceRisk")}: </strong>
+                  {fields.danger ||
+                    fields.alert_description ||
+                    primaryWarning.riskLegalProvision}
+                </p>
+              )}
+            </section>
             <div style={{ marginTop: "16px" }}>
-              <div className="review-modal__section-heading" style={{ marginBottom: "8px" }}>
+              <div
+                className="review-modal__section-heading"
+                style={{ marginBottom: "8px" }}
+              >
                 <h4>{t("analysis.reviewLayout.identifiersHeading")}</h4>
               </div>
               <table className="review-modal__identifiers-table">
                 <thead>
                   <tr>
                     <th>{t("analysis.reviewLayout.identifiers.field")}</th>
-                    <th>{t("analysis.reviewLayout.identifiers.yourProduct")}</th>
+                    <th>
+                      {t("analysis.reviewLayout.identifiers.yourProduct")}
+                    </th>
                     <th>{t("analysis.reviewLayout.identifiers.safetyGate")}</th>
                     <th>{t("analysis.reviewLayout.identifiers.result")}</th>
                   </tr>
@@ -258,28 +406,44 @@ export function AlertDetailModal({
                 <tbody>
                   {identifierRows.map((row, idx) => (
                     <tr key={idx}>
-                      <td><strong>{row.label}</strong></td>
+                      <td>
+                        <strong>{row.label}</strong>
+                      </td>
                       <td>
                         {row.merchantVal ? (
                           <span>{row.merchantVal}</span>
                         ) : (
-                          <span className="review-modal__val-empty">{t("analysis.reviewLayout.identifiers.notSpecified")}</span>
+                          <span className="review-modal__val-empty">
+                            {t(
+                              "analysis.reviewLayout.identifiers.notSpecified",
+                            )}
+                          </span>
                         )}
                       </td>
                       <td>
                         {row.safetyVal ? (
                           <span>{row.safetyVal}</span>
                         ) : (
-                          <span className="review-modal__val-empty">{t("analysis.reviewLayout.identifiers.notSpecified")}</span>
+                          <span className="review-modal__val-empty">
+                            {t(
+                              "analysis.reviewLayout.identifiers.notSpecified",
+                            )}
+                          </span>
                         )}
                       </td>
                       <td>
                         {row.status === "match" ? (
-                          <s-badge tone="success">{t("analysis.reviewLayout.identifiers.match")}</s-badge>
+                          <s-badge tone="success">
+                            {t("analysis.reviewLayout.identifiers.match")}
+                          </s-badge>
                         ) : row.status === "mismatch" ? (
-                          <s-badge tone="critical">{t("analysis.reviewLayout.identifiers.mismatch")}</s-badge>
+                          <s-badge tone="critical">
+                            {t("analysis.reviewLayout.identifiers.mismatch")}
+                          </s-badge>
                         ) : (
-                          <s-badge tone="subdued">{t("analysis.reviewLayout.identifiers.notSpecified")}</s-badge>
+                          <s-badge tone="subdued">
+                            {t("workspace.cannotCompare")}
+                          </s-badge>
                         )}
                       </td>
                     </tr>
@@ -290,135 +454,250 @@ export function AlertDetailModal({
           </section>
 
           <div className="review-modal__final-row">
-          <section className="review-modal__section" aria-label={t("analysis.reviewLayout.reviewPointsHeading")}>
-            <div className="review-modal__section-heading"><h3>{t("analysis.reviewLayout.reviewPointsHeading")}</h3></div>
-            <div className="review-modal__points">
-              <div><strong>{t("analysis.imageMatch")}</strong><span>{imageSimilarity !== null ? t("analysis.imageMatchShort", { count: imageSimilarity }) : t("common.unknown")}</span></div>
-              <div><strong>{t("analysis.fields.brand")}</strong><span>{safetyBrand || t("common.unknown")}</span></div>
-              <div><strong>{t("analysis.fields.model")}</strong><span>{safetyModel || t("common.unknown")}</span></div>
-              <div><strong>{t("analysis.fields.category")}</strong><span>{safetyCategory || t("common.unknown")}</span></div>
-            </div>
-            {primaryWarning?.reason && <p className="review-modal__reason">{primaryWarning.reason}</p>}
-            <p className="review-modal__score-help">{t("analysis.scoreHelper")}</p>
-          </section>
-
-          {isActive ? (
-            <section className="review-modal__decision" aria-label={t("analysis.reviewLayout.decisionHeading")}>
-              <div className="review-modal__decision-heading">
-                <h3>{t("analysis.reviewLayout.decisionHeading")}</h3>
-                <s-badge tone={canRecordDecision ? "success" : "warning"}>
-                  {canRecordDecision ? t("analysis.reviewLayout.readyToRecord") : t("analysis.reviewLayout.actionNeeded")}
-                </s-badge>
+            <details className="advanced-settings-disclosure">
+              <summary>{t("workspace.scoreDetails")}</summary>
+              <p>{t("workspace.scoreHelp")}</p>
+              <div className="review-modal__points">
+                <div>
+                  <strong>
+                    {t("analysis.overallMatchShort", {
+                      count: overallSimilarity || 0,
+                    })}
+                  </strong>
+                </div>
+                <div>
+                  <strong>{t("analysis.imageMatch")}</strong>
+                  <span>
+                    {imageSimilarity !== null
+                      ? t("analysis.imageMatchShort", {
+                          count: imageSimilarity,
+                        })
+                      : t("common.unknown")}
+                  </span>
+                </div>
               </div>
-              <p className="review-modal__decision-prompt">{t("analysis.reviewLayout.decisionPrompt")}</p>
-              <s-select label={t("analysis.reviewLayout.outcomeLabel")} value={selectedOutcome} onChange={(event: any) => setSelectedOutcome(event.currentTarget.value || "")}>
-                <s-option value="">{t("analysis.reviewLayout.chooseOutcome")}</s-option>
-                <s-option value="removed_from_sale">{t("resolveActions.removedFromSale")}</s-option>
-                <s-option value="modified_product">{t("resolveActions.modifiedProduct")}</s-option>
-                <s-option value="contacted_supplier">{t("resolveActions.contactedSupplier")}</s-option>
-                <s-option value="verified_safe">{t("resolveActions.verifiedSafe")}</s-option>
-                <s-option value="false_positive">{t("resolveActions.falsePositive")}</s-option>
-                <s-option value="not_my_product">{t("resolveActions.notMyProduct")}</s-option>
-                <s-option value="other">{t("resolveActions.other")}</s-option>
-              </s-select>
-              <s-text-area label={t(needsOtherNote ? "analysis.reviewLayout.noteRequiredLabel" : "analysis.reviewLayout.noteLabel")} placeholder={t("analysis.audit.notePlaceholder")} value={auditNote} required={needsOtherNote || undefined} onInput={(event: any) => setAuditNote(event.currentTarget.value || "")} />
-              {needsOtherNote && !auditNote.trim() && <p className="review-modal__required-note" role="status">{t("analysis.reviewLayout.otherNoteRequired")}</p>}
-              <p className="review-modal__decision-note">{t("analysis.decisionContextDesc")}</p>
-            </section>
-          ) : (
-            <div className="review-modal__recorded">
-              <strong>{t("analysis.decisionRecorded")}</strong>
-              {recordedOutcome && <span>{recordedOutcome}</span>}
-              {alert.notes && <p>{alert.notes}</p>}
-            </div>
-          )}
-          {decisionHistory.length > 0 && (
-            <section className="review-modal__section" aria-label={t("analysis.decisionRecorded")}>
-              <div className="review-modal__section-heading"><h3>{t("analysis.decisionRecorded")}</h3></div>
-              <ol className="review-modal__history">
-                {decisionHistory.map((event, index) => {
-                  const stateKey = event.reviewState === "waiting_for_supplier"
-                    ? "resolveActions.contactPending"
-                    : event.reviewState === "dismissed"
-                      ? "status.dismissed"
-                      : event.reviewState === "resolved"
-                        ? "status.resolved"
-                        : "status.needsReview";
-                  const eventOutcome = event.resolutionType
-                    ? outcomeLabels[event.resolutionType as ResolutionType] || event.resolutionType
-                    : null;
-                  return (
-                    <li key={`${event.createdAt}-${index}`}>
-                      <s-stack gap="small-100">
-                        <s-stack direction="inline" gap="small-100" alignItems="center">
-                          <s-text fontWeight="semibold">{t(stateKey)}</s-text>
-                          {eventOutcome && <s-text>{eventOutcome}</s-text>}
-                          <s-text tone="subdued" size="small">{new Date(event.createdAt).toLocaleString()}</s-text>
+            </details>
+
+            {isActive ? (
+              <section
+                className="review-modal__decision"
+                aria-label={t("analysis.reviewLayout.decisionHeading")}
+              >
+                <div className="review-modal__decision-heading">
+                  <h3>{t("analysis.reviewLayout.decisionHeading")}</h3>
+                  <s-badge tone={canRecordDecision ? "success" : "warning"}>
+                    {canRecordDecision
+                      ? t("analysis.reviewLayout.readyToRecord")
+                      : t("analysis.reviewLayout.actionNeeded")}
+                  </s-badge>
+                </div>
+                <p className="review-modal__decision-prompt">
+                  {t("workspace.reviewPrompt")}
+                </p>
+                <s-select
+                  label={t("analysis.reviewLayout.outcomeLabel")}
+                  value={selectedOutcome}
+                  onChange={(event: any) =>
+                    setSelectedOutcome(event.currentTarget.value || "")
+                  }
+                >
+                  <s-option value="">
+                    {t("analysis.reviewLayout.chooseOutcome")}
+                  </s-option>
+                  <s-option value="removed_from_sale">
+                    {t("resolveActions.removedFromSale")}
+                  </s-option>
+                  <s-option value="modified_product">
+                    {t("resolveActions.modifiedProduct")}
+                  </s-option>
+                  <s-option value="contacted_supplier">
+                    {t("resolveActions.contactedSupplier")}
+                  </s-option>
+                  <s-option value="match_not_confirmed">
+                    {t("workspace.matchNotConfirmed")}
+                  </s-option>
+                  <s-option value="false_positive">
+                    {t("resolveActions.falsePositive")}
+                  </s-option>
+                  <s-option value="not_my_product">
+                    {t("resolveActions.notMyProduct")}
+                  </s-option>
+                  <s-option value="other">{t("resolveActions.other")}</s-option>
+                </s-select>
+                <s-text-area
+                  label={t(
+                    needsOtherNote
+                      ? "analysis.reviewLayout.noteRequiredLabel"
+                      : "analysis.reviewLayout.noteLabel",
+                  )}
+                  placeholder={t("analysis.audit.notePlaceholder")}
+                  value={auditNote}
+                  required={needsOtherNote || undefined}
+                  onInput={(event: any) =>
+                    setAuditNote(event.currentTarget.value || "")
+                  }
+                />
+                {needsOtherNote && !auditNote.trim() && (
+                  <p className="review-modal__required-note" role="status">
+                    {t("analysis.reviewLayout.otherNoteRequired")}
+                  </p>
+                )}
+                <p className="review-modal__decision-note">
+                  {t("workspace.resultHelp")}
+                </p>
+              </section>
+            ) : (
+              <div className="review-modal__recorded">
+                <strong>
+                  {t(
+                    recordedOutcome || decisionHistory.length
+                      ? "analysis.decisionRecorded"
+                      : "workspace.noMatchAtCheck",
+                  )}
+                </strong>
+                {recordedOutcome && <span>{recordedOutcome}</span>}
+                {alert.notes && <p>{alert.notes}</p>}
+              </div>
+            )}
+            {decisionHistory.length > 0 && (
+              <section
+                className="review-modal__section"
+                aria-label={t("analysis.decisionRecorded")}
+              >
+                <div className="review-modal__section-heading">
+                  <h3>{t("analysis.decisionRecorded")}</h3>
+                </div>
+                <ol className="review-modal__history">
+                  {decisionHistory.map((event, index) => {
+                    const stateKey =
+                      event.reviewState === "waiting_for_supplier"
+                        ? "resolveActions.contactPending"
+                        : event.reviewState === "dismissed"
+                          ? "status.dismissed"
+                          : event.reviewState === "resolved"
+                            ? "status.resolved"
+                            : "status.needsReview";
+                    const eventOutcome = event.resolutionType
+                      ? outcomeLabels[event.resolutionType as ResolutionType] ||
+                        event.resolutionType
+                      : null;
+                    return (
+                      <li key={`${event.createdAt}-${index}`}>
+                        <s-stack gap="small-100">
+                          <s-stack
+                            direction="inline"
+                            gap="small-100"
+                            alignItems="center"
+                          >
+                            <s-text fontWeight="semibold">{t(stateKey)}</s-text>
+                            {eventOutcome && <s-text>{eventOutcome}</s-text>}
+                            <s-text tone="subdued" size="small">
+                              {new Date(event.createdAt).toLocaleString()}
+                            </s-text>
+                          </s-stack>
+                          {event.notes && <s-text>{event.notes}</s-text>}
                         </s-stack>
-                        {event.notes && <s-text>{event.notes}</s-text>}
-                      </s-stack>
-                    </li>
-                  );
-                })}
-              </ol>
-            </section>
-          )}
+                      </li>
+                    );
+                  })}
+                </ol>
+              </section>
+            )}
           </div>
           {warnings.length > 0 && (
             <details className="review-modal__evidence">
-              <summary>{t("analysis.reviewLayout.fullEvidence", { count: warnings.length })}</summary>
+              <summary>
+                {t("analysis.reviewLayout.fullEvidence", {
+                  count: warnings.length,
+                })}
+              </summary>
               <div className="review-modal__evidence-content">
                 {warnings.map((warning: any, index: number) => (
-                  <WarningCard key={`warning-${index}`} warning={warning} index={index} onImageClick={setSelectedImage} getWarningImages={getWarningImages} merchantProduct={alert} />
+                  <WarningCard
+                    key={`warning-${index}`}
+                    warning={warning}
+                    index={index}
+                    onImageClick={setSelectedImage}
+                    getWarningImages={getWarningImages}
+                    merchantProduct={alert}
+                  />
                 ))}
               </div>
             </details>
           )}
-
         </div>
         {isActive && (
-          <s-button slot="primary-action" variant="primary" disabled={!canRecordDecision || isLoading} loading={isLoading || undefined} onClick={recordDecision} commandFor={canRecordDecision ? modalId : undefined} command={canRecordDecision ? "--hide" : undefined}>
+          <s-button
+            slot="primary-action"
+            variant="primary"
+            disabled={!canRecordDecision || isLoading}
+            loading={isLoading || undefined}
+            onClick={recordDecision}
+            commandFor={canRecordDecision ? modalId : undefined}
+            command={canRecordDecision ? "--hide" : undefined}
+          >
             {t("actions.recordDecision")}
           </s-button>
         )}
         {(alert.status === "dismissed" || alert.status === "resolved") && (
-          <s-button ref={reactivateBtnRef} slot="secondary-actions" variant="secondary" icon="undo" commandFor={modalId} command="--hide" loading={isLoading || undefined}>{t("actions.reactivate")}</s-button>
+          <s-button
+            ref={reactivateBtnRef}
+            slot="secondary-actions"
+            variant="secondary"
+            icon="undo"
+            commandFor={modalId}
+            command="--hide"
+            loading={isLoading || undefined}
+          >
+            {t("actions.reactivate")}
+          </s-button>
         )}
-        <s-button slot="secondary-actions" variant="secondary" commandFor={modalId} command="--hide">{t("common.cancel")}</s-button>
+        <s-button
+          slot="secondary-actions"
+          variant="secondary"
+          commandFor={modalId}
+          command="--hide"
+        >
+          {t("common.cancel")}
+        </s-button>
       </s-modal>
 
       {/* Image Lightbox (top-layer dialog so it always appears above s-modal) */}
-      {typeof document !== "undefined" && createPortal(
-        <dialog
-          ref={lightboxDialogRef}
-          className="image-lightbox-dialog"
-          onClose={closeLightbox}
-          onClick={(event) => {
-            if (event.target === event.currentTarget) {
-              closeLightbox();
-            }
-          }}
-        >
-          {selectedImage && (
-            <div className="image-lightbox-content" onClick={(e) => e.stopPropagation()}>
-              <button
-                className="image-lightbox-close"
-                onClick={closeLightbox}
-                aria-label={t("common.close")}
-                type="button"
+      {typeof document !== "undefined" &&
+        createPortal(
+          <dialog
+            ref={lightboxDialogRef}
+            className="image-lightbox-dialog"
+            onClose={closeLightbox}
+            onClick={(event) => {
+              if (event.target === event.currentTarget) {
+                closeLightbox();
+              }
+            }}
+          >
+            {selectedImage && (
+              <div
+                className="image-lightbox-content"
+                onClick={(e) => e.stopPropagation()}
               >
-                {t("common.close")}
-              </button>
-              <img
-                src={selectedImage}
-                alt={t("analysis.enlargedSafetyAlert")}
-                className="image-lightbox-image"
-              />
-            </div>
-          )}
-        </dialog>,
-        document.body
-      )}
+                <button
+                  className="image-lightbox-close"
+                  onClick={closeLightbox}
+                  aria-label={t("common.close")}
+                  type="button"
+                >
+                  {t("common.close")}
+                </button>
+                <img
+                  src={selectedImage}
+                  alt={t("analysis.enlargedSafetyAlert")}
+                  className="image-lightbox-image"
+                />
+              </div>
+            )}
+          </dialog>,
+          document.body,
+        )}
     </>
   );
 }
@@ -447,33 +726,55 @@ function WarningCard({
     ? new Date(alertDate).toLocaleDateString("en-GB")
     : "—";
   const warningOverallSimilarity =
-    typeof warning.overallSimilarity === "number" ? warning.overallSimilarity : 0;
+    typeof warning.overallSimilarity === "number"
+      ? warning.overallSimilarity
+      : 0;
   const pictures = getWarningImages(warning);
 
   // Get correct field names from Safety Gate database (official ec.europa.eu fields with fallbacks)
-  const caseNumber = fields.caseNumber || fields.alert_number;
+  const { caseNumber, url: safetyGateUrl } = officialSource(fields);
   const brand = fields.brand || fields.product_brand;
   const category = fields.category || fields.product_category;
   const productName = fields.name || fields.product || fields.product_name;
-  const productModel = fields.type_numberOfModel || fields.product_model_type || fields.product_model || fields.model;
-  const notifyingCountry = fields.notifyingCountry || fields.alert_country || fields.notifying_country;
-  const originCountry = fields.countryOfOrigin || fields.product_country || fields.country_of_origin;
+  const productModel =
+    fields.type_numberOfModel ||
+    fields.product_model_type ||
+    fields.product_model ||
+    fields.model;
+  const notifyingCountry =
+    fields.notifyingCountry || fields.alert_country || fields.notifying_country;
+  const originCountry =
+    fields.countryOfOrigin ||
+    fields.product_country ||
+    fields.country_of_origin;
   const alertLevel = fields.level || fields.alert_level || fields.risk_level;
   const alertType = fields.riskType || fields.alert_type;
-  const safetyGateUrl = fields.url || fields.rapex_url || fields.reference;
   const dangerDescription = fields.danger || fields.alert_description;
   const productDescription = fields.description || fields.product_description;
-  const measuresDescription = fields.measures || fields.technical_defect || fields.measures_country;
+  const measuresDescription =
+    fields.measures || fields.technical_defect || fields.measures_country;
 
   // Determine card border color based on similarity
-  const borderColor = warningOverallSimilarity >= 80 ? "border-critical" : warningOverallSimilarity >= 60 ? "border-warning" : "border";
+  const borderColor =
+    warningOverallSimilarity >= 80
+      ? "border-critical"
+      : warningOverallSimilarity >= 60
+        ? "border-warning"
+        : "border";
   const isImageFirst = warning.scoreBreakdown?.scoringMode === "image-first";
 
   // Check matching fields with merchant product details for highlighting
-  const merchantTitle = String(merchantProduct?.productTitle || "").toLowerCase();
-  const isBrandMatched = brand && merchantTitle.includes(brand.trim().toLowerCase());
-  const isModelMatched = productModel && merchantTitle.includes(productModel.trim().toLowerCase());
-  const isCategoryMatched = category && merchantProduct?.productType && merchantTitle.includes(category.trim().toLowerCase());
+  const merchantTitle = String(
+    merchantProduct?.productTitle || "",
+  ).toLowerCase();
+  const isBrandMatched =
+    brand && merchantTitle.includes(brand.trim().toLowerCase());
+  const isModelMatched =
+    productModel && merchantTitle.includes(productModel.trim().toLowerCase());
+  const isCategoryMatched =
+    category &&
+    merchantProduct?.productType &&
+    merchantTitle.includes(category.trim().toLowerCase());
 
   return (
     <s-box
@@ -484,25 +785,28 @@ function WarningCard({
       background="bg-surface"
     >
       <s-stack gap="base">
-        
         {/* HEADER: Risk badges + source link */}
-        <s-stack direction="inline" align="space-between" blockAlign="center" wrap>
+        <s-stack
+          direction="inline"
+          align="space-between"
+          blockAlign="center"
+          wrap
+        >
           <s-stack direction="inline" gap="small" wrap blockAlign="center">
             {alertLevel && (
-              <AlertBadge
-                alertLevel={alertLevel}
-                showSeverity={true}
-              />
+              <AlertBadge alertLevel={alertLevel} showSeverity={true} />
             )}
             {alertType && (
               <AlertBadge
                 alertLevel={alertLevel}
                 alertType={alertType}
-                riskDescription={warning.riskLegalProvision || dangerDescription}
+                riskDescription={
+                  warning.riskLegalProvision || dangerDescription
+                }
               />
             )}
           </s-stack>
-          
+
           {safetyGateUrl && (
             <s-link href={safetyGateUrl} target="_blank">
               {t("analysis.viewOnSafetyGate")}
@@ -513,7 +817,8 @@ function WarningCard({
         {/* Alert number */}
         {caseNumber && (
           <s-text tone="subdued" size="small">
-            {t("analysis.alertNumber", { number: caseNumber })} • {formattedDate}
+            {t("analysis.alertNumber", { number: caseNumber })} •{" "}
+            {formattedDate}
           </s-text>
         )}
 
@@ -523,7 +828,10 @@ function WarningCard({
           {pictures.length > 0 && (
             <div className="alert-reference-images">
               {(() => {
-                const primarySrc = typeof pictures[0] === "string" ? pictures[0] : pictures[0]?.url || pictures[0]?.src;
+                const primarySrc =
+                  typeof pictures[0] === "string"
+                    ? pictures[0]
+                    : pictures[0]?.url || pictures[0]?.src;
                 if (!primarySrc) return null;
                 return (
                   <div
@@ -535,14 +843,19 @@ function WarningCard({
                       if (e.key === "Enter") onImageClick(primarySrc);
                     }}
                   >
-                    <img src={primarySrc} alt="Safety Gate Reference 1" className="alert-reference-image-primary" />
+                    <img
+                      src={primarySrc}
+                      alt="Safety Gate Reference 1"
+                      className="alert-reference-image-primary"
+                    />
                   </div>
                 );
               })()}
               {pictures.length > 1 && (
                 <div className="alert-reference-thumbnails">
                   {pictures.slice(1, 5).map((pic: any, idx: number) => {
-                    const src = typeof pic === "string" ? pic : pic?.url || pic?.src;
+                    const src =
+                      typeof pic === "string" ? pic : pic?.url || pic?.src;
                     if (!src) return null;
                     return (
                       <div
@@ -555,7 +868,11 @@ function WarningCard({
                           if (e.key === "Enter") onImageClick(src);
                         }}
                       >
-                        <img src={src} alt={`Thumbnail ${idx + 2}`} className="alert-reference-image-thumb" />
+                        <img
+                          src={src}
+                          alt={`Thumbnail ${idx + 2}`}
+                          className="alert-reference-image-thumb"
+                        />
                       </div>
                     );
                   })}
@@ -565,19 +882,49 @@ function WarningCard({
           )}
 
           <div className="match-detail-list">
-            {productName && <DetailItem label={t("analysis.fields.productName")} value={productName} />}
+            {productName && (
+              <DetailItem
+                label={t("analysis.fields.productName")}
+                value={productName}
+              />
+            )}
             {brand && (
-              <DetailItem label={t("analysis.fields.brand")} value={brand} highlight={Boolean(isBrandMatched)} />
+              <DetailItem
+                label={t("analysis.fields.brand")}
+                value={brand}
+                highlight={Boolean(isBrandMatched)}
+              />
             )}
             {productModel && (
-              <DetailItem label={t("analysis.fields.model")} value={productModel} highlight={Boolean(isModelMatched)} />
+              <DetailItem
+                label={t("analysis.fields.model")}
+                value={productModel}
+                highlight={Boolean(isModelMatched)}
+              />
             )}
             {category && (
-              <DetailItem label={t("analysis.fields.category")} value={category} highlight={Boolean(isCategoryMatched)} />
+              <DetailItem
+                label={t("analysis.fields.category")}
+                value={category}
+                highlight={Boolean(isCategoryMatched)}
+              />
             )}
-            {notifyingCountry && <DetailItem label={t("analysis.fields.notifyingCountry")} value={notifyingCountry} />}
-            {originCountry && <DetailItem label={t("analysis.fields.origin")} value={originCountry} />}
-            <DetailItem label={t("analysis.fields.alertDate")} value={formattedDate} />
+            {notifyingCountry && (
+              <DetailItem
+                label={t("analysis.fields.notifyingCountry")}
+                value={notifyingCountry}
+              />
+            )}
+            {originCountry && (
+              <DetailItem
+                label={t("analysis.fields.origin")}
+                value={originCountry}
+              />
+            )}
+            <DetailItem
+              label={t("analysis.fields.alertDate")}
+              value={formattedDate}
+            />
             {alertLevel && (
               <div className="match-detail-list__item">
                 <span>{t("analysis.riskSeverity")}</span>
@@ -594,13 +941,22 @@ function WarningCard({
         </s-grid>
 
         {warning.reason && (
-          <s-box padding="base" borderRadius="base" background="bg-surface-info">
+          <s-box
+            padding="base"
+            borderRadius="base"
+            background="bg-surface-info"
+          >
             <s-stack gap="small-100">
-              <s-text fontWeight="bold" tone="info" size="small">{t("analysis.whyThisMatched")}</s-text>
+              <s-text fontWeight="bold" tone="info" size="small">
+                {t("analysis.whyThisMatched")}
+              </s-text>
               <s-text>{warning.reason}</s-text>
-              {isImageFirst && !warning.reason.toLowerCase().includes("exact") && (
-                <s-text tone="subdued" size="small">{t("analysis.imageDominated")}</s-text>
-              )}
+              {isImageFirst &&
+                !warning.reason.toLowerCase().includes("exact") && (
+                  <s-text tone="subdued" size="small">
+                    {t("analysis.imageDominated")}
+                  </s-text>
+                )}
             </s-stack>
           </s-box>
         )}
@@ -613,7 +969,9 @@ function WarningCard({
             background="bg-surface-critical"
           >
             <s-stack gap="small-100">
-              <s-text fontWeight="bold" tone="critical" size="small">{t("analysis.riskDescription")}</s-text>
+              <s-text fontWeight="bold" tone="critical" size="small">
+                {t("analysis.riskDescription")}
+              </s-text>
               <s-text>{dangerDescription}</s-text>
             </s-stack>
           </s-box>
@@ -621,9 +979,16 @@ function WarningCard({
 
         {/* Measures (if present) */}
         {measuresDescription && (
-          <s-box padding="base" borderRadius="base" background="bg-surface-warning">
+          <s-box
+            padding="base"
+            borderRadius="base"
+            background="bg-surface-warning"
+          >
             <s-stack gap="small-100">
-              <s-text fontWeight="bold" tone="warning" size="small">{t("analysis.measures") || "Compulsory / Economic Operator Measures"}</s-text>
+              <s-text fontWeight="bold" tone="warning" size="small">
+                {t("analysis.measures") ||
+                  "Compulsory / Economic Operator Measures"}
+              </s-text>
               <s-text size="small">{measuresDescription}</s-text>
             </s-stack>
           </s-box>
@@ -631,31 +996,54 @@ function WarningCard({
 
         {/* Product Description */}
         {productDescription && (
-          <s-box padding="base" borderRadius="base" background="bg-surface-secondary">
+          <s-box
+            padding="base"
+            borderRadius="base"
+            background="bg-surface-secondary"
+          >
             <s-stack gap="small-100">
-              <s-text tone="subdued" size="small">{t("analysis.fields.productDescription")}</s-text>
+              <s-text tone="subdued" size="small">
+                {t("analysis.fields.productDescription")}
+              </s-text>
               <s-text size="small">{productDescription}</s-text>
             </s-stack>
           </s-box>
         )}
 
         {/* Legal Provision */}
-        {fields.risk_legal_provision && fields.risk_legal_provision !== dangerDescription && (
-          <s-box padding="base" borderRadius="base" background="bg-surface-warning">
-            <s-stack gap="small-100">
-              <s-text fontWeight="bold" tone="warning" size="small">{t("analysis.legalProvision")}</s-text>
-              <s-text size="small">{fields.risk_legal_provision}</s-text>
-            </s-stack>
-          </s-box>
-        )}
+        {fields.risk_legal_provision &&
+          fields.risk_legal_provision !== dangerDescription && (
+            <s-box
+              padding="base"
+              borderRadius="base"
+              background="bg-surface-warning"
+            >
+              <s-stack gap="small-100">
+                <s-text fontWeight="bold" tone="warning" size="small">
+                  {t("analysis.legalProvision")}
+                </s-text>
+                <s-text size="small">{fields.risk_legal_provision}</s-text>
+              </s-stack>
+            </s-box>
+          )}
       </s-stack>
     </s-box>
   );
 }
 
-function DetailItem({ label, value, highlight = false }: { label: string; value: string; highlight?: boolean }) {
+function DetailItem({
+  label,
+  value,
+  highlight = false,
+}: {
+  label: string;
+  value: string;
+  highlight?: boolean;
+}) {
   return (
-    <div className={`match-detail-list__item ${highlight ? "match-detail-list__item--highlight" : ""}`}>
+    <div
+      className={`match-detail-list__item ${highlight ? "match-detail-list__item--highlight" : ""}`}
+    >
       <span>{label}</span>
       <strong>{value}</strong>
     </div>

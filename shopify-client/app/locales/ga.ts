@@ -1,6 +1,7 @@
 import { buildCoreLocale } from "./core-locale";
 
 export default buildCoreLocale({
+  localeCode: "ga",
   otherOutcome: 'Eile',
   reviewLayout: { possibleMatch: 'Meaitseáil fhéideartha in Safety Gate', compareHeading: 'Cuir na táirgí i gcomparáid', decisionHeading: 'Taifead do chinneadh', chooseOutcome: 'Roghnaigh toradh', actionNeeded: 'Gníomh de dhíth', readyToRecord: 'Réidh le taifeadadh', noteLabel: 'Cad a sheiceáil tú? (roghnach)', noteRequiredLabel: 'Cad a sheiceáil tú? (riachtanach)' }, dashboard: "Painéal", alertsLabel: "Foláirimh sábháilteachta", manual: "Seiceáil láimhe", settings: "Socruithe", language: "Teanga", reviewAlerts: "Athbhreithnigh foláirimh", search: "Cuardaigh", clear: "Glan", needsReview: "Le hathbhreithniú", safe: "Sábháilte", notChecked: "Gan seiceáil", alertsTitle: "Foláirimh sábháilteachta", findProduct: "Aimsigh táirge",
   notifications: { enabledTitle: "Foláirimh sábháilteachta ríomhphoist", enabledDescription: "Seol torthaí nua láithreach agus achoimre sheachtainiúil nuair nach bhfuil aon toradh ann.", emailLabel: "Ríomhphost fógraí", emailHelp: "Tógtar ó Shopify ar dtús é. Is féidir seoladh eile a úsáid.", languageLabel: "Teanga ríomhphoist" },

@@ -1,6 +1,7 @@
 import { buildCoreLocale } from "./core-locale";
 
 export default buildCoreLocale({
+  localeCode: "sv",
   otherOutcome: 'Annat',
   reviewLayout: { possibleMatch: 'Möjlig träff i Safety Gate', compareHeading: 'Jämför produkterna', decisionHeading: 'Registrera ditt beslut', chooseOutcome: 'Välj ett resultat', actionNeeded: 'Åtgärd krävs', readyToRecord: 'Redo att registrera', noteLabel: 'Vad kontrollerade du? (valfritt)', noteRequiredLabel: 'Vad kontrollerade du? (obligatoriskt)' }, dashboard: "Översikt", alertsLabel: "Säkerhetsvarningar", manual: "Manuell kontroll", settings: "Inställningar", language: "Språk", reviewAlerts: "Granska varningar", search: "Sök", clear: "Rensa", needsReview: "Behöver granskas", safe: "Säker", notChecked: "Inte kontrollerad", alertsTitle: "Säkerhetsvarningar", findProduct: "Hitta produkt",
   notifications: { enabledTitle: "Säkerhetsvarningar via e-post", enabledDescription: "Skicka nya fynd direkt och en veckosammanfattning när inga fynd finns.", emailLabel: "E-post för aviseringar", emailHelp: "Hämtas först från Shopify. Du kan använda en annan adress.", languageLabel: "E-postspråk" },

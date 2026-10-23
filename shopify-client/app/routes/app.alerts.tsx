@@ -1,21 +1,29 @@
 import { useState, useCallback, useEffect } from "react";
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "react-router";
-import { useLoaderData, useFetcher, useNavigate, useRouteError, isRouteErrorResponse } from "react-router";
+import {
+  useLoaderData,
+  useFetcher,
+  useNavigate,
+  useRouteError,
+  isRouteErrorResponse,
+} from "react-router";
 import { data as json } from "react-router";
 import { useTranslation } from "react-i18next";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
 import db from "../merchant-db.server";
-import {
-  AlertTable,
-  AlertDetailModal,
-} from "../components";
+import { withOfficialReferences } from "../services/review-evidence.server";
+import { isWaitingForSupplier } from "../services/review-evidence";
+import { AlertTable, AlertDetailModal } from "../components";
 
 export const loader = async ({ request, url }: LoaderFunctionArgs) => {
   const { session, admin } = await authenticate.admin(request);
 
   const openAlertId = url.searchParams.get("open") || null;
-  const page = parseInt(url.searchParams.get("page") || "1");
+  const page = Math.max(
+    1,
+    Number.parseInt(url.searchParams.get("page") || "1") || 1,
+  );
   const pageSize = 25;
   const offset = (page - 1) * pageSize;
 
@@ -27,7 +35,8 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
   const riskLevelFilters = url.searchParams.getAll("riskLevel");
   const search = url.searchParams.get("search") || undefined;
   const sortByParam = url.searchParams.get("sortBy") || "created";
-  const sortOrderParam: "asc" | "desc" = url.searchParams.get("sortOrder") === "asc" ? "asc" : "desc";
+  const sortOrderParam: "asc" | "desc" =
+    url.searchParams.get("sortOrder") === "asc" ? "asc" : "desc";
   const sortField =
     sortByParam === "name"
       ? "productTitle"
@@ -37,39 +46,85 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
   const orderBy = { [sortField]: sortOrderParam };
 
   const whereClause: any = { shop: session.shop };
-  if (statusFilters.length > 0) whereClause.status = statusFilters.length === 1 ? statusFilters[0] : { in: statusFilters };
-  if (riskLevelFilters.length > 0) whereClause.riskLevel = riskLevelFilters.length === 1 ? riskLevelFilters[0] : { in: riskLevelFilters };
+  const waitingOnly = statusFilters.includes("waiting_for_supplier");
+  if (waitingOnly) whereClause.status = "active";
+  else if (statusFilters.length > 0)
+    whereClause.status =
+      statusFilters.length === 1 ? statusFilters[0] : { in: statusFilters };
+  if (riskLevelFilters.length > 0)
+    whereClause.riskLevel =
+      riskLevelFilters.length === 1
+        ? riskLevelFilters[0]
+        : { in: riskLevelFilters };
   // Prisma version here does not support `mode: 'insensitive'`; fallback to default contains
   if (search) whereClause.productTitle = { contains: search };
 
-  const [rawAlerts, totalCount, activeCount, resolvedCount, dismissedCount, activeAlertRiskSample] = await Promise.all([
-    db.safetyAlert.findMany({ where: whereClause, orderBy, skip: offset, take: pageSize }),
-    db.safetyAlert.count({ where: whereClause }),
-    db.safetyAlert.count({ where: { shop: session.shop, status: 'active' } }),
-    db.safetyAlert.count({ where: { shop: session.shop, status: 'resolved' } }),
-    db.safetyAlert.count({ where: { shop: session.shop, status: 'dismissed' } }),
+  const [
+    queriedAlerts,
+    queriedCount,
+    activeCount,
+    resolvedCount,
+    dismissedCount,
+    activeAlertRiskSample,
+  ] = await Promise.all([
     db.safetyAlert.findMany({
-      where: { shop: session.shop, status: 'active' },
+      where: whereClause,
+      orderBy,
+      ...(waitingOnly ? {} : { skip: offset, take: pageSize }),
+    }),
+    db.safetyAlert.count({ where: whereClause }),
+    db.safetyAlert.count({ where: { shop: session.shop, status: "active" } }),
+    db.safetyAlert.count({ where: { shop: session.shop, status: "resolved" } }),
+    db.safetyAlert.count({
+      where: { shop: session.shop, status: "dismissed" },
+    }),
+    db.safetyAlert.findMany({
+      where: { shop: session.shop, status: "active" },
       select: { riskLevel: true, checkResult: true },
       take: 100,
     }),
   ]);
 
-  const productIds = rawAlerts.map((a: any) => a.productId).filter(Boolean).map((id: string) =>
-    id.startsWith('gid://shopify/Product/') ? id : `gid://shopify/Product/${id}`
+  const waitingAlerts = waitingOnly
+    ? queriedAlerts.filter(isWaitingForSupplier)
+    : queriedAlerts;
+  const totalCount = waitingOnly ? waitingAlerts.length : queriedCount;
+  const rawAlerts = await withOfficialReferences(
+    waitingOnly
+      ? waitingAlerts.slice(offset, offset + pageSize)
+      : waitingAlerts,
   );
+  if (openAlertId && !rawAlerts.some((alert) => alert.id === openAlertId)) {
+    const owned = await db.safetyAlert.findMany({
+      where: { shop: session.shop, id: openAlertId },
+      take: 1,
+    });
+    rawAlerts.push(...(await withOfficialReferences(owned)));
+  }
+
+  const productIds = rawAlerts
+    .map((a: any) => a.productId)
+    .filter(Boolean)
+    .map((id: string) =>
+      id.startsWith("gid://shopify/Product/")
+        ? id
+        : `gid://shopify/Product/${id}`,
+    );
 
   const productImages: Record<string, string | null> = {};
   if (productIds.length > 0) {
     try {
-      const response = await admin.graphql(`#graphql
+      const response = await admin.graphql(
+        `#graphql
         query getProductImages($ids: [ID!]!) {
           nodes(ids: $ids) { ... on Product { id featuredImage { url } } }
-        }`, { variables: { ids: productIds } });
+        }`,
+        { variables: { ids: productIds } },
+      );
       const { data } = await response.json();
       data?.nodes?.forEach((node: any) => {
         if (node?.id) {
-          const numericId = node.id.replace('gid://shopify/Product/', '');
+          const numericId = node.id.replace("gid://shopify/Product/", "");
           productImages[numericId] = node.featuredImage?.url || null;
           productImages[node.id] = node.featuredImage?.url || null;
         }
@@ -80,63 +135,130 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
   }
 
   const alerts = rawAlerts.map((alert: any) => {
-    let alertType = 'Unknown', riskDescription = '', alertDetails = null, riskLevelFromResult = null, overallSimilarity = null;
+    let alertType = "Unknown",
+      riskDescription = "",
+      alertDetails = null,
+      riskLevelFromResult = null,
+      overallSimilarity = null;
     try {
       const checkResult = JSON.parse(alert.checkResult);
-      const warnings = Array.isArray(checkResult?.warnings) ? checkResult.warnings : [];
+      const warnings = Array.isArray(checkResult?.warnings)
+        ? checkResult.warnings
+        : [];
       if (warnings.length > 0) {
         const first = warnings[0];
         overallSimilarity = first.overallSimilarity || null;
-        alertType = first.alertType || first.alertDetails?.fields?.alert_type || 'Unknown';
-        riskDescription = first.riskLegalProvision || first.alertDetails?.fields?.risk_legal_provision || '';
+        alertType =
+          first.alertType ||
+          first.alertDetails?.fields?.alert_type ||
+          "Unknown";
+        riskDescription =
+          first.riskLegalProvision ||
+          first.alertDetails?.fields?.risk_legal_provision ||
+          "";
         alertDetails = first.alertDetails || null;
         // Extract risk level from checkResult (more reliable than DB field for older records)
-        riskLevelFromResult = first.alertDetails?.fields?.alert_level ||
+        riskLevelFromResult =
+          first.alertDetails?.fields?.alert_level ||
           first.alertDetails?.fields?.risk_level ||
-          first.riskLevel || null;
+          first.riskLevel ||
+          null;
         const fields = first.alertDetails?.fields || {};
-        const pics = [...(fields.pictures || []), fields.product_image].filter(Boolean);
-        if (pics[0]) alertDetails = { ...alertDetails, fallbackImage: typeof pics[0] === 'string' ? pics[0] : pics[0].url };
+        const pics = [...(fields.pictures || []), fields.product_image].filter(
+          Boolean,
+        );
+        if (pics[0])
+          alertDetails = {
+            ...alertDetails,
+            fallbackImage: typeof pics[0] === "string" ? pics[0] : pics[0].url,
+          };
       }
     } catch {
       // Ignore malformed legacy check payloads and fall back to stored alert fields.
     }
     // Prefer riskLevel from checkResult, fallback to DB field
-    const effectiveRiskLevel = riskLevelFromResult || (alert.riskLevel !== 'unknown' ? alert.riskLevel : null) || 'Unknown';
+    const effectiveRiskLevel =
+      riskLevelFromResult ||
+      (alert.riskLevel !== "unknown" ? alert.riskLevel : null) ||
+      "Unknown";
     return {
-      ...alert, alertType, riskDescription, alertDetails, overallSimilarity,
+      ...alert,
+      alertType,
+      riskDescription,
+      alertDetails,
+      overallSimilarity,
       riskLevel: effectiveRiskLevel,
-      productImage: productImages[alert.productId] || productImages[`gid://shopify/Product/${alert.productId}`] || alertDetails?.fallbackImage || null,
+      productImage:
+        productImages[alert.productId] ||
+        productImages[`gid://shopify/Product/${alert.productId}`] ||
+        alertDetails?.fallbackImage ||
+        null,
     };
   });
   const decisionHistory = openAlertId
-    ? await db.safetyAlert.listDecisionEvents({ shop: session.shop, alertId: openAlertId, take: 10 })
+    ? await db.safetyAlert.listDecisionEvents({
+        shop: session.shop,
+        alertId: openAlertId,
+        take: 10,
+      })
     : [];
 
   const criticalActiveAlerts = activeAlertRiskSample.filter((alert: any) => {
     try {
       const parsed = alert.checkResult ? JSON.parse(alert.checkResult) : null;
-      const warning = Array.isArray(parsed?.warnings) ? parsed.warnings[0] : null;
+      const warning = Array.isArray(parsed?.warnings)
+        ? parsed.warnings[0]
+        : null;
       const level = String(
         warning?.alertDetails?.fields?.alert_level ||
-        warning?.alertDetails?.fields?.risk_level ||
-        warning?.riskLevel ||
-        alert.riskLevel ||
-        ""
+          warning?.alertDetails?.fields?.risk_level ||
+          warning?.riskLevel ||
+          alert.riskLevel ||
+          "",
       ).toLowerCase();
-      return level.includes("serious") || level.includes("high") || level === "1" || level === "2";
+      return (
+        level.includes("serious") ||
+        level.includes("high") ||
+        level === "1" ||
+        level === "2"
+      );
     } catch {
       const level = String(alert.riskLevel || "").toLowerCase();
-      return level.includes("serious") || level.includes("high") || level === "1" || level === "2";
+      return (
+        level.includes("serious") ||
+        level.includes("high") ||
+        level === "1" ||
+        level === "2"
+      );
     }
   }).length;
 
   return json({
     alerts,
     decisionHistory,
-    pagination: { currentPage: page, totalPages: Math.ceil(totalCount / pageSize), totalCount, hasNext: page < Math.ceil(totalCount / pageSize), hasPrevious: page > 1 },
-    filters: { status: statusFilters, riskLevel: riskLevelFilters, search, sortBy: sortByParam, sortOrder: sortOrderParam, showAllRecords, openAlertId },
-    stats: { active: activeCount, resolved: resolvedCount, dismissed: dismissedCount, total: activeCount + resolvedCount + dismissedCount, criticalActive: criticalActiveAlerts },
+    pagination: {
+      currentPage: page,
+      totalPages: Math.ceil(totalCount / pageSize),
+      totalCount,
+      hasNext: page < Math.ceil(totalCount / pageSize),
+      hasPrevious: page > 1,
+    },
+    filters: {
+      status: statusFilters,
+      riskLevel: riskLevelFilters,
+      search,
+      sortBy: sortByParam,
+      sortOrder: sortOrderParam,
+      showAllRecords,
+      openAlertId,
+    },
+    stats: {
+      active: activeCount,
+      resolved: resolvedCount,
+      dismissed: dismissedCount,
+      total: activeCount + resolvedCount + dismissedCount,
+      criticalActive: criticalActiveAlerts,
+    },
     shop: session.shop,
   });
 };
@@ -150,8 +272,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const resolutionType = formData.get("resolutionType") as string | null;
   const notes = (formData.get("notes") as string | null)?.trim() || undefined;
 
-  if ((action === "resolve" || action === "dismiss") && resolutionType === "other" && !notes) {
-    return json({ success: false, error: "A note is required for the other outcome" }, { status: 400 });
+  if (
+    (action === "resolve" || action === "dismiss") &&
+    resolutionType === "other" &&
+    !notes
+  ) {
+    return json(
+      { success: false, error: "A note is required for the other outcome" },
+      { status: 400 },
+    );
   }
 
   if (action !== "resolve" && action !== "dismiss" && action !== "reactivate") {
@@ -160,12 +289,18 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   let ids: string[];
   try {
-    ids = alertIdsJson ? JSON.parse(alertIdsJson) as string[] : [alertId];
+    ids = alertIdsJson ? (JSON.parse(alertIdsJson) as string[]) : [alertId];
   } catch {
-    return json({ success: false, error: "Invalid alert selection" }, { status: 400 });
+    return json(
+      { success: false, error: "Invalid alert selection" },
+      { status: 400 },
+    );
   }
   if (!Array.isArray(ids) || ids.some((id) => typeof id !== "string")) {
-    return json({ success: false, error: "Invalid alert selection" }, { status: 400 });
+    return json(
+      { success: false, error: "Invalid alert selection" },
+      { status: 400 },
+    );
   }
 
   try {
@@ -179,7 +314,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     });
     return json({ success: true });
   } catch (error) {
-    return json({ success: false, error: error instanceof Error ? error.message : "Could not save alert decision" }, { status: 400 });
+    return json(
+      {
+        success: false,
+        error:
+          error instanceof Error
+            ? error.message
+            : "Could not save alert decision",
+      },
+      { status: 400 },
+    );
   }
 };
 
@@ -195,12 +339,17 @@ export function ErrorBoundary() {
 
   return (
     <s-page suppressHydrationWarning>
-      <s-heading slot="title" size="large" suppressHydrationWarning>{t("alerts.title")}</s-heading>
+      <s-heading slot="title" size="large" suppressHydrationWarning>
+        {t("alerts.title")}
+      </s-heading>
       <div className="admin-stack" style={{ marginTop: "var(--s-space-400)" }}>
         <s-banner tone="critical" heading={t("errors.pageLoadFailed")}>
           <s-text>{title}</s-text>
           <div style={{ marginTop: "var(--s-space-200)" }}>
-            <s-button onClick={() => window.location.reload()} suppressHydrationWarning>
+            <s-button
+              onClick={() => window.location.reload()}
+              suppressHydrationWarning
+            >
               {t("actions.retry")}
             </s-button>
           </div>
@@ -211,54 +360,105 @@ export function ErrorBoundary() {
 }
 
 export default function AlertsPage() {
-  const { alerts, decisionHistory, pagination, filters, stats, shop } = useLoaderData<typeof loader>();
+  const { alerts, decisionHistory, pagination, filters, stats, shop } =
+    useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const shopify = useAppBridge();
 
-  const [searchValue, setSearchValue] = useState(filters.search || '');
-  const [statusFilter, setStatusFilter] = useState<string[]>(filters.status || []);
-  const [riskLevelFilter, setRiskLevelFilter] = useState<string[]>(filters.riskLevel || []);
+  const [searchValue, setSearchValue] = useState(filters.search || "");
+  const [statusFilter, setStatusFilter] = useState<string[]>(
+    filters.status || [],
+  );
+  const [riskLevelFilter, setRiskLevelFilter] = useState<string[]>(
+    filters.riskLevel || [],
+  );
 
-  const applyFilters = useCallback((overrides?: { search?: string; status?: string[]; riskLevel?: string[]; page?: number; sortBy?: string; sortOrder?: string }) => {
-    const params = new URLSearchParams();
-    const s = (overrides?.search ?? searchValue).trim();
-    if (s) params.set('search', s);
-    
-    // Status filters
-    const statusVal = overrides && Object.prototype.hasOwnProperty.call(overrides, 'status') ? overrides.status : statusFilter;
-    statusVal?.forEach(v => params.append('status', v));
-    if (statusVal?.length === 0) params.set('view', 'all');
+  const applyFilters = useCallback(
+    (overrides?: {
+      search?: string;
+      status?: string[];
+      riskLevel?: string[];
+      page?: number;
+      sortBy?: string;
+      sortOrder?: string;
+    }) => {
+      const params = new URLSearchParams();
+      const s = (overrides?.search ?? searchValue).trim();
+      if (s) params.set("search", s);
 
-    // Risk level filters
-    const riskVal = overrides && Object.prototype.hasOwnProperty.call(overrides, 'riskLevel') ? overrides.riskLevel : riskLevelFilter;
-    riskVal?.forEach(v => params.append('riskLevel', v));
+      // Status filters
+      const statusVal =
+        overrides && Object.prototype.hasOwnProperty.call(overrides, "status")
+          ? overrides.status
+          : statusFilter;
+      statusVal?.forEach((v) => params.append("status", v));
+      if (statusVal?.length === 0) params.set("view", "all");
 
-    const sortBy = overrides?.sortBy ?? filters.sortBy;
-    const sortOrder = overrides?.sortOrder ?? filters.sortOrder;
-    if (sortBy && sortBy !== "created") params.set("sortBy", sortBy);
-    if (sortOrder && sortOrder !== "desc") params.set("sortOrder", sortOrder);
-    const p = overrides?.page ?? 1;
-    if (p > 1) params.set('page', p.toString());
-    const queryString = params.toString();
-    navigate(queryString ? `/app/alerts?${queryString}` : '/app/alerts');
-  }, [filters.sortBy, filters.sortOrder, searchValue, statusFilter, riskLevelFilter, navigate]);
+      // Risk level filters
+      const riskVal =
+        overrides &&
+        Object.prototype.hasOwnProperty.call(overrides, "riskLevel")
+          ? overrides.riskLevel
+          : riskLevelFilter;
+      riskVal?.forEach((v) => params.append("riskLevel", v));
 
-  const handleAlertAction = useCallback((alertId: string, action: string, resolutionType?: string, notes?: string) => {
-    fetcher.submit({ action, alertId, resolutionType: resolutionType || '', notes: notes || '' }, { method: 'POST' });
-  }, [fetcher]);
+      const sortBy = overrides?.sortBy ?? filters.sortBy;
+      const sortOrder = overrides?.sortOrder ?? filters.sortOrder;
+      if (sortBy && sortBy !== "created") params.set("sortBy", sortBy);
+      if (sortOrder && sortOrder !== "desc") params.set("sortOrder", sortOrder);
+      const p = overrides?.page ?? 1;
+      if (p > 1) params.set("page", p.toString());
+      const queryString = params.toString();
+      navigate(queryString ? `/app/alerts?${queryString}` : "/app/alerts");
+    },
+    [
+      filters.sortBy,
+      filters.sortOrder,
+      searchValue,
+      statusFilter,
+      riskLevelFilter,
+      navigate,
+    ],
+  );
 
-  const handleBulkAction = useCallback((alertIds: string[], action: string, resolutionType?: string) => {
-    fetcher.submit({ 
-      action, 
-      alertIds: JSON.stringify(alertIds), 
-      resolutionType: resolutionType || '' 
-    }, { method: 'POST' });
-  }, [fetcher]);
+  const handleAlertAction = useCallback(
+    (
+      alertId: string,
+      action: string,
+      resolutionType?: string,
+      notes?: string,
+    ) => {
+      fetcher.submit(
+        {
+          action,
+          alertId,
+          resolutionType: resolutionType || "",
+          notes: notes || "",
+        },
+        { method: "POST" },
+      );
+    },
+    [fetcher],
+  );
+
+  const handleBulkAction = useCallback(
+    (alertIds: string[], action: string, resolutionType?: string) => {
+      fetcher.submit(
+        {
+          action,
+          alertIds: JSON.stringify(alertIds),
+          resolutionType: resolutionType || "",
+        },
+        { method: "POST" },
+      );
+    },
+    [fetcher],
+  );
 
   useEffect(() => {
-    setSearchValue(filters.search || '');
+    setSearchValue(filters.search || "");
     setStatusFilter(filters.status || []);
     setRiskLevelFilter(filters.riskLevel || []);
   }, [filters]);
@@ -271,15 +471,17 @@ export default function AlertsPage() {
 
   return (
     <s-page size="large" className="page-shell" suppressHydrationWarning>
-      <s-heading slot="title" size="large" suppressHydrationWarning>{t('alerts.title')}</s-heading>
+      <s-heading slot="title" size="large" suppressHydrationWarning>
+        {t("alerts.title")}
+      </s-heading>
       {stats.active > 0 && alerts.length > 0 ? (
         <s-button
           slot="primary-action"
           variant="primary"
-          commandFor={`alert-detail-${(alerts.find((a: any) => a.status === 'active') || alerts[0]).id}`}
+          commandFor={`alert-detail-${(alerts.find((a: any) => a.status === "active") || alerts[0]).id}`}
           suppressHydrationWarning
         >
-          {t("actions.reviewDecision")}
+          {t("workspace.compare")}
         </s-button>
       ) : (
         <s-button
@@ -291,10 +493,20 @@ export default function AlertsPage() {
           {t("actions.checkOneProduct")}
         </s-button>
       )}
-      <s-button slot="secondary-actions" variant="secondary" onClick={() => navigate("/app/audit-report")} suppressHydrationWarning>
-        {t("actions.auditReport")}
+      <s-button
+        slot="secondary-actions"
+        variant="secondary"
+        onClick={() => navigate("/app/audit-report")}
+        suppressHydrationWarning
+      >
+        {t("workspace.reportTitle")}
       </s-button>
-      <s-button slot="secondary-actions" variant="secondary" onClick={() => navigate("/app/evidence")} suppressHydrationWarning>
+      <s-button
+        slot="secondary-actions"
+        variant="secondary"
+        onClick={() => navigate("/app/evidence")}
+        suppressHydrationWarning
+      >
         {t("actions.viewEvidence")}
       </s-button>
 
@@ -302,22 +514,28 @@ export default function AlertsPage() {
         {stats.active > 0 && (
           <s-banner
             tone={stats.criticalActive > 0 ? "critical" : "warning"}
-            heading={stats.criticalActive > 0
-              ? t("alerts.admin.criticalBannerTitle", { count: stats.active })
-              : t("alerts.admin.warningBannerTitle", { count: stats.active })}
+            heading={
+              stats.criticalActive > 0
+                ? t("alerts.admin.criticalBannerTitle", {
+                    count: stats.criticalActive,
+                  })
+                : t("alerts.admin.warningBannerTitle", { count: stats.active })
+            }
           >
             <s-text>
               {stats.criticalActive > 0
-                ? t("alerts.admin.criticalBannerDescription", { count: stats.criticalActive })
+                ? t("alerts.admin.criticalBannerDescription", {
+                    count: stats.criticalActive,
+                  })
                 : t("alerts.admin.warningBannerDescription")}
             </s-text>
             {alerts.length > 0 && (
               <div style={{ marginTop: "var(--s-space-200)" }}>
                 <s-button
                   variant="primary"
-                  commandFor={`alert-detail-${(alerts.find((a: any) => a.status === 'active') || alerts[0]).id}`}
+                  commandFor={`alert-detail-${(alerts.find((a: any) => a.status === "active") || alerts[0]).id}`}
                 >
-                  {t("actions.openFirstMatch")}
+                  {t("workspace.compare")}
                 </s-button>
               </div>
             )}
@@ -327,26 +545,33 @@ export default function AlertsPage() {
         <section className="admin-card">
           <div className="admin-card__header">
             <div>
-              <p className="admin-eyebrow">{t("alerts.admin.queue")}</p>
-              <h2 className="admin-card__title">{t('alerts.subtitle')}</h2>
+              <h2 className="admin-card__title">{t("alerts.subtitle")}</h2>
               <p className="admin-card__description">
                 {t("alerts.admin.queueDescription")}
               </p>
             </div>
             <div className="admin-inline-meta">
-              <s-badge tone={stats.active > 0 ? "critical" : "success"}>{t('alerts.meta.active', { count: stats.active })}</s-badge>
-              <s-badge tone="info">{t('alerts.meta.total', { count: stats.total })}</s-badge>
+              <s-badge tone={stats.active > 0 ? "critical" : "success"}>
+                {t("alerts.meta.active", { count: stats.active })}
+              </s-badge>
+              <s-badge tone="info">
+                {t("alerts.meta.total", { count: stats.total })}
+              </s-badge>
             </div>
           </div>
 
           <AlertTable
             alerts={alerts}
-            onViewDetails={() => { }}
-            onDismiss={(id, resolutionType) => handleAlertAction(id, 'dismiss', resolutionType)}
-            onResolve={(id, resolutionType) => handleAlertAction(id, 'resolve', resolutionType)}
-            onReactivate={(id) => handleAlertAction(id, 'reactivate')}
+            onViewDetails={() => {}}
+            onDismiss={(id, resolutionType) =>
+              handleAlertAction(id, "dismiss", resolutionType)
+            }
+            onResolve={(id, resolutionType) =>
+              handleAlertAction(id, "resolve", resolutionType)
+            }
+            onReactivate={(id) => handleAlertAction(id, "reactivate")}
             onBulkAction={handleBulkAction}
-            isLoading={fetcher.state === 'submitting'}
+            isLoading={fetcher.state === "submitting"}
             showProductLink
             modalIdPrefix="alert-detail"
             searchValue={searchValue}
@@ -363,7 +588,9 @@ export default function AlertsPage() {
             }}
             sortBy={filters.sortBy}
             sortOrder={filters.sortOrder}
-            onSortChange={(sortBy, sortOrder) => applyFilters({ sortBy, sortOrder })}
+            onSortChange={(sortBy, sortOrder) =>
+              applyFilters({ sortBy, sortOrder })
+            }
             stats={stats}
           />
         </section>
@@ -372,26 +599,30 @@ export default function AlertsPage() {
           <section className="admin-card">
             <div className="admin-card__header">
               <p className="admin-card__description">
-                {t('pagination.pageOf', {
+                {t("pagination.pageOf", {
                   current: pagination.currentPage,
                   total: pagination.totalPages,
-                  count: pagination.totalCount
+                  count: pagination.totalCount,
                 })}
               </p>
               <div className="admin-actions">
                 <s-button
                   variant="secondary"
-                  onClick={() => applyFilters({ page: pagination.currentPage - 1 })}
+                  onClick={() =>
+                    applyFilters({ page: pagination.currentPage - 1 })
+                  }
                   disabled={!pagination.hasPrevious || undefined}
                 >
-                  {t('actions.previous')}
+                  {t("actions.previous")}
                 </s-button>
                 <s-button
                   variant="secondary"
-                  onClick={() => applyFilters({ page: pagination.currentPage + 1 })}
+                  onClick={() =>
+                    applyFilters({ page: pagination.currentPage + 1 })
+                  }
                   disabled={!pagination.hasNext || undefined}
                 >
-                  {t('actions.next')}
+                  {t("actions.next")}
                 </s-button>
               </div>
             </div>
@@ -404,13 +635,19 @@ export default function AlertsPage() {
         <AlertDetailModal
           key={alert.id}
           alert={{ ...alert, shop: alert.shop || shop }}
-          decisionHistory={alert.id === filters.openAlertId ? decisionHistory : []}
+          decisionHistory={
+            alert.id === filters.openAlertId ? decisionHistory : []
+          }
           modalId={`alert-detail-${alert.id}`}
           openOnMount={alert.id === filters.openAlertId}
-          onDismiss={(id, resolutionType, notes) => handleAlertAction(id, 'dismiss', resolutionType, notes)}
-          onResolve={(id, resolutionType, notes) => handleAlertAction(id, 'resolve', resolutionType, notes)}
-          onReactivate={(id) => handleAlertAction(id, 'reactivate')}
-          isLoading={fetcher.state === 'submitting'}
+          onDismiss={(id, resolutionType, notes) =>
+            handleAlertAction(id, "dismiss", resolutionType, notes)
+          }
+          onResolve={(id, resolutionType, notes) =>
+            handleAlertAction(id, "resolve", resolutionType, notes)
+          }
+          onReactivate={(id) => handleAlertAction(id, "reactivate")}
+          isLoading={fetcher.state === "submitting"}
         />
       ))}
     </s-page>

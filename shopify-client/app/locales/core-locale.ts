@@ -1,4 +1,6 @@
+import { workspaceCopy } from "./workspace";
 type CoreLocaleInput = {
+  localeCode: keyof typeof workspaceCopy;
   dashboard: string;
   alertsLabel: string;
   manual: string;
@@ -72,6 +74,7 @@ export function buildCoreLocale(input: CoreLocaleInput) {
   };
 
   return {
+    workspace: workspaceCopy[input.localeCode],
     nav: {
       dashboard: input.dashboard,
       safetyAlerts: input.alertsLabel,

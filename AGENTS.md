@@ -387,3 +387,12 @@ Identifier comparisons in the merchant review modal require full equality after 
 Shopify extensions use `shopify.i18n.translate` with English/Slovak locale resources and the supported `2026-07` API. Use guarded `globalThis` event listeners in the extension sandbox, not unguarded `window`. A report retry may treat a provider-confirmed duplicate idempotency key as already submitted; it must never infer delivered status from acceptance.
 
 Direct review links must wait for `customElements.whenDefined("s-modal")` and open the overlay once. Never combine `showOverlay()` with a command-trigger click or a timed second open: the command can toggle it closed again. Cancel pending opens on effect cleanup and depend on the alert ID rather than a newly created alert object. Production browser verification found this issue after following the dashboard review link; manual opening worked. The correction has regression coverage in `test/review-modal.test.ts`.
+
+
+## Merchant workflow clarity, 23 October 2026
+
+Catalog coverage, filters and rows use the same current-product-version predicate through `catalog-state.ts`. A changed product may still have an open finding; display those independent facts separately. Never attach a shop-wide open-alert badge or raw activity text to the last product check. Historical successful runs do not imply a current monitoring entitlement; development bypass, unverified billing, expired access and queued/failed runs have explicit states. Do not promise a next completed check using a hardcoded clock time.
+
+The review UI can fill missing official references from the actual imported `rapex_alerts` record without mutating saved matcher facts or merchant decisions. Validate public case-number shape and HTTPS Commission links; internal hashes and arbitrary URLs are not public references. Shopify vendor is not evidence of brand equality. New `match_not_confirmed` outcomes remain distinct from historical `verified_safe` outcomes.
+
+Decision history reads immutable tenant-scoped decision events, separately from finding snapshots. Report preview and CSV share the same detected-date/status filters. The CSV includes current findings and every stored decision event for the selected findings; retain formula neutralization and authenticated resource downloads. Preview limits must be visible and must not truncate the full export. Legacy exclusion rules apply to manual client checks only; show their actual scope and affected-product preview, not a claim that background monitoring applies them.

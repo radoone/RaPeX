@@ -1,6 +1,7 @@
 import { buildCoreLocale } from "./core-locale";
 
 export default buildCoreLocale({
+  localeCode: "hr",
   otherOutcome: 'Ostalo',
   reviewLayout: { possibleMatch: 'Moguće podudaranje u Safety Gateu', compareHeading: 'Usporedite proizvode', decisionHeading: 'Zabilježite odluku', chooseOutcome: 'Odaberite ishod', actionNeeded: 'Potrebna je radnja', readyToRecord: 'Spremno za bilježenje', noteLabel: 'Što ste provjerili? (neobavezno)', noteRequiredLabel: 'Što ste provjerili? (obavezno)' }, dashboard: "Nadzorna ploča", alertsLabel: "Sigurnosna upozorenja", manual: "Ručna provjera", settings: "Postavke", language: "Jezik", reviewAlerts: "Pregledaj upozorenja", search: "Traži", clear: "Očisti", needsReview: "Potrebna provjera", safe: "Sigurno", notChecked: "Nije provjereno", alertsTitle: "Sigurnosna upozorenja", findProduct: "Pronađi proizvod",
   notifications: { enabledTitle: "Sigurnosne obavijesti e-poštom", enabledDescription: "Nove nalaze pošalji odmah, a tjedni sažetak kada nema nalaza.", emailLabel: "E-pošta za obavijesti", emailHelp: "U početku se preuzima iz Shopifyja. Možete koristiti drugu adresu.", languageLabel: "Jezik e-pošte" },

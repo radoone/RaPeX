@@ -1,16 +1,27 @@
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "react-router";
 import { data as json, redirect } from "react-router";
-import { useActionData, useLoaderData, useNavigation, Form, useRouteError, isRouteErrorResponse } from "react-router";
+import {
+  useActionData,
+  useLoaderData,
+  useNavigation,
+  Form,
+  useRouteError,
+  isRouteErrorResponse,
+} from "react-router";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { authenticate } from "../shopify.server";
 import db from "../merchant-db.server";
 import { LanguageSwitcher } from "../components";
+import { MonitoringStatus } from "../components/MonitoringStatus";
+import { exclusionPreview } from "../services/exclusion-preview";
 import { getBillingStatus } from "../services/billing.server";
 import { EU_LANGUAGES } from "../locales/languages";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const SUPPORTED_LANGUAGES = new Set(EU_LANGUAGES.map((language) => language.code));
+const SUPPORTED_LANGUAGES = new Set(
+  EU_LANGUAGES.map((language) => language.code),
+);
 
 async function getShopifyContactEmail(admin: any): Promise<string | null> {
   const response = await admin.graphql(`#graphql
@@ -19,37 +30,64 @@ async function getShopifyContactEmail(admin: any): Promise<string | null> {
     }
   `);
   const payload = await response.json();
-  const value = String(payload.data?.shop?.contactEmail || payload.data?.shop?.email || "").trim().toLowerCase();
+  const value = String(
+    payload.data?.shop?.contactEmail || payload.data?.shop?.email || "",
+  )
+    .trim()
+    .toLowerCase();
   return EMAIL_PATTERN.test(value) ? value : null;
 }
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request, url }: LoaderFunctionArgs) => {
   const { admin, billing, session } = await authenticate.admin(request);
   const billingStatus = await getBillingStatus(billing, session.shop, admin);
   let settings = await db.safetySetting.findUnique({
     where: { shop: session.shop },
   });
-  
-  const envDefault = Number(process.env.SAFETY_GATE_SIMILARITY_THRESHOLD || "0");
+
+  const envDefault = Number(
+    process.env.SAFETY_GATE_SIMILARITY_THRESHOLD || "0",
+  );
   const fallbackDefault = Number.isFinite(envDefault) ? envDefault : 70;
 
-  const shopifyContactEmail = await getShopifyContactEmail(admin).catch((error) => {
-    console.warn("Could not load Shopify contact email for notifications", error);
-    return null;
-  });
+  const shopifyContactEmail = await getShopifyContactEmail(admin).catch(
+    (error) => {
+      console.warn(
+        "Could not load Shopify contact email for notifications",
+        error,
+      );
+      return null;
+    },
+  );
 
-  if (!settings || settings.emailNotifications === undefined || settings.immediateAlertEmails === undefined || settings.weeklySummaryEmails === undefined || !settings.notificationEmail) {
+  if (
+    !settings ||
+    settings.emailNotifications === undefined ||
+    settings.immediateAlertEmails === undefined ||
+    settings.weeklySummaryEmails === undefined ||
+    !settings.notificationEmail
+  ) {
     settings = await db.safetySetting.upsert({
       where: { shop: session.shop },
       update: {
-        ...(settings?.emailNotifications === undefined ? { emailNotifications: true } : {}),
-        ...(settings?.immediateAlertEmails === undefined ? { immediateAlertEmails: settings?.emailNotifications !== false } : {}),
-        ...(settings?.weeklySummaryEmails === undefined ? { weeklySummaryEmails: settings?.emailNotifications !== false } : {}),
-        ...(!settings?.notificationEmail && shopifyContactEmail ? {
-          notificationEmail: shopifyContactEmail,
-          notificationEmailSource: "shopify" as const,
-        } : {}),
-        ...(!settings?.notificationLanguage ? { notificationLanguage: "en" } : {}),
+        ...(settings?.emailNotifications === undefined
+          ? { emailNotifications: true }
+          : {}),
+        ...(settings?.immediateAlertEmails === undefined
+          ? { immediateAlertEmails: settings?.emailNotifications !== false }
+          : {}),
+        ...(settings?.weeklySummaryEmails === undefined
+          ? { weeklySummaryEmails: settings?.emailNotifications !== false }
+          : {}),
+        ...(!settings?.notificationEmail && shopifyContactEmail
+          ? {
+              notificationEmail: shopifyContactEmail,
+              notificationEmailSource: "shopify" as const,
+            }
+          : {}),
+        ...(!settings?.notificationLanguage
+          ? { notificationLanguage: "en" }
+          : {}),
       },
       create: {
         shop: session.shop,
@@ -67,7 +105,32 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     });
   }
 
+  const catalog: Array<{
+    id: string;
+    title: string;
+    vendor: string;
+    productType: string;
+  }> = [];
+  let cursor: string | null = null;
+  do {
+    const response: any = await admin.graphql(
+      `#graphql
+      query exclusionPreview($after: String) { products(first: 250, after: $after) { nodes { id title vendor productType } pageInfo { hasNextPage endCursor } } }
+    `,
+      { variables: { after: cursor } },
+    );
+    const payload = await response.json();
+    if (payload.errors?.length || !payload.data?.products)
+      throw new Error("Could not load exclusion preview");
+    catalog.push(...payload.data.products.nodes);
+    const pageInfo = payload.data.products.pageInfo;
+    if (pageInfo.hasNextPage && !pageInfo.endCursor)
+      throw new Error("Shopify catalog cursor is missing");
+    cursor = pageInfo.hasNextPage ? pageInfo.endCursor : null;
+  } while (cursor);
   return json({
+    catalog,
+    saved: url.searchParams.get("saved") === "1",
     settings: settings || {
       similarityThreshold: fallbackDefault,
       autoDraftHighRisk: false,
@@ -89,7 +152,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const { session } = await authenticate.admin(request);
   const formData = await request.formData();
-  
+
   const threshold = Number(formData.get("similarityThreshold"));
   const similarityThreshold = Number.isFinite(threshold)
     ? Math.min(Math.max(Math.round(threshold), 0), 100)
@@ -99,9 +162,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const immediateAlertEmails = formData.get("immediateAlertEmails") === "true";
   const weeklySummaryEmails = formData.get("weeklySummaryEmails") === "true";
   const emailNotifications = immediateAlertEmails || weeklySummaryEmails;
-  const notificationEmail = String(formData.get("notificationEmail") || "").trim().toLowerCase();
-  const requestedLanguage = String(formData.get("notificationLanguage") || "en");
-  const notificationLanguage = SUPPORTED_LANGUAGES.has(requestedLanguage as any) ? requestedLanguage : "en";
+  const notificationEmail = String(formData.get("notificationEmail") || "")
+    .trim()
+    .toLowerCase();
+  const requestedLanguage = String(
+    formData.get("notificationLanguage") || "en",
+  );
+  const notificationLanguage = SUPPORTED_LANGUAGES.has(requestedLanguage as any)
+    ? requestedLanguage
+    : "en";
   if (emailNotifications && !EMAIL_PATTERN.test(notificationEmail)) {
     return json({ error: "invalid_notification_email" }, { status: 400 });
   }
@@ -135,7 +204,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     },
   });
 
-  return redirect("/app/settings");
+  return redirect("/app/settings?saved=1");
 };
 
 export function ErrorBoundary() {
@@ -150,12 +219,17 @@ export function ErrorBoundary() {
 
   return (
     <s-page suppressHydrationWarning>
-      <s-heading slot="title" size="large" suppressHydrationWarning>{t("settings.title")}</s-heading>
+      <s-heading slot="title" size="large" suppressHydrationWarning>
+        {t("settings.title")}
+      </s-heading>
       <div className="admin-stack" style={{ marginTop: "var(--s-space-400)" }}>
         <s-banner tone="critical" heading={t("errors.pageLoadFailed")}>
           <s-text>{title}</s-text>
           <div style={{ marginTop: "var(--s-space-200)" }}>
-            <s-button onClick={() => window.location.reload()} suppressHydrationWarning>
+            <s-button
+              onClick={() => window.location.reload()}
+              suppressHydrationWarning
+            >
               {t("actions.retry")}
             </s-button>
           </div>
@@ -166,511 +240,275 @@ export function ErrorBoundary() {
 }
 
 export default function Settings() {
-  const { settings, envDefault, billingStatus, shopifyContactEmail } = useLoaderData<typeof loader>();
+  const { settings, billingStatus, catalog, saved } =
+    useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
   const { t } = useTranslation();
-  
-  const [value, setValue] = useState((settings?.similarityThreshold ?? 70).toString());
-  const [autoDraft, setAutoDraft] = useState(settings?.autoDraftHighRisk ?? false);
-  const [immediateAlertEmails, setImmediateAlertEmails] = useState(settings?.immediateAlertEmails ?? settings?.emailNotifications ?? true);
-  const [weeklySummaryEmails, setWeeklySummaryEmails] = useState(settings?.weeklySummaryEmails ?? settings?.emailNotifications ?? true);
-  const [notificationEmail, setNotificationEmail] = useState(settings?.notificationEmail ?? "");
-  const [notificationLanguage, setNotificationLanguage] = useState(settings?.notificationLanguage ?? "en");
-
-  const [vendorsList, setVendorsList] = useState<string[]>([]);
-  const [typesList, setTypesList] = useState<string[]>([]);
-  const [vendorInput, setVendorInput] = useState("");
-  const [typeInput, setTypeInput] = useState("");
-
+  const initial = {
+    threshold: String(settings.similarityThreshold ?? 70),
+    priority: settings.autoDraftHighRisk ?? false,
+    immediate:
+      settings.immediateAlertEmails ?? settings.emailNotifications ?? true,
+    weekly: settings.weeklySummaryEmails ?? settings.emailNotifications ?? true,
+    email: settings.notificationEmail || "",
+    language: settings.notificationLanguage || "en",
+    vendors: settings.excludeVendors || "",
+    types: settings.excludeTypes || "",
+  };
+  const [values, setValues] = useState(initial);
   useEffect(() => {
-    if (settings) {
-      setValue((settings.similarityThreshold ?? 70).toString());
-      setAutoDraft(settings.autoDraftHighRisk ?? false);
-      setImmediateAlertEmails(settings.immediateAlertEmails ?? settings.emailNotifications ?? true);
-      setWeeklySummaryEmails(settings.weeklySummaryEmails ?? settings.emailNotifications ?? true);
-      setNotificationEmail(settings.notificationEmail ?? "");
-      setNotificationLanguage(settings.notificationLanguage ?? "en");
-      setVendorsList(settings.excludeVendors ? settings.excludeVendors.split(',').map(s => s.trim()).filter(Boolean) : []);
-      setTypesList(settings.excludeTypes ? settings.excludeTypes.split(',').map(s => s.trim()).filter(Boolean) : []);
-    }
+    setValues({
+      threshold: String(settings.similarityThreshold ?? 70),
+      priority: settings.autoDraftHighRisk ?? false,
+      immediate:
+        settings.immediateAlertEmails ?? settings.emailNotifications ?? true,
+      weekly:
+        settings.weeklySummaryEmails ?? settings.emailNotifications ?? true,
+      email: settings.notificationEmail || "",
+      language: settings.notificationLanguage || "en",
+      vendors: settings.excludeVendors || "",
+      types: settings.excludeTypes || "",
+    });
   }, [settings]);
-
-  const handleVendorKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' || e.key === ',') {
-      e.preventDefault();
-      const val = vendorInput.trim().replace(/,$/, '');
-      if (val && !vendorsList.includes(val)) {
-        const newList = [...vendorsList, val];
-        setVendorsList(newList);
-      }
-      setVendorInput("");
-    } else if (e.key === 'Backspace' && !vendorInput && vendorsList.length > 0) {
-      const newList = vendorsList.slice(0, -1);
-      setVendorsList(newList);
-    }
-  };
-
-  const handleVendorBlur = () => {
-    const val = vendorInput.trim().replace(/,$/, '');
-    if (val && !vendorsList.includes(val)) {
-      const newList = [...vendorsList, val];
-      setVendorsList(newList);
-    }
-    setVendorInput("");
-  };
-
-  const handleTypeKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' || e.key === ',') {
-      e.preventDefault();
-      const val = typeInput.trim().replace(/,$/, '');
-      if (val && !typesList.includes(val)) {
-        const newList = [...typesList, val];
-        setTypesList(newList);
-      }
-      setTypeInput("");
-    } else if (e.key === 'Backspace' && !typeInput && typesList.length > 0) {
-      const newList = typesList.slice(0, -1);
-      setTypesList(newList);
-    }
-  };
-
-  const handleTypeBlur = () => {
-    const val = typeInput.trim().replace(/,$/, '');
-    if (val && !typesList.includes(val)) {
-      const newList = [...typesList, val];
-      setTypesList(newList);
-    }
-    setTypeInput("");
-  };
-
-  const isSubmitting = navigation.state === "submitting" || navigation.state === "loading";
-  const thresholdNumber = Number(value);
-  const monitoringMode =
-    thresholdNumber < 60 ? "broad" : thresholdNumber <= 75 ? "balanced" : "strict";
-  const initialScanStatus = settings?.initialScanStatus;
-  const hasCompletedInitialScan = initialScanStatus === "completed" ||
-    (settings?.freeScanUsed === true && Boolean(settings?.freeScanCompletedAt));
-  const automationStatus = initialScanStatus === "scanning"
-    ? "scanning"
-    : initialScanStatus === "failed"
-      ? "failed"
-      : hasCompletedInitialScan
-        ? billingStatus?.hasActivePayment
-          ? "active"
-          : "completedNoPlan"
-        : "notStarted";
-  const automationStatusTone = automationStatus === "active"
-    ? "success"
-    : automationStatus === "failed"
-      ? "critical"
-      : automationStatus === "scanning" || automationStatus === "completedNoPlan"
-        ? "warning"
-        : "info";
-
+  const dirty = JSON.stringify(values) !== JSON.stringify(initial);
+  const busy = navigation.state !== "idle";
+  const change = <K extends keyof typeof values>(
+    key: K,
+    value: (typeof values)[K],
+  ) => setValues((current) => ({ ...current, [key]: value }));
+  const excluded = exclusionPreview(catalog, values.vendors, values.types);
+  const mode =
+    Number(values.threshold) < 60
+      ? "broad"
+      : Number(values.threshold) <= 75
+        ? "balanced"
+        : "strict";
   return (
-    <s-page size="large" className="page-shell" suppressHydrationWarning>
-      <s-heading slot="title" size="large" suppressHydrationWarning>{t('settings.title')}</s-heading>
-
+    <s-page size="large" className="page-shell">
+      <s-heading slot="title">{t("settings.title")}</s-heading>
       <div className="admin-stack">
-        {actionData && "error" in actionData && actionData.error === "invalid_notification_email" ? (
-          <s-banner tone="critical" heading={t("settingsAdmin.notifications.invalidEmail")} />
-        ) : null}
-        <Form method="post">
-          <input type="hidden" name="autoDraftHighRisk" value={autoDraft ? "true" : "false"} />
-          <input type="hidden" name="immediateAlertEmails" value={immediateAlertEmails ? "true" : "false"} />
-          <input type="hidden" name="weeklySummaryEmails" value={weeklySummaryEmails ? "true" : "false"} />
-          <input type="hidden" name="notificationEmail" value={notificationEmail} />
-          <input type="hidden" name="notificationLanguage" value={notificationLanguage} />
-          <input type="hidden" name="excludeVendors" value={vendorsList.join(', ')} />
-          <input type="hidden" name="excludeTypes" value={typesList.join(', ')} />
-
-          <section className="admin-card monitoring-settings-overview">
-            <div className="admin-card__header">
-              <div>
-                <p className="admin-eyebrow">{t("settingsAdmin.automationStatusEyebrow")}</p>
-                <h2 className="admin-card__title">{t(`settingsAdmin.automationStatus.${automationStatus}.title`)}</h2>
-                <p className="admin-card__description">{t(`settingsAdmin.automationStatus.${automationStatus}.description`)}</p>
-              </div>
-              <s-badge tone={automationStatusTone}>{t(`settingsAdmin.automationStatus.${automationStatus}.badge`)}</s-badge>
-            </div>
-            {automationStatus !== "active" ? (
-              <s-button href="/app/manual-check" variant="secondary">
-                {t("settingsAdmin.automationStatus.openCatalog")}
-              </s-button>
-            ) : null}
-          </section>
-
-          <section className="admin-section-grid admin-section-grid--wide">
-            {/* COLUMN 1: Settings Form */}
+        <MonitoringStatus billing={billingStatus} />
+        {saved && !dirty && <p role="status">{t("workspace.saved")}</p>}
+        {actionData && "error" in actionData && (
+          <s-banner
+            tone="critical"
+            heading={t("settingsAdmin.notifications.invalidEmail")}
+          />
+        )}
+        <Form method="post" className="admin-stack">
+          <input
+            type="hidden"
+            name="similarityThreshold"
+            value={values.threshold}
+          />
+          <input
+            type="hidden"
+            name="autoDraftHighRisk"
+            value={String(values.priority)}
+          />
+          <input
+            type="hidden"
+            name="immediateAlertEmails"
+            value={String(values.immediate)}
+          />
+          <input
+            type="hidden"
+            name="weeklySummaryEmails"
+            value={String(values.weekly)}
+          />
+          <input type="hidden" name="notificationEmail" value={values.email} />
+          <input
+            type="hidden"
+            name="notificationLanguage"
+            value={values.language}
+          />
+          <input type="hidden" name="excludeVendors" value={values.vendors} />
+          <input type="hidden" name="excludeTypes" value={values.types} />
+          <div className="settings-save-bar">
+            <span role="status">
+              {dirty ? t("workspace.unsaved") : t("settings.title")}
+            </span>
+            <s-button
+              type="submit"
+              variant="primary"
+              disabled={!dirty || busy}
+              loading={busy}
+            >
+              {t("workspace.saveChanges")}
+            </s-button>
+          </div>
+          <div className="admin-section-grid admin-section-grid--wide">
+            <section className="admin-card admin-stack">
+              <h2 className="admin-card__title">
+                {t("settingsAdmin.notifications.enabledTitle")}
+              </h2>
+              <label className="settings-checkbox">
+                <input
+                  type="checkbox"
+                  checked={values.immediate}
+                  onChange={(event) =>
+                    change("immediate", event.target.checked)
+                  }
+                />
+                {t("settingsAdmin.notifications.immediateTitle")}
+              </label>
+              <p className="admin-helper">
+                {t("settingsAdmin.notifications.immediateDescription")}
+              </p>
+              <label className="settings-checkbox">
+                <input
+                  type="checkbox"
+                  checked={values.weekly}
+                  onChange={(event) => change("weekly", event.target.checked)}
+                />
+                {t("settingsAdmin.notifications.weeklyTitle")}
+              </label>
+              <p className="admin-helper">
+                {t("settingsAdmin.notifications.weeklyDescription")}
+              </p>
+              <s-text-field
+                label={t("settingsAdmin.notifications.emailLabel")}
+                type="email"
+                value={values.email}
+                onInput={(event: any) =>
+                  change("email", event.currentTarget.value)
+                }
+                required={values.immediate || values.weekly}
+              />
+              <s-select
+                label={t("workspace.notificationLanguage")}
+                value={values.language}
+                onChange={(event: any) =>
+                  change("language", event.currentTarget.value)
+                }
+              >
+                {EU_LANGUAGES.map((language) => (
+                  <s-option key={language.code} value={language.code}>
+                    {language.label}
+                  </s-option>
+                ))}
+              </s-select>
+            </section>
             <div className="admin-stack">
-              {/* Automation & Notifications settings */}
-              <div className="admin-card">
-                <div className="admin-card__header">
-                  <div>
-                    <h2 className="admin-card__title">{t("settingsAdmin.notifications.enabledTitle")}</h2>
-                    <p className="admin-card__description">{t("settingsAdmin.notifications.enabledDescription")}</p>
-                  </div>
-                </div>
-
-                <div className="admin-form-block" style={{ gap: '20px', display: 'flex', flexDirection: 'column' }}>
-                  {((immediateAlertEmails || weeklySummaryEmails) && !notificationEmail.trim()) && (
-                    <s-banner tone="warning" heading={t("settings.notifications.noRecipientHeading")}>
-                      <p>{t("settings.notifications.noRecipientDescription")}</p>
-                      {shopifyContactEmail && (
-                        <div style={{ marginTop: '8px' }}>
-                          <s-button type="button" onClick={() => setNotificationEmail(shopifyContactEmail)}>
-                            {t("settings.notifications.useShopifyEmail", { email: shopifyContactEmail })}
-                          </s-button>
-                        </div>
-                      )}
-                    </s-banner>
-                  )}
-
-                  <div className="admin-checkbox-group">
-                    <label style={{ display: 'flex', alignItems: 'flex-start', cursor: 'pointer', gap: '10px' }}>
-                      <input
-                        type="checkbox"
-                        checked={immediateAlertEmails}
-                        onChange={(e) => {
-                          const checked = e.target.checked;
-                          setImmediateAlertEmails(checked);
-                          if (checked && !notificationEmail.trim() && shopifyContactEmail) {
-                            setNotificationEmail(shopifyContactEmail);
-                          }
-                        }}
-                        style={{ marginTop: '3px', transform: 'scale(1.15)' }}
-                      />
-                      <div>
-                        <s-text fontWeight="bold">{t("settingsAdmin.notifications.immediateTitle")}</s-text>
-                        <br />
-                        <s-text tone="subdued" size="small">{t("settingsAdmin.notifications.immediateDescription")}</s-text>
-                      </div>
-                    </label>
-                    <label style={{ display: 'flex', alignItems: 'flex-start', cursor: 'pointer', gap: '10px', marginTop: '12px' }}>
-                      <input
-                        type="checkbox"
-                        checked={weeklySummaryEmails}
-                        onChange={(e) => {
-                          const checked = e.target.checked;
-                          setWeeklySummaryEmails(checked);
-                          if (checked && !notificationEmail.trim() && shopifyContactEmail) {
-                            setNotificationEmail(shopifyContactEmail);
-                          }
-                        }}
-                        style={{ marginTop: '3px', transform: 'scale(1.15)' }}
-                      />
-                      <div>
-                        <s-text fontWeight="bold">{t("settingsAdmin.notifications.weeklyTitle")}</s-text>
-                        <br />
-                        <s-text tone="subdued" size="small">{t("settingsAdmin.notifications.weeklyDescription")}</s-text>
-                      </div>
-                    </label>
-                  </div>
-                  <div>
-                    <s-text-field
-                      label={t("settingsAdmin.notifications.emailLabel")}
-                      type="email"
-                      value={notificationEmail}
-                      disabled={(!immediateAlertEmails && !weeklySummaryEmails) || undefined}
-                      onChange={(event: any) => setNotificationEmail(event.currentTarget.value)}
-                      helpText={t("settingsAdmin.notifications.emailHelp")}
-                    />
-                    {shopifyContactEmail && notificationEmail.trim().toLowerCase() !== shopifyContactEmail.toLowerCase() && (
-                      <div style={{ marginTop: '6px' }}>
-                        <s-button
-                          type="button"
-                          variant="secondary"
-                          onClick={() => setNotificationEmail(shopifyContactEmail)}
-                        >
-                          {t("settings.notifications.useShopifyEmail", { email: shopifyContactEmail })}
-                        </s-button>
-                      </div>
-                    )}
-                  </div>
-                  <s-select
-                    label={t("settingsAdmin.notifications.languageLabel")}
-                    value={notificationLanguage}
-                    disabled={(!immediateAlertEmails && !weeklySummaryEmails) || undefined}
-                    onChange={(event: any) => setNotificationLanguage(event.currentTarget.value)}
-                  >
-                    {EU_LANGUAGES.map((language) => (
-                      <s-option key={language.code} value={language.code}>{language.label}</s-option>
-                    ))}
-                  </s-select>
-                </div>
-              </div>
-
-              {/* Threshold Settings */}
-              <div className="admin-card">
-                <div className="admin-card__header">
-                  <div>
-                    <p className="admin-eyebrow">{t("settingsAdmin.monitoringModeEyebrow")}</p>
-                    <h2 className="admin-card__title">{t('settings.threshold.title')}</h2>
-                    <p className="admin-card__description">{t('settings.threshold.description')}</p>
-                  </div>
-                  <s-badge tone="info">{t(`settingsAdmin.mode.${monitoringMode}`)}</s-badge>
-                </div>
-
-                <div className="monitoring-mode-grid">
-                  <button
+              <section className="admin-card">
+                <h2 className="admin-card__title">
+                  {t("workspace.appLanguage")}
+                </h2>
+                <LanguageSwitcher />
+              </section>
+              <section className="admin-card admin-stack">
+                <h2 className="admin-card__title">{t("billing.planTitle")}</h2>
+                <p>
+                  {billingStatus.developmentBypass
+                    ? t("billing.statusDevelopmentBypass")
+                    : !billingStatus.billingVerified
+                      ? t("billing.verificationError")
+                      : billingStatus.hasActivePayment
+                        ? t("billing.statusActivePro")
+                        : t("billing.statusFreeUsed")}
+                </p>
+                {billingStatus.pricingPlansUrl && (
+                  <s-button
                     type="button"
-                    className={`monitoring-mode-option ${monitoringMode === "broad" ? "monitoring-mode-option--active" : ""}`}
-                    onClick={() => setValue("50")}
+                    onClick={() =>
+                      window.open(billingStatus.pricingPlansUrl!, "_top")
+                    }
                   >
-                    <strong>{t("settingsAdmin.guidanceItems.broadTitle")}</strong>
-                    <span>{t("settingsAdmin.guidanceItems.broadDescription")}</span>
-                  </button>
-                  <button
-                    type="button"
-                    className={`monitoring-mode-option ${monitoringMode === "balanced" ? "monitoring-mode-option--active" : ""}`}
-                    onClick={() => setValue("70")}
-                  >
-                    <strong>{t("settingsAdmin.guidanceItems.balancedTitle")}</strong>
-                    <span>{t("settingsAdmin.guidanceItems.balancedDescription")}</span>
-                  </button>
-                  <button
-                    type="button"
-                    className={`monitoring-mode-option ${monitoringMode === "strict" ? "monitoring-mode-option--active" : ""}`}
-                    onClick={() => setValue("85")}
-                  >
-                    <strong>{t("settingsAdmin.guidanceItems.strictTitle")}</strong>
-                    <span>{t("settingsAdmin.guidanceItems.strictDescription")}</span>
-                  </button>
-                </div>
-
-                <details className="advanced-settings-disclosure">
-                  <summary>{t("settingsAdmin.advancedMatchingSettings")}</summary>
-                  <div className="admin-note">
-                    <strong>{t('settings.threshold.howItWorks')}</strong>
-                    <span>{t("settingsAdmin.strictnessHint")}</span>
-                  </div>
-                  <div className="admin-form-block">
-                    <s-number-field
-                      label={t('settings.threshold.label')}
-                      labelAccessibilityVisibility="visible"
-                      name="similarityThreshold"
-                      min="0"
-                      max="100"
-                      value={value}
-                      onChange={(e: any) => setValue(e.currentTarget.value)}
-                    />
-                  </div>
-                </details>
-              </div>
-
-              {/* Safety automation settings */}
-              <div className="admin-card">
-                <div className="admin-card__header">
-                  <div>
-                    <p className="admin-eyebrow">{t("settingsAdmin.automation.eyebrow")}</p>
-                    <h2 className="admin-card__title">{t("settingsAdmin.automation.title")}</h2>
-                    <p className="admin-card__description">{t("settingsAdmin.automation.description")}</p>
-                  </div>
-                </div>
-
-                <div className="admin-form-block" style={{ gap: '20px', display: 'flex', flexDirection: 'column' }}>
-                  <div className="admin-checkbox-group">
-                    <label style={{ display: 'flex', alignItems: 'flex-start', cursor: 'pointer', gap: '10px' }}>
-                      <input
-                        type="checkbox"
-                        checked={autoDraft}
-                        onChange={(e) => setAutoDraft(e.target.checked)}
-                        style={{ marginTop: '3px', transform: 'scale(1.15)' }}
-                      />
-                      <div>
-                        <s-text fontWeight="bold">{t("settingsAdmin.automation.autoDraftTitle")}</s-text>
-                        <br />
-                        <s-text tone="subdued" size="small">{t("settingsAdmin.automation.autoDraftDescription")}</s-text>
-                      </div>
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              {/* Exclusion rules settings */}
-              <div className="admin-card">
-                <div className="admin-card__header">
-                  <div>
-                    <p className="admin-eyebrow">{t("settingsAdmin.exclusions.eyebrow")}</p>
-                    <h2 className="admin-card__title">{t("settingsAdmin.exclusions.title")}</h2>
-                    <p className="admin-card__description">{t("settingsAdmin.exclusions.description")}</p>
-                  </div>
-                </div>
-
-                <div className="admin-form-block" style={{ gap: '20px', display: 'flex', flexDirection: 'column' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    <label htmlFor="excluded-vendors"><s-text fontWeight="bold">{t("settingsAdmin.exclusions.vendorsTitle")}</s-text></label>
-                    <s-text tone="subdued" size="small">{t("settingsAdmin.exclusions.vendorsDescription")}</s-text>
-                    <div className="chip-container">
-                      {vendorsList.map((vendor, idx) => (
-                        <s-chip key={vendor} onDismiss={() => {
-                          const newList = vendorsList.filter((_, i) => i !== idx);
-                          setVendorsList(newList);
-                        }}>
-                          {vendor}
-                        </s-chip>
-                      ))}
-                      <input
-                        type="text"
-                        id="excluded-vendors"
-                        aria-label={t("settingsAdmin.exclusions.vendorsTitle")}
-                        placeholder={vendorsList.length === 0 ? t("settingsAdmin.exclusions.vendorsPlaceholder") : ""}
-                        value={vendorInput}
-                        onChange={(e) => setVendorInput(e.target.value)}
-                        onKeyDown={handleVendorKeyDown}
-                        onBlur={handleVendorBlur}
-                        className="chip-input"
-                      />
-                    </div>
-                  </div>
-
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    <label htmlFor="excluded-product-types"><s-text fontWeight="bold">{t("settingsAdmin.exclusions.typesTitle")}</s-text></label>
-                    <s-text tone="subdued" size="small">{t("settingsAdmin.exclusions.typesDescription")}</s-text>
-                    <div className="chip-container">
-                      {typesList.map((type, idx) => (
-                        <s-chip key={type} onDismiss={() => {
-                          const newList = typesList.filter((_, i) => i !== idx);
-                          setTypesList(newList);
-                        }}>
-                          {type}
-                        </s-chip>
-                      ))}
-                      <input
-                        type="text"
-                        id="excluded-product-types"
-                        aria-label={t("settingsAdmin.exclusions.typesTitle")}
-                        placeholder={typesList.length === 0 ? t("settingsAdmin.exclusions.typesPlaceholder") : ""}
-                        value={typeInput}
-                        onChange={(e) => setTypeInput(e.target.value)}
-                        onKeyDown={handleTypeKeyDown}
-                        onBlur={handleTypeBlur}
-                        className="chip-input"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Save actions */}
-              <div className="admin-actions" style={{ padding: '16px 0' }}>
-                <s-button type="submit" variant="primary" loading={isSubmitting || undefined}>
-                  {t("settingsAdmin.saveAll")}
-                </s-button>
-                <s-button type="button" variant="secondary" onClick={() => {
-                  setValue(envDefault.toString());
-                  setAutoDraft(false);
-                  setImmediateAlertEmails(true);
-                  setWeeklySummaryEmails(true);
-                  setNotificationLanguage("en");
-                  setVendorInput("");
-                  setTypeInput("");
-                  setVendorsList([]);
-                  setTypesList([]);
-                }}>
-                  {t('settings.threshold.resetToDefault')}
-                </s-button>
-              </div>
+                    {t("billing.managePlanButton")}
+                  </s-button>
+                )}
+              </section>
             </div>
-
-            {/* COLUMN 2: Guidance info */}
-            <div className="admin-stack">
-              <div className="admin-card settings-value-card">
-                <div className="admin-card__header">
-                  <div>
-                    <p className="admin-eyebrow">{t("settingsAdmin.valueEyebrow")}</p>
-                    <h2 className="admin-card__title">{t("settingsAdmin.valueTitle")}</h2>
-                    <p className="admin-card__description">{t("settingsAdmin.valueDescription")}</p>
-                  </div>
-                </div>
-
-                <div className="admin-guidance-list">
-                  <div className="admin-guidance-item">
-                    <strong>{t("settingsAdmin.valueItems.dailyTitle")}</strong>
-                    <p>{t("settingsAdmin.valueItems.dailyDescription")}</p>
-                  </div>
-                  <div className="admin-guidance-item">
-                    <strong>{t("settingsAdmin.valueItems.auditTitle")}</strong>
-                    <p>{t("settingsAdmin.valueItems.auditDescription")}</p>
-                  </div>
-                  <div className="admin-guidance-item">
-                    <strong>{t("settingsAdmin.valueItems.workflowTitle")}</strong>
-                    <p>{t("settingsAdmin.valueItems.workflowDescription")}</p>
-                  </div>
-                </div>
-              </div>
-
-              <details className="advanced-settings-disclosure settings-subscription-disclosure">
-                <summary>{t("settingsAdmin.included.title")}</summary>
-                <div className="admin-note">
-                  <strong>{t("settingsAdmin.included.monitoringTitle")}</strong>
-                  <span>{t("settingsAdmin.included.monitoringDescription")}</span>
-                </div>
-                <div className="admin-note">
-                  <strong>{t("settingsAdmin.included.evidenceTitle")}</strong>
-                  <span>{t("settingsAdmin.included.evidenceDescription")}</span>
-                </div>
-                <div className="admin-note">
-                  <strong>{t("settingsAdmin.included.teamTitle")}</strong>
-                  <span>{t("settingsAdmin.included.teamDescription")}</span>
-                </div>
-              </details>
-
-              <div className="admin-card">
-                <div className="admin-card__header">
-                  <div>
-                    <p className="admin-eyebrow">{t("billing.planEyebrow")}</p>
-                    <h2 className="admin-card__title">{t("billing.planTitle")}</h2>
-                    <p className="admin-card__description">
-                      {billingStatus.hasActivePayment
-                        ? t("billing.planActiveDescription")
-                        : billingStatus.freeScanUsed
-                          ? t("billing.planFreeUsedDescription")
-                          : t("billing.planFreeAvailableDescription")}
-                    </p>
-                  </div>
-                </div>
-                <div className="admin-form-block">
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px" }}>
-                    <div>
-                      <span style={{ marginRight: "8px", fontWeight: 600 }}>{t("billing.statusLabel")}:</span>
-                      <s-badge tone={billingStatus.developmentBypass ? "info" : !billingStatus.billingVerified ? "critical" : billingStatus.hasActivePayment ? "success" : billingStatus.freeScanUsed ? "warning" : "info"}>
-                        {billingStatus.developmentBypass
-                          ? t("billing.statusDevelopmentBypass")
-                          : !billingStatus.billingVerified
-                            ? t("billing.statusUnverified")
-                            : billingStatus.hasActivePayment
-                              ? t("billing.statusActivePro")
-                              : billingStatus.freeScanUsed
-                                ? t("billing.statusFreeUsed")
-                                : t("billing.statusFreeAvailable")}
-                      </s-badge>
-                    </div>
-                    {billingStatus.pricingPlansUrl ? <s-button
-                      variant={billingStatus.hasActivePayment ? "secondary" : "primary"}
-                      onClick={() => window.open(billingStatus.pricingPlansUrl || undefined, "_top")}
-                      suppressHydrationWarning
-                    >
-                      {billingStatus.hasActivePayment ? t("billing.managePlanButton") : t("billing.upgradePlanButton")}
-                    </s-button> : <s-text tone="critical">{t("billing.pricingUnavailable")}</s-text>}
-                  </div>
-                </div>
-              </div>
-
-              <div className="admin-card">
-                <div className="admin-card__header">
-                  <div>
-                    <h2 className="admin-card__title">{t('common.language')}</h2>
-                  </div>
-                </div>
-                <div className="admin-form-block">
-                  <LanguageSwitcher />
-                </div>
-              </div>
-
-            </div>
+          </div>
+          <section className="admin-card">
+            <h2 className="admin-card__title">{t("workspace.recommended")}</h2>
+            <p>{t("workspace.balancedHelp")}</p>
+            <s-badge tone="info">{t(`settingsAdmin.mode.${mode}`)}</s-badge>
           </section>
+          <details className="admin-card advanced-settings-disclosure">
+            <summary>{t("workspace.settingsAdvanced")}</summary>
+            <div className="admin-stack">
+              <div
+                className="monitoring-mode-grid"
+                role="group"
+                aria-label={t("settings.threshold.title")}
+              >
+                {(
+                  [
+                    ["broad", "50"],
+                    ["balanced", "70"],
+                    ["strict", "85"],
+                  ] as const
+                ).map(([name, number]) => (
+                  <button
+                    key={name}
+                    type="button"
+                    aria-pressed={mode === name}
+                    className={`monitoring-mode-option ${mode === name ? "monitoring-mode-option--active" : ""}`}
+                    onClick={() => change("threshold", number)}
+                  >
+                    <strong>
+                      {mode === name ? "✓ " : ""}
+                      {t(`settingsAdmin.mode.${name}`)}
+                    </strong>
+                    <span>{t(`workspace.${name}Help`)}</span>
+                  </button>
+                ))}
+              </div>
+              <s-number-field
+                label={t("settings.threshold.label")}
+                min="0"
+                max="100"
+                value={values.threshold}
+                onChange={(event: any) =>
+                  change("threshold", event.currentTarget.value)
+                }
+              />
+              <label className="settings-checkbox">
+                <input
+                  type="checkbox"
+                  checked={values.priority}
+                  onChange={(event) => change("priority", event.target.checked)}
+                />
+                {t("settingsAdmin.automation.autoDraftTitle")}
+              </label>
+              <p className="admin-helper">
+                {t("settingsAdmin.automation.autoDraftDescription")}
+              </p>
+              <h3>{t("settingsAdmin.exclusions.title")}</h3>
+              <p>{t("workspace.excludeHelp")}</p>
+              <s-text-field
+                label={t("settingsAdmin.exclusions.vendorsTitle")}
+                value={values.vendors}
+                onInput={(event: any) =>
+                  change("vendors", event.currentTarget.value)
+                }
+                helpText={t("settingsAdmin.exclusions.vendorsDescription")}
+              />
+              <s-text-field
+                label={t("settingsAdmin.exclusions.typesTitle")}
+                value={values.types}
+                onInput={(event: any) =>
+                  change("types", event.currentTarget.value)
+                }
+                helpText={t("settingsAdmin.exclusions.typesDescription")}
+              />
+              <p role="status">
+                {t("workspace.excluded", {
+                  count: excluded.length,
+                  total: catalog.length,
+                })}
+              </p>
+              {excluded.length > 0 && (
+                <ul>
+                  {excluded.slice(0, 10).map((product) => (
+                    <li key={product.id}>{product.title}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </details>
         </Form>
       </div>
     </s-page>

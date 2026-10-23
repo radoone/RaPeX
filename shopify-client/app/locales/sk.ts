@@ -1,5 +1,7 @@
+import { workspaceCopy } from "./workspace";
 const sk = {
     translation: {
+      workspace: workspaceCopy.sk,
       "billingRedirect": {
         "opening": "Otváram cenové plány Shopify...",
         "openPricingPlans": "Otvoriť cenové plány"
@@ -173,8 +175,8 @@ const sk = {
           "criticalBannerTitle_plural": "{{count}} aktívne upozornenia obsahujú vysokorizikové zhody",
           "criticalBannerDescription": "{{count}} aktívna zhoda je označená ako vysoké alebo vážne riziko. Tieto produkty riešte prednostne ešte pred ďalším predajom.",
           "criticalBannerDescription_plural": "{{count}} aktívne zhody sú označené ako vysoké alebo vážne riziko. Tieto produkty riešte prednostne ešte pred ďalším predajom.",
-          "warningBannerTitle": "{{count}} aktívne upozornenie potrebuje rozhodnutie merchanta",
-          "warningBannerTitle_plural": "{{count}} aktívne upozornenia potrebujú rozhodnutie merchanta",
+          "warningBannerTitle": "{{count}} aktívne upozornenie potrebuje rozhodnutie obchodníkaa",
+          "warningBannerTitle_plural": "{{count}} aktívne upozornenia potrebujú rozhodnutie obchodníkaa",
           "warningBannerDescription": "Skontrolujte tieto zhody, zamietnite falošné poplachy alebo potvrdené problémy uzavrite, aby bol zoznam stále použiteľný.",
           "storeStatus": "Stav obchodu",
           "noActiveAlertsTitle": "Žiadne aktívne bezpečnostné upozornenia",
@@ -208,8 +210,8 @@ const sk = {
           "auditRecordsDescription": "Vyriešené a zamietnuté rozhodnutia s dôvodmi a internými poznámkami.",
           "auditReady": "Report pripravený",
           "monitoringStatusEyebrow": "Stav monitoringu",
-          "monitoringStatusNeedsReview": "{{count}} produkt potrebuje rozhodnutie merchanta",
-          "monitoringStatusNeedsReview_plural": "{{count}} produkty potrebujú rozhodnutie merchanta",
+          "monitoringStatusNeedsReview": "{{count}} produkt potrebuje rozhodnutie obchodníkaa",
+          "monitoringStatusNeedsReview_plural": "{{count}} produkty potrebujú rozhodnutie obchodníkaa",
           "monitoringStatusAllClear": "Monitoring katalógu beží",
           "monitoringStatusDescription": "ZeroRecall kontroluje katalóg voči novým aktualizáciám EÚ Safety Gate, zvýrazní produkty na kontrolu a uchováva dôkazy pre auditné reporty.",
           "productsMonitored": "Produkty so uloženými kontrolami",
@@ -289,7 +291,7 @@ const sk = {
           "resolvedRateTitle": "Miera uzavretia",
           "resolvedRateDescription": "Aká časť zaznamenaných upozornení už bola uzavretá.",
           "priorityQueue": "Zoznam rozhodnutí",
-          "recentAlertsTitle": "Produkty čakajúce na rozhodnutie merchanta",
+          "recentAlertsTitle": "Produkty čakajúce na rozhodnutie obchodníkaa",
           "recentAlertsDescription": "Skontrolujte pravdepodobné zhody so Safety Gate, zaznamenajte rozhodnutie a uchovajte dôkazy pre audit.",
           "noAlertsTitle": "Žiadne produkty nevyžadujú kontrolu",
           "noAlertsDescription": "Momentálne nie sú otvorené žiadne kontroly produktov. Aj to má hodnotu: denný monitoring beží na pozadí a dôkazy ostávajú pripravené na export.",
@@ -298,7 +300,7 @@ const sk = {
           "emptyProofCoverage": "{{count}} produktov má zaznamenané dôkazy ochrany.",
           "demoAlert": {
             "badge": "Ukážkový workflow",
-            "sample": "Čo merchant vidí pri zhode",
+            "sample": "Čo obchodníka vidí pri zhode",
             "title": "Nájdená pravdepodobná zhoda so Safety Gate",
             "description": "Appka ukáže Shopify produkt, záznam zo Safety Gate, dôvod zhody a akciu na zaznamenanie rozhodnutia.",
             "reason": "Porovnať značku, model, kategóriu a fotografie produktu",
@@ -314,7 +316,7 @@ const sk = {
           "bulkCheckUncheckedSummary": "Skontroluje sa zostávajúcich {{count}} produktov a preskočí sa {{skip}} už skontrolovaných položiek.",
           "latestRun": "Posledný beh",
           "bulkCheckSummary": "Súhrn hromadnej kontroly",
-          "bulkCheckSummaryDescription": "Súhrn ostáva kompaktný, aby merchant vedel potvrdiť výsledky bez otvárania ďalšej obrazovky.",
+          "bulkCheckSummaryDescription": "Súhrn ostáva kompaktný, aby obchodníka vedel potvrdiť výsledky bez otvárania ďalšej obrazovky.",
           "stats": {
             "totalProducts": "Všetky produkty",
             "alreadyChecked": "Už skontrolované",
@@ -416,7 +418,7 @@ const sk = {
         "clear": "Vymazať",
         "view": "Zobraziť",
         "viewDetails": "Zobraziť detaily",
-        "reviewDecision": "Skontrolovať rozhodnutie",
+        "reviewDecision": "Porovnať produkty",
         "resolve": "Vyriešiť",
         "recordDecision": "Zaznamenať rozhodnutie",
         "reactivate": "Reaktivovať"
@@ -425,7 +427,7 @@ const sk = {
         "menuLabel": "Akcie riešenia",
         "actionTaken": "Vykonaná akcia",
         "noActionNeeded": "Akcia nie je potrebná",
-        "verifiedSafe": "Produkt overený ako bezpečný",
+        "verifiedSafe": "Historický výsledok: produkt overený ako bezpečný",
         "removedFromSale": "Stiahnuté z predaja",
         "modifiedProduct": "Produkt upravený",
         "contactedSupplier": "Kontaktovaný dodávateľ (Čaká na odpoveď)",
@@ -561,7 +563,7 @@ const sk = {
           "whyMatched": "Prečo vznikla zhoda",
           "whatToDo": "Čo mám spraviť?"
         },
-        "merchantRecommendation": {
+        "obchodníkaRecommendation": {
           "active": "Porovnajte obrázky produktu a Safety Gate, potvrďte značku alebo model a zaznamenajte opatrenie obchodu.",
           "safe": "Teraz nie je potrebné opatrenie. Kontrolu zopakujte po zmene produktu, obalu, obrázkov alebo dodávateľa.",
           "reviewed": "Tento nález je uzavretý. Pred opätovnou aktiváciou overte zaznamenaný výsledok a dôkazy."
@@ -667,7 +669,7 @@ const sk = {
           },
           "empty": "Žiadne upozornenia pre zvolené filtre",
           "emptyAllClearTitle": "Všetky aktívne produktové kontroly sú vybavené",
-          "emptyAllClearBody": "Momentálne nie sú otvorené žiadne rozhodnutia merchanta. Denný monitoring stále beží a uzavreté rozhodnutia ostávajú v auditnej stope.",
+          "emptyAllClearBody": "Momentálne nie sú otvorené žiadne rozhodnutia obchodníkaa. Denný monitoring stále beží a uzavreté rozhodnutia ostávajú v auditnej stope.",
           "emptyFilteredTitle": "Žiadne položky na kontrolu nezodpovedajú týmto filtrom",
           "emptyFilteredBody": "Upravte filtre alebo vyhľadajte iný produkt. Aktívny zoznam môže byť stále čistý.",
           "thumbnailLabel": "Náhľad {{title}}",
@@ -895,7 +897,7 @@ const sk = {
       },
       "settingsAdmin": {
         "configuration": "Konfigurácia",
-        "configurationDescription": "Stránka je zameraná na jedno rozhodnutie merchanta: aké prísne má byť porovnávanie produktov s upozorneniami Safety Gate.",
+        "configurationDescription": "Stránka je zameraná na jedno rozhodnutie obchodníkaa: aké prísne má byť porovnávanie produktov s upozorneniami Safety Gate.",
         "currentThreshold": "Aktuálny prah",
         "storeSetting": "Nastavenie obchodu",
         "currentThresholdDescription": "Nižšie hodnoty zachytia viac možných zhôd. Vyššie hodnoty znižujú počet falošných poplachov.",
@@ -1025,8 +1027,8 @@ const sk = {
           "dailyDescription": "Nové Safety Gate upozornenia sa kontrolujú voči monitorovaným produktom bez manuálneho skenu.",
           "auditTitle": "Dôkazy pripravené na audit",
           "auditDescription": "Vyriešené a zamietnuté rozhodnutia uchovávajú poznámky, dôvody a históriu kontroly pre exportovateľné reporty.",
-          "workflowTitle": "Workflow priamo v Shopify",
-          "workflowDescription": "Merchant rieši iba produkty čakajúce na rozhodnutie a potom ich vyrieši, zamietne alebo kontaktuje dodávateľa."
+          "workflowTitle": "Postup priamo v Shopify",
+          "workflowDescription": "Obchodník rieši iba produkty čakajúce na rozhodnutie a potom ich vyrieši, zamietne alebo kontaktuje dodávateľa."
         },
         "saveAll": "Uložiť všetky nastavenia",
         "workspace": "Pracovné prostredie",
@@ -1041,7 +1043,7 @@ const sk = {
             "description": "Nové Safety Gate upozornenia sa kontrolujú voči vášmu Shopify katalógu."
           },
           "review": {
-            "title": "Workflow rozhodnutí merchanta",
+            "title": "Workflow rozhodnutí obchodníkaa",
             "description": "Porovnajte zhodu, rozhodnite ďalší krok a udržujte zoznam použiteľný."
           },
           "audit": {
@@ -1118,7 +1120,7 @@ const sk = {
             "dismiss": "Rozhodnutie zaznamenané: zamietnuté"
           },
           "details": {
-            "checkSafe": "Produkt bol skontrolovaný a označený ako bezpečný.",
+            "checkSafe": "Pri tejto kontrole sa nenašla zhoda.",
             "checkUnsafe": "Produkt vyžaduje kontrolu. Záznam rozhodnutia bol vytvorený.",
             "bulkScanned": "Hromadný sken katalógu bol dokončený.",
             "autoDrafted": "Produkt bol označený na prioritnú kontrolu.",

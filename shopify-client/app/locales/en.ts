@@ -1,5 +1,7 @@
+import { workspaceCopy } from "./workspace";
 const en = {
     translation: {
+      workspace: workspaceCopy.en,
       "billingRedirect": {
         "opening": "Opening Shopify pricing plans...",
         "openPricingPlans": "Open pricing plans"
@@ -416,7 +418,7 @@ const en = {
         "clear": "Clear",
         "view": "View",
         "viewDetails": "View details",
-        "reviewDecision": "Review decision",
+        "reviewDecision": "Compare products",
         "resolve": "Resolve",
         "recordDecision": "Record decision",
         "reactivate": "Reactivate"
@@ -425,7 +427,7 @@ const en = {
         "menuLabel": "Resolution actions",
         "actionTaken": "Action taken",
         "noActionNeeded": "No action needed",
-        "verifiedSafe": "Product verified safe",
+        "verifiedSafe": "Historical outcome: product verified safe",
         "removedFromSale": "Removed from sale",
         "modifiedProduct": "Product modified",
         "contactedSupplier": "Contacted supplier (Pending response)",
@@ -1118,7 +1120,7 @@ const en = {
             "dismiss": "Decision recorded: dismissed"
           },
           "details": {
-            "checkSafe": "Product checked and verified as safe.",
+            "checkSafe": "No match was found in this check.",
             "checkUnsafe": "Product needs review. Decision record created.",
             "bulkScanned": "Bulk catalog scan completed.",
             "autoDrafted": "Product marked for priority review.",

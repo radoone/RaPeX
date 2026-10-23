@@ -1,249 +1,201 @@
 import type { LoaderFunctionArgs } from "react-router";
-import { data as json, isRouteErrorResponse, useLoaderData, useNavigate, useRouteError } from "react-router";
+import {
+  data as json,
+  isRouteErrorResponse,
+  useLoaderData,
+  useNavigate,
+  useRouteError,
+} from "react-router";
 import { useTranslation } from "react-i18next";
-import { Fragment, useMemo, useState } from "react";
+import { useState } from "react";
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { authenticate } from "../shopify.server";
-import db from "../merchant-db.server";
-import { formatRelativeDate } from "../components/AlertTable";
-
-export const headers = (headersArgs: any) => {
-  return boundary.headers(headersArgs);
-};
-
-function parseAlertSummary(checkResult: string | null | undefined) {
-  try {
-    const parsed = checkResult ? JSON.parse(checkResult) : null;
-    const warning = Array.isArray(parsed?.warnings) ? parsed.warnings[0] : null;
-    return {
-      reason: warning?.reason || parsed?.recommendation || "",
-      riskLevel:
-        warning?.alertDetails?.fields?.alert_level ||
-        warning?.alertDetails?.fields?.risk_level ||
-        warning?.riskLevel ||
-        "",
-      alertNumber: warning?.alertDetails?.fields?.alert_number || "",
-    };
-  } catch {
-    return { reason: "", riskLevel: "", alertNumber: "" };
-  }
-}
-
-function decisionLabelKey(record: { resolutionType: string | null; status: string }) {
-  switch (record.resolutionType) {
-    case "verified_safe":
-      return "resolveActions.verifiedSafe";
-    case "removed_from_sale":
-      return "resolveActions.removedFromSale";
-    case "modified_product":
-      return "resolveActions.modifiedProduct";
-    case "contacted_supplier":
-      return "resolveActions.contactedSupplier";
-    case "false_positive":
-      return "resolveActions.falsePositive";
-    case "not_my_product":
-      return "resolveActions.notMyProduct";
-    case "other":
-      return "resolveActions.other";
-    default:
-      return record.status === "resolved"
-        ? "status.resolved"
-        : record.status === "dismissed"
-          ? "status.dismissed"
-          : "status.needsReview";
-  }
-}
-
-function compactEvidenceText(record: { notes?: string | null; reason?: string | null }) {
-  const source = record.notes || record.reason || "";
-  const firstSentence = source.split(/(?<=[.!?])\s+/)[0]?.trim();
-  if (!firstSentence) return "";
-  return firstSentence.length > 120 ? `${firstSentence.slice(0, 117).trim()}...` : firstSentence;
-}
-
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+import { reviewRecords } from "../services/review-records.server";
+import { decisionKey, isWaitingForSupplier } from "../services/review-evidence";
+import { localizeRisk } from "../components/AlertBadge";
+export const headers = boundary.headers;
+export const loader = async ({ request, url }: LoaderFunctionArgs) => {
   const { session } = await authenticate.admin(request);
-  const alerts = await db.safetyAlert.findMany({
-    where: { shop: session.shop },
-    orderBy: { updatedAt: "desc" },
-    take: 100,
-  });
-
   return json({
-    records: alerts.map((alert: any) => ({
-      id: alert.id,
-      productTitle: alert.productTitle,
-      productId: alert.productId,
-      status: alert.status,
-      resolutionType: alert.resolutionType || null,
-      notes: alert.notes || null,
-      updatedAt: alert.updatedAt,
-      resolvedAt: alert.resolvedAt || null,
-      dismissedAt: alert.dismissedAt || null,
-      ...parseAlertSummary(alert.checkResult),
-    })),
+    ...(await reviewRecords(
+      session.shop,
+      { from: "", to: "", status: "" },
+      100,
+    )),
+    view:
+      url.searchParams.get("view") === "findings" ? "findings" : "decisions",
   });
 };
-
 export default function EvidencePage() {
-  const { records } = useLoaderData<typeof loader>();
+  const { records, total, view } = useLoaderData<typeof loader>();
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const dateLocale = i18n.language === "sk" ? "sk-SK" : "en-GB";
-  const [searchValue, setSearchValue] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [expandedRecords, setExpandedRecords] = useState<string[]>([]);
-  const filteredRecords = useMemo(() => {
-    const query = searchValue.trim().toLocaleLowerCase();
-    return records.filter((record: any) => {
-      const matchesStatus = statusFilter === "all" || record.status === statusFilter;
-      const searchable = [record.productTitle, record.alertNumber, record.notes, record.reason]
-        .filter(Boolean)
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("");
+  const findings = records.filter(
+    (record) =>
+      (!status || record.status === status) &&
+      [record.productTitle, record.caseNumber, record.reason, record.notes]
         .join(" ")
-        .toLocaleLowerCase();
-      return matchesStatus && (!query || searchable.includes(query));
-    });
-  }, [records, searchValue, statusFilter]);
-
+        .toLowerCase()
+        .includes(search.toLowerCase()),
+  );
+  const events = findings
+    .flatMap((record) =>
+      record.decisions.map((event: any) => ({ ...event, record })),
+    )
+    .sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
   return (
-    <s-page size="large" className="page-shell" suppressHydrationWarning>
-      <s-heading slot="title" size="large" suppressHydrationWarning>{t("evidence.title")}</s-heading>
-      <s-button slot="primary-action" variant="primary" onClick={() => navigate("/app/audit-report")} suppressHydrationWarning>
-        {t("auditReport.open")}
+    <s-page size="large" className="page-shell">
+      <s-heading slot="title">{t("workspace.history")}</s-heading>
+      <s-button slot="primary-action" href="/app/audit-report">
+        {t("workspace.reportTitle")}
       </s-button>
-
       <div className="admin-stack">
         <section className="admin-card">
-          <div className="admin-card__header">
-            <div>
-              <p className="admin-eyebrow">{t("evidence.eyebrow")}</p>
-              <h2 className="admin-card__title">{t("evidence.heading")}</h2>
-              <p className="admin-card__description">{t("evidence.description")}</p>
-            </div>
-            <s-badge tone="info">
-              {filteredRecords.length === records.length
-                ? t("evidence.records", { count: records.length })
-                : t("evidence.filteredRecords", { visible: filteredRecords.length, total: records.length })}
-            </s-badge>
+          <div className="admin-actions">
+            <s-button
+              variant={view === "decisions" ? "secondary" : "tertiary"}
+              onClick={() => navigate("/app/evidence?view=decisions")}
+            >
+              {t("workspace.history")}
+            </s-button>
+            <s-button
+              variant={view === "findings" ? "secondary" : "tertiary"}
+              onClick={() => navigate("/app/evidence?view=findings")}
+            >
+              {t("workspace.findings")}
+            </s-button>
           </div>
-        </section>
-
-        <section className="admin-card">
           <div className="admin-toolbar evidence-toolbar">
             <s-text-field
               label={t("evidence.filters.searchLabel")}
-              labelAccessibilityVisibility="exclusive"
-              icon="search"
-              placeholder={t("evidence.filters.searchPlaceholder")}
-              value={searchValue}
-              onInput={(event: any) => setSearchValue(event.currentTarget.value || "")}
+              value={search}
+              onInput={(event: any) =>
+                setSearch(event.currentTarget.value || "")
+              }
             />
             <s-select
-              label={t("evidence.filters.statusLabel")}
-              value={statusFilter}
-              onChange={(event: any) => setStatusFilter(event.currentTarget.value || "all")}
+              label={t("workspace.status")}
+              value={status}
+              onChange={(event: any) => setStatus(event.currentTarget.value)}
             >
-              <s-option value="all">{t("common.all")}</s-option>
-              <s-option value="active">{t("status.needsReview")}</s-option>
-              <s-option value="resolved">{t("status.resolved")}</s-option>
-              <s-option value="dismissed">{t("status.dismissed")}</s-option>
+              <s-option value="">{t("workspace.all")}</s-option>
+              {["active", "resolved", "dismissed"].map((value) => (
+                <s-option key={value} value={value}>
+                  {t(
+                    value === "active"
+                      ? "status.needsReview"
+                      : `status.${value}`,
+                  )}
+                </s-option>
+              ))}
             </s-select>
           </div>
-          <div className="audit-report-table-wrap" aria-label={t("evidence.table.accessibilityLabel")}>
-          <s-table accessibilityLabel={t("evidence.table.accessibilityLabel")}>
-            <s-table-header-row>
-              <s-table-header listSlot="primary">{t("evidence.table.product")}</s-table-header>
-              <s-table-header listSlot="inline">{t("evidence.table.status")}</s-table-header>
-              <s-table-header listSlot="labeled">{t("evidence.table.decision")}</s-table-header>
-              <s-table-header>{t("evidence.table.summary")}</s-table-header>
-              <s-table-header>{t("evidence.table.updated")}</s-table-header>
-              <s-table-header>{t("evidence.table.details")}</s-table-header>
-            </s-table-header-row>
-            <s-table-body>
-              {filteredRecords.length === 0 ? (
-                <s-table-row>
-                  <s-table-cell colSpan={6}>
-                    <s-box padding="large">
-                      <s-text tone="subdued">
-                        {records.length === 0 ? t("evidence.empty") : t("evidence.filters.noResults")}
-                      </s-text>
-                    </s-box>
-                  </s-table-cell>
-                </s-table-row>
-              ) : filteredRecords.map((record: any) => {
-                const isExpanded = expandedRecords.includes(record.id);
-                const evidenceText = record.notes || record.reason || "";
-                return (
-                  <Fragment key={record.id}>
-                    <s-table-row>
-                      <s-table-cell>
-                        <s-stack gap="small-100">
-                          <s-link onClick={() => navigate(`/app/alerts?search=${encodeURIComponent(record.productTitle)}`)}>
-                            {record.productTitle}
-                          </s-link>
-                          {record.alertNumber ? (
-                            <s-text tone="subdued" size="small">{t("evidence.alertNumber", { number: record.alertNumber })}</s-text>
-                          ) : null}
-                        </s-stack>
-                      </s-table-cell>
-                      <s-table-cell>
-                        <s-badge tone={record.status === "active" ? "critical" : record.status === "resolved" ? "success" : "info"}>
-                          {record.status === "active"
-                            ? t("status.needsReview")
-                            : record.status === "resolved"
-                              ? t("status.resolved")
-                              : t("status.dismissed")}
-                        </s-badge>
-                      </s-table-cell>
-                      <s-table-cell>
-                        <s-stack gap="small-100">
-                          <s-text>{t(decisionLabelKey(record))}</s-text>
-                          {record.riskLevel ? <s-text tone="subdued" size="small">{record.riskLevel}</s-text> : null}
-                        </s-stack>
-                      </s-table-cell>
-                      <s-table-cell>
-                        <s-text tone={evidenceText ? undefined : "subdued"}>
-                          {compactEvidenceText(record) || t("evidence.noNotes")}
-                        </s-text>
-                      </s-table-cell>
-                      <s-table-cell>
-                        <s-text>{formatRelativeDate(new Date(record.updatedAt), t, dateLocale)}</s-text>
-                      </s-table-cell>
-                      <s-table-cell>
-                        {evidenceText ? (
-                          <s-button
-                            variant="tertiary"
-                            size="small"
-                            accessibilityLabel={isExpanded
-                              ? t("evidence.filters.collapseForProduct", { title: record.productTitle })
-                              : t("evidence.filters.expandForProduct", { title: record.productTitle })}
-                            onClick={() => setExpandedRecords((current) => current.includes(record.id)
-                              ? current.filter((id) => id !== record.id)
-                              : [...current, record.id])}
-                          >
-                            {isExpanded ? t("evidence.filters.showLess") : t("evidence.filters.showMore")}
-                          </s-button>
-                        ) : null}
-                      </s-table-cell>
-                    </s-table-row>
-                    {isExpanded && (
-                      <s-table-row>
-                        <s-table-cell colSpan={6}>
-                          <s-box padding="base" background="bg-surface-secondary" borderRadius="base">
-                            <s-stack gap="small-100">
-                              <s-text fontWeight="semibold">{t("evidence.fullEvidence")}</s-text>
-                              <s-text>{evidenceText}</s-text>
-                            </s-stack>
-                          </s-box>
-                        </s-table-cell>
-                      </s-table-row>
-                    )}
-                  </Fragment>
-                );
-              })}
-            </s-table-body>
-          </s-table>
+          <p className="admin-helper">
+            {t("workspace.historyLimit", { count: 100 })} ({total})
+          </p>
+          <div role="status" className="admin-helper">
+            {view === "decisions"
+              ? t("workspace.eventCount", { count: events.length })
+              : t("evidence.records", { count: findings.length })}
           </div>
+          {view === "decisions" ? (
+            events.length === 0 ? (
+              <div className="admin-empty-state">
+                <p>{t("workspace.noDecisions")}</p>
+                <s-button href="/app/alerts?status=active">
+                  {t("workspace.goReview")}
+                </s-button>
+              </div>
+            ) : (
+              <div className="decision-event-list">
+                {events.map((event) => (
+                  <article
+                    className="decision-event"
+                    key={`${event.record.id}-${event.id}`}
+                  >
+                    <s-link
+                      href={`/app/alerts?view=all&open=${encodeURIComponent(event.record.id)}`}
+                    >
+                      {event.record.productTitle}
+                    </s-link>
+                    <p>
+                      <strong>{t(decisionKey(event.resolutionType))}</strong> ·{" "}
+                      {t(
+                        event.reviewState === "waiting_for_supplier"
+                          ? "workspace.waiting"
+                          : `status.${event.reviewState === "needs_review" ? "needsReview" : event.reviewState}`,
+                      )}
+                    </p>
+                    <p className="admin-helper">
+                      {t("workspace.when")}:{" "}
+                      {event.createdAt &&
+                        new Date(event.createdAt).toLocaleString(
+                          i18n.language,
+                        )}{" "}
+                      · {t("workspace.who")}:{" "}
+                      {event.actorId || t("common.unknown")}
+                    </p>
+                    {event.notes && <p>{event.notes}</p>}
+                  </article>
+                ))}
+              </div>
+            )
+          ) : (
+            <s-table accessibilityLabel={t("workspace.findings")}>
+              <s-table-header-row>
+                <s-table-header listSlot="primary">
+                  {t("evidence.table.product")}
+                </s-table-header>
+                <s-table-header listSlot="inline">
+                  {t("workspace.status")}
+                </s-table-header>
+                <s-table-header>{t("workspace.whyMatch")}</s-table-header>
+                <s-table-header>{t("workspace.outcome")}</s-table-header>
+              </s-table-header-row>
+              <s-table-body>
+                {findings.map((record) => (
+                  <s-table-row key={record.id}>
+                    <s-table-cell>
+                      <s-link
+                        href={`/app/alerts?view=all&open=${encodeURIComponent(record.id)}`}
+                      >
+                        {record.productTitle}
+                      </s-link>
+                      {record.caseNumber && <p>{record.caseNumber}</p>}
+                      {record.url && (
+                        <s-link href={record.url} target="_blank">
+                          {t("analysis.viewOnSafetyGate")}
+                        </s-link>
+                      )}
+                    </s-table-cell>
+                    <s-table-cell>
+                      <s-badge
+                        tone={record.status === "active" ? "warning" : "info"}
+                      >
+                        {isWaitingForSupplier(record)
+                          ? t("workspace.waiting")
+                          : t(
+                              record.status === "active"
+                                ? "status.needsReview"
+                                : `status.${record.status}`,
+                            )}
+                      </s-badge>
+                      <p>{localizeRisk(record.riskLevel, t)}</p>
+                    </s-table-cell>
+                    <s-table-cell>
+                      <p>{record.reason}</p>
+                    </s-table-cell>
+                    <s-table-cell>
+                      {t(decisionKey(record.resolutionType))}
+                      {record.notes && <p>{record.notes}</p>}
+                    </s-table-cell>
+                  </s-table-row>
+                ))}
+              </s-table-body>
+            </s-table>
+          )}
         </section>
       </div>
     </s-page>
@@ -253,7 +205,10 @@ export default function EvidencePage() {
 export function ErrorBoundary() {
   const { t } = useTranslation();
   const error = useRouteError();
-  if (isRouteErrorResponse(error) && (error.status === 200 || !error.statusText)) {
+  if (
+    isRouteErrorResponse(error) &&
+    (error.status === 200 || !error.statusText)
+  ) {
     return boundary.error(error);
   }
   const message = isRouteErrorResponse(error)
@@ -263,10 +218,14 @@ export function ErrorBoundary() {
       : t("errors.unknown");
   return (
     <s-page size="large">
-      <s-heading slot="title" size="large">{t("evidence.title")}</s-heading>
+      <s-heading slot="title" size="large">
+        {t("evidence.title")}
+      </s-heading>
       <s-banner tone="critical" heading={t("errors.pageLoadFailed")}>
         <s-text>{message}</s-text>
-        <s-button slot="secondary-actions" href="/app/evidence">{t("actions.retry")}</s-button>
+        <s-button slot="secondary-actions" href="/app/evidence">
+          {t("actions.retry")}
+        </s-button>
       </s-banner>
     </s-page>
   );
