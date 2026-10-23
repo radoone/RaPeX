@@ -264,7 +264,12 @@
     "unavailableTitle": "Bezmaksas skenēšana pašlaik nav pieejama",
     "unavailableBody": "Mēs pašlaik nevaram sākt skenēšanu. Skatiet rezultāta piemēru vai sazinieties ar mums.",
     "contactLink": "Sazinieties ar mums",
-    "domainHelp": "Shopify administrācijas panelī atveriet Iestatījumi → Domēni un nokopējiet adresi, kas beidzas ar .myshopify.com. Izmantojiet to sava pielāgotā domēna vietā."
+    "domainHelp": "Shopify administrācijas panelī atveriet Iestatījumi → Domēni un nokopējiet adresi, kas beidzas ar .myshopify.com. Izmantojiet to sava pielāgotā domēna vietā.",
+    "reportTitle": "Pilns pārbaudes pārskats",
+    "reportDownload": "Lejupielādēt visus rezultātus (CSV)",
+    "reportBody": "Ietver visus produktus ar iespējamām atbilstībām. Vienreizēja pārbaude. Privātā saite derīga 30 dienas.",
+    "reportLoading": "Tiek sagatavots pilns pārskats…",
+    "reportError": "Pārskats nav pieejams vai saites derīgums beidzies. Mēģiniet vēlreiz vai rakstiet info@zerorecall.online."
   },
   "quiet": {
     "eyebrow": "VAIRĀK MIERA",

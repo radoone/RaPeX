@@ -33,7 +33,7 @@ test('owner submission uses configured recipient and sender, a stable provider k
       const body = JSON.parse(options.body);
       assert.equal(url, 'https://api.brevo.com/v3/smtp/email');
       assert.deepEqual(body.to, [{ email: 'radoone@gmail.com' }]); assert.equal(body.sender.email, 'info@zerorecall.online');
-      assert.equal(body.headers['Idempotency-Key'], 'free-scan-owner-Abcdef12345678901234');
+      assert.match(body.headers.idempotencyKey, /^[a-f0-9-]{36}$/);
       assert.doesNotMatch(JSON.stringify(body), /#verify=/);
       return { ok: true, status: 201, json: async () => ({ messageId: 'message-1' }) };
     };

@@ -264,7 +264,12 @@
     "unavailableTitle": "Níl an scanadh saor in aisce ar fáil faoi láthair",
     "unavailableBody": "Ní féidir linn scanadh a thosú faoi láthair. Féach ar shampla de thoradh nó déan teagmháil linn.",
     "contactLink": "Déan teagmháil linn",
-    "domainHelp": "I riarachán Shopify, oscail Socruithe → Fearainn agus cóipeáil an seoladh a chríochnaíonn le .myshopify.com. Úsáid é sin in áit d’fhearainn shaincheaptha."
+    "domainHelp": "I riarachán Shopify, oscail Socruithe → Fearainn agus cóipeáil an seoladh a chríochnaíonn le .myshopify.com. Úsáid é sin in áit d’fhearainn shaincheaptha.",
+    "reportTitle": "Tuairisc iomlán an tseiceála",
+    "reportDownload": "Íoslódáil na torthaí go léir (CSV)",
+    "reportBody": "Áirítear gach táirge a bhfuil meaitseáil fhéideartha aige. Seiceáil aonuaire. Rachaidh an nasc príobháideach in éag tar éis 30 lá.",
+    "reportLoading": "An tuairisc iomlán á hullmhú…",
+    "reportError": "Níl an tuairisc ar fáil nó tá an nasc imithe in éag. Bain triail eile as nó scríobh chuig info@zerorecall.online."
   },
   "quiet": {
     "eyebrow": "NÍOS MÓ SUAIMHNEAS INTINNE",

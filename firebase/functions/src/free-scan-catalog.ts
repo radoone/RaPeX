@@ -5,8 +5,34 @@ export type PublicCatalogProduct = { id: number; [key: string]: any };
 export type FreeScanPage = { requestId: string; pageIndex: number };
 export type ScanPreviewMatch = {
   productId?: string; productTitle?: string; productUrl?: string;
-  result?: { warnings?: Array<{ alertId?: string; overallSimilarity?: number }> };
+  result?: { warnings?: Array<{
+    alertId?: string; overallSimilarity?: number; reason?: string;
+    alertDetails?: { fields?: Record<string, unknown> };
+  }> };
 };
+
+/** Keep actionable source evidence without storing an unbounded matcher result. */
+export function compactScanPreview(matches: ScanPreviewMatch[]): ScanPreviewMatch[] {
+  return matches.slice(0, 5).map(match => compactScanMatch(match, 1));
+}
+
+export function compactScanMatch(match: ScanPreviewMatch, maxWarnings = Infinity): ScanPreviewMatch {
+  const text = (value: unknown, limit: number) => typeof value === "string" ? value.slice(0, limit) : "";
+  return ({
+    productId: text(match.productId, 100), productTitle: text(match.productTitle, 1000), productUrl: text(match.productUrl, 2048),
+    result: { warnings: (match.result?.warnings || []).slice(0, maxWarnings).map(warning => {
+      const source = warning.alertDetails?.fields || {};
+      const fields = Object.fromEntries(["url", "rapex_url", "caseNumber", "alert_number", "type_numberOfModel", "product_model"].flatMap(key => {
+        const value = text(source[key], key.includes("url") ? 2048 : 500);
+        return value ? [[key, value]] : [];
+      }));
+      return {
+        alertId: text(warning.alertId, 500), reason: text(warning.reason, 1200), alertDetails: { fields },
+        ...(typeof warning.overallSimilarity === "number" && Number.isFinite(warning.overallSimilarity) ? { overallSimilarity: warning.overallSimilarity } : {}),
+      };
+    }) },
+  });
+}
 export type CatalogProgress = {
   domain: string; status: string; nextPage: number; checkedProducts: number;
   possibleMatches: number; catalogComplete: boolean;

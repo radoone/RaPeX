@@ -1,6 +1,7 @@
 /** ZeroRecall transactional emails. Pure renderers: no database or delivery side effects. */
 import { URL } from "node:url";
 import { emailText, normalizeEmailLanguage } from "./email-localization.js";
+import type { ScanPreviewMatch } from "./free-scan-catalog.js";
 export type EmailContent = { subject: string; htmlContent: string; textContent: string };
 export type AlertEmailDetails = {
   productTitle: string;
@@ -29,11 +30,7 @@ export type WeeklyEmailFinding = AlertEmailDetails & {
   reviewState: "needs_review" | "waiting_for_supplier" | "resolved" | "dismissed" | "unknown";
   isNew: boolean;
 };
-export type ScanEmailMatch = {
-  productTitle?: string;
-  productUrl?: string;
-  result?: { warnings?: Array<{ alertId?: string; overallSimilarity?: number }> };
-};
+export type ScanEmailMatch = ScanPreviewMatch;
 
 const HOME = "https://zerorecall.online";
 const SAFETY_GATE = "https://ec.europa.eu/safety-gate-alerts/";
@@ -54,7 +51,23 @@ function httpsUrl(value: unknown): string | null {
 }
 
 function riskLabel(value: string, language: string): string {
-  return ({ serious: emailText(language, "serious"), high: emailText(language, "high"), unknown: emailText(language, "not_available") } as Record<string, string>)[value.toLowerCase()] || value;
+  const key = value.trim().toLowerCase().replace(/ risk$/, "");
+  const labels: Record<string, string> = { serious: emailText(language, "serious"), high: emailText(language, "high"), unknown: emailText(language, "not_available") };
+  return Object.hasOwn(labels, key) ? labels[key] : value;
+}
+
+function marketingUrl(language: string, home = HOME, anchor?: string): string {
+  const url = new URL(httpsUrl(home) || HOME);
+  url.searchParams.set("lang", normalizeEmailLanguage(language));
+  if (anchor) url.hash = anchor;
+  return url.toString();
+}
+
+function officialRecordUrl(value: unknown): string | null {
+  const url = httpsUrl(value);
+  if (!url) return null;
+  const host = new URL(url).hostname;
+  return host === "ec.europa.eu" || host.endsWith(".ec.europa.eu") ? url : null;
 }
 
 function paragraph(text: string): string {
@@ -80,13 +93,13 @@ function shell(options: {
   const settings = httpsUrl(options.settingsUrl);
   return `<!doctype html>
 <html lang="${normalizeEmailLanguage(language)}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>${escapeEmailHtml(options.title)}</title>
-<style>body,table,td,a{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}table{mso-table-lspace:0pt;mso-table-rspace:0pt}img{border:0;outline:none;text-decoration:none}a:focus{outline:2px solid #315e4b;outline-offset:3px}@media only screen and (max-width:600px){.outer{padding:24px 18px!important}.headline{font-size:32px!important}.stack{display:block!important;width:100%!important;box-sizing:border-box!important}.photo{max-width:100%!important;width:100%!important}.photo-cell{padding:0 0 18px!important}.button{display:block!important}}</style></head>
+<style>body,table,td,a{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}table{mso-table-lspace:0pt;mso-table-rspace:0pt}img{border:0;outline:none;text-decoration:none}a:focus{outline:2px solid #315e4b;outline-offset:3px}@media only screen and (max-width:600px){.outer{padding:24px 18px!important}.headline{font-size:32px!important}.stack{display:block!important;width:100%!important;box-sizing:border-box!important}.photo{max-width:180px!important;width:100%!important}.photo-cell{padding:0 0 18px!important}.button{display:block!important}}</style></head>
 <body style="margin:0;padding:0;background:#faf9f5;color:#1c2822;font-family:${FONT}">
 <div style="display:none;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all">${escapeEmailHtml(options.preheader)}</div>
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" bgcolor="#faf9f5"><tr><td class="outer" align="center" style="padding:40px 28px">
 <!--[if mso]><table role="presentation" width="600" align="center"><tr><td><![endif]-->
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:600px"><tr><td>
-<p style="margin:0 0 38px"><a href="${HOME}" style="font-family:${FONT};font-size:23px;letter-spacing:-1px;font-weight:700;color:#1c2822;text-decoration:none">ZeroRecall</a></p>
+<p style="margin:0 0 38px"><a href="${escapeEmailHtml(marketingUrl(language))}" style="font-family:${FONT};font-size:23px;letter-spacing:-1px;font-weight:700;color:#1c2822;text-decoration:none">ZeroRecall</a></p>
 <p style="margin:0 0 24px"><span style="display:inline-block;border-radius:24px;padding:10px 16px;background:${options.warning ? "#fff0df" : "#e8efe7"};color:${options.warning ? "#93421f" : GREEN};font-size:13px;font-weight:700;line-height:1.4">${escapeEmailHtml(options.status)}</span></p>
 <h1 class="headline" style="margin:0 0 26px;font-size:44px;letter-spacing:-1.5px;line-height:1.12;font-weight:700;color:#15251d">${escapeEmailHtml(options.title)}</h1>
 ${options.body}
@@ -96,14 +109,14 @@ ${options.after || ""}
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:28px;border-top:1px solid #d9ddd4"><tr><td style="padding-top:20px;font-size:12px;line-height:1.8;color:#68726b">
 <strong style="color:#243b2e">ZeroRecall</strong> · ${emailText(language, "product_safety_for_shopify")}<br>
 ${options.footerText ? escapeEmailHtml(options.footerText) : settings ? emailText(language, "you_receive_this_email_based_on_your_store_s_notification_sett") : emailText(language, "this_email_relates_to_your_one_off_scan_request")}<br>
-${settings ? `<a href="${escapeEmailHtml(settings)}" style="color:${GREEN}">${emailText(language, "email_preferences")}</a> · ` : ""}<a href="mailto:info@zerorecall.online" style="color:${GREEN}">info@zerorecall.online</a> · <a href="${HOME}" style="color:${GREEN}">zerorecall.online</a>
+${settings ? `<a href="${escapeEmailHtml(settings)}" style="color:${GREEN}">${emailText(language, "email_preferences")}</a> · ` : ""}<a href="mailto:info@zerorecall.online" style="color:${GREEN}">info@zerorecall.online</a> · <a href="${escapeEmailHtml(marketingUrl(language))}" style="color:${GREEN}">zerorecall.online</a>
 </td></tr></table>
 </td></tr></table><!--[if mso]></td></tr></table><![endif]-->
 </td></tr></table></body></html>`;
 }
 
 function plainFooter(language: string, settingsUrl?: string): string {
-  return `\n\nZeroRecall · ${emailText(language, "product_safety_for_shopify")}\n${settingsUrl ? `${emailText(language, "email_preferences")}: ${settingsUrl}\n` : ""}info@zerorecall.online\n${HOME}`;
+  return `\n\nZeroRecall · ${emailText(language, "product_safety_for_shopify")}\n${settingsUrl ? `${emailText(language, "email_preferences")}: ${settingsUrl}\n` : ""}info@zerorecall.online\n${marketingUrl(language)}`;
 }
 
 export function renderAlertEmail(language: string, details: AlertEmailDetails, shop: string, url: string, settingsUrl: string): EmailContent {
@@ -124,7 +137,7 @@ export function renderAlertEmail(language: string, details: AlertEmailDetails, s
   if (details.model) rows.push([emailText(language, "model_in_the_alert"), details.model]);
   if (details.riskType) rows.push([emailText(language, "risk_type"), details.riskType]);
   const image = httpsUrl(details.safetyGateImage);
-  const detailTable = facts(rows, /^(Serious|High)$/i.test(details.riskLevel) ? (emailText(language, "risk_level")) : undefined);
+  const detailTable = facts(rows, /^(Serious|High)(?: risk)?$/i.test(details.riskLevel.trim()) ? (emailText(language, "risk_level")) : undefined);
   const body = image
     ? `<table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td class="stack photo-cell" width="43%" valign="top" style="padding:8px 20px 0 0"><img class="photo" src="${escapeEmailHtml(image)}" alt="${escapeEmailHtml(emailText(language, "product_from_the_safety_gate_record"))}" width="240" style="display:block;width:100%;max-width:240px;height:auto;border-radius:10px"><p style="margin:8px 0;font-size:11px;line-height:1.4;color:#68726b">${emailText(language, "photo_from_the_safety_gate_record")}</p></td><td class="stack" valign="top">${detailTable}</td></tr></table>`
     : detailTable;
@@ -192,7 +205,7 @@ export function renderVerificationEmail(language: string, domain: string, url: s
   };
 }
 
-export function renderScanReportEmail(language: string, domain: string, lead: { totalProductsScanned: number; flaggedProductsCount: number; matches?: ScanEmailMatch[] }, homeUrl = HOME): EmailContent {
+export function renderScanReportEmail(language: string, domain: string, lead: { totalProductsScanned: number; flaggedProductsCount: number; matches?: ScanEmailMatch[] }, homeUrl = HOME, reportUrl?: string): EmailContent {
   language = normalizeEmailLanguage(language);
   const title = emailText(language, "your_scan_results_are_ready");
   const status = lead.flaggedProductsCount > 0 ? (emailText(language, "possible_matches_to_review")) : (emailText(language, "no_matches_found"));
@@ -201,17 +214,29 @@ export function renderScanReportEmail(language: string, domain: string, lead: { 
   const intro = emailText(language, "we_completed_a_one_off_comparison_of_available_public_products");
   const matches = (lead.matches || []).slice(0, 5).map(match => {
     const parsed = httpsUrl(match.productUrl);
-    const productUrl = parsed && new URL(parsed).hostname === domain ? parsed : null;
-    return { title: match.productTitle || (emailText(language, "product")), url: productUrl, reference: match.result?.warnings?.[0]?.alertId };
+    const productUrl = parsed && new URL(parsed).origin === `https://${domain}` ? parsed : null;
+    const warning = match.result?.warnings?.[0];
+    const fields = warning?.alertDetails?.fields || {};
+    const field = (...keys: string[]) => keys.map(key => fields[key]).find(value => typeof value === "string" && value.trim()) as string | undefined;
+    const reference = field("caseNumber", "alert_number") || (/^(?:A\d{1,2}|INFO|SR|OR)\//i.test(warning?.alertId || "") ? warning?.alertId : undefined);
+    return {
+      title: match.productTitle || emailText(language, "product"), url: productUrl, reference,
+      sourceUrl: officialRecordUrl(field("url", "rapex_url")),
+      model: field("type_numberOfModel", "product_model"),
+      reason: typeof warning?.reason === "string" ? warning.reason.slice(0, 1200) : "",
+    };
   });
-  const matchesHtml = matches.length ? `<h2 style="margin:28px 0 8px;font-size:21px">${emailText(language, "products_to_review")}</h2>${matches.map(match => `<div style="padding:14px 0;border-bottom:1px solid #d9ddd4"><p style="margin:0;font-size:16px;font-weight:700;line-height:1.5">${match.url ? `<a href="${escapeEmailHtml(match.url)}" style="color:${GREEN}">${escapeEmailHtml(match.title)}</a>` : escapeEmailHtml(match.title)}</p>${match.reference ? `<p style="margin:6px 0 0;font-size:13px;line-height:1.5;color:#68726b">${emailText(language, "safety_gate_record")}: ${escapeEmailHtml(match.reference)}</p>` : ""}</div>`).join("")}${lead.flaggedProductsCount > 5 ? paragraph(emailText(language, "this_email_shows_up_to_five_products")) : ""}` : "";
+  const reportLink = httpsUrl(reportUrl);
+  const reportAction = reportLink ? `<p style="margin:24px 0"><a href="${escapeEmailHtml(reportLink)}" style="color:${GREEN};font-weight:700">${emailText(language, "products_to_review")} — CSV</a></p>` : "";
+  const truncated = lead.flaggedProductsCount > 5 ? emailText(language, "this_email_shows_up_to_five_products") : "";
+  const matchesHtml = matches.length ? `<h2 style="margin:28px 0 8px;font-size:21px">${emailText(language, "products_to_review")}</h2>${matches.map(match => `<div style="padding:14px 0;border-bottom:1px solid #d9ddd4"><p style="margin:0;font-size:16px;font-weight:700;line-height:1.5">${match.url ? `<a href="${escapeEmailHtml(match.url)}" style="color:${GREEN}">${escapeEmailHtml(match.title)}</a>` : escapeEmailHtml(match.title)}</p>${match.reference ? `<p style="margin:6px 0 0;font-size:13px;line-height:1.5;color:#68726b">${emailText(language, "alert_reference")}: ${escapeEmailHtml(match.reference)}</p>` : ""}${match.model ? paragraph(`${emailText(language, "model_in_the_alert")}: ${match.model}`) : ""}${match.reason ? paragraph(`${emailText(language, "why_this_matched")}: ${match.reason}`) : ""}${match.sourceUrl ? `<p style="margin:8px 0 0;font-size:14px;line-height:1.5"><a href="${escapeEmailHtml(match.sourceUrl)}" style="color:${GREEN}">${emailText(language, "safety_gate_record")}</a></p>` : ""}</div>`).join("")}${truncated ? paragraph(truncated) : ""}` : "";
   const next = emailText(language, "this_scan_is_a_one_off_ongoing_monitoring_and_decision_history");
   const official = `<p style="margin:22px 0 0;font-size:14px;line-height:1.5"><a href="${SAFETY_GATE}" style="color:${GREEN}">${emailText(language, "open_the_official_safety_gate_portal")}</a></p>`;
-  const home = httpsUrl(homeUrl) || HOME;
+  const home = marketingUrl(language, homeUrl, "pricing");
   return {
     subject: `ZeroRecall: ${emailText(language, "catalog_scan_result")} – ${domain}`,
-    htmlContent: shell({ language, title, status, warning: lead.flaggedProductsCount > 0, preheader: `${domain} · ${lead.totalProductsScanned} ${emailText(language, "products_checked_2")} · ${status}`, body: paragraph(intro) + facts(rows) + matchesHtml + note(emailText(language, "how_to_interpret_the_result"), caveat, lead.flaggedProductsCount > 0) + official, action: emailText(language, "explore_ongoing_monitoring"), url: `${home.replace(/\/$/, "")}/?lang=${normalizeEmailLanguage(language)}#how-it-works`, after: note(emailText(language, "what_comes_next"), next) }),
-    textContent: `${title}\n\n${intro}\n\n${rows.map(([label, value]) => `${label}: ${value}`).join("\n")}\n\n${matches.map(match => `${match.title}${match.url ? `\n${match.url}` : ""}${match.reference ? `\nSafety Gate: ${match.reference}` : ""}`).join("\n\n")}\n\n${caveat}\n\n${SAFETY_GATE}\n\n${next}\n${home}${plainFooter(language)}`,
+    htmlContent: shell({ language, title, status, warning: lead.flaggedProductsCount > 0, preheader: `${domain} · ${lead.totalProductsScanned} ${emailText(language, "products_checked_2")} · ${status}`, body: paragraph(intro) + facts(rows) + matchesHtml + reportAction + note(emailText(language, "how_to_interpret_the_result"), caveat, lead.flaggedProductsCount > 0) + official, action: emailText(language, "explore_ongoing_monitoring"), url: home, after: note(emailText(language, "what_comes_next"), next) }),
+    textContent: `${title}\n\n${intro}\n\n${rows.map(([label, value]) => `${label}: ${value}`).join("\n")}\n\n${matches.map(match => `${match.title}${match.url ? `\n${match.url}` : ""}${match.reference ? `\n${emailText(language, "alert_reference")}: ${match.reference}` : ""}${match.model ? `\n${emailText(language, "model_in_the_alert")}: ${match.model}` : ""}${match.reason ? `\n${emailText(language, "why_this_matched")}: ${match.reason}` : ""}${match.sourceUrl ? `\n${emailText(language, "safety_gate_record")}: ${match.sourceUrl}` : ""}`).join("\n\n")}${truncated ? `\n\n${truncated}` : ""}\n\n${caveat}\n\n${SAFETY_GATE}\n\n${reportLink ? `${emailText(language, "products_to_review")} — CSV\n${reportLink}\n\n` : ""}${next}\n${home}${plainFooter(language)}`,
   };
 }
 

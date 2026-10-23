@@ -265,7 +265,12 @@
       "unavailableTitle": "El escaneo gratuito no está disponible actualmente",
       "unavailableBody": "No podemos iniciar un escaneo en este momento. Vea un ejemplo de resultado o contáctenos.",
       "contactLink": "Contáctenos",
-      "domainHelp": "En el panel de Shopify, abra Configuración → Dominios y copie la dirección que termina en .myshopify.com. Utilícela en lugar de su dominio personalizado."
+      "domainHelp": "En el panel de Shopify, abra Configuración → Dominios y copie la dirección que termina en .myshopify.com. Utilícela en lugar de su dominio personalizado.",
+      "reportTitle": "Informe completo del análisis",
+      "reportDownload": "Descargar todos los resultados (CSV)",
+      "reportBody": "Incluye todos los productos con posibles coincidencias. Análisis único. El enlace privado caduca a los 30 días.",
+      "reportLoading": "Preparando el informe completo…",
+      "reportError": "Informe no disponible o enlace caducado. Reinténtalo o escribe a info@zerorecall.online."
     },
     "quiet": {
       "eyebrow": "MÁS TRANQUILIDAD",

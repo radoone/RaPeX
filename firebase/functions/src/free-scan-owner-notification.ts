@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
+import { emailIdempotencyKey } from "./email-delivery.js";
 import { db } from "./firebase-admin.js";
 import { renderFreeScanOwnerEmail } from "./email-templates.js";
 
@@ -35,7 +36,7 @@ export async function sendFreeScanOwnerEmail(requestId: string, data: OwnerReque
       sender: { name: (process.env.BREVO_SENDER_NAME || "ZeroRecall").trim(), email: sender },
       replyTo: { email: sender }, to: [{ email: recipient }],
       ...renderFreeScanOwnerEmail(data), tags: ["free-scan-owner"],
-      headers: { "Idempotency-Key": `free-scan-owner-${requestId}` },
+      headers: { idempotencyKey: emailIdempotencyKey(data.domain, `free-scan-owner-${requestId}`) },
     }), signal: globalThis.AbortSignal.timeout(20_000),
   });
   const body = await response.json() as { messageId?: string; code?: string; message?: string };

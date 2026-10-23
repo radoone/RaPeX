@@ -30,7 +30,7 @@ test("confirmation preserves single-use token and explains start, expiry and ign
 });
 
 test("report links stay on the requested shop, escapes titles and limits the email to five matches", () => {
-  const lead = { totalProductsScanned: 100, flaggedProductsCount: 7, matches: Array.from({ length: 7 }, (_, i) => ({ productTitle: `Product <${i}>`, productUrl: i === 0 ? "https://example.myshopify.com.evil.test/p" : `https://example.myshopify.com/products/${i}`, result: { warnings: [{ alertId: 'A/1 <test>' }] } })) };
+  const lead = { totalProductsScanned: 100, flaggedProductsCount: 7, matches: Array.from({ length: 7 }, (_, i) => ({ productTitle: `Product <${i}>`, productUrl: i === 0 ? "https://example.myshopify.com.evil.test/p" : `https://example.myshopify.com/products/${i}`, result: { warnings: [{ alertId: 'internal-id', alertDetails: { fields: { caseNumber: 'A/1 <test>' } } }] } })) };
   const content = renderScanReportEmail("en", "example.myshopify.com", lead);
   assert.doesNotMatch(content.htmlContent, /evil\.test|Product &lt;5&gt;/);
   assert.match(content.htmlContent, /Product &lt;0&gt;/);
@@ -38,6 +38,38 @@ test("report links stay on the requested shop, escapes titles and limits the ema
   assert.match(content.htmlContent, /A\/1 &lt;test&gt;/);
   assert.match(content.textContent, /does not certify/);
   assert.match(content.htmlContent, /up to five products/);
+  assert.match(content.textContent, /up to five products/);
+});
+
+test("reports provide actual official evidence, omit internal IDs and preserve the selected language", () => {
+  const internalId = "d92d5b51-79c4-4b7e-9532-d5db343558fe";
+  const record = "https://ec.europa.eu/safety-gate-alerts/screen/webReport/alertDetail/EXAMPLE";
+  const match = { productTitle: "Toy", productUrl: "https://example.myshopify.com/products/toy", result: { warnings: [{ alertId: internalId, reason: "Compare <model> and batch", alertDetails: { fields: { url: record, caseNumber: "A12/EXAMPLE/26", type_numberOfModel: "Model <1>" } } }] } };
+  const content = renderScanReportEmail("sk", "example.myshopify.com", { totalProductsScanned: 10, flaggedProductsCount: 1, matches: [match] });
+  assert.ok(content.textContent.includes(record));
+  assert.match(content.htmlContent, /A12\/EXAMPLE\/26|Model &lt;1&gt;/);
+  assert.match(content.htmlContent, /Compare &lt;model&gt; and batch/);
+  assert.doesNotMatch(content.htmlContent + content.textContent, new RegExp(internalId));
+  assert.match(content.htmlContent, /href="https:\/\/zerorecall.online\/\?lang=sk#pricing"/);
+  assert.ok(content.textContent.includes("https://zerorecall.online/?lang=sk#pricing"));
+  for (const url of ["https://ec.europa.eu.evil.test/record", "javascript:alert(1)", "https://example.com/record"]) {
+    const unsafe = structuredClone(match);
+    unsafe.result.warnings[0].alertDetails.fields.url = url;
+    const message = renderScanReportEmail("en", "example.myshopify.com", { totalProductsScanned: 10, flaggedProductsCount: 1, matches: [unsafe] });
+    assert.ok(!message.htmlContent.includes(url));
+    assert.ok(!message.textContent.includes(url));
+  }
+});
+
+test("official risk values are localized and highlighted, including the 'risk' suffix", () => {
+  for (const [riskLevel, label] of [["Serious risk", "Závažná"], [" HIGH RISK ", "Vysoká"]]) {
+    const content = renderAlertEmail("sk", { ...details, productTitle: "Toy", riskLevel }, "example.myshopify.com", app, app);
+    assert.match(content.htmlContent, new RegExp(`color:#93421f[^>]*>${label}`));
+    assert.ok(content.textContent.includes(label));
+    assert.ok(!content.textContent.includes(riskLevel));
+  }
+  const unknown = renderAlertEmail("en", { ...details, riskLevel: "constructor" }, "example.myshopify.com", app, app);
+  assert.match(unknown.textContent, /Risk level: constructor\n/);
 });
 
 test("weekly zero findings never certifies safety and incomplete monitoring takes priority over zero findings", () => {

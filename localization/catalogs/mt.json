@@ -265,7 +265,12 @@
       "unavailableTitle": "L-iskannjar b'xejn bħalissa mhux disponibbli",
       "unavailableBody": "Ma nistgħux nibdew skannjar bħalissa. Ara riżultat eżempju jew ikkuntattjana.",
       "contactLink": "Ikkuntattjana",
-      "domainHelp": "Fl-amministrazzjoni Shopify, iftaħ Settings → Domains u kkopja l-indirizz li jispiċċa b’.myshopify.com. Uża dan minflok id-dominju personalizzat tiegħek."
+      "domainHelp": "Fl-amministrazzjoni Shopify, iftaħ Settings → Domains u kkopja l-indirizz li jispiċċa b’.myshopify.com. Uża dan minflok id-dominju personalizzat tiegħek.",
+      "reportTitle": "Rapport sħiħ tal-kontroll",
+      "reportDownload": "Niżżel ir-riżultati kollha (CSV)",
+      "reportBody": "Jinkludi l-prodotti kollha b’taqbil possibbli. Kontroll ta’ darba. Il-link privata tiskadi wara 30 jum.",
+      "reportLoading": "Qed jitħejja r-rapport sħiħ…",
+      "reportError": "Ir-rapport mhux disponibbli jew il-link skadiet. Erġa’ pprova jew ikteb lil info@zerorecall.online."
     },
     "quiet": {
       "eyebrow": "AKTAR SERĦAN IL-MOĦĦ",

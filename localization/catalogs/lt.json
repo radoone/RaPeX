@@ -265,7 +265,12 @@
       "unavailableTitle": "Nemokamas skenavimas šiuo metu nepasiekiamas",
       "unavailableBody": "Šiuo metu negalime pradėti skenavimo. Peržiūrėkite pavyzdinį rezultatą arba susisiekite su mumis.",
       "contactLink": "Susisiekite su mumis",
-      "domainHelp": "Shopify administravimo srityje atverkite Nustatymai → Domenai ir nukopijuokite adresą, kuris baigiasi .myshopify.com. Naudokite jį vietoje savo pasirinktinio domeno."
+      "domainHelp": "Shopify administravimo srityje atverkite Nustatymai → Domenai ir nukopijuokite adresą, kuris baigiasi .myshopify.com. Naudokite jį vietoje savo pasirinktinio domeno.",
+      "reportTitle": "Visa patikros ataskaita",
+      "reportDownload": "Atsisiųsti visus rezultatus (CSV)",
+      "reportBody": "Apima visus produktus su galimais atitikmenimis. Vienkartinė patikra. Privati nuoroda galioja 30 dienų.",
+      "reportLoading": "Ruošiama visa ataskaita…",
+      "reportError": "Ataskaita nepasiekiama arba nuorodos galiojimas baigėsi. Bandykite dar kartą arba rašykite info@zerorecall.online."
     },
     "quiet": {
       "eyebrow": "DAUGIAU RAMYBĖS",

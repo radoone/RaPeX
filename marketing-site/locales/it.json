@@ -264,7 +264,12 @@
     "unavailableTitle": "La scansione gratuita non è attualmente disponibile",
     "unavailableBody": "Non possiamo avviare una scansione in questo momento. Vedi un esempio di risultato o contattaci.",
     "contactLink": "Contattaci",
-    "domainHelp": "Nel pannello di controllo Shopify apri Impostazioni → Domini e copia l’indirizzo che termina con .myshopify.com. Usa questo indirizzo anziché il dominio personalizzato."
+    "domainHelp": "Nel pannello di controllo Shopify apri Impostazioni → Domini e copia l’indirizzo che termina con .myshopify.com. Usa questo indirizzo anziché il dominio personalizzato.",
+    "reportTitle": "Rapporto completo del controllo",
+    "reportDownload": "Scarica tutti i risultati (CSV)",
+    "reportBody": "Include tutti i prodotti con possibili corrispondenze. Controllo singolo. Il link privato scade dopo 30 giorni.",
+    "reportLoading": "Preparazione del rapporto completo…",
+    "reportError": "Rapporto non disponibile o link scaduto. Riprova o scrivi a info@zerorecall.online."
   },
   "quiet": {
     "eyebrow": "MAGGIORE TRANQUILLITÀ",

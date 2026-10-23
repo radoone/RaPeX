@@ -6,6 +6,8 @@ import { db } from "./firebase-admin.js";
 import { getFunctions } from "firebase-admin/functions";
 import { freeScanPageTaskId, type FreeScanPage } from "./free-scan-catalog.js";
 import { renderVerificationEmail, renderScanReportEmail } from "./email-templates.js";
+import { emailIdempotencyKey, EmailProviderRejection } from "./email-delivery.js";
+import { readFreeScanReport } from "./free-scan-report.js";
 import { normalizeEmailLanguage } from "./email-localization.js";
 
 type FreeScanRequest = {
@@ -14,6 +16,7 @@ type FreeScanRequest = {
   locale: string;
   status: "awaiting_verification" | "queued" | "running" | "reporting" | "completed" | "failed";
   createdAt: Timestamp;
+  reportAccessToken?: string;
   verificationHash?: string;
   verificationExpiresAt?: Timestamp;
 };
@@ -149,6 +152,12 @@ export async function handleFreeScanRequest(request: HttpRequest, response: Http
 
   if (request.method !== "POST") {
     response.status(405).json({ error: "Method not allowed." });
+    return;
+  }
+
+  if (request.body?.reportToken !== undefined) {
+    const result = await readFreeScanReport(request.body.reportToken, request.body.cursor);
+    response.status(result.status).json(result.body);
     return;
   }
 
@@ -326,7 +335,8 @@ export async function sendFreeScanReport(requestId: string, data: FreeScanReques
   const apiKey = (process.env.BREVO_API_KEY || "").trim();
   const senderEmail = (process.env.BREVO_SENDER_EMAIL || "").trim();
   if (!apiKey || !senderEmail) throw new Error("Brevo sender is not configured");
-  const content = renderScanReportEmail(data.locale, data.domain, result.lead!, MARKETING_SITE_URL);
+  const reportUrl = data.reportAccessToken ? `${MARKETING_SITE_URL}/index.html?lang=${normalizeEmailLanguage(data.locale)}#report=${requestId}.${data.reportAccessToken}` : undefined;
+  const content = renderScanReportEmail(data.locale, data.domain, result.lead!, MARKETING_SITE_URL, reportUrl);
   const response = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     headers: { "api-key": apiKey, accept: "application/json", "content-type": "application/json" },
@@ -336,7 +346,7 @@ export async function sendFreeScanReport(requestId: string, data: FreeScanReques
       to: [{ email: data.email }],
       ...content,
       tags: ["free-scan"],
-      headers: { "Idempotency-Key": `free-scan-${requestId}` },
+      headers: { idempotencyKey: emailIdempotencyKey(data.domain, `free-scan-${requestId}`) },
     }),
     signal: globalThis.AbortSignal.timeout(20_000),
   });
@@ -344,7 +354,7 @@ export async function sendFreeScanReport(requestId: string, data: FreeScanReques
   // A retry after provider acceptance may receive a duplicate-key response.
   // This confirms submission only; inbox delivery remains a separate state.
   if (!response.ok && delivery.code === "duplicate_parameter" && /idempotenc/i.test(delivery.message || "")) return;
-  if (!response.ok) throw new Error(`Brevo rejected report (${response.status})`);
+  if (!response.ok) throw new EmailProviderRejection(`Brevo rejected report (${response.status})`);
   if (typeof delivery.messageId !== "string" || !delivery.messageId) {
     throw new Error("Brevo did not confirm report acceptance");
   }

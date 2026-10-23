@@ -14,7 +14,7 @@ test("report submission retries accept only provider-confirmed idempotency dupli
   const result = { success: true, lead: { totalProductsScanned: 2, flaggedProductsCount: 0, matches: [] } };
   try {
     global.fetch = async (_url, options) => {
-      assert.equal(JSON.parse(options.body).headers["Idempotency-Key"], "free-scan-test-request");
+      assert.match(JSON.parse(options.body).headers.idempotencyKey, /^[a-f0-9-]{36}$/);
       assert.ok(options.signal);
       return { ok: false, status: 400, json: async () => ({ code: "duplicate_parameter", message: "idempotency key already used" }) };
     };

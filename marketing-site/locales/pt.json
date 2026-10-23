@@ -264,7 +264,12 @@
     "unavailableTitle": "A análise gratuita está atualmente indisponível",
     "unavailableBody": "Não podemos iniciar uma análise agora. Veja um exemplo de resultado ou contacte-nos.",
     "contactLink": "Contacte-nos",
-    "domainHelp": "No painel de administração Shopify, abra Definições → Domínios e copie o endereço terminado em .myshopify.com. Utilize-o em vez do seu domínio personalizado."
+    "domainHelp": "No painel de administração Shopify, abra Definições → Domínios e copie o endereço terminado em .myshopify.com. Utilize-o em vez do seu domínio personalizado.",
+    "reportTitle": "Relatório completo da análise",
+    "reportDownload": "Descarregar todos os resultados (CSV)",
+    "reportBody": "Inclui todos os produtos com possíveis correspondências. Análise única. A ligação privada expira após 30 dias.",
+    "reportLoading": "A preparar o relatório completo…",
+    "reportError": "Relatório indisponível ou ligação expirada. Tente novamente ou contacte info@zerorecall.online."
   },
   "quiet": {
     "eyebrow": "MAIS TRANQUILIDADE",

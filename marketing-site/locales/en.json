@@ -264,7 +264,12 @@
     "unavailableTitle": "The free scan is currently unavailable",
     "unavailableBody": "We cannot start a scan right now. See an example result or contact us.",
     "contactLink": "Contact us",
-    "domainHelp": "In Shopify Admin, open Settings → Domains and copy the address ending in .myshopify.com. Use that address instead of your custom domain."
+    "domainHelp": "In Shopify Admin, open Settings → Domains and copy the address ending in .myshopify.com. Use that address instead of your custom domain.",
+    "reportTitle": "Complete scan report",
+    "reportDownload": "Download all findings (CSV)",
+    "reportBody": "Includes all products with possible matches. This is a one-off scan. The private link expires after 30 days.",
+    "reportLoading": "Preparing the complete report…",
+    "reportError": "The report is unavailable or the link has expired. Try again or contact info@zerorecall.online."
   },
   "quiet": {
     "eyebrow": "MORE PEACE OF MIND",

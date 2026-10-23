@@ -264,7 +264,12 @@
     "unavailableTitle": "Scanarea gratuită nu este disponibilă în prezent",
     "unavailableBody": "Nu putem începe o scanare chiar acum. Vedeți un exemplu de rezultat sau contactați-ne.",
     "contactLink": "Contactați-ne",
-    "domainHelp": "În panoul Shopify, deschideți Setări → Domenii și copiați adresa care se termină cu .myshopify.com. Folosiți-o în locul domeniului personalizat."
+    "domainHelp": "În panoul Shopify, deschideți Setări → Domenii și copiați adresa care se termină cu .myshopify.com. Folosiți-o în locul domeniului personalizat.",
+    "reportTitle": "Raport complet al verificării",
+    "reportDownload": "Descarcă toate rezultatele (CSV)",
+    "reportBody": "Include toate produsele cu posibile potriviri. Verificare unică. Linkul privat expiră după 30 de zile.",
+    "reportLoading": "Se pregătește raportul complet…",
+    "reportError": "Raport indisponibil sau link expirat. Încearcă din nou sau scrie la info@zerorecall.online."
   },
   "quiet": {
     "eyebrow": "MAI MULTĂ LINIȘTE SUFLETEASCĂ",

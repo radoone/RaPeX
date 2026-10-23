@@ -265,7 +265,12 @@
       "unavailableTitle": "Az ingyenes ellenőrzés jelenleg nem elérhető",
       "unavailableBody": "Jelenleg nem tudunk ellenőrzést indítani. Tekintsen meg egy példa eredményt, vagy lépjen kapcsolatba velünk.",
       "contactLink": "Lépjen kapcsolatba velünk",
-      "domainHelp": "A Shopify adminfelületén nyissa meg a Beállítások → Domainek menüt, és másolja ki a .myshopify.com végződésű címet. Ezt használja az egyéni domain helyett."
+      "domainHelp": "A Shopify adminfelületén nyissa meg a Beállítások → Domainek menüt, és másolja ki a .myshopify.com végződésű címet. Ezt használja az egyéni domain helyett.",
+      "reportTitle": "Teljes ellenőrzési jelentés",
+      "reportDownload": "Összes találat letöltése (CSV)",
+      "reportBody": "Minden lehetséges egyezést mutató terméket tartalmaz. Egyszeri ellenőrzés. A privát hivatkozás 30 nap után lejár.",
+      "reportLoading": "A teljes jelentés előkészítése…",
+      "reportError": "A jelentés nem érhető el vagy a hivatkozás lejárt. Próbálja újra, vagy írjon ide: info@zerorecall.online."
     },
     "quiet": {
       "eyebrow": "TÖBB NYUGALOM",

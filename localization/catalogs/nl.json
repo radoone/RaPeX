@@ -265,7 +265,12 @@
       "unavailableTitle": "De gratis scan is momenteel niet beschikbaar",
       "unavailableBody": "We kunnen nu geen scan starten. Bekijk een voorbeeldresultaat of neem contact met ons op.",
       "contactLink": "Neem contact met ons op",
-      "domainHelp": "Open in het Shopify-beheercentrum Instellingen → Domeinen en kopieer het adres dat eindigt op .myshopify.com. Gebruik dit in plaats van je eigen domein."
+      "domainHelp": "Open in het Shopify-beheercentrum Instellingen → Domeinen en kopieer het adres dat eindigt op .myshopify.com. Gebruik dit in plaats van je eigen domein.",
+      "reportTitle": "Volledig controlerapport",
+      "reportDownload": "Alle resultaten downloaden (CSV)",
+      "reportBody": "Bevat alle producten met mogelijke overeenkomsten. Eenmalige controle. De privélink verloopt na 30 dagen.",
+      "reportLoading": "Volledig rapport voorbereiden…",
+      "reportError": "Rapport niet beschikbaar of link verlopen. Probeer opnieuw of mail info@zerorecall.online."
     },
     "quiet": {
       "eyebrow": "MEER GEMOEDSRUST",

@@ -265,7 +265,12 @@
       "unavailableTitle": "Darmowe skanowanie jest obecnie niedostępne",
       "unavailableBody": "Nie możemy teraz rozpocząć skanowania. Zobacz przykładowy wynik lub skontaktuj się z nami.",
       "contactLink": "Skontaktuj się z nami",
-      "domainHelp": "W panelu Shopify otwórz Ustawienia → Domeny i skopiuj adres kończący się na .myshopify.com. Użyj go zamiast własnej domeny sklepu."
+      "domainHelp": "W panelu Shopify otwórz Ustawienia → Domeny i skopiuj adres kończący się na .myshopify.com. Użyj go zamiast własnej domeny sklepu.",
+      "reportTitle": "Pełny raport kontroli",
+      "reportDownload": "Pobierz wszystkie wyniki (CSV)",
+      "reportBody": "Zawiera wszystkie produkty z możliwymi dopasowaniami. Kontrola jednorazowa. Prywatny link wygasa po 30 dniach.",
+      "reportLoading": "Przygotowujemy pełny raport…",
+      "reportError": "Raport niedostępny lub link wygasł. Spróbuj ponownie albo napisz na info@zerorecall.online."
     },
     "quiet": {
       "eyebrow": "WIĘKSZY SPOKÓJ DUCHA",

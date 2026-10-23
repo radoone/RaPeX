@@ -345,6 +345,7 @@ export const merchantMonitoringTask = onTaskDispatched(
 export const sendImmediateSafetyGateAlertEmail = onDocumentCreated(
   {
     document: "merchants/{shopId}/alerts/{alertId}",
+    retry: true,
     region: "europe-west1",
     secrets: ["BREVO_API_KEY"],
   },
@@ -355,6 +356,10 @@ export const weeklyClearSafetyGateSummary = onSchedule(
   {
     region: "europe-west1",
     schedule: "0 8 * * 1",
+    retryCount: 5,
+    minBackoffSeconds: 60,
+    maxBackoffSeconds: 300,
+    maxRetrySeconds: 1800,
     timeZone: "Europe/Bratislava",
     secrets: ["BREVO_API_KEY"],
   },
@@ -434,4 +439,13 @@ export const freeScanCatalogTask = onTaskDispatched(
 export const notifyFreeScanOwner = onDocumentCreated(
   { document: "free_scan_requests/{requestId}", region: "europe-west1", memory: "256MiB", timeoutSeconds: 60, maxInstances: 2, retry: true, secrets: ["BREVO_API_KEY"] },
   async event => handleFreeScanOwnerCreated(event.params.requestId),
+);
+
+// Refresh verified Partner contracts even when merchants leave Shopify Admin closed.
+export const refreshShopifyBillingEntitlements = onSchedule(
+  { region: "europe-west1", schedule: "every 60 minutes", timeoutSeconds: 540, serviceAccount: "safety-gate-shopify-runtime@rapex-99a2c.iam.gserviceaccount.com", secrets: ["SHOPIFY_PARTNER_API_TOKEN"] },
+  async () => {
+    const { refreshShopifyEntitlements } = await import("./billing-entitlements.js");
+    logger.info("Scheduled billing verification completed", await refreshShopifyEntitlements());
+  },
 );

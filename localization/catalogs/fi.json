@@ -265,7 +265,12 @@
       "unavailableTitle": "Ilmainen skannaus ei ole tällä hetkellä käytettävissä",
       "unavailableBody": "Emme voi aloittaa skannausta juuri nyt. Katso esimerkkilöytö tai ota meihin yhteyttä.",
       "contactLink": "Ota meihin yhteyttä",
-      "domainHelp": "Avaa Shopify-hallinnassa Asetukset → Verkkotunnukset ja kopioi osoite, joka päättyy .myshopify.com. Käytä sitä oman verkkotunnuksesi sijaan."
+      "domainHelp": "Avaa Shopify-hallinnassa Asetukset → Verkkotunnukset ja kopioi osoite, joka päättyy .myshopify.com. Käytä sitä oman verkkotunnuksesi sijaan.",
+      "reportTitle": "Täydellinen tarkastusraportti",
+      "reportDownload": "Lataa kaikki havainnot (CSV)",
+      "reportBody": "Sisältää kaikki tuotteet, joilla on mahdollisia vastaavuuksia. Kertatarkastus. Yksityinen linkki vanhenee 30 päivän kuluttua.",
+      "reportLoading": "Valmistellaan täydellistä raporttia…",
+      "reportError": "Raportti ei ole saatavilla tai linkki on vanhentunut. Yritä uudelleen tai ota yhteyttä info@zerorecall.online."
     },
     "quiet": {
       "eyebrow": "LISÄÄ MIELENRAUHAA",

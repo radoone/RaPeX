@@ -265,7 +265,12 @@
       "unavailableTitle": "Bezplatné skenování je momentálně nedostupné",
       "unavailableBody": "Momentálně nemůžeme spustit skenování. Podívejte se na příklad výsledku nebo nás kontaktujte.",
       "contactLink": "Kontaktujte nás",
-      "domainHelp": "V administraci Shopify otevřete Nastavení → Domény a zkopírujte adresu končící na .myshopify.com. Zadejte ji místo vlastní domény obchodu."
+      "domainHelp": "V administraci Shopify otevřete Nastavení → Domény a zkopírujte adresu končící na .myshopify.com. Zadejte ji místo vlastní domény obchodu.",
+      "reportTitle": "Úplný výsledek kontroly",
+      "reportDownload": "Stáhnout všechny nálezy (CSV)",
+      "reportBody": "Obsahuje všechny produkty s možnými shodami. Jde o jednorázovou kontrolu. Soukromý odkaz platí 30 dní.",
+      "reportLoading": "Připravujeme úplný report…",
+      "reportError": "Report není dostupný nebo odkaz vypršel. Zkus to znovu nebo napiš na info@zerorecall.online."
     },
     "quiet": {
       "eyebrow": "VÍCE KLIDU",

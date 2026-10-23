@@ -264,7 +264,12 @@
     "unavailableTitle": "Besplatno skeniranje trenutno nije dostupno",
     "unavailableBody": "Trenutno ne možemo započeti skeniranje. Pogledajte primjer rezultata ili nas kontaktirajte.",
     "contactLink": "Kontaktirajte nas",
-    "domainHelp": "U Shopify administraciji otvorite Postavke → Domene i kopirajte adresu koja završava na .myshopify.com. Upotrijebite je umjesto vlastite domene trgovine."
+    "domainHelp": "U Shopify administraciji otvorite Postavke → Domene i kopirajte adresu koja završava na .myshopify.com. Upotrijebite je umjesto vlastite domene trgovine.",
+    "reportTitle": "Potpuno izvješće provjere",
+    "reportDownload": "Preuzmi sve nalaze (CSV)",
+    "reportBody": "Uključuje sve proizvode s mogućim podudaranjima. Jednokratna provjera. Privatna poveznica istječe nakon 30 dana.",
+    "reportLoading": "Priprema potpunog izvješća…",
+    "reportError": "Izvješće nije dostupno ili je poveznica istekla. Pokušajte ponovno ili pišite na info@zerorecall.online."
   },
   "quiet": {
     "eyebrow": "VIŠE MIRA",

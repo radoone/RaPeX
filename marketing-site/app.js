@@ -2,6 +2,7 @@ import i18next from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import languages from "../localization/languages.json";
 import authorities from "../localization/authorities.json";
+import { downloadReportPages } from "./free-scan-report.js";
 import en from "./locales/en.json";
 
 const catalogs = import.meta.glob(["./locales/??.json", "!./locales/en.json"], { import: "default" });
@@ -221,6 +222,59 @@ function initFormHandler() {
       }
     };
     window.setTimeout(poll, 4000);
+  }
+
+  const reportToken = window.location.hash.startsWith("#report=") ? window.location.hash.slice(8) : "";
+  if (reportToken) {
+    form.hidden = true;
+    const panel = document.createElement("div");
+    panel.className = "scan-feedback";
+    const heading = document.createElement("h3");
+    heading.dataset.i18n = "scan.reportTitle";
+    heading.textContent = i18next.t("scan.reportTitle");
+    const description = document.createElement("p");
+    description.dataset.i18n = "scan.reportBody";
+    description.textContent = i18next.t("scan.reportBody");
+    const download = document.createElement("button");
+    download.type = "button";
+    download.className = "btn btn--primary";
+    download.dataset.i18n = "scan.reportDownload";
+    download.textContent = i18next.t("scan.reportDownload");
+    const status = document.createElement("p");
+    status.setAttribute("role", "status");
+    panel.append(heading, description, download, status);
+    form.before(panel);
+    panel.scrollIntoView({ block: "center" });
+    let objectUrl;
+    download.addEventListener("click", async () => {
+      download.disabled = true;
+      panel.dataset.state = "pending";
+      status.textContent = i18next.t("scan.reportLoading");
+      try {
+        const result = await downloadReportPages(reportToken, async payload => {
+          const response = await fetch("/api/free-scan", {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload), cache: "no-store", signal: AbortSignal.timeout(30_000),
+          });
+          if (!response.ok) throw new Error("Report unavailable");
+          return response.json();
+        });
+        if (objectUrl) URL.revokeObjectURL(objectUrl);
+        objectUrl = URL.createObjectURL(new Blob([result.csv], { type: "text/csv;charset=utf-8" }));
+        const link = document.createElement("a");
+        link.href = objectUrl;
+        link.download = `zerorecall-${result.domain}.csv`;
+        link.textContent = i18next.t("scan.reportDownload");
+        status.replaceChildren(link);
+        link.click();
+      } catch {
+        panel.dataset.state = "error";
+        status.textContent = i18next.t("scan.reportError");
+      } finally { download.disabled = false; }
+    });
+    // Keep the access token in memory, not in subsequent copied URLs/history.
+    window.history.replaceState({}, "", `${window.location.pathname}${window.location.search}#free-scan`);
+    return;
   }
 
   const confirmationToken = window.location.hash.startsWith("#verify=")

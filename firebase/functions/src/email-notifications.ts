@@ -1,4 +1,4 @@
-import { createHash, timingSafeEqual } from "node:crypto";
+import { createHash, randomUUID, timingSafeEqual } from "node:crypto";
 import { URL } from "node:url";
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import * as logger from "firebase-functions/logger";
@@ -6,6 +6,7 @@ import type { CloudEvent } from "firebase-functions/v2";
 import type { FirestoreEvent, QueryDocumentSnapshot } from "firebase-functions/v2/firestore";
 import type { Request } from "firebase-functions/v2/https";
 import { db } from "./firebase-admin.js";
+import { emailAttemptPolicy, emailIdempotencyKey, EMAIL_LEASE_MS, EMAIL_TERMINAL, EmailProviderRejection } from "./email-delivery.js";
 import { FIRESTORE_COLLECTIONS } from "./safety-gate-config.js";
 import { escapeEmailHtml as escapeHtml, renderAlertEmail, renderWeeklyEmail } from "./email-templates.js";
 import type { AlertEmailDetails, EmailContent, WeeklyEmailMetrics, WeeklyEmailFinding } from "./email-templates.js";
@@ -133,7 +134,7 @@ async function sendBrevoEmail(params: {
   notificationId: string;
   to: string;
   content: EmailContent;
-}): Promise<string> {
+}): Promise<string | null> {
   const apiKey = (process.env.BREVO_API_KEY || "").trim();
   const senderEmail = normalizeEmail(process.env.BREVO_SENDER_EMAIL);
   const senderName = (process.env.BREVO_SENDER_NAME || "ZeroRecall").trim();
@@ -152,15 +153,16 @@ async function sendBrevoEmail(params: {
       textContent: params.content.textContent,
       tags: ["safety-gate"],
       headers: {
-        "Idempotency-Key": params.notificationId,
+        idempotencyKey: emailIdempotencyKey(params.shop, params.notificationId),
         "X-Mailin-custom": `notification_id:${params.notificationId}|shop_key:${encodeURIComponent(params.shop)}`,
       },
     }),
+    signal: globalThis.AbortSignal.timeout(20_000),
   });
-  const payload = await response.json() as { messageId?: string; message?: string };
-  if (!response.ok || !payload.messageId) {
-    throw new Error(`Brevo rejected email (${response.status}): ${payload.message || "unknown error"}`);
-  }
+  const payload = await response.json() as { messageId?: string; message?: string; code?: string };
+  if (!response.ok && payload.code === "duplicate_parameter" && /idempotenc/i.test(payload.message || "")) return null;
+  if (!response.ok) throw new EmailProviderRejection(`Brevo rejected email (${response.status})`);
+  if (!payload.messageId) throw new Error("Brevo acceptance was not confirmed");
   return payload.messageId.replace(/^<|>$/g, "");
 }
 
@@ -176,63 +178,63 @@ async function createAndSendNotification(params: {
 }): Promise<boolean> {
   const merchantRef = getMerchantRef(params.shop);
   const notificationRef = merchantRef.collection(NOTIFICATION_SUBCOLLECTION).doc(params.notificationId);
-  try {
-    await notificationRef.create({
-      shop: params.shop,
-      type: params.type,
-      status: "pending" satisfies EmailNotificationStatus,
-      recipient: params.recipient,
-      subject: sanitizeSubject(params.content.subject),
+  const leaseId = randomUUID();
+  const millis = (value: unknown) => value instanceof Timestamp ? value.toMillis() : undefined;
+  const claimed = await db.runTransaction(async transaction => {
+    const snapshot = await transaction.get(notificationRef);
+    const existing = snapshot.data() || {};
+    const policy = emailAttemptPolicy({ ...existing, leaseUntil: millis(existing.leaseUntil), ambiguousSince: millis(existing.ambiguousSince) }, Date.now());
+    if (policy === "skip") return null;
+    if (policy === "busy") throw new Error("Email submission is already in progress");
+    if (policy !== "send") {
+      transaction.set(notificationRef, { status: "failed", retryable: false, failureCode: policy, updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+      logger.error("Email requires operator review", { shop: params.shop, notificationId: params.notificationId, reason: policy });
+      return null;
+    }
+    // Freeze recipient and content for every retry of this logical notification.
+    const recipient = existing.recipient || params.recipient;
+    const content = existing.content || { ...params.content, subject: sanitizeSubject(params.content.subject) };
+    transaction.set(notificationRef, {
+      shop: params.shop, type: params.type, recipient, content, subject: content.subject,
       sourceAlertId: params.sourceAlertId || null,
       periodStart: params.periodStart ? Timestamp.fromDate(params.periodStart) : null,
       periodEnd: params.periodEnd ? Timestamp.fromDate(params.periodEnd) : null,
-      createdAt: FieldValue.serverTimestamp(),
-      updatedAt: FieldValue.serverTimestamp(),
-    });
-  } catch (error) {
-    const code = (error as { code?: number | string }).code;
-    if (code === 6 || code === "already-exists") {
-      logger.info("Skipping duplicate email notification", { shop: params.shop, notificationId: params.notificationId });
-      return false;
-    }
-    throw error;
-  }
-
+      createdAt: existing.createdAt || FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp(),
+      status: "pending", retryable: true, attempts: Number(existing.attempts || 0) + 1,
+      leaseId, leaseUntil: Timestamp.fromMillis(Date.now() + EMAIL_LEASE_MS),
+      ambiguousSince: existing.ambiguousSince || Timestamp.now(),
+    }, { merge: true });
+    return { recipient: String(recipient), content: content as EmailContent, hadAmbiguity: existing.ambiguousSince instanceof Timestamp };
+  });
+  if (!claimed) return false;
   try {
-    const messageId = await sendBrevoEmail({
-      shop: params.shop,
-      notificationId: params.notificationId,
-      to: params.recipient,
-      content: params.content,
+    const messageId = await sendBrevoEmail({ shop: params.shop, notificationId: params.notificationId, to: claimed.recipient, content: claimed.content });
+    // Persist the provider index first. A crash here is retried using the same key.
+    if (messageId) await db.collection(WEBHOOK_INDEX_COLLECTION).doc(createHash("sha256").update(messageId).digest("hex")).set({ shop: params.shop, notificationId: params.notificationId });
+    await db.runTransaction(async transaction => {
+      const current = await transaction.get(notificationRef);
+      if (current.get("leaseId") !== leaseId) return;
+      transaction.set(notificationRef, {
+        ...(EMAIL_TERMINAL.has(current.get("status")) ? {} : { status: "accepted" }),
+        ...(messageId ? { providerMessageId: messageId } : { duplicateAccepted: true }),
+        acceptedAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp(),
+        leaseUntil: FieldValue.delete(), ambiguousSince: FieldValue.delete(), retryable: false,
+      }, { merge: true });
     });
-    await Promise.all([
-      db.runTransaction(async (transaction) => {
-        const current = await transaction.get(notificationRef);
-        const currentStatus = current.get("status") as EmailNotificationStatus | undefined;
-        const terminalStatus = currentStatus === "delivered" || currentStatus === "bounced" || currentStatus === "blocked";
-        transaction.set(notificationRef, {
-          ...(terminalStatus ? {} : { status: "accepted" satisfies EmailNotificationStatus }),
-          providerMessageId: messageId,
-          acceptedAt: FieldValue.serverTimestamp(),
-          updatedAt: FieldValue.serverTimestamp(),
-        }, { merge: true });
-      }),
-      db.collection(WEBHOOK_INDEX_COLLECTION).doc(createHash("sha256").update(messageId).digest("hex")).set({
-        shop: params.shop,
-        notificationId: params.notificationId,
-        createdAt: FieldValue.serverTimestamp(),
-      }),
-    ]);
     return true;
   } catch (error) {
-    await notificationRef.set({
-      status: "failed" satisfies EmailNotificationStatus,
-      error: error instanceof Error ? error.message : String(error),
-      failedAt: FieldValue.serverTimestamp(),
-      updatedAt: FieldValue.serverTimestamp(),
-    }, { merge: true });
-    logger.error("Email notification failed", { shop: params.shop, notificationId: params.notificationId, error });
-    return false;
+    await db.runTransaction(async transaction => {
+      const current = await transaction.get(notificationRef);
+      if (current.get("leaseId") !== leaseId || EMAIL_TERMINAL.has(current.get("status"))) return;
+      transaction.set(notificationRef, {
+        status: "failed", failedAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp(),
+        failureCode: error instanceof EmailProviderRejection ? "provider_rejected" : "acceptance_unknown",
+        leaseUntil: FieldValue.delete(),
+        ...(error instanceof EmailProviderRejection && !claimed.hadAmbiguity ? { ambiguousSince: FieldValue.delete() } : {}),
+      }, { merge: true });
+    });
+    // Both the immediate event and weekly scheduler must retry a failed submission.
+    throw error;
   }
 }
 
@@ -412,6 +414,7 @@ export async function runWeeklyClearSummaries(end = new Date()): Promise<{ sent:
       logger.error("Weekly clear summary failed", { shop, error });
     }
   }
+  if (failed) throw new Error(`${failed} weekly email submissions need retry`);
   return { sent, skipped, failed };
 }
 
@@ -513,6 +516,8 @@ export async function handleBrevoWebhook(request: Request, response: ResponseSha
 export type WeeklySchedulerEvent = CloudEvent<{ scheduleTime?: string }>;
 
 export const emailNotificationTestUtils = {
+  createAndSendNotification,
+  sendBrevoEmail,
   escapeHtml,
   normalizeEmail,
   parseAlertDetails,

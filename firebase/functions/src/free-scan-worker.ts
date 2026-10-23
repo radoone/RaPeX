@@ -1,21 +1,11 @@
+import { submitScanReportOnce } from "./email-submission.js";
+import { randomBytes, createHash } from "node:crypto";
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import * as logger from "firebase-functions/logger";
 import { db } from "./firebase-admin.js";
 import { scanPublicCatalogProducts } from "./public-store-scanner.js";
 import { enqueueFreeScanCatalogPage, sendFreeScanReport } from "./free-scan.js";
-import { fetchPublicCatalogPage, runFreeScanCatalogPage, type FreeScanPage, type ScanPreviewMatch } from "./free-scan-catalog.js";
-
-function preview(matches: ScanPreviewMatch[]): ScanPreviewMatch[] {
-  return matches.slice(0, 5).map(match => ({
-    productId: String(match.productId || "").slice(0, 100),
-    productTitle: String(match.productTitle || "").slice(0, 1000),
-    productUrl: String(match.productUrl || "").slice(0, 2048),
-    result: { warnings: (match.result?.warnings || []).slice(0, 1).map(warning => ({
-      alertId: String(warning.alertId || "").slice(0, 500),
-      ...(typeof warning.overallSimilarity === "number" ? { overallSimilarity: warning.overallSimilarity } : {}),
-    })) },
-  }));
-}
+import { compactScanPreview as preview, compactScanMatch, fetchPublicCatalogPage, runFreeScanCatalogPage, type FreeScanPage } from "./free-scan-catalog.js";
 
 /** One durable task per public catalog page; no catalog-sized arrays in a request document. */
 export async function handleFreeScanCatalogTask(payload: FreeScanPage, retryCount: number): Promise<void> {
@@ -50,7 +40,7 @@ export async function handleFreeScanCatalogTask(payload: FreeScanPage, retryCoun
             const match = matchesByProduct.get(String(product.id));
             transaction.create(ref.collection("products").doc(String(product.id)), {
               productId: String(product.id), checkedAt: FieldValue.serverTimestamp(), pageIndex,
-              match: match ? preview([match])[0] : null, expireAt,
+              match: match ? compactScanMatch(match) : null, expireAt,
             });
           }
           const checkedProducts = Number(snapshot.get("checkedProducts") || 0) + products.length;
@@ -72,9 +62,17 @@ export async function handleFreeScanCatalogTask(payload: FreeScanPage, retryCoun
       report: async () => {
         const snapshot = await ref.get();
         if (!snapshot.exists || snapshot.get("status") !== "reporting" || snapshot.get("catalogComplete") !== true) return;
-        const data = snapshot.data()!;
+        const data = await db.runTransaction(async transaction => {
+          const current = await transaction.get(ref);
+          const value = current.data()!;
+          if (value.reportAccessToken) return value;
+          const reportAccessToken = randomBytes(32).toString("base64url");
+          const access = { reportAccessToken, reportAccessHash: createHash("sha256").update(reportAccessToken).digest("hex") };
+          transaction.update(ref, access);
+          return { ...value, ...access };
+        });
         const lead = { totalProductsScanned: Number(data.checkedProducts), flaggedProductsCount: Number(data.possibleMatches), matches: data.previewMatches || [] };
-        await sendFreeScanReport(payload.requestId, data as Parameters<typeof sendFreeScanReport>[1], { success: true, lead });
+        await submitScanReportOnce(ref, () => sendFreeScanReport(payload.requestId, data as Parameters<typeof sendFreeScanReport>[1], { success: true, lead }));
         await db.runTransaction(async transaction => {
           const current = await transaction.get(ref);
           if (current.get("status") !== "reporting") return;

@@ -17,8 +17,10 @@ test('all four email types render all EU languages without missing copy or broke
       assert.match(message.htmlContent, new RegExp(`<html lang="${language}">`));
       assert.doesNotMatch(message.htmlContent + message.textContent, /\{\{|undefined|NaN/);
       assert.match(message.htmlContent, /info@zerorecall.online/);
+      assert.ok(message.htmlContent.includes(`href="https://zerorecall.online/?lang=${language}"`));
     }
     assert.ok(messages[2].textContent.includes(url), language);
+    assert.ok(messages[3].textContent.includes(`https://zerorecall.online/?lang=${language}#pricing`), language);
     assert.ok(messages[1].subject.includes(EMAIL_LOCALES[language].monitoring_was_incomplete), language);
     assert.match(messages[0].htmlContent, /Product &lt;model&gt;/);
     assert.equal(normalizeEmailLanguage(`${language.toUpperCase()}-XX`), language);

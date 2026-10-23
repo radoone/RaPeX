@@ -264,7 +264,12 @@
     "unavailableTitle": "Tasuta skaneerimine pole praegu saadaval",
     "unavailableBody": "Me ei saa praegu skaneerimist alustada. Vaadake näidistulemust või võtke meiega ühendust.",
     "contactLink": "Võta meiega ühendust",
-    "domainHelp": "Avage Shopify halduses Seaded → Domeenid ja kopeerige aadress lõpuga .myshopify.com. Kasutage seda oma kohandatud domeeni asemel."
+    "domainHelp": "Avage Shopify halduses Seaded → Domeenid ja kopeerige aadress lõpuga .myshopify.com. Kasutage seda oma kohandatud domeeni asemel.",
+    "reportTitle": "Täielik kontrolliaruanne",
+    "reportDownload": "Laadi kõik leiud alla (CSV)",
+    "reportBody": "Sisaldab kõiki võimalike vastetega tooteid. Ühekordne kontroll. Privaatne link aegub 30 päeva pärast.",
+    "reportLoading": "Täieliku aruande ettevalmistamine…",
+    "reportError": "Aruanne pole saadaval või link on aegunud. Proovi uuesti või kirjuta info@zerorecall.online."
   },
   "quiet": {
     "eyebrow": "ROHKEM MEELERAHU",

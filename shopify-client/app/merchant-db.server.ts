@@ -122,6 +122,9 @@ export type SafetySettingRecord = {
   monitoringEntitled?: boolean;
   billingVerifiedAt?: Date | null;
   subscriptionValidUntil?: Date | null;
+  subscriptionPeriodEnd?: Date | null;
+  shopifyShopId?: string;
+  billingRefreshAfter?: Date | null;
   slackWebhookUrl?: string | null;
   createdAt: Date;
   updatedAt: Date;

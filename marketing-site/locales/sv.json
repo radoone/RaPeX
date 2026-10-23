@@ -264,7 +264,12 @@
     "unavailableTitle": "Gratisskanningen är för närvarande inte tillgänglig",
     "unavailableBody": "Vi kan inte starta en skanning just nu. Se ett exempelresultat eller kontakta oss.",
     "contactLink": "Kontakta oss",
-    "domainHelp": "Öppna Inställningar → Domäner i Shopify-admin och kopiera adressen som slutar på .myshopify.com. Använd den i stället för din anpassade domän."
+    "domainHelp": "Öppna Inställningar → Domäner i Shopify-admin och kopiera adressen som slutar på .myshopify.com. Använd den i stället för din anpassade domän.",
+    "reportTitle": "Fullständig kontrollrapport",
+    "reportDownload": "Hämta alla resultat (CSV)",
+    "reportBody": "Innehåller alla produkter med möjliga träffar. Engångskontroll. Den privata länken gäller i 30 dagar.",
+    "reportLoading": "Förbereder hela rapporten…",
+    "reportError": "Rapporten är inte tillgänglig eller länken har gått ut. Försök igen eller kontakta info@zerorecall.online."
   },
   "quiet": {
     "eyebrow": "MER LUGN OCH RO",

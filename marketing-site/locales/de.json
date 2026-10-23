@@ -264,7 +264,12 @@
     "unavailableTitle": "Der kostenlose Scan ist derzeit nicht verfügbar",
     "unavailableBody": "Wir können derzeit keinen Scan starten. Sehen Sie sich ein Beispielergebnis an oder kontaktieren Sie uns.",
     "contactLink": "Kontaktieren Sie uns",
-    "domainHelp": "Öffnen Sie im Shopify-Adminbereich Einstellungen → Domains und kopieren Sie die Adresse mit der Endung .myshopify.com. Verwenden Sie diese statt Ihrer eigenen Shop-Domain."
+    "domainHelp": "Öffnen Sie im Shopify-Adminbereich Einstellungen → Domains und kopieren Sie die Adresse mit der Endung .myshopify.com. Verwenden Sie diese statt Ihrer eigenen Shop-Domain.",
+    "reportTitle": "Vollständiger Prüfbericht",
+    "reportDownload": "Alle Funde herunterladen (CSV)",
+    "reportBody": "Enthält alle Produkte mit möglichen Übereinstimmungen. Einmalige Prüfung. Der private Link ist 30 Tage gültig.",
+    "reportLoading": "Vollständiger Bericht wird vorbereitet…",
+    "reportError": "Bericht nicht verfügbar oder Link abgelaufen. Erneut versuchen oder info@zerorecall.online kontaktieren."
   },
   "quiet": {
     "eyebrow": "MEHR SORGENFREIHEIT",
