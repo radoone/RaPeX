@@ -155,11 +155,9 @@ Safety Gate is the current public name. RAPEX is the older name and still appear
 
 ## Requirements
 
-- Node.js 22 for Firebase Functions
-- Node.js 22+ for the Shopify app
-- npm workspaces
-- Firebase CLI
-- Shopify CLI
+- Node.js 22.23.4 (`.nvmrc` and Docker; Firebase manages the Node 22 runtime patch)
+- npm 12.2.1 with workspaces
+- Firebase and Shopify CLIs are pinned in the project
 - Firebase project with Firestore and Functions enabled
 - Google AI / Gemini credentials used by the checker
 - Safety Gate API key used between Shopify and Firebase
@@ -169,8 +167,15 @@ Safety Gate is the current public name. RAPEX is the older name and still appear
 Install dependencies from the repository root:
 
 ```bash
-npm install
+nvm install
+nvm use
+npm install --global npm@12.2.1
+npm ci
+npm ci --prefix firebase/functions
+npm run deps:check
 ```
+
+The root lockfile covers Shopify, both extensions and the Firebase CLI. Functions keeps a separate deployment lockfile. Run Shopify CLI commands from `shopify-client/`; do not create nested Shopify lockfiles. See [dependency maintenance](docs/dependencies.md) for compatibility limits and audit findings.
 
 Configure Firebase:
 

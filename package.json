@@ -5,29 +5,59 @@
   "private": true,
   "workspaces": [
     "firebase",
-    "shopify-client"
+    "shopify-client",
+    "shopify-client/extensions/*"
   ],
   "scripts": {
     "localization:build": "node localization/build-locales.mjs",
     "localization:check": "node --test localization/test-locales.mjs",
     "postinstall": "patch-package",
-    "build": "npm run build --workspaces",
-    "test": "npm run test --workspaces",
-    "lint": "npm run lint --workspaces",
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
     "firebase:deploy": "npm run deploy --workspace=firebase",
     "shopify:dev": "npm run dev --workspace=shopify-client",
     "marketing:dev": "vite --config marketing-site/vite.config.ts",
     "marketing:build": "vite build --config marketing-site/vite.config.ts && cp -r marketing-site/dist/* firebase/hosting/",
-    "marketing:preview": "vite preview --config marketing-site/vite.config.ts"
+    "marketing:preview": "vite preview --config marketing-site/vite.config.ts",
+    "deps:check": "node scripts/check-dependencies.mjs"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.5",
-    "eslint": "^9.39.5",
-    "patch-package": "^8.0.1",
-    "react-router": "7.18.2"
+    "@eslint/js": "9.39.5",
+    "eslint": "9.39.5",
+    "patch-package": "8.0.1",
+    "react-router": "7.18.2",
+    "vite": "8.3.5",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@preact/signals": "2.11.3",
+    "preact": "11.0.2",
+    "@shopify/ui-extensions": "2026.10.0"
   },
   "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=8.0.0"
+    "node": ">=22.23.4 <23 || >=24.15.0",
+    "npm": ">=12.2.1"
+  },
+  "packageManager": "npm@12.2.1",
+  "allowScripts": {
+    "@firebase/util@1.15.3": true,
+    "@parcel/watcher@2.6.0": true,
+    "@prisma/client@6.19.3": true,
+    "@prisma/engines@6.19.3": true,
+    "better-sqlite3@11.10.0": true,
+    "esbuild@0.28.2": true,
+    "esbuild@0.28.1": true,
+    "fsevents@2.3.3": true,
+    "prisma@6.19.3": true,
+    "protobufjs@7.6.6": true,
+    "re2@1.27.0": true
+  },
+  "overrides": {
+    "@graphql-tools/utils": "12.1.0",
+    "deepmerge-ts": "8.0.2",
+    "lodash": "4.18.1",
+    "uuid": "11.1.1"
   }
 }

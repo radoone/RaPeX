@@ -10,6 +10,7 @@ import {
 } from "react-router";
 import { useEffect } from "react";
 import { AppProvider } from "@shopify/shopify-app-react-router/react";
+import { POLARIS_URL } from "./polaris";
 import i18n, { EU_LANGUAGES } from "./i18n";
 import themeStyles from "./styles/theme.css?url";
 
@@ -66,12 +67,12 @@ export default function App() {
         <link rel="stylesheet" href="https://cdn.shopify.com/static/fonts/inter/v4/styles.css" />
         <link rel="stylesheet" href={themeStyles} />
         <script src="https://cdn.shopify.com/shopifycloud/app-bridge.js"></script>
-        <script src="https://cdn.shopify.com/shopifycloud/polaris.js"></script>
+        <script src={POLARIS_URL}></script>
         <Meta />
         <Links />
       </head>
       <body>
-        <AppProvider apiKey={apiKey}>
+        <AppProvider apiKey={apiKey} polarisUrl={POLARIS_URL}>
           <Outlet />
         </AppProvider>
         <ScrollRestoration />
