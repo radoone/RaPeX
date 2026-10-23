@@ -12,8 +12,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return new Response("Product identity is missing", { status: 422 });
   }
 
-  const sourceUpdatedAt = String(product.updated_at || product.updatedAt || "") ||
-    request.headers.get("X-Shopify-Triggered-At") || new Date().toISOString();
+  // The deletion event time is newer than the product's last edit timestamp.
+  // Prefer it so a legitimate deletion cannot lose to a queued catalog update.
+  const sourceUpdatedAt = request.headers.get("X-Shopify-Triggered-At") ||
+    String(product.updated_at || product.updatedAt || "") || new Date().toISOString();
   await queueShopifyProductDeletion({ shop, productId, sourceUpdatedAt });
   return new Response(null, { status: 202 });
 };
