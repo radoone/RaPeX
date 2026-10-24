@@ -1,9 +1,11 @@
+import * as matchingWork from '../../lib/matching-work.js';
 import ts from 'typescript';
 import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
 
 // Evaluate owning source with explicit I/O substitutes. No Firebase SDK, credentials or live calls.
 export function sourceFunction(module, name, deps = {}) {
+  deps = { ...matchingWork, ...deps };
   const source = readFileSync(new URL(`../../src/${module}.ts`, import.meta.url), 'utf8');
   const tree = ts.createSourceFile('test.ts', source, ts.ScriptTarget.Latest, true);
   const node = tree.statements.find(n => ts.isFunctionDeclaration(n) && n.name?.text === name);

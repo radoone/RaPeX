@@ -1,3 +1,4 @@
+import { loadFirstSuccessful, mapBounded, memoizeBounded } from "./matching-work.js";
 import { createHash } from "node:crypto";
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import { googleAI } from "@genkit-ai/google-genai";
@@ -227,38 +228,20 @@ function appendMediaMessages(
 async function buildPromptParts(
   product: ProductInput,
   alerts: NormalizedAlert[],
+  loadMedia: (url: string) => Promise<EncodedImage | null> = prepareImageMedia,
 ): Promise<
   AnalysisPromptInput & {
     analysis: Omit<SafetyCheckAnalysis, "mode" | "candidateAlertsConsidered" | "scoringMode">;
   }
 > {
   const productImageUrls = getProductImageUrls(product);
-  const productImages: EncodedImage[] = [];
-  for (const imageUrl of productImageUrls) {
-    const encoded = await prepareImageMedia(imageUrl);
-    if (encoded) {
-      productImages.push(encoded);
-    }
-  }
-
-  const alertImages: Array<{ alertId: string; media: EncodedImage }> = [];
-  for (const alert of alerts) {
-    const pictures = limitImageUrls(normalizePictures(alert.fields), 2);
-    for (const picture of pictures) {
-      const encoded = await prepareImageMedia(picture);
-      if (encoded) {
-        alertImages.push({ alertId: alert.id, media: encoded });
-      }
-
-      if (alertImages.length >= AI_CONFIG.maxAlertImages) {
-        break;
-      }
-    }
-
-    if (alertImages.length >= AI_CONFIG.maxAlertImages) {
-      break;
-    }
-  }
+  const productImages = (await loadFirstSuccessful(productImageUrls, AI_CONFIG.maxProductImages, 4, loadMedia))
+    .map((result) => result.value);
+  const imageCandidates = alerts.flatMap((alert) =>
+    limitImageUrls(normalizePictures(alert.fields), 2).map((url) => ({alertId: alert.id, url})),
+  );
+  const alertImages = (await loadFirstSuccessful(imageCandidates, AI_CONFIG.maxAlertImages, 4, (item) => loadMedia(item.url)))
+    .map(({item, value}) => ({alertId: item.alertId, media: value}));
 
   return {
     comparisonPrompt: "",
@@ -272,8 +255,8 @@ async function buildPromptParts(
   };
 }
 
-async function analyzeProductMatches(product: ProductInput, alerts: NormalizedAlert[], comparisonPrompt: string) {
-  const promptInput = await buildPromptParts(product, alerts);
+async function analyzeProductMatches(product: ProductInput, alerts: NormalizedAlert[], comparisonPrompt: string, loadMedia: (url: string) => Promise<EncodedImage | null>) {
+  const promptInput = await buildPromptParts(product, alerts, loadMedia);
   promptInput.comparisonPrompt = comparisonPrompt;
   const attempts = [
     { model: AI_CONFIG.primaryModel, promptType: "multimodal", label: "2.5-flash multimodal" },
@@ -328,12 +311,12 @@ async function analyzeProductMatches(product: ProductInput, alerts: NormalizedAl
 export async function checkProductAgainstAlerts(
   product: ProductInput,
   candidateAlerts: NormalizedAlert[],
+  loadMedia: (url: string) => Promise<EncodedImage | null> = memoizeBounded(prepareImageMedia),
 ): Promise<SafetyCheckResult> {
   if (candidateAlerts.length > 12) {
-    const batches: SafetyCheckResult[] = [];
-    for (let offset = 0; offset < candidateAlerts.length; offset += 12) {
-      batches.push(await checkProductAgainstAlerts(product, candidateAlerts.slice(offset, offset + 12)));
-    }
+    const chunks: NormalizedAlert[][] = [];
+    for (let offset = 0; offset < candidateAlerts.length; offset += 12) chunks.push(candidateAlerts.slice(offset, offset + 12));
+    const batches = await mapBounded(chunks, 2, (chunk) => checkProductAgainstAlerts(product, chunk, loadMedia));
     const warnings = batches.flatMap((result) => result.warnings);
     return {
       ...batches[0], warnings, isSafe: warnings.length === 0,
@@ -353,7 +336,7 @@ export async function checkProductAgainstAlerts(
   }
 
   const comparisonPrompt = buildComparisonPrompt(product, candidateAlerts);
-  const analysisResult = await analyzeProductMatches(product, candidateAlerts, comparisonPrompt);
+  const analysisResult = await analyzeProductMatches(product, candidateAlerts, comparisonPrompt, loadMedia);
 
   if (!analysisResult) {
     return createUnavailableAnalysisResult({

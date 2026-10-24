@@ -32,7 +32,7 @@ test('13 eligible alerts are all evaluated in batches no larger than 12', async 
   const sizes = [];
   let checker;
   checker = fn('safety-gate-checker', 'checkProductAgainstAlerts', {
-    getProductImageUrls: () => [], readCachedMatchResult: async () => null,
+    getProductImageUrls: () => [], prepareImageMedia: async () => null, readCachedMatchResult: async () => null,
     buildComparisonPrompt: (_p, alerts) => { sizes.push(alerts.length); return ''; },
     analyzeProductMatches: async () => ({ response: { text: '[]' }, analysis }),
     parseAnalysisMatches, buildSafetyCheckResult, writeCachedMatchResult: async () => {}, createUnavailableAnalysisResult,
