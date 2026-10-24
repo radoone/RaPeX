@@ -5,6 +5,7 @@ import * as logger from "firebase-functions/logger";
 import { db } from "./firebase-admin.js";
 import { AI_CONFIG, FIRESTORE_COLLECTIONS, MATCHING_THRESHOLDS } from "./safety-gate-config.js";
 import { recallWithinThreshold } from "./vector-recall.js";
+import { selectMonitoringImages, prioritizeMonitoringImages, type MonitoringImage, type StoredMonitoringImage } from "./monitoring-images.js";
 import { buildMonitoringCursorValues } from "./monitoring-cursor.js";
 import { monitoringTaskId, scheduledMonitoringRunId } from "./monitoring-task-id.js";
 import { canApplyProductVersion, installationKey, isProductChangeSupersededByDeletion } from "./product-lifecycle.js";
@@ -56,12 +57,13 @@ type ResponseShape = {
 type AlertRetrievalCandidate = {
   alert: NormalizedAlert;
   textVector?: number[];
-  imageVector?: number[];
+  images?: MonitoringImage[];
 };
 
 type MerchantProductCandidate = {
   id: string;
   data: Record<string, unknown>;
+  matchedImageUrls?: string[];
 };
 
 type MerchantMonitoringWindow = {
@@ -379,7 +381,6 @@ async function loadRapexAlertCandidatesSince(
       return {
         alert: normalizeRapexAlert(doc.id, data),
         textVector: asVectorArray(data.vector_text),
-        imageVector: asVectorArray(data.vector_image),
       };
     })
     .sort((left, right) => {
@@ -396,6 +397,27 @@ async function loadRapexAlertCandidatesSince(
     });
 }
 
+async function loadMonitoringImages(candidates: AlertRetrievalCandidate[]): Promise<void> {
+  const byAlert = new Map<string, StoredMonitoringImage[]>();
+  const ids = [...new Set(candidates.map(candidate => candidate.alert.id))];
+  // Firestore permits 30 disjunctions; do not issue one read query per alert/photo.
+  for (let offset = 0; offset < ids.length; offset += 30) {
+    const snapshots = await db.collection(FIRESTORE_COLLECTIONS.alertImages)
+      .where("alertId", "in", ids.slice(offset, offset + 30))
+      .select("alertId", "imageUrl", "embeddingSourceUrl", "vector_image").get();
+    for (const doc of snapshots.docs) {
+      const data = doc.data();
+      const alertId = String(data.alertId);
+      const images = byAlert.get(alertId) || [];
+      images.push({ imageUrl: String(data.imageUrl), embeddingSourceUrl: data.embeddingSourceUrl, vector: asVectorArray(data.vector_image) });
+      byAlert.set(alertId, images);
+    }
+  }
+  for (const candidate of candidates) {
+    candidate.images = selectMonitoringImages(normalizePictures(candidate.alert.fields), byAlert.get(candidate.alert.id) || []);
+  }
+}
+
 async function findCandidateProductsForAlert(
   shop: string,
   alertCandidate: AlertRetrievalCandidate,
@@ -407,10 +429,12 @@ async function findCandidateProductsForAlert(
     .collection(FIRESTORE_COLLECTIONS.subProducts);
 
   if (!alertCandidate.textVector?.length) throw new Error("Safety Gate text vector is unavailable");
-  for (const [field, vector, initialLimit, maxDistance] of [
-    ["vector_text", alertCandidate.textVector, MONITOR_TEXT_CANDIDATE_LIMIT, MATCHING_THRESHOLDS.textDistance],
-    ["vector_image", alertCandidate.imageVector, MONITOR_IMAGE_CANDIDATE_LIMIT, MATCHING_THRESHOLDS.imageDistance],
-  ] as const) {
+  const searches = [
+    { field: "vector_text", vector: alertCandidate.textVector, initialLimit: MONITOR_TEXT_CANDIDATE_LIMIT, maxDistance: MATCHING_THRESHOLDS.textDistance, imageUrl: undefined as string | undefined },
+    ...(alertCandidate.images || []).map(image => ({ field: "vector_image", vector: image.vector, initialLimit: MONITOR_IMAGE_CANDIDATE_LIMIT, maxDistance: MATCHING_THRESHOLDS.imageDistance, imageUrl: image.mediaUrl })),
+  ];
+  const imageScores = new Map<string, Map<string, number>>();
+  for (const { field, vector, initialLimit, maxDistance, imageUrl } of searches) {
     if (!vector?.length) continue;
     const docs = await recallWithinThreshold({
       initialLimit, maxDistance,
@@ -422,7 +446,14 @@ async function findCandidateProductsForAlert(
     for (const doc of docs) {
       const data = doc.data() as Record<string, unknown>;
       if (data.deletedAt) continue;
-      candidates.set(doc.id, { id: doc.id, data });
+      const candidate = candidates.get(doc.id) || { id: doc.id, data };
+      if (imageUrl) {
+        const scores = imageScores.get(doc.id) || new Map<string, number>();
+        scores.set(imageUrl, Math.min(scores.get(imageUrl) ?? Infinity, Number(doc.get("distance"))));
+        imageScores.set(doc.id, scores);
+        candidate.matchedImageUrls = [...scores].sort((a, b) => a[1] - b[1]).map(([url]) => url);
+      }
+      candidates.set(doc.id, candidate);
     }
   }
 
@@ -775,10 +806,11 @@ export async function runMerchantDeltaMonitoringForShop(params: {
         if (!snapshot.exists) throw new Error("Safety Gate change references a missing source");
         if (seen.has(snapshot.id)) continue;
         const data = snapshot.data()!;
-        rapexAlertCandidates.push({ alert: normalizeRapexAlert(snapshot.id, data), textVector: asVectorArray(data.vector_text), imageVector: asVectorArray(data.vector_image) });
+        rapexAlertCandidates.push({ alert: normalizeRapexAlert(snapshot.id, data), textVector: asVectorArray(data.vector_text) });
         seen.add(snapshot.id);
       }
     }
+    await loadMonitoringImages(rapexAlertCandidates);
     const rapexAlerts = rapexAlertCandidates.map((candidate) => candidate.alert);
     const candidateProductsByDocId = new Map<
       string,
@@ -793,7 +825,7 @@ export async function runMerchantDeltaMonitoringForShop(params: {
           alerts: new Map<string, NormalizedAlert>(),
         };
 
-        existing.alerts.set(alertCandidate.alert.id, alertCandidate.alert);
+        existing.alerts.set(alertCandidate.alert.id, prioritizeMonitoringImages(alertCandidate.alert, productCandidate.matchedImageUrls || []));
 
         candidateProductsByDocId.set(productCandidate.id, existing);
       }

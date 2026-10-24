@@ -33,7 +33,6 @@ type ImageEmbeddingPayload = {
 
 type ExistingAlertEmbeddingState = {
   hasTextVector: boolean;
-  hasPrimaryImageVector: boolean;
   existingImageDocIds: Set<string>;
 };
 
@@ -109,7 +108,6 @@ async function getExistingAlertEmbeddingState(alertId: string): Promise<Existing
 
   return {
     hasTextVector: hasStoredVectorField(alertData, "vector_text"),
-    hasPrimaryImageVector: hasStoredVectorField(alertData, "vector_image"),
     existingImageDocIds: new Set(imageDocs.docs.map((doc) => doc.id)),
   };
 }
@@ -168,7 +166,6 @@ function buildAlertDocument(
   record: RapexRecord,
   recordAlertDate: Date,
   vectorText?: number[],
-  vectorImage?: number[],
 ): RapexAlertDocument {
   const document: RapexAlertDocument = {
     meta: {
@@ -185,9 +182,6 @@ function buildAlertDocument(
     document.vector_text = FieldValue.vector(vectorText);
   }
 
-  if (vectorImage?.length) {
-    document.vector_image = FieldValue.vector(vectorImage);
-  }
 
   return document;
 }
@@ -309,7 +303,6 @@ async function enrichRecord(record: RapexRecord): Promise<{
       record,
       recordAlertDate,
       vectorText,
-      existingState.hasPrimaryImageVector ? undefined : imageEmbeddings[0]?.vector,
     ),
     recordAlertDate,
     imageEmbeddings,
@@ -371,7 +364,6 @@ async function processRecordsPage(
     logger.debug("Processed Safety Gate alert embeddings", {
       alertId: record.recordid,
       textEmbedded: !existingState.hasTextVector && Boolean(document.vector_text),
-      primaryImageEmbedded: !existingState.hasPrimaryImageVector && Boolean(document.vector_image),
       imageEmbeddingsWritten: imageSync.written,
     });
 
@@ -623,7 +615,6 @@ export async function backfillRecentAlertEmbeddings(params?: {
       existingImageDocIds,
     );
     const imageSync = await writeMissingAlertImageEmbeddings(record, alertDate, imageEmbeddings, bulkWriter);
-    const hasPrimaryImageVector = hasStoredVectorField(data, "vector_image");
     const updatePayload: Record<string, unknown> = {};
 
     if (textEmbedding?.length) {
@@ -631,9 +622,6 @@ export async function backfillRecentAlertEmbeddings(params?: {
       textEmbeddingsWritten += 1;
     }
 
-    if (!hasPrimaryImageVector && imageEmbeddings[0]?.vector?.length) {
-      updatePayload.vector_image = FieldValue.vector(imageEmbeddings[0].vector);
-    }
 
     if (Object.keys(updatePayload).length > 0) {
       bulkWriter.set(doc.ref, updatePayload, { merge: true });

@@ -1,8 +1,9 @@
 """Idempotent production safeguards. Run from the repository root with an authorized gcloud account.
-Enables PITR/deletion protection, daily/weekly backups and operations error notifications.
+Maintains deletion protection and operations notifications. Paid recovery is disabled
+by owner request (24 October 2026); --enable-paid-recovery explicitly opts back in.
 Credentials are read only by subprocess and never logged or saved.
 """
-import os,json,urllib.request,urllib.error,subprocess,pathlib,time
+import os,json,urllib.request,urllib.error,subprocess,pathlib,time,sys
 os.environ['CLOUDSDK_PYTHON']='/opt/homebrew/bin/python3.14'
 project='rapex-99a2c'; db='https://firestore.googleapis.com/v1/projects/'+project+'/databases/(default)'
 token=subprocess.check_output(['gcloud','auth','print-access-token'],text=True).strip()
@@ -12,14 +13,18 @@ def call(url,data=None,method=None):
   with urllib.request.urlopen(req,timeout=90) as r:return json.load(r)
  except urllib.error.HTTPError as e:raise RuntimeError(str(e.code)+' '+e.read().decode()[:1000])
 result={}
-updated=call(db+'?updateMask=pointInTimeRecoveryEnablement,deleteProtectionState',{'pointInTimeRecoveryEnablement':'POINT_IN_TIME_RECOVERY_ENABLED','deleteProtectionState':'DELETE_PROTECTION_ENABLED'},'PATCH')
+paid_recovery='--enable-paid-recovery' in sys.argv[1:]
+updated=call(db+'?updateMask=pointInTimeRecoveryEnablement,deleteProtectionState',{'pointInTimeRecoveryEnablement':'POINT_IN_TIME_RECOVERY_ENABLED' if paid_recovery else 'POINT_IN_TIME_RECOVERY_DISABLED','deleteProtectionState':'DELETE_PROTECTION_ENABLED'},'PATCH')
 result['database']={k:updated.get(k)for k in ['name','pointInTimeRecoveryEnablement','deleteProtectionState','versionRetentionPeriod','earliestVersionTime']}
-print('PITR and database deletion protection enabled',flush=True)
+print('Database deletion protection enabled; paid recovery '+('enabled' if paid_recovery else 'disabled'),flush=True)
 existing=call(db+'/backupSchedules').get('backupSchedules',[])
-for kind,config in [('dailyRecurrence',{'retention':'604800s','dailyRecurrence':{}}),('weeklyRecurrence',{'retention':'2419200s','weeklyRecurrence':{'day':'SUNDAY'}})]:
- if not any(kind in s for s in existing):call(db+'/backupSchedules',config,'POST')
+if paid_recovery:
+ for kind,config in [('dailyRecurrence',{'retention':'604800s','dailyRecurrence':{}}),('weeklyRecurrence',{'retention':'2419200s','weeklyRecurrence':{'day':'SUNDAY'}})]:
+  if not any(kind in s for s in existing):call(db+'/backupSchedules',config,'POST')
+else:
+ for schedule in existing:call('https://firestore.googleapis.com/v1/'+schedule['name'],method='DELETE')
 result['backupSchedules']=call(db+'/backupSchedules').get('backupSchedules',[])
-print('Daily 7-day and weekly 28-day backup schedules verified',flush=True)
+print('Backup schedules verified; paid recovery '+('enabled' if paid_recovery else 'disabled'),flush=True)
 monitor='https://monitoring.googleapis.com/v3/projects/'+project
 channels=call(monitor+'/notificationChannels').get('notificationChannels',[])
 channel=next((c for c in channels if c.get('type')=='email'and c.get('labels',{}).get('email_address')=='info@zerorecall.online'),None)

@@ -76,11 +76,12 @@ function buildAlertSignature(alerts: NormalizedAlert[]): string {
       recordid: alert.meta?.recordid,
       alertDate: alert.meta?.alert_date,
       recordTimestamp: alert.meta?.record_timestamp,
+      images: hashValue(normalizePictures(alert.fields)),
     }))
     .sort((left, right) => `${left.id}:${left.recordTimestamp || left.alertDate}`.localeCompare(
       `${right.id}:${right.recordTimestamp || right.alertDate}`,
     ))
-    .map((alert) => `${alert.id}:${alert.recordTimestamp || alert.alertDate || ""}`)
+    .map((alert) => `${alert.id}:${alert.recordTimestamp || alert.alertDate || ""}:${alert.images}`)
     .join("|");
 }
 

@@ -37,10 +37,11 @@ export function database() {
   const snapshot = path => { const exists = rows.has(path), data = exists ? { ...rows.get(path) } : undefined; return { id: path.split('/').at(-1), ref: doc(path), exists, data: () => data && { ...data }, get: key => key.split('.').reduce((v, k) => v?.[k], data) }; };
   const collection = (path, filters = [], cap = Infinity) => ({
     orderBy: () => collection(path, filters, cap), startAfter: () => collection(path, filters, cap),
-    doc: id => doc(`${path}/${id}`), where: (k, op, v) => collection(path, [...filters, [k, v]], cap), limit: n => collection(path, filters, n),
+    select: () => collection(path, filters, cap),
+    doc: id => doc(`${path}/${id}`), where: (k, op, v) => collection(path, [...filters, [k, op, v]], cap), limit: n => collection(path, filters, n),
     get: async () => {
       const docs = [...rows.keys()].filter(k => k.startsWith(`${path}/`) && !k.slice(path.length + 1).includes('/'))
-        .map(snapshot).filter(d => filters.every(([k, v]) => d.get(k) === v)).slice(0, cap);
+        .map(snapshot).filter(d => filters.every(([k, op, v]) => op === 'in' ? v.includes(d.get(k)) : d.get(k) === v)).slice(0, cap);
       return { docs, empty: !docs.length, size: docs.length };
     },
     add: async data => { const ref = doc(`${path}/auto-${++sequence}`); await ref.set(data); return ref; },
@@ -62,5 +63,5 @@ export function database() {
   } };
   return db;
 }
-export const collections = { merchants: 'merchants', alerts: 'rapex_alerts', subProducts: 'products', subAlerts: 'alerts', subChecks: 'checks' };
+export const collections = { merchants: 'merchants', alerts: 'rapex_alerts', alertImages: 'rapex_alert_images', subProducts: 'products', subAlerts: 'alerts', subChecks: 'checks' };
 export const logger = { info() {}, warn() {}, error() {} };

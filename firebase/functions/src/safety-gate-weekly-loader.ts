@@ -204,7 +204,6 @@ export async function ingestWeeklyNotification(
 
   // Embed images
   let imagesEmbeddedCount = 0;
-  let primaryImageVector: unknown;
 
   if (notification.pictures.length > 0) {
     for (let i = 0; i < notification.pictures.length; i++) {
@@ -213,14 +212,10 @@ export async function ingestWeeklyNotification(
       const imgDocRef = db.collection(FIRESTORE_COLLECTIONS.alertImages).doc(imageDocId);
       const imgSnap = await imgDocRef.get();
 
-      if (i === 0 && imgSnap.exists) primaryImageVector = imgSnap.get("vector_image");
       if (!imgSnap.exists) {
         const imgVector = await embedImage(imgUrl);
         if (imgVector?.length) {
           imagesEmbeddedCount++;
-          if (i === 0 && !primaryImageVector) {
-            primaryImageVector = FieldValue.vector(imgVector);
-          }
           await imgDocRef.set({
             alertId: docId,
             imageUrl: imgUrl,
@@ -257,7 +252,7 @@ export async function ingestWeeklyNotification(
   if (vectorText) {
     alertDocData.vector_text = vectorText;
   }
-  alertDocData.vector_image = primaryImageVector || FieldValue.delete();
+  alertDocData.vector_image = FieldValue.delete();
   await db.runTransaction(async (transaction) => {
     const latest = await transaction.get(docRef);
     transaction.set(docRef, alertDocData, { merge: true });

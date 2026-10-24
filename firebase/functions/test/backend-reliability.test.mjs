@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { createUnavailableAnalysisResult, parseAnalysisMatches, buildSafetyCheckResult } from '../lib/safety-gate-checker-results.js';
 import { recallWithinThreshold } from '../lib/vector-recall.js';
+import { selectMonitoringImages, prioritizeMonitoringImages } from '../lib/monitoring-images.js';
+import { mapBounded, memoizeBounded } from '../lib/matching-work.js';
 import { canApplyProductVersion, installationKey, isProductChangeSupersededByDeletion } from '../lib/product-lifecycle.js';
 import { sourceFunction as fn, database, Timestamp, FieldValue, collections, logger } from './helpers/isolated-source.mjs';
 
@@ -32,7 +34,9 @@ test('13 eligible alerts are all evaluated in batches no larger than 12', async 
   const sizes = [];
   let checker;
   checker = fn('safety-gate-checker', 'checkProductAgainstAlerts', {
-    getProductImageUrls: () => [], prepareImageMedia: async () => null, readCachedMatchResult: async () => null,
+    mapBounded, memoizeBounded,
+    getProductImageUrls: () => [],
+    prepareImageMedia: async () => null, readCachedMatchResult: async () => null,
     buildComparisonPrompt: (_p, alerts) => { sizes.push(alerts.length); return ''; },
     analyzeProductMatches: async () => ({ response: { text: '[]' }, analysis }),
     parseAnalysisMatches, buildSafetyCheckResult, writeCachedMatchResult: async () => {}, createUnavailableAnalysisResult,
@@ -149,6 +153,8 @@ function monitor(db, dateCandidates = [], check = async () => ({ isSafe: true, w
     ...deps(db), getMonitorState: async () => db.rows.get(merchantPath), randomUUID: () => 'run',
     resolveMonitoringWindow: ({ currentState }) => ({ mode: 'delta', strategy: 'since-last-check', days: null, checkpointDate: normalize(currentState.lastRapexAlertDate) || new Date('2026-01-01'), checkpointRecordTimestamp: null }),
     loadRapexAlertCandidatesSince: async () => dateCandidates,
+    loadMonitoringImages: fn('merchant-monitoring', 'loadMonitoringImages', { ...deps(db), selectMonitoringImages, normalizePictures: fields => fields?.pictures || [], asVectorArray: x => x?.toArray() }),
+    prioritizeMonitoringImages,
     findCandidateProductsForAlert: fn('merchant-monitoring', 'findCandidateProductsForAlert', { ...deps(db), recallWithinThreshold, MONITOR_TEXT_CANDIDATE_LIMIT: 8, MONITOR_IMAGE_CANDIDATE_LIMIT: 5, MATCHING_THRESHOLDS: { textDistance: .38, imageDistance: .35 } }),
     toProductInput: x => x, checkProductAgainstAlerts: check, normalizeAlertDate: normalize,
     normalizeRapexAlert: (id, data) => ({ id, ...data }), asVectorArray: x => x?.toArray(),
@@ -169,6 +175,15 @@ test('missing index or AI failure cannot advance a monitoring checkpoint or writ
     assert.equal(db.rows.get(merchantPath).lastRapexAlertDocId, undefined);
     assert.equal([...db.rows.keys()].some(key => key.includes('/checks/')), false);
   }
+});
+
+test('a failed all-images read cannot advance monitoring or write a completed check', async () => {
+  const db = fixture(), collection = db.collection;
+  db.collection = path => path === 'rapex_alert_images' ? { where: () => ({ select: () => ({ get: async () => { throw Error('Image collection unavailable'); } }) }) } : collection(path);
+  await assert.rejects(monitor(db, [candidate(1)])({ shop }), /Image collection unavailable/);
+  assert.equal(db.rows.get(merchantPath).lastMonitorStatus, 'FAILURE');
+  assert.equal(db.rows.get(merchantPath).lastRapexAlertDocId, undefined);
+  assert.equal([...db.rows.keys()].some(key => key.includes('/checks/')), false);
 });
 
 test('monitoring passes every eligible candidate and keeps the page incomplete at its boundary', async () => {
@@ -272,7 +287,7 @@ test('global retrieval preserves official evidence and source revisions for cach
   assert.equal(first.fields.caseNumber, 'SR/12345/26');
   assert.equal(first.fields.type_numberOfModel, 'M1');
   assert.equal(first.fields.url, 'https://ec.europa.eu/safety-gate-alerts/record/A');
-  const signature = fn('safety-gate-checker', 'buildAlertSignature');
+  const signature = fn('safety-gate-checker', 'buildAlertSignature', { normalizePictures: fields => fields?.pictures || [], hashValue: value => createHash('sha256').update(JSON.stringify(value)).digest('hex') });
   assert.notEqual(signature([first]), signature([{ ...first, meta: { ...first.meta, record_timestamp: '2026-10-23' } }]));
 });
 

@@ -56,7 +56,7 @@ Firestore is both the RAPEX knowledge base and the merchant app datastore.
 
 Main collections:
 - `rapex_alerts`: imported Safety Gate records
-- `rapex_alert_images`: per-image embedding documents for recent Safety Gate alerts (lightweight, stores only image metadata + vector without duplicated alert fields)
+- `rapex_alert_images`: per-image embedding documents across Safety Gate history (lightweight, stores only image metadata + vector without duplicated alert fields)
 - `rapex_meta/loader_state`: loader checkpoint and run status
 - `merchant_match_cache`: short-lived cache for AI match determinations with a 30-day Firestore TTL (`expireAt`)
 - `merchants`: tenant root documents storing per-shop settings and monitor state
@@ -71,8 +71,8 @@ Main collections:
 Imported alert documents store:
 - raw Safety Gate fields
 - metadata such as `recordid`, `alert_date`, `record_timestamp`
-- text embeddings and sometimes image embeddings for similarity search
-- recent alerts also fan out their image embeddings into `rapex_alert_images`, so vector image recall is not limited to a single primary picture
+- text embeddings for similarity search; picture embeddings live only in `rapex_alert_images`
+- available picture embeddings are stored in `rapex_alert_images`, so vector image recall is not limited to a single primary picture
 
 ### 3. Shopify app
 
@@ -201,7 +201,7 @@ Public ZeroRecall home/about/privacy pages and all four email types now have loc
 - Similarity can use product title, description, brand, model, category, and sometimes image data.
 - Similarity can use product title, description, brand, model, category, and multiple product images when available.
 - Merchant product checks persist per-shop Shopify products into `merchants/{shop}/products` early enough that repeated checks can reuse cached `vector_text` / `vector_image` instead of always re-embedding the product, as long as the same `shop`, `productId`, and `sourceUpdatedAt` are provided.
-- Recent alert image retrieval now uses `rapex_alert_images` so all alert pictures can be embedded and searched; legacy `rapex_alerts.vector_image` remains a fallback during rollout/backfill.
+- Alert image retrieval and merchant monitoring use `rapex_alert_images` for all available current pictures. On 24 October 2026 the owner authorized removal of inline `rapex_alerts.vector_image` copies and their obsolete source-only index. Do not recreate those copies or a primary-vector fallback in source documents; Shopify product vectors are separate and remain in product documents. Weekly, historical and maintenance writers must write picture vectors only to `rapex_alert_images`. See `docs/alert-image-storage.md`.
 - Safety check responses now distinguish between `overallSimilarity` (final review score) and `imageSimilarity` (visual packaging similarity).
 - Candidate alert retrieval and merchant product monitoring use Cosine Distance threshold pre-filtering (`textDistance <= 0.38` and `imageDistance <= 0.35` in `safety-gate-config.ts`) to immediately classify products as safe, bypassing the expensive Gemini LLM matcher when no high-similarity vector matches are found.
 - **Batch Vectorization for Store Scanning & Large Catalogs:** Whenever scanning public Shopify store sortiments or performing bulk catalog audits, **ALWAYS use batch vectorization (`embedTexts` in batches of 50–100) and fast Firestore KNN vector search (`retrieveAlertsForVector`)** to pre-filter candidate alerts before invoking Gemini LLM models. Never run isolated per-item LLM checks in a loop over large product catalogs. Multimodal LLM analysis (Gemini 2.5 Flash `checkProductAgainstAlerts`) must strictly serve as a targeted arbiter only on the shortlist of candidate pairs that passed the vector similarity threshold.
@@ -423,7 +423,7 @@ Both manual and background findings use the same transactional product/source ke
 
 Weekly imports use content hashes and an atomic `rapex_changes` journal with server commit timestamps so corrections to older publications are monitored independently of publication-date cursors. Checkpoints retain full timestamp/document-ID tuples. History/windowed audit checkpoints are scoped separately. Daily/manual overflow pages continue through durable tasks and incomplete pages do not report overall success. Keep batch vectorization and targeted AI.
 
-Operational safeguards and release/rollback instructions are in `docs/firebase-operations.md`. The hourly read-only health scheduler uses its dedicated `safety-gate-backend-health` service account; maintain private invocation and viewer-only database access. Keep PITR, database deletion protection, daily/weekly backups and operations alerting configured. A successful scheduled backup configuration, recovery request or alert-policy creation is not evidence of a completed backup, verified restore or received incident email. Preserve those evidence distinctions.
+Operational safeguards and release/rollback instructions are in `docs/firebase-operations.md`. The hourly read-only health scheduler uses its dedicated `safety-gate-backend-health` service account; maintain private invocation and viewer-only database access. Keep database deletion protection and operations alerting configured. The owner explicitly disabled scheduled backups and PITR on 24 October 2026; keep paid recovery disabled unless the owner asks to re-enable it. A successful backup configuration or recovery request is not evidence of a completed backup or verified restore; alert-policy creation is not proof of a received incident email. Preserve those evidence distinctions.
 
 Global nearest-neighbour retrieval remains bounded; the live official-record positive control exposed that expanding all sources inside a broad distance threshold is not a practical product query. Visual scores require images on both sides. Merchant similarity thresholds are stored on the merchant root (the old `merchant_settings` naming is historical).
 

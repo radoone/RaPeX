@@ -33,7 +33,6 @@ export interface RapexAlertDocument {
   };
   fields: RapexRecordFields;
   vector_text?: FirestoreVectorValue;
-  vector_image?: FirestoreVectorValue;
 }
 
 export interface RapexAlertImageDocument {
