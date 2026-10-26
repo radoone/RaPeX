@@ -205,7 +205,7 @@ export default function AuditReportPage() {
         <section className="admin-card">
           {records.length === 0 ? (
             <s-box padding="large">
-              <s-text tone="subdued">{t("auditReport.empty")}</s-text>
+              <s-text tone="subdued">{t("workspace.reportEmpty")}</s-text>
             </s-box>
           ) : (
             <div
