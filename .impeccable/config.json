@@ -1,3 +1,15 @@
 {
-  "buildPath": "code"
+  "buildPath": "code",
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "createdAt": "2026-10-26T15:08:26.011Z",
+        "reason": "Codex: requested Shopify Admin alignment; actual Shopify Products reference uses ShopifyInter at 13px, and this app already loads public Inter. Native consistency takes priority over distinctive typography."
+      }
+    ]
+  }
 }

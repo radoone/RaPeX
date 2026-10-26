@@ -1,3 +1,4 @@
+import { AdminCard } from "../components/AdminCard";
 import { LocalDateTime } from "../components/LocalDateTime";
 import type { LoaderFunctionArgs } from "react-router";
 import {
@@ -53,7 +54,7 @@ export default function EvidencePage() {
         {t("workspace.reportTitle")}
       </s-button>
       <div className="admin-stack">
-        <section className="admin-card">
+        <AdminCard className="admin-card">
           <div className="admin-actions">
             <s-button
               variant={view === "decisions" ? "secondary" : "tertiary"}
@@ -131,8 +132,12 @@ export default function EvidencePage() {
                     </p>
                     <p className="admin-helper">
                       {t("workspace.when")}:{" "}
-                      {event.createdAt &&
-                        <LocalDateTime value={event.createdAt} locale={i18n.language} />}{" "}
+                      {event.createdAt && (
+                        <LocalDateTime
+                          value={event.createdAt}
+                          locale={i18n.language}
+                        />
+                      )}{" "}
                       · {t("workspace.who")}:{" "}
                       {event.actorId || t("common.unknown")}
                     </p>
@@ -195,7 +200,7 @@ export default function EvidencePage() {
               </s-table-body>
             </s-table>
           )}
-        </section>
+        </AdminCard>
       </div>
     </s-page>
   );

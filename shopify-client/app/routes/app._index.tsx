@@ -1,3 +1,4 @@
+import { AdminCard } from "../components/AdminCard";
 import { LocalDateTime } from "../components/LocalDateTime";
 import { useEffect, useRef } from "react";
 import { randomUUID } from "node:crypto";
@@ -1052,17 +1053,13 @@ export default function Index() {
               }
               lastSuccess={confirmedMonitoringAt}
             />
-            <section
-              className={`dashboard-status-panel dashboard-status-panel--${dashboardStatus.tone}`}
+            <s-banner
+              tone={dashboardStatus.tone}
+              heading={dashboardStatus.title}
             >
-              <div className="dashboard-status-panel__content">
-                <h2 className="dashboard-status-panel__title">
-                  {dashboardStatus.title}
-                </h2>
-                <p className="dashboard-status-panel__description">
-                  {dashboardStatus.description}
-                </p>
-                <div className="dashboard-status-panel__actions">
+              <s-stack gap="base">
+                <s-text>{dashboardStatus.description}</s-text>
+                <div className="dashboard-banner-actions">
                   <s-button
                     variant="primary"
                     onClick={() => navigate(dashboardStatus.actionHref)}
@@ -1081,18 +1078,17 @@ export default function Index() {
                       </s-button>
                     )}
                 </div>
-              </div>
-              <div className="dashboard-status-panel__facts">
-                <div className="dashboard-status-panel__fact">
-                  <span>{t("dashboard.admin.productsMonitored")}</span>
-                  <strong>{monitoredProductLabel}</strong>
-                  <small>
-                    {coveragePercent}% · {t("workspace.verifyScope")}
-                  </small>
+                <div className="dashboard-coverage-inline">
+                  <s-text>
+                    {t("dashboard.admin.productsMonitored")}:{" "}
+                    <strong>{monitoredProductLabel}</strong> · {coveragePercent}
+                    %
+                  </s-text>
+                  <s-text tone="subdued">{t("workspace.verifyScope")}</s-text>
                 </div>
-              </div>
-            </section>
-            <section className="admin-card">
+              </s-stack>
+            </s-banner>
+            <AdminCard className="admin-card">
               <div className="admin-card__header">
                 <h2 className="admin-card__title">{t("workspace.goReview")}</h2>
                 <s-button
@@ -1159,8 +1155,8 @@ export default function Index() {
                   ))}
                 </div>
               )}
-            </section>
-            <section className="admin-card admin-stack">
+            </AdminCard>
+            <AdminCard className="admin-card admin-stack">
               <h2 className="admin-card__title">
                 {t("experience.valueTitle")}
               </h2>
@@ -1195,7 +1191,7 @@ export default function Index() {
                   {t("workspace.history")}
                 </s-button>
               </div>
-            </section>
+            </AdminCard>
 
             {!isScanning && recentMonitoringRuns.length > 0 ? (
               <s-section

@@ -1,3 +1,4 @@
+import { AdminCard } from "../components/AdminCard";
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "react-router";
 import { data as json, redirect } from "react-router";
 import {
@@ -339,31 +340,27 @@ export default function Settings() {
             </s-button>
           </div>
           <div className="admin-section-grid admin-section-grid--wide">
-            <section className="admin-card admin-stack">
+            <AdminCard className="admin-card admin-stack">
               <h2 className="admin-card__title">
                 {t("settingsAdmin.notifications.enabledTitle")}
               </h2>
-              <label className="settings-checkbox">
-                <input
-                  type="checkbox"
-                  checked={values.immediate}
-                  onChange={(event) =>
-                    change("immediate", event.target.checked)
-                  }
-                />
-                {t("settingsAdmin.notifications.immediateTitle")}
-              </label>
+              <s-checkbox
+                label={t("settingsAdmin.notifications.immediateTitle")}
+                checked={values.immediate}
+                onChange={(event: any) =>
+                  change("immediate", event.currentTarget.checked)
+                }
+              />
               <p className="admin-helper">
                 {t("settingsAdmin.notifications.immediateDescription")}
               </p>
-              <label className="settings-checkbox">
-                <input
-                  type="checkbox"
-                  checked={values.weekly}
-                  onChange={(event) => change("weekly", event.target.checked)}
-                />
-                {t("settingsAdmin.notifications.weeklyTitle")}
-              </label>
+              <s-checkbox
+                label={t("settingsAdmin.notifications.weeklyTitle")}
+                checked={values.weekly}
+                onChange={(event: any) =>
+                  change("weekly", event.currentTarget.checked)
+                }
+              />
               <p className="admin-helper">
                 {t("settingsAdmin.notifications.weeklyDescription")}
               </p>
@@ -389,15 +386,15 @@ export default function Settings() {
                   </s-option>
                 ))}
               </s-select>
-            </section>
+            </AdminCard>
             <div className="admin-stack">
-              <section className="admin-card">
+              <AdminCard className="admin-card">
                 <h2 className="admin-card__title">
                   {t("workspace.appLanguage")}
                 </h2>
                 <LanguageSwitcher />
-              </section>
-              <section className="admin-card admin-stack">
+              </AdminCard>
+              <AdminCard className="admin-card admin-stack">
                 <h2 className="admin-card__title">{t("billing.planTitle")}</h2>
                 <p>
                   {billingStatus.developmentBypass
@@ -423,97 +420,98 @@ export default function Settings() {
                     {t("billing.managePlanButton")}
                   </s-button>
                 )}
-              </section>
+              </AdminCard>
             </div>
           </div>
-          <section className="admin-card">
+          <AdminCard className="admin-card">
             <h2 className="admin-card__title">{t("workspace.recommended")}</h2>
             <p>{t("workspace.balancedHelp")}</p>
             <s-badge tone="info">{t(`settingsAdmin.mode.${mode}`)}</s-badge>
-          </section>
-          <details className="admin-card advanced-settings-disclosure">
-            <summary>{t("workspace.settingsAdvanced")}</summary>
-            <div className="admin-stack">
-              <div
-                className="monitoring-mode-grid"
-                role="group"
-                aria-label={t("settings.threshold.title")}
-              >
-                {(
-                  [
-                    ["broad", "50"],
-                    ["balanced", "70"],
-                    ["strict", "85"],
-                  ] as const
-                ).map(([name, number]) => (
-                  <button
-                    key={name}
-                    type="button"
-                    aria-pressed={mode === name}
-                    className={`monitoring-mode-option ${mode === name ? "monitoring-mode-option--active" : ""}`}
-                    onClick={() => change("threshold", number)}
-                  >
-                    <strong>
-                      {mode === name ? "✓ " : ""}
-                      {t(`settingsAdmin.mode.${name}`)}
-                    </strong>
-                    <span>{t(`workspace.${name}Help`)}</span>
-                  </button>
-                ))}
-              </div>
-              <s-number-field
-                label={t("settings.threshold.label")}
-                min="0"
-                max="100"
-                value={values.threshold}
-                onChange={(event: any) =>
-                  change("threshold", event.currentTarget.value)
-                }
-              />
-              <label className="settings-checkbox">
-                <input
-                  type="checkbox"
-                  checked={values.priority}
-                  onChange={(event) => change("priority", event.target.checked)}
-                />
-                {t("settingsAdmin.automation.autoDraftTitle")}
-              </label>
-              <p className="admin-helper">
-                {t("settingsAdmin.automation.autoDraftDescription")}
-              </p>
-              <h3>{t("settingsAdmin.exclusions.title")}</h3>
-              <p>{t("workspace.excludeHelp")}</p>
-              <s-text-field
-                label={t("settingsAdmin.exclusions.vendorsTitle")}
-                value={values.vendors}
-                onInput={(event: any) =>
-                  change("vendors", event.currentTarget.value)
-                }
-                helpText={t("settingsAdmin.exclusions.vendorsDescription")}
-              />
-              <s-text-field
-                label={t("settingsAdmin.exclusions.typesTitle")}
-                value={values.types}
-                onInput={(event: any) =>
-                  change("types", event.currentTarget.value)
-                }
-                helpText={t("settingsAdmin.exclusions.typesDescription")}
-              />
-              <p role="status">
-                {t("workspace.excluded", {
-                  count: excluded.length,
-                  total: catalog.length,
-                })}
-              </p>
-              {excluded.length > 0 && (
-                <ul>
-                  {excluded.slice(0, 10).map((product) => (
-                    <li key={product.id}>{product.title}</li>
+          </AdminCard>
+          <AdminCard className="admin-card">
+            <details className="advanced-settings-disclosure">
+              <summary>{t("workspace.settingsAdvanced")}</summary>
+              <div className="admin-stack">
+                <div
+                  className="monitoring-mode-grid"
+                  role="group"
+                  aria-label={t("settings.threshold.title")}
+                >
+                  {(
+                    [
+                      ["broad", "50"],
+                      ["balanced", "70"],
+                      ["strict", "85"],
+                    ] as const
+                  ).map(([name, number]) => (
+                    <button
+                      key={name}
+                      type="button"
+                      aria-pressed={mode === name}
+                      className={`monitoring-mode-option ${mode === name ? "monitoring-mode-option--active" : ""}`}
+                      onClick={() => change("threshold", number)}
+                    >
+                      <strong>
+                        {mode === name ? "✓ " : ""}
+                        {t(`settingsAdmin.mode.${name}`)}
+                      </strong>
+                      <span>{t(`workspace.${name}Help`)}</span>
+                    </button>
                   ))}
-                </ul>
-              )}
-            </div>
-          </details>
+                </div>
+                <s-number-field
+                  label={t("settings.threshold.label")}
+                  min="0"
+                  max="100"
+                  value={values.threshold}
+                  onChange={(event: any) =>
+                    change("threshold", event.currentTarget.value)
+                  }
+                />
+                <s-checkbox
+                  label={t("settingsAdmin.automation.autoDraftTitle")}
+                  checked={values.priority}
+                  onChange={(event: any) =>
+                    change("priority", event.currentTarget.checked)
+                  }
+                />
+                <p className="admin-helper">
+                  {t("settingsAdmin.automation.autoDraftDescription")}
+                </p>
+                <h3>{t("settingsAdmin.exclusions.title")}</h3>
+                <p>{t("workspace.excludeHelp")}</p>
+                <s-text-field
+                  label={t("settingsAdmin.exclusions.vendorsTitle")}
+                  value={values.vendors}
+                  onInput={(event: any) =>
+                    change("vendors", event.currentTarget.value)
+                  }
+                  helpText={t("settingsAdmin.exclusions.vendorsDescription")}
+                />
+                <s-text-field
+                  label={t("settingsAdmin.exclusions.typesTitle")}
+                  value={values.types}
+                  onInput={(event: any) =>
+                    change("types", event.currentTarget.value)
+                  }
+                  helpText={t("settingsAdmin.exclusions.typesDescription")}
+                />
+                <p role="status">
+                  {t("workspace.excluded", {
+                    count: excluded.length,
+                    total: catalog.length,
+                  })}
+                </p>
+                {excluded.length > 0 && (
+                  <ul>
+                    {excluded.slice(0, 10).map((product) => (
+                      <li key={product.id}>{product.title}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </details>
+          </AdminCard>
         </Form>
       </div>
     </s-page>

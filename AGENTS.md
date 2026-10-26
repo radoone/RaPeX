@@ -299,6 +299,8 @@ When explaining or changing behavior, prefer these files as the source of truth:
 
 Merchant UX review (26 October 2026): `MonitoringStatus` must explain the next action for paused/unverified monitoring and explicitly distinguish development preview from background monitoring. An active entitlement with a completed run older than 48 hours displays a monitoring warning; queued/processing work and billing failures take precedence. This warning is a UI freshness signal, not a claim that a scheduled task failed. The dashboard's ongoing-value counts are saved current-version checks, total checks and closed findings, never invented time savings or a safety guarantee. Shared merchant guidance is translated for all 24 EU languages in `app/locales/experience.ts`. Keep full product titles wrapping in the review queue with actions visible, and scope bulk decisions to visible selected findings after filtering.
 
+Use `AdminCard` for merchant cards so Polaris `s-section` owns their surface; keep inner layout in app CSS. Shopify Admin alignment uses Inter, compact headings, native banners and native settings checkboxes. Keep the pinned Polaris 1 runtime contract and do not style shadow-DOM internals. See `DESIGN.md` for the captured reference.
+
 When the project purpose, architecture, workflow, or important conventions change, update this `AGENTS.md` too.
 
 ## Commit convention

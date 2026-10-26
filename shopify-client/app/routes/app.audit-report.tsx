@@ -1,3 +1,4 @@
+import { AdminCard } from "../components/AdminCard";
 import { LocalDateTime } from "../components/LocalDateTime";
 import type { LoaderFunctionArgs } from "react-router";
 import {
@@ -105,7 +106,7 @@ export default function AuditReportPage() {
             <s-text>{t("actions.retry")}</s-text>
           </s-banner>
         ) : null}
-        <section className="admin-card">
+        <AdminCard className="admin-card">
           <div className="admin-card__header">
             <div>
               <p className="admin-eyebrow">{t("auditReport.eyebrow")}</p>
@@ -124,11 +125,15 @@ export default function AuditReportPage() {
             <p>
               {t("workspace.scope", {
                 from: new Date(scope.from).toLocaleDateString(
-                  i18n.language.split(/[-_]/)[0] === "en" ? "en-GB" : i18n.language,
+                  i18n.language.split(/[-_]/)[0] === "en"
+                    ? "en-GB"
+                    : i18n.language,
                   { timeZone: "UTC" },
                 ),
                 to: new Date(scope.to).toLocaleDateString(
-                  i18n.language.split(/[-_]/)[0] === "en" ? "en-GB" : i18n.language,
+                  i18n.language.split(/[-_]/)[0] === "en"
+                    ? "en-GB"
+                    : i18n.language,
                   { timeZone: "UTC" },
                 ),
               })}
@@ -201,8 +206,8 @@ export default function AuditReportPage() {
               render={(date) => t("auditReport.generated", { date })}
             />
           </p>
-        </section>
-        <section className="admin-card">
+        </AdminCard>
+        <AdminCard className="admin-card">
           {records.length === 0 ? (
             <s-box padding="large">
               <s-text tone="subdued">{t("workspace.reportEmpty")}</s-text>
@@ -278,7 +283,7 @@ export default function AuditReportPage() {
               </s-table>
             </div>
           )}
-        </section>
+        </AdminCard>
       </div>
     </s-page>
   );

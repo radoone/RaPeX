@@ -1,13 +1,13 @@
 :root {
-  --surface: #ffffff;
-  --surface-subdued: #f6f6f7;
-  --surface-hover: #f1f2f3;
-  --border: #e1e3e5;
-  --border-subdued: #ebebeb;
-  --text: #202223;
-  --text-subdued: #6d7175;
-  --primary: #008060;
-  --primary-surface: rgba(0, 128, 96, 0.06);
+  --surface: var(--p-color-bg-surface, #ffffff);
+  --surface-subdued: var(--p-color-bg-surface-secondary, #f7f7f7);
+  --surface-hover: var(--p-color-bg-surface-hover, #f1f1f1);
+  --border: var(--p-color-border, #dddddd);
+  --border-subdued: var(--p-color-border-secondary, #f2f2f2);
+  --text: var(--p-color-text, #101010);
+  --text-subdued: var(--p-color-text-secondary, #4a4a4a);
+  --primary: var(--p-color-bg-fill-brand, #303030);
+  --primary-surface: var(--p-color-bg-surface-success, #f1f8f5);
   --critical: #d82c0d;
   --critical-surface: rgba(216, 44, 13, 0.08);
   --critical-surface-subdued: rgba(216, 44, 13, 0.04);
@@ -17,14 +17,16 @@
   --radius-lg: 12px;
   --shadow: 0 1px 0 rgba(22, 29, 37, 0.05);
   --shadow-md: 0 1px 0 rgba(22, 29, 37, 0.05), 0 2px 6px rgba(22, 29, 37, 0.08);
-  --focus: 0 0 0 3px rgba(0, 128, 96, 0.35);
+  --focus: 0 0 0 2px var(--p-color-border-focus, #005bd3);
   --grid-gap: 16px;
 }
 
 body {
-  background: var(--surface-subdued);
+  background: var(--p-color-bg, #ffffff);
   color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  line-height: 20px;
 }
 
 .page-shell {
@@ -62,8 +64,9 @@ body {
 
 .admin-card__title {
   margin: 0;
-  font-size: 20px;
-  line-height: 1.3;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
   color: var(--text);
 }
 
@@ -1466,8 +1469,8 @@ s-divider[direction="vertical"] {
 }
 
 .btn--primary:hover:not(:disabled) {
-  background: #006e52;
-  border-color: #006e52;
+  background: var(--p-color-bg-fill-brand-hover, #1a1a1a);
+  border-color: var(--p-color-bg-fill-brand-hover, #1a1a1a);
 }
 
 .btn--secondary {
@@ -3101,3 +3104,30 @@ s-modal s-box[background="bg-surface-critical"] s-grid {
     transition:none;
   }
 }
+
+/* Native Shopify containers own their surface and elevation. */
+.native-admin-card__content.admin-card {
+  border:0;
+  border-radius:0;
+  box-shadow:none;
+  background:transparent;
+  padding:16px;
+}
+.admin-card__description, .dashboard-status-panel__description,
+.admin-helper, .review-modal__intro, .review-modal__score-help {
+  font-size:13px;
+  line-height:20px;
+}
+.admin-eyebrow { text-transform:none; letter-spacing:normal; font-size:12px; }
+.review-modal__title { font-size:20px; line-height:28px; font-weight:600; }
+.review-modal__section-heading h3, .review-modal__decision-heading h3 {
+  font-size:14px;
+  line-height:20px;
+  font-weight:600;
+}
+.dashboard-coverage-inline { display:flex; flex-wrap:wrap; gap:8px; align-items:baseline; }
+.dashboard-banner-actions { display:flex; flex-wrap:wrap; gap:8px; }
+.monitoring-value-facts > div { padding:12px 16px; border:0; border-radius:0; background:var(--surface-subdued); }
+.monitoring-value-facts dd { font-size:20px; line-height:28px; font-weight:600; }
+.review-modal__product-card { border-radius:var(--radius); }
+.review-modal__steps { background:var(--surface-subdued); padding:12px; }

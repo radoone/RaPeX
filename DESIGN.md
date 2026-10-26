@@ -2,9 +2,9 @@
 name: Safety Gate Monitor Design System
 description: Cohesive visual design language bridging native Shopify Polaris Admin ergonomics with trusted EU compliance editorial authority
 colors:
-  primary: "#008060"
-  primary-hover: "#006e52"
-  primary-surface: "#f0f8f5"
+  primary: "#303030"
+  primary-hover: "#1a1a1a"
+  primary-surface: "#f1f8f5"
   critical: "#d82c0d"
   critical-surface: "#fdf3f2"
   warning: "#c68400"
@@ -12,40 +12,40 @@ colors:
   editorial-accent: "#b84c28"
   editorial-strong: "#8c2d0f"
   surface: "#ffffff"
-  surface-subdued: "#f6f6f7"
-  surface-hover: "#f1f2f3"
-  border: "#e1e3e5"
-  border-subdued: "#ebebeb"
-  text: "#202223"
-  text-subdued: "#6d7175"
+  surface-subdued: "#f7f7f7"
+  surface-hover: "#f1f1f1"
+  border: "#dddddd"
+  border-subdued: "#f2f2f2"
+  text: "#101010"
+  text-subdued: "#4a4a4a"
   warm-bg: "#f4efe4"
 typography:
   display:
-    fontFamily: "-apple-system, BlinkMacSystemFont, 'San Francisco', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif"
+    fontFamily: "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
     fontSize: "24px"
     fontWeight: 700
     lineHeight: "1.25"
   headline:
-    fontFamily: "-apple-system, BlinkMacSystemFont, 'San Francisco', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif"
+    fontFamily: "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
     fontSize: "20px"
     fontWeight: 600
     lineHeight: "1.3"
   title:
-    fontFamily: "-apple-system, BlinkMacSystemFont, 'San Francisco', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif"
+    fontFamily: "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
     fontSize: "16px"
     fontWeight: 600
     lineHeight: "1.35"
   body:
-    fontFamily: "-apple-system, BlinkMacSystemFont, 'San Francisco', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif"
-    fontSize: "14px"
+    fontFamily: "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+    fontSize: "13px"
     fontWeight: 400
-    lineHeight: "1.5"
+    lineHeight: "20px"
   label:
-    fontFamily: "-apple-system, BlinkMacSystemFont, 'San Francisco', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif"
+    fontFamily: "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
     fontSize: "12px"
     fontWeight: 600
     lineHeight: "1.35"
-    letterSpacing: "0.04em"
+    letterSpacing: "normal"
 rounded:
   sm: "4px"
   md: "8px"
@@ -103,8 +103,9 @@ On customer-facing surfaces, the system projects trustworthy regulatory authorit
 The palette balances Shopify's trusted merchant emerald, high-visibility risk indicators, and calm neutral surfaces.
 
 ### Primary
-- **Polaris Emerald** (#008060): Primary merchant actions, confirmed safe statuses, active monitoring badges, and brand trust anchors.
-- **Deep Emerald Hover** (#006e52): Interactive hover state for primary buttons.
+- **Admin Charcoal** (#303030): Fallback for primary merchant actions; native Polaris buttons own their actual styling.
+- **Emerald** (#008060): Success indicators and public marketing brand accents.
+- **Charcoal Hover** (#1a1a1a): Fallback hover state for custom primary buttons.
 - **Mint Surface** (#f0f8f5): Subtle background tint for success cards, verified-safe rows, and positive audit milestones.
 
 ### Secondary
@@ -117,39 +118,39 @@ The palette balances Shopify's trusted merchant emerald, high-visibility risk in
 - **Editorial Terracotta** (#b84c28): Marketing accent color representing European regulatory vigilance.
 
 ### Neutral
-- **Ink Charcoal** (#202223): Primary text, headings, and high-contrast labels.
-- **Muted Slate** (#6d7175): Secondary helper text, subtitles, timestamp metadata, and table column headers.
+- **Ink Charcoal** (#101010): Primary text, headings, and high-contrast labels.
+- **Muted Slate** (#4a4a4a): Secondary helper text, subtitles, timestamp metadata, and table column headers.
 - **Card Surface** (#ffffff): Base elevated card background.
-- **Canvas Subdued** (#f6f6f7): Background canvas for the admin shell, table zebra rows, and nested fact boxes.
-- **Border Neutral** (#e1e3e5): Standard card and panel dividing lines.
-- **Border Subdued** (#ebebeb): Inner nested borders and stat dividers.
+- **Canvas Subdued** (#f7f7f7): Background canvas for the admin shell, table zebra rows, and nested fact boxes.
+- **Border Neutral** (#dddddd): Standard card and panel dividing lines.
+- **Border Subdued** (#f2f2f2): Inner nested borders and stat dividers.
 
 ### Named Rules
 **The Triage Hierarchy Rule.** Red (#d82c0d) is strictly reserved for actionable, serious safety hazards. Informational stats and passive states must use neutral slate or emerald trust tones to prevent alarm fatigue.
-**The Native Surface Rule.** In Shopify Admin routes, all container backgrounds must inherit either `--surface` (#ffffff) or `--surface-subdued` (#f6f6f7) to guarantee visual unity with the host admin OS.
+**The Native Surface Rule.** In Shopify Admin routes, all container backgrounds must inherit either `--surface` (#ffffff) or `--surface-subdued` (#f7f7f7) to guarantee visual unity with the host admin OS.
 
 ## Typography
 
-**Display & Body Font:** `-apple-system, BlinkMacSystemFont, "San Francisco", "Segoe UI", Roboto, "Helvetica Neue", sans-serif`  
+**Display & Body Font:** `Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`
 **Marketing Display Font:** `"Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif` (used for editorial numerals and small callout marks)
 
 **Character:** Clean, highly legible, modern administrative typography optimized for dense product tables, legal recall case numbers, and rapid scanning.
 
 ### Hierarchy
-- **Display** (Bold 700, 24px, line-height 1.25): Dashboard hero titles, status panel headlines, major milestone headers.
-- **Headline** (Semi-bold 600, 20px, line-height 1.3): Admin card titles, section headings, modal topbars.
-- **Title** (Semi-bold 600, 16px, line-height 1.35): Product names, card subtitles, drawer headers, review queue titles.
-- **Body** (Regular 400, 14px, line-height 1.5): Main body paragraphs, product descriptions, risk summaries (max line length 65–75ch).
-- **Label / Eyebrow** (Semi-bold 600, 12px, line-height 1.35, letter-spacing 0.04em, uppercase): Section eyebrows, metric labels, table headers, chip captions.
+- **Display** (Bold 700, 24px, line-height 1.25): Reserved for larger promotional or milestone content. Merchant status uses the native banner heading.
+- **Headline** (Semi-bold 600, 20px, line-height 28px): Product title in the comparison modal.
+- **Title** (Semi-bold 600, 16px, line-height 24px): Admin card and section headings.
+- **Body** (Regular 400, 13px, line-height 20px): Main body paragraphs, product descriptions, risk summaries (max line length 65–75ch).
+- **Label / Eyebrow** (Semi-bold 600, 12px, line-height 1.35, normal letter-spacing, sentence case): Section eyebrows, metric labels, table headers, chip captions.
 
 ### Named Rules
-**The Eyebrow-Title Rule.** Major admin cards lead with an uppercase 12px muted eyebrow before the 20px headline to immediately establish category context.
+**The Heading Rule.** Use a clear 16px card heading. Add a 12px muted sentence-case eyebrow only when it supplies useful context.
 
 ## Layout
 
 The spatial model uses a strict 4px/8px incremental grid with consistent vertical rhythm.
 - **Page Shell:** 12px vertical stack gap with a max responsive width of 1200px.
-- **Admin Card Padding:** 18px 20px standard internal padding.
+- **Admin Card Padding:** 16px internal content padding inside native Polaris sections.
 - **Split Panels:** Two-column grid (e.g., `minmax(300px, 1.05fr) minmax(420px, 1.45fr)`) with 18px–20px gap for side-by-side product comparisons.
 - **Facts Grid:** Multi-column stat grid (`repeat(2, 1fr)` to `repeat(4, 1fr)`) with 10px spacing for dense summary metrics.
 - **Responsive Breakpoints:** 640px (single column stack on mobile), 960px (tablet), 1200px (full desktop cockpit).
@@ -177,20 +178,20 @@ Surfaces rely primarily on tonal layering and crisp 1px borders rather than heav
 
 ### Buttons
 - **Shape:** Gently rounded (8px radius)
-- **Primary:** Background `#008060`, text `#ffffff`, padding `8px 16px`, font-weight 600. Hover `#006e52`.
+- **Primary:** Use native `s-button variant="primary"`. Custom fallback uses `#303030` with white text and `#1a1a1a` hover.
 - **Critical:** Background `#d82c0d`, text `#ffffff`, padding `8px 16px`, font-weight 600.
 - **Ghost / Tertiary:** Background `transparent`, border `1px solid var(--border)`, text `var(--text)`, padding `8px 16px`. Hover background `var(--surface-hover)`.
 
 ### Status Badges & Chips
 - **High Risk:** Background `rgba(216, 44, 13, 0.08)`, border `1px solid rgba(216, 44, 13, 0.22)`, text `#d82c0d`, pill radius (999px), font-size 12px, font-weight 600.
 - **Needs Review:** Background `rgba(198, 132, 0, 0.08)`, border `1px solid rgba(198, 132, 0, 0.28)`, text `#c68400`.
-- **Verified Safe:** Background `rgba(0, 128, 96, 0.08)`, border `1px solid rgba(0, 128, 96, 0.25)`, text `#008060`.
+- **No match found:** Background `rgba(0, 128, 96, 0.08)`, border `1px solid rgba(0, 128, 96, 0.25)`, text `#008060`.
 
 ### Cards & Comparison Panels
 - **Corner Style:** 12px radius.
 - **Background:** Flat `#ffffff` with optional 4% tint overlay for critical status cards.
 - **Border:** 1px solid `var(--border)`.
-- **Internal Padding:** 18px 20px.
+- **Internal Padding:** 16px in `AdminCard`; native Polaris owns the outer surface.
 
 ### Alert List Rows
 - **Layout:** 3-column grid (`48px minmax(0, 1fr) auto`), 12px gap, 12px 14px padding.
@@ -215,3 +216,9 @@ Surfaces rely primarily on tonal layering and crisp 1px borders rather than heav
 ## Merchant Admin consistency (26 October 2026)
 
 Use flat surfaces, shared radius tokens, subtle elevation and consistent 1px borders across dashboard, review, legacy status cards and onboarding. Do not use gradient card backgrounds or thick one-sided accent borders. Communicate severity with explicit text and badges; flat semantic tints may support them. Matching sensitivity is informational and uses a neutral surface. Onboarding progress uses transform scaling rather than animated width and respects reduced-motion preferences. Keep padded modal sections within their container with border-box sizing.
+
+## Shopify Admin alignment (26 October 2026)
+
+The reference is the actual Shopify Admin Products screen in the development shop, captured at `outputs/shopify-native-alignment-2026-10-26/02-shopify-products-reference.jpg`. Its computed body font is ShopifyInter at 13px. The embedded app uses the already-loaded public Inter font, a 13px/20px body and compact 16px/24px card headings. Custom surfaces use Shopify-compatible color-token fallbacks (`#101010` text, `#4a4a4a` secondary text, `#dddddd` borders and a white page canvas). Primary action styling belongs to Polaris rather than a custom green brand skin.
+
+`AdminCard` delegates container styling to the existing Polaris 1 `s-section`; app CSS controls only the inner content layout. Keep native controls and tables, including settings checkboxes, and use `s-banner` for dashboard status. Do not override shadow-DOM component styles or change the shared Polaris runtime URL as part of this visual alignment. Marketing brand colors remain separate from the embedded Admin interface.

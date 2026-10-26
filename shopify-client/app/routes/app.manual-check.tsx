@@ -1,3 +1,4 @@
+import { AdminCard } from "../components/AdminCard";
 import { LocalDateTime } from "../components/LocalDateTime";
 import { useState, useCallback, useEffect, useMemo } from "react";
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "react-router";
@@ -890,7 +891,7 @@ export default function ManualCheckPage() {
       </s-button>
 
       <div className="admin-stack">
-        <section className="admin-card">
+        <AdminCard className="admin-card">
           <div className="admin-card__header">
             <div>
               <p className="admin-eyebrow">
@@ -940,9 +941,14 @@ export default function ManualCheckPage() {
             <SummaryCard
               title={t("manualCheck.coverage.lastRun")}
               value={
-                lastRunAt
-                  ? <LocalDateTime value={lastRunAt} format={(date) => formatRelativeDate(date, t, dateLocale)} />
-                  : t("status.notChecked")
+                lastRunAt ? (
+                  <LocalDateTime
+                    value={lastRunAt}
+                    format={(date) => formatRelativeDate(date, t, dateLocale)}
+                  />
+                ) : (
+                  t("status.notChecked")
+                )
               }
               description={lastRunResult}
               badge={
@@ -997,7 +1003,7 @@ export default function ManualCheckPage() {
               </s-badge>
             </div>
           </div>
-        </section>
+        </AdminCard>
 
         {fetcher.data && "error" in fetcher.data && fetcher.data.error && (
           <s-banner
@@ -1057,7 +1063,7 @@ export default function ManualCheckPage() {
           </s-banner>
         )}
 
-        <section className="admin-card" id="product-catalogue">
+        <AdminCard className="admin-card" id="product-catalogue">
           <div className="admin-card__header">
             <div>
               <p className="admin-eyebrow">{t("manualCheck.admin.catalog")}</p>
@@ -1297,7 +1303,12 @@ export default function ManualCheckPage() {
                                 )}
                               {lastCheck && (
                                 <span className="admin-helper">
-                                  <LocalDateTime value={lastCheck} format={(date) => formatRelativeDate(date, t, dateLocale)} />
+                                  <LocalDateTime
+                                    value={lastCheck}
+                                    format={(date) =>
+                                      formatRelativeDate(date, t, dateLocale)
+                                    }
+                                  />
                                 </span>
                               )}
                             </>
@@ -1353,7 +1364,7 @@ export default function ManualCheckPage() {
               </s-table-body>
             </s-table>
           )}
-        </section>
+        </AdminCard>
       </div>
 
       {filteredProducts.length > visibleCount && (

@@ -1,3 +1,4 @@
+import { AdminCard } from "../components/AdminCard";
 import { useState, useCallback, useEffect } from "react";
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "react-router";
 import {
@@ -540,7 +541,7 @@ export default function AlertsPage() {
           </s-banner>
         )}
 
-        <section className="admin-card">
+        <AdminCard className="admin-card">
           <div className="admin-card__header">
             <div>
               <h2 className="admin-card__title">{t("alerts.subtitle")}</h2>
@@ -591,10 +592,10 @@ export default function AlertsPage() {
             }
             stats={stats}
           />
-        </section>
+        </AdminCard>
 
         {pagination.totalPages > 1 && (
-          <section className="admin-card">
+          <AdminCard className="admin-card">
             <div className="admin-card__header">
               <p className="admin-card__description">
                 {t("pagination.pageOf", {
@@ -624,7 +625,7 @@ export default function AlertsPage() {
                 </s-button>
               </div>
             </div>
-          </section>
+          </AdminCard>
         )}
       </div>
 

@@ -1,3 +1,4 @@
+import { AdminCard } from "./AdminCard";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { useLocation, useRevalidator } from "react-router";
@@ -36,7 +37,7 @@ export function MonitoringStatus({
           : t("workspace.scheduleHelp");
   const needsPlan = state === "paused";
   return (
-    <section
+    <AdminCard
       className={`admin-card monitoring-status monitoring-status--${state}`}
       aria-label={t("workspace.monitoringLabel")}
     >
@@ -107,6 +108,6 @@ export function MonitoringStatus({
           </p>
         </div>
       )}
-    </section>
+    </AdminCard>
   );
 }
