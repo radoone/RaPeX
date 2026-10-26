@@ -9,7 +9,12 @@ export function useHydrated() {
 }
 
 /** Hydrate a stable UTC timestamp before applying the browser's locale and time zone. */
-export function LocalDateTime({ value, locale, format, render }: {
+export function LocalDateTime({
+  value,
+  locale,
+  format,
+  render,
+}: {
   value: Date | string | number;
   locale?: string;
   format?: (date: Date) => string;
@@ -20,7 +25,9 @@ export function LocalDateTime({ value, locale, format, render }: {
   if (!Number.isFinite(date.getTime())) return <time>—</time>;
   const iso = date.toISOString();
   const text = hydrated
-    ? format ? format(date) : date.toLocaleString(locale)
+    ? format
+      ? format(date)
+      : date.toLocaleString(locale?.split(/[-_]/)[0] === "en" ? "en-GB" : locale)
     : iso.replace("T", " ").replace(/\.\d{3}Z$/, " UTC");
   return <time dateTime={iso}>{render ? render(text) : text}</time>;
 }

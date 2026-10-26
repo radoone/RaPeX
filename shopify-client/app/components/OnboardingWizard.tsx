@@ -71,7 +71,7 @@ export function OnboardingWizard({
   };
 
   const progressLineStyle = {
-    width: `${(currentStep - 1) * 50}%`
+    transform: `scaleX(${(currentStep - 1) / 2})`
   };
 
   return (

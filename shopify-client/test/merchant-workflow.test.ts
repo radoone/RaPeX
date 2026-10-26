@@ -75,6 +75,33 @@ describe("truthful monitoring status", () => {
     expect(monitoringState(billing, "FAILURE")).toBe("failed");
     expect(monitoringState(billing, "SUCCESS")).toBe("enabled");
   });
+  it("flags stale completed monitoring without masking billing or live work", () => {
+    const now = Date.parse("2026-10-26T10:00:00Z");
+    const old = "2026-10-21T01:18:49Z";
+    expect(monitoringState(billing, "completed", now, old)).toBe("delayed");
+    expect(
+      monitoringState(billing, "SUCCESS", now, "2026-10-24T10:00:00Z"),
+    ).toBe("enabled");
+    expect(monitoringState(billing, "processing", now, old)).toBe("processing");
+    expect(
+      monitoringState(
+        { ...billing, hasActivePayment: false },
+        "completed",
+        now,
+        old,
+      ),
+    ).toBe("paused");
+    expect(
+      monitoringState(
+        { ...billing, developmentBypass: true },
+        "completed",
+        now,
+        old,
+      ),
+    ).toBe("preview");
+    expect(monitoringState(billing, "FAILURE", now, old)).toBe("failed");
+    expect(monitoringState(billing, "SUCCESS", now, "invalid")).toBe("enabled");
+  });
 });
 
 describe("official source evidence", () => {
@@ -96,7 +123,11 @@ describe("official source evidence", () => {
     ).toBe("SR/00665/26");
     expect(officialSource({ url: "http://ec.europa.eu/alert" }).url).toBeNull();
     expect(parseEvidence("broken").caseNumber).toBeNull();
-    expect(officialSource({ alert_number: "29e15f96041ca7c4614319be88a3c24c99873ea0" }).caseNumber).toBeNull();
+    expect(
+      officialSource({
+        alert_number: "29e15f96041ca7c4614319be88a3c24c99873ea0",
+      }).caseNumber,
+    ).toBeNull();
   });
 });
 

@@ -524,9 +524,7 @@ export default function AlertsPage() {
           >
             <s-text>
               {stats.criticalActive > 0
-                ? t("alerts.admin.criticalBannerDescription", {
-                    count: stats.criticalActive,
-                  })
+                ? t("workspace.reviewPrompt")
                 : t("alerts.admin.warningBannerDescription")}
             </s-text>
             {alerts.length > 0 && (

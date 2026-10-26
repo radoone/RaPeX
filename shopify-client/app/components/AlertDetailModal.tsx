@@ -268,6 +268,9 @@ export function AlertDetailModal({
             </div>
           </div>
 
+          {isActive && (
+            <p className="review-modal__steps">{t("experience.reviewSteps")}</p>
+          )}
           <section
             className="review-modal__section"
             aria-label={t("analysis.reviewLayout.compareHeading")}

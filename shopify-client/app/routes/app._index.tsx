@@ -1136,7 +1136,12 @@ export default function Index() {
                         <div className="admin-inline-meta">
                           <AlertBadge alertType={alert.alertType} />
                           <span>
-                            <LocalDateTime value={alert.createdAt} format={(date) => formatRelativeDate(date, t, i18n.language)} />
+                            <LocalDateTime
+                              value={alert.createdAt}
+                              format={(date) =>
+                                formatRelativeDate(date, t, i18n.language)
+                              }
+                            />
                           </span>
                         </div>
                       </div>
@@ -1155,14 +1160,42 @@ export default function Index() {
                 </div>
               )}
             </section>
-            <div className="admin-actions">
-              <s-button variant="secondary" href="/app/evidence?view=decisions">
-                {t("workspace.history")}
-              </s-button>
-              <s-button variant="secondary" href="/app/audit-report">
-                {t("workspace.reportTitle")}
-              </s-button>
-            </div>
+            <section className="admin-card admin-stack">
+              <h2 className="admin-card__title">
+                {t("experience.valueTitle")}
+              </h2>
+              <p className="admin-card__description">
+                {t("experience.valueBody")}
+              </p>
+              <dl className="monitoring-value-facts">
+                <div>
+                  <dt>{t("dashboard.admin.productsMonitored")}</dt>
+                  <dd>{monitoredProductLabel}</dd>
+                </div>
+                <div>
+                  <dt>{t("dashboard.admin.checksCompletedTitle")}</dt>
+                  <dd>{stats.totalChecks}</dd>
+                </div>
+                <div>
+                  <dt>{t("workspace.documentedFindings")}</dt>
+                  <dd>{stats.resolvedAlerts + stats.dismissedAlerts}</dd>
+                </div>
+              </dl>
+              <div className="admin-actions">
+                <s-button variant="secondary" href="/app/settings">
+                  {t("billing.managePlanButton")}
+                </s-button>
+                <s-button variant="tertiary" href="/app/audit-report">
+                  {t("workspace.reportTitle")}
+                </s-button>
+                <s-button
+                  variant="tertiary"
+                  href="/app/evidence?view=decisions"
+                >
+                  {t("workspace.history")}
+                </s-button>
+              </div>
+            </section>
 
             {!isScanning && recentMonitoringRuns.length > 0 ? (
               <s-section
@@ -1209,9 +1242,16 @@ export default function Index() {
                           </span>
                         </div>
                         <small>
-                          {run.updatedAt
-                            ? <LocalDateTime value={run.updatedAt} format={(date) => formatRelativeDate(date, t, i18n.language)} />
-                            : t("dashboard.admin.monitoringRunDateUnknown")}
+                          {run.updatedAt ? (
+                            <LocalDateTime
+                              value={run.updatedAt}
+                              format={(date) =>
+                                formatRelativeDate(date, t, i18n.language)
+                              }
+                            />
+                          ) : (
+                            t("dashboard.admin.monitoringRunDateUnknown")
+                          )}
                         </small>
                       </div>
                     );

@@ -9,6 +9,7 @@ export function monitoringState(
   billing: Billing,
   status?: string | null,
   now = Date.now(),
+  lastSuccess?: string | null,
 ) {
   if (billing.developmentBypass) return "preview";
   if (!billing.billingVerified) return "unverified";
@@ -27,5 +28,8 @@ export function monitoringState(
     ["IN_PROGRESS", "queued", "processing", "retrying"].includes(status || "")
   )
     return "processing";
+  const completedAt = lastSuccess ? Date.parse(lastSuccess) : NaN;
+  if (Number.isFinite(completedAt) && now - completedAt > 48 * 60 * 60_000)
+    return "delayed";
   return "enabled";
 }

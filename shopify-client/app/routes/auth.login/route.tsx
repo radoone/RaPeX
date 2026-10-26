@@ -11,6 +11,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     const errors = loginErrorMessage(await login(request));
     return { errors };
   } catch (error) {
+    if (error instanceof Response) throw error;
     console.error("Auth login loader failed", error);
     return {
       errors: { shop: "Authentication failed. Please re-enter your shop domain." },
@@ -23,6 +24,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const errors = loginErrorMessage(await login(request));
     return { errors };
   } catch (error) {
+    if (error instanceof Response) throw error;
     console.error("Auth login action failed", error);
     return {
       errors: { shop: "Authentication failed. Please try again." },

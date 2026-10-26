@@ -297,6 +297,8 @@ When explaining or changing behavior, prefer these files as the source of truth:
 
 ## Maintenance rule
 
+Merchant UX review (26 October 2026): `MonitoringStatus` must explain the next action for paused/unverified monitoring and explicitly distinguish development preview from background monitoring. An active entitlement with a completed run older than 48 hours displays a monitoring warning; queued/processing work and billing failures take precedence. This warning is a UI freshness signal, not a claim that a scheduled task failed. The dashboard's ongoing-value counts are saved current-version checks, total checks and closed findings, never invented time savings or a safety guarantee. Shared merchant guidance is translated for all 24 EU languages in `app/locales/experience.ts`. Keep full product titles wrapping in the review queue with actions visible, and scope bulk decisions to visible selected findings after filtering.
+
 When the project purpose, architecture, workflow, or important conventions change, update this `AGENTS.md` too.
 
 ## Commit convention

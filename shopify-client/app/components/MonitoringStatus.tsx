@@ -1,36 +1,109 @@
 import { useTranslation } from "react-i18next";
-import { LocalDateTime } from "./LocalDateTime";
+import { useState } from "react";
+import { useLocation, useRevalidator } from "react-router";
+import { LocalDateTime, useHydrated } from "./LocalDateTime";
 import { monitoringState } from "../services/monitoring-state";
+
 export function MonitoringStatus({
   billing,
   status,
   lastSuccess,
 }: {
-  billing: Parameters<typeof monitoringState>[0];
+  billing: Parameters<typeof monitoringState>[0] & {
+    pricingPlansUrl?: string | null;
+  };
   status?: string | null;
   lastSuccess?: string | null;
 }) {
   const { t, i18n } = useTranslation();
-  const state = monitoringState(billing, status);
+  const revalidator = useRevalidator();
+  const { pathname } = useLocation();
+  const hydrated = useHydrated();
+  const [observedAt] = useState(() => Date.now());
+  const state = monitoringState(
+    billing,
+    status,
+    observedAt,
+    hydrated ? lastSuccess : undefined,
+  );
+  const help =
+    state === "preview"
+      ? t("experience.previewHelp")
+      : state === "paused"
+        ? t("experience.pausedHelp")
+        : state === "unverified"
+          ? t("billing.verificationError")
+          : t("workspace.scheduleHelp");
+  const needsPlan = state === "paused";
   return (
     <section
-      className="admin-card monitoring-status"
+      className={`admin-card monitoring-status monitoring-status--${state}`}
       aria-label={t("workspace.monitoringLabel")}
     >
-      <div>
+      <div className="monitoring-status__main">
         <h2 className="admin-card__title">{t("workspace.monitoringLabel")}</h2>
-        <p role="status">{t(`workspace.monitoring.${state}`)}</p>
-        {state === "enabled" && (
-          <p className="admin-helper">{t("workspace.scheduleHelp")}</p>
+        <p role="status">
+          <s-badge
+            tone={
+              state === "enabled"
+                ? "success"
+                : state === "processing"
+                  ? "info"
+                  : "warning"
+            }
+          >
+            {state === "delayed"
+              ? t("experience.delayed")
+              : t(`workspace.monitoring.${state}`)}
+          </s-badge>
+        </p>
+        <p className="admin-helper">{help}</p>
+        {(pathname !== "/app/settings" ||
+          (needsPlan && billing.pricingPlansUrl) ||
+          ["unverified", "failed", "delayed"].includes(state)) && (
+          <div className="admin-actions">
+            {needsPlan && billing.pricingPlansUrl && (
+              <s-button
+                variant="primary"
+                onClick={() => window.open(billing.pricingPlansUrl!, "_top")}
+              >
+                {t("billingRedirect.openPricingPlans")}
+              </s-button>
+            )}
+            {state === "unverified" && (
+              <s-button
+                variant="secondary"
+                loading={revalidator.state !== "idle"}
+                onClick={() => revalidator.revalidate()}
+              >
+                {t("actions.retry")}
+              </s-button>
+            )}
+            {["failed", "delayed"].includes(state) && (
+              <s-button variant="secondary" href="/app/manual-check">
+                {t("dashboard.admin.status.monitoringProblem.action")}
+              </s-button>
+            )}
+            {pathname !== "/app/settings" && (
+              <s-button variant="tertiary" href="/app/settings">
+                {t("settings.title")}
+              </s-button>
+            )}
+          </div>
         )}
       </div>
       {lastSuccess !== undefined && (
-        <div>
+        <div className="monitoring-status__last">
           <span className="admin-helper">{t("workspace.lastSuccess")}</span>
           <p>
-            {lastSuccess
-              ? <LocalDateTime value={lastSuccess} locale={i18n.language} />
-              : t("workspace.neverRun")}
+            {lastSuccess ? (
+              <LocalDateTime
+                value={lastSuccess}
+                locale={i18n.language === "en" ? "en-GB" : i18n.language}
+              />
+            ) : (
+              t("workspace.neverRun")
+            )}
           </p>
         </div>
       )}

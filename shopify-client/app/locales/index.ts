@@ -1,3 +1,4 @@
+import { experienceCopy } from "./experience";
 import bg from "./bg";
 import cs from "./cs";
 import da from "./da";
@@ -55,13 +56,24 @@ const coreLocales = {
   sv,
 } as const;
 
-function deepMerge<T extends Record<string, unknown>>(base: T, override: Record<string, unknown>): T {
+function deepMerge<T extends Record<string, unknown>>(
+  base: T,
+  override: Record<string, unknown>,
+): T {
   const output: Record<string, unknown> = { ...base };
   for (const [key, value] of Object.entries(override)) {
     const existing = output[key];
     output[key] =
-      existing && typeof existing === "object" && !Array.isArray(existing) && value && typeof value === "object" && !Array.isArray(value)
-        ? deepMerge(existing as Record<string, unknown>, value as Record<string, unknown>)
+      existing &&
+      typeof existing === "object" &&
+      !Array.isArray(existing) &&
+      value &&
+      typeof value === "object" &&
+      !Array.isArray(value)
+        ? deepMerge(
+            existing as Record<string, unknown>,
+            value as Record<string, unknown>,
+          )
         : value;
   }
   return output as T;
@@ -69,18 +81,22 @@ function deepMerge<T extends Record<string, unknown>>(base: T, override: Record<
 
 // Retain the existing translations while adapting legacy `_plural` keys to
 // i18next's current Intl plural categories (including Slovak few/many).
-function normalizePlurals(value: Record<string, unknown>): Record<string, unknown> {
+function normalizePlurals(
+  value: Record<string, unknown>,
+): Record<string, unknown> {
   const output: Record<string, unknown> = {};
   for (const [key, entry] of Object.entries(value)) {
-    output[key] = entry && typeof entry === "object" && !Array.isArray(entry)
-      ? normalizePlurals(entry as Record<string, unknown>)
-      : entry;
+    output[key] =
+      entry && typeof entry === "object" && !Array.isArray(entry)
+        ? normalizePlurals(entry as Record<string, unknown>)
+        : entry;
   }
   for (const [key, entry] of Object.entries(value)) {
     if (!key.endsWith("_plural") || typeof entry !== "string") continue;
     const base = key.slice(0, -"_plural".length);
     if (typeof value[base] === "string") output[`${base}_one`] ??= value[base];
-    for (const category of ["few", "many", "other"]) output[`${base}_${category}`] ??= entry;
+    for (const category of ["few", "many", "other"])
+      output[`${base}_${category}`] ??= entry;
   }
   return output;
 }
@@ -96,7 +112,13 @@ const mergedResources = {
 };
 
 export const localizedResources = Object.fromEntries(
-  Object.entries(mergedResources).map(([code, resource]) => [code, {
-    translation: normalizePlurals(resource.translation),
-  }]),
+  Object.entries(mergedResources).map(([code, resource]) => [
+    code,
+    {
+      translation: normalizePlurals({
+        ...resource.translation,
+        experience: experienceCopy[code as keyof typeof experienceCopy],
+      }),
+    },
+  ]),
 );

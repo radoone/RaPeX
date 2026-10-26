@@ -406,8 +406,13 @@ export default function Settings() {
                       ? t("billing.verificationError")
                       : billingStatus.hasActivePayment
                         ? t("billing.statusActivePro")
-                        : t("billing.statusFreeUsed")}
+                        : t(
+                            billingStatus.freeScanUsed
+                              ? "billing.statusFreeUsed"
+                              : "billing.statusFreeAvailable",
+                          )}
                 </p>
+                <p className="admin-helper">{t("experience.valueBody")}</p>
                 {billingStatus.pricingPlansUrl && (
                   <s-button
                     type="button"

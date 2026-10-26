@@ -76,12 +76,16 @@ export function AlertTable({
 }: AlertTableProps) {
   const { t } = useTranslation();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  // Bulk decisions must never include rows hidden by a changed filter.
+  const visibleSelectedIds = selectedIds.filter((id) =>
+    alerts.some((alert) => alert.id === id),
+  );
 
   // Determine active tab
   const activeTab = statusFilter.length === 1 ? statusFilter[0] : "all";
 
   const toggleSelectAll = () => {
-    if (selectedIds.length === alerts.length) {
+    if (visibleSelectedIds.length === alerts.length) {
       setSelectedIds([]);
     } else {
       setSelectedIds(alerts.map((a) => a.id));
@@ -95,15 +99,15 @@ export function AlertTable({
   };
 
   const handleBulkResolve = (resolutionType?: ResolutionType) => {
-    if (onBulkAction && selectedIds.length > 0) {
-      onBulkAction(selectedIds, "resolve", resolutionType);
+    if (onBulkAction && visibleSelectedIds.length > 0) {
+      onBulkAction(visibleSelectedIds, "resolve", resolutionType);
       setSelectedIds([]);
     }
   };
 
   const handleBulkDismiss = (resolutionType?: ResolutionType) => {
-    if (onBulkAction && selectedIds.length > 0) {
-      onBulkAction(selectedIds, "dismiss", resolutionType);
+    if (onBulkAction && visibleSelectedIds.length > 0) {
+      onBulkAction(visibleSelectedIds, "dismiss", resolutionType);
       setSelectedIds([]);
     }
   };
@@ -117,6 +121,14 @@ export function AlertTable({
       <s-stack gap="small" style={{ paddingBottom: "var(--s-space-base)" }}>
         {/* Tabs */}
         <s-stack direction="inline" gap="none">
+          <s-button
+            variant={activeTab === "active" ? "secondary" : "tertiary"}
+            size="small"
+            onClick={() => onStatusChange?.("active")}
+          >
+            {t("alerts.table.tabs.active")}{" "}
+            {stats?.active ? `(${stats.active})` : ""}
+          </s-button>
           <s-button
             variant={
               activeTab === "waiting_for_supplier" ? "secondary" : "tertiary"
@@ -132,14 +144,6 @@ export function AlertTable({
             onClick={() => onStatusChange?.("")}
           >
             {t("alerts.table.tabs.all")} {stats ? `(${stats.total})` : ""}
-          </s-button>
-          <s-button
-            variant={activeTab === "active" ? "secondary" : "tertiary"}
-            size="small"
-            onClick={() => onStatusChange?.("active")}
-          >
-            {t("alerts.table.tabs.active")}{" "}
-            {stats?.active ? `(${stats.active})` : ""}
           </s-button>
           <s-button
             variant={activeTab === "resolved" ? "secondary" : "tertiary"}
@@ -235,184 +239,194 @@ export function AlertTable({
         </s-grid>
       </s-stack>
 
-      <s-table accessibilityLabel={t("alerts.table.accessibilityLabel")}>
-        <s-table-header-row>
-          <s-table-header>
-            <s-checkbox
-              accessibilityLabel={t("alerts.table.selectAll")}
-              checked={
-                selectedIds.length === alerts.length && alerts.length > 0
-              }
-              indeterminate={
-                selectedIds.length > 0 && selectedIds.length < alerts.length
-              }
-              onChange={toggleSelectAll}
-            />
-          </s-table-header>
-          <s-table-header listSlot="primary">
-            {t("alerts.table.headers.product")}
-          </s-table-header>
-          <s-table-header listSlot="inline">
-            {t("alerts.table.headers.status")}
-          </s-table-header>
-          <s-table-header listSlot="labeled">
-            {t("alerts.table.headers.risk")}
-          </s-table-header>
-          <s-table-header listSlot="labeled">
-            {t("alerts.table.headers.detected")}
-          </s-table-header>
-          <s-table-header>{t("alerts.table.headers.actions")}</s-table-header>
-        </s-table-header-row>
-        <s-table-body>
-          {alerts.length === 0 ? (
-            <s-table-row>
-              <s-table-cell colSpan={6}>
-                <s-box padding="large">
-                  <s-stack gap="small" align="center">
-                    <s-text fontWeight="semibold">
-                      {activeTab === "active" && !searchValue
-                        ? t("alerts.table.emptyAllClearTitle")
-                        : t("alerts.table.emptyFilteredTitle")}
-                    </s-text>
-                    <s-text tone="subdued">
-                      {activeTab === "active" && !searchValue
-                        ? t("alerts.table.emptyAllClearBody")
-                        : t("alerts.table.emptyFilteredBody")}
-                    </s-text>
-                    <s-stack
-                      direction="inline"
-                      gap="small"
-                      justifyContent="center"
-                    >
-                      <s-button
-                        variant="primary"
-                        href="/app/manual-check#product-catalogue"
-                      >
-                        {t("actions.checkOneProduct")}
-                      </s-button>
-                      <s-button variant="secondary" href="/app/evidence">
-                        {t("actions.viewEvidence")}
-                      </s-button>
-                    </s-stack>
-                  </s-stack>
-                </s-box>
-              </s-table-cell>
-            </s-table-row>
-          ) : (
-            alerts.map((alert) => (
-              <AlertRow
-                key={alert.id}
-                alert={alert}
-                onViewDetails={onViewDetails}
-                showProductLink={showProductLink}
-                modalId={`${modalIdPrefix}-${alert.id}`}
-                isSelected={selectedIds.includes(alert.id)}
-                onSelect={(id) => toggleSelect(id)}
+      <div
+        className="review-table-scroll"
+        role="region"
+        aria-label={t("alerts.table.accessibilityLabel")}
+      >
+        <s-table accessibilityLabel={t("alerts.table.accessibilityLabel")}>
+          <s-table-header-row>
+            <s-table-header>
+              <s-checkbox
+                accessibilityLabel={t("alerts.table.selectAll")}
+                checked={
+                  visibleSelectedIds.length === alerts.length &&
+                  alerts.length > 0
+                }
+                indeterminate={
+                  visibleSelectedIds.length > 0 &&
+                  visibleSelectedIds.length < alerts.length
+                }
+                onChange={toggleSelectAll}
               />
-            ))
-          )}
-        </s-table-body>
-      </s-table>
+            </s-table-header>
+            <s-table-header listSlot="primary">
+              {t("alerts.table.headers.product")}
+            </s-table-header>
+            <s-table-header listSlot="inline">
+              {t("alerts.table.headers.status")}
+            </s-table-header>
+            <s-table-header listSlot="labeled">
+              {t("alerts.table.headers.risk")}
+            </s-table-header>
+            <s-table-header listSlot="labeled">
+              {t("alerts.table.headers.detected")}
+            </s-table-header>
+            <s-table-header>{t("alerts.table.headers.actions")}</s-table-header>
+          </s-table-header-row>
+          <s-table-body>
+            {alerts.length === 0 ? (
+              <s-table-row>
+                <s-table-cell colSpan={6}>
+                  <s-box padding="large">
+                    <s-stack gap="small" align="center">
+                      <s-text fontWeight="semibold">
+                        {activeTab === "active" && !searchValue
+                          ? t("alerts.table.emptyAllClearTitle")
+                          : t("alerts.table.emptyFilteredTitle")}
+                      </s-text>
+                      <s-text tone="subdued">
+                        {activeTab === "active" && !searchValue
+                          ? t("workspace.emptyHelp")
+                          : t("alerts.table.emptyFilteredBody")}
+                      </s-text>
+                      <s-stack
+                        direction="inline"
+                        gap="small"
+                        justifyContent="center"
+                      >
+                        <s-button
+                          variant="primary"
+                          href="/app/manual-check#product-catalogue"
+                        >
+                          {t("actions.checkOneProduct")}
+                        </s-button>
+                        <s-button variant="secondary" href="/app/evidence">
+                          {t("actions.viewEvidence")}
+                        </s-button>
+                      </s-stack>
+                    </s-stack>
+                  </s-box>
+                </s-table-cell>
+              </s-table-row>
+            ) : (
+              alerts.map((alert) => (
+                <AlertRow
+                  key={alert.id}
+                  alert={alert}
+                  onViewDetails={onViewDetails}
+                  showProductLink={showProductLink}
+                  modalId={`${modalIdPrefix}-${alert.id}`}
+                  isSelected={visibleSelectedIds.includes(alert.id)}
+                  onSelect={(id) => toggleSelect(id)}
+                />
+              ))
+            )}
+          </s-table-body>
+        </s-table>
+      </div>
 
       {/* Floating Bulk Action Bar */}
-      <div
-        className={`floating-bulk-actions ${selectedIds.length > 0 ? "is-visible" : ""}`}
-      >
-        <span>
-          {t("uxEnhancements.alerts.floating.selectedCount", {
-            count: selectedIds.length,
-          })}
-        </span>
-        <s-button
-          variant="secondary"
-          size="small"
-          commandFor="floating-bulk-resolve-popover"
-          style={{
-            backgroundColor: "#2c2c2e",
-            borderColor: "#3a3a3c",
-            color: "#ffffff",
-          }}
+      {visibleSelectedIds.length > 0 && (
+        <div
+          className={`floating-bulk-actions ${visibleSelectedIds.length > 0 ? "is-visible" : ""}`}
         >
-          {t("uxEnhancements.alerts.floating.resolveSelected")}
-        </s-button>
-        <s-button
-          variant="secondary"
-          size="small"
-          commandFor="floating-bulk-dismiss-popover"
-          style={{
-            backgroundColor: "#2c2c2e",
-            borderColor: "#3a3a3c",
-            color: "#ffffff",
-          }}
-        >
-          {t("uxEnhancements.alerts.floating.dismissSelected")}
-        </s-button>
+          <span>
+            {t("uxEnhancements.alerts.floating.selectedCount", {
+              count: visibleSelectedIds.length,
+            })}
+          </span>
+          <s-button
+            variant="secondary"
+            size="small"
+            commandFor="floating-bulk-resolve-popover"
+            style={{
+              backgroundColor: "#2c2c2e",
+              borderColor: "#3a3a3c",
+              color: "#ffffff",
+            }}
+          >
+            {t("uxEnhancements.alerts.floating.resolveSelected")}
+          </s-button>
+          <s-button
+            variant="secondary"
+            size="small"
+            commandFor="floating-bulk-dismiss-popover"
+            style={{
+              backgroundColor: "#2c2c2e",
+              borderColor: "#3a3a3c",
+              color: "#ffffff",
+            }}
+          >
+            {t("uxEnhancements.alerts.floating.dismissSelected")}
+          </s-button>
 
-        <s-popover id="floating-bulk-resolve-popover">
-          <s-stack gap="none">
-            <s-box padding="small">
-              <s-text fontWeight="semibold" size="small">
-                {t("resolveActions.menuLabel")}
-              </s-text>
-            </s-box>
-            <s-divider />
-            <s-box padding="small">
-              <s-stack gap="small-100">
-                <s-button
-                  variant="tertiary"
-                  size="small"
-                  onClick={() => handleBulkResolve("match_not_confirmed")}
-                >
-                  {t("workspace.matchNotConfirmed")}
-                </s-button>
-                <s-button
-                  variant="tertiary"
-                  size="small"
-                  onClick={() => handleBulkResolve("removed_from_sale")}
-                >
-                  {t("resolveActions.removedFromSale")}
-                </s-button>
-                <s-button
-                  variant="tertiary"
-                  size="small"
-                  onClick={() => handleBulkResolve("modified_product")}
-                >
-                  {t("resolveActions.modifiedProduct")}
-                </s-button>
-              </s-stack>
-            </s-box>
-          </s-stack>
-        </s-popover>
+          <s-popover id="floating-bulk-resolve-popover">
+            <s-stack gap="none">
+              <s-box padding="small">
+                <s-text fontWeight="semibold" size="small">
+                  {t("resolveActions.menuLabel")}
+                </s-text>
+              </s-box>
+              <s-divider />
+              <s-box padding="small">
+                <s-stack gap="small-100">
+                  <s-button
+                    variant="tertiary"
+                    size="small"
+                    onClick={() => handleBulkResolve("match_not_confirmed")}
+                  >
+                    {t("workspace.matchNotConfirmed")}
+                  </s-button>
+                  <s-button
+                    variant="tertiary"
+                    size="small"
+                    onClick={() => handleBulkResolve("removed_from_sale")}
+                  >
+                    {t("resolveActions.removedFromSale")}
+                  </s-button>
+                  <s-button
+                    variant="tertiary"
+                    size="small"
+                    onClick={() => handleBulkResolve("modified_product")}
+                  >
+                    {t("resolveActions.modifiedProduct")}
+                  </s-button>
+                </s-stack>
+              </s-box>
+            </s-stack>
+          </s-popover>
 
-        <s-popover id="floating-bulk-dismiss-popover">
-          <s-stack gap="none">
-            <s-box padding="small">
-              <s-text fontWeight="semibold" size="small">
-                {t("resolveActions.menuLabel")}
-              </s-text>
-            </s-box>
-            <s-divider />
-            <s-box padding="small">
-              <s-stack gap="small-100">
-                <s-button
-                  variant="tertiary"
-                  size="small"
-                  onClick={() => handleBulkDismiss("false_positive")}
-                >
-                  {t("resolveActions.falsePositive")}
-                </s-button>
-                <s-button
-                  variant="tertiary"
-                  size="small"
-                  onClick={() => handleBulkDismiss("not_my_product")}
-                >
-                  {t("resolveActions.notMyProduct")}
-                </s-button>
-              </s-stack>
-            </s-box>
-          </s-stack>
-        </s-popover>
-      </div>
+          <s-popover id="floating-bulk-dismiss-popover">
+            <s-stack gap="none">
+              <s-box padding="small">
+                <s-text fontWeight="semibold" size="small">
+                  {t("resolveActions.menuLabel")}
+                </s-text>
+              </s-box>
+              <s-divider />
+              <s-box padding="small">
+                <s-stack gap="small-100">
+                  <s-button
+                    variant="tertiary"
+                    size="small"
+                    onClick={() => handleBulkDismiss("false_positive")}
+                  >
+                    {t("resolveActions.falsePositive")}
+                  </s-button>
+                  <s-button
+                    variant="tertiary"
+                    size="small"
+                    onClick={() => handleBulkDismiss("not_my_product")}
+                  >
+                    {t("resolveActions.notMyProduct")}
+                  </s-button>
+                </s-stack>
+              </s-box>
+            </s-stack>
+          </s-popover>
+        </div>
+      )}
     </s-section>
   );
 }
@@ -482,7 +496,7 @@ function AlertRow({
 
       {/* Product Cell - Shopify style */}
       <s-table-cell>
-        <s-stack direction="inline" gap="small" alignItems="center">
+        <div className="review-product">
           {alert.productImage ? (
             <s-clickable
               commandFor={modalId}
@@ -515,24 +529,24 @@ function AlertRow({
               </s-text>
             </s-box>
           )}
-          <s-stack gap="small-100">
-            <s-button
-              variant="tertiary"
+          <div className="review-product__content">
+            <s-clickable
+              className="review-product__name"
               commandFor={modalId}
               command="--show"
               accessibilityLabel={t("workspace.compareProduct", {
                 title: alert.productTitle,
               })}
             >
-              {alert.productTitle}
-            </s-button>
+              <span>{alert.productTitle}</span>
+            </s-clickable>
             {alert.alertType && (
               <s-text tone="subdued" size="small">
                 {localizeRisk(alert.alertType, t)}
               </s-text>
             )}
-          </s-stack>
-        </s-stack>
+          </div>
+        </div>
       </s-table-cell>
 
       {/* Status Cell */}
@@ -577,10 +591,14 @@ function AlertRow({
       {/* Date Cell */}
       <s-table-cell>
         <s-text suppressHydrationWarning>
-          <LocalDateTime value={createdDate} format={(date) => formatRelativeDate(date, t, dateLocale)} />
-          {hydrated && alert.status === "active" &&
+          <LocalDateTime
+            value={createdDate}
+            format={(date) => formatRelativeDate(date, t, dateLocale)}
+          />
+          {hydrated &&
+            alert.status === "active" &&
             observedAt - createdDate.getTime() >= 7 * 86400000 && (
-              <span className="admin-helper">
+              <span className="admin-helper review-product__age">
                 {t("workspace.oldest", {
                   count: Math.floor(
                     (observedAt - createdDate.getTime()) / 86400000,
@@ -593,7 +611,7 @@ function AlertRow({
 
       {/* Actions Cell */}
       <s-table-cell>
-        <s-stack direction="inline" gap="small-200">
+        <s-stack gap="small-200">
           <s-button
             ref={viewBtnRef}
             size="small"

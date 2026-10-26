@@ -211,3 +211,7 @@ Surfaces rely primarily on tonal layering and crisp 1px borders rather than heav
 - **Don't** use raw unformatted JSON or technical model debug scores in merchant-facing views.
 - **Don't** mutate Shopify product catalog status directly without merchant review action.
 - **Don't** mix non-Polaris UI component libraries into the embedded Shopify admin shell.
+
+## Merchant Admin consistency (26 October 2026)
+
+Use flat surfaces, shared radius tokens, subtle elevation and consistent 1px borders across dashboard, review, legacy status cards and onboarding. Do not use gradient card backgrounds or thick one-sided accent borders. Communicate severity with explicit text and badges; flat semantic tints may support them. Matching sensitivity is informational and uses a neutral surface. Onboarding progress uses transform scaling rather than animated width and respects reduced-motion preferences. Keep padded modal sections within their container with border-box sizing.
