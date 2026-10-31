@@ -94,8 +94,8 @@ export function buildCoreLocale(input: CoreLocaleInput) {
       openPricingPlans: "Open pricing plans",
     },
     resolveActions: {
-      contactPending: "Waiting for supplier response",
-      other: input.otherOutcome || "Other",
+      contactPending: workspaceCopy[input.localeCode].outcomeLabels.contactedSupplier,
+      ...workspaceCopy[input.localeCode].outcomeLabels,
     },
     billing: {
       freeScanAvailableHeading: "Free Initial Catalog Scan Active",

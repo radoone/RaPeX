@@ -74,6 +74,7 @@ describe("truthful monitoring status", () => {
     expect(monitoringState(billing, "queued")).toBe("processing");
     expect(monitoringState(billing, "FAILURE")).toBe("failed");
     expect(monitoringState(billing, "SUCCESS")).toBe("enabled");
+    expect(monitoringState(billing, null, Date.now(), null)).toBe("unknown");
   });
   it("flags stale completed monitoring without masking billing or live work", () => {
     const now = Date.parse("2026-10-26T10:00:00Z");

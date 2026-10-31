@@ -187,53 +187,50 @@ export function AlertTable({
                   label={t("alerts.table.sortBy")}
                   labelAccessibilityVisibility="visible"
                   name="sortBy"
+                  onChange={(event: any) =>
+                    onSortChange?.(
+                      event.currentTarget.values?.[0] || "priority",
+                      sortOrder,
+                    )
+                  }
                 >
-                  <s-choice
-                    value="created"
-                    selected={sortBy === "created"}
-                    onClick={() => onSortChange?.("created", sortOrder)}
-                  >
+                  <s-choice value="priority" selected={sortBy === "priority"}>
+                    {t("workspace.priority")}
+                  </s-choice>
+                  <s-choice value="created" selected={sortBy === "created"}>
                     {t("alerts.table.sortOptions.created")}
                   </s-choice>
-                  <s-choice
-                    value="risk"
-                    selected={sortBy === "risk"}
-                    onClick={() => onSortChange?.("risk", sortOrder)}
-                  >
+                  <s-choice value="risk" selected={sortBy === "risk"}>
                     {t("alerts.table.sortOptions.risk")}
                   </s-choice>
-                  <s-choice
-                    value="name"
-                    selected={sortBy === "name"}
-                    onClick={() => onSortChange?.("name", sortOrder)}
-                  >
+                  <s-choice value="name" selected={sortBy === "name"}>
                     {t("alerts.table.sortOptions.name")}
                   </s-choice>
                 </s-choice-list>
               </s-box>
-              <s-divider />
-              <s-box padding="small">
-                <s-choice-list
-                  label={t("alerts.table.order")}
-                  labelAccessibilityVisibility="visible"
-                  name="sortOrder"
-                >
-                  <s-choice
-                    value="desc"
-                    selected={sortOrder === "desc"}
-                    onClick={() => onSortChange?.(sortBy, "desc")}
+              {sortBy !== "priority" && <s-divider />}
+              {sortBy !== "priority" && (
+                <s-box padding="small">
+                  <s-choice-list
+                    label={t("alerts.table.order")}
+                    labelAccessibilityVisibility="visible"
+                    name="sortOrder"
+                    onChange={(event: any) =>
+                      onSortChange?.(
+                        sortBy,
+                        event.currentTarget.values?.[0] || "desc",
+                      )
+                    }
                   >
-                    {t("alerts.table.orderOptions.desc")}
-                  </s-choice>
-                  <s-choice
-                    value="asc"
-                    selected={sortOrder === "asc"}
-                    onClick={() => onSortChange?.(sortBy, "asc")}
-                  >
-                    {t("alerts.table.orderOptions.asc")}
-                  </s-choice>
-                </s-choice-list>
-              </s-box>
+                    <s-choice value="desc" selected={sortOrder === "desc"}>
+                      {t("alerts.table.orderOptions.desc")}
+                    </s-choice>
+                    <s-choice value="asc" selected={sortOrder === "asc"}>
+                      {t("alerts.table.orderOptions.asc")}
+                    </s-choice>
+                  </s-choice-list>
+                </s-box>
+              )}
             </s-stack>
           </s-popover>
         </s-grid>
@@ -267,7 +264,7 @@ export function AlertTable({
               {t("alerts.table.headers.status")}
             </s-table-header>
             <s-table-header listSlot="labeled">
-              {t("alerts.table.headers.risk")}
+              {t("workspace.sourceRisk")}
             </s-table-header>
             <s-table-header listSlot="labeled">
               {t("alerts.table.headers.detected")}
@@ -654,9 +651,14 @@ export function formatRelativeDate(
 
   if (diffDays === 0) return t("dates.today");
   if (diffDays === 1) return t("dates.yesterday");
-  if (diffDays < 7) return t("dates.daysAgo", { count: diffDays });
-  if (diffDays < 30)
-    return t("dates.weeksAgo", { count: Math.floor(diffDays / 7) });
+  if (diffDays < 30) {
+    const days = Math.max(0, diffDays);
+    const unit = days < 7 ? "day" : "week";
+    const count = unit === "day" ? days : Math.floor(days / 7);
+    return new Intl.RelativeTimeFormat(locale || "en", {
+      numeric: "auto",
+    }).format(-count, unit);
+  }
   const resolvedLocale = !locale || locale === "en" ? "en-GB" : locale;
   return parsedDate.toLocaleDateString(resolvedLocale, {
     day: "numeric",

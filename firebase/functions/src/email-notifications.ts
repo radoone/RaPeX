@@ -6,6 +6,7 @@ import type { CloudEvent } from "firebase-functions/v2";
 import type { FirestoreEvent, QueryDocumentSnapshot } from "firebase-functions/v2/firestore";
 import type { Request } from "firebase-functions/v2/https";
 import { db } from "./firebase-admin.js";
+import { mapBounded } from "./matching-work.js";
 import { emailAttemptPolicy, emailIdempotencyKey, EMAIL_LEASE_MS, EMAIL_TERMINAL, EmailProviderRejection } from "./email-delivery.js";
 import { FIRESTORE_COLLECTIONS } from "./safety-gate-config.js";
 import { escapeEmailHtml as escapeHtml, renderAlertEmail, renderWeeklyEmail } from "./email-templates.js";
@@ -31,6 +32,7 @@ type MerchantSettings = {
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const NOTIFICATION_SUBCOLLECTION = "email_notifications";
 const WEBHOOK_INDEX_COLLECTION = "email_notification_index";
+const WEBHOOK_INDEX_TTL_MS = 90 * 24 * 60 * 60 * 1000;
 const APP_TIME_ZONE = "Europe/Bratislava";
 
 function getMerchantRef(shop: string) {
@@ -209,8 +211,15 @@ async function createAndSendNotification(params: {
   if (!claimed) return false;
   try {
     const messageId = await sendBrevoEmail({ shop: params.shop, notificationId: params.notificationId, to: claimed.recipient, content: claimed.content });
-    // Persist the provider index first. A crash here is retried using the same key.
-    if (messageId) await db.collection(WEBHOOK_INDEX_COLLECTION).doc(createHash("sha256").update(messageId).digest("hex")).set({ shop: params.shop, notificationId: params.notificationId });
+    // Persist the provider index first with a 90-day TTL so webhook lookup documents do not linger forever.
+    if (messageId) {
+      await db.collection(WEBHOOK_INDEX_COLLECTION).doc(createHash("sha256").update(messageId).digest("hex")).set({
+        shop: params.shop,
+        notificationId: params.notificationId,
+        createdAt: FieldValue.serverTimestamp(),
+        expireAt: Timestamp.fromMillis(Date.now() + WEBHOOK_INDEX_TTL_MS),
+      });
+    }
     await db.runTransaction(async transaction => {
       const current = await transaction.get(notificationRef);
       if (current.get("leaseId") !== leaseId) return;
@@ -337,13 +346,13 @@ export async function runWeeklyClearSummaries(end = new Date()): Promise<{ sent:
   let skipped = 0;
   let failed = 0;
 
-  for (const merchant of merchants.docs) {
+  await mapBounded(merchants.docs, 6, async (merchant) => {
     const data = merchant.data() as Record<string, unknown>;
     const shop = typeof data.shop === "string" ? data.shop : decodeURIComponent(merchant.id);
     const settings = readMerchantSettings(shop, data);
     if (!hasCurrentMonitoringEntitlement(data) || !settings.weeklySummaryEmails || !settings.notificationEmail) {
       skipped += 1;
-      continue;
+      return;
     }
     const newFindings = merchant.ref.collection(FIRESTORE_COLLECTIONS.subAlerts)
       .where("createdAt", ">=", Timestamp.fromDate(start))
@@ -413,7 +422,7 @@ export async function runWeeklyClearSummaries(end = new Date()): Promise<{ sent:
       failed += 1;
       logger.error("Weekly clear summary failed", { shop, error });
     }
-  }
+  });
   if (failed) throw new Error(`${failed} weekly email submissions need retry`);
   return { sent, skipped, failed };
 }

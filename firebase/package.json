@@ -12,6 +12,6 @@
     "lint": "cd functions && npm run lint"
   },
   "devDependencies": {
-    "firebase-tools": "15.34.1"
+    "firebase-tools": "15.34.2"
   }
 }

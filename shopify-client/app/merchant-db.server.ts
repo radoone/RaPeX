@@ -149,6 +149,8 @@ const SUBCOLLECTIONS = {
   decisionEvents: "decision_events",
 } as const;
 
+const MAX_IN_MEMORY_FILTER_DOCS = 1000;
+
 let credentialWarningShown = false;
 
 function isFirestoreCredentialError(error: unknown): boolean {
@@ -431,6 +433,8 @@ const safetyAlert = {
       if (typeof options.take === "number" && options.take > 0) {
         firestoreQuery = firestoreQuery.limit(options.take);
       }
+    } else {
+      firestoreQuery = firestoreQuery.limit(MAX_IN_MEMORY_FILTER_DOCS);
     }
 
     const snapshot = await withCredentialFallback(() => firestoreQuery.get(), null as any);
@@ -468,7 +472,7 @@ const safetyAlert = {
     const { query: baseQuery, inMemoryContains } = buildBaseQuery(SUBCOLLECTIONS.alerts, options.where);
 
     if (inMemoryContains) {
-      const snapshot = await withCredentialFallback(() => baseQuery.select(inMemoryContains.field).get(), null as any);
+      const snapshot = await withCredentialFallback(() => baseQuery.select(inMemoryContains.field).limit(MAX_IN_MEMORY_FILTER_DOCS).get(), null as any);
       if (!snapshot) return 0;
       return snapshot.docs.filter((doc: any) =>
         String(doc.get(inMemoryContains.field) || "").toLowerCase().includes(inMemoryContains.value),
@@ -707,6 +711,8 @@ const safetyCheck = {
       if (typeof options.take === "number" && options.take > 0) {
         firestoreQuery = firestoreQuery.limit(options.take);
       }
+    } else {
+      firestoreQuery = firestoreQuery.limit(MAX_IN_MEMORY_FILTER_DOCS);
     }
 
     const snapshot = await withCredentialFallback(() => firestoreQuery.get(), null as any);
@@ -1001,7 +1007,8 @@ export async function purgeMerchantShopData(shop: string): Promise<{
   monitorState: number;
   activityLogs: number;
 }> {
-  const shopRef = getMerchantDocRef(shop);
+  const cleanShop = shop.trim();
+  const shopRef = getMerchantDocRef(cleanShop);
   // Retire the installation before enumerating/deleting descendants so in-flight
   // Firebase workers cannot repopulate a subtree while recursiveDelete runs.
   await firestore.runTransaction(async transaction => {
@@ -1011,6 +1018,23 @@ export async function purgeMerchantShopData(shop: string): Promise<{
     });
   });
   await firestore.recursiveDelete(shopRef);
+
+  // Also purge any global cross-collection documents tied to this shop for GDPR compliance.
+  for (const collectionName of ["merchant_match_cache", "email_notification_index"]) {
+    const snapshot = await withCredentialFallback(
+      () => firestore.collection(collectionName).where("shop", "==", cleanShop).get(),
+      null as any,
+    );
+    if (snapshot && !snapshot.empty) {
+      for (let start = 0; start < snapshot.docs.length; start += 450) {
+        const batch = firestore.batch();
+        for (const doc of snapshot.docs.slice(start, start + 450)) {
+          batch.delete(doc.ref);
+        }
+        await withCredentialFallback(() => batch.commit(), undefined);
+      }
+    }
+  }
 
   return {
     alerts: 0,

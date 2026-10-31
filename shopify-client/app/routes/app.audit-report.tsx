@@ -227,7 +227,8 @@ export default function AuditReportPage() {
                   </s-table-header>
                   <s-table-header>{t("workspace.findings")}</s-table-header>
                   <s-table-header>{t("workspace.outcome")}</s-table-header>
-                  <s-table-header>{t("workspace.when")}</s-table-header>
+                  <s-table-header>{t("workspace.detectedAt")}</s-table-header>
+                  <s-table-header>{t("workspace.decisionAt")}</s-table-header>
                 </s-table-header-row>
                 <s-table-body>
                   {records.map((record) => (
@@ -258,12 +259,13 @@ export default function AuditReportPage() {
                         ) : (
                           <p>{t("workspace.sourceMissing")}</p>
                         )}
-                        <p>{record.reason}</p>
+                        <p>{t("workspace.matchNeedsVerification")}</p>
+                        {record.sourceRisk && <p><strong>{t("workspace.sourceRisk")}: </strong>{record.sourceRisk}</p>}
                       </s-table-cell>
                       <s-table-cell>
                         <p>{t(decisionKey(record.resolutionType))}</p>
                         {record.notes && <p>{record.notes}</p>}
-                        {record.decisions[0] && (
+                        {record.resolutionType && record.decisions[0] && (
                           <p>
                             {t("workspace.who")}: {record.decisions[0].actorId}
                           </p>
@@ -276,6 +278,11 @@ export default function AuditReportPage() {
                             locale={i18n.language}
                           />
                         )}
+                      </s-table-cell>
+                      <s-table-cell>
+                        {record.resolutionType && (record.decisions[0]?.createdAt || record.resolvedAt || record.dismissedAt) ? (
+                          <LocalDateTime value={record.decisions[0]?.createdAt || record.resolvedAt || record.dismissedAt} locale={i18n.language} />
+                        ) : "—"}
                       </s-table-cell>
                     </s-table-row>
                   ))}

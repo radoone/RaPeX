@@ -34,6 +34,7 @@ export function parseEvidence(checkResult?: string | null) {
     return {
       ...officialSource(fields),
       reason: warning.reason || "",
+      sourceRisk: fields.danger || fields.alert_description || fields.risk_legal_provision || "",
       riskLevel:
         fields.level ||
         fields.alert_level ||
@@ -50,6 +51,7 @@ export function parseEvidence(checkResult?: string | null) {
       caseNumber: null,
       url: null,
       reason: "",
+      sourceRisk: "",
       riskLevel: "",
       overallSimilarity: "",
       alertType: "",

@@ -34,6 +34,8 @@ export function MonitoringStatus({
         ? t("experience.pausedHelp")
         : state === "unverified"
           ? t("billing.verificationError")
+          : state === "unknown"
+            ? t("workspace.monitoringUnknownHelp")
           : t("workspace.scheduleHelp");
   const needsPlan = state === "paused";
   return (
@@ -61,7 +63,7 @@ export function MonitoringStatus({
         <p className="admin-helper">{help}</p>
         {(pathname !== "/app/settings" ||
           (needsPlan && billing.pricingPlansUrl) ||
-          ["unverified", "failed", "delayed"].includes(state)) && (
+          ["unverified", "unknown", "failed", "delayed"].includes(state)) && (
           <div className="admin-actions">
             {needsPlan && billing.pricingPlansUrl && (
               <s-button
@@ -71,7 +73,7 @@ export function MonitoringStatus({
                 {t("billingRedirect.openPricingPlans")}
               </s-button>
             )}
-            {state === "unverified" && (
+            {["unverified", "unknown"].includes(state) && (
               <s-button
                 variant="secondary"
                 loading={revalidator.state !== "idle"}

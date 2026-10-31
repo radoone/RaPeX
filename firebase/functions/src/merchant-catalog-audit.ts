@@ -1,6 +1,8 @@
+import { createDecipheriv, createHash } from "node:crypto";
 import { FieldValue, Timestamp, type DocumentReference } from "firebase-admin/firestore";
 import { getFunctions } from "firebase-admin/functions";
 import * as logger from "firebase-functions/logger";
+import { requireOperationsKey } from "./api-auth.js";
 import { db } from "./firebase-admin.js";
 import { FIRESTORE_COLLECTIONS } from "./safety-gate-config.js";
 import type { MerchantProductUpsertInput, ProductCheckInput } from "./safety-gate-types.js";
@@ -50,23 +52,8 @@ function shopDomain(value: unknown): string | undefined {
   return /^[a-z0-9][a-z0-9-]*\.myshopify\.com$/.test(shop) ? shop : undefined;
 }
 
-function requestHeader(request: RequestShape, name: string): string {
-  const value = request.headers[name.toLowerCase()] ?? request.headers[name];
-  return Array.isArray(value) ? String(value[0] || "") : String(value || "");
-}
-
 function authorized(request: RequestShape, response: ResponseShape): boolean {
-  const expected = (process.env.SAFETY_GATE_API_KEY || "").trim();
-  const supplied = requestHeader(request, "x-api-key").trim();
-  if (expected && supplied === expected) return true;
-  response.status(expected ? 401 : 503).json({ error: expected ? "Unauthorized" : "Operations key is not configured" });
-  return false;
-}
-
-function applyCors(response: ResponseShape): void {
-  response.set("Access-Control-Allow-Origin", "*");
-  response.set("Access-Control-Allow-Methods", "POST, OPTIONS");
-  response.set("Access-Control-Allow-Headers", "Content-Type, X-API-Key");
+  return requireOperationsKey(request, response);
 }
 
 function toProductInput(node: Record<string, any>, shop: string): MerchantProductUpsertInput {
@@ -99,6 +86,40 @@ function toProductInput(node: Record<string, any>, shop: string): MerchantProduc
   };
 }
 
+const ENCRYPTED_TOKEN_PREFIX = "enc:v1:";
+
+export function decryptStoredShopifyToken(stored: unknown): string {
+  if (typeof stored !== "string" || !stored.trim()) {
+    throw new Error("A durable offline Shopify session is not available for this shop");
+  }
+  const trimmed = stored.trim();
+  if (!trimmed.startsWith(ENCRYPTED_TOKEN_PREFIX)) {
+    return trimmed;
+  }
+  const rawSecret = (
+    process.env.SHOPIFY_SESSION_ENCRYPTION_KEY ||
+    process.env.SAFETY_GATE_API_KEY ||
+    process.env.SHOPIFY_API_SECRET ||
+    ""
+  ).trim();
+  if (!rawSecret) {
+    throw new Error("Cannot decrypt Shopify session token: encryption key is not configured");
+  }
+  const key = createHash("sha256").update(`zerorecall-session-v1:${rawSecret}`).digest();
+  const parts = trimmed.slice(ENCRYPTED_TOKEN_PREFIX.length).split(".");
+  if (parts.length !== 3) {
+    throw new Error("Invalid encrypted Shopify session token format");
+  }
+  const [ivB64, tagB64, ciphertextB64] = parts;
+  const decipher = createDecipheriv("aes-256-gcm", key, Buffer.from(ivB64, "base64url"));
+  decipher.setAuthTag(Buffer.from(tagB64, "base64url"));
+  const decrypted = Buffer.concat([
+    decipher.update(Buffer.from(ciphertextB64, "base64url")),
+    decipher.final(),
+  ]);
+  return decrypted.toString("utf8");
+}
+
 async function loadOfflineAccessToken(shop: string): Promise<string> {
   const sessions = await db.collection("shopify_sessions")
     .where("shop", "==", shop)
@@ -106,10 +127,7 @@ async function loadOfflineAccessToken(shop: string): Promise<string> {
     .limit(1)
     .get();
   const token = sessions.docs[0]?.get("accessToken");
-  if (typeof token !== "string" || !token.trim()) {
-    throw new Error("A durable offline Shopify session is not available for this shop");
-  }
-  return token;
+  return decryptStoredShopifyToken(token);
 }
 
 async function loadShopifyProductPage(shop: string, cursor: string | null): Promise<{
@@ -164,7 +182,6 @@ async function enqueue(payload: MerchantCatalogAuditTaskPayload): Promise<void> 
 }
 
 export async function handleStartMerchantCatalogAuditRequest(request: RequestShape, response: ResponseShape): Promise<void> {
-  applyCors(response);
   if (request.method === "OPTIONS") return response.status(204).send("");
   if (request.method !== "POST") return response.status(405).json({ error: "Method not allowed" });
   if (!authorized(request, response)) return;

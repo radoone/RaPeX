@@ -222,7 +222,10 @@ export async function checkProductSafety(
   } catch (error) {
     console.error("Error checking product safety:", error);
     // Throw error so UI can handle it via ErrorBoundary
-    throw new Error(error instanceof Error ? error.message : "Safety Gate service is unavailable");
+    throw new Error(
+      error instanceof Error ? error.message : "Safety Gate service is unavailable",
+      { cause: error },
+    );
   }
 }
 

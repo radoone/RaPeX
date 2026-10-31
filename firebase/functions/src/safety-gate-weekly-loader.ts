@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import * as logger from "firebase-functions/logger";
 import { db } from "./firebase-admin.js";
+import { mapBounded } from "./matching-work.js";
 import { FIRESTORE_COLLECTIONS } from "./safety-gate-config.js";
 import { buildEmbeddingText, embedImage, embedText } from "./safety-gate-embeddings.js";
 import {
@@ -131,6 +132,12 @@ export async function fetchWeeklyReportDetail(
 }
 
 async function findExistingAlertDocId(caseNumber: string): Promise<string | null> {
+  const deterministicId = createHash("sha1").update(`ec-safety-gate-${caseNumber}`).digest("hex");
+  const directSnap = await db.collection(FIRESTORE_COLLECTIONS.alerts).doc(deterministicId).get();
+  if (directSnap.exists) {
+    return deterministicId;
+  }
+
   const queryByCase = await db
     .collection(FIRESTORE_COLLECTIONS.alerts)
     .where("fields.caseNumber", "==", caseNumber)
@@ -206,32 +213,35 @@ export async function ingestWeeklyNotification(
   let imagesEmbeddedCount = 0;
 
   if (notification.pictures.length > 0) {
-    for (let i = 0; i < notification.pictures.length; i++) {
-      const imgUrl = notification.pictures[i];
-      const imageDocId = buildAlertImageDocId(docId, imgUrl);
-      const imgDocRef = db.collection(FIRESTORE_COLLECTIONS.alertImages).doc(imageDocId);
-      const imgSnap = await imgDocRef.get();
+    await mapBounded(
+      notification.pictures.map((imgUrl, index) => ({ imgUrl, index })),
+      3,
+      async ({ imgUrl, index }) => {
+        const imageDocId = buildAlertImageDocId(docId, imgUrl);
+        const imgDocRef = db.collection(FIRESTORE_COLLECTIONS.alertImages).doc(imageDocId);
+        const imgSnap = await imgDocRef.get();
 
-      if (!imgSnap.exists) {
-        const imgVector = await embedImage(imgUrl);
-        if (imgVector?.length) {
-          imagesEmbeddedCount++;
-          await imgDocRef.set({
-            alertId: docId,
-            imageUrl: imgUrl,
-            imageIndex: i,
-            meta: {
-              datasetid: "ec.europa.eu-safety-gate",
-              recordid: docId,
-              alert_date: Timestamp.fromDate(alertDate),
-              ingested_at: FieldValue.serverTimestamp(),
-            },
-            vector_image: FieldValue.vector(imgVector),
-            updatedAt: FieldValue.serverTimestamp(),
-          });
+        if (!imgSnap.exists) {
+          const imgVector = await embedImage(imgUrl);
+          if (imgVector?.length) {
+            imagesEmbeddedCount++;
+            await imgDocRef.set({
+              alertId: docId,
+              imageUrl: imgUrl,
+              imageIndex: index,
+              meta: {
+                datasetid: "ec.europa.eu-safety-gate",
+                recordid: docId,
+                alert_date: Timestamp.fromDate(alertDate),
+                ingested_at: FieldValue.serverTimestamp(),
+              },
+              vector_image: FieldValue.vector(imgVector),
+              updatedAt: FieldValue.serverTimestamp(),
+            });
+          }
         }
-      }
-    }
+      },
+    );
   }
 
   const revisionTimestamp = contentChanged ? new Date().toISOString()
@@ -345,7 +355,7 @@ export async function runSafetyGateWeeklyLoaderJob(options?: {
       const notifications = await fetchWeeklyReportDetail(report.url, report.year, report.week);
       logger.info(`Report ${report.reference} contains ${notifications.length} alerts.`);
 
-      for (const notif of notifications) {
+      await mapBounded(notifications, 4, async (notif) => {
         try {
           const result = await ingestWeeklyNotification(notif);
           notificationsProcessed++;
@@ -361,7 +371,7 @@ export async function runSafetyGateWeeklyLoaderJob(options?: {
           notificationFailures++;
           logger.error(`Error ingesting notification ${notif.caseNumber}:`, itemError);
         }
-      }
+      });
 
       if (report.year > latestYear || (report.year === latestYear && report.week > latestWeek)) {
         latestYear = report.year;

@@ -15,6 +15,7 @@ import { authenticate } from "../shopify.server";
 import db from "../merchant-db.server";
 import { withOfficialReferences } from "../services/review-evidence.server";
 import { isWaitingForSupplier } from "../services/review-evidence";
+import { compareReviewPriority } from "../services/review-priority";
 import { AlertTable, AlertDetailModal } from "../components";
 
 export const loader = async ({ request, url }: LoaderFunctionArgs) => {
@@ -35,7 +36,8 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
   }
   const riskLevelFilters = url.searchParams.getAll("riskLevel");
   const search = url.searchParams.get("search") || undefined;
-  const sortByParam = url.searchParams.get("sortBy") || "created";
+  const sortByParam = url.searchParams.get("sortBy") || "priority";
+  const priorityOrder = sortByParam === "priority";
   const sortOrderParam: "asc" | "desc" =
     url.searchParams.get("sortOrder") === "asc" ? "asc" : "desc";
   const sortField =
@@ -71,7 +73,7 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
     db.safetyAlert.findMany({
       where: whereClause,
       orderBy,
-      ...(waitingOnly ? {} : { skip: offset, take: pageSize }),
+      ...(waitingOnly || priorityOrder ? {} : { skip: offset, take: pageSize }),
     }),
     db.safetyAlert.count({ where: whereClause }),
     db.safetyAlert.count({ where: { shop: session.shop, status: "active" } }),
@@ -90,8 +92,9 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
     ? queriedAlerts.filter(isWaitingForSupplier)
     : queriedAlerts;
   const totalCount = waitingOnly ? waitingAlerts.length : queriedCount;
+  if (priorityOrder) waitingAlerts.sort(compareReviewPriority);
   const rawAlerts = await withOfficialReferences(
-    waitingOnly
+    waitingOnly || priorityOrder
       ? waitingAlerts.slice(offset, offset + pageSize)
       : waitingAlerts,
   );
@@ -164,15 +167,6 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
           first.alertDetails?.fields?.risk_level ||
           first.riskLevel ||
           null;
-        const fields = first.alertDetails?.fields || {};
-        const pics = [...(fields.pictures || []), fields.product_image].filter(
-          Boolean,
-        );
-        if (pics[0])
-          alertDetails = {
-            ...alertDetails,
-            fallbackImage: typeof pics[0] === "string" ? pics[0] : pics[0].url,
-          };
       }
     } catch {
       // Ignore malformed legacy check payloads and fall back to stored alert fields.
@@ -192,7 +186,6 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
       productImage:
         productImages[alert.productId] ||
         productImages[`gid://shopify/Product/${alert.productId}`] ||
-        alertDetails?.fallbackImage ||
         null,
     };
   });
@@ -407,7 +400,7 @@ export default function AlertsPage() {
 
       const sortBy = overrides?.sortBy ?? filters.sortBy;
       const sortOrder = overrides?.sortOrder ?? filters.sortOrder;
-      if (sortBy && sortBy !== "created") params.set("sortBy", sortBy);
+      if (sortBy && sortBy !== "priority") params.set("sortBy", sortBy);
       if (sortOrder && sortOrder !== "desc") params.set("sortOrder", sortOrder);
       const p = overrides?.page ?? 1;
       if (p > 1) params.set("page", p.toString());
@@ -470,19 +463,21 @@ export default function AlertsPage() {
     }
   }, [fetcher.data, shopify, t]);
 
+  const nextAlert = alerts.find((alert: any) => alert.status === "active");
+
   return (
     <s-page size="large" className="page-shell" suppressHydrationWarning>
       <s-heading slot="title" size="large" suppressHydrationWarning>
         {t("alerts.title")}
       </s-heading>
-      {stats.active > 0 && alerts.length > 0 ? (
+      {stats.active > 0 && nextAlert ? (
         <s-button
           slot="primary-action"
           variant="primary"
-          commandFor={`alert-detail-${(alerts.find((a: any) => a.status === "active") || alerts[0]).id}`}
+          commandFor={`alert-detail-${nextAlert.id}`}
           suppressHydrationWarning
         >
-          {t("workspace.compare")}
+          {t("workspace.reviewNext", { title: nextAlert.productTitle })}
         </s-button>
       ) : (
         <s-button
@@ -517,7 +512,7 @@ export default function AlertsPage() {
             tone={stats.criticalActive > 0 ? "critical" : "warning"}
             heading={
               stats.criticalActive > 0
-                ? t("alerts.admin.criticalBannerTitle", {
+                ? t("dashboard.admin.status.reviewNeeded.criticalTitle", {
                     count: stats.criticalActive,
                   })
                 : t("alerts.admin.warningBannerTitle", { count: stats.active })
@@ -528,15 +523,8 @@ export default function AlertsPage() {
                 ? t("workspace.reviewPrompt")
                 : t("alerts.admin.warningBannerDescription")}
             </s-text>
-            {alerts.length > 0 && (
-              <div style={{ marginTop: "var(--s-space-200)" }}>
-                <s-button
-                  variant="primary"
-                  commandFor={`alert-detail-${(alerts.find((a: any) => a.status === "active") || alerts[0]).id}`}
-                >
-                  {t("workspace.compare")}
-                </s-button>
-              </div>
+            {filters.sortBy === "priority" && (
+              <p>{t("workspace.priorityHelp")}</p>
             )}
           </s-banner>
         )}

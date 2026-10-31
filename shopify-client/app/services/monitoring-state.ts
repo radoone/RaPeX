@@ -28,6 +28,7 @@ export function monitoringState(
     ["IN_PROGRESS", "queued", "processing", "retrying"].includes(status || "")
   )
     return "processing";
+  if (lastSuccess === null) return "unknown";
   const completedAt = lastSuccess ? Date.parse(lastSuccess) : NaN;
   if (Number.isFinite(completedAt) && now - completedAt > 48 * 60 * 60_000)
     return "delayed";

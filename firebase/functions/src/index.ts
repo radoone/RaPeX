@@ -34,14 +34,7 @@ import {
   handleMerchantCatalogAuditTask,
   handleStartMerchantCatalogAuditRequest,
 } from "./merchant-catalog-audit.js";
-
-function requireOperationsKey(req: { get(name: string): string | undefined }, res: { status(code: number): { json(payload: unknown): void } }): boolean {
-  const expected = (process.env.SAFETY_GATE_API_KEY || "").trim();
-  const provided = (req.get("x-api-key") || "").trim();
-  if (expected && provided === expected) return true;
-  res.status(expected ? 401 : 503).json({ error: expected ? "Unauthorized" : "Operations key is not configured" });
-  return false;
-}
+import { requireOperationsKey } from "./api-auth.js";
 
 // --- Scheduled Function ---
 export const dailyRapexDeltaLoader = onSchedule(
@@ -74,7 +67,7 @@ export const manualSafetyGateWeeklyLoader = onRequest(
     secrets: ["GOOGLE_API_KEY", "SAFETY_GATE_API_KEY"],
   },
   async (req, res) => {
-    if (!requireOperationsKey(req, res)) return;
+    if (!requireOperationsKey(req, res, { allowAdminKey: true })) return;
     try {
       const year = req.query.year ? Number.parseInt(String(req.query.year), 10) : undefined;
       const weeks = req.query.weeks
@@ -111,10 +104,11 @@ export const manualRapexLoader = onRequest(
   {
     region: "europe-west1",
     memory: "256MiB",
+    maxInstances: 1,
     secrets: ["GOOGLE_API_KEY", "SAFETY_GATE_API_KEY"],
   },
   async (req, res) => {
-    if (!requireOperationsKey(req, res)) return;
+    if (!requireOperationsKey(req, res, { allowAdminKey: true })) return;
     try {
       logger.info("Manual Safety Gate loader triggered via HTTP", { method: req.method, url: req.url });
 
@@ -141,11 +135,12 @@ export const backfillRecentRapexEmbeddings = onRequest(
   {
     region: "europe-west1",
     memory: "1GiB",
+    maxInstances: 1,
     timeoutSeconds: 540,
     secrets: ["GOOGLE_API_KEY", "SAFETY_GATE_API_KEY"],
   },
   async (req, res) => {
-    if (!requireOperationsKey(req, res)) return;
+    if (!requireOperationsKey(req, res, { allowAdminKey: true })) return;
     try {
       const days = Number.parseInt(String(req.query.days || ""), 10);
       const limit = Number.parseInt(String(req.query.limit || ""), 10);
@@ -185,11 +180,12 @@ export const backfillHistoricalRapexAlerts = onRequest(
   {
     region: "europe-west1",
     memory: "1GiB",
+    maxInstances: 1,
     timeoutSeconds: 540,
     secrets: ["GOOGLE_API_KEY", "SAFETY_GATE_API_KEY"],
   },
   async (req, res) => {
-    if (!requireOperationsKey(req, res)) return;
+    if (!requireOperationsKey(req, res, { allowAdminKey: true })) return;
     try {
       const year = req.query.year ? Number.parseInt(String(req.query.year), 10) : undefined;
       const fromYear = req.query.fromYear ? Number.parseInt(String(req.query.fromYear), 10) : undefined;
@@ -232,6 +228,7 @@ export const upsertMerchantProductAPI = onRequest(
   {
     region: "europe-west1",
     memory: "512MiB",
+    maxInstances: 10,
     secrets: ["GOOGLE_API_KEY", "SAFETY_GATE_API_KEY"],
   },
   handleUpsertMerchantProductRequest,
@@ -241,6 +238,7 @@ export const runMerchantDeltaMonitoringAPI = onRequest(
   {
     region: "europe-west1",
     memory: "1GiB",
+    maxInstances: 5,
     timeoutSeconds: 540,
     secrets: ["GOOGLE_API_KEY", "SAFETY_GATE_API_KEY"],
   },
@@ -251,6 +249,7 @@ export const startMerchantCatalogAuditAPI = onRequest(
   {
     region: "europe-west1",
     memory: "256MiB",
+    maxInstances: 5,
     timeoutSeconds: 60,
     secrets: ["SAFETY_GATE_API_KEY"],
   },
@@ -261,6 +260,7 @@ export const startShopifyProductChangeAPI = onRequest(
   {
     region: "europe-west1",
     memory: "256MiB",
+    maxInstances: 20,
     timeoutSeconds: 60,
     secrets: ["SAFETY_GATE_API_KEY"],
   },
@@ -302,7 +302,7 @@ export const merchantCatalogAuditTask = onTaskDispatched(
       maxBackoffSeconds: 600,
       maxDoublings: 4,
     },
-    secrets: ["GOOGLE_API_KEY"],
+    secrets: ["GOOGLE_API_KEY", "SAFETY_GATE_API_KEY"],
   },
   async (request) => {
     await handleMerchantCatalogAuditTask(request.data, request.context.retryCount);
@@ -375,6 +375,7 @@ export const weeklyClearSafetyGateSummary = onSchedule(
 export const brevoEmailWebhook = onRequest(
   {
     region: "europe-west1",
+    maxInstances: 10,
     secrets: ["BREVO_WEBHOOK_SECRET"],
   },
   handleBrevoWebhook,
@@ -385,6 +386,7 @@ export const checkProductSafetyAPI = onRequest(
   {
     region: "europe-west1",
     memory: "512MiB",
+    maxInstances: 15,
     timeoutSeconds: 240, // Allow both bounded multimodal matcher batches to complete
     invoker: "public", // Allow unauthenticated access at platform level; API key enforced in code
     secrets: ["GOOGLE_API_KEY", "SAFETY_GATE_API_KEY"],
@@ -396,6 +398,7 @@ export const scanPublicShopifyStoreAPI = onRequest(
   {
     region: "europe-west1",
     memory: "1GiB",
+    maxInstances: 3,
     timeoutSeconds: 540,
     secrets: ["GOOGLE_API_KEY", "SAFETY_GATE_API_KEY"],
   },

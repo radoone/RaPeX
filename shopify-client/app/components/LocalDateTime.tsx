@@ -29,5 +29,5 @@ export function LocalDateTime({
       ? format(date)
       : date.toLocaleString(locale?.split(/[-_]/)[0] === "en" ? "en-GB" : locale)
     : iso.replace("T", " ").replace(/\.\d{3}Z$/, " UTC");
-  return <time dateTime={iso}>{render ? render(text) : text}</time>;
+  return <time dateTime={iso} title={hydrated ? date.toLocaleString(locale) : iso}>{render ? render(text) : text}</time>;
 }

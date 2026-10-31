@@ -1,5 +1,11 @@
 # Implementation status — 1 October 2026
 
+## Data retention and marketing site update — 3 October 2026
+
+- Firestore TTL is active for free scan requests (30 days), rate-limit records (2 days), public scan leads and cached product vectors (90 days after latest scan), merchant check history (90 days), and AI match cache (30 days). TTL deletion is asynchronous and may happen after the stated expiry time. A one-time metadata backfill set a 90-day expiry on all 21 existing lead documents and 29,493 cached product documents; it changed no product or report content.
+- The public scan worker writes the 90-day expiry onto lead and product-vector records. Shop alerts, decisions, activity, settings, and Shopify sessions are removed by the Shopify uninstall / `shop/redact` purge.
+- The bilingual marketing site now includes a public privacy and retention page linked from the home/about footers and sitemap, deployed to Firebase Hosting and checked live in Slovak and English. The public scanner and free-scan worker were redeployed to refresh product-vector expiries on each scan. The scan report's separate recipient email and the public store contact email used in internal lead management are described on the page. Legal operator postal details are not yet included.
+
 Earlier product/reliability changes are committed and pushed to `origin/main`. Firebase monitoring and catalog-audit workers are active in `rapex-99a2c`. The stable Shopify Cloud Run service is `safety-gate-shopify-00006-ptw` at `https://safety-gate-shopify-29849753697.europe-west1.run.app`; its root health request returned HTTP 200. On 1 October 2026, the product-change ingress and worker were redeployed with durable product-delete cleanup, and the Shopify server was redeployed with a `products/delete` webhook route. Email work remains outside the active implementation.
 
 ## Implemented and deployed

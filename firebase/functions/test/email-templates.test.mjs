@@ -1,9 +1,29 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { renderAlertEmail, renderWeeklyEmail, renderVerificationEmail, renderScanReportEmail } from "../lib/email-templates.js";
+import { EMAIL_LANGUAGES, emailText } from "../lib/email-localization.js";
 
 const app = "https://admin.shopify.com/store/example/apps/zerorecall/app";
 const details = { productTitle: 'Toy <img src=x onerror="alert(1)">', riskLevel: "High", overallSimilarity: null, safetyGateProduct: "Toy & parts", reason: "Compare <model> & batch", safetyGateImage: "javascript:alert(1)" };
+
+test("all 24 languages give cautious review guidance instead of unverified model claims", () => {
+  assert.equal(EMAIL_LANGUAGES.length, 24);
+  for (const language of EMAIL_LANGUAGES) {
+    const reason = "UNVERIFIED_MODEL_CLAIM";
+    const alert = renderAlertEmail(language, { ...details, reason }, "example.myshopify.com", app, app);
+    const weekly = renderWeeklyEmail(language, "example.myshopify.com", new Date("2026-10-12"), new Date("2026-10-19"), {
+      products: 100, checks: 24, safetyGateRecords: 6, newFindings: 1, openFindings: 1,
+      monitoringComplete: true, lastSuccessfulRun: null,
+      findings: [{ ...details, reason, url: app, reviewState: "needs_review", isNew: true }],
+    }, app, app);
+    for (const message of [alert, weekly]) {
+      assert.doesNotMatch(message.htmlContent + message.textContent, new RegExp(reason));
+      assert.ok(message.textContent.includes(emailText(language, "compare_the_model_brand_and_batch_with_the_official_record_sav")));
+    }
+    assert.match(weekly.textContent, /100/);
+    assert.match(weekly.textContent, /24/);
+  }
+});
 
 test("alert renders untrusted fields as text and omits unsafe photos and missing scores", () => {
   const content = renderAlertEmail("en", details, "example.myshopify.com", `${app}/alerts?open=a&source=email`, `${app}/settings`);

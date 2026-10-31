@@ -14,8 +14,8 @@ export function publicImageAddress(address: string): boolean {
 }
 export function validatePublicImageUrl(raw: string): URL {
   const url = new URL(raw);
-  const hostname = url.hostname.replace(/^\[|\]$/g, "");
-  if (url.protocol !== "https:" || url.username || url.password || (url.port && url.port !== "443") || hostname === "localhost" || (isIP(hostname) && !publicImageAddress(hostname))) throw new Error("Image URL must use public HTTPS");
+  const hostname = url.hostname.replace(/^\[|\]$/g, "").toLowerCase();
+  if (url.protocol !== "https:" || url.username || url.password || (url.port && url.port !== "443") || hostname === "localhost" || hostname.endsWith(".localhost") || hostname.endsWith(".internal") || (isIP(hostname) && !publicImageAddress(hostname))) throw new Error("Image URL must use public HTTPS");
   return url;
 }
 const publicLookup: LookupFunction = (hostname, options, callback) => {
@@ -25,13 +25,13 @@ const publicLookup: LookupFunction = (hostname, options, callback) => {
     else callback(null, addresses[0].address, addresses[0].family);
   }).catch((error) => callback(error, "", 4));
 };
-const agent = new Agent({ lookup: publicLookup });
+export const publicHttpsAgent = new Agent({ lookup: publicLookup });
 /** Enforce the byte cap during transfer and revalidate each redirect and DNS resolution. */
 export async function downloadPublicImage(raw: string, timeout: number) {
   const url = validatePublicImageUrl(raw);
   return axios.get(url.href, {
     responseType: "arraybuffer", timeout, maxContentLength: 5 * 1024 * 1024,
-    maxBodyLength: 5 * 1024 * 1024, maxRedirects: 3, httpsAgent: agent, proxy: false,
+    maxBodyLength: 5 * 1024 * 1024, maxRedirects: 3, httpsAgent: publicHttpsAgent, proxy: false,
     beforeRedirect: (options) => { validatePublicImageUrl(`${options.protocol}//${options.hostname}${options.port ? `:${options.port}` : ""}${options.path || "/"}`); },
   });
 }

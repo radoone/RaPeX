@@ -12,6 +12,8 @@ vi.mock("../app/shopify.server", () => ({
 vi.mock("../app/services/billing.server", () => ({
   getBillingStatus: vi.fn(),
 }));
+vi.mock("../app/firestore.server", () => ({ firestore: {} }));
+vi.mock("../app/services/monitoring-runs.server", () => ({ getRecentMonitoringRuns: vi.fn() }));
 import { action } from "../app/routes/app.settings";
 function request(email: string) {
   return new Request("https://example.com/app/settings", {

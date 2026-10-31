@@ -1,8 +1,51 @@
+import { createCipheriv, createDecipheriv, createHash, randomBytes } from "node:crypto";
 import { Session } from "@shopify/shopify-api";
 import type { SessionStorage } from "@shopify/shopify-app-session-storage";
 import type { Firestore } from "firebase-admin/firestore";
 
 const SESSION_COLLECTION = "shopify_sessions";
+const ENCRYPTED_TOKEN_PREFIX = "enc:v1:";
+
+function deriveSessionEncryptionKey(): Buffer | null {
+  const rawSecret = (
+    process.env.SHOPIFY_SESSION_ENCRYPTION_KEY ||
+    process.env.SAFETY_GATE_API_KEY ||
+    process.env.SHOPIFY_API_SECRET ||
+    ""
+  ).trim();
+  if (!rawSecret) return null;
+  return createHash("sha256").update(`zerorecall-session-v1:${rawSecret}`).digest();
+}
+
+export function encryptSessionAccessToken(token: unknown): unknown {
+  if (typeof token !== "string" || !token || token.startsWith(ENCRYPTED_TOKEN_PREFIX)) {
+    return token;
+  }
+  const key = deriveSessionEncryptionKey();
+  if (!key) return token;
+  const iv = randomBytes(12);
+  const cipher = createCipheriv("aes-256-gcm", key, iv);
+  const encrypted = Buffer.concat([cipher.update(token, "utf8"), cipher.final()]);
+  const authTag = cipher.getAuthTag();
+  return `${ENCRYPTED_TOKEN_PREFIX}${iv.toString("base64url")}.${authTag.toString("base64url")}.${encrypted.toString("base64url")}`;
+}
+
+export function decryptSessionAccessToken(stored: unknown): string | undefined {
+  if (typeof stored !== "string" || !stored) return undefined;
+  if (!stored.startsWith(ENCRYPTED_TOKEN_PREFIX)) return stored;
+  const key = deriveSessionEncryptionKey();
+  if (!key) throw new Error("Cannot decrypt Shopify session token: encryption key is not configured");
+  const parts = stored.slice(ENCRYPTED_TOKEN_PREFIX.length).split(".");
+  if (parts.length !== 3) throw new Error("Invalid encrypted Shopify session token format");
+  const [ivB64, tagB64, ciphertextB64] = parts;
+  const decipher = createDecipheriv("aes-256-gcm", key, Buffer.from(ivB64, "base64url"));
+  decipher.setAuthTag(Buffer.from(tagB64, "base64url"));
+  const decrypted = Buffer.concat([
+    decipher.update(Buffer.from(ciphertextB64, "base64url")),
+    decipher.final(),
+  ]);
+  return decrypted.toString("utf8");
+}
 
 function asDate(value: unknown): Date | undefined {
   if (value instanceof Date) return value;
@@ -13,8 +56,10 @@ function asDate(value: unknown): Date | undefined {
 }
 
 function toShopifySession(data: Record<string, unknown>): Session {
+  const accessToken = decryptSessionAccessToken(data.accessToken);
   return new Session({
     ...data,
+    ...(accessToken !== undefined ? { accessToken } : {}),
     id: String(data.id || ""),
     shop: String(data.shop || ""),
     state: String(data.state || ""),
@@ -33,7 +78,12 @@ export class FirestoreSessionStorage implements SessionStorage {
   }
 
   async storeSession(session: Session): Promise<boolean> {
-    await this.sessionRef(session.id).set({ ...session.toObject(), updatedAt: new Date() });
+    const serialized = session.toObject();
+    await this.sessionRef(session.id).set({
+      ...serialized,
+      ...(serialized.accessToken ? { accessToken: encryptSessionAccessToken(serialized.accessToken) } : {}),
+      updatedAt: new Date(),
+    });
     return true;
   }
 

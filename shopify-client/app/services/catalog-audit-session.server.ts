@@ -1,5 +1,6 @@
 import { sessionStorage } from "../shopify.server";
 import { firestore } from "../firestore.server";
+import { encryptSessionAccessToken } from "../firestore-session-storage.server";
 
 const SESSION_COLLECTION = "shopify_sessions";
 
@@ -8,8 +9,10 @@ export async function mirrorOfflineSessionForCatalogAudit(shop: string): Promise
   const sessions = await sessionStorage.findSessionsByShop(shop);
   const offlineSession = sessions.find((session) => !session.isOnline && Boolean(session.accessToken));
   if (!offlineSession) throw new Error("Offline Shopify session is not available for catalog audit");
+  const serialized = offlineSession.toObject();
   await firestore.collection(SESSION_COLLECTION).doc(encodeURIComponent(offlineSession.id)).set({
-    ...offlineSession.toObject(),
+    ...serialized,
+    ...(serialized.accessToken ? { accessToken: encryptSessionAccessToken(serialized.accessToken) } : {}),
     updatedAt: new Date(),
   });
 }

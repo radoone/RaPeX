@@ -39,4 +39,17 @@ describe("authenticated audit export", () => {
     await expect(loader({ request: new Request("https://example.com/app/audit-report.csv"), url: new URL("https://example.com/app/audit-report.csv") } as never)).rejects.toMatchObject({ status: 401 });
     expect(findMany).not.toHaveBeenCalled();
   });
+  it("does not export unverified matcher claims from existing findings", async () => {
+    authenticateAdmin.mockResolvedValue({ session: { shop: "example.myshopify.com" } });
+    findMany.mockResolvedValue([{
+      id: "finding-2", productTitle: "Doll", productId: "2", status: "active",
+      createdAt: new Date("2026-10-15T08:00:00Z"),
+      checkResult: JSON.stringify({ warnings: [{ reason: "Both products contain toxic chemicals", alertDetails: { fields: { danger: "Official alert describes a chemical risk" } } }] }),
+    }]);
+    const response = await loader({ request: new Request("https://example.com/app/audit-report.csv"), url: new URL("https://example.com/app/audit-report.csv") } as never);
+    const content = await response.text();
+    expect(content).not.toContain("Both products contain toxic chemicals");
+    expect(content).toContain("Possible match. Compare the product identifiers");
+    expect(content).toContain("Official alert describes a chemical risk");
+  });
 });

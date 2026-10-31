@@ -1,6 +1,9 @@
+import axios from "axios";
 import * as logger from "firebase-functions/logger";
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import { db } from "./firebase-admin.js";
+import { isAuthorizedApiKey } from "./api-auth.js";
+import { publicHttpsAgent, validatePublicImageUrl } from "./public-image.js";
 import { checkProductAgainstAlerts } from "./safety-gate-checker.js";
 import type { ProductInput, SafetyCheckResult } from "./safety-gate-checker.schemas.js";
 import { buildEmbeddingText, embedTexts } from "./safety-gate-embeddings.js";
@@ -22,18 +25,8 @@ type ResponseShape = {
 };
 
 const PUBLIC_SCAN_RETENTION_MS = 90 * 86400_000;
-
-const CORS_HEADERS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, X-API-Key, Authorization",
-} as const;
-
-function applyCorsHeaders(response: ResponseShape): void {
-  for (const [name, value] of Object.entries(CORS_HEADERS)) {
-    response.set(name, value);
-  }
-}
+const MAX_CONTACT_HTML_BYTES = 1024 * 1024; // 1 MB max per contact page
+const MAX_CATALOG_JSON_BYTES = 10 * 1024 * 1024; // 10 MB max per catalog page
 
 function coerceString(value: unknown): string | undefined {
   if (Array.isArray(value)) return coerceString(value[0]);
@@ -42,22 +35,27 @@ function coerceString(value: unknown): string | undefined {
   return trimmed ? trimmed : undefined;
 }
 
-function extractApiKey(request: RequestShape): string {
-  const headerKey = coerceString(request.headers["x-api-key"]);
-  if (headerKey) return headerKey;
-
-  const authHeader = coerceString(request.headers["authorization"]);
-  if (authHeader && authHeader.toLowerCase().startsWith("bearer ")) {
-    return authHeader.slice(7).trim();
-  }
-  return "";
-}
-
-function normalizeDomain(input: string): string {
+export function normalizePublicStoreDomain(input: string): string | null {
   let cleaned = input.trim().toLowerCase();
   cleaned = cleaned.replace(/^https?:\/\//i, "");
   cleaned = cleaned.replace(/\/.*$/, "");
-  return cleaned;
+  if (
+    !cleaned ||
+    cleaned.length > 253 ||
+    cleaned === "localhost" ||
+    cleaned.endsWith(".localhost") ||
+    cleaned.endsWith(".internal") ||
+    cleaned.endsWith(".local") ||
+    !/^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)+$/.test(cleaned)
+  ) {
+    return null;
+  }
+  try {
+    validatePublicImageUrl(`https://${cleaned}/`);
+    return cleaned;
+  } catch {
+    return null;
+  }
 }
 
 const COMMON_CONTACT_PATHS = [
@@ -81,15 +79,27 @@ async function extractContactEmail(domain: string): Promise<string | null> {
 
   for (const path of COMMON_CONTACT_PATHS) {
     try {
-      const res = await fetch(`${baseUrl}${path}`, {
+      const targetUrl = validatePublicImageUrl(`${baseUrl}${path}`);
+      const res = await axios.get<string>(targetUrl.href, {
+        responseType: "text",
+        timeout: 8000,
+        maxContentLength: MAX_CONTACT_HTML_BYTES,
+        maxBodyLength: MAX_CONTACT_HTML_BYTES,
+        maxRedirects: 3,
+        httpsAgent: publicHttpsAgent,
+        proxy: false,
+        beforeRedirect: (options) => {
+          validatePublicImageUrl(`${options.protocol}//${options.hostname}${options.port ? `:${options.port}` : ""}${options.path || "/"}`);
+        },
         headers: {
           "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
           "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         },
+        validateStatus: (status) => status >= 200 && status < 300,
       });
 
-      if (!res.ok) continue;
-      const html = await res.text();
+      const html = typeof res.data === "string" ? res.data : "";
+      if (!html) continue;
 
       let match: RegExpExecArray | null;
       while ((match = MAILTO_REGEX.exec(html)) !== null) {
@@ -312,34 +322,44 @@ async function fetchStoreCatalog(domain: string, maxProducts = 250): Promise<any
   const perPage = Math.min(maxProducts, 250);
 
   while (products.length < maxProducts) {
-    const fetchUrl = `https://${domain}/products.json?limit=${perPage}&page=${page}`;
+    const fetchUrl = validatePublicImageUrl(`https://${domain}/products.json?limit=${perPage}&page=${page}`);
     let pageProducts: any[] | null = null;
     for (let attempt = 1; attempt <= 4; attempt++) {
       try {
-      const res = await fetch(fetchUrl, {
-        headers: {
-          "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
-          "Accept": "application/json",
-          "Accept-Language": "sk,cs;q=0.9,en;q=0.8",
-        },
-        signal: globalThis.AbortSignal.timeout(15000),
-      });
+        const res = await axios.get<{ products?: any[] }>(fetchUrl.href, {
+          responseType: "json",
+          timeout: 15000,
+          maxContentLength: MAX_CATALOG_JSON_BYTES,
+          maxBodyLength: MAX_CATALOG_JSON_BYTES,
+          maxRedirects: 3,
+          httpsAgent: publicHttpsAgent,
+          proxy: false,
+          beforeRedirect: (options) => {
+            validatePublicImageUrl(`${options.protocol}//${options.hostname}${options.port ? `:${options.port}` : ""}${options.path || "/"}`);
+          },
+          headers: {
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+            "Accept": "application/json",
+            "Accept-Language": "sk,cs;q=0.9,en;q=0.8",
+          },
+          validateStatus: () => true,
+        });
 
-      if (res.status === 429) {
+        if (res.status === 429) {
           if (attempt < 4) {
             logger.warn(`Rate limit 429 on page ${page} for ${domain}; retry ${attempt}/3`);
             await sleep(1000 * attempt);
             continue;
           }
           throw new Error(`Shopify catalog rate limit persisted on page ${page}`);
-      }
+        }
 
-      if (!res.ok) {
+        if (res.status < 200 || res.status >= 300) {
           throw new Error(`Shopify catalog returned ${res.status} on page ${page}`);
-      }
+        }
 
-      const data = await res.json() as { products?: any[] };
-        if (!Array.isArray(data.products)) {
+        const data = res.data;
+        if (!data || !Array.isArray(data.products)) {
           throw new Error(`Shopify catalog response was invalid on page ${page}`);
         }
         pageProducts = data.products;
@@ -663,17 +683,12 @@ export async function handleScanPublicShopifyStoreRequest(
   request: RequestShape,
   response: ResponseShape,
 ): Promise<void> {
-  applyCorsHeaders(response);
-
   if (request.method === "OPTIONS") {
     response.status(204).send("");
     return;
   }
 
-  const expectedKey = (process.env.SAFETY_GATE_API_KEY ?? "").trim();
-  const providedKey = extractApiKey(request);
-
-  if (!expectedKey || !providedKey || providedKey !== expectedKey) {
+  if (!isAuthorizedApiKey(request, "SAFETY_GATE_ADMIN_API_KEY")) {
     response.status(401).json({ error: "Unauthorized. Valid API key required." });
     return;
   }
@@ -777,7 +792,11 @@ async function enrichLeadMatches(matches: any[], leadDomain?: string): Promise<a
     return;
   }
 
-  const domain = normalizeDomain(rawDomain);
+  const domain = normalizePublicStoreDomain(rawDomain);
+  if (!domain) {
+    response.status(400).json({ error: "Invalid or non-public store domain." });
+    return;
+  }
   logger.info(`Starting batch vectorized public store scan for ${domain} (maxProducts=${maxProducts})...`);
 
   try {

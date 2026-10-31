@@ -29,22 +29,31 @@ function describeAlertSource(alert: NormalizedAlert): string {
     : "Source: recent time-filtered scan";
 }
 
+function sanitizePromptField(value: unknown, maxLength: number): string {
+  if (value === null || value === undefined) return "";
+  return String(value)
+    .replace(/<\/?(?:merchant_product|candidate_alerts|system|instruction)[^>]*>/gi, "")
+    .replace(/\r\n/g, "\n")
+    .trim()
+    .slice(0, maxLength);
+}
+
 export function buildComparisonPrompt(product: ProductInput, alerts: NormalizedAlert[]): string {
   const alertsText = alerts
     .map((alert) => {
       const f = alert.fields || {};
-      const caseNumber = f.caseNumber || f.alert_number || "Not specified";
-      const prodName = f.name || f.product || f.product_name || f.product_description || "Not specified";
-      const category = f.category || f.product_category || "Not specified";
-      const brand = f.brand || f.product_brand || "Unknown";
-      const model = f.type_numberOfModel || f.product_model || f.product_model_type || "Not specified";
-      const danger = f.danger || f.alert_description || f.risk_legal_provision || "Not specified";
-      const measures = f.measures || f.technical_defect || f.measures_country || "Not specified";
-      const riskType = f.riskType || f.alert_type || "Not specified";
-      const level = f.level || f.alert_level || f.risk_level || "Not specified";
-      const country = f.notifyingCountry || f.notifying_country || f.alert_country || "Not specified";
+      const caseNumber = sanitizePromptField(f.caseNumber || f.alert_number || "Not specified", 150);
+      const prodName = sanitizePromptField(f.name || f.product || f.product_name || f.product_description || "Not specified", 400);
+      const category = sanitizePromptField(f.category || f.product_category || "Not specified", 200);
+      const brand = sanitizePromptField(f.brand || f.product_brand || "Unknown", 200);
+      const model = sanitizePromptField(f.type_numberOfModel || f.product_model || f.product_model_type || "Not specified", 250);
+      const danger = sanitizePromptField(f.danger || f.alert_description || f.risk_legal_provision || "Not specified", 1000);
+      const measures = sanitizePromptField(f.measures || f.technical_defect || f.measures_country || "Not specified", 600);
+      const riskType = sanitizePromptField(f.riskType || f.alert_type || "Not specified", 200);
+      const level = sanitizePromptField(f.level || f.alert_level || f.risk_level || "Not specified", 100);
+      const country = sanitizePromptField(f.notifyingCountry || f.notifying_country || f.alert_country || "Not specified", 100);
 
-      return `Alert ID: ${alert.id}
+      return `Alert ID: ${sanitizePromptField(alert.id, 150)}
 Case Number: ${caseNumber}
 Product: ${prodName}
 Category: ${category}
@@ -59,15 +68,23 @@ ${describeAlertSource(alert)}`;
     })
     .join("\n\n");
 
-  return `NEW PRODUCT TO CHECK:
-Name: ${product.name}
-Category: ${product.category}
-Description: ${product.description}
-Brand: ${product.brand || "Not specified"}
-Model: ${product.model || "Not specified"}
+  const safeName = sanitizePromptField(product.name, 300);
+  const safeCategory = sanitizePromptField(product.category, 150);
+  const safeDescription = sanitizePromptField(product.description, 2500);
+  const safeBrand = sanitizePromptField(product.brand || "Not specified", 200);
+  const safeModel = sanitizePromptField(product.model || "Not specified", 200);
 
-CANDIDATE SAFETY GATE ALERTS:
-${alertsText}`;
+  return `<merchant_product>
+Name: ${safeName}
+Category: ${safeCategory}
+Description: ${safeDescription}
+Brand: ${safeBrand}
+Model: ${safeModel}
+</merchant_product>
+
+<candidate_alerts>
+${alertsText}
+</candidate_alerts>`;
 }
 
 function createDefaultAnalysis(candidateAlertsConsidered: number, productImagesProvided = 0): SafetyCheckAnalysis {

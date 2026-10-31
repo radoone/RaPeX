@@ -18,6 +18,9 @@ import { MonitoringStatus } from "../components/MonitoringStatus";
 import { exclusionPreview } from "../services/exclusion-preview";
 import { getBillingStatus } from "../services/billing.server";
 import { EU_LANGUAGES } from "../locales/languages";
+import { firestore } from "../firestore.server";
+import { getRecentMonitoringRuns } from "../services/monitoring-runs.server";
+import { toIsoString } from "../services/monitoring-runs";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const SUPPORTED_LANGUAGES = new Set(
@@ -42,6 +45,16 @@ async function getShopifyContactEmail(admin: any): Promise<string | null> {
 export const loader = async ({ request, url }: LoaderFunctionArgs) => {
   const { admin, billing, session } = await authenticate.admin(request);
   const billingStatus = await getBillingStatus(billing, session.shop, admin);
+  const [monitorSnapshot, runs] = await Promise.all([
+    firestore.collection("merchants").doc(encodeURIComponent(session.shop)).get().catch(() => null),
+    getRecentMonitoringRuns(session.shop).catch(() => []),
+  ]);
+  const monitor = monitorSnapshot?.exists ? monitorSnapshot.data() : null;
+  const lastMonitoringAt = runs.find((run) => run.status === "completed")?.updatedAt ||
+    (monitor?.lastMonitorStatus === "SUCCESS" ? toIsoString(monitor.lastMonitorRunEnd) : null);
+  const monitoringStatus = runs[0]?.status === "completed"
+    ? monitor?.lastMonitorStatus || null
+    : runs[0]?.status || monitor?.lastMonitorStatus || null;
   let settings = await db.safetySetting.findUnique({
     where: { shop: session.shop },
   });
@@ -146,6 +159,8 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
     },
     envDefault: fallbackDefault,
     billingStatus,
+    lastMonitoringAt,
+    monitoringStatus,
     shopifyContactEmail,
   });
 };
@@ -241,7 +256,7 @@ export function ErrorBoundary() {
 }
 
 export default function Settings() {
-  const { settings, billingStatus, catalog, saved } =
+  const { settings, billingStatus, catalog, saved, lastMonitoringAt, monitoringStatus } =
     useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
@@ -289,7 +304,7 @@ export default function Settings() {
     <s-page size="large" className="page-shell">
       <s-heading slot="title">{t("settings.title")}</s-heading>
       <div className="admin-stack">
-        <MonitoringStatus billing={billingStatus} />
+        <MonitoringStatus billing={billingStatus} status={monitoringStatus} lastSuccess={lastMonitoringAt} />
         {saved && !dirty && <p role="status">{t("workspace.saved")}</p>}
         {actionData && "error" in actionData && (
           <s-banner

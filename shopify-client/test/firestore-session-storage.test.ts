@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import type { Session } from "@shopify/shopify-api";
-import { FirestoreSessionStorage } from "../app/firestore-session-storage.server";
+import { FirestoreSessionStorage, encryptSessionAccessToken, decryptSessionAccessToken } from "../app/firestore-session-storage.server";
 
 vi.mock("@shopify/shopify-api", () => ({
   Session: class MockSession {
@@ -72,5 +72,20 @@ describe("FirestoreSessionStorage", () => {
     expect((await storage.findSessionsByShop(session.shop))).toHaveLength(1);
     await expect(storage.deleteSessions([session.id])).resolves.toBe(true);
     await expect(storage.loadSession(session.id)).resolves.toBeUndefined();
+  });
+
+  it("encrypts Shopify accessToken at rest when an encryption secret is configured", async () => {
+    const oldSecret = process.env.SHOPIFY_API_SECRET;
+    process.env.SHOPIFY_API_SECRET = "test-session-encryption-secret-key";
+    try {
+      const encrypted = encryptSessionAccessToken("shpat_secret_12345");
+      expect(typeof encrypted).toBe("string");
+      expect(encrypted).not.toBe("shpat_secret_12345");
+      expect(String(encrypted).startsWith("enc:v1:")).toBe(true);
+      expect(decryptSessionAccessToken(encrypted)).toBe("shpat_secret_12345");
+    } finally {
+      if (oldSecret === undefined) delete process.env.SHOPIFY_API_SECRET;
+      else process.env.SHOPIFY_API_SECRET = oldSecret;
+    }
   });
 });

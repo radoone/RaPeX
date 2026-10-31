@@ -1,13 +1,14 @@
 import * as logger from "firebase-functions/logger";
+import { isAuthorizedApiKey } from "./api-auth.js";
 import { PRODUCT_SAFETY_API_USAGE } from "./safety-gate-config.js";
 import { checkProductSafety } from "./safety-gate-checker.js";
 import type { ProductCheckInput } from "./safety-gate-types.js";
 
-const CORS_HEADERS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, X-API-Key",
-} as const;
+const MAX_NAME_CHARS = 300;
+const MAX_CATEGORY_CHARS = 120;
+const MAX_DESCRIPTION_CHARS = 4000;
+const MAX_BRAND_MODEL_CHARS = 200;
+const MAX_URL_CHARS = 2048;
 
 type RequestShape = {
   method: string;
@@ -23,15 +24,9 @@ type ResponseShape = {
   send(payload: string): void;
 };
 
-function applyCorsHeaders(response: ResponseShape): void {
-  for (const [name, value] of Object.entries(CORS_HEADERS)) {
-    response.set(name, value);
-  }
-}
-
-function coerceString(value: unknown): string | undefined {
+function coerceString(value: unknown, maxLength = MAX_DESCRIPTION_CHARS): string | undefined {
   if (Array.isArray(value)) {
-    return coerceString(value[0]);
+    return coerceString(value[0], maxLength);
   }
 
   if (typeof value !== "string") {
@@ -39,45 +34,32 @@ function coerceString(value: unknown): string | undefined {
   }
 
   const trimmed = value.trim();
-  return trimmed ? trimmed : undefined;
+  return trimmed ? trimmed.slice(0, maxLength) : undefined;
 }
 
-function coerceStringArray(value: unknown): string[] | undefined {
+function coerceStringArray(value: unknown, maxItems = 10, maxLength = MAX_URL_CHARS): string[] | undefined {
   const values = Array.isArray(value) ? value : [value];
   const normalized = values
-    .map((entry) => coerceString(entry))
-    .filter((entry): entry is string => Boolean(entry));
+    .map((entry) => coerceString(entry, maxLength))
+    .filter((entry): entry is string => Boolean(entry))
+    .slice(0, maxItems);
 
   return normalized.length > 0 ? normalized : undefined;
-}
-
-function extractApiKey(request: RequestShape): string {
-  const headerKey = coerceString(request.headers["x-api-key"]);
-  if (headerKey) {
-    return headerKey;
-  }
-
-  const authHeader = coerceString(request.headers["authorization"]);
-  if (authHeader && authHeader.toLowerCase().startsWith("bearer ")) {
-    return authHeader.slice(7).trim();
-  }
-
-  return "";
 }
 
 function readProductData(request: RequestShape): Partial<ProductCheckInput> | null {
   if (request.method === "POST" && request.body) {
     return {
-      name: coerceString(request.body.name),
-      category: coerceString(request.body.category),
-      description: coerceString(request.body.description),
-      imageUrl: coerceString(request.body.imageUrl),
+      name: coerceString(request.body.name, MAX_NAME_CHARS),
+      category: coerceString(request.body.category, MAX_CATEGORY_CHARS),
+      description: coerceString(request.body.description, MAX_DESCRIPTION_CHARS),
+      imageUrl: coerceString(request.body.imageUrl, MAX_URL_CHARS),
       imageUrls: coerceStringArray(request.body.imageUrls),
-      brand: coerceString(request.body.brand),
-      model: coerceString(request.body.model),
-      shop: coerceString(request.body.shop),
-      productId: coerceString(request.body.productId),
-      sourceUpdatedAt: coerceString(request.body.sourceUpdatedAt),
+      brand: coerceString(request.body.brand, MAX_BRAND_MODEL_CHARS),
+      model: coerceString(request.body.model, MAX_BRAND_MODEL_CHARS),
+      shop: coerceString(request.body.shop, 255),
+      productId: coerceString(request.body.productId, 128),
+      sourceUpdatedAt: coerceString(request.body.sourceUpdatedAt, 64),
     };
   }
 
@@ -92,8 +74,6 @@ export async function handleCheckProductSafetyRequest(
   request: RequestShape,
   response: ResponseShape,
 ): Promise<void> {
-  applyCorsHeaders(response);
-
   if (request.method === "OPTIONS") {
     response.status(204).send("");
     return;
@@ -107,15 +87,8 @@ export async function handleCheckProductSafetyRequest(
     return;
   }
 
-  const providedKey = extractApiKey(request);
-  const expectedApiKey = (process.env.SAFETY_GATE_API_KEY ?? "").trim();
-
-  if (!providedKey || !expectedApiKey || providedKey !== expectedApiKey) {
-    logger.warn("Unauthorized API access attempt", {
-      hasApiKey: Boolean(providedKey),
-      apiKeyLength: providedKey.length,
-      expectedKeyLength: expectedApiKey.length,
-    });
+  if (!isAuthorizedApiKey(request)) {
+    logger.warn("Unauthorized API access attempt on checkProductSafetyAPI");
     response.status(401).json({
       error: "Unauthorized",
       message: "Valid API key required",

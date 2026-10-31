@@ -275,16 +275,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const processedRecentAlerts = recentAlerts.map((alert: any) => {
     let alertType = undefined;
     let riskDescription = undefined;
-    let matchReason = "";
-    let fallbackImage = null;
 
     try {
       if (alert.checkResult) {
         const checkResult = JSON.parse(alert.checkResult);
         if (checkResult.warnings && checkResult.warnings.length > 0) {
           const firstWarning = checkResult.warnings[0];
-          matchReason =
-            typeof firstWarning.reason === "string" ? firstWarning.reason : "";
           alertType =
             firstWarning.alertType ||
             firstWarning.alertDetails?.fields?.alert_type;
@@ -292,13 +288,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
             firstWarning.riskLegalProvision ||
             firstWarning.alertDetails?.fields?.risk_legal_provision;
 
-          const fields = firstWarning.alertDetails?.fields || {};
-          const pics = [
-            ...(fields.pictures || []),
-            fields.product_image,
-          ].filter(Boolean);
-          if (pics[0])
-            fallbackImage = typeof pics[0] === "string" ? pics[0] : pics[0].url;
         }
       }
     } catch (error) {
@@ -308,10 +297,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     const productImage =
       productImages[alert.productId] ||
       productImages[`gid://shopify/Product/${alert.productId}`] ||
-      fallbackImage ||
       null;
 
-    return { ...alert, alertType, riskDescription, matchReason, productImage };
+    return { ...alert, alertType, riskDescription, productImage };
   });
 
   const totalProductsCount = currentCatalogProductIds.length;
@@ -383,6 +371,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     settings: resolvedSettings,
     billingStatus,
     recentMonitoringRuns,
+    observedAt: Date.now(),
     monitorState: monitorState
       ? {
           status: monitorState.lastMonitorStatus || null,
@@ -651,6 +640,7 @@ export default function Index() {
     lastMonitoringAt,
     monitorState,
     recentMonitoringRuns,
+    observedAt,
   } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<ActionResponse>();
   const progressFetcher = useFetcher<CatalogAuditProgress>();
@@ -666,6 +656,9 @@ export default function Index() {
   const hasCompleteCoverage =
     stats.totalProducts > 0 && stats.checkedProducts >= stats.totalProducts;
   const confirmedMonitoringAt = lastMonitoringAt;
+  const latestMonitoringStatus = recentMonitoringRuns[0]?.status === "completed"
+    ? monitorState?.status
+    : recentMonitoringRuns[0]?.status || monitorState?.status;
   const coveragePercent =
     stats.totalProducts > 0
       ? Math.min(
@@ -681,7 +674,7 @@ export default function Index() {
         ? "no-action-needed"
         : !hasCompleteCoverage
           ? "coverage-incomplete"
-          : monitoringState(billingStatus, monitorState?.status) !==
+          : monitoringState(billingStatus, latestMonitoringStatus, observedAt, lastMonitoringAt) !==
                 "enabled" || !lastMonitoringAt
             ? "monitoring-problem"
             : "no-action-needed";
@@ -704,9 +697,7 @@ export default function Index() {
         stats.criticalActiveAlerts > 0
           ? t("dashboard.admin.status.reviewNeeded.criticalDescription")
           : t("dashboard.admin.status.reviewNeeded.description"),
-      actionHref: recentAlerts[0]?.id
-        ? `/app/alerts?status=active&open=${encodeURIComponent(recentAlerts[0].id)}`
-        : "/app/alerts?status=active",
+      actionHref: "/app/alerts?status=active",
       actionLabel:
         stats.activeAlerts === 1
           ? t("actions.reviewOneMatch")
@@ -1029,30 +1020,6 @@ export default function Index() {
                   </div>
                 </s-banner>
               )}
-            {!isScanning && monitorState?.status === "FAILURE" ? (
-              <s-banner
-                tone="critical"
-                heading={t("dashboard.admin.status.monitoringProblem.title")}
-              >
-                <s-text>
-                  {t("dashboard.admin.status.monitoringProblem.description")}
-                </s-text>
-                <div style={{ marginTop: "var(--s-space-200)" }}>
-                  <s-button variant="primary" href="/app/manual-check">
-                    {t("dashboard.admin.status.monitoringProblem.action")}
-                  </s-button>
-                </div>
-              </s-banner>
-            ) : null}
-            <MonitoringStatus
-              billing={billingStatus}
-              status={
-                recentMonitoringRuns[0]?.status === "completed"
-                  ? monitorState?.status
-                  : recentMonitoringRuns[0]?.status || monitorState?.status
-              }
-              lastSuccess={confirmedMonitoringAt}
-            />
             <s-banner
               tone={dashboardStatus.tone}
               heading={dashboardStatus.title}
@@ -1072,7 +1039,7 @@ export default function Index() {
                         variant="secondary"
                         onClick={() => navigate("/app/manual-check")}
                       >
-                        {t("actions.protectRemainingProducts", {
+                        {t("workspace.viewRemainingProducts", {
                           count: stats.uncheckedProducts,
                         })}
                       </s-button>
@@ -1088,6 +1055,11 @@ export default function Index() {
                 </div>
               </s-stack>
             </s-banner>
+            <MonitoringStatus
+              billing={billingStatus}
+              status={latestMonitoringStatus}
+              lastSuccess={confirmedMonitoringAt}
+            />
             <AdminCard className="admin-card">
               <div className="admin-card__header">
                 <h2 className="admin-card__title">{t("workspace.goReview")}</h2>
@@ -1124,11 +1096,7 @@ export default function Index() {
                       </div>
                       <div className="admin-alert-row__content">
                         <h3>{alert.productTitle}</h3>
-                        {alert.matchReason && (
-                          <p className="match-reason-preview">
-                            {alert.matchReason}
-                          </p>
-                        )}
+                        <p className="match-reason-preview">{t("workspace.matchNeedsVerification")}</p>
                         <div className="admin-inline-meta">
                           <AlertBadge alertType={alert.alertType} />
                           <span>
@@ -1231,9 +1199,10 @@ export default function Index() {
                             )}
                           </s-badge>
                           <span>
-                            {t("dashboard.admin.monitoringRunProgress", {
+                            {t("workspace.runScope", {
                               products: run.productsScanned,
-                              alerts: run.alertsCreated,
+                              records: run.rapexAlertsScanned,
+                              findings: run.alertsCreated,
                             })}
                           </span>
                         </div>

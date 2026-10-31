@@ -76,6 +76,7 @@ async function fetchCatalogProductsForManualCheck(
               id
               title
               handle
+              status
               vendor
               productType
               tags
@@ -234,15 +235,6 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
           first.alertDetails?.fields?.risk_level ||
           first.riskLevel ||
           null;
-        const fields = first.alertDetails?.fields || {};
-        const pics = [...(fields.pictures || []), fields.product_image].filter(
-          Boolean,
-        );
-        if (pics[0])
-          alertDetails = {
-            ...alertDetails,
-            fallbackImage: typeof pics[0] === "string" ? pics[0] : pics[0].url,
-          };
       }
     } catch {
       // Ignore malformed legacy check payloads and fall back to stored alert fields.
@@ -266,7 +258,6 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
       riskLevel: effectiveRiskLevel,
       productImage:
         (product?.featuredImage as { url?: string } | undefined)?.url ||
-        alertDetails?.fallbackImage ||
         null,
     };
 
@@ -612,6 +603,7 @@ export default function ManualCheckPage() {
   const [tabFilter, setTabFilter] = useState<
     "all" | "unprotected" | "needs_review" | "safe"
   >("all");
+  const [shopifyStatusFilter, setShopifyStatusFilter] = useState("all");
   const dateLocale = i18n.language === "sk" ? "sk-SK" : "en-GB";
 
   const filterCounts = useMemo(() => {
@@ -638,6 +630,7 @@ export default function ManualCheckPage() {
 
   const filteredProducts = useMemo(() => {
     return products.filter((product: any) => {
+      if (shopifyStatusFilter !== "all" && product.status !== shopifyStatusFilter) return false;
       const productId = product.id.replace("gid://shopify/Product/", "");
       const existingAlert = alertsByProduct[productId];
       const hasActiveAlert = existingAlert?.status === "active";
@@ -658,7 +651,7 @@ export default function ManualCheckPage() {
       }
       return true;
     });
-  }, [products, alertsByProduct, productStates, tabFilter]);
+  }, [products, alertsByProduct, productStates, tabFilter, shopifyStatusFilter]);
 
   // Synchronize searchValue with URL parameter when it changes (e.g., cleared/updated externally)
   useEffect(() => {
@@ -1119,7 +1112,14 @@ export default function ManualCheckPage() {
               </div>
             </div>
 
+            <p className="admin-helper">{t("workspace.catalogScopeHelp")}</p>
             <p className="admin-helper">{t("workspace.coverageFiltersHelp")}</p>
+            <s-select label={t("workspace.productStatus")} value={shopifyStatusFilter} onChange={(event: any) => setShopifyStatusFilter(event.currentTarget.value)}>
+              <s-option value="all">{t("workspace.productStatusAll")}</s-option>
+              <s-option value="ACTIVE">{t("workspace.productStatusActive")}</s-option>
+              <s-option value="DRAFT">{t("workspace.productStatusDraft")}</s-option>
+              <s-option value="ARCHIVED">{t("workspace.productStatusArchived")}</s-option>
+            </s-select>
             {/* Quick filter chips */}
             <s-stack direction="inline" gap="small" blockAlign="center" wrap>
               <s-clickable-chip
@@ -1260,6 +1260,7 @@ export default function ManualCheckPage() {
                             ) : (
                               <>
                                 <strong>{product.title}</strong>
+                                <p>{t("workspace.productStatus")}: {t(product.status === "ACTIVE" ? "workspace.productStatusActive" : product.status === "DRAFT" ? "workspace.productStatusDraft" : product.status === "ARCHIVED" ? "workspace.productStatusArchived" : "workspace.productStatusUnknown")}</p>
                                 <p>
                                   {product.vendor ||
                                     t("manualCheck.catalogue.unknownVendor")}
@@ -1418,18 +1419,6 @@ export default function ManualCheckPage() {
             firstWarning?.riskLevel ||
             "Unknown";
 
-          // Get fallback image from warning if product has no image
-          const fields = firstWarning?.alertDetails?.fields || {};
-          const pics = [
-            ...(fields.pictures || []),
-            fields.product_image,
-          ].filter(Boolean);
-          const fallbackImage = pics[0]
-            ? typeof pics[0] === "string"
-              ? pics[0]
-              : pics[0].url
-            : null;
-
           const newAlert = {
             id: currentAlertId,
             shop,
@@ -1440,7 +1429,6 @@ export default function ManualCheckPage() {
             productImage:
               selectedProduct?.featuredImage?.url ||
               selectedProduct?.images?.nodes?.[0]?.url ||
-              fallbackImage ||
               null,
             riskLevel,
             alertType,

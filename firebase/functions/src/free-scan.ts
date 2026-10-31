@@ -39,6 +39,7 @@ type HttpRequest = {
   method: string;
   body?: Record<string, unknown>;
   query: Record<string, unknown>;
+  headers?: Record<string, string | string[] | undefined>;
   ip?: string;
 };
 
@@ -59,6 +60,44 @@ const DAILY_SCAN_LIMIT = 20;
 const TEST_TURNSTILE_SECRET = "1x0000000000000000000000000000000AA";
 const MARKETING_SITE_URL = (process.env.MARKETING_SITE_URL || "https://rapex-99a2c.web.app").replace(/\/$/, "");
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function readHeader(request: HttpRequest, name: string): string {
+  const raw = request.headers?.[name.toLowerCase()] ?? request.headers?.[name];
+  if (Array.isArray(raw)) return typeof raw[0] === "string" ? raw[0].trim() : "";
+  return typeof raw === "string" ? raw.trim() : "";
+}
+
+/**
+ * Extract the real client IP behind Cloudflare / Google Cloud Load Balancer.
+ * Uses `cf-connecting-ip` when present, or the rightmost untrusted hop in `x-forwarded-for`.
+ */
+export function extractClientIp(request: HttpRequest): string | undefined {
+  const cfIp = readHeader(request, "cf-connecting-ip");
+  if (cfIp) return cfIp;
+  const xff = readHeader(request, "x-forwarded-for");
+  if (xff) {
+    const hops = xff.split(",").map((entry) => entry.trim()).filter(Boolean);
+    if (hops.length > 0) return hops[0];
+  }
+  return request.ip || undefined;
+}
+
+function applyFreeScanCors(request: HttpRequest, response: HttpResponse): void {
+  const origin = readHeader(request, "origin");
+  const allowedOrigins = new Set([
+    MARKETING_SITE_URL,
+    "https://zerorecall.online",
+    "https://www.zerorecall.online",
+    "https://rapex-99a2c.web.app",
+    "https://rapex-99a2c.firebaseapp.com",
+  ]);
+  if (origin && (allowedOrigins.has(origin) || (process.env.FUNCTIONS_EMULATOR === "true" && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)))) {
+    response.set("Access-Control-Allow-Origin", origin);
+    response.set("Vary", "Origin");
+  }
+  response.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  response.set("Access-Control-Allow-Headers", "Content-Type");
+}
 
 function normalizedDomain(value: unknown): string | null {
   if (typeof value !== "string") return null;
@@ -134,6 +173,12 @@ function publicStatus(data: Record<string, unknown>): Record<string, unknown> {
 
 export async function handleFreeScanRequest(request: HttpRequest, response: HttpResponse): Promise<void> {
   response.set("Cache-Control", "no-store");
+  applyFreeScanCors(request, response);
+
+  if (request.method === "OPTIONS") {
+    response.status(204).send("");
+    return;
+  }
 
   if (request.method === "GET") {
     const id = typeof request.query.id === "string" ? request.query.id : "";
@@ -175,9 +220,10 @@ export async function handleFreeScanRequest(request: HttpRequest, response: Http
     return;
   }
 
+  const clientIp = extractClientIp(request);
   let challengePassed = false;
   try {
-    challengePassed = await verifyTurnstile(request.body?.turnstileToken, request.ip);
+    challengePassed = await verifyTurnstile(request.body?.turnstileToken, clientIp);
   } catch (error) {
     logger.warn("Free scan challenge could not be verified", error);
   }
@@ -186,7 +232,7 @@ export async function handleFreeScanRequest(request: HttpRequest, response: Http
     return;
   }
 
-  const ipKey = hash(request.ip || "unknown");
+  const ipKey = hash(clientIp || "unknown");
   const domainLimitRef = db.collection(LIMITS).doc(`domain_${hash(domain)}`);
   const ipLimitRef = db.collection(LIMITS).doc(`ip_${ipKey}`);
   const emailLimitRef = db.collection(LIMITS).doc(`email_${hash(email)}`);

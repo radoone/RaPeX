@@ -2,7 +2,9 @@ import { FieldPath, FieldValue, Timestamp, type DocumentReference } from "fireba
 import { getFunctions } from "firebase-admin/functions";
 import { createHash, randomUUID } from "node:crypto";
 import * as logger from "firebase-functions/logger";
+import { isAuthorizedApiKey } from "./api-auth.js";
 import { db } from "./firebase-admin.js";
+import { mapBounded } from "./matching-work.js";
 import { AI_CONFIG, FIRESTORE_COLLECTIONS, MATCHING_THRESHOLDS } from "./safety-gate-config.js";
 import { recallWithinThreshold } from "./vector-recall.js";
 import { selectMonitoringImages, prioritizeMonitoringImages, type MonitoringImage, type StoredMonitoringImage } from "./monitoring-images.js";
@@ -118,18 +120,6 @@ function currentEntitlement(data: Record<string, unknown>): boolean {
   return validUntil instanceof Timestamp && validUntil.toMillis() > Date.now();
 }
 
-const CORS_HEADERS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, X-API-Key",
-} as const;
-
-function applyCorsHeaders(response: ResponseShape): void {
-  for (const [name, value] of Object.entries(CORS_HEADERS)) {
-    response.set(name, value);
-  }
-}
-
 function coerceString(value: unknown): string | undefined {
   if (Array.isArray(value)) {
     return coerceString(value[0]);
@@ -141,14 +131,8 @@ function coerceString(value: unknown): string | undefined {
   return trimmed ? trimmed : undefined;
 }
 
-function extractApiKey(request: RequestShape): string {
-  return coerceString(request.headers["x-api-key"]) || "";
-}
-
 function requireAuthorizedRequest(request: RequestShape): boolean {
-  const expectedKey = (process.env.SAFETY_GATE_API_KEY ?? "").trim();
-  const providedKey = extractApiKey(request);
-  return Boolean(expectedKey && providedKey && expectedKey === providedKey);
+  return isAuthorizedApiKey(request);
 }
 
 
@@ -858,7 +842,8 @@ export async function runMerchantDeltaMonitoringForShop(params: {
     let alertsCreated = 0;
     let productsScanned = 0;
 
-    for (const candidate of candidateProductsByDocId.values()) {
+    const candidateEntries = Array.from(candidateProductsByDocId.values());
+    await mapBounded(candidateEntries, 2, async (candidate) => {
       const productInput = toProductInput(candidate.product.data);
       const result = await checkProductAgainstAlerts(
         productInput,
@@ -892,7 +877,7 @@ export async function runMerchantDeltaMonitoringForShop(params: {
         }, { merge: true });
         return true;
       });
-      if (!applied) continue;
+      if (!applied) return;
 
       if (!result.isSafe && result.warnings.length > 0) {
         matchesFound += result.warnings.length;
@@ -925,7 +910,7 @@ export async function runMerchantDeltaMonitoringForShop(params: {
           updatedAt: FieldValue.serverTimestamp(),
         });
       }
-    }
+    });
 
     const latestAlert = dateCandidates.at(-1)?.alert;
     const summary: MerchantMonitoringSummary = {
@@ -1214,7 +1199,6 @@ export async function handleStartShopifyProductChangeRequest(
   request: RequestShape,
   response: ResponseShape,
 ): Promise<void> {
-  applyCorsHeaders(response);
   if (request.method === "OPTIONS") return response.status(204).send("");
   if (request.method !== "POST") return response.status(405).json({ error: "Method not allowed" });
   if (!requireAuthorizedRequest(request)) return response.status(401).json({ error: "Unauthorized" });
@@ -1474,8 +1458,6 @@ export async function handleUpsertMerchantProductRequest(
   request: RequestShape,
   response: ResponseShape,
 ): Promise<void> {
-  applyCorsHeaders(response);
-
   if (request.method === "OPTIONS") {
     response.status(204).send("");
     return;
@@ -1507,8 +1489,6 @@ export async function handleRunMerchantDeltaMonitoringRequest(
   request: RequestShape,
   response: ResponseShape,
 ): Promise<void> {
-  applyCorsHeaders(response);
-
   if (request.method === "OPTIONS") {
     response.status(204).send("");
     return;

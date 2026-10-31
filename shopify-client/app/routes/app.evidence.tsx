@@ -95,7 +95,8 @@ export default function EvidencePage() {
             </s-select>
           </div>
           <p className="admin-helper">
-            {t("workspace.historyLimit", { count: 100 })} ({total})
+            {t("workspace.historyLimit", { count: 100 })}{" "}
+            {t("workspace.findingCount", { count: total })}
           </p>
           <div role="status" className="admin-helper">
             {view === "decisions"
@@ -123,7 +124,7 @@ export default function EvidencePage() {
                       {event.record.productTitle}
                     </s-link>
                     <p>
-                      <strong>{t(decisionKey(event.resolutionType))}</strong> ·{" "}
+                      <strong>{t(event.action === "reactivate" ? "workspace.reopened" : decisionKey(event.resolutionType))}</strong> ·{" "}
                       {t(
                         event.reviewState === "waiting_for_supplier"
                           ? "workspace.waiting"
@@ -189,7 +190,8 @@ export default function EvidencePage() {
                       <p>{localizeRisk(record.riskLevel, t)}</p>
                     </s-table-cell>
                     <s-table-cell>
-                      <p>{record.reason}</p>
+                      <p>{t("workspace.matchNeedsVerification")}</p>
+                      {record.sourceRisk && <p><strong>{t("workspace.sourceRisk")}: </strong>{record.sourceRisk}</p>}
                     </s-table-cell>
                     <s-table-cell>
                       {t(decisionKey(record.resolutionType))}

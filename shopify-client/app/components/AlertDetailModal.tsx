@@ -50,6 +50,7 @@ export function AlertDetailModal({
   const [isHydrated, setIsHydrated] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [auditNote, setAuditNote] = useState("");
+  const [outcomeGroup, setOutcomeGroup] = useState("");
   const [selectedOutcome, setSelectedOutcome] = useState<ResolutionType | "">(
     "",
   );
@@ -100,8 +101,9 @@ export function AlertDetailModal({
 
   useEffect(() => {
     setSelectedOutcome("");
+    setOutcomeGroup("");
     setAuditNote("");
-  }, [alert?.id]);
+  }, [alert?.id, alert?.status, alert?.reviewState]);
 
   // Handle reactivate button click
   useEffect(() => {
@@ -269,7 +271,18 @@ export function AlertDetailModal({
           </div>
 
           {isActive && (
-            <p className="review-modal__steps">{t("experience.reviewSteps")}</p>
+            <div className="review-modal__steps">
+              {t("experience.reviewSteps")}{" "}
+              <button
+                type="button"
+                className="review-modal__jump"
+                onClick={() =>
+                  document.getElementById(`${modalId}-decision`)?.focus()
+                }
+              >
+                {t("workspace.chooseOutcomeLink")}
+              </button>
+            </div>
           )}
           <section
             className="review-modal__section"
@@ -368,10 +381,27 @@ export function AlertDetailModal({
               aria-label={t("workspace.whyMatch")}
             >
               <h3>{t("workspace.whyMatch")}</h3>
-              <p>
-                {primaryWarning?.reason?.split(/(?<=[.!?])\s+/)[0] ||
-                  t("analysis.reviewLayout.possibleMatch")}
-              </p>
+              <p>{t("workspace.matchNeedsVerification")}</p>
+              {identifierRows.some((row) => row.status === "match") && (
+                <p>
+                  {t("workspace.matchingIdentifiers", {
+                    fields: identifierRows
+                      .filter((row) => row.status === "match")
+                      .map((row) => row.label)
+                      .join(", "),
+                  })}
+                </p>
+              )}
+              {identifierRows.some((row) => row.status === "mismatch") && (
+                <p>
+                  {t("workspace.differentIdentifiers", {
+                    fields: identifierRows
+                      .filter((row) => row.status === "mismatch")
+                      .map((row) => row.label)
+                      .join(", "),
+                  })}
+                </p>
+              )}
               {identifierRows.some((row) => row.status === "unspecified") && (
                 <p className="admin-note">
                   {t("workspace.missingIdentifiers")}
@@ -379,12 +409,12 @@ export function AlertDetailModal({
               )}
               {(fields.danger ||
                 fields.alert_description ||
-                primaryWarning?.riskLegalProvision) && (
+                fields.risk_legal_provision) && (
                 <p>
                   <strong>{t("workspace.sourceRisk")}: </strong>
                   {fields.danger ||
                     fields.alert_description ||
-                    primaryWarning.riskLegalProvision}
+                    fields.risk_legal_provision}
                 </p>
               )}
             </section>
@@ -484,6 +514,8 @@ export function AlertDetailModal({
             {isActive ? (
               <section
                 className="review-modal__decision"
+                id={`${modalId}-decision`}
+                tabIndex={-1}
                 aria-label={t("analysis.reviewLayout.decisionHeading")}
               >
                 <div className="review-modal__decision-heading">
@@ -497,36 +529,83 @@ export function AlertDetailModal({
                 <p className="review-modal__decision-prompt">
                   {t("workspace.reviewPrompt")}
                 </p>
-                <s-select
-                  label={t("analysis.reviewLayout.outcomeLabel")}
-                  value={selectedOutcome}
-                  onChange={(event: any) =>
-                    setSelectedOutcome(event.currentTarget.value || "")
-                  }
+                <s-choice-list
+                  label={t("workspace.chooseOutcomeLink")}
+                  name={`${modalId}-outcome-group`}
+                  onChange={(event: any) => {
+                    const group = event.currentTarget.values?.[0] || "";
+                    setOutcomeGroup(group);
+                    setSelectedOutcome(
+                      group === "other"
+                        ? "other"
+                        : group === "information"
+                          ? "contacted_supplier"
+                          : "",
+                    );
+                  }}
                 >
-                  <s-option value="">
-                    {t("analysis.reviewLayout.chooseOutcome")}
-                  </s-option>
-                  <s-option value="removed_from_sale">
-                    {t("resolveActions.removedFromSale")}
-                  </s-option>
-                  <s-option value="modified_product">
-                    {t("resolveActions.modifiedProduct")}
-                  </s-option>
-                  <s-option value="contacted_supplier">
-                    {t("resolveActions.contactedSupplier")}
-                  </s-option>
-                  <s-option value="match_not_confirmed">
-                    {t("workspace.matchNotConfirmed")}
-                  </s-option>
-                  <s-option value="false_positive">
-                    {t("resolveActions.falsePositive")}
-                  </s-option>
-                  <s-option value="not_my_product">
-                    {t("resolveActions.notMyProduct")}
-                  </s-option>
-                  <s-option value="other">{t("resolveActions.other")}</s-option>
-                </s-select>
+                  {[
+                    ["information", "workspace.groupInformation"],
+                    ["different", "workspace.groupDifferent"],
+                    ["action", "workspace.groupAction"],
+                    ["other", "resolveActions.other"],
+                  ].map(([group, label]) => (
+                    <s-choice
+                      key={group}
+                      value={group}
+                      selected={outcomeGroup === group}
+                    >
+                      {t(label)}
+                    </s-choice>
+                  ))}
+                </s-choice-list>
+                {outcomeGroup === "information" && (
+                  <strong>{t("resolveActions.contactedSupplier")}</strong>
+                )}
+                {(outcomeGroup === "action" ||
+                  outcomeGroup === "different") && (
+                  <s-select
+                    label={t("workspace.chooseOutcomeLink")}
+                    value={selectedOutcome}
+                    onChange={(event: any) =>
+                      setSelectedOutcome(event.currentTarget.value || "")
+                    }
+                  >
+                    <s-option value="">
+                      {t("analysis.reviewLayout.chooseOutcome")}
+                    </s-option>
+                    {outcomeGroup === "action" && (
+                      <s-option value="removed_from_sale">
+                        {t("resolveActions.removedFromSale")}
+                      </s-option>
+                    )}
+                    {outcomeGroup === "action" && (
+                      <s-option value="modified_product">
+                        {t("resolveActions.modifiedProduct")}
+                      </s-option>
+                    )}
+                    {outcomeGroup === "different" && (
+                      <s-option value="match_not_confirmed">
+                        {t("workspace.matchNotConfirmed")}
+                      </s-option>
+                    )}
+                    {outcomeGroup === "different" && (
+                      <s-option value="false_positive">
+                        {t("resolveActions.falsePositive")}
+                      </s-option>
+                    )}
+                    {outcomeGroup === "different" && (
+                      <s-option value="not_my_product">
+                        {t("resolveActions.notMyProduct")}
+                      </s-option>
+                    )}
+                  </s-select>
+                )}
+                <p className="admin-helper" role="status">
+                  {selectedOutcome
+                    ? t(`workspace.outcomeHelp.${selectedOutcome}`)
+                    : t("workspace.chooseOutcomeHelp")}
+                </p>
                 <s-text-area
                   label={t(
                     needsOtherNote
@@ -764,7 +843,6 @@ function WarningCard({
       : warningOverallSimilarity >= 60
         ? "border-warning"
         : "border";
-  const isImageFirst = warning.scoreBreakdown?.scoringMode === "image-first";
 
   // Check matching fields with merchant product details for highlighting
   const merchantTitle = String(
@@ -804,7 +882,7 @@ function WarningCard({
                 alertLevel={alertLevel}
                 alertType={alertType}
                 riskDescription={
-                  warning.riskLegalProvision || dangerDescription
+                  dangerDescription || fields.risk_legal_provision
                 }
               />
             )}
@@ -943,7 +1021,7 @@ function WarningCard({
           </div>
         </s-grid>
 
-        {warning.reason && (
+        {
           <s-box
             padding="base"
             borderRadius="base"
@@ -953,16 +1031,10 @@ function WarningCard({
               <s-text fontWeight="bold" tone="info" size="small">
                 {t("analysis.whyThisMatched")}
               </s-text>
-              <s-text>{warning.reason}</s-text>
-              {isImageFirst &&
-                !warning.reason.toLowerCase().includes("exact") && (
-                  <s-text tone="subdued" size="small">
-                    {t("analysis.imageDominated")}
-                  </s-text>
-                )}
+              <s-text>{t("workspace.matchNeedsVerification")}</s-text>
             </s-stack>
           </s-box>
-        )}
+        }
 
         {/* RISK DESCRIPTION (if present) */}
         {dangerDescription && (

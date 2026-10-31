@@ -4,16 +4,16 @@ import { functionsAi } from "./firebase-admin.js";
 export const ProductInputSchema = functionsAi.defineSchema(
   "ProductInput",
   z.object({
-    name: z.string().describe("Product name"),
-    category: z.string().describe("Product category (toys, electronics, etc.)"),
-    description: z.string().describe("Product description"),
-    imageUrl: z.string().optional().describe("URL to product image"),
-    imageUrls: z.array(z.string()).optional().describe("URLs to product images"),
-    brand: z.string().optional().describe("Product brand"),
-    model: z.string().optional().describe("Product model"),
-    shop: z.string().optional().describe("Shopify shop domain for merchant product cache reuse"),
-    productId: z.string().optional().describe("Shopify product ID for merchant product cache reuse"),
-    sourceUpdatedAt: z.string().optional().describe("Shopify source updated timestamp for cache validation"),
+    name: z.string().max(500).describe("Product name"),
+    category: z.string().max(200).describe("Product category (toys, electronics, etc.)"),
+    description: z.string().max(5000).describe("Product description"),
+    imageUrl: z.string().max(2048).optional().describe("URL to product image"),
+    imageUrls: z.array(z.string().max(2048)).max(10).optional().describe("URLs to product images"),
+    brand: z.string().max(300).optional().describe("Product brand"),
+    model: z.string().max(300).optional().describe("Product model"),
+    shop: z.string().max(255).optional().describe("Shopify shop domain for merchant product cache reuse"),
+    productId: z.string().max(128).optional().describe("Shopify product ID for merchant product cache reuse"),
+    sourceUpdatedAt: z.string().max(64).optional().describe("Shopify source updated timestamp for cache validation"),
   }),
 );
 
