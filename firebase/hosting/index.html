@@ -69,8 +69,8 @@
 <link rel="alternate" hreflang="sl" href="https://zerorecall.online/?lang=sl" />
 <link rel="alternate" hreflang="sv" href="https://zerorecall.online/?lang=sv" />
 <link rel="alternate" hreflang="x-default" href="https://zerorecall.online/" />
-  <script type="module" crossorigin src="/assets/app-CQZ83Bzb.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/styles-ClJsGka4.css">
+  <script type="module" crossorigin src="/assets/app-xFzq3jys.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/styles-BVBZ7AT1.css">
 </head>
   <body>
     <div class="site-container" id="top">
@@ -171,12 +171,9 @@
           <div class="scan-section__copy">
             <span class="section-eyebrow" data-i18n="scan.eyebrow">ONE-OFF CHECK · NO INSTALLATION</span>
             <h2 class="section-title" id="scan-title" data-i18n="scan.title">Free check of your entire public catalog</h2>
-            <p data-i18n="scan.description">Enter your Shopify domain and email. Confirm your email to start a one-off check of all available public products. We will email the result when it is ready.</p>
-            <ul class="scan-benefits">
-              <li data-i18n="scan.benefit1">Public products only</li>
-              <li data-i18n="scan.benefit2">Possible matches to review</li>
-              <li data-i18n="scan.benefit3">Your products stay unchanged</li>
-            </ul>
+            <p class="scan-description-mobile" data-i18n="scan.privacyNote">The scan starts after email confirmation. The result goes to the same address.</p>
+            <p class="scan-description-desktop" data-i18n="scan.description">Enter your Shopify domain and email. Confirm your email to start a one-off check of all available public products. We will email the result when it is ready.</p>
+
           </div>
           <div class="scan-box">
             <div class="scan-feedback" id="scan-feedback" role="status" aria-live="polite" hidden>
@@ -205,6 +202,19 @@
               <button class="btn btn--primary" id="scan-confirm-button" type="button" data-i18n="scan.confirmButton">Confirm and start scan</button>
             </div>
 
+            <details class="legal-details scan-details">
+              <summary data-i18n="scan.detailsSummary">What happens during the scan and how does matching work?</summary>
+            <ul class="scan-benefits">
+              <li data-i18n="scan.benefit1">Public products only</li>
+              <li data-i18n="scan.benefit2">Possible matches to review</li>
+              <li data-i18n="scan.benefit3">Your products stay unchanged</li>
+            </ul>
+              <ol class="scan-details__steps">
+                <li data-i18n="scan.detailsStep1">After you confirm the single-use email link (valid for 30 minutes), we read only your store's publicly available products (titles, brands, models, categories and photos).</li>
+                <li data-i18n="scan.detailsStep2">We compare product text and photos against 35,000+ official EU Safety Gate (RAPEX) records using multimodal vector and visual similarity — spotting identical products even under a different name or language.</li>
+                <li data-i18n="scan.detailsStep3">Within a few minutes you receive an email with the number of checked products, photos and official case numbers of possible matches, plus a private CSV download link.</li>
+              </ol>
+            </details>
           </div>
         </section>
 

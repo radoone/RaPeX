@@ -19,6 +19,7 @@ import { authenticate } from "../shopify.server";
 import db, { type SafetySettingRecord } from "../merchant-db.server";
 import { firestore } from "../firestore.server";
 import { formatRelativeDate } from "../components";
+import { compareReviewPriority } from "../services/review-priority";
 import {
   getBillingStatus,
   requireActiveBilling,
@@ -126,7 +127,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     totalChecks,
     recentAlerts,
     checkedProductIds,
-    activeAlertRiskSample,
     storedSettings,
     currentCatalogProductIds,
   ] = await Promise.all([
@@ -148,7 +148,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     db.safetyAlert.findMany({
       where: { shop: session.shop, status: "active" },
       orderBy: { createdAt: "desc" },
-      take: 3,
     }),
     // Get list of already checked product IDs
     db.safetyCheck.findMany({
@@ -156,17 +155,17 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       orderBy: { checkedAt: "desc" },
       select: { productId: true, checkedAt: true, sourceUpdatedAt: true },
     }),
-    db.safetyAlert.findMany({
-      where: { shop: session.shop, status: "active" },
-      select: { riskLevel: true, checkResult: true },
-      take: 100,
-    }),
     db.safetySetting.findUnique({
       where: { shop: session.shop },
     }),
     fetchCurrentCatalogProductVersions(admin),
   ]);
 
+  recentAlerts.sort(compareReviewPriority);
+  const displayAlerts = recentAlerts.slice(0, 3);
+  const nextReviewAlert = recentAlerts[0]
+    ? { id: recentAlerts[0].id, productTitle: recentAlerts[0].productTitle }
+    : null;
   const monitorStateSnapshot = await firestore
     .collection("merchants")
     .doc(encodeURIComponent(session.shop))
@@ -240,7 +239,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   }
 
   // Fetch product images from Shopify
-  const productIds = recentAlerts
+  const productIds = displayAlerts
     .map((a: any) => a.productId)
     .filter(Boolean)
     .map((id: string) =>
@@ -272,7 +271,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     }
   }
 
-  const processedRecentAlerts = recentAlerts.map((alert: any) => {
+  const processedRecentAlerts = displayAlerts.map((alert: any) => {
     let alertType = undefined;
     let riskDescription = undefined;
 
@@ -311,7 +310,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     (item) => item.state === "current",
   ).length;
   const uncheckedProductCount = totalProductsCount - checkedProductCount;
-  const criticalActiveAlerts = activeAlertRiskSample.filter((alert: any) => {
+  const criticalActiveAlerts = recentAlerts.filter((alert: any) => {
     try {
       const parsed = alert.checkResult ? JSON.parse(alert.checkResult) : null;
       const warning = Array.isArray(parsed?.warnings)
@@ -368,6 +367,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       criticalActiveAlerts,
     },
     recentAlerts: processedRecentAlerts,
+    nextReviewAlert,
     settings: resolvedSettings,
     billingStatus,
     recentMonitoringRuns,
@@ -635,6 +635,7 @@ export default function Index() {
   const {
     stats,
     recentAlerts,
+    nextReviewAlert,
     settings,
     billingStatus,
     lastMonitoringAt,
@@ -1029,9 +1030,17 @@ export default function Index() {
                 <div className="dashboard-banner-actions">
                   <s-button
                     variant="primary"
-                    onClick={() => navigate(dashboardStatus.actionHref)}
+                    onClick={() =>
+                      navigate(
+                        dashboardState === "review-needed" && nextReviewAlert?.id
+                          ? `/app/alerts?status=active&open=${encodeURIComponent(nextReviewAlert.id)}`
+                          : dashboardStatus.actionHref,
+                      )
+                    }
                   >
-                    {dashboardStatus.actionLabel}
+                    {dashboardState === "review-needed" && nextReviewAlert?.id
+                      ? t("workspace.reviewNext", { title: nextReviewAlert.productTitle })
+                      : dashboardStatus.actionLabel}
                   </s-button>
                   {stats.uncheckedProducts > 0 &&
                     dashboardState === "review-needed" && (

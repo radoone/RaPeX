@@ -1,0 +1,1406 @@
+{
+  "actions": {
+    "auditReport": "Granskningsrapport",
+    "clear": "Rensa",
+    "dashboard": "Kontrollpanel",
+    "downloadAuditReport": "Ladda ner granskningsrapport",
+    "checkAll": "Kontrollera alla produkter",
+    "checkAllProducts": "Kontrollera alla {{count}} produkter",
+    "checking": "Kontrollerar...",
+    "checkNewSafetyGateAlerts": "Kontrollera nya Safety Gate-varningar",
+    "checkOneProduct": "Kontrollera en produkt",
+    "checkSelectedProduct": "Kontrollera vald produkt",
+    "checkUnchecked": "Kontrollera {{count}} okontrollerade produkter",
+    "manualCheck": "Kontrollera produkt",
+    "next": "Nästa",
+    "openFirstMatch": "Öppna första matchning",
+    "previous": "Föregående",
+    "protectRemainingProducts": "Kontrollera {{count}} återstående produkter",
+    "reactivate": "Återaktivera",
+    "recordDecision": "Registrera beslut",
+    "refreshCoverage": "Uppdatera katalogtäckning",
+    "resolve": "Lös",
+    "retry": "Försök igen",
+    "reviewActiveProducts": "Granska aktiva produkter",
+    "reviewAlerts": "Granska varningar",
+    "reviewDecision": "Jämför produkter",
+    "reviewMultipleMatches": "Granska {{count}} matchningar",
+    "reviewOneMatch": "Granska 1 matchning",
+    "reviewProductsNeedingAction": "Granska {{count}} produkt som behöver åtgärdas",
+    "reviewProductsNeedingAction_few": "Granska {{count}} produkter som behöver åtgärdas",
+    "reviewProductsNeedingAction_many": "Granska {{count}} produkter som behöver åtgärdas",
+    "reviewProductsNeedingAction_one": "Granska {{count}} produkt som behöver åtgärdas",
+    "reviewProductsNeedingAction_other": "Granska {{count}} produkter som behöver åtgärdas",
+    "reviewProductsNeedingAction_plural": "Granska {{count}} produkter som behöver åtgärdas",
+    "search": "Sök",
+    "settings": "Inställningar",
+    "tryAgain": "Försök igen",
+    "view": "Visa",
+    "viewAlerts": "Visa varningar",
+    "viewDetails": "Visa detaljer",
+    "viewEvidence": "Visa beslutshistorik"
+  },
+  "alerts": {
+    "admin": {
+      "actionNeeded": "Åtgärd krävs",
+      "actionNeededDescription": "Granska matchningar, avfärda falska positiva eller lös bekräftade risker så att varningskön förblir hanterbar.",
+      "actionNeededTitle": "{{count}} aktiv varning behöver fortfarande ett beslut",
+      "actionNeededTitle_few": "{{count}} aktiva varningar behöver fortfarande ett beslut",
+      "actionNeededTitle_many": "{{count}} aktiva varningar behöver fortfarande ett beslut",
+      "actionNeededTitle_one": "{{count}} aktiv varning behöver fortfarande ett beslut",
+      "actionNeededTitle_other": "{{count}} aktiva varningar behöver fortfarande ett beslut",
+      "actionNeededTitle_plural": "{{count}} aktiva varningar behöver fortfarande ett beslut",
+      "criticalBannerDescription": "{{count}} aktiv matchning är markerad som hög eller allvarlig risk i Safety Gate. Lös dessa matchningar först.",
+      "criticalBannerDescription_few": "{{count}} aktiva matchningar är markerade som hög eller allvarlig risk i Safety Gate. Lös dessa matchningar först.",
+      "criticalBannerDescription_many": "{{count}} aktiva matchningar är markerade som hög eller allvarlig risk i Safety Gate. Lös dessa matchningar först.",
+      "criticalBannerDescription_one": "{{count}} aktiv matchning är markerad som hög eller allvarlig risk i Safety Gate. Lös dessa matchningar först.",
+      "criticalBannerDescription_other": "{{count}} aktiva matchningar är markerade som hög eller allvarlig risk i Safety Gate. Lös dessa matchningar först.",
+      "criticalBannerDescription_plural": "{{count}} aktiva matchningar är markerade som hög eller allvarlig risk i Safety Gate. Lös dessa matchningar först.",
+      "criticalBannerTitle": "{{count}} högriskmatchning behöver granskas",
+      "criticalBannerTitle_few": "{{count}} högriskmatchningar behöver granskas",
+      "criticalBannerTitle_many": "{{count}} högriskmatchningar behöver granskas",
+      "criticalBannerTitle_one": "{{count}} högriskmatchning behöver granskas",
+      "criticalBannerTitle_other": "{{count}} högriskmatchningar behöver granskas",
+      "criticalBannerTitle_plural": "{{count}} högriskmatchningar behöver granskas",
+      "queue": "Produktbeslutskö",
+      "queueDescription": "Bekräfta troliga matchningar, avfärda falska positiva eller registrera vilken åtgärd som vidtogs.",
+      "warningBannerDescription": "Använd denna kö endast för verkliga beslut: lös bekräftade risker och avfärda falska positiva snabbt.",
+      "warningBannerTitle": "{{count}} aktiv varning behöver fortfarande granskas",
+      "warningBannerTitle_few": "{{count}} aktiva varningar behöver fortfarande granskas",
+      "warningBannerTitle_many": "{{count}} aktiva varningar behöver fortfarande granskas",
+      "warningBannerTitle_one": "{{count}} aktiv varning behöver fortfarande granskas",
+      "warningBannerTitle_other": "{{count}} aktiva varningar behöver fortfarande granskas",
+      "warningBannerTitle_plural": "{{count}} aktiva varningar behöver fortfarande granskas"
+    },
+    "breadcrumbs": {
+      "current": "Granskningskö",
+      "dashboard": "Kontrollpanel"
+    },
+    "checklist": {
+      "items": {
+        "0": "Prioritera aktiva varningar",
+        "1": "Dokumentera åtgärder",
+        "2": "Verifiera innan du avfärdar"
+      },
+      "title": "Checklista för åtgärder"
+    },
+    "meta": {
+      "active": "{{count}} att granska",
+      "total": "{{count}} totalt"
+    },
+    "metrics": {
+      "activeHeading": "Aktiva varningar",
+      "archived": "Arkiverade",
+      "dismissedDescription": "Spara anteckningar för granskning",
+      "dismissedDescriptionZero": "Inga avfärdade varningar ännu",
+      "dismissedHeading": "Avfärdade",
+      "resolutionHeading": "Lösningsgrad",
+      "resolved": "{{count}} lösta",
+      "resolvedAndDismissed": "{{resolved}} lösta • {{dismissed}} avfärdade",
+      "totalRecorded": "{{count}} totalt registrerade"
+    },
+    "pagination": {
+      "next": "Nästa",
+      "previous": "Föregående"
+    },
+    "subtitle": "Granska produkter som behöver ett beslut.",
+    "table": {
+      "accessibilityLabel": "Tabell över säkerhetsvarningar",
+      "empty": "Inga varningar matchar dina filter",
+      "emptyAllClearBody": "Det finns inga öppna beslut från handlare just nu. Daglig övervakning pågår fortfarande och stängda beslut finns kvar i granskningsloggen.",
+      "emptyAllClearTitle": "Alla aktiva produktgranskningar är hanterade",
+      "emptyFilteredBody": "Justera filtren eller sök efter en annan produkt. Din aktiva kö kan fortfarande vara tom.",
+      "emptyFilteredTitle": "Inga granskningsobjekt matchar dessa filter",
+      "headers": {
+        "actions": "Åtgärder",
+        "detected": "Upptäckt",
+        "product": "Produkt",
+        "risk": "Risk",
+        "status": "Status"
+      },
+      "order": "Beställning",
+      "orderOptions": {
+        "asc": "Äldst först",
+        "desc": "Nyast först"
+      },
+      "reviewProduct": "Granska beslut för {{title}}",
+      "searchLabel": "Sök varningar",
+      "searchPlaceholder": "Sök efter produktnamn...",
+      "selectAll": "Välj alla synliga fynd",
+      "selectedCount": "{{count}} valda",
+      "selectProduct": "Välj fynd för {{title}}",
+      "similarityTooltip": "Likhetspoäng: {{score}}%",
+      "sort": "Sortera",
+      "sortBy": "Sortera efter",
+      "sortOptions": {
+        "created": "Datum upptäckt",
+        "name": "Produktnamn",
+        "risk": "Risknivå"
+      },
+      "tabs": {
+        "active": "Behöver granskas",
+        "all": "Alla",
+        "dismissed": "Avfärdade",
+        "resolved": "Löst"
+      },
+      "thumbnailLabel": "Miniatyrbild för {{title}}",
+      "viewProduct": "Visa registrerat fynd för {{title}}"
+    },
+    "title": "Granskningskö",
+    "toasts": {
+      "updated": "Varning uppdaterad"
+    }
+  },
+  "analysis": {
+    "alertImagesUsed": "Varningsbilder jämförda: {{count}}",
+    "alertNumber": "Varning {{number}}",
+    "audit": {
+      "existingNotes": "Granskningsanteckningar",
+      "noteLabel": "Granskningsanteckning",
+      "notePlaceholder": "Lägg till vad du kontrollerade, leverantörsbevis eller varför detta avvisades."
+    },
+    "candidateAlerts": "Kandidatvarningar: {{count}}",
+    "decisionContextDesc": "Att registrera ett beslut dokumenterar att denna säkerhetsmatchning har granskats och bevarar din granskningslogg. Det ändrar inte automatiskt din Shopify-produkt eller avpublicerar den från din butik.",
+    "decisionContextTitle": "Registrering av efterlevnadsbeslut",
+    "decisionRecorded": "Beslut registrerat",
+    "editInShopify": "Redigera produkt i Shopify",
+    "enlargedSafetyAlert": "Förstorad säkerhetsvarningsbild",
+    "fields": {
+      "accessibilityLabel": "Tabell med matchningsdetaljer för varning",
+      "alertDate": "Varningsdatum",
+      "brand": "Märke",
+      "category": "Kategori",
+      "field": "Fält",
+      "model": "Modell",
+      "notifyingCountry": "Anmälande land",
+      "origin": "Ursprung",
+      "productDescription": "Produktbeskrivning",
+      "productName": "Produktnamn",
+      "value": "Värde"
+    },
+    "focus": {
+      "criticalLead": "Denna produkt har en matchning med hög konfidens. Registrera ett beslut först efter granskning.",
+      "criticalStepCompare": "Jämför din produktbild med den första Safety Gate-matchningen nedan.",
+      "criticalStepDecide": "Välj ett resultat i menyn ”Registrera beslut” baserat på din granskning.",
+      "criticalStepDocument": "Lägg till interna anteckningar för spårbarhet och uppföljning med leverantör.",
+      "criticalTitle": "Åtgärd krävs nu",
+      "recordedOutcome": "Registrerat resultat: {{outcome}}",
+      "reviewedLead": "Denna varning är inte aktiv. Håll register tydliga för granskningar.",
+      "reviewedStepAudit": "Verifiera den valda lösningen och anteckningarna.",
+      "reviewedStepReactivate": "Återaktivera endast om nya produktbevis dyker upp.",
+      "reviewedTitle": "Granskning redan slutförd",
+      "safeLead": "Nuvarande resultat är säkert. Fortsätt övervaka produktuppdateringar.",
+      "safeStepClose": "Stäng denna detalj och fortsätt med andra aktiva varningar.",
+      "safeStepMonitor": "Behåll denna produkt i automatisk övervakning.",
+      "safeStepRecheck": "Kör en ny kontroll om bilder, förpackning eller leverantör ändras.",
+      "safeTitle": "Ingen brådskande åtgärd behövs"
+    },
+    "hazardType": "Farotyp",
+    "checkedAt": "Kontrollerad: {{date}}",
+    "imageDominated": "Denna matchning bedömdes med bildfokuserad viktning, så visuell förpackningslikhet vägde tyngre än textolikhet.",
+    "imageMatch": "Bildmatchning",
+    "imageMatchShort": "{{count}}% bild",
+    "legalProvision": "Lagbestämmelse",
+    "matchesHint": "Börja med det översta matchningskortet nedan och bekräfta visuell förpackning först, sedan modell- och märkesdetaljer.",
+    "merchantRecommendation": {
+      "active": "Jämför produkt- och Safety Gate-bilderna, bekräfta märke eller modell och registrera sedan vilken åtgärd din butik kommer att vidta.",
+      "reviewed": "Detta fynd är stängt. Verifiera det registrerade resultatet och bevisen innan du återaktiverar det.",
+      "safe": "Ingen butiksåtgärd krävs nu. Kontrollera igen om produkten, förpackningen, bilderna eller leverantören ändras."
+    },
+    "modalAccessibilityLabel": "Detaljer om Safety Gate-matchning för {{title}}",
+    "modalHeading": "Granska Safety Gate-matchning",
+    "noIssuesFound": "Inga säkerhetsproblem hittades",
+    "openProductImage": "Öppna bild för {{title}}",
+    "overallMatch": "Övergripande matchning",
+    "overallMatchShort": "{{count}}% övergripande",
+    "potentialRisk": "Potentiell säkerhetsrisk",
+    "primaryRiskFocus": "Primärt riskfokus: {{category}} på nivån {{level}}. Bekräfta detta först innan du fattar ett beslut.",
+    "productImagesUsed": "Produktbilder: {{used}} / {{provided}}",
+    "reviewLayout": {
+      "actionNeeded": "Åtgärd krävs",
+      "compareHeading": "Jämför produkterna",
+      "compareHint": "Kontrollera foton, varumärke, modell och kategori innan du fattar ett beslut.",
+      "decisionHeading": "Registrera ditt beslut",
+      "decisionPrompt": "Välj granskningsresultat. Du kan lägga till en anteckning om vad du kontrollerade.",
+      "fullEvidence": "Fullständiga Safety Gate-bevis ({{count}})",
+      "groupHelp": {
+        "action": "Stäng ärendet efter att du har tagit bort produkten från försäljning eller uppdaterat den i Shopify.",
+        "different": "Stäng eller avfärda ärendet eftersom din produkt är en annan modell, ett annat varumärke eller en annan batch.",
+        "information": "Håll ärendet öppet medan du ber din leverantör om batch-, modell- eller säkerhetsdokument.",
+        "other": "Registrera ett annat resultat med en obligatorisk förklarande anteckning för din granskningshistorik."
+      },
+      "chooseOutcome": "Välj ett resultat",
+      "identifiers": {
+        "barcode": "Streckkod (GTIN/EAN)",
+        "batch": "Batch / Parti",
+        "brand": "Märke",
+        "field": "Identifierare",
+        "match": "Matchning",
+        "mismatch": "Avvikelse",
+        "model": "Modell",
+        "notSpecified": "ej specificerad",
+        "result": "Jämförelse",
+        "safetyGate": "Safety Gate-varning",
+        "yourProduct": "Din Shopify-produkt"
+      },
+      "identifiersHeading": "Jämförelse av identifierare sida vid sida",
+      "languageDiffNote": "Appens gränssnittsspråk ({{appLang}}) och e-postmeddelandespråk ({{emailLang}}) ställs in oberoende av varandra.",
+      "noImage": "Ingen bild tillgänglig",
+      "noteLabel": "Vad kontrollerade du? (valfritt)",
+      "noteRequiredLabel": "Vad kontrollerade du? (obligatoriskt)",
+      "otherNoteRequired": "Lägg till en anteckning för att förklara det andra resultatet.",
+      "outcomeLabel": "Granskningsresultat",
+      "possibleMatch": "Möjlig Safety Gate-matchning",
+      "readyToRecord": "Redo att registrera",
+      "reviewPointsHeading": "Punkter att granska",
+      "unnamedRecord": "Safety Gate-post"
+    },
+    "riskDescription": "Riskbeskrivning",
+    "riskLevel": "Risknivå",
+    "riskSeverity": "Riskens allvarlighetsgrad",
+    "safetyGateMatches": "Safety Gate-matchningar",
+    "scoreHelper": "Övergripande matchning är det slutliga granskningsresultatet. Bildmatchning återspeglar endast förpackningens likhet.",
+    "sections": {
+      "whatHappened": "Vad hände?",
+      "whatHappenedReviewed": "Denna matchning har redan granskats och registrerats.",
+      "whatHappenedRisk": "Denna Shopify-produkt liknar en produkt som redan rapporterats i Safety Gate.",
+      "whatHappenedSafe": "Den senaste kontrollen hittade ingen sannolik Safety Gate-matchning.",
+      "whatToDo": "Vad ska jag göra?",
+      "whyMatched": "Varför det matchade"
+    },
+    "seriousRisk": "Allvarlig {{category}}-risk",
+    "summary": {
+      "confidence": "Förtroende",
+      "confidenceUnknown": "Förtroende okänt",
+      "decisionRecorded": "Beslut registrerat",
+      "decisionRequired": "Beslut krävs",
+      "highConfidence": "Högt förtroende",
+      "likelyMatch": "Sannolik matchning",
+      "likelySafetyGateMatch": "Sannolik Safety Gate-matchning",
+      "matchType": "Matchningstyp",
+      "nextStep": "Nästa steg",
+      "noLikelyMatch": "Ingen sannolik matchning",
+      "overallMatch": "Övergripande resultat",
+      "reviewRecommended": "Granskning rekommenderas"
+    },
+    "supplierFollowUp": {
+      "copy": "Kopiera uppföljning med leverantör",
+      "template": "Hej, vi granskar {{product}} eftersom den kan matcha Safety Gate-varningen {{alert}} (risk: {{risk}}). Vänligen bekräfta om detta är samma modell/batch, tillhandahåll produktsäkerhetsdokumentation och förklara eventuella skillnader. Anledning till matchning: {{reason}}"
+    },
+    "technicalDetails": {
+      "description": "Poäng och hämtningsantal sparas här för en djupare granskning. Börja med produktfoton, varumärke, modell och den rekommenderade åtgärden ovan.",
+      "hide": "Dölj detaljer",
+      "show": "Visa detaljer",
+      "title": "Tekniska matchningsdetaljer"
+    },
+    "textOnly": "Endast textkontroll",
+    "viewOnSafetyGate": "Visa på Safety Gate",
+    "whyThisMatched": "Varför detta matchade",
+    "withImage": "Kontrollerad med bilder",
+    "yourProduct": "Din Shopify-produkt"
+  },
+  "auditReport": {
+    "decision": "Beslut",
+    "description": "Granska hela posten innan du exporterar en CSV för ditt team, din leverantör eller din revision.",
+    "detected": "Upptäckt",
+    "documented": "Beslut dokumenterade",
+    "download": "Ladda ner CSV",
+    "empty": "Inga produktsäkerhetsfynd har registrerats ännu.",
+    "eyebrow": "Exportklar post",
+    "generated": "Genererad {{date}}",
+    "heading": "Fynd och beslut",
+    "needsReview": "Behöver granskas",
+    "notRecorded": "Ej registrerad",
+    "open": "Öppna revisionsrapport",
+    "product": "Produkt",
+    "risk": "Riskens allvarlighetsgrad",
+    "status": "Status",
+    "summaryLabel": "Sammanfattning av revisionsrapport",
+    "tableLabel": "Säkerhetsrevisionsrapport",
+    "title": "Säkerhetsrevisionsrapport",
+    "total": "Registrerade fynd",
+    "viewHistory": "Visa granskningshistorik"
+  },
+  "billing": {
+    "freeScanAvailableDescription": "Du har 1 gratis katalogskanning tillgänglig. Kör din första revision för att kontrollera din butiks produkter mot EU:s Safety Gate-databas för farliga icke-livsmedelsprodukter.",
+    "freeScanAvailableHeading": "Gratis initial katalogskanning aktiv",
+    "managePlanButton": "Hantera prenumeration",
+    "planActiveDescription": "Övervakning är aktiverad för denna Shopify-butik. Granska den senaste körningen och eventuella produkter som behöver uppmärksamhet.",
+    "planEyebrow": "Plan & Täckning",
+    "planFreeAvailableDescription": "En kostnadsfri första skanning av Safety Gate-katalogen är tillgänglig.",
+    "planFreeUsedDescription": "Din kostnadsfria första skanning är klar. Välj en plan för att starta löpande övervakning och fortsätta exportera granskningsloggen.",
+    "planTitle": "Prenumeration och säkerhetsövervakning",
+    "pricingUnavailable": "Shopifys prissättning är inte konfigurerad för denna app.",
+    "statusActivePro": "ZeroRecall Pro (aktiv)",
+    "statusDevelopmentBypass": "Utvecklingsförhandsvisning (fakturering förbigången)",
+    "statusFreeAvailable": "Kostnadsfri första skanning",
+    "statusFreeUsed": "Kostnadsfri skanning använd",
+    "statusLabel": "Aktuell plan",
+    "statusUnverified": "Prenumerationen kunde inte verifieras",
+    "upgradePlanButton": "Uppgradera till Pro",
+    "upgradeRequiredDescription": "Din kostnadsfria första skanning är klar. Välj en Shopify-plan för att övervaka nya Safety Gate-varningar och kontrollera ändrade produkter.",
+    "upgradeRequiredHeading": "Fortsätt övervakningen av Safety Gate",
+    "verificationError": "Nya skanningar pausas tills Shopify-faktureringen kan kontrolleras. Dina befintliga fynd och beslut är fortfarande tillgängliga."
+  },
+  "billingRedirect": {
+    "opening": "Öppnar Shopifys prisplaner...",
+    "openPricingPlans": "Öppna prisplaner"
+  },
+  "common": {
+    "all": "Alla",
+    "cancel": "Avbryt",
+    "close": "Stäng",
+    "confirm": "Bekräfta",
+    "language": "Språk",
+    "loading": "Laddar...",
+    "unknown": "Okänd"
+  },
+  "dashboard": {
+    "activeAlertsBanner": {
+      "content": "Lös {{count}} aktiv varning för att hålla berörda produkter tillgängliga i din butik.",
+      "content_few": "Lös {{count}} aktiva varningar för att hålla berörda produkter tillgängliga i din butik.",
+      "content_many": "Lös {{count}} aktiva varningar för att hålla berörda produkter tillgängliga i din butik.",
+      "content_one": "Lös {{count}} aktiv varning för att hålla berörda produkter tillgängliga i din butik.",
+      "content_other": "Lös {{count}} aktiva varningar för att hålla berörda produkter tillgängliga i din butik.",
+      "content_plural": "Lös {{count}} aktiva varningar för att hålla berörda produkter tillgängliga i din butik.",
+      "manualCheckAction": "Manuell kontroll",
+      "reviewAction": "Granska första varningen",
+      "title": "Aktiva säkerhetsvarningar kräver uppmärksamhet"
+    },
+    "admin": {
+      "actionNeeded": "Åtgärd krävs",
+      "actionNeededDescription": "Granska först flaggade produkter så att du kan bestämma om du vill behålla dem till försäljning, avfärda matchningen eller lösa varningen.",
+      "actionNeededTitle": "{{count}} aktiv varning behöver granskas",
+      "actionNeededTitle_few": "{{count}} aktiva varningar behöver granskas",
+      "actionNeededTitle_many": "{{count}} aktiva varningar behöver granskas",
+      "actionNeededTitle_one": "{{count}} aktiv varning behöver granskas",
+      "actionNeededTitle_other": "{{count}} aktiva varningar behöver granskas",
+      "actionNeededTitle_plural": "{{count}} aktiva varningar behöver granskas",
+      "activeAlertsDescription": "Produkter som fortfarande behöver ett handelsbeslut innan kön är tom.",
+      "auditHistoryKept": "Granskningshistorik sparad",
+      "auditReady": "Rapport redo",
+      "auditRecordsDescription": "Lösta och avfärdade beslut med orsaker och interna anteckningar.",
+      "auditRecordsTitle": "Granskningsposter",
+      "auditReport": "Granskningsrapport",
+      "automaticChecks": "Automatiska kontroller",
+      "bulkCheckAllSummary": "Detta kommer att köra en fullständig genomgång för alla {{count}} produkter.",
+      "bulkCheckDescription": "Skanna först okontrollerade produkter, eller inkludera hela katalogen när du vill ha en ny genomgång.",
+      "bulkCheckSummary": "Sammanfattning av masskontroll",
+      "bulkCheckSummaryDescription": "Håll denna sammanfattning kompakt så att handlare kan bekräfta resultat utan att öppna en andra skärm.",
+      "bulkCheckTitle": "Masskontroll av katalog",
+      "bulkCheckUncheckedSummary": "Detta kommer att kontrollera {{count}} återstående produkter och hoppa över {{skip}} redan granskade artiklar.",
+      "catalogCoverageDescription": "Andel av katalogen som redan kontrollerats mot Safety Gate.",
+      "catalogCoverageTitle": "Katalogtäckning",
+      "coverage": "Täckning",
+      "coveragePercent": "Katalog med sparade kontroller",
+      "criticalBannerDescription": "{{count}} aktiv matchning är markerad som hög eller allvarlig risk. Prioritera dessa produkter innan ny försäljning fortsätter.",
+      "criticalBannerDescription_few": "{{count}} aktiva matchningar är markerade som hög eller allvarlig risk. Prioritera dessa produkter innan ny försäljning fortsätter.",
+      "criticalBannerDescription_many": "{{count}} aktiva matchningar är markerade som hög eller allvarlig risk. Prioritera dessa produkter innan ny försäljning fortsätter.",
+      "criticalBannerDescription_one": "{{count}} aktiv matchning är markerad som hög eller allvarlig risk. Prioritera dessa produkter innan ny försäljning fortsätter.",
+      "criticalBannerDescription_other": "{{count}} aktiva matchningar är markerade som hög eller allvarlig risk. Prioritera dessa produkter innan ny försäljning fortsätter.",
+      "criticalBannerDescription_plural": "{{count}} aktiva matchningar är markerade som hög eller allvarlig risk. Prioritera dessa produkter innan ny försäljning fortsätter.",
+      "criticalBannerTitle": "{{count}} aktiv varning inkluderar högriskmatchningar",
+      "criticalBannerTitle_few": "{{count}} aktiva varningar inkluderar högriskmatchningar",
+      "criticalBannerTitle_many": "{{count}} aktiva varningar inkluderar högriskmatchningar",
+      "criticalBannerTitle_one": "{{count}} aktiv varning inkluderar högriskmatchningar",
+      "criticalBannerTitle_other": "{{count}} aktiva varningar inkluderar högriskmatchningar",
+      "criticalBannerTitle_plural": "{{count}} aktiva varningar inkluderar högriskmatchningar",
+      "daily": "Dagligen",
+      "dailyAtTime": "Dagligen kl. 03:47 Europa/Bratislava",
+      "dailyAtTimePlanned": "Schemalagd (dagligen kl. 03:47)",
+      "decisionsClosed": "Beslut stängda",
+      "demoAlert": {
+        "action": "Lös, avfärda eller följ upp med leverantören",
+        "badge": "Exempel på arbetsflöde",
+        "description": "Appen visar Shopify-produkten, Safety Gate-posten, varför den matchade och åtgärden att registrera.",
+        "evidence": "Behåll anteckningar och exportera en granskningsrapport",
+        "reason": "Jämför märke, modell, kategori och produktfoton",
+        "sample": "Vad handlare ser när en matchning visas",
+        "title": "Trolig Safety Gate-matchning hittad"
+      },
+      "emptyProofCoverage": "{{count}} produkter har ett registrerat kontrollresultat.",
+      "emptyProofEvidence": "{{count}} stängda beslut behålls för granskningshistorik.",
+      "emptyProofMonitoring": "Daglig Safety Gate-övervakning körs fortfarande.",
+      "exportProof": "Exportera bevis",
+      "fallbackAlertDescription": "Matchad mot en Safety Gate-varning.",
+      "finishCoverage": "Slutför katalogtäckning",
+      "highRiskMatchesDescription": "Allvarliga eller högrisk-Safety Gate-matchningar att granska först.",
+      "highRiskMatchesTitle": "Högriskmatchningar",
+      "checkChangedProducts": "Granska ändrade produkter",
+      "checksCompletedDescription": "Automatiska och manuella kontroller som minskar manuellt kataloggranskningsarbete.",
+      "checksCompletedTitle": "Slutförda kontroller",
+      "lastMonitoringRunDescription": "Senaste automatiska, manuella eller masskontrollen av Safety Gate.",
+      "lastMonitoringRunTitle": "Senaste övervakningskörningen",
+      "lastSafetyGateUpdateChecked": "Senaste Safety Gate-uppdateringen kontrollerad",
+      "latestRun": "Senaste körningen",
+      "monitoringRunDateUnknown": "Tid ej tillgänglig",
+      "monitoringRunHistoryEmpty": "Inga schemalagda övervakningskörningar har registrerats ännu.",
+      "monitoringRunHistoryTitle": "Senaste övervakningskörningarna",
+      "monitoringRunProgress": "{{products}} produkter kontrollerade · {{alerts}} nya varningar",
+      "monitoringRunStatus": {
+        "completed": "Slutförd",
+        "enqueue_failed": "Kunde inte starta",
+        "failed": "Misslyckades",
+        "processing": "Pågår",
+        "queued": "I kö",
+        "retrying": "Försöker igen",
+        "skipped_unentitled": "Planen inaktiv",
+        "unknown": "Status ej tillgänglig"
+      },
+      "monitoringRunsTitle": "Övervakningskontroller",
+      "monitoringStatusAllClear": "Katalogövervakning pågår",
+      "monitoringStatusDescription": "ZeroRecall kontrollerar din katalog mot nya EU Safety Gate-uppdateringar, markerar produkter som behöver granskas och sparar bevis för revisionsrapporter.",
+      "monitoringStatusEyebrow": "Övervakningsstatus",
+      "monitoringStatusNeedsReview": "{{count}} produkt behöver ett handelsbeslut",
+      "monitoringStatusNeedsReview_few": "{{count}} produkter behöver handelsbeslut",
+      "monitoringStatusNeedsReview_many": "{{count}} produkter behöver handelsbeslut",
+      "monitoringStatusNeedsReview_one": "{{count}} produkt behöver ett handelsbeslut",
+      "monitoringStatusNeedsReview_other": "{{count}} produkter behöver handelsbeslut",
+      "monitoringStatusNeedsReview_plural": "{{count}} produkter behöver handelsbeslut",
+      "needsReviewTitle": "Produkter som behöver granskas",
+      "nextAutomaticCheck": "Nästa automatiska kontroll",
+      "noActiveAlertsDescription": "Dina senaste kontroller kräver för närvarande ingen åtgärd. Fortsätt att skanna nyligen tillagda produkter för att bibehålla täckningen.",
+      "noActiveAlertsTitle": "Inga aktiva säkerhetsvarningar",
+      "noAlertsDescription": "Det finns inga öppna produktgranskningar just nu. Det är fortfarande användbart: daglig övervakning fortsätter i bakgrunden och dina bevis är redo för export.",
+      "noAlertsTitle": "Inga produkter behöver granskas",
+      "priorityQueue": "Beslutskö",
+      "productsCoveredShort": "med ett registrerat kontrollresultat",
+      "productsMonitored": "Aktuella produktversioner kontrollerade",
+      "proofGridLabel": "Övervakningsaktivitet",
+      "protectionDescription": "Antal beskriver resultat som registrerats i appen; de är inte en produktsäkerhetscertifiering.",
+      "protectionEyebrow": "Din övervakningshistorik",
+      "protectionTitle": "Granska senaste kontroller och handelsbeslut.",
+      "recentAlertsDescription": "Granska troliga Safety Gate-matchningar, registrera ett beslut och spara bevis för revisioner.",
+      "recentAlertsTitle": "Produkter som behöver handelsbeslut",
+      "recommendedAction": "Rekommenderad åtgärd: granska matchningen och registrera ett beslut.",
+      "resolvedRateDescription": "Hur stor del av den loggade varningsaktiviteten som redan har avslutats.",
+      "resolvedRateTitle": "Lösningsgrad",
+      "results": {
+        "alertCreated": "Varning skapad",
+        "completed": "Slutförd",
+        "error": "Fel",
+        "checked": "Kontrollerad",
+        "skipped": "Överhoppad"
+      },
+      "reviewOneProduct": "Kontrollera en produkt",
+      "riskInAlert": "Risk beskriven i Safety Gate-varning",
+      "runBulkCheck": "Kör masskontroll",
+      "stats": {
+        "alertsCreated": "Varningar skapade",
+        "alreadyChecked": "Redan kontrollerad",
+        "errors": "Fel",
+        "checked": "Kontrollerad",
+        "skipped": "Överhoppad",
+        "stillUnchecked": "Fortfarande okontrollerad",
+        "totalProducts": "Totalt antal produkter"
+      },
+      "status": {
+        "cachedEvidence": "Cachelagrade bevis återanvänds",
+        "coverageIncomplete": {
+          "description": "Inga Safety Gate-matchningar behöver granskas i de {{checked}} övervakade produkterna. Slutför täckningen för alla {{total}} aktuella produkter innan du bekräftar hela katalogen.",
+          "eyebrow": "Täckning ofullständig",
+          "title": "{{count}} produkt behöver fortfarande täckning",
+          "title_few": "{{count}} produkter behöver fortfarande täckning",
+          "title_many": "{{count}} produkter behöver fortfarande täckning",
+          "title_one": "{{count}} produkt behöver fortfarande täckning",
+          "title_other": "{{count}} produkter behöver fortfarande täckning",
+          "title_plural": "{{count}} produkter behöver fortfarande täckning"
+        },
+        "deltaMonitoring": "Endast nya Safety Gate-varningar kontrolleras",
+        "factsLabel": "Aktuella övervakningsfakta",
+        "matchesNeedingReview": "Matchningar som behöver granskas",
+        "monitoringNotConfirmed": "Övervakning ännu inte bekräftad",
+        "monitoringProblem": {
+          "action": "Uppdatera katalogtäckning",
+          "description": "Dina nuvarande produkter har täckningsbevis, men appen kan inte bekräfta när Safety Gate-övervakningen senast slutfördes. Uppdatera katalogtäckningen för att återställa en tillförlitlig status.",
+          "eyebrow": "Övervakning behöver uppmärksamhet",
+          "title": "Katalogtäckningen har ingen registrerad övervakningskörning"
+        },
+        "noActionNeeded": {
+          "action": "Visa katalogtäckning",
+          "description": "Inga produkter i din övervakade katalog matchar för närvarande EU Safety Gate-varningar. Övervakningen fortsätter i bakgrunden och endast nya varningar eller ändrade produkter behöver åtgärdas.",
+          "emptyCatalogDescription": "Lägg till produkter i din Shopify-katalog så är ZeroRecall redo att täcka dem.",
+          "emptyCatalogTitle": "Inga produkter att övervaka ännu",
+          "eyebrow": "Aktuell Safety Gate-status",
+          "title": "Ingen åtgärd behövs"
+        },
+        "none": "Ingen",
+        "reviewNeeded": {
+          "criticalDescription": "Granska dessa möjliga matchningar innan du fortsätter försäljningen. Jämför produkten och Safety Gate-bevisen, registrera sedan ditt beslut.",
+          "criticalEyebrow": "Brådskande granskning",
+          "criticalTitle": "{{count}} möjlig matchning med en allvarlig riskvarning behöver granskas",
+          "criticalTitle_few": "{{count}} möjliga matchningar med en allvarlig riskvarning behöver granskas",
+          "criticalTitle_many": "{{count}} möjliga matchningar med allvarlig risk-varning behöver granskas",
+          "criticalTitle_one": "{{count}} möjlig matchning med allvarlig risk-varning behöver granskas",
+          "criticalTitle_other": "{{count}} möjliga matchningar med allvarlig risk-varning behöver granskas",
+          "criticalTitle_plural": "{{count}} möjliga matchningar med allvarlig risk-varning behöver granskas",
+          "description": "Potentiella Safety Gate-matchningar kräver ett beslut från handlaren. Granska matchningarna först; kontrollresultat för andra produkter finns kvar i katalogen.",
+          "eyebrow": "Granskning krävs",
+          "title": "{{count}} möjlig matchning behöver granskas",
+          "title_few": "{{count}} möjliga matchningar behöver granskas",
+          "title_many": "{{count}} möjliga matchningar behöver granskas",
+          "title_one": "{{count}} möjlig matchning behöver granskas",
+          "title_other": "{{count}} möjliga matchningar behöver granskas",
+          "title_plural": "{{count}} möjliga matchningar behöver granskas"
+        },
+        "scheduledPlanned": "Schemalagd körning"
+      },
+      "storeStatus": "Butiksstatus",
+      "valueMetrics": {
+        "decisionsRecorded": "Beslut registrerade",
+        "evidenceRetained": "Beslut med bevis",
+        "checksRun": "Kontroller körda",
+        "openDecisions": "Öppna beslut",
+        "productsCovered": "Kontrollerade produkter"
+      },
+      "valueProofDescription": "Visa teamet att prenumerationen inte är en engångsskanning: katalogtäckning, kontroller, beslut och skrivskyddad Shopify-åtkomst förblir aktiva.",
+      "valueProofDescriptionComplete": "Dessa antal visar registrerad kontrollaktivitet för den aktuella katalogen.",
+      "valueProofDescriptionIncomplete": "Kör kontroller för återstående produkter för att lägga till resultat i den aktuella katalogposten.",
+      "valueProofEyebrow": "Täckningsåtgärd",
+      "valueProofTitle": "Vad ZeroRecall fortsätter att göra",
+      "valueProofTitleComplete": "Varje aktuell produkt har en registrerad kontroll",
+      "valueProofTitleIncomplete": "{{count}} produkter har en registrerad kontroll",
+      "warningBannerDescription": "Granska dessa matchningar, avfärda falska positiva eller lös bekräftade problem så att kön förblir hanterbar.",
+      "warningBannerTitle": "{{count}} aktiv varning kräver ett beslut från handlaren",
+      "warningBannerTitle_few": "{{count}} aktiva varningar kräver beslut från handlaren",
+      "warningBannerTitle_many": "{{count}} aktiva varningar kräver beslut från handlaren",
+      "warningBannerTitle_one": "{{count}} aktiv varning kräver ett beslut från handlaren",
+      "warningBannerTitle_other": "{{count}} aktiva varningar kräver beslut från handlaren",
+      "warningBannerTitle_plural": "{{count}} aktiva varningar kräver beslut från handlaren",
+      "withReadOnlyShopifyAccess": "Skrivskyddad Shopify-åtkomst"
+    },
+    "bulkCheck": {
+      "action": "Kontrollera alla produkter",
+      "alerts": "Varningar {{count}}",
+      "alreadyChecked": "Redan kontrollerad",
+      "completed": "Slutförd på {{seconds}} sekunder",
+      "description": "Skanna varje produkt i din butik mot Safety Gate-databasen för att upptäcka dolda risker.",
+      "errors": "Fel {{count}}",
+      "checked": "Kontrollerade {{count}}",
+      "includeAlreadyChecked": "Inkludera redan kontrollerade produkter",
+      "notYetChecked": "Inte kontrollerad ännu",
+      "processed": "Bearbetade {{count}}",
+      "started": "Startade {{date}}",
+      "title": "Massäkerhetskontroll",
+      "totalProducts": "Totalt antal produkter",
+      "willCheckAll": "Kommer att kontrollera alla {{count}} produkter",
+      "willCheckUnchecked": "Kommer att kontrollera {{count}} okontrollerade produkter (hoppa över {{skip}} redan kontrollerade)"
+    },
+    "bulkResults": {
+      "success": "Masskontroll slutförd: {{processed}} bearbetade, {{checked}} kontrollerade, {{alertsCreated}} varningar skapade."
+    },
+    "howItWorks": {
+      "alertGeneration": {
+        "description": "Matchningar genererar varningar som du kan avfärda eller lösa för att spåra efterlevnad.",
+        "title": "Varningsgenerering"
+      },
+      "autoMonitoring": {
+        "description": "Produkter kontrolleras mot EU-databasen när de skapas eller uppdateras.",
+        "title": "Automatisk övervakning"
+      },
+      "title": "Så här fungerar det"
+    },
+    "liveScan": {
+      "completed": "Klar",
+      "description": "Importerar din katalog från Shopify och skannar produkter mot över 35 000 poster i den officiella EU Safety Gate (RAPEX)-databasen. Resultaten visas nedan inom kort.",
+      "eyebrow": "Automatisk säkerhetsrevision",
+      "failedDescription": "Vi kunde inte slutföra denna revision. Din katalog markerades inte som fullständigt kontrollerad. Starta skanningen igen eller kontakta support om problemet kvarstår.",
+      "failedHeading": "Katalogrevision behöver ett nytt försök",
+      "heading": "Gratis säkerhetsrevision av katalog pågår...",
+      "inProgress": "Pågår...",
+      "pending": "Väntar",
+      "progress": "Importerade {{imported}} av {{fetched}} produkter; jämförde {{scanned}} produkter med {{alerts}} Safety Gate-varningar hittills.",
+      "stepAudit": "3. Förbered GPSR-revisionsspår och efterlevnadsstatus",
+      "stepImport": "1. Importera produkter från Shopify",
+      "stepScan": "2. Jämför med Safety Gate-databasen (över 35 000 poster)"
+    },
+    "metricsCard": {
+      "activeAlertsHeading": "Aktiva varningar",
+      "productsCheckedHeading": "Kontrollerade produkter",
+      "resolutionHeading": "Lösningsgrad",
+      "resolved": "{{count}} lösta",
+      "resolvedAndDismissed": "{{resolved}} lösta • {{dismissed}} avfärdade",
+      "scans": "Safety Gate-skanningar",
+      "totalRecorded": "{{count}} totalt registrerade"
+    },
+    "monitorCard": {
+      "description": "Spåra varningar, kör katalogkontroller och håll tillsynsmyndigheter nöjda.",
+      "reviewAction": "Granska varningar",
+      "title": "Övervaka produktsäkerhet med en blick"
+    },
+    "quickActions": {
+      "browsePortal": "Bläddra i Safety Gate-portalen",
+      "description": "Regelbundna kontroller och dokumentation hjälper till att visa due diligence för tillsynsmyndigheter.",
+      "manualCheck": "Kör en manuell kontroll",
+      "title": "Snabba åtgärder"
+    },
+    "recentAlerts": {
+      "active": "{{count}} aktiva",
+      "allResolved": "Alla lösta",
+      "description": "Undersök de senaste matchningarna från Safety Gate innan du fullföljer beställningar.",
+      "emptyState": {
+        "content": "Bra nyheter – inga produkter är för närvarande flaggade. Fortsätt övervaka för att upprätthålla efterlevnad.",
+        "heading": "Inga säkerhetsvarningar ännu"
+      },
+      "matchCount": "{{count}} matchning hittades",
+      "matchCount_few": "{{count}} matchningar hittades",
+      "matchCount_many": "{{count}} matchningar hittades",
+      "matchCount_one": "{{count}} matchning hittades",
+      "matchCount_other": "{{count}} matchningar hittades",
+      "matchCount_plural": "{{count}} matchningar hittades",
+      "title": "Senaste säkerhetsvarningar"
+    },
+    "safetyBreakdown": {
+      "actionDesc": "Matchningar hittade med EU Safety Gate-rapporter som kräver granskning och lösning.",
+      "actionLabel": "Åtgärd krävs",
+      "description": "Översikt över din produktkatalogs verifiering mot europeiska säkerhetslistor och GPSR-direktivet.",
+      "eyebrow": "Katalogskyddsstatus",
+      "protectedDesc": "Produkter vars senaste registrerade kontroll inte hittade någon trolig matchning.",
+      "protectedLabel": "Kontrollerade produkter utan öppna fynd",
+      "protectRemainingAction": "Kontrollera återstående ({{count}})",
+      "reviewAlertsAction": "Granska varningar",
+      "scanAllAction": "Kör fullständig kataloggranskning",
+      "title": "Produktsäkerhetsstatus",
+      "unprotectedAllCovered": "Varje aktuell produkt har ett registrerat kontrollresultat.",
+      "unprotectedDesc": "Produkter utan registrerad Safety Gate-kontroll.",
+      "unprotectedLabel": "Inte kontrollerad ännu"
+    },
+    "setup": {
+      "description": "Gör din butik redo för EU:s produktsäkerhetsöverensstämmelse.",
+      "progress": "{{completed}} av {{total}} steg slutförda",
+      "steps": {
+        "step1": {
+          "description": "Klicka på ”Kontrollera alla produkter” för att skanna hela din katalog mot EU:s Safety Gate-databas.",
+          "label": "Kör din första massproduktkontroll"
+        },
+        "step2": {
+          "description": "Kontrollera varningssidan för att granska produkter som matchar Safety Gate-varningar.",
+          "label": "Granska eventuella säkerhetsvarningar"
+        },
+        "step3": {
+          "description": "Aktivera automatiska kontroller i Inställningar för att automatiskt övervaka nya produkter.",
+          "label": "Konfigurera automatisk övervakning"
+        }
+      },
+      "title": "Installationsguide"
+    },
+    "stats": {
+      "actionNeeded": "Åtgärd krävs",
+      "activeAlerts": "Aktiva varningar",
+      "alertsLogged": "Varningar loggade",
+      "allClear": "Allt klart",
+      "autoMonitoring": "Automatisk övervakning",
+      "descriptions": {
+        "activeAlerts": "Granska dessa produkter idag för att förbli kompatibel.",
+        "activeAlertsZero": "Alla säkerhetsproblem är lösta.",
+        "alertsLogged": "Inkluderar lösta och avvisade varningar för granskningsspår.",
+        "alertsLoggedZero": "Inga historiska varningar. Fortsätt övervaka nya produkter.",
+        "productsChecked": "Automatiska Shopify-händelser fortsätter att övervaka uppdateringar.",
+        "productsCheckedZero": "Kör en masskontroll för att skanna din nuvarande katalog."
+      },
+      "newSetup": "Ny installation",
+      "open": "{{count}} öppna",
+      "productsChecked": "Kontrollerade produkter",
+      "resolved": "{{count}} lösta"
+    },
+    "title": "ZeroRecall"
+  },
+  "dates": {
+    "daysAgo": "{{count}} dagar sedan",
+    "today": "Idag",
+    "weeksAgo": "{{count}} veckor sedan",
+    "yesterday": "Igår"
+  },
+  "errors": {
+    "apiError": "Extern säkerhetstjänst är tillfälligt otillgänglig. Försök igen senare.",
+    "pageLoadFailed": "Sidan kunde inte laddas",
+    "unknown": "Något gick fel"
+  },
+  "evidence": {
+    "alertNumber": "Safety Gate-varning {{number}}",
+    "description": "Granska registrerade produktsäkerhetsbeslut, anteckningar, riskkontext och bevis på leverantörsuppföljning.",
+    "empty": "Inga produktsäkerhetsbeslut har registrerats ännu.",
+    "eyebrow": "Granskningsspår",
+    "filteredRecords": "{{visible}} av {{total}} poster",
+    "filters": {
+      "collapseForProduct": "Dölj fullständiga bevis för {{title}}",
+      "expandForProduct": "Visa fullständiga bevis för {{title}}",
+      "noResults": "Inga granskningsposter matchar dessa filter.",
+      "searchLabel": "Sök granskningsspår",
+      "searchPlaceholder": "Sök produkt, varningsnummer eller bevis",
+      "showLess": "Dölj bevis",
+      "showMore": "Visa bevis",
+      "statusLabel": "Beslutsstatus"
+    },
+    "fullEvidence": "Fullständiga bevis",
+    "heading": "Beslut och historik över bevis",
+    "noNotes": "Ingen anteckning registrerad",
+    "records": "{{count}} poster",
+    "table": {
+      "accessibilityLabel": "Tabell över produktsäkerhetsbevis",
+      "decision": "Beslut",
+      "details": "Detaljer",
+      "notes": "Anteckningar/bevis",
+      "product": "Produkt",
+      "status": "Status",
+      "summary": "Sammanfattning av bevis",
+      "updated": "Uppdaterad"
+    },
+    "title": "Granskningsspår"
+  },
+  "experience": {
+    "delayed": "Övervakning kräver uppmärksamhet – den senast slutförda körningen är över 48 timmar gammal",
+    "pausedHelp": "Automatiska kontroller är pausade. Välj en plan för att kontrollera nya Safety Gate-varningar och produktändringar medan Shopify är stängt.",
+    "previewHelp": "Att öppna denna utvecklingsförhandsvisning aktiverar inte bakgrundsövervakning. Schemalagda kontroller kräver en verifierad aktiv Shopify-plan.",
+    "reviewSteps": "1. Jämför foton och identifierare → 2. Välj granskningsresultat → 3. Registrera ditt beslut",
+    "valueBody": "Dagliga kontroller av nya Safety Gate-varningar, kontroller när produkter ändras, e-postmeddelanden när aktiverade, och sparade granskningsbeslut.",
+    "valueTitle": "Vad kontinuerlig övervakning tillför"
+  },
+  "manualCheck": {
+    "admin": {
+      "catalog": "Katalog",
+      "catalogDescription": "Produkter sorteras efter de senaste Shopify-uppdateringarna så att handlare kan kontrollera de senaste ändringarna först.",
+      "checkFailed": "Kontrollen misslyckades",
+      "manualReview": "Granskning på begäran",
+      "manualReviewDescription": "Välj vilken produkt som helst från din katalog och kör en riktad Safety Gate-kontroll när du behöver ett omedelbart svar.",
+      "productFlagged": "Produkt flaggad"
+    },
+    "badges": {
+      "flagged": "{{count}} flaggade",
+      "checks": "{{count}} kontroller",
+      "needsReview": "{{count}} behöver granskas"
+    },
+    "banners": {
+      "alertDescription": "Ett potentiellt säkerhetsproblem hittades för denna produkt.",
+      "alertHeading": "Säkerhetsvarning skapad",
+      "failedHeading": "Kontrollen misslyckades",
+      "textOnlyDescription": "Detta resultat använde endast textfält. Om produkten förlitar sig på visuella skillnader, granska matchningen noggrannare.",
+      "textOnlyHeading": "Bildjämförelse var inte tillgänglig"
+    },
+    "breadcrumbs": {
+      "current": "Katalogtäckning",
+      "dashboard": "Kontrollpanel"
+    },
+    "bulk": {
+      "description": "Granska sparade kontroller och kör en ny Safety Gate-jämförelse för produkter i din nuvarande katalog.",
+      "checkAllProducts": "Kontrollera återstående produkter",
+      "checkingAll": "Kontrollerar katalog...",
+      "title": "Kontrollera din katalog"
+    },
+    "catalogue": {
+      "accessibilityLabel": "Produkttabell",
+      "actions": {
+        "checkAgain": "Kontrollera igen",
+        "checkAgainForProduct": "Kontrollera {{title}} igen",
+        "checkSafety": "Kontrollera säkerhet",
+        "checkSafetyForProduct": "Kontrollera säkerheten för {{title}}",
+        "viewForProduct": "Visa registrerat fynd för {{title}}"
+      },
+      "columns": {
+        "action": "Åtgärd",
+        "checks": "Kontroller",
+        "product": "Produkt",
+        "status": "Status"
+      },
+      "emptyBody": "Inga produkter är tillgängliga för kontroll.",
+      "emptyHeading": "Inga produkter hittades",
+      "firstCheck": "Kör din första kontroll",
+      "heading": "Produktkatalog ({{count}})",
+      "lastChecked": "Senast kontrollerad {{date}}",
+      "noType": "Ingen typ",
+      "searchLabel": "Hitta produkt",
+      "searchPlaceholder": "Sök produkter efter titel, SKU, leverantör eller typ",
+      "status": {
+        "notChecked": "Ej kontrollerad",
+        "reviewed": "Granskad",
+        "safe": "Ingen matchning hittades",
+        "unsafe": "Behöver granskas"
+      },
+      "totalChecks": "{{count}} totalt",
+      "unknownVendor": "Okänd leverantör"
+    },
+    "coverage": {
+      "completeDescription": "Varje aktuell Shopify-produkt har en registrerad Safety Gate-kontroll. Nya eller ändrade produkter behöver fortfarande en ny kontroll.",
+      "completeTitle": "Varje aktuell produkt har ett sparat kontrollresultat",
+      "eyebrow": "Katalogkontrollstatus",
+      "incompleteDescription": "Kontrollera de återstående produkterna för att spara ett Safety Gate-resultat för den aktuella katalogen.",
+      "incompleteTitle": "{{count}} produkter har ingen sparad kontroll ännu",
+      "lastProductNeedsReview": "Senaste produktkontrollen skapade eller uppdaterade ett granskningsobjekt.",
+      "lastProductSafe": "Senaste produktkontrollen hittade ingen sannolik Safety Gate-matchning.",
+      "lastRun": "Senaste kontrollen",
+      "lastRunResultWithCounts": "Kontrollerade {{checked}}, hoppade över {{skipped}} oförändrade, skapade {{alerts}} granskningsobjekt, {{errors}} fel.",
+      "noneRemaining": "Varje aktuell produkt har ett sparat kontrollresultat.",
+      "noRunYet": "Ingen katalog- eller produktkontroll har körts ännu.",
+      "percent": "{{percent}}% med en aktuell kontroll",
+      "productsCovered": "Kontrollerade produkter",
+      "productsCoveredDescription": "Produkter med ett sparat resultat för sin nuvarande Shopify-version.",
+      "remaining": "Inte kontrollerad ännu",
+      "remainingDescription": "Kör en kontroll för att spara ett Safety Gate-resultat för dessa produkter."
+    },
+    "filters": {
+      "all": "Alla ({{count}})",
+      "needsReview": "Möjlig matchning ({{count}})",
+      "safe": "Ingen matchning hittades ({{count}})",
+      "unprotected": "Oskyddad eller ändrad ({{count}})"
+    },
+    "modal": {
+      "unknown": "Okänd",
+      "unknownProduct": "Okänd produkt"
+    },
+    "overview": {
+      "coverage": "{{coverage}}% täckning",
+      "manualCompleted": "Manuella kontroller slutförda",
+      "manualCompletedDescription": "{{checked}} av {{total}} produkter kontrollerade",
+      "noOpenReviews": "Inga öppna produktbeslut.",
+      "noRisks": "Inga risker har upptäckts ännu.",
+      "prioritise": "Prioritera dessa produkter för åtgärd.",
+      "productsDescription": "Senaste produkter från din butik.",
+      "productsFlagged": "Produkter flaggade",
+      "productsInScope": "Produkter inom räckvidd",
+      "productsNeedingReview": "Produkter som behöver granskas",
+      "title": "Översikt över kontroller"
+    },
+    "quickActions": {
+      "title": "Snabba åtgärder"
+    },
+    "subtitle": "Skydda resten av din katalog, uppdatera övervakningen eller kontrollera en vald produkt.",
+    "title": "Katalogtäckning",
+    "toasts": {
+      "completed": "Säkerhetskontroll slutförd",
+      "flagged": "Potentiellt säkerhetsproblem hittades"
+    }
+  },
+  "nav": {
+    "catalogCoverage": "Katalogtäckning",
+    "dashboard": "Kontrollpanel",
+    "evidence": "Granskningsspår",
+    "manualCheck": "Katalogtäckning",
+    "safetyAlerts": "Granskningskö",
+    "settings": "Inställningar"
+  },
+  "news": {
+    "items": {
+      "databaseUpdate": {
+        "date": "Dec 2025",
+        "description": "Safety Gate-databasen uppdateras kontinuerligt med nya produktvarningar. Kör regelbundna kontroller för att förbli kompatibel.",
+        "title": "EU Safety Gate-databasen uppdaterad"
+      },
+      "gpsr": {
+        "date": "GPSR 2024",
+        "description": "Lär dig mer om GPSR-kraven och hur du säkerställer att dina produkter uppfyller EU:s säkerhetsstandarder.",
+        "title": "Allmän produktsäkerhetsförordning"
+      }
+    },
+    "title": "Nyheter"
+  },
+  "onboarding": {
+    "back": "Tillbaka",
+    "finishButton": "Slutför installation och gå till översikt",
+    "nextStep": "Nästa steg",
+    "stepIndicator": "Steg {{current}} av {{total}}",
+    "steps": {
+      "automation": {
+        "description": "Konfigurera prioriterad granskning och automatiska säkerhetsregler för din butik.",
+        "label": "Säkerhetsautomation",
+        "quarantine": {
+          "desc": "Markera produkter automatiskt för prioriterad granskning när de matchar Safety Gate-varningar med allvarlig risk (tröskel >= 95%).",
+          "label": "Aktivera prioriterad granskning",
+          "title": "Prioritera allvarliga risker"
+        },
+        "title": "Steg 3: Automatisk övervakning och varningar",
+        "webhooks": {
+          "desc": "Produkter kontrolleras automatiskt mot EU-databasen när de skapas eller uppdateras.",
+          "title": "Realtids-Webhook-skanning"
+        }
+      },
+      "scan": {
+        "alerts": "Riskvarningar skapade: {{count}}",
+        "complete": "Katalogen övervakas nu",
+        "description": "Importera dina nuvarande Shopify-produkter till Safety Gate-övervakning och jämför sedan katalogen med de senaste Safety Gate-varningarna.",
+        "imported": "Produkter importerade för övervakning: {{count}}",
+        "label": "Katalogimport",
+        "monitored": "Produkter jämförda med Safety Gate-varningar: {{count}}",
+        "scanned": "Produkter skannade: {{count}}",
+        "scanning": "Importerar katalog och jämför produkter med Safety Gate-varningar...",
+        "startButton": "Importera och övervaka aktuell katalog",
+        "title": "Steg 2: Importera och övervaka aktuell katalog",
+        "toScan": "Produkter att importera för övervakning: {{count}}"
+      },
+      "sensitivity": {
+        "balanced": "70% (Rekommenderas - Balanserad)",
+        "broad": "40% (Bred - Fler varningar)",
+        "calibration": {
+          "balancedDesc": "Standardkänslighet. Optimerad balans mellan precision och antalet varningar. Skannar titlar, beskrivningar och matchar viktiga varumärken och modellstrukturer.",
+          "balancedTitle": "Balanserat upptäcktsläge",
+          "broadDesc": "Hög känslighet. Fångar upp löst relaterade matchningar. Rekommenderas om du säljer högriskproduktkategorier (leksaker, elektronik) och vill ha fullständig täckning, men förvänta dig en del falsklarm.",
+          "broadTitle": "Brett upptäcktsläge",
+          "strictDesc": "Hög precision. Filtrerar bort mindre likheter. Varningar utlöses endast vid mycket tydliga matchningar av varumärkes-/modellnamn. Låg frekvens av falsklarm.",
+          "strictTitle": "Strikt upptäcktsläge"
+        },
+        "description": "Välj hur nära en produkt ska matcha en Safety Gate-post innan den behöver granskas.",
+        "label": "Matchningsstränghet",
+        "strict": "90 % (Strikt – Färre varningar)",
+        "thresholdLabel": "Matchningströskel: {{value}}%",
+        "title": "Steg 1: Ställ in matchningsstränghet"
+      }
+    },
+    "subtitle": "Hitta möjliga matchningar av farliga produkter, granska dem i Shopify och spara revisionsbevis för varje beslut.",
+    "title": "Övervaka din katalog mot EU Safety Gate",
+    "value": {
+      "audit": {
+        "description": "Lösta och avvisade beslut behåller anteckningar för export och uppföljning med leverantörer.",
+        "title": "Revisionsklara bevis"
+      },
+      "monitor": {
+        "description": "Nya Safety Gate-varningar kontrolleras mot din Shopify-katalog.",
+        "title": "Daglig övervakning av EU Safety Gate"
+      },
+      "review": {
+        "description": "Jämför matchningen, bestäm vad du ska göra och håll kön hanterbar.",
+        "title": "Arbetsflöde för handlarbeslut"
+      }
+    }
+  },
+  "pagination": {
+    "pageOf": "Sida {{current}} av {{total}} ({{count}} varningar)"
+  },
+  "portal": {
+    "description": "Få tillgång till den officiella europeiska Safety Gate-databasen för att söka efter farliga produkter och se detaljerade säkerhetsvarningar.",
+    "home": "Safety Gate startsida",
+    "homeDescription": "Få tillgång till Europeiska kommissionens officiella portal",
+    "searchDatabase": "Sök i databasen",
+    "searchDescription": "Sök i EU Safety Gate efter farliga produkter",
+    "title": "Safety Gate-portal"
+  },
+  "resolveActions": {
+    "actionTaken": "Åtgärd vidtagen",
+    "contactedSupplier": "Kontaktade leverantör (väntar på svar)",
+    "contactPending": "Väntar på leverantörssvar",
+    "falsePositive": "Falsklarm",
+    "menuLabel": "Åtgärder för lösning",
+    "modifiedProduct": "Produkt modifierad",
+    "noActionNeeded": "Ingen åtgärd behövs",
+    "notMyProduct": "Inte min produkt",
+    "other": "Annat",
+    "removedFromSale": "Borttagen från försäljning",
+    "verifiedSafe": "Historiskt resultat: produkt verifierad som säker"
+  },
+  "settings": {
+    "monitoring": {
+      "automatic": {
+        "description": "Produkter kontrolleras automatiskt när de skapas eller uppdateras via webhooks.",
+        "enabled": "Aktiverad",
+        "title": "Automatisk kontroll"
+      },
+      "manual": {
+        "description": "Kör säkerhetskontroller på begäran för alla produkter i din katalog.",
+        "goToManualCheck": "Gå till manuell kontroll",
+        "title": "Manuella kontroller"
+      },
+      "title": "Övervakning"
+    },
+    "navigation": {
+      "dashboard": "Kontrollpanel",
+      "manualCheck": "Manuell kontroll",
+      "title": "Navigering",
+      "viewAlerts": "Visa varningar"
+    },
+    "subtitle": "Kontrollera hur ZeroRecall övervakar din Shopify-katalog.",
+    "threshold": {
+      "currentDefault": "Nuvarande miljöstandard",
+      "description": "Välj hur många möjliga Safety Gate-matchningar ditt team vill granska. Balanserad övervakning rekommenderas för de flesta Shopify-kataloger.",
+      "howItWorks": "Så här fungerar det",
+      "label": "Avancerad matchningströskel (%)",
+      "resetToDefault": "Återställ till standard",
+      "save": "Spara",
+      "title": "Övervakningsläge"
+    },
+    "title": "Övervakningsinställningar"
+  },
+  "settingsAdmin": {
+    "advancedMatchingSettings": "Avancerade matchningsinställningar",
+    "automation": {
+      "autoDraftDescription": "Markera produkter automatiskt för prioriterad granskning när de matchar Safety Gate-varningar med allvarlig risk (tröskel >= 95%).",
+      "autoDraftTitle": "Prioritera allvarliga risker",
+      "description": "Konfigurera prioriterad granskning för högriskmatchningar.",
+      "eyebrow": "Realtidsoperationer",
+      "title": "Säkerhetsautomatisering"
+    },
+    "automationStatus": {
+      "active": {
+        "badge": "Plan aktiv",
+        "description": "Den första katalogrevisionen är klar och denna butik har en aktiv övervakningsplan.",
+        "title": "Katalogrevisionen är klar"
+      },
+      "completedNoPlan": {
+        "badge": "Revision klar",
+        "description": "Den första katalogrevisionen är klar. Pågående automatisk övervakning kräver en aktiv plan.",
+        "title": "Initial katalogrevision slutförd"
+      },
+      "failed": {
+        "badge": "Behöver uppmärksamhet",
+        "description": "Den senaste importen eller revisionen slutfördes inte. Försök igen med katalogtäckningen innan du förlitar dig på övervakningsstatusen.",
+        "title": "Initial katalogrevision behöver uppmärksamhet"
+      },
+      "notStarted": {
+        "badge": "Ej verifierad",
+        "description": "Den första importen har inte slutförts, så katalogtäckningen är ännu inte bekräftad.",
+        "title": "Katalogrevision ej bekräftad"
+      },
+      "openCatalog": "Öppna katalogtäckning",
+      "scanning": {
+        "badge": "Pågår",
+        "description": "Produkter importeras och kontrolleras. Katalogtäckningen kommer att bekräftas efter att revisionen är klar.",
+        "title": "Initial katalogrevision pågår"
+      }
+    },
+    "automationStatusDescription": "Dagliga uppdateringar från EU Safety Gate, produktändringar i Shopify och revisionsposter hanteras automatiskt. Använd endast dessa inställningar för att justera granskningsvolym och aviseringar.",
+    "automationStatusEyebrow": "Automatisk övervakning",
+    "automationStatusTitle": "Safety Gate-övervakning fungerar för denna butik",
+    "configuration": "Konfiguration",
+    "configurationDescription": "Håll sidan fokuserad på ett handlarbeslut: hur strikt kontrollen ska vara när produkter jämförs med Safety Gate-varningar.",
+    "currentThreshold": "Nuvarande tröskel",
+    "currentThresholdDescription": "Lägre värden fångar fler möjliga matchningar. Högre värden minskar falsklarm.",
+    "environmentDefault": "Miljöstandard",
+    "environmentDefaultDescription": "Används när butiken ännu inte har sparat en anpassad tröskel.",
+    "exclusions": {
+      "description": "Exkludera specifika leverantörer eller produktkategorier från Safety Gate-kontroller för att minska falsklarm.",
+      "eyebrow": "Filtreringsregler",
+      "title": "Exkluderingsregler",
+      "typesDescription": "Skriv en produktkategori eller typ och tryck på Enter eller komma för att lägga till den.",
+      "typesPlaceholder": "Presentkort, tjänst, ...",
+      "typesTitle": "Uteslutna produkttyper",
+      "vendorsDescription": "Skriv ett leverantörsnamn och tryck på Enter eller komma för att lägga till det.",
+      "vendorsPlaceholder": "Leverantör A, Leverantör B, ...",
+      "vendorsTitle": "Uteslutna leverantörer"
+    },
+    "fallback": "Reservlösning",
+    "guidance": "Vägledning",
+    "guidanceItems": {
+      "balancedDescription": "Rekommenderas för de flesta kataloger (65–70 %). Fångar troliga risker samtidigt som falska varningar hålls nere.",
+      "balancedTitle": "Balanserad standard",
+      "broadDescription": "Använd cirka 50 % när du föredrar att fånga fler möjliga matchningar och är bekväm med att granska fler varningar.",
+      "broadTitle": "Bred övervakning",
+      "strictDescription": "Använd 80 %+ när din katalog är stabil och du vill ha färre manuella granskningar.",
+      "strictTitle": "Strikt matchning"
+    },
+    "included": {
+      "description": "Appen övervakar kontinuerligt din katalog mot Safety Gate-varningar, bevarar bevis på efterlevnad och varnar dig när produkter behöver granskas.",
+      "evidenceDescription": "Lösta och avvisade beslut behåller anteckningar, skäl, riskkontext och tidsstämplar.",
+      "evidenceTitle": "Exporterbart bevis",
+      "eyebrow": "Pågående övervakning",
+      "monitoringDescription": "Nya Safety Gate-poster jämförs med övervakade Shopify-produkter utan en manuell skanning.",
+      "monitoringTitle": "Pågående EU-övervakning",
+      "teamDescription": "Prioriterad granskning, leverantörsdokumentation och filter hjälper ditt team att hantera verkliga beslut snabbare.",
+      "teamTitle": "Granskningsflöde",
+      "title": "Vad din butik håller täckt"
+    },
+    "matchingStrictness": "Matchningsstriktess",
+    "mode": {
+      "balanced": "Balanserad",
+      "broad": "Fler matchningar",
+      "strict": "Färre matchningar"
+    },
+    "monitoringModeEyebrow": "Övervakningsläge",
+    "notifications": {
+      "emailHelp": "Ursprungligen hämtad från Shopify. Du kan använda en annan adress.",
+      "emailLabel": "E-post för aviseringar",
+      "enabledDescription": "Välj om du vill få brådskande resultat, en veckosammanfattning eller båda.",
+      "enabledTitle": "E-postaviseringar om säkerhet",
+      "immediateDescription": "Mejla mig så snart en produkt behöver granskas.",
+      "immediateTitle": "Nya resultat",
+      "invalidEmail": "Ange en giltig e-postadress innan du aktiverar e-postaviseringar.",
+      "languageLabel": "E-postspråk",
+      "noRecipientDescription": "E-postaviseringar är aktiverade, men ingen adress har angetts. Inga meddelanden kommer att levereras förrän en e-postadress har angetts.",
+      "noRecipientHeading": "Ingen e-postmottagare konfigurerad",
+      "useShopifyEmail": "Använd butikens kontakt-e-post ({{email}})",
+      "weeklyDescription": "Måndagens övervakningssammanfattning: bekräftar när inga nya resultat har inträffat, eller sammanfattar öppna ärenden som behöver granskas.",
+      "weeklyTitle": "Veckosammanfattning av övervakning"
+    },
+    "onDemand": "På begäran",
+    "plans": {
+      "advancedDescription": "Lägg till prioriterad granskning, uppföljning med leverantörer och arbetsflöden för EU-språk.",
+      "advancedTitle": "Avancerat: automatisering och flerspråkiga arbetsflöden",
+      "description": "Funktioner och möjligheter som ingår i din butiks övervakningsplan.",
+      "eyebrow": "Prenumerationsvärde",
+      "manualDescription": "Kör kontroller en produkt i taget och se den senaste produktstatusen.",
+      "manualTitle": "Gratis: manuella kontroller",
+      "monitorDescription": "Övervaka nya Safety Gate-varningar mot katalogen, exportera CSV-granskningsrapporter och behåll en beslutshistorik.",
+      "monitorTitle": "Betald: daglig övervakning och rapporter",
+      "title": "Planfunktioner"
+    },
+    "recommendedSetup": "Rekommenderad inställning",
+    "saveAll": "Spara alla inställningar",
+    "status": {
+      "auditTrail": "Granskningsspår",
+      "autoQuarantine": "Prioriterad granskning",
+      "dailySafetyGateUpdates": "Dagliga Safety Gate-uppdateringar",
+      "emailDigest": "E-postsammanfattning",
+      "off": "Av",
+      "on": "På",
+      "running": "Körs",
+      "shopifyProductUpdates": "Nya/uppdaterade Shopify-produkter"
+    },
+    "storeSetting": "Butiksinställning",
+    "strictnessHint": "40–60 % är bredare skanning. 70–85 % är striktare och ger vanligtvis färre falska positiva resultat.",
+    "valueDescription": "Pågående övervakning jämför kvalificerade katalogprodukter med nyligen publicerade Safety Gate-poster.",
+    "valueEyebrow": "Katalogövervakning",
+    "valueItems": {
+      "auditDescription": "Lösta och avvisade beslut behåller anteckningar, skäl och granskningshistorik för exporterbara rapporter.",
+      "auditTitle": "Revisionsklara bevis",
+      "dailyDescription": "Nya Safety Gate-varningar kontrolleras mot övervakade produkter utan att handlaren startar en manuell skanning.",
+      "dailyTitle": "Daglig katalogövervakning",
+      "workflowDescription": "Handlare granskar endast produkter som behöver ett beslut, löser sedan, avvisar eller följer upp med leverantörer.",
+      "workflowTitle": "Shopify-eget granskningsflöde"
+    },
+    "valueTitle": "Vad som förblir täckt",
+    "workspace": "Arbetsyta"
+  },
+  "status": {
+    "actionRequired": "Åtgärd krävs",
+    "allClear": "Allt klart",
+    "archived": "Arkiverade",
+    "dismissed": "Avfärdade",
+    "flagged": "flagga",
+    "monitored": "Övervakad",
+    "needsReview": "Behöver granskas",
+    "notChecked": "Ej kontrollerad",
+    "protected": "Kontrollerad",
+    "resolved": "Löst",
+    "runCheck": "Kör kontroll",
+    "safe": "Ingen matchning hittades",
+    "scanning": "Skanning pågår",
+    "unprotected": "Ej kontrollerad",
+    "unsafe": "Behöver granskas",
+    "updated": "Uppdaterad"
+  },
+  "uxEnhancements": {
+    "activityTimeline": {
+      "actions": {
+        "dismiss": "Beslut registrerat: avvisat",
+        "check": "Produkt kontrollerad",
+        "quarantine": "Produkt markerad för granskning",
+        "resolve": "Beslut registrerat: löst"
+      },
+      "description": "Registrerade säkerhetskontroller, produktbeslut och bevis som sparas för granskningsrapporter.",
+      "details": {
+        "autoDrafted": "Produkt markerad för prioriterad granskning.",
+        "bulkScanned": "Masskatalogskanning slutförd.",
+        "checkSafe": "Ingen matchning hittades i denna kontroll.",
+        "checkUnsafe": "Produkten behöver granskas. Beslutspost skapad.",
+        "noReason": "Ingen anledning angiven.",
+        "reason": "Anledning: {{reason}}"
+      },
+      "eyebrow": "Granskningsspår",
+      "noActivity": "Inga granskningshändelser än. Kör övervakning för att börja samla bevis.",
+      "title": "Beslut och historik över bevis",
+      "types": {
+        "automatic": "Systemhändelse",
+        "bulk": "Masshändelse",
+        "manual": "Handlarhändelse"
+      }
+    },
+    "alerts": {
+      "floating": {
+        "dismissSelected": "Avfärda valda",
+        "resolveSelected": "Lös valda",
+        "selectedCount": "{{count}} vald varning",
+        "selectedCount_few": "{{count}} valda varningar",
+        "selectedCount_many": "{{count}} valda varningar",
+        "selectedCount_one": "{{count}} vald varning",
+        "selectedCount_other": "{{count}} valda varningar",
+        "selectedCount_plural": "{{count}} valda varningar"
+      },
+      "quickFilters": {
+        "allAlerts": "Alla poster",
+        "allAlertsDesc": "Visa alla säkerhetsvarningar i katalogen.",
+        "highRisk": "Endast hög risk",
+        "highRiskDesc": "Allvarliga risknivåer som kräver åtgärd.",
+        "needsReview": "Behöver granskas",
+        "needsReviewDesc": "Väntande säkerhetsvarningar.",
+        "resolved": "Lösta/avfärdade",
+        "resolvedDesc": "Tidigare varningar som sparats för granskning.",
+        "title": "Snabbfilter"
+      }
+    },
+    "complianceRing": {
+      "scoreLabel": "Rensa",
+      "subtitle": "Andel kontrollerade produkter utan öppna granskningsposter",
+      "title": "Hälsa för övervakad katalog"
+    }
+  },
+  "workspace": {
+    "all": "Alla",
+    "appLanguage": "Appspråk",
+    "apply": "Tillämpa filter",
+    "applyFilters": "Tillämpa filter",
+    "balancedHelp": "Balanserad matchning är den rekommenderade startpunkten. Ändra den endast om du vill granska fler eller färre möjliga matchningar.",
+    "broadHelp": "Inkluderar fler möjliga matchningar och kan kräva mer manuell granskning.",
+    "cannotCompare": "Kan inte jämföra",
+    "catalogGlobalAction": "Kontrollera {{count}} produkter i hela katalogen",
+    "catalogScopeHelp": "Täckningen inkluderar alla Shopify-katalogprodukter, inklusive aktiva, utkast och arkiverade artiklar. Filter ändrar endast den här listan, inte täckningen eller övervakningsomfånget.",
+    "clearFilters": "Rensa filter",
+    "compare": "Jämför produkter",
+    "compareProduct": "Jämför produkter: {{title}}",
+    "coverageFiltersHelp": "Täckning och öppna fynd är separata: en ändrad produkt kan också ha ett fynd som väntar på granskning.",
+    "coverageIncomplete": "{{count}} produkter behöver en aktuell kontroll",
+    "coverageScope": "Visar {{visible}} av {{total}} katalogprodukter.",
+    "csv": {
+      "action": "Beslutsåtgärd",
+      "actor": "Inspelad av",
+      "caseNumber": "Safety Gate-ärende",
+      "decisionAt": "Beslut vid",
+      "detectedAt": "Upptäckt vid",
+      "generatedAt": "Genererad vid",
+      "guidance": "Granskningsvägledning",
+      "notes": "Granskningsanteckningar",
+      "product": "Produkt",
+      "productId": "Shopify produkt-ID",
+      "recordType": "Posttyp",
+      "resolution": "Lösning",
+      "risk": "Risknivå",
+      "shop": "Butik",
+      "source": "Officiell källa",
+      "sourceRisk": "Risk i officiell varning",
+      "status": "Status"
+    },
+    "csvGuidance": "Möjlig matchning. Jämför produktidentifierare och officiell post innan du fattar beslut.",
+    "currentFindingStatus": "Aktuell status för fynd",
+    "dateFilterTimezone": "Datum använder övervakningstidszonen: {{timeZone}}. Tillämpa filter för att uppdatera resultat och exportera.",
+    "decisionAt": "Beslut registrerat",
+    "decisionExportHelp": "Denna vy och dess CSV-export använder beslutsdatum. De inkluderar granskningshändelser för äldre fynd, inklusive återöppnade ärenden. Produktnamn och officiella källfakta behåller sin ursprungliga text.",
+    "decisionFrom": "Beslutsdatum från",
+    "decisionLegacy": "Historiskt resultat: produkt verifierad som säker",
+    "decisionTo": "Beslutsdatum till",
+    "detectedAt": "Fynd upptäckt",
+    "differentIdentifiers": "Olika identifierare: {{fields}}. Kontrollera dem innan du fattar beslut.",
+    "documentedFindings": "Fynd som för närvarande är lösta eller avfärdade",
+    "download": "Ladda ner CSV",
+    "emptyHelp": "Inga öppna fynd är registrerade. Detta intygar inte att dina produkter är säkra. Kontrollera katalogtäckning och den senaste övervakningskörningen.",
+    "eventCount": "{{count}} beslutshändelser",
+    "excluded": "{{count}} av {{total}} katalogprodukter matchar dessa regler för manuella kontroller. Automatisk övervakning använder inte dessa undantag. Befintliga fynd förblir tillgängliga.",
+    "excludeHelp": "Dessa regler gäller för manuella kontroller. Kontrollera de berörda produkterna innan du sparar.",
+    "exportHelp": "CSV-filen innehåller alla fynd under den valda perioden och statusen, inklusive officiella referenser, granskningsanteckningar och registrerade beslutshändelser. Det är en registrering av kontroller, inte ett säkerhetscertifikat.",
+    "exportReady": "CSV förberedd. Om nedladdningen inte startade, använd denna länk:",
+    "findingCount": "Fynd i detta omfång: {{count}}.",
+    "findingFrom": "Fynd upptäckt från",
+    "findings": "Fynd och bevis",
+    "findingTo": "Fynd upptäckt till",
+    "from": "Från datum",
+    "goReview": "Granska öppna fynd",
+    "groupAction": "Åtgärd vidtagen",
+    "groupDifferent": "Annan produkt",
+    "groupInformation": "Behöver mer information",
+    "history": "Beslutshistorik",
+    "historyLimit": "Visar upp till {{count}} senaste fynd. Exportera hela posten för alla fynd.",
+    "changed": "Ändrad sedan senaste kontrollen",
+    "chooseOutcomeHelp": "Välj ett resultat för att kunna registrera ditt beslut.",
+    "chooseOutcomeLink": "Välj resultat",
+    "lastSuccess": "Senaste lyckade övervakningskörning",
+    "matchingIdentifiers": "Matchande identifierare: {{fields}}.",
+    "matchNeedsVerification": "Möjlig matchning. Jämför foton och identifierare med den officiella posten innan du fattar beslut.",
+    "matchNotConfirmed": "Matchning inte bekräftad efter granskning av bevis",
+    "missingIdentifiers": "Vissa identifierare saknas. Jämför tillgängliga foton och fråga din leverantör efter modell, streckkod och batch.",
+    "monitoring": {
+      "enabled": "Aktiverad – dagliga kontroller",
+      "failed": "Senaste automatiska kontrollen misslyckades",
+      "paused": "Pausad – ingen aktuell övervakningsplan",
+      "preview": "Utvecklingsförhandsvisning – fakturering förbigås",
+      "processing": "Kontroll köad eller pågår",
+      "unknown": "Övervakningsaktivitet ej bekräftad",
+      "unverified": "Pausad – prenumeration kunde inte verifieras"
+    },
+    "monitoringLabel": "Automatisk övervakning",
+    "monitoringUnknownHelp": "Ingen lyckad övervakningskörning är tillgänglig för att bekräfta den senaste aktiviteten. Uppdatera för att kontrollera igen.",
+    "neverRun": "Ingen slutförd övervakningskörning registrerad",
+    "noCurrentResult": "Ett aktuellt resultat behövs",
+    "noDecisions": "Inga beslut har registrerats ännu. Öppna ett fynd, jämför produkterna och registrera vad du granskade.",
+    "noFilteredDecisions": "Inga beslutshändelser matchar dessa filter. Rensa filtren för att se hela historiken.",
+    "noFilteredFindings": "Inga fynd matchar dessa filter. Rensa filtren för att se hela listan.",
+    "noMatch": "Ingen matchning hittades",
+    "noMatchAtCheck": "Ingen matchning hittades i denna kontroll.",
+    "notes": "Granskningsanteckningar",
+    "notificationLanguage": "E-postspråk",
+    "notRecorded": "Inget aktuellt granskningsresultat",
+    "oldest": "Öppen i {{count}} dagar",
+    "onboarding": "Importera katalog → kontrollera Safety Gate-poster → granska resultat",
+    "outcome": "Resultat",
+    "outcomeHelp": {
+      "contacted_supplier": "Fyndet förblir öppet medan du väntar på din leverantör.",
+      "false_positive": "Använd när bevisen visar att varningen inte gäller. Fyndet kommer att avfärdas.",
+      "match_not_confirmed": "Använd när bevisen du granskade inte bekräftar en matchning. Fyndet kommer att lösas.",
+      "modified_product": "Uppdatera först produkten i Shopify. Att registrera detta resultat ändrar inte produkten; fyndet kommer att lösas.",
+      "not_my_product": "Använd när varningen gäller en annan produkt. Fyndet kommer att avfärdas.",
+      "other": "Beskriv resultatet i den obligatoriska anteckningen. Fyndet kommer att lösas.",
+      "removed_from_sale": "Ta först bort produkten från försäljning i Shopify. Att registrera detta resultat ändrar inte produkten; fyndet kommer att lösas.",
+      "verified_safe": "Detta är ett historiskt resultat."
+    },
+    "outcomeLabels": {
+      "contactedSupplier": "Väntar på leverantör",
+      "falsePositive": "Falsklarm",
+      "modifiedProduct": "Modifierad produkt",
+      "notMyProduct": "Inte min produkt",
+      "other": "Annat",
+      "removedFromSale": "Borttagen från försäljning",
+      "verifiedSafe": "Historisk: verifierad säker"
+    },
+    "possibleMatch": "Möjlig matchning",
+    "possibleMatchAtCheck": "Denna kontroll hittade en möjlig Safety Gate-matchning.",
+    "print": "Skriv ut/spara PDF",
+    "priority": "Granskningsprioritet",
+    "priorityHelp": "Beslut först, sedan officiell varningsallvarlighetsgrad och äldsta fynd. Objekt som väntar på leverantörer följer.",
+    "productStatus": "Shopify-status",
+    "productStatusActive": "Aktiv",
+    "productStatusAll": "Alla Shopify-statusar",
+    "productStatusArchived": "Arkiverade",
+    "productStatusDraft": "Utkast",
+    "productStatusUnknown": "Okänd",
+    "recommended": "Rekommenderad inställning",
+    "referenceMissing": "Officiellt ärendenummer saknas",
+    "remaining": "Ogranskad eller ändrad",
+    "reopened": "Återöppnad för granskning",
+    "reportEmpty": "Inga fynd matchar dessa filter.",
+    "reportTitle": "Rapport över kontroller och beslut",
+    "resultHelp": "Att registrera ett resultat dokumenterar din granskning i granskningsspåret och ändrar inte Shopify-produkten.",
+    "reviewNext": "Granska nästa matchning: {{title}}",
+    "reviewPrompt": "Jämför bevisen, välj resultat och registrera dina anteckningar.",
+    "riskLabels": {
+      "electric": "Elektrisk stöt",
+      "fire": "Brand",
+      "health": "Hälsorisk",
+      "high": "Hög risk",
+      "chemical": "Kemisk",
+      "choking": "Kvävning",
+      "injuries": "Skador",
+      "low": "Låg risk",
+      "medium": "Medelhög risk",
+      "serious": "Allvarlig risk",
+      "unknown": "Risk i Safety Gate-varning"
+    },
+    "runScope": "Produktkontroller: {{products}} · Safety Gate-poster beaktade: {{records}} · Nya fynd: {{findings}}",
+    "saved": "Inställningar sparade.",
+    "saveChanges": "Spara ändringar",
+    "scope": "Fynd från {{from}} till {{to}}",
+    "scoreDetails": "Likhetsdetaljer",
+    "scoreHelp": "Dessa är likhetspoäng som används för att prioritera granskning, inte en sannolikhet att din produkt är farlig.",
+    "settingsAdvanced": "Avancerad matchning och undantag",
+    "shop": "Butik",
+    "showMore": "Visa fler produkter",
+    "scheduleHelp": "Nya Safety Gate-varningar kontrolleras medan övervakningsplanen är aktiv. Tiden för nästa slutförda kontroll beror på kön.",
+    "sourceMissing": "Officiell postlänk är inte tillgänglig för detta sparade fynd.",
+    "sourceRisk": "Risk i den officiella varningen (ursprunglig EU-post)",
+    "status": "Fyndstatus",
+    "strictHelp": "Visar färre möjliga matchningar och kan missa mindre uppenbara likheter.",
+    "to": "Till datum",
+    "unconfirmedIdentifiers": "De tillgängliga katalogidentifierarna bekräftar inte denna matchning. Jämför förpackningen och fråga din leverantör efter den saknade modellen, streckkoden och batchen.",
+    "unchecked": "Inte kontrollerad ännu",
+    "unsaved": "Du har osparade ändringar.",
+    "verifyScope": "Katalogresultat gäller den produktversion som kontrollerades. Ändrade produkter behöver en ny kontroll.",
+    "viewRemainingProducts": "Visa {{count}} produkter som behöver en kontroll",
+    "viewShopify": "Öppna Shopify-produkt",
+    "waiting": "Väntar på leverantör",
+    "when": "Registrerad vid",
+    "who": "Inspelad av",
+    "whyMatch": "Varför detta kan matcha"
+  }
+}

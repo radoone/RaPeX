@@ -1,0 +1,1406 @@
+{
+  "actions": {
+    "auditReport": "Raport de audit",
+    "clear": "Șterge",
+    "dashboard": "Tablou de bord",
+    "downloadAuditReport": "Descarcă raportul de audit",
+    "checkAll": "Verifică toate produsele",
+    "checkAllProducts": "Verifică toate cele {{count}} produse",
+    "checking": "Se verifică...",
+    "checkNewSafetyGateAlerts": "Verifică alerte noi Safety Gate",
+    "checkOneProduct": "Verifică un produs",
+    "checkSelectedProduct": "Verifică produsul selectat",
+    "checkUnchecked": "Verifică {{count}} produse neverificate",
+    "manualCheck": "Verifică produsul",
+    "next": "Următorul",
+    "openFirstMatch": "Deschide prima potrivire",
+    "previous": "Anteriorul",
+    "protectRemainingProducts": "Verifică {{count}} produse rămase",
+    "reactivate": "Reactivează",
+    "recordDecision": "Înregistrează decizia",
+    "refreshCoverage": "Reîmprospătează acoperirea catalogului",
+    "resolve": "Rezolvă",
+    "retry": "Reîncearcă",
+    "reviewActiveProducts": "Examinează produsele active",
+    "reviewAlerts": "Examinează alertele",
+    "reviewDecision": "Compară produsele",
+    "reviewMultipleMatches": "Examinează {{count}} potriviri",
+    "reviewOneMatch": "Examinează 1 potrivire",
+    "reviewProductsNeedingAction": "Examinează {{count}} produs care necesită acțiune",
+    "reviewProductsNeedingAction_few": "Examinează {{count}} produse care necesită acțiune",
+    "reviewProductsNeedingAction_many": "Examinează {{count}} produse care necesită acțiune",
+    "reviewProductsNeedingAction_one": "Examinează {{count}} produs care necesită acțiune",
+    "reviewProductsNeedingAction_other": "Examinează {{count}} produse care necesită acțiune",
+    "reviewProductsNeedingAction_plural": "Examinează {{count}} produse care necesită acțiune",
+    "search": "Căutare",
+    "settings": "Setări",
+    "tryAgain": "Încearcă din nou",
+    "view": "Vizualizează",
+    "viewAlerts": "Vizualizează alertele",
+    "viewDetails": "Vizualizează detaliile",
+    "viewEvidence": "Vizualizează istoricul deciziilor"
+  },
+  "alerts": {
+    "admin": {
+      "actionNeeded": "Acțiune necesară",
+      "actionNeededDescription": "Examinează potrivirile, respinge falsele pozitive sau rezolvă riscurile confirmate, astfel încât coada de alerte să rămână gestionabilă.",
+      "actionNeededTitle": "{{count}} alertă activă încă necesită o decizie",
+      "actionNeededTitle_few": "{{count}} alerte active încă necesită o decizie",
+      "actionNeededTitle_many": "{{count}} alerte active încă necesită o decizie",
+      "actionNeededTitle_one": "{{count}} alertă activă încă necesită o decizie",
+      "actionNeededTitle_other": "{{count}} alerte active încă necesită o decizie",
+      "actionNeededTitle_plural": "{{count}} alerte active încă necesită o decizie",
+      "criticalBannerDescription": "{{count}} potrivire activă este marcată cu risc ridicat sau grav în Safety Gate. Rezolvă mai întâi acele potriviri.",
+      "criticalBannerDescription_few": "{{count}} potriviri active sunt marcate cu risc ridicat sau grav în Safety Gate. Rezolvă mai întâi acele potriviri.",
+      "criticalBannerDescription_many": "{{count}} potriviri active sunt marcate cu risc ridicat sau grav în Safety Gate. Rezolvă mai întâi acele potriviri.",
+      "criticalBannerDescription_one": "{{count}} potrivire activă este marcată cu risc ridicat sau grav în Safety Gate. Rezolvă mai întâi acele potriviri.",
+      "criticalBannerDescription_other": "{{count}} potriviri active sunt marcate cu risc ridicat sau grav în Safety Gate. Rezolvă mai întâi acele potriviri.",
+      "criticalBannerDescription_plural": "{{count}} potriviri active sunt marcate cu risc ridicat sau grav în Safety Gate. Rezolvă mai întâi acele potriviri.",
+      "criticalBannerTitle": "{{count}} potrivire cu risc ridicat necesită examinare",
+      "criticalBannerTitle_few": "{{count}} potriviri cu risc ridicat necesită examinare",
+      "criticalBannerTitle_many": "{{count}} potriviri cu risc ridicat necesită examinare",
+      "criticalBannerTitle_one": "{{count}} potrivire cu risc ridicat necesită examinare",
+      "criticalBannerTitle_other": "{{count}} potriviri cu risc ridicat necesită examinare",
+      "criticalBannerTitle_plural": "{{count}} potriviri cu risc ridicat necesită examinare",
+      "queue": "Coada de decizii privind produsele",
+      "queueDescription": "Confirmă potrivirile probabile, respinge falsele pozitive sau înregistrează acțiunea întreprinsă.",
+      "warningBannerDescription": "Folosește această coadă doar pentru decizii reale: rezolvă riscurile confirmate și respinge rapid falsele pozitive.",
+      "warningBannerTitle": "{{count}} alertă activă încă necesită examinare",
+      "warningBannerTitle_few": "{{count}} alerte active încă necesită examinare",
+      "warningBannerTitle_many": "{{count}} alerte active încă necesită examinare",
+      "warningBannerTitle_one": "{{count}} alertă activă încă necesită examinare",
+      "warningBannerTitle_other": "{{count}} alerte active încă necesită examinare",
+      "warningBannerTitle_plural": "{{count}} alerte active încă necesită examinare"
+    },
+    "breadcrumbs": {
+      "current": "Coada de examinare",
+      "dashboard": "Tablou de bord"
+    },
+    "checklist": {
+      "items": {
+        "0": "Prioritizează alertele active",
+        "1": "Documentează pașii de remediere",
+        "2": "Verifică înainte de a respinge"
+      },
+      "title": "Listă de verificare a răspunsului"
+    },
+    "meta": {
+      "active": "{{count}} de examinat",
+      "total": "{{count}} total"
+    },
+    "metrics": {
+      "activeHeading": "Alerte active",
+      "archived": "Arhivate",
+      "dismissedDescription": "Păstrează notițe pentru audit",
+      "dismissedDescriptionZero": "Nicio alertă respinsă încă",
+      "dismissedHeading": "Respinse",
+      "resolutionHeading": "Rata de rezolvare",
+      "resolved": "{{count}} rezolvate",
+      "resolvedAndDismissed": "{{resolved}} rezolvate • {{dismissed}} respinse",
+      "totalRecorded": "{{count}} înregistrate în total"
+    },
+    "pagination": {
+      "next": "Următorul",
+      "previous": "Anteriorul"
+    },
+    "subtitle": "Examinează produsele care necesită o decizie.",
+    "table": {
+      "accessibilityLabel": "Tabel cu alerte de siguranță",
+      "empty": "Nicio alertă nu corespunde filtrelor tale",
+      "emptyAllClearBody": "Nu există decizii deschise ale comercianților în acest moment. Monitorizarea zilnică este încă în curs, iar deciziile închise rămân în istoricul de audit.",
+      "emptyAllClearTitle": "Toate recenziile active ale produselor sunt gestionate",
+      "emptyFilteredBody": "Ajustează filtrele sau caută un alt produs. Este posibil ca lista ta activă să fie încă goală.",
+      "emptyFilteredTitle": "Niciun articol de recenzie nu corespunde acestor filtre",
+      "headers": {
+        "actions": "Acțiuni",
+        "detected": "Detectat",
+        "product": "Produs",
+        "risk": "Risc",
+        "status": "Status"
+      },
+      "order": "Comandă",
+      "orderOptions": {
+        "asc": "Cel mai vechi mai întâi",
+        "desc": "Cel mai nou mai întâi"
+      },
+      "reviewProduct": "Decizie de recenzie pentru {{title}}",
+      "searchLabel": "Căutare alerte",
+      "searchPlaceholder": "Căutare după numele produsului...",
+      "selectAll": "Selectează toate constatările vizibile",
+      "selectedCount": "{{count}} selectate",
+      "selectProduct": "Selectează constatarea pentru {{title}}",
+      "similarityTooltip": "Scor de similaritate: {{score}}%",
+      "sort": "Sortare",
+      "sortBy": "Sortează după",
+      "sortOptions": {
+        "created": "Data detectării",
+        "name": "Numele produsului",
+        "risk": "Nivel de risc"
+      },
+      "tabs": {
+        "active": "Necesită revizuire",
+        "all": "Toate",
+        "dismissed": "Respinse",
+        "resolved": "Rezolvate"
+      },
+      "thumbnailLabel": "Miniatură {{title}}",
+      "viewProduct": "Vezi constatarea înregistrată pentru {{title}}"
+    },
+    "title": "Coada de revizuire",
+    "toasts": {
+      "updated": "Alertă actualizată"
+    }
+  },
+  "analysis": {
+    "alertImagesUsed": "Imagini de alertă comparate: {{count}}",
+    "alertNumber": "Alertă {{number}}",
+    "audit": {
+      "existingNotes": "Note de audit",
+      "noteLabel": "Notă de audit",
+      "notePlaceholder": "Adaugă ce ai verificat, dovezi de la furnizor sau de ce a fost respinsă."
+    },
+    "candidateAlerts": "Alerte candidate: {{count}}",
+    "decisionContextDesc": "Înregistrarea unei decizii documentează că această potrivire de siguranță a fost revizuită și păstrează istoricul tău de audit. Nu modifică automat produsul tău Shopify și nu îl anulează publicarea din magazinul tău.",
+    "decisionContextTitle": "Înregistrarea deciziilor de conformitate",
+    "decisionRecorded": "Decizie înregistrată",
+    "editInShopify": "Editează produsul în Shopify",
+    "enlargedSafetyAlert": "Imagine mărită a alertei de siguranță",
+    "fields": {
+      "accessibilityLabel": "Tabel cu detalii de potrivire a alertei",
+      "alertDate": "Data alertei",
+      "brand": "Brand",
+      "category": "Categorie",
+      "field": "Câmp",
+      "model": "Model",
+      "notifyingCountry": "Țara notificatoare",
+      "origin": "Origine",
+      "productDescription": "Descrierea produsului",
+      "productName": "Numele produsului",
+      "value": "Valoare"
+    },
+    "focus": {
+      "criticalLead": "Acest produs are o potrivire cu încredere ridicată. Înregistrează o decizie numai după revizuire.",
+      "criticalStepCompare": "Compară fotografia produsului tău cu prima potrivire Safety Gate de mai jos.",
+      "criticalStepDecide": "Alege un rezultat din meniul Înregistrează decizia pe baza revizuirii tale.",
+      "criticalStepDocument": "Adaugă note interne pentru trasabilitate și urmărire cu furnizorul.",
+      "criticalTitle": "Acțiune necesară acum",
+      "recordedOutcome": "Rezultat înregistrat: {{outcome}}",
+      "reviewedLead": "Această alertă nu este activă. Păstrează înregistrările clare pentru audituri.",
+      "reviewedStepAudit": "Verifică rezoluția și notele selectate.",
+      "reviewedStepReactivate": "Reactivează numai dacă apar noi dovezi ale produsului.",
+      "reviewedTitle": "Revizuire deja finalizată",
+      "safeLead": "Rezultatul actual este sigur. Continuă monitorizarea actualizărilor produsului.",
+      "safeStepClose": "Închide acest detaliu și continuă cu alte alerte active.",
+      "safeStepMonitor": "Păstrează acest produs în monitorizare automată.",
+      "safeStepRecheck": "Rulează o nouă verificare dacă se schimbă imaginile, ambalajul sau furnizorul.",
+      "safeTitle": "Nu este necesară o acțiune urgentă"
+    },
+    "hazardType": "Tip de pericol",
+    "checkedAt": "Verificat: {{date}}",
+    "imageDominated": "Această potrivire a fost evaluată cu o pondere mai mare pentru imagine, astfel încât similaritatea vizuală a ambalajului a avut o greutate mai mare decât nepotrivirea textului.",
+    "imageMatch": "Potrivire imagine",
+    "imageMatchShort": "{{count}}% imagine",
+    "legalProvision": "Dispoziție legală",
+    "matchesHint": "Începe cu cardul de potrivire de sus de mai jos și confirmă mai întâi ambalajul vizual, apoi detaliile modelului și ale mărcii.",
+    "merchantRecommendation": {
+      "active": "Compară imaginile produsului și Safety Gate, confirmă marca sau modelul, apoi înregistrează acțiunea pe care o va întreprinde magazinul tău.",
+      "reviewed": "Această constatare este închisă. Verifică rezultatul înregistrat și dovezile înainte de a o reactiva.",
+      "safe": "Nu este necesară nicio acțiune a magazinului acum. Verifică din nou dacă se schimbă produsul, ambalajul, imaginile sau furnizorul."
+    },
+    "modalAccessibilityLabel": "Detalii potrivire Safety Gate pentru {{title}}",
+    "modalHeading": "Revizuiește potrivirea Safety Gate",
+    "noIssuesFound": "Nu s-au găsit probleme de siguranță",
+    "openProductImage": "Deschide imaginea pentru {{title}}",
+    "overallMatch": "Potrivire generală",
+    "overallMatchShort": "{{count}}% general",
+    "potentialRisk": "Risc potențial de siguranță",
+    "primaryRiskFocus": "Focalizare principală pe risc: {{category}} la nivelul {{level}}. Confirmați acest lucru înainte de a decide.",
+    "productImagesUsed": "Imagini de produs: {{used}} / {{provided}}",
+    "reviewLayout": {
+      "actionNeeded": "Acțiune necesară",
+      "compareHeading": "Comparați produsele",
+      "compareHint": "Verificați fotografiile, marca, modelul și categoria înainte de a decide.",
+      "decisionHeading": "Înregistrați decizia dvs.",
+      "decisionPrompt": "Alegeți rezultatul revizuirii. Puteți adăuga o notă despre ce ați verificat.",
+      "fullEvidence": "Dovezi complete Safety Gate ({{count}})",
+      "groupHelp": {
+        "action": "Închideți constatarea după ce ați retras produsul de la vânzare sau l-ați actualizat în Shopify.",
+        "different": "Închideți sau ignorați constatarea deoarece produsul dvs. este un model, o marcă sau un lot diferit.",
+        "information": "Păstrați constatarea deschisă în timp ce solicitați furnizorului dvs. documente privind lotul, modelul sau siguranța.",
+        "other": "Înregistrați un alt rezultat cu o notă explicativă obligatorie pentru istoricul dvs. de audit."
+      },
+      "chooseOutcome": "Alegeți un rezultat",
+      "identifiers": {
+        "barcode": "Cod de bare (GTIN/EAN)",
+        "batch": "Lot / Serie",
+        "brand": "Brand",
+        "field": "Identificator",
+        "match": "Potrivire",
+        "mismatch": "Discrepanță",
+        "model": "Model",
+        "notSpecified": "nespecificat",
+        "result": "Comparație",
+        "safetyGate": "Alertă Safety Gate",
+        "yourProduct": "Produsul dvs. Shopify"
+      },
+      "identifiersHeading": "Comparație alăturată a identificatorilor",
+      "languageDiffNote": "Limba interfeței aplicației ({{appLang}}) și limba notificărilor prin e-mail ({{emailLang}}) sunt setate independent.",
+      "noImage": "Nicio imagine disponibilă",
+      "noteLabel": "Ce ați verificat? (opțional)",
+      "noteRequiredLabel": "Ce ați verificat? (obligatoriu)",
+      "otherNoteRequired": "Adăugați o notă pentru a explica celălalt rezultat.",
+      "outcomeLabel": "Rezultatul revizuirii",
+      "possibleMatch": "Potrivire posibilă Safety Gate",
+      "readyToRecord": "Gata de înregistrare",
+      "reviewPointsHeading": "Puncte de revizuit",
+      "unnamedRecord": "Înregistrare Safety Gate"
+    },
+    "riskDescription": "Descrierea riscului",
+    "riskLevel": "Nivel de risc",
+    "riskSeverity": "Severitatea riscului",
+    "safetyGateMatches": "Potriviri Safety Gate",
+    "scoreHelper": "Scorul general este scorul final al revizuirii. Potrivirea imaginii reflectă doar similaritatea ambalajului.",
+    "sections": {
+      "whatHappened": "Ce s-a întâmplat?",
+      "whatHappenedReviewed": "Această potrivire a fost deja revizuită și înregistrată.",
+      "whatHappenedRisk": "Acest produs Shopify seamănă cu un produs deja raportat în Safety Gate.",
+      "whatHappenedSafe": "Ultima verificare nu a găsit o potrivire probabilă Safety Gate.",
+      "whatToDo": "Ce ar trebui să fac?",
+      "whyMatched": "De ce s-a potrivit"
+    },
+    "seriousRisk": "Risc grav de {{category}}",
+    "summary": {
+      "confidence": "Încredere",
+      "confidenceUnknown": "Încredere necunoscută",
+      "decisionRecorded": "Decizie înregistrată",
+      "decisionRequired": "Decizie necesară",
+      "highConfidence": "Încredere ridicată",
+      "likelyMatch": "Potrivire probabilă",
+      "likelySafetyGateMatch": "Potrivire probabilă Safety Gate",
+      "matchType": "Tip de potrivire",
+      "nextStep": "Pasul următor",
+      "noLikelyMatch": "Nicio potrivire probabilă",
+      "overallMatch": "Scor general",
+      "reviewRecommended": "Revizuire recomandată"
+    },
+    "supplierFollowUp": {
+      "copy": "Copiați urmărirea furnizorului",
+      "template": "Bună ziua, revizuim {{product}} deoarece ar putea corespunde alertei Safety Gate {{alert}} (risc: {{risk}}). Vă rugăm să confirmați dacă acesta este același model/lot, să furnizați documentația de siguranță a produsului și să explicați orice diferențe. Motivul potrivirii: {{reason}}"
+    },
+    "technicalDetails": {
+      "description": "Scorurile și numărul de recuperări sunt păstrate aici pentru o revizuire mai aprofundată. Începeți cu fotografiile produsului, marca, modelul și acțiunea recomandată de mai sus.",
+      "hide": "Ascunde detaliile",
+      "show": "Afișează detaliile",
+      "title": "Detalii tehnice ale potrivirii"
+    },
+    "textOnly": "Verificare doar text",
+    "viewOnSafetyGate": "Vizualizați pe Safety Gate",
+    "whyThisMatched": "De ce s-a potrivit acest lucru",
+    "withImage": "Verificat cu imagini",
+    "yourProduct": "Produsul dvs. Shopify"
+  },
+  "auditReport": {
+    "decision": "Decizie",
+    "description": "Revizuiți înregistrarea completă înainte de a exporta un CSV pentru echipa dvs., furnizor sau audit.",
+    "detected": "Detectat",
+    "documented": "Decizii documentate",
+    "download": "Descărcați CSV",
+    "empty": "Nu au fost înregistrate încă constatări privind siguranța produselor.",
+    "eyebrow": "Înregistrare gata de export",
+    "generated": "Generat la {{date}}",
+    "heading": "Constatări și decizii",
+    "needsReview": "Necesită revizuire",
+    "notRecorded": "Neînregistrat",
+    "open": "Deschide raportul de audit",
+    "product": "Produs",
+    "risk": "Severitatea riscului",
+    "status": "Status",
+    "summaryLabel": "Sumar raport de audit",
+    "tableLabel": "Raport de audit de siguranță",
+    "title": "Raport de audit de siguranță",
+    "total": "Constatări înregistrate",
+    "viewHistory": "Vizualizați istoricul auditului"
+  },
+  "billing": {
+    "freeScanAvailableDescription": "Aveți la dispoziție 1 scanare gratuită a catalogului. Rulați primul dvs. audit pentru a verifica produsele magazinului dvs. în comparație cu baza de date EU Safety Gate pentru produse periculoase nealimentare.",
+    "freeScanAvailableHeading": "Scanare inițială gratuită a catalogului activă",
+    "managePlanButton": "Gestionați abonamentul",
+    "planActiveDescription": "Monitorizarea este activată pentru acest magazin Shopify. Revizuiți ultima rulare și orice produse care necesită atenție.",
+    "planEyebrow": "Plan și acoperire",
+    "planFreeAvailableDescription": "Este disponibilă o scanare inițială gratuită a catalogului Safety Gate.",
+    "planFreeUsedDescription": "Scanarea inițială gratuită s-a încheiat. Alegeți un plan pentru a începe monitorizarea continuă și a continua exportul jurnalului de audit.",
+    "planTitle": "Abonament și monitorizare siguranță",
+    "pricingUnavailable": "Prețurile Shopify nu sunt configurate pentru această aplicație.",
+    "statusActivePro": "ZeroRecall Pro (Activ)",
+    "statusDevelopmentBypass": "Previzualizare dezvoltare (facturare ocolită)",
+    "statusFreeAvailable": "Scanare inițială gratuită",
+    "statusFreeUsed": "Scanare gratuită utilizată",
+    "statusLabel": "Plan curent",
+    "statusUnverified": "Abonamentul nu a putut fi verificat",
+    "upgradePlanButton": "Actualizați la Pro",
+    "upgradeRequiredDescription": "Scanarea inițială gratuită este completă. Alegeți un plan Shopify pentru a monitoriza noile alerte Safety Gate și a verifica produsele modificate.",
+    "upgradeRequiredHeading": "Continuați monitorizarea Safety Gate",
+    "verificationError": "Noile scanări sunt întrerupte până la verificarea facturării Shopify. Constatările și deciziile dvs. existente rămân disponibile."
+  },
+  "billingRedirect": {
+    "opening": "Se deschid planurile de prețuri Shopify...",
+    "openPricingPlans": "Deschideți planurile de prețuri"
+  },
+  "common": {
+    "all": "Toate",
+    "cancel": "Anulează",
+    "close": "Închide",
+    "confirm": "Confirmă",
+    "language": "Limbă",
+    "loading": "Se încarcă...",
+    "unknown": "Necunoscut"
+  },
+  "dashboard": {
+    "activeAlertsBanner": {
+      "content": "Rezolvați {{count}} alertă activă pentru a menține produsele afectate disponibile în magazinul dvs.",
+      "content_few": "Rezolvați {{count}} alerte active pentru a menține produsele afectate disponibile în magazinul dvs.",
+      "content_many": "Rezolvați {{count}} alerte active pentru a menține produsele afectate disponibile în magazinul dvs.",
+      "content_one": "Rezolvați {{count}} alertă activă pentru a menține produsele afectate disponibile în magazinul dvs.",
+      "content_other": "Rezolvați {{count}} alerte active pentru a menține produsele afectate disponibile în magazinul dvs.",
+      "content_plural": "Rezolvați {{count}} alerte active pentru a menține produsele afectate disponibile în magazinul dvs.",
+      "manualCheckAction": "Verificare manuală",
+      "reviewAction": "Revizuiți prima alertă",
+      "title": "Alertele de siguranță active necesită atenție"
+    },
+    "admin": {
+      "actionNeeded": "Acțiune necesară",
+      "actionNeededDescription": "Revizuiți mai întâi produsele semnalate, astfel încât să puteți decide dacă le păstrați la vânzare, respingeți potrivirea sau rezolvați alerta.",
+      "actionNeededTitle": "{{count}} alertă activă necesită revizuire",
+      "actionNeededTitle_few": "{{count}} alerte active necesită revizuire",
+      "actionNeededTitle_many": "{{count}} alerte active necesită revizuire",
+      "actionNeededTitle_one": "{{count}} alertă activă necesită revizuire",
+      "actionNeededTitle_other": "{{count}} alerte active necesită revizuire",
+      "actionNeededTitle_plural": "{{count}} alerte active necesită revizuire",
+      "activeAlertsDescription": "Produse care încă necesită o decizie a comerciantului înainte ca lista să fie goală.",
+      "auditHistoryKept": "Istoricul auditului păstrat",
+      "auditReady": "Raport gata",
+      "auditRecordsDescription": "Decizii rezolvate și respinse cu motive și note interne.",
+      "auditRecordsTitle": "Înregistrări de audit",
+      "auditReport": "Raport de audit",
+      "automaticChecks": "Verificări automate",
+      "bulkCheckAllSummary": "Aceasta va rula o verificare completă pentru toate cele {{count}} produse.",
+      "bulkCheckDescription": "Scanați mai întâi produsele neverificate sau includeți întregul catalog atunci când doriți o nouă verificare.",
+      "bulkCheckSummary": "Sumar verificare în masă",
+      "bulkCheckSummaryDescription": "Păstrați acest sumar compact, astfel încât comercianții să poată confirma rezultatele fără a deschide un al doilea ecran.",
+      "bulkCheckTitle": "Verificare în masă a catalogului",
+      "bulkCheckUncheckedSummary": "Aceasta va verifica {{count}} produse rămase și va sări peste {{skip}} articole deja revizuite.",
+      "catalogCoverageDescription": "Ponderea catalogului deja verificată în raport cu Safety Gate.",
+      "catalogCoverageTitle": "Acoperirea catalogului",
+      "coverage": "Acoperire",
+      "coveragePercent": "Catalog cu verificări salvate",
+      "criticalBannerDescription": "{{count}} potrivire activă este marcată cu risc ridicat sau grav. Prioritizați aceste produse înainte de a continua noile vânzări.",
+      "criticalBannerDescription_few": "{{count}} potriviri active sunt marcate cu risc ridicat sau grav. Prioritizați aceste produse înainte de a continua noile vânzări.",
+      "criticalBannerDescription_many": "{{count}} potriviri active sunt marcate cu risc ridicat sau grav. Prioritizați aceste produse înainte de a continua noile vânzări.",
+      "criticalBannerDescription_one": "{{count}} potrivire activă este marcată cu risc ridicat sau grav. Prioritizați aceste produse înainte de a continua noile vânzări.",
+      "criticalBannerDescription_other": "{{count}} potriviri active sunt marcate cu risc ridicat sau grav. Prioritizați aceste produse înainte de a continua noile vânzări.",
+      "criticalBannerDescription_plural": "{{count}} potriviri active sunt marcate cu risc ridicat sau grav. Prioritizați aceste produse înainte de a continua noile vânzări.",
+      "criticalBannerTitle": "{{count}} alertă activă include potriviri cu risc ridicat",
+      "criticalBannerTitle_few": "{{count}} alerte active includ potriviri cu risc ridicat",
+      "criticalBannerTitle_many": "{{count}} alerte active includ potriviri cu risc ridicat",
+      "criticalBannerTitle_one": "{{count}} alertă activă include potriviri cu risc ridicat",
+      "criticalBannerTitle_other": "{{count}} alerte active includ potriviri cu risc ridicat",
+      "criticalBannerTitle_plural": "{{count}} alerte active includ potriviri cu risc ridicat",
+      "daily": "Zilnic",
+      "dailyAtTime": "Zilnic la 03:47 Europa/Bratislava",
+      "dailyAtTimePlanned": "Programat (zilnic la 03:47)",
+      "decisionsClosed": "Decizii închise",
+      "demoAlert": {
+        "action": "Rezolvați, respingeți sau contactați furnizorul",
+        "badge": "Exemplu de flux de lucru",
+        "description": "Aplicația afișează produsul Shopify, înregistrarea Safety Gate, motivul potrivirii și acțiunea de înregistrat.",
+        "evidence": "Păstrați note și exportați un raport de audit",
+        "reason": "Comparați marca, modelul, categoria și fotografiile produsului",
+        "sample": "Ce văd comercianții când apare o potrivire",
+        "title": "Potrivire probabilă Safety Gate găsită"
+      },
+      "emptyProofCoverage": "{{count}} produse au un rezultat de verificare înregistrat.",
+      "emptyProofEvidence": "{{count}} decizii închise sunt păstrate pentru istoricul auditului.",
+      "emptyProofMonitoring": "Monitorizarea zilnică Safety Gate este încă în curs de desfășurare.",
+      "exportProof": "Exportă dovadă",
+      "fallbackAlertDescription": "Potrivit cu o alertă Safety Gate.",
+      "finishCoverage": "Finalizați acoperirea catalogului",
+      "highRiskMatchesDescription": "Potriviri Safety Gate cu risc grav sau ridicat de revizuit mai întâi.",
+      "highRiskMatchesTitle": "Potriviri cu risc ridicat",
+      "checkChangedProducts": "Verifică produsele modificate",
+      "checksCompletedDescription": "Verificări automate și manuale care reduc munca manuală de revizuire a catalogului.",
+      "checksCompletedTitle": "Verificări finalizate",
+      "lastMonitoringRunDescription": "Cea mai recentă verificare automată, manuală sau în masă Safety Gate.",
+      "lastMonitoringRunTitle": "Ultima rulare de monitorizare",
+      "lastSafetyGateUpdateChecked": "Ultima actualizare Safety Gate verificată",
+      "latestRun": "Cea mai recentă rulare",
+      "monitoringRunDateUnknown": "Ora indisponibilă",
+      "monitoringRunHistoryEmpty": "Nu au fost înregistrate încă rulări de monitorizare programate.",
+      "monitoringRunHistoryTitle": "Rulări recente de monitorizare",
+      "monitoringRunProgress": "{{products}} produse verificate · {{alerts}} alerte noi",
+      "monitoringRunStatus": {
+        "completed": "Finalizat",
+        "enqueue_failed": "Nu s-a putut porni",
+        "failed": "Eșuat",
+        "processing": "În curs de procesare",
+        "queued": "În așteptare",
+        "retrying": "Se reîncearcă",
+        "skipped_unentitled": "Plan inactiv",
+        "unknown": "Stare indisponibilă"
+      },
+      "monitoringRunsTitle": "Verificări de monitorizare",
+      "monitoringStatusAllClear": "Monitorizarea catalogului este în curs de desfășurare",
+      "monitoringStatusDescription": "ZeroRecall verifică catalogul dvs. în raport cu noile actualizări EU Safety Gate, evidențiază produsele care necesită revizuire și păstrează dovezi pentru rapoartele de audit.",
+      "monitoringStatusEyebrow": "Stare monitorizare",
+      "monitoringStatusNeedsReview": "{{count}} produs necesită o decizie a comerciantului",
+      "monitoringStatusNeedsReview_few": "{{count}} produse necesită decizii ale comerciantului",
+      "monitoringStatusNeedsReview_many": "{{count}} produse necesită decizii ale comerciantului",
+      "monitoringStatusNeedsReview_one": "{{count}} produs necesită o decizie a comerciantului",
+      "monitoringStatusNeedsReview_other": "{{count}} produse necesită decizii ale comerciantului",
+      "monitoringStatusNeedsReview_plural": "{{count}} produse necesită decizii ale comerciantului",
+      "needsReviewTitle": "Produse care necesită revizuire",
+      "nextAutomaticCheck": "Următoarea verificare automată",
+      "noActiveAlertsDescription": "Ultimele dvs. verificări nu necesită în prezent nicio acțiune. Continuați să scanați produsele nou adăugate pentru a menține acoperirea.",
+      "noActiveAlertsTitle": "Nu există alerte de siguranță active",
+      "noAlertsDescription": "Nu există revizuiri de produse deschise în acest moment. Acest lucru este totuși util: monitorizarea zilnică continuă în fundal, iar dovezile dvs. rămân pregătite pentru export.",
+      "noAlertsTitle": "Niciun produs nu necesită revizuire",
+      "priorityQueue": "Coada de decizii",
+      "productsCoveredShort": "cu un rezultat de verificare înregistrat",
+      "productsMonitored": "Versiuni curente de produse verificate",
+      "proofGridLabel": "Activitate de monitorizare",
+      "protectionDescription": "Numerele descriu rezultatele înregistrate în aplicație; acestea nu reprezintă o certificare a siguranței produsului.",
+      "protectionEyebrow": "Înregistrarea dvs. de monitorizare",
+      "protectionTitle": "Revizuiți verificările recente și deciziile comerciantului.",
+      "recentAlertsDescription": "Revizuiți posibilele potriviri Safety Gate, înregistrați o decizie și păstrați dovezile pentru audituri.",
+      "recentAlertsTitle": "Produse care necesită decizia comerciantului",
+      "recommendedAction": "Acțiune recomandată: revizuiți potrivirea și înregistrați o decizie.",
+      "resolvedRateDescription": "Cât de mult din activitatea de alertă înregistrată a fost deja închisă.",
+      "resolvedRateTitle": "Rata de rezolvare",
+      "results": {
+        "alertCreated": "Alertă creată",
+        "completed": "Finalizat",
+        "error": "Eroare",
+        "checked": "Verificat",
+        "skipped": "Omis"
+      },
+      "reviewOneProduct": "Verifică un produs",
+      "riskInAlert": "Risc descris în alerta Safety Gate",
+      "runBulkCheck": "Rulați verificarea în masă",
+      "stats": {
+        "alertsCreated": "Alerte create",
+        "alreadyChecked": "Deja verificat",
+        "errors": "Erori",
+        "checked": "Verificat",
+        "skipped": "Omis",
+        "stillUnchecked": "Încă neverificat",
+        "totalProducts": "Total produse"
+      },
+      "status": {
+        "cachedEvidence": "Dovezile cache sunt reutilizate",
+        "coverageIncomplete": {
+          "description": "Nicio potrivire Safety Gate nu necesită revizuire în cele {{checked}} produse monitorizate. Finalizați acoperirea pentru toate cele {{total}} produse curente înainte de a confirma întregul catalog.",
+          "eyebrow": "Acoperire incompletă",
+          "title": "{{count}} produs încă necesită acoperire",
+          "title_few": "{{count}} produse încă necesită acoperire",
+          "title_many": "{{count}} produse încă necesită acoperire",
+          "title_one": "{{count}} produs încă necesită acoperire",
+          "title_other": "{{count}} produse încă necesită acoperire",
+          "title_plural": "{{count}} produse încă necesită acoperire"
+        },
+        "deltaMonitoring": "Se verifică doar alertele noi Safety Gate",
+        "factsLabel": "Fapte curente de monitorizare",
+        "matchesNeedingReview": "Potriviri care necesită revizuire",
+        "monitoringNotConfirmed": "Monitorizarea nu este încă confirmată",
+        "monitoringProblem": {
+          "action": "Reîmprospătează acoperirea catalogului",
+          "description": "Produsele dvs. curente au dovezi de acoperire, dar aplicația nu poate confirma când s-a finalizat ultima monitorizare Safety Gate. Reîmprospătați acoperirea catalogului pentru a restabili o stare fiabilă.",
+          "eyebrow": "Monitorizarea necesită atenție",
+          "title": "Acoperirea catalogului nu are nicio rulare de monitorizare înregistrată"
+        },
+        "noActionNeeded": {
+          "action": "Vizualizați acoperirea catalogului",
+          "description": "Niciun produs din catalogul dvs. monitorizat nu se potrivește în prezent cu alertele EU Safety Gate. Monitorizarea continuă în fundal și doar alertele noi sau produsele modificate necesită intervenție.",
+          "emptyCatalogDescription": "Adăugați produse în catalogul dvs. Shopify, iar ZeroRecall va fi gata să le acopere.",
+          "emptyCatalogTitle": "Niciun produs de monitorizat încă",
+          "eyebrow": "Starea curentă Safety Gate",
+          "title": "Nu este necesară nicio acțiune"
+        },
+        "none": "Niciunul",
+        "reviewNeeded": {
+          "criticalDescription": "Revizuiți aceste posibile potriviri înainte de a continua vânzările. Comparați produsul și dovezile Safety Gate, apoi înregistrați decizia dvs.",
+          "criticalEyebrow": "Revizuire urgentă",
+          "criticalTitle": "{{count}} potrivire posibilă cu o alertă de risc grav necesită revizuire",
+          "criticalTitle_few": "{{count}} potriviri posibile cu o alertă de risc grav necesită revizuire",
+          "criticalTitle_many": "{{count}} posibile potriviri cu o alertă de risc grav necesită examinare",
+          "criticalTitle_one": "{{count}} posibilă potrivire cu o alertă de risc grav necesită examinare",
+          "criticalTitle_other": "{{count}} posibile potriviri cu o alertă de risc grav necesită examinare",
+          "criticalTitle_plural": "{{count}} posibile potriviri cu o alertă de risc grav necesită examinare",
+          "description": "Potențialele potriviri Safety Gate necesită o decizie din partea comerciantului. Examinează mai întâi potrivirile; rezultatele verificărilor pentru alte produse rămân disponibile în catalog.",
+          "eyebrow": "Necesită examinare",
+          "title": "{{count}} posibilă potrivire necesită examinare",
+          "title_few": "{{count}} posibile potriviri necesită examinare",
+          "title_many": "{{count}} posibile potriviri necesită examinare",
+          "title_one": "{{count}} posibilă potrivire necesită examinare",
+          "title_other": "{{count}} posibile potriviri necesită examinare",
+          "title_plural": "{{count}} posibile potriviri necesită examinare"
+        },
+        "scheduledPlanned": "Rulare programată"
+      },
+      "storeStatus": "Starea magazinului",
+      "valueMetrics": {
+        "decisionsRecorded": "Decizii înregistrate",
+        "evidenceRetained": "Decizii cu dovezi",
+        "checksRun": "Verificări rulate",
+        "openDecisions": "Decizii deschise",
+        "productsCovered": "Produse verificate"
+      },
+      "valueProofDescription": "Arată echipei că abonamentul nu este o scanare unică: acoperirea catalogului, verificările, deciziile și accesul Shopify doar în citire rămân active.",
+      "valueProofDescriptionComplete": "Aceste numărători arată activitatea de verificare înregistrată pentru catalogul curent.",
+      "valueProofDescriptionIncomplete": "Rulează verificări pentru produsele rămase pentru a adăuga rezultate în înregistrarea curentă a catalogului.",
+      "valueProofEyebrow": "Acțiune de acoperire",
+      "valueProofTitle": "Ce continuă să facă ZeroRecall",
+      "valueProofTitleComplete": "Fiecare produs curent are o verificare înregistrată",
+      "valueProofTitleIncomplete": "{{count}} produse au o verificare înregistrată",
+      "warningBannerDescription": "Examinează aceste potriviri, ignoră falsele pozitive sau rezolvă problemele confirmate pentru ca lista să rămână gestionabilă.",
+      "warningBannerTitle": "{{count}} alertă activă necesită o decizie din partea comerciantului",
+      "warningBannerTitle_few": "{{count}} alerte active necesită decizii din partea comercianților",
+      "warningBannerTitle_many": "{{count}} alerte active necesită decizii din partea comercianților",
+      "warningBannerTitle_one": "{{count}} alertă activă necesită o decizie din partea comerciantului",
+      "warningBannerTitle_other": "{{count}} alerte active necesită decizii din partea comercianților",
+      "warningBannerTitle_plural": "{{count}} alerte active necesită decizii din partea comercianților",
+      "withReadOnlyShopifyAccess": "Acces Shopify doar în citire"
+    },
+    "bulkCheck": {
+      "action": "Verifică toate produsele",
+      "alerts": "Alerte {{count}}",
+      "alreadyChecked": "Deja verificat",
+      "completed": "Finalizat în {{seconds}} secunde",
+      "description": "Scanează fiecare produs din magazinul tău în baza de date Safety Gate pentru a detecta riscuri ascunse.",
+      "errors": "Erori {{count}}",
+      "checked": "Verificat {{count}}",
+      "includeAlreadyChecked": "Include produsele deja verificate",
+      "notYetChecked": "Încă neverificat",
+      "processed": "Procesat {{count}}",
+      "started": "Început la {{date}}",
+      "title": "Verificare de siguranță în masă",
+      "totalProducts": "Total produse",
+      "willCheckAll": "Vor fi verificate toate cele {{count}} produse",
+      "willCheckUnchecked": "Vor fi verificate {{count}} produse neverificate (se omit {{skip}} deja verificate)"
+    },
+    "bulkResults": {
+      "success": "Verificare în masă finalizată: {{processed}} procesate, {{checked}} verificate, {{alertsCreated}} alerte create."
+    },
+    "howItWorks": {
+      "alertGeneration": {
+        "description": "Potrivirile generează alerte pe care le poți ignora sau rezolva pentru a urmări conformitatea.",
+        "title": "Generare alerte"
+      },
+      "autoMonitoring": {
+        "description": "Produsele sunt verificate în baza de date a UE ori de câte ori sunt create sau actualizate.",
+        "title": "Monitorizare automată"
+      },
+      "title": "Cum funcționează"
+    },
+    "liveScan": {
+      "completed": "Gata",
+      "description": "Se importă catalogul tău din Shopify și se scanează produsele în peste 35.000 de înregistrări din baza de date oficială EU Safety Gate (RAPEX). Rezultatele vor apărea imediat mai jos.",
+      "eyebrow": "Audit automat de siguranță",
+      "failedDescription": "Nu am putut finaliza acest audit. Catalogul tău nu a fost marcat ca fiind complet verificat. Repornește scanarea sau contactează asistența dacă problema persistă.",
+      "failedHeading": "Audit catalog necesită o nouă încercare",
+      "heading": "Audit de siguranță gratuit al catalogului în curs...",
+      "inProgress": "În curs...",
+      "pending": "În așteptare",
+      "progress": "Importate {{imported}} din {{fetched}} produse; comparate {{scanned}} produse cu {{alerts}} alerte Safety Gate până acum.",
+      "stepAudit": "3. Pregătește istoricul auditului GPSR și starea de conformitate",
+      "stepImport": "1. Importă produse din Shopify",
+      "stepScan": "2. Compară cu baza de date Safety Gate (peste 35.000 de înregistrări)"
+    },
+    "metricsCard": {
+      "activeAlertsHeading": "Alerte active",
+      "productsCheckedHeading": "Produse verificate",
+      "resolutionHeading": "Rata de rezolvare",
+      "resolved": "{{count}} rezolvate",
+      "resolvedAndDismissed": "{{resolved}} rezolvate • {{dismissed}} respinse",
+      "scans": "Scanări Safety Gate",
+      "totalRecorded": "{{count}} înregistrate în total"
+    },
+    "monitorCard": {
+      "description": "Urmărește alertele, rulează verificări ale catalogului și menține autoritățile de reglementare mulțumite.",
+      "reviewAction": "Examinează alertele",
+      "title": "Monitorizează siguranța produselor dintr-o privire"
+    },
+    "quickActions": {
+      "browsePortal": "Navighează pe portalul Safety Gate",
+      "description": "Verificările regulate și documentația ajută la demonstrarea diligenței necesare autorităților de reglementare.",
+      "manualCheck": "Rulează o verificare manuală",
+      "title": "Acțiuni rapide"
+    },
+    "recentAlerts": {
+      "active": "{{count}} active",
+      "allResolved": "Toate rezolvate",
+      "description": "Investighează cele mai recente potriviri din Safety Gate înainte de a onora comenzile.",
+      "emptyState": {
+        "content": "Veste bună – niciun produs nu este semnalat în prezent. Continuă monitorizarea pentru a menține conformitatea.",
+        "heading": "Nicio alertă de siguranță încă"
+      },
+      "matchCount": "{{count}} potrivire găsită",
+      "matchCount_few": "{{count}} potriviri găsite",
+      "matchCount_many": "{{count}} potriviri găsite",
+      "matchCount_one": "{{count}} potrivire găsită",
+      "matchCount_other": "{{count}} potriviri găsite",
+      "matchCount_plural": "{{count}} potriviri găsite",
+      "title": "Alerte de siguranță recente"
+    },
+    "safetyBreakdown": {
+      "actionDesc": "Potriviri găsite cu rapoartele EU Safety Gate care necesită examinare și rezolvare.",
+      "actionLabel": "Acțiune necesară",
+      "description": "Prezentare generală a verificării catalogului de produse în raport cu listele europene de siguranță și directiva GPSR.",
+      "eyebrow": "Starea protecției catalogului",
+      "protectedDesc": "Produse a căror ultimă verificare înregistrată nu a găsit nicio potrivire probabilă.",
+      "protectedLabel": "Produse verificate fără constatări deschise",
+      "protectRemainingAction": "Verifică restul ({{count}})",
+      "reviewAlertsAction": "Examinează alertele",
+      "scanAllAction": "Rulează auditul complet al catalogului",
+      "title": "Starea siguranței produselor",
+      "unprotectedAllCovered": "Fiecare produs curent are un rezultat de verificare înregistrat.",
+      "unprotectedDesc": "Produse fără verificare Safety Gate înregistrată.",
+      "unprotectedLabel": "Încă neverificate"
+    },
+    "setup": {
+      "description": "Pregătește-ți magazinul pentru conformitatea cu siguranța produselor în UE.",
+      "progress": "{{completed}} din {{total}} pași finalizați",
+      "steps": {
+        "step1": {
+          "description": "Apasă pe „Verifică toate produsele” pentru a scana întregul catalog în baza de date EU Safety Gate.",
+          "label": "Rulează prima verificare în masă a produselor"
+        },
+        "step2": {
+          "description": "Verifică pagina de alerte pentru a examina orice produse care se potrivesc cu avertismentele Safety Gate.",
+          "label": "Examinează orice alerte de siguranță"
+        },
+        "step3": {
+          "description": "Activează verificările automate în Setări pentru a monitoriza automat produsele noi.",
+          "label": "Configurează monitorizarea automată"
+        }
+      },
+      "title": "Ghid de configurare"
+    },
+    "stats": {
+      "actionNeeded": "Acțiune necesară",
+      "activeAlerts": "Alerte active",
+      "alertsLogged": "Alerte înregistrate",
+      "allClear": "Totul este în regulă",
+      "autoMonitoring": "Monitorizare automată",
+      "descriptions": {
+        "activeAlerts": "Examinează aceste produse astăzi pentru a rămâne conform.",
+        "activeAlertsZero": "Toate problemele de siguranță sunt rezolvate.",
+        "alertsLogged": "Include alerte rezolvate și ignorate pentru pista de audit.",
+        "alertsLoggedZero": "Nu există alerte istorice. Continuă să monitorizezi produsele noi.",
+        "productsChecked": "Evenimentele automate Shopify continuă să monitorizeze actualizările.",
+        "productsCheckedZero": "Rulează o verificare în masă pentru a scana catalogul curent."
+      },
+      "newSetup": "Configurare nouă",
+      "open": "{{count}} deschise",
+      "productsChecked": "Produse verificate",
+      "resolved": "{{count}} rezolvate"
+    },
+    "title": "ZeroRecall"
+  },
+  "dates": {
+    "daysAgo": "Acum {{count}} zile",
+    "today": "Astăzi",
+    "weeksAgo": "Acum {{count}} săptămâni",
+    "yesterday": "Ieri"
+  },
+  "errors": {
+    "apiError": "Serviciul extern de siguranță este temporar indisponibil. Te rugăm să încerci din nou mai târziu.",
+    "pageLoadFailed": "Încărcarea paginii a eșuat",
+    "unknown": "Ceva nu a mers bine"
+  },
+  "evidence": {
+    "alertNumber": "Alertă Safety Gate {{number}}",
+    "description": "Examinează deciziile înregistrate privind siguranța produselor, notele, contextul riscului și dovezile de urmărire a furnizorilor.",
+    "empty": "Nu au fost înregistrate încă decizii privind siguranța produselor.",
+    "eyebrow": "Pista de audit",
+    "filteredRecords": "{{visible}} din {{total}} înregistrări",
+    "filters": {
+      "collapseForProduct": "Ascunde dovezile complete pentru {{title}}",
+      "expandForProduct": "Afișează dovezile complete pentru {{title}}",
+      "noResults": "Nicio înregistrare de audit nu corespunde acestor filtre.",
+      "searchLabel": "Căutare în pista de audit",
+      "searchPlaceholder": "Căutare produs, număr alertă sau dovezi",
+      "showLess": "Ascunde dovezile",
+      "showMore": "Afișează dovezile",
+      "statusLabel": "Starea deciziei"
+    },
+    "fullEvidence": "Dovezi complete",
+    "heading": "Istoricul deciziilor și al dovezilor",
+    "noNotes": "Nicio notă înregistrată",
+    "records": "{{count}} înregistrări",
+    "table": {
+      "accessibilityLabel": "Tabel cu dovezi privind siguranța produselor",
+      "decision": "Decizie",
+      "details": "Detalii",
+      "notes": "Note / dovezi",
+      "product": "Produs",
+      "status": "Status",
+      "summary": "Rezumatul dovezilor",
+      "updated": "Actualizat"
+    },
+    "title": "Pista de audit"
+  },
+  "experience": {
+    "delayed": "Monitorizarea necesită atenție – ultima rulare finalizată este mai veche de 48 de ore",
+    "pausedHelp": "Verificările automate sunt întrerupte. Alege un plan pentru a verifica noile alerte Safety Gate și modificările produselor în timp ce Shopify este închis.",
+    "previewHelp": "Deschiderea acestei previzualizări de dezvoltare nu activează monitorizarea în fundal. Verificările programate necesită un plan Shopify activ verificat.",
+    "reviewSteps": "1. Compară fotografii și identificatori → 2. Alege rezultatul examinării → 3. Înregistrează decizia ta",
+    "valueBody": "Verificări zilnice pentru noi alerte Safety Gate, verificări la modificarea produselor, notificări prin e-mail când sunt activate și decizii de examinare salvate.",
+    "valueTitle": "Ce aduce monitorizarea continuă"
+  },
+  "manualCheck": {
+    "admin": {
+      "catalog": "Catalog",
+      "catalogDescription": "Produsele sunt sortate după cele mai recente actualizări Shopify, astfel încât comercianții să poată reverifica mai întâi modificările recente.",
+      "checkFailed": "Verificare eșuată",
+      "manualReview": "Examinare la cerere",
+      "manualReviewDescription": "Alege orice produs din catalogul tău și rulează o verificare țintită Safety Gate atunci când ai nevoie de un răspuns imediat.",
+      "productFlagged": "Produs semnalat"
+    },
+    "badges": {
+      "flagged": "{{count}} semnalate",
+      "checks": "{{count}} verificări",
+      "needsReview": "{{count}} necesită examinare"
+    },
+    "banners": {
+      "alertDescription": "A fost găsită o potențială problemă de siguranță pentru acest produs.",
+      "alertHeading": "Alertă de siguranță creată",
+      "failedHeading": "Verificare eșuată",
+      "textOnlyDescription": "Acest rezultat a folosit doar câmpuri text. Dacă produsul se bazează pe diferențe vizuale, examinează potrivirea mai atent.",
+      "textOnlyHeading": "Comparația imaginilor nu a fost disponibilă"
+    },
+    "breadcrumbs": {
+      "current": "Acoperirea catalogului",
+      "dashboard": "Tablou de bord"
+    },
+    "bulk": {
+      "description": "Examinează verificările salvate și rulează o nouă comparație Safety Gate pentru produsele din catalogul tău actual.",
+      "checkAllProducts": "Verifică produsele rămase",
+      "checkingAll": "Se verifică catalogul...",
+      "title": "Verifică-ți catalogul"
+    },
+    "catalogue": {
+      "accessibilityLabel": "Tabelul catalogului de produse",
+      "actions": {
+        "checkAgain": "Verifică din nou",
+        "checkAgainForProduct": "Verifică din nou {{title}}",
+        "checkSafety": "Verifică siguranța",
+        "checkSafetyForProduct": "Verifică siguranța pentru {{title}}",
+        "viewForProduct": "Vezi constatarea înregistrată pentru {{title}}"
+      },
+      "columns": {
+        "action": "Acțiune",
+        "checks": "Verificări",
+        "product": "Produs",
+        "status": "Status"
+      },
+      "emptyBody": "Nu sunt disponibile produse pentru verificare.",
+      "emptyHeading": "Nu s-au găsit produse",
+      "firstCheck": "Rulează prima verificare",
+      "heading": "Catalog de produse ({{count}})",
+      "lastChecked": "Ultima verificare {{date}}",
+      "noType": "Fără tip",
+      "searchLabel": "Găsește produsul",
+      "searchPlaceholder": "Căută produse după titlu, SKU, furnizor sau tip",
+      "status": {
+        "notChecked": "Neverificat",
+        "reviewed": "Revizuit",
+        "safe": "Nicio potrivire găsită",
+        "unsafe": "Necesită revizuire"
+      },
+      "totalChecks": "{{count}} total",
+      "unknownVendor": "Furnizor necunoscut"
+    },
+    "coverage": {
+      "completeDescription": "Fiecare produs Shopify actual are o verificare Safety Gate înregistrată. Produsele noi sau modificate necesită în continuare o verificare nouă.",
+      "completeTitle": "Fiecare produs actual are un rezultat de verificare salvat",
+      "eyebrow": "Stare verificare catalog",
+      "incompleteDescription": "Verifică produsele rămase pentru a salva un rezultat Safety Gate pentru catalogul curent.",
+      "incompleteTitle": "{{count}} produse nu au încă o verificare salvată",
+      "lastProductNeedsReview": "Ultima verificare a produsului a creat sau a actualizat un element de revizuire.",
+      "lastProductSafe": "Ultima verificare a produsului nu a găsit nicio potrivire probabilă Safety Gate.",
+      "lastRun": "Ultima verificare",
+      "lastRunResultWithCounts": "Verificate {{checked}}, {{skipped}} omise neschimbate, {{alerts}} elemente de revizuire create, {{errors}} erori.",
+      "noneRemaining": "Fiecare produs actual are un rezultat de verificare salvat.",
+      "noRunYet": "Nicio verificare de catalog sau produs nu a fost rulată încă.",
+      "percent": "{{percent}}% cu o verificare curentă",
+      "productsCovered": "Produse verificate",
+      "productsCoveredDescription": "Produse cu un rezultat salvat pentru versiunea lor curentă Shopify.",
+      "remaining": "Încă neverificate",
+      "remainingDescription": "Rulează o verificare pentru a salva un rezultat Safety Gate pentru aceste produse."
+    },
+    "filters": {
+      "all": "Toate ({{count}})",
+      "needsReview": "Potrivire posibilă ({{count}})",
+      "safe": "Nicio potrivire găsită ({{count}})",
+      "unprotected": "Neverificate sau modificate ({{count}})"
+    },
+    "modal": {
+      "unknown": "Necunoscut",
+      "unknownProduct": "Produs necunoscut"
+    },
+    "overview": {
+      "coverage": "Acoperire {{coverage}}%",
+      "manualCompleted": "Verificări manuale finalizate",
+      "manualCompletedDescription": "{{checked}} din {{total}} produse verificate",
+      "noOpenReviews": "Nicio decizie de produs deschisă.",
+      "noRisks": "Nu s-au detectat riscuri încă.",
+      "prioritise": "Prioritizează aceste produse pentru acțiune.",
+      "productsDescription": "Cele mai recente produse din magazinul tău.",
+      "productsFlagged": "Produse semnalate",
+      "productsInScope": "Produse în scop",
+      "productsNeedingReview": "Produse care necesită revizuire",
+      "title": "Prezentare generală a verificărilor"
+    },
+    "quickActions": {
+      "title": "Acțiuni rapide"
+    },
+    "subtitle": "Protejează restul catalogului tău, reîmprospătează monitorizarea sau verifică un produs selectat.",
+    "title": "Acoperirea catalogului",
+    "toasts": {
+      "completed": "Verificare de siguranță finalizată",
+      "flagged": "Potențială problemă de siguranță găsită"
+    }
+  },
+  "nav": {
+    "catalogCoverage": "Acoperire catalog",
+    "dashboard": "Tablou de bord",
+    "evidence": "Pista de audit",
+    "manualCheck": "Acoperire catalog",
+    "safetyAlerts": "Coada de revizuire",
+    "settings": "Setări"
+  },
+  "news": {
+    "items": {
+      "databaseUpdate": {
+        "date": "Dec 2025",
+        "description": "Baza de date Safety Gate este actualizată continuu cu noi alerte de produs. Rulează verificări regulate pentru a rămâne conform.",
+        "title": "Baza de date EU Safety Gate actualizată"
+      },
+      "gpsr": {
+        "date": "GPSR 2024",
+        "description": "Află despre cerințele GPSR și cum să te asiguri că produsele tale respectă standardele de siguranță ale UE.",
+        "title": "Regulamentul general privind siguranța produselor"
+      }
+    },
+    "title": "Știri"
+  },
+  "onboarding": {
+    "back": "Înapoi",
+    "finishButton": "Finalizează configurarea și mergi la tabloul de bord",
+    "nextStep": "Pasul următor",
+    "stepIndicator": "Pasul {{current}} din {{total}}",
+    "steps": {
+      "automation": {
+        "description": "Configurează revizuirea priorității și regulile automate de siguranță pentru magazinul tău.",
+        "label": "Automatizare siguranță",
+        "quarantine": {
+          "desc": "Marchează automat produsele pentru revizuire prioritară atunci când se potrivesc cu alertele Safety Gate cu risc serios (prag >= 95%).",
+          "label": "Activează revizuirea priorității",
+          "title": "Prioritizează riscurile serioase"
+        },
+        "title": "Pasul 3: Monitorizare automată și alerte",
+        "webhooks": {
+          "desc": "Produsele sunt verificate automat în baza de date a UE ori de câte ori sunt create sau actualizate.",
+          "title": "Scanare Webhook în timp real"
+        }
+      },
+      "scan": {
+        "alerts": "Alerte de risc create: {{count}}",
+        "complete": "Catalogul este acum monitorizat",
+        "description": "Importă produsele tale Shopify actuale în monitorizarea Safety Gate, apoi compară catalogul cu alertele recente Safety Gate.",
+        "imported": "Produse importate pentru monitorizare: {{count}}",
+        "label": "Import catalog",
+        "monitored": "Produse comparate cu alertele Safety Gate: {{count}}",
+        "scanned": "Produse scanate: {{count}}",
+        "scanning": "Se importă catalogul și se compară produsele cu alertele Safety Gate...",
+        "startButton": "Importă și monitorizează catalogul curent",
+        "title": "Pasul 2: Importă și monitorizează catalogul curent",
+        "toScan": "Produse de importat pentru monitorizare: {{count}}"
+      },
+      "sensitivity": {
+        "balanced": "70% (Recomandat - Echilibrat)",
+        "broad": "40% (Lărgit - Mai multe avertismente)",
+        "calibration": {
+          "balancedDesc": "Sensibilitate standard. Echilibru optimizat între precizie și volumul alertelor. Scanează titlurile, descrierile și potrivește mărcile cheie și structurile modelelor.",
+          "balancedTitle": "Mod de detectare echilibrat",
+          "broadDesc": "Sensibilitate ridicată. Surprinde potriviri vag înrudite. Recomandat dacă vindeți categorii de produse cu risc ridicat (jucării, electronice) și doriți o acoperire completă, dar așteptați-vă la unele rezultate fals pozitive.",
+          "broadTitle": "Mod de detectare extins",
+          "strictDesc": "Precizie ridicată. Filtrează similitudinile minore. Alertele se vor declanșa doar pentru potriviri foarte clare ale numelui mărcii/modelului. Rată scăzută de alerte false.",
+          "strictTitle": "Mod de detectare strict"
+        },
+        "description": "Alegeți cât de bine ar trebui să se potrivească un produs cu o înregistrare Safety Gate înainte de a necesita revizuire.",
+        "label": "Strictețea potrivirii",
+        "strict": "90% (Strict - Mai puține avertismente)",
+        "thresholdLabel": "Prag de potrivire: {{value}}%",
+        "title": "Pasul 1: Setați strictețea potrivirii"
+      }
+    },
+    "subtitle": "Găsiți posibile potriviri de produse periculoase, revizuiți-le în Shopify și păstrați dovezi de audit pentru fiecare decizie.",
+    "title": "Monitorizați-vă catalogul în raport cu EU Safety Gate",
+    "value": {
+      "audit": {
+        "description": "Deciziile rezolvate și respinse păstrează note pentru exporturi și urmărirea furnizorilor.",
+        "title": "Dovezi pregătite pentru audit"
+      },
+      "monitor": {
+        "description": "Noile alerte Safety Gate sunt verificate în raport cu catalogul dvs. Shopify.",
+        "title": "Monitorizare zilnică EU Safety Gate"
+      },
+      "review": {
+        "description": "Comparați potrivirea, decideți ce să faceți și mențineți coada de așteptare acționabilă.",
+        "title": "Flux de lucru pentru decizia comerciantului"
+      }
+    }
+  },
+  "pagination": {
+    "pageOf": "Pagina {{current}} din {{total}} ({{count}} alerte)"
+  },
+  "portal": {
+    "description": "Accesați baza de date oficială europeană Safety Gate pentru a căuta produse periculoase și a vizualiza alerte detaliate de siguranță.",
+    "home": "Pagina principală Safety Gate",
+    "homeDescription": "Accesați portalul oficial al Comisiei Europene",
+    "searchDatabase": "Căutați în baza de date",
+    "searchDescription": "Căutați în EU Safety Gate produse periculoase",
+    "title": "Portal Safety Gate"
+  },
+  "resolveActions": {
+    "actionTaken": "Acțiune întreprinsă",
+    "contactedSupplier": "Furnizor contactat (în așteptarea răspunsului)",
+    "contactPending": "Se așteaptă răspunsul furnizorului",
+    "falsePositive": "Fals pozitiv",
+    "menuLabel": "Acțiuni de rezolvare",
+    "modifiedProduct": "Produs modificat",
+    "noActionNeeded": "Nu este necesară nicio acțiune",
+    "notMyProduct": "Nu este produsul meu",
+    "other": "Altele",
+    "removedFromSale": "Retras de la vânzare",
+    "verifiedSafe": "Rezultat istoric: produs verificat ca fiind sigur"
+  },
+  "settings": {
+    "monitoring": {
+      "automatic": {
+        "description": "Produsele sunt verificate automat la creare sau actualizare prin webhook-uri.",
+        "enabled": "Activat",
+        "title": "Verificare automată"
+      },
+      "manual": {
+        "description": "Efectuați verificări de siguranță la cerere pentru orice produs din catalogul dvs.",
+        "goToManualCheck": "Accesați Verificarea manuală",
+        "title": "Verificări manuale"
+      },
+      "title": "Monitorizare"
+    },
+    "navigation": {
+      "dashboard": "Tablou de bord",
+      "manualCheck": "Verificare manuală",
+      "title": "Navigare",
+      "viewAlerts": "Vizualizează alertele"
+    },
+    "subtitle": "Controlați modul în care ZeroRecall vă monitorizează catalogul Shopify.",
+    "threshold": {
+      "currentDefault": "Valoarea implicită curentă a mediului",
+      "description": "Alegeți câte posibile potriviri Safety Gate dorește echipa dvs. să revizuiască. Monitorizarea echilibrată este recomandată pentru majoritatea cataloagelor Shopify.",
+      "howItWorks": "Cum funcționează",
+      "label": "Prag avansat de potrivire (%)",
+      "resetToDefault": "Resetați la valoarea implicită",
+      "save": "Salvați",
+      "title": "Mod de monitorizare"
+    },
+    "title": "Setări de monitorizare"
+  },
+  "settingsAdmin": {
+    "advancedMatchingSettings": "Setări avansate de potrivire",
+    "automation": {
+      "autoDraftDescription": "Marchează automat produsele pentru revizuire prioritară atunci când se potrivesc cu alertele Safety Gate cu risc serios (prag >= 95%).",
+      "autoDraftTitle": "Prioritizați riscurile grave",
+      "description": "Configurați revizuirea prioritară pentru potrivirile cu risc ridicat.",
+      "eyebrow": "Operațiuni în timp real",
+      "title": "Automatizare siguranță"
+    },
+    "automationStatus": {
+      "active": {
+        "badge": "Plan activ",
+        "description": "Auditarea inițială a catalogului a fost finalizată și acest magazin are un plan de monitorizare activ.",
+        "title": "Audit catalog finalizat"
+      },
+      "completedNoPlan": {
+        "badge": "Audit finalizat",
+        "description": "Auditarea inițială a catalogului este finalizată. Monitorizarea automată continuă necesită un plan activ.",
+        "title": "Audit inițial catalog finalizat"
+      },
+      "failed": {
+        "badge": "Necesită atenție",
+        "description": "Ultimul import sau audit nu s-a finalizat. Reîncercați acoperirea catalogului înainte de a vă baza pe starea monitorizării.",
+        "title": "Audit inițial catalog necesită atenție"
+      },
+      "notStarted": {
+        "badge": "Neverificat",
+        "description": "Importul inițial nu s-a finalizat, deci acoperirea catalogului nu este încă confirmată.",
+        "title": "Audit catalog neconfirmat"
+      },
+      "openCatalog": "Deschideți acoperirea catalogului",
+      "scanning": {
+        "badge": "În curs de procesare",
+        "description": "Produsele sunt importate și verificate. Acoperirea catalogului va fi confirmată după finalizarea auditului.",
+        "title": "Audit inițial catalog în curs"
+      }
+    },
+    "automationStatusDescription": "Actualizările zilnice EU Safety Gate, modificările produselor Shopify și înregistrările de audit sunt gestionate automat. Utilizați aceste setări doar pentru a ajusta volumul de revizuire și notificările.",
+    "automationStatusEyebrow": "Monitorizare automată",
+    "automationStatusTitle": "Monitorizarea Safety Gate funcționează pentru acest magazin",
+    "configuration": "Configurație",
+    "configurationDescription": "Păstrați pagina concentrată pe o singură decizie a comerciantului: cât de strict ar trebui să fie verificatorul atunci când compară produsele cu alertele Safety Gate.",
+    "currentThreshold": "Prag curent",
+    "currentThresholdDescription": "Valorile mai mici surprind mai multe potriviri posibile. Valorile mai mari reduc rezultatele fals pozitive.",
+    "environmentDefault": "Valoare implicită a mediului",
+    "environmentDefaultDescription": "Utilizat atunci când magazinul nu are încă un prag personalizat salvat.",
+    "exclusions": {
+      "description": "Excludeți anumiți furnizori sau categorii de produse de la verificările Safety Gate pentru a reduce rezultatele fals pozitive.",
+      "eyebrow": "Reguli de filtrare",
+      "title": "Reguli de excludere",
+      "typesDescription": "Introduceți o categorie sau un tip de produs și apăsați Enter sau virgulă pentru a-l adăuga.",
+      "typesPlaceholder": "Card cadou, Serviciu, ...",
+      "typesTitle": "Tipuri de produse excluse",
+      "vendorsDescription": "Introduceți un nume de furnizor și apăsați Enter sau virgulă pentru a-l adăuga.",
+      "vendorsPlaceholder": "Furnizor A, Furnizor B, ...",
+      "vendorsTitle": "Furnizori excluși"
+    },
+    "fallback": "Soluție de rezervă",
+    "guidance": "Ghidare",
+    "guidanceItems": {
+      "balancedDescription": "Recomandat pentru majoritatea cataloagelor (65-70%). Identifică riscurile probabile, menținând în același timp un număr redus de alerte false.",
+      "balancedTitle": "Implicit echilibrat",
+      "broadDescription": "Utilizați aproximativ 50% atunci când preferați să identificați mai multe potriviri posibile și sunteți confortabil să examinați mai multe alerte.",
+      "broadTitle": "Monitorizare extinsă",
+      "strictDescription": "Utilizați 80%+ atunci când catalogul dvs. este stabil și doriți mai puține examinări manuale.",
+      "strictTitle": "Potrivire strictă"
+    },
+    "included": {
+      "description": "Aplicația monitorizează continuu catalogul dvs. în raport cu alertele Safety Gate, păstrează dovezile de conformitate și vă alertează atunci când produsele necesită examinare.",
+      "evidenceDescription": "Deciziile rezolvate și respinse păstrează note, motive, contextul riscului și marcaje temporale.",
+      "evidenceTitle": "Dovadă exportabilă",
+      "eyebrow": "Monitorizare continuă",
+      "monitoringDescription": "Noile înregistrări Safety Gate sunt comparate cu produsele Shopify monitorizate fără o scanare manuală.",
+      "monitoringTitle": "Monitorizare UE continuă",
+      "teamDescription": "Examinarea prioritară, documentația furnizorului și filtrele ajută echipa dvs. să gestioneze deciziile reale mai rapid.",
+      "teamTitle": "Flux de lucru pentru examinare",
+      "title": "Ce acoperă magazinul dvs."
+    },
+    "matchingStrictness": "Strictețea potrivirii",
+    "mode": {
+      "balanced": "Echilibrat",
+      "broad": "Mai multe potriviri",
+      "strict": "Mai puține potriviri"
+    },
+    "monitoringModeEyebrow": "Mod de monitorizare",
+    "notifications": {
+      "emailHelp": "Preluat inițial de la Shopify. Puteți utiliza o altă adresă.",
+      "emailLabel": "E-mail de notificare",
+      "enabledDescription": "Alegeți dacă primiți constatări urgente, un rezumat săptămânal sau ambele.",
+      "enabledTitle": "Alerte de siguranță prin e-mail",
+      "immediateDescription": "Trimiteți-mi un e-mail imediat ce un produs necesită examinare.",
+      "immediateTitle": "Constatări noi",
+      "invalidEmail": "Introduceți o adresă de e-mail validă înainte de a activa notificările prin e-mail.",
+      "languageLabel": "Limba e-mailului",
+      "noRecipientDescription": "Notificările prin e-mail sunt activate, dar nu este specificată nicio adresă. Nu vor fi livrate mesaje până când nu este introdus un e-mail.",
+      "noRecipientHeading": "Niciun destinatar de e-mail configurat",
+      "useShopifyEmail": "Utilizați e-mailul de contact al magazinului ({{email}})",
+      "weeklyDescription": "Rezumatul monitorizării de luni: confirmă când nu au apărut constatări noi sau rezumă cazurile deschise care necesită examinare.",
+      "weeklyTitle": "Rezumat săptămânal al monitorizării"
+    },
+    "onDemand": "La cerere",
+    "plans": {
+      "advancedDescription": "Adăugați examinare prioritară, urmărire furnizor și fluxuri de lucru în limba UE.",
+      "advancedTitle": "Avansat: automatizare și fluxuri de lucru multilingve",
+      "description": "Funcționalități și capabilități incluse în planul de monitorizare a magazinului dvs.",
+      "eyebrow": "Valoarea abonamentului",
+      "manualDescription": "Efectuați verificări câte un produs pe rând și vedeți cel mai recent statut al produsului.",
+      "manualTitle": "Gratuit: verificări manuale",
+      "monitorDescription": "Monitorizați noile alerte Safety Gate în raport cu catalogul, exportați rapoarte de audit CSV și păstrați un istoric al deciziilor.",
+      "monitorTitle": "Plătit: monitorizare zilnică și rapoarte",
+      "title": "Capabilități plan"
+    },
+    "recommendedSetup": "Configurare recomandată",
+    "saveAll": "Salvați toate setările",
+    "status": {
+      "auditTrail": "Pista de audit",
+      "autoQuarantine": "Examinare prioritară",
+      "dailySafetyGateUpdates": "Actualizări zilnice Safety Gate",
+      "emailDigest": "Rezumat prin e-mail",
+      "off": "Dezactivat",
+      "on": "Activat",
+      "running": "În curs de execuție",
+      "shopifyProductUpdates": "Produse Shopify noi/actualizate"
+    },
+    "storeSetting": "Setare magazin",
+    "strictnessHint": "40-60% înseamnă o scanare mai amplă. 70-85% este mai strict și produce de obicei mai puține rezultate fals pozitive.",
+    "valueDescription": "Monitorizarea continuă compară produsele eligibile din catalog cu înregistrările Safety Gate nou publicate.",
+    "valueEyebrow": "Monitorizarea catalogului",
+    "valueItems": {
+      "auditDescription": "Deciziile rezolvate și respinse păstrează note, motive și istoricul examinării pentru rapoarte exportabile.",
+      "auditTitle": "Dovezi pregătite pentru audit",
+      "dailyDescription": "Noile alerte Safety Gate sunt verificate în raport cu produsele monitorizate fără ca comerciantul să inițieze o scanare manuală.",
+      "dailyTitle": "Monitorizare zilnică a catalogului",
+      "workflowDescription": "Comercianții examinează doar produsele care necesită o decizie, apoi rezolvă, resping sau urmăresc cu furnizorii.",
+      "workflowTitle": "Flux de lucru de examinare nativ Shopify"
+    },
+    "valueTitle": "Ce rămâne acoperit",
+    "workspace": "Spațiu de lucru"
+  },
+  "status": {
+    "actionRequired": "Acțiune necesară",
+    "allClear": "Totul este în regulă",
+    "archived": "Arhivate",
+    "dismissed": "Respinse",
+    "flagged": "semnalizat",
+    "monitored": "Monitorizat",
+    "needsReview": "Necesită revizuire",
+    "notChecked": "Neverificat",
+    "protected": "Verificat",
+    "resolved": "Rezolvate",
+    "runCheck": "Execută verificare",
+    "safe": "Nicio potrivire găsită",
+    "scanning": "Scanare în curs",
+    "unprotected": "Neverificat",
+    "unsafe": "Necesită revizuire",
+    "updated": "Actualizat"
+  },
+  "uxEnhancements": {
+    "activityTimeline": {
+      "actions": {
+        "dismiss": "Decizie înregistrată: respins",
+        "check": "Produs verificat",
+        "quarantine": "Produs marcat pentru examinare",
+        "resolve": "Decizie înregistrată: rezolvat"
+      },
+      "description": "Verificări de siguranță înregistrate, decizii privind produsele și dovezi păstrate pentru rapoartele de audit.",
+      "details": {
+        "autoDrafted": "Produs marcat pentru examinare prioritară.",
+        "bulkScanned": "Scanare în masă a catalogului finalizată.",
+        "checkSafe": "Nu a fost găsită nicio potrivire în această verificare.",
+        "checkUnsafe": "Produsul necesită examinare. Înregistrare decizie creată.",
+        "noReason": "Niciun motiv specificat.",
+        "reason": "Motiv: {{reason}}"
+      },
+      "eyebrow": "Pista de audit",
+      "noActivity": "Încă nu există evenimente de audit. Rulați monitorizarea pentru a începe să construiți dovezi.",
+      "title": "Istoricul deciziilor și al dovezilor",
+      "types": {
+        "automatic": "Eveniment de sistem",
+        "bulk": "Eveniment în bloc",
+        "manual": "Eveniment comerciant"
+      }
+    },
+    "alerts": {
+      "floating": {
+        "dismissSelected": "Revocare selectate",
+        "resolveSelected": "Rezolvare selectate",
+        "selectedCount": "{{count}} alertă selectată",
+        "selectedCount_few": "{{count}} alerte selectate",
+        "selectedCount_many": "{{count}} alerte selectate",
+        "selectedCount_one": "{{count}} alertă selectată",
+        "selectedCount_other": "{{count}} alerte selectate",
+        "selectedCount_plural": "{{count}} alerte selectate"
+      },
+      "quickFilters": {
+        "allAlerts": "Toate înregistrările",
+        "allAlertsDesc": "Afișează toate avertismentele de siguranță din catalog.",
+        "highRisk": "Doar risc ridicat",
+        "highRiskDesc": "Niveluri de risc grave care necesită acțiune.",
+        "needsReview": "Necesită examinare",
+        "needsReviewDesc": "Alerte de siguranță în așteptare.",
+        "resolved": "Rezolvate/Revocate",
+        "resolvedDesc": "Alerte anterioare păstrate pentru audit.",
+        "title": "Filtre rapide"
+      }
+    },
+    "complianceRing": {
+      "scoreLabel": "Șterge",
+      "subtitle": "Ponderea produselor verificate fără elemente de examinare deschise",
+      "title": "Starea de sănătate a catalogului monitorizat"
+    }
+  },
+  "workspace": {
+    "all": "Toate",
+    "appLanguage": "Limba aplicației",
+    "apply": "Aplică filtre",
+    "applyFilters": "Aplică filtre",
+    "balancedHelp": "Potrivirea echilibrată este punctul de plecare recomandat. Modificați-o doar dacă doriți să examinați mai multe sau mai puține potriviri posibile.",
+    "broadHelp": "Include mai multe potriviri posibile și poate necesita mai multă examinare manuală.",
+    "cannotCompare": "Nu se poate compara",
+    "catalogGlobalAction": "Verifică {{count}} produse din catalog",
+    "catalogScopeHelp": "Acoperirea include toate produsele din catalogul Shopify, inclusiv articolele active, în ciornă și arhivate. Filtrele modifică doar această listă, nu acoperirea sau domeniul de monitorizare.",
+    "clearFilters": "Șterge filtrele",
+    "compare": "Compară produsele",
+    "compareProduct": "Compară produse: {{title}}",
+    "coverageFiltersHelp": "Acoperirea și constatările deschise sunt separate: un produs modificat poate avea și o constatare în așteptarea examinării.",
+    "coverageIncomplete": "{{count}} produse necesită o verificare curentă",
+    "coverageScope": "Se afișează {{visible}} din {{total}} produse din catalog.",
+    "csv": {
+      "action": "Acțiune de decizie",
+      "actor": "Înregistrat de",
+      "caseNumber": "Cazul Safety Gate",
+      "decisionAt": "Decizie la",
+      "detectedAt": "Detectat la",
+      "generatedAt": "Generat la",
+      "guidance": "Ghid de examinare",
+      "notes": "Note de examinare",
+      "product": "Produs",
+      "productId": "ID produs Shopify",
+      "recordType": "Tip înregistrare",
+      "resolution": "Rezoluție",
+      "risk": "Nivel de risc",
+      "shop": "Magazin",
+      "source": "Sursă oficială",
+      "sourceRisk": "Risc în alerta oficială",
+      "status": "Status"
+    },
+    "csvGuidance": "Potrivire posibilă. Comparați identificatorii produsului și înregistrarea oficială înainte de a decide.",
+    "currentFindingStatus": "Starea actuală a constatării",
+    "dateFilterTimezone": "Datele utilizează fusul orar de monitorizare: {{timeZone}}. Aplicați filtre pentru a actualiza rezultatele și a exporta.",
+    "decisionAt": "Decizie înregistrată",
+    "decisionExportHelp": "Această vizualizare și exportul său CSV utilizează datele deciziilor. Acestea includ evenimente de examinare pentru constatări mai vechi, inclusiv cazuri redeschise. Numele produselor și faptele sursei oficiale își păstrează textul original.",
+    "decisionFrom": "Data deciziei de la",
+    "decisionLegacy": "Rezultat istoric: produs verificat ca fiind sigur",
+    "decisionTo": "Data deciziei până la",
+    "detectedAt": "Constatare detectată",
+    "differentIdentifiers": "Identificatori diferiți: {{fields}}. Verificați-i înainte de a decide.",
+    "documentedFindings": "Constatări documentate rezolvate sau revocate în prezent",
+    "download": "Descărcați CSV",
+    "emptyHelp": "Nu sunt înregistrate constatări deschise. Acest lucru nu certifică faptul că produsele dvs. sunt sigure. Verificați acoperirea catalogului și ultima rulare de monitorizare.",
+    "eventCount": "{{count}} evenimente de decizie",
+    "excluded": "{{count}} din {{total}} produse din catalog corespund acestor reguli pentru verificări manuale. Monitorizarea automată nu utilizează aceste excluderi. Constatările existente rămân disponibile.",
+    "excludeHelp": "Aceste reguli se aplică verificărilor manuale. Verificați produsele afectate înainte de a salva.",
+    "exportHelp": "CSV-ul conține toate constatările din perioada și starea selectate, inclusiv referințe oficiale, note de examinare și evenimente de decizie înregistrate. Este o înregistrare a verificărilor, nu un certificat de siguranță.",
+    "exportReady": "CSV pregătit. Dacă descărcarea nu a început, utilizați acest link:",
+    "findingCount": "Constatări în acest domeniu: {{count}}.",
+    "findingFrom": "Constatare detectată de la",
+    "findings": "Constatări și dovezi",
+    "findingTo": "Constatare detectată până la",
+    "from": "De la data",
+    "goReview": "Examinează constatările deschise",
+    "groupAction": "Acțiune întreprinsă",
+    "groupDifferent": "Produs diferit",
+    "groupInformation": "Necesită mai multe informații",
+    "history": "Istoricul deciziilor",
+    "historyLimit": "Se afișează până la {{count}} constatări recente. Exportați înregistrarea completă pentru toate constatările.",
+    "changed": "Modificat de la ultima verificare",
+    "chooseOutcomeHelp": "Alegeți un rezultat pentru a permite înregistrarea deciziei dvs.",
+    "chooseOutcomeLink": "Alegeți rezultatul",
+    "lastSuccess": "Ultima rulare de monitorizare reușită",
+    "matchingIdentifiers": "Identificatori potriviți: {{fields}}.",
+    "matchNeedsVerification": "Potrivire posibilă. Comparați fotografiile și identificatorii cu înregistrarea oficială înainte de a decide.",
+    "matchNotConfirmed": "Potrivirea nu a fost confirmată după examinarea dovezilor",
+    "missingIdentifiers": "Lipsesc unii identificatori. Comparați fotografiile disponibile și cereți furnizorului modelul, codul de bare și lotul.",
+    "monitoring": {
+      "enabled": "Activat — verificări zilnice",
+      "failed": "Ultima verificare automată a eșuat",
+      "paused": "Pauză — niciun plan de monitorizare curent",
+      "preview": "Previzualizare dezvoltare — facturare ocolită",
+      "processing": "Verificare în așteptare sau în curs",
+      "unknown": "Activitatea de monitorizare nu este confirmată",
+      "unverified": "Pauză — abonamentul nu a putut fi verificat"
+    },
+    "monitoringLabel": "Monitorizare automată",
+    "monitoringUnknownHelp": "Nicio rulare de monitorizare reușită nu este disponibilă pentru a confirma activitatea recentă. Reîmprospătați pentru a verifica din nou.",
+    "neverRun": "Nicio rulare de monitorizare finalizată înregistrată",
+    "noCurrentResult": "Este necesar un rezultat curent",
+    "noDecisions": "Nu au fost înregistrate decizii încă. Deschideți o constatare, comparați produsele și înregistrați ce ați revizuit.",
+    "noFilteredDecisions": "Niciun eveniment de decizie nu corespunde acestor filtre. Ștergeți filtrele pentru a vedea istoricul complet.",
+    "noFilteredFindings": "Nicio constatare nu corespunde acestor filtre. Ștergeți filtrele pentru a vedea lista completă.",
+    "noMatch": "Nicio potrivire găsită",
+    "noMatchAtCheck": "Nu a fost găsită nicio potrivire în această verificare.",
+    "notes": "Note de examinare",
+    "notificationLanguage": "Limba e-mailului",
+    "notRecorded": "Niciun rezultat curent al revizuirii",
+    "oldest": "Deschis de {{count}} zile",
+    "onboarding": "Importă catalog → verifică înregistrările Safety Gate → revizuiește rezultatele",
+    "outcome": "Rezultat",
+    "outcomeHelp": {
+      "contacted_supplier": "Constatarea rămâne deschisă în timp ce așteptați furnizorul.",
+      "false_positive": "Utilizați atunci când dovezile arată că alerta nu se aplică. Constatarea va fi respinsă.",
+      "match_not_confirmed": "Utilizați atunci când dovezile pe care le-ați revizuit nu confirmă o potrivire. Constatarea va fi rezolvată.",
+      "modified_product": "Mai întâi actualizați produsul în Shopify. Înregistrarea acestui rezultat nu modifică produsul; constatarea va fi rezolvată.",
+      "not_my_product": "Utilizați atunci când alerta se referă la un alt produs. Constatarea va fi respinsă.",
+      "other": "Descrieți rezultatul în nota obligatorie. Constatarea va fi rezolvată.",
+      "removed_from_sale": "Mai întâi eliminați produsul de la vânzare în Shopify. Înregistrarea acestui rezultat nu modifică produsul; constatarea va fi rezolvată.",
+      "verified_safe": "Acesta este un rezultat istoric."
+    },
+    "outcomeLabels": {
+      "contactedSupplier": "Așteaptă furnizorul",
+      "falsePositive": "Fals pozitiv",
+      "modifiedProduct": "Produs modificat",
+      "notMyProduct": "Nu este produsul meu",
+      "other": "Altele",
+      "removedFromSale": "Retras de la vânzare",
+      "verifiedSafe": "Istoric: verificat sigur"
+    },
+    "possibleMatch": "Potrivire posibilă",
+    "possibleMatchAtCheck": "Această verificare a găsit o posibilă potrivire Safety Gate.",
+    "print": "Imprimă / salvează PDF",
+    "priority": "Prioritate revizuire",
+    "priorityHelp": "Deciziile mai întâi, apoi gravitatea alertei oficiale și cele mai vechi constatări. Urmează articolele care așteaptă furnizorii.",
+    "productStatus": "Stare Shopify",
+    "productStatusActive": "Activ",
+    "productStatusAll": "Toate stările Shopify",
+    "productStatusArchived": "Arhivate",
+    "productStatusDraft": "Ciornă",
+    "productStatusUnknown": "Necunoscut",
+    "recommended": "Setare recomandată",
+    "referenceMissing": "Număr caz oficial indisponibil",
+    "remaining": "Neverificat sau modificat",
+    "reopened": "Redeschis pentru revizuire",
+    "reportEmpty": "Nicio constatare nu corespunde acestor filtre.",
+    "reportTitle": "Raport verificări și decizii",
+    "resultHelp": "Înregistrarea unui rezultat documentează revizuirea dvs. în jurnalul de audit și nu modifică produsul Shopify.",
+    "reviewNext": "Revizuiește următoarea potrivire: {{title}}",
+    "reviewPrompt": "Comparați dovezile, alegeți rezultatul și înregistrați-vă notele.",
+    "riskLabels": {
+      "electric": "Șoc electric",
+      "fire": "Incendiu",
+      "health": "Risc pentru sănătate",
+      "high": "Risc ridicat",
+      "chemical": "Chimic",
+      "choking": "Sufocare",
+      "injuries": "Leziuni",
+      "low": "Risc scăzut",
+      "medium": "Risc mediu",
+      "serious": "Risc serios",
+      "unknown": "Risc în alerta Safety Gate"
+    },
+    "runScope": "Verificări produse: {{products}} · Înregistrări Safety Gate considerate: {{records}} · Constatări noi: {{findings}}",
+    "saved": "Setări salvate.",
+    "saveChanges": "Salvează modificările",
+    "scope": "Constatări de la {{from}} până la {{to}}",
+    "scoreDetails": "Detalii similitudine",
+    "scoreHelp": "Acestea sunt scoruri de similitudine utilizate pentru a prioritiza revizuirea, nu o probabilitate ca produsul dvs. să fie periculos.",
+    "settingsAdvanced": "Potrivire avansată și excluderi",
+    "shop": "Magazin",
+    "showMore": "Afișează mai multe produse",
+    "scheduleHelp": "Noile alerte Safety Gate sunt verificate în timp ce planul de monitorizare este activ. Ora următoarei verificări finalizate depinde de coadă.",
+    "sourceMissing": "Linkul înregistrării oficiale nu este disponibil pentru această constatare salvată.",
+    "sourceRisk": "Risc în alerta oficială (înregistrare UE originală)",
+    "status": "Stare constatare",
+    "strictHelp": "Afișează mai puține potriviri posibile și poate rata similitudini mai puțin evidente.",
+    "to": "Până la data",
+    "unconfirmedIdentifiers": "Identificatorii de catalog disponibili nu confirmă această potrivire. Comparați ambalajul și cereți furnizorului modelul, codul de bare și lotul lipsă.",
+    "unchecked": "Încă neverificate",
+    "unsaved": "Aveți modificări nesalvate.",
+    "verifyScope": "Rezultatele catalogului se aplică versiunii produsului care a fost verificată. Produsele modificate necesită o nouă verificare.",
+    "viewRemainingProducts": "Vizualizați {{count}} produse care necesită o verificare",
+    "viewShopify": "Deschide produsul Shopify",
+    "waiting": "Așteaptă furnizorul",
+    "when": "Înregistrat la",
+    "who": "Înregistrat de",
+    "whyMatch": "De ce ar putea corespunde"
+  }
+}

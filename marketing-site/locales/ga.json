@@ -269,7 +269,11 @@
     "reportDownload": "Íoslódáil na torthaí go léir (CSV)",
     "reportBody": "Áirítear gach táirge a bhfuil meaitseáil fhéideartha aige. Seiceáil aonuaire. Rachaidh an nasc príobháideach in éag tar éis 30 lá.",
     "reportLoading": "An tuairisc iomlán á hullmhú…",
-    "reportError": "Níl an tuairisc ar fáil nó tá an nasc imithe in éag. Bain triail eile as nó scríobh chuig info@zerorecall.online."
+    "reportError": "Níl an tuairisc ar fáil nó tá an nasc imithe in éag. Bain triail eile as nó scríobh chuig info@zerorecall.online.",
+    "detailsSummary": "Cad go díreach a sheiceálaimid le linn an scain saor in aisce?",
+    "detailsStep1": "<strong>1. Catalóg phoiblí Shopify:</strong> Léimid teidil, cur síos, brandaí, catagóirí agus grianghraif táirgí atá ar fáil go poiblí ó do shiopa (gan rochtain riaracháin).",
+    "detailsStep2": "<strong>2. Comparáid téacs agus íomhánna le Safety Gate:</strong> Tiontaímid téacs agus íomhánna ina veicteoirí cuardaigh agus déanaimid comparáid leo in aghaidh bhunachar sonraí iomlán AE Safety Gate (RAPEX roimhe seo).",
+    "detailsStep3": "<strong>3. Achoimre ríomhphoist agus easpórtáil CSV:</strong> Nuair a bheidh sé críochnaithe, gheobhaidh tú ríomhphost le meaitseálacha féideartha, uimhreacha cásanna, naisc oifigiúla AE agus íoslódáil CSV."
   },
   "quiet": {
     "eyebrow": "NÍOS MÓ SUAIMHNEAS INTINNE",

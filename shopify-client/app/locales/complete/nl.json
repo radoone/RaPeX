@@ -1,0 +1,1406 @@
+{
+  "actions": {
+    "auditReport": "Auditrapport",
+    "clear": "Wissen",
+    "dashboard": "Dashboard",
+    "downloadAuditReport": "Auditrapport downloaden",
+    "checkAll": "Alle producten controleren",
+    "checkAllProducts": "Alle {{count}} producten controleren",
+    "checking": "Bezig met controleren...",
+    "checkNewSafetyGateAlerts": "Nieuwe Safety Gate-waarschuwingen controleren",
+    "checkOneProduct": "Eén product controleren",
+    "checkSelectedProduct": "Geselecteerd product controleren",
+    "checkUnchecked": "{{count}} ongecontroleerde producten controleren",
+    "manualCheck": "Product controleren",
+    "next": "Volgende",
+    "openFirstMatch": "Eerste overeenkomst openen",
+    "previous": "Vorige",
+    "protectRemainingProducts": "{{count}} resterende producten controleren",
+    "reactivate": "Opnieuw activeren",
+    "recordDecision": "Beslissing vastleggen",
+    "refreshCoverage": "Catalogusdekking vernieuwen",
+    "resolve": "Oplossen",
+    "retry": "Opnieuw proberen",
+    "reviewActiveProducts": "Actieve producten beoordelen",
+    "reviewAlerts": "Waarschuwingen beoordelen",
+    "reviewDecision": "Producten vergelijken",
+    "reviewMultipleMatches": "{{count}} overeenkomsten beoordelen",
+    "reviewOneMatch": "1 overeenkomst beoordelen",
+    "reviewProductsNeedingAction": "{{count}} product beoordelen dat actie vereist",
+    "reviewProductsNeedingAction_few": "{{count}} producten beoordelen die actie vereisen",
+    "reviewProductsNeedingAction_many": "{{count}} producten beoordelen die actie vereisen",
+    "reviewProductsNeedingAction_one": "{{count}} product beoordelen dat actie vereist",
+    "reviewProductsNeedingAction_other": "{{count}} producten beoordelen die actie vereisen",
+    "reviewProductsNeedingAction_plural": "{{count}} producten beoordelen die actie vereisen",
+    "search": "Zoeken",
+    "settings": "Instellingen",
+    "tryAgain": "Opnieuw proberen",
+    "view": "Bekijken",
+    "viewAlerts": "Waarschuwingen bekijken",
+    "viewDetails": "Details bekijken",
+    "viewEvidence": "Beslissingsgeschiedenis bekijken"
+  },
+  "alerts": {
+    "admin": {
+      "actionNeeded": "Actie vereist",
+      "actionNeededDescription": "Beoordeel overeenkomsten, negeer valse positieven of los bevestigde risico's op, zodat de waarschuwingswachtrij bruikbaar blijft.",
+      "actionNeededTitle": "{{count}} actieve waarschuwing vereist nog een beslissing",
+      "actionNeededTitle_few": "{{count}} actieve waarschuwingen vereisen nog een beslissing",
+      "actionNeededTitle_many": "{{count}} actieve waarschuwingen vereisen nog een beslissing",
+      "actionNeededTitle_one": "{{count}} actieve waarschuwing vereist nog een beslissing",
+      "actionNeededTitle_other": "{{count}} actieve waarschuwingen vereisen nog een beslissing",
+      "actionNeededTitle_plural": "{{count}} actieve waarschuwingen vereisen nog een beslissing",
+      "criticalBannerDescription": "{{count}} actieve overeenkomst is gemarkeerd als hoog of ernstig risico in Safety Gate. Los die overeenkomsten eerst op.",
+      "criticalBannerDescription_few": "{{count}} actieve overeenkomsten zijn gemarkeerd als hoog of ernstig risico in Safety Gate. Los die overeenkomsten eerst op.",
+      "criticalBannerDescription_many": "{{count}} actieve overeenkomsten zijn gemarkeerd als hoog of ernstig risico in Safety Gate. Los die overeenkomsten eerst op.",
+      "criticalBannerDescription_one": "{{count}} actieve overeenkomst is gemarkeerd als hoog of ernstig risico in Safety Gate. Los die overeenkomsten eerst op.",
+      "criticalBannerDescription_other": "{{count}} actieve overeenkomsten zijn gemarkeerd als hoog of ernstig risico in Safety Gate. Los die overeenkomsten eerst op.",
+      "criticalBannerDescription_plural": "{{count}} actieve overeenkomsten zijn gemarkeerd als hoog of ernstig risico in Safety Gate. Los die overeenkomsten eerst op.",
+      "criticalBannerTitle": "{{count}} overeenkomst met hoog risico moet worden beoordeeld",
+      "criticalBannerTitle_few": "{{count}} overeenkomsten met hoog risico moeten worden beoordeeld",
+      "criticalBannerTitle_many": "{{count}} overeenkomsten met hoog risico moeten worden beoordeeld",
+      "criticalBannerTitle_one": "{{count}} overeenkomst met hoog risico moet worden beoordeeld",
+      "criticalBannerTitle_other": "{{count}} overeenkomsten met hoog risico moeten worden beoordeeld",
+      "criticalBannerTitle_plural": "{{count}} overeenkomsten met hoog risico moeten worden beoordeeld",
+      "queue": "Wachtrij voor productbeslissingen",
+      "queueDescription": "Bevestig waarschijnlijke overeenkomsten, negeer valse positieven of leg vast welke actie is ondernomen.",
+      "warningBannerDescription": "Gebruik deze wachtrij alleen voor echte beslissingen: los bevestigde risico's op en negeer valse positieven snel.",
+      "warningBannerTitle": "{{count}} actieve waarschuwing moet nog worden beoordeeld",
+      "warningBannerTitle_few": "{{count}} actieve waarschuwingen moeten nog worden beoordeeld",
+      "warningBannerTitle_many": "{{count}} actieve waarschuwingen moeten nog worden beoordeeld",
+      "warningBannerTitle_one": "{{count}} actieve waarschuwing moet nog worden beoordeeld",
+      "warningBannerTitle_other": "{{count}} actieve waarschuwingen moeten nog worden beoordeeld",
+      "warningBannerTitle_plural": "{{count}} actieve waarschuwingen moeten nog worden beoordeeld"
+    },
+    "breadcrumbs": {
+      "current": "Wachtrij beoordelen",
+      "dashboard": "Dashboard"
+    },
+    "checklist": {
+      "items": {
+        "0": "Prioriteit geven aan actieve waarschuwingen",
+        "1": "Herstelstappen documenteren",
+        "2": "Verifiëren voordat u negeert"
+      },
+      "title": "Checklist voor reactie"
+    },
+    "meta": {
+      "active": "{{count}} te beoordelen",
+      "total": "{{count}} totaal"
+    },
+    "metrics": {
+      "activeHeading": "Actieve waarschuwingen",
+      "archived": "Gearchiveerd",
+      "dismissedDescription": "Notities bewaren voor audit",
+      "dismissedDescriptionZero": "Nog geen genegeerde waarschuwingen",
+      "dismissedHeading": "Genegeerd",
+      "resolutionHeading": "Oplossingspercentage",
+      "resolved": "{{count}} opgelost",
+      "resolvedAndDismissed": "{{resolved}} opgelost • {{dismissed}} genegeerd",
+      "totalRecorded": "{{count}} totaal vastgelegd"
+    },
+    "pagination": {
+      "next": "Volgende",
+      "previous": "Vorige"
+    },
+    "subtitle": "Producten beoordelen die een beslissing vereisen.",
+    "table": {
+      "accessibilityLabel": "Tabel met veiligheidswaarschuwingen",
+      "empty": "Geen waarschuwingen die overeenkomen met uw filters",
+      "emptyAllClearBody": "Er zijn momenteel geen openstaande beslissingen van verkopers. Dagelijkse monitoring wordt nog steeds uitgevoerd en gesloten beslissingen blijven in het auditspoor.",
+      "emptyAllClearTitle": "Alle actieve productbeoordelingen zijn afgehandeld",
+      "emptyFilteredBody": "Pas de filters aan of zoek een ander product. Uw actieve wachtrij kan nog steeds leeg zijn.",
+      "emptyFilteredTitle": "Geen beoordelingsitems komen overeen met deze filters",
+      "headers": {
+        "actions": "Acties",
+        "detected": "Gedetecteerd",
+        "product": "Product",
+        "risk": "Risico",
+        "status": "Status"
+      },
+      "order": "Volgorde",
+      "orderOptions": {
+        "asc": "Oudste eerst",
+        "desc": "Nieuwste eerst"
+      },
+      "reviewProduct": "Beoordelingsbeslissing voor {{title}}",
+      "searchLabel": "Waarschuwingen zoeken",
+      "searchPlaceholder": "Zoeken op productnaam...",
+      "selectAll": "Alle zichtbare bevindingen selecteren",
+      "selectedCount": "{{count}} geselecteerd",
+      "selectProduct": "Bevinding selecteren voor {{title}}",
+      "similarityTooltip": "Overeenkomstscore: {{score}}%",
+      "sort": "Sorteren",
+      "sortBy": "Sorteren op",
+      "sortOptions": {
+        "created": "Datum gedetecteerd",
+        "name": "Productnaam",
+        "risk": "Risiconiveau"
+      },
+      "tabs": {
+        "active": "Moet worden beoordeeld",
+        "all": "Alles",
+        "dismissed": "Genegeerd",
+        "resolved": "Opgelost"
+      },
+      "thumbnailLabel": "Miniatuur van {{title}}",
+      "viewProduct": "Bekijk de geregistreerde bevinding voor {{title}}"
+    },
+    "title": "Beoordelingswachtrij",
+    "toasts": {
+      "updated": "Waarschuwing bijgewerkt"
+    }
+  },
+  "analysis": {
+    "alertImagesUsed": "Vergeleken waarschuwingsafbeeldingen: {{count}}",
+    "alertNumber": "Waarschuwing {{number}}",
+    "audit": {
+      "existingNotes": "Auditnotities",
+      "noteLabel": "Auditnotitie",
+      "notePlaceholder": "Voeg toe wat u hebt gecontroleerd, bewijs van de leverancier of waarom dit is afgewezen."
+    },
+    "candidateAlerts": "Kandidaatwaarschuwingen: {{count}}",
+    "decisionContextDesc": "Het vastleggen van een beslissing documenteert dat deze veiligheidsmatch is beoordeeld en bewaart uw auditspoor. Het wijzigt uw Shopify-product niet automatisch of publiceert het niet vanuit uw winkel.",
+    "decisionContextTitle": "Nalevingbeslissingen vastleggen",
+    "decisionRecorded": "Beslissing vastgelegd",
+    "editInShopify": "Product bewerken in Shopify",
+    "enlargedSafetyAlert": "Vergrote veiligheidswaarschuwingsafbeelding",
+    "fields": {
+      "accessibilityLabel": "Tabel met details van waarschuwingsmatches",
+      "alertDate": "Waarschuwingsdatum",
+      "brand": "Merk",
+      "category": "Categorie",
+      "field": "Veld",
+      "model": "Model",
+      "notifyingCountry": "Meldend land",
+      "origin": "Oorsprong",
+      "productDescription": "Productbeschrijving",
+      "productName": "Productnaam",
+      "value": "Waarde"
+    },
+    "focus": {
+      "criticalLead": "Dit product heeft een match met hoge betrouwbaarheid. Leg pas een beslissing vast na beoordeling.",
+      "criticalStepCompare": "Vergelijk uw productfoto met de eerste Safety Gate-match hieronder.",
+      "criticalStepDecide": "Kies een uitkomst in het menu 'Beslissing vastleggen' op basis van uw beoordeling.",
+      "criticalStepDocument": "Voeg interne notities toe voor traceerbaarheid en opvolging van leveranciers.",
+      "criticalTitle": "Actie nu vereist",
+      "recordedOutcome": "Vastgelegde uitkomst: {{outcome}}",
+      "reviewedLead": "Deze waarschuwing is niet actief. Houd records duidelijk voor audits.",
+      "reviewedStepAudit": "Controleer de geselecteerde oplossing en notities.",
+      "reviewedStepReactivate": "Alleen opnieuw activeren als er nieuw productbewijs verschijnt.",
+      "reviewedTitle": "Beoordeling al voltooid",
+      "safeLead": "Huidig resultaat is veilig. Blijf productupdates monitoren.",
+      "safeStepClose": "Sluit dit detail en ga verder met andere actieve waarschuwingen.",
+      "safeStepMonitor": "Houd dit product in automatische monitoring.",
+      "safeStepRecheck": "Voer een nieuwe controle uit als afbeeldingen, verpakking of leverancier veranderen.",
+      "safeTitle": "Geen dringende actie nodig"
+    },
+    "hazardType": "Gevarentype",
+    "checkedAt": "Gecontroleerd: {{date}}",
+    "imageDominated": "Deze match is gescoord met een 'afbeelding-eerst'-weging, dus visuele gelijkenis van de verpakking woog zwaarder dan tekstverschillen.",
+    "imageMatch": "Afbeeldingsovereenkomst",
+    "imageMatchShort": "{{count}}% afbeelding",
+    "legalProvision": "Wettelijke bepaling",
+    "matchesHint": "Begin met de bovenste matchkaart hieronder en bevestig eerst de visuele verpakking, daarna de model- en merkdetails.",
+    "merchantRecommendation": {
+      "active": "Vergelijk de product- en Safety Gate-afbeeldingen, bevestig het merk of model en leg vervolgens de actie vast die uw winkel zal ondernemen.",
+      "reviewed": "Deze bevinding is gesloten. Controleer de vastgelegde uitkomst en het bewijs voordat u deze opnieuw activeert.",
+      "safe": "Er is nu geen winkelactie vereist. Controleer opnieuw als het product, de verpakking, afbeeldingen of de leverancier verandert."
+    },
+    "modalAccessibilityLabel": "Details van Safety Gate-match voor {{title}}",
+    "modalHeading": "Safety Gate-match beoordelen",
+    "noIssuesFound": "Geen veiligheidsproblemen gevonden",
+    "openProductImage": "Afbeelding openen voor {{title}}",
+    "overallMatch": "Algemene match",
+    "overallMatchShort": "{{count}}% algemeen",
+    "potentialRisk": "Potentieel veiligheidsrisico",
+    "primaryRiskFocus": "Primaire risicofocus: {{category}} op {{level}}-niveau. Bevestig dit eerst voordat u een beslissing neemt.",
+    "productImagesUsed": "Productafbeeldingen: {{used}} / {{provided}}",
+    "reviewLayout": {
+      "actionNeeded": "Actie vereist",
+      "compareHeading": "Vergelijk de producten",
+      "compareHint": "Controleer de foto's, het merk, het model en de categorie voordat u een beslissing neemt.",
+      "decisionHeading": "Leg uw beslissing vast",
+      "decisionPrompt": "Kies de uitkomst van de beoordeling. U kunt een notitie toevoegen over wat u hebt gecontroleerd.",
+      "fullEvidence": "Volledig Safety Gate-bewijs ({{count}})",
+      "groupHelp": {
+        "action": "Sluit de bevinding nadat u het product uit de verkoop hebt gehaald of hebt bijgewerkt in Shopify.",
+        "different": "Sluit of negeer de bevinding omdat uw product een ander model, merk of batch is.",
+        "information": "Houd de bevinding open terwijl u uw leverancier vraagt om batch-, model- of veiligheidsdocumenten.",
+        "other": "Leg een andere uitkomst vast met een verplichte verklarende notitie voor uw auditspoor."
+      },
+      "chooseOutcome": "Kies een uitkomst",
+      "identifiers": {
+        "barcode": "Barcode (GTIN/EAN)",
+        "batch": "Batch / Lot",
+        "brand": "Merk",
+        "field": "Identificatie",
+        "match": "Overeenkomst",
+        "mismatch": "Afwijking",
+        "model": "Model",
+        "notSpecified": "niet gespecificeerd",
+        "result": "Vergelijking",
+        "safetyGate": "Safety Gate-waarschuwing",
+        "yourProduct": "Uw Shopify-product"
+      },
+      "identifiersHeading": "Vergelijking van identificatiegegevens naast elkaar",
+      "languageDiffNote": "De taal van de app-interface ({{appLang}}) en de taal van e-mailmeldingen ({{emailLang}}) worden onafhankelijk ingesteld.",
+      "noImage": "Geen afbeelding beschikbaar",
+      "noteLabel": "Wat hebt u gecontroleerd? (optioneel)",
+      "noteRequiredLabel": "Wat hebt u gecontroleerd? (verplicht)",
+      "otherNoteRequired": "Voeg een notitie toe om de andere uitkomst te verklaren.",
+      "outcomeLabel": "Beoordelingsuitkomst",
+      "possibleMatch": "Mogelijke Safety Gate-overeenkomst",
+      "readyToRecord": "Klaar om vast te leggen",
+      "reviewPointsHeading": "Te beoordelen punten",
+      "unnamedRecord": "Safety Gate-record"
+    },
+    "riskDescription": "Risicobeschrijving",
+    "riskLevel": "Risiconiveau",
+    "riskSeverity": "Risicoernst",
+    "safetyGateMatches": "Safety Gate-overeenkomsten",
+    "scoreHelper": "De algehele overeenkomst is de uiteindelijke beoordelingsscore. Afbeeldingsovereenkomst weerspiegelt alleen de gelijkenis van de verpakking.",
+    "sections": {
+      "whatHappened": "Wat is er gebeurd?",
+      "whatHappenedReviewed": "Deze overeenkomst is al beoordeeld en vastgelegd.",
+      "whatHappenedRisk": "Dit Shopify-product lijkt op een product dat al is gemeld in Safety Gate.",
+      "whatHappenedSafe": "De laatste controle heeft geen waarschijnlijke Safety Gate-overeenkomst gevonden.",
+      "whatToDo": "Wat moet ik doen?",
+      "whyMatched": "Waarom het overeenkwam"
+    },
+    "seriousRisk": "Ernstig {{category}}-risico",
+    "summary": {
+      "confidence": "Vertrouwen",
+      "confidenceUnknown": "Vertrouwen onbekend",
+      "decisionRecorded": "Beslissing vastgelegd",
+      "decisionRequired": "Beslissing vereist",
+      "highConfidence": "Hoog vertrouwen",
+      "likelyMatch": "Waarschijnlijke overeenkomst",
+      "likelySafetyGateMatch": "Waarschijnlijke Safety Gate-overeenkomst",
+      "matchType": "Type overeenkomst",
+      "nextStep": "Volgende stap",
+      "noLikelyMatch": "Geen waarschijnlijke overeenkomst",
+      "overallMatch": "Algemene score",
+      "reviewRecommended": "Beoordeling aanbevolen"
+    },
+    "supplierFollowUp": {
+      "copy": "Kopieer opvolging leverancier",
+      "template": "Hallo, we beoordelen {{product}} omdat het mogelijk overeenkomt met Safety Gate-waarschuwing {{alert}} (risico: {{risk}}). Bevestig alstublieft of dit hetzelfde model/batch is, verstrek documentatie over productveiligheid en leg eventuele verschillen uit. Reden van overeenkomst: {{reason}}"
+    },
+    "technicalDetails": {
+      "description": "Scores en ophaalaantallen worden hier bewaard voor een diepere beoordeling. Begin met productfoto's, merk, model en de aanbevolen actie hierboven.",
+      "hide": "Details verbergen",
+      "show": "Details tonen",
+      "title": "Technische overeenkomstdetails"
+    },
+    "textOnly": "Alleen tekstcontrole",
+    "viewOnSafetyGate": "Bekijken op Safety Gate",
+    "whyThisMatched": "Waarom dit overeenkwam",
+    "withImage": "Gecontroleerd met afbeeldingen",
+    "yourProduct": "Uw Shopify-product"
+  },
+  "auditReport": {
+    "decision": "Beslissing",
+    "description": "Bekijk het volledige record voordat u een CSV exporteert voor uw team, leverancier of audit.",
+    "detected": "Gedetecteerd",
+    "documented": "Beslissingen gedocumenteerd",
+    "download": "CSV downloaden",
+    "empty": "Er zijn nog geen bevindingen over productveiligheid vastgelegd.",
+    "eyebrow": "Klaar voor export",
+    "generated": "Gegenereerd op {{date}}",
+    "heading": "Bevindingen en beslissingen",
+    "needsReview": "Beoordeling nodig",
+    "notRecorded": "Niet vastgelegd",
+    "open": "Open auditrapport",
+    "product": "Product",
+    "risk": "Risicoernst",
+    "status": "Status",
+    "summaryLabel": "Samenvatting auditrapport",
+    "tableLabel": "Veiligheidsauditrapport",
+    "title": "Veiligheidsauditrapport",
+    "total": "Vastgelegde bevindingen",
+    "viewHistory": "Auditspoor bekijken"
+  },
+  "billing": {
+    "freeScanAvailableDescription": "U hebt 1 gratis catalogusscan beschikbaar. Voer uw eerste audit uit om de producten van uw winkel te controleren aan de hand van de EU Safety Gate-database voor gevaarlijke non-foodproducten.",
+    "freeScanAvailableHeading": "Gratis initiële catalogusscan actief",
+    "managePlanButton": "Abonnement beheren",
+    "planActiveDescription": "Monitoring is ingeschakeld voor deze Shopify-winkel. Bekijk de laatste uitvoering en alle producten die aandacht nodig hebben.",
+    "planEyebrow": "Abonnement & dekking",
+    "planFreeAvailableDescription": "Eén gratis eerste Safety Gate catalogusscan is beschikbaar.",
+    "planFreeUsedDescription": "Uw gratis eerste scan is voltooid. Kies een abonnement om doorlopende monitoring te starten en het auditrapport te blijven exporteren.",
+    "planTitle": "Abonnement & Veiligheidsmonitoring",
+    "pricingUnavailable": "Shopify-prijzen zijn niet geconfigureerd voor deze app.",
+    "statusActivePro": "ZeroRecall Pro (Actief)",
+    "statusDevelopmentBypass": "Ontwikkelingsvoorbeeld (facturering omzeild)",
+    "statusFreeAvailable": "Gratis eerste scan",
+    "statusFreeUsed": "Gratis scan gebruikt",
+    "statusLabel": "Huidig abonnement",
+    "statusUnverified": "Abonnement kon niet worden geverifieerd",
+    "upgradePlanButton": "Upgrade naar Pro",
+    "upgradeRequiredDescription": "Uw gratis eerste scan is voltooid. Kies een Shopify-abonnement om nieuwe Safety Gate-waarschuwingen te monitoren en gewijzigde producten te controleren.",
+    "upgradeRequiredHeading": "Doorgaan met Safety Gate-monitoring",
+    "verificationError": "Nieuwe scans zijn gepauzeerd totdat de Shopify-facturering kan worden gecontroleerd. Uw bestaande bevindingen en beslissingen blijven beschikbaar."
+  },
+  "billingRedirect": {
+    "opening": "Shopify-prijsplannen openen...",
+    "openPricingPlans": "Open prijsplannen"
+  },
+  "common": {
+    "all": "Alles",
+    "cancel": "Annuleren",
+    "close": "Sluiten",
+    "confirm": "Bevestigen",
+    "language": "Taal",
+    "loading": "Laden...",
+    "unknown": "Onbekend"
+  },
+  "dashboard": {
+    "activeAlertsBanner": {
+      "content": "Los {{count}} actieve waarschuwing op om getroffen producten beschikbaar te houden in uw winkel.",
+      "content_few": "Los {{count}} actieve waarschuwingen op om getroffen producten beschikbaar te houden in uw winkel.",
+      "content_many": "Los {{count}} actieve waarschuwingen op om getroffen producten beschikbaar te houden in uw winkel.",
+      "content_one": "Los {{count}} actieve waarschuwing op om getroffen producten beschikbaar te houden in uw winkel.",
+      "content_other": "Los {{count}} actieve waarschuwingen op om getroffen producten beschikbaar te houden in uw winkel.",
+      "content_plural": "Los {{count}} actieve waarschuwingen op om getroffen producten beschikbaar te houden in uw winkel.",
+      "manualCheckAction": "Handmatige controle",
+      "reviewAction": "Eerste waarschuwing beoordelen",
+      "title": "Actieve veiligheidswaarschuwingen vereisen aandacht"
+    },
+    "admin": {
+      "actionNeeded": "Actie vereist",
+      "actionNeededDescription": "Beoordeel eerst gemarkeerde producten, zodat u kunt beslissen of u ze te koop wilt houden, de overeenkomst wilt negeren of de waarschuwing wilt oplossen.",
+      "actionNeededTitle": "{{count}} actieve waarschuwing vereist beoordeling",
+      "actionNeededTitle_few": "{{count}} actieve waarschuwingen vereisen beoordeling",
+      "actionNeededTitle_many": "{{count}} actieve waarschuwingen vereisen beoordeling",
+      "actionNeededTitle_one": "{{count}} actieve waarschuwing vereist beoordeling",
+      "actionNeededTitle_other": "{{count}} actieve waarschuwingen vereisen beoordeling",
+      "actionNeededTitle_plural": "{{count}} actieve waarschuwingen vereisen beoordeling",
+      "activeAlertsDescription": "Producten die nog een beslissing van de handelaar nodig hebben voordat de wachtrij leeg is.",
+      "auditHistoryKept": "Auditgeschiedenis bewaard",
+      "auditReady": "Rapport gereed",
+      "auditRecordsDescription": "Opgeloste en afgewezen beslissingen met redenen en interne notities.",
+      "auditRecordsTitle": "Auditverslagen",
+      "auditReport": "Auditrapport",
+      "automaticChecks": "Automatische controles",
+      "bulkCheckAllSummary": "Dit voert een volledige controle uit voor alle {{count}} producten.",
+      "bulkCheckDescription": "Scan eerst ongecontroleerde producten, of neem de hele catalogus op wanneer u een nieuwe controle wilt uitvoeren.",
+      "bulkCheckSummary": "Samenvatting bulkcontrole",
+      "bulkCheckSummaryDescription": "Houd deze samenvatting compact, zodat handelaars de resultaten kunnen bevestigen zonder een tweede scherm te openen.",
+      "bulkCheckTitle": "Bulk cataloguscontrole",
+      "bulkCheckUncheckedSummary": "Dit controleert {{count}} resterende producten en slaat {{skip}} reeds beoordeelde items over.",
+      "catalogCoverageDescription": "Aandeel van de catalogus dat al is gecontroleerd tegen Safety Gate.",
+      "catalogCoverageTitle": "Catalogusdekking",
+      "coverage": "Dekking",
+      "coveragePercent": "Catalogus met opgeslagen controles",
+      "criticalBannerDescription": "{{count}} actieve overeenkomst is gemarkeerd als hoog of ernstig risico. Geef prioriteit aan deze producten voordat nieuwe verkopen doorgaan.",
+      "criticalBannerDescription_few": "{{count}} actieve overeenkomsten zijn gemarkeerd als hoog of ernstig risico. Geef prioriteit aan deze producten voordat nieuwe verkopen doorgaan.",
+      "criticalBannerDescription_many": "{{count}} actieve overeenkomsten zijn gemarkeerd als hoog of ernstig risico. Geef prioriteit aan deze producten voordat nieuwe verkopen doorgaan.",
+      "criticalBannerDescription_one": "{{count}} actieve overeenkomst is gemarkeerd als hoog of ernstig risico. Geef prioriteit aan deze producten voordat nieuwe verkopen doorgaan.",
+      "criticalBannerDescription_other": "{{count}} actieve overeenkomsten zijn gemarkeerd als hoog of ernstig risico. Geef prioriteit aan deze producten voordat nieuwe verkopen doorgaan.",
+      "criticalBannerDescription_plural": "{{count}} actieve overeenkomsten zijn gemarkeerd als hoog of ernstig risico. Geef prioriteit aan deze producten voordat nieuwe verkopen doorgaan.",
+      "criticalBannerTitle": "{{count}} actieve waarschuwing bevat overeenkomsten met een hoog risico",
+      "criticalBannerTitle_few": "{{count}} actieve waarschuwingen bevatten overeenkomsten met een hoog risico",
+      "criticalBannerTitle_many": "{{count}} actieve waarschuwingen bevatten overeenkomsten met een hoog risico",
+      "criticalBannerTitle_one": "{{count}} actieve waarschuwing bevat overeenkomsten met een hoog risico",
+      "criticalBannerTitle_other": "{{count}} actieve waarschuwingen bevatten overeenkomsten met een hoog risico",
+      "criticalBannerTitle_plural": "{{count}} actieve waarschuwingen bevatten overeenkomsten met een hoog risico",
+      "daily": "Dagelijks",
+      "dailyAtTime": "Dagelijks om 03:47 Europa/Bratislava",
+      "dailyAtTimePlanned": "Gepland (dagelijks om 03:47)",
+      "decisionsClosed": "Beslissingen gesloten",
+      "demoAlert": {
+        "action": "Oplossen, negeren of opvolgen met de leverancier",
+        "badge": "Voorbeeld workflow",
+        "description": "De app toont het Shopify-product, het Safety Gate-record, waarom het overeenkwam en de actie die moet worden vastgelegd.",
+        "evidence": "Notities bijhouden en een auditrapport exporteren",
+        "reason": "Vergelijk merk, model, categorie en productfoto's",
+        "sample": "Wat handelaars zien wanneer een overeenkomst verschijnt",
+        "title": "Waarschijnlijke Safety Gate-overeenkomst gevonden"
+      },
+      "emptyProofCoverage": "{{count}} producten hebben een geregistreerd controleresultaat.",
+      "emptyProofEvidence": "{{count}} gesloten beslissingen worden bewaard voor de auditgeschiedenis.",
+      "emptyProofMonitoring": "Dagelijkse Safety Gate-monitoring is nog steeds actief.",
+      "exportProof": "Bewijs exporteren",
+      "fallbackAlertDescription": "Overeenkomst gevonden met een Safety Gate-waarschuwing.",
+      "finishCoverage": "Voltooi catalogusdekking",
+      "highRiskMatchesDescription": "Ernstige of hoogrisico Safety Gate-overeenkomsten om eerst te beoordelen.",
+      "highRiskMatchesTitle": "Overeenkomsten met hoog risico",
+      "checkChangedProducts": "Gecontroleerde producten controleren",
+      "checksCompletedDescription": "Automatische en handmatige controles die handmatig catalogusbeoordelingswerk verminderen.",
+      "checksCompletedTitle": "Controles voltooid",
+      "lastMonitoringRunDescription": "Meest recente automatische, handmatige of bulk Safety Gate-controle.",
+      "lastMonitoringRunTitle": "Laatste monitoringrun",
+      "lastSafetyGateUpdateChecked": "Laatste Safety Gate-update gecontroleerd",
+      "latestRun": "Laatste run",
+      "monitoringRunDateUnknown": "Tijd niet beschikbaar",
+      "monitoringRunHistoryEmpty": "Er zijn nog geen geplande monitoringruns vastgelegd.",
+      "monitoringRunHistoryTitle": "Recente monitoringruns",
+      "monitoringRunProgress": "{{products}} producten gecontroleerd · {{alerts}} nieuwe waarschuwingen",
+      "monitoringRunStatus": {
+        "completed": "Voltooid",
+        "enqueue_failed": "Kon niet starten",
+        "failed": "Mislukt",
+        "processing": "Bezig",
+        "queued": "In wachtrij",
+        "retrying": "Opnieuw proberen",
+        "skipped_unentitled": "Plan inactief",
+        "unknown": "Status niet beschikbaar"
+      },
+      "monitoringRunsTitle": "Monitoringcontroles",
+      "monitoringStatusAllClear": "Catalogusmonitoring is actief",
+      "monitoringStatusDescription": "ZeroRecall controleert uw catalogus op nieuwe EU Safety Gate-updates, markeert producten die beoordeling nodig hebben en bewaart bewijsmateriaal voor auditrapporten.",
+      "monitoringStatusEyebrow": "Monitoringstatus",
+      "monitoringStatusNeedsReview": "{{count}} product heeft een beslissing van de handelaar nodig",
+      "monitoringStatusNeedsReview_few": "{{count}} producten hebben beslissingen van de handelaar nodig",
+      "monitoringStatusNeedsReview_many": "{{count}} producten hebben beslissingen van de handelaar nodig",
+      "monitoringStatusNeedsReview_one": "{{count}} product heeft een beslissing van de handelaar nodig",
+      "monitoringStatusNeedsReview_other": "{{count}} producten hebben beslissingen van de handelaar nodig",
+      "monitoringStatusNeedsReview_plural": "{{count}} producten hebben beslissingen van de handelaar nodig",
+      "needsReviewTitle": "Producten die beoordeling nodig hebben",
+      "nextAutomaticCheck": "Volgende automatische controle",
+      "noActiveAlertsDescription": "Uw laatste controles vereisen momenteel geen actie. Blijf nieuw toegevoegde producten scannen om dekking te behouden.",
+      "noActiveAlertsTitle": "Geen actieve veiligheidswaarschuwingen",
+      "noAlertsDescription": "Er zijn momenteel geen openstaande productbeoordelingen. Dat is nog steeds nuttig: dagelijkse monitoring gaat door op de achtergrond en uw bewijsmateriaal blijft klaar voor export.",
+      "noAlertsTitle": "Geen producten hebben beoordeling nodig",
+      "priorityQueue": "Beslissingswachtrij",
+      "productsCoveredShort": "met een vastgelegd controleresultaat",
+      "productsMonitored": "Huidige productversies gecontroleerd",
+      "proofGridLabel": "Monitoringactiviteit",
+      "protectionDescription": "Aantallen beschrijven resultaten die in de app zijn vastgelegd; ze zijn geen productveiligheidscertificering.",
+      "protectionEyebrow": "Uw monitoringrecord",
+      "protectionTitle": "Bekijk recente controles en beslissingen van de handelaar.",
+      "recentAlertsDescription": "Bekijk waarschijnlijke Safety Gate-overeenkomsten, leg een beslissing vast en bewaar bewijsmateriaal voor audits.",
+      "recentAlertsTitle": "Producten die een beslissing van de handelaar nodig hebben",
+      "recommendedAction": "Aanbevolen actie: bekijk de overeenkomst en leg een beslissing vast.",
+      "resolvedRateDescription": "Hoeveel van de geregistreerde waarschuwingsactiviteit al is afgesloten.",
+      "resolvedRateTitle": "Opgelost percentage",
+      "results": {
+        "alertCreated": "Waarschuwing aangemaakt",
+        "completed": "Voltooid",
+        "error": "Fout",
+        "checked": "Gecontroleerd",
+        "skipped": "Overgeslagen"
+      },
+      "reviewOneProduct": "Eén product controleren",
+      "riskInAlert": "Risico beschreven in Safety Gate-waarschuwing",
+      "runBulkCheck": "Bulkcontrole uitvoeren",
+      "stats": {
+        "alertsCreated": "Waarschuwingen aangemaakt",
+        "alreadyChecked": "Al gecontroleerd",
+        "errors": "Fouten",
+        "checked": "Gecontroleerd",
+        "skipped": "Overgeslagen",
+        "stillUnchecked": "Nog ongecontroleerd",
+        "totalProducts": "Totaal aantal producten"
+      },
+      "status": {
+        "cachedEvidence": "Gecachte bewijzen worden hergebruikt",
+        "coverageIncomplete": {
+          "description": "Geen Safety Gate-overeenkomsten hoeven te worden beoordeeld in de {{checked}} gemonitorde producten. Voltooi de dekking voor alle {{total}} huidige producten voordat u de hele catalogus bevestigt.",
+          "eyebrow": "Dekking onvolledig",
+          "title": "{{count}} product heeft nog dekking nodig",
+          "title_few": "{{count}} producten hebben nog dekking nodig",
+          "title_many": "{{count}} producten hebben nog dekking nodig",
+          "title_one": "{{count}} product heeft nog dekking nodig",
+          "title_other": "{{count}} producten hebben nog dekking nodig",
+          "title_plural": "{{count}} producten hebben nog dekking nodig"
+        },
+        "deltaMonitoring": "Alleen nieuwe Safety Gate-waarschuwingen worden gecontroleerd",
+        "factsLabel": "Huidige monitoringfeiten",
+        "matchesNeedingReview": "Overeenkomsten die beoordeling nodig hebben",
+        "monitoringNotConfirmed": "Monitoring nog niet bevestigd",
+        "monitoringProblem": {
+          "action": "Catalogusdekking vernieuwen",
+          "description": "Uw huidige producten hebben dekkingsbewijs, maar de app kan niet bevestigen wanneer de Safety Gate-monitoring voor het laatst is voltooid. Vernieuw de catalogusdekking om een betrouwbare status te herstellen.",
+          "eyebrow": "Monitoring heeft aandacht nodig",
+          "title": "Catalogusdekking heeft geen vastgelegde monitoringrun"
+        },
+        "noActionNeeded": {
+          "action": "Catalogusdekking bekijken",
+          "description": "Geen producten in uw gemonitorde catalogus komen momenteel overeen met EU Safety Gate-waarschuwingen. Monitoring gaat door op de achtergrond en alleen nieuwe waarschuwingen of gewijzigde producten vereisen werk.",
+          "emptyCatalogDescription": "Voeg producten toe aan uw Shopify-catalogus en ZeroRecall is klaar om ze te dekken.",
+          "emptyCatalogTitle": "Nog geen producten om te monitoren",
+          "eyebrow": "Huidige Safety Gate-status",
+          "title": "Geen actie nodig"
+        },
+        "none": "Geen",
+        "reviewNeeded": {
+          "criticalDescription": "Bekijk deze mogelijke overeenkomsten voordat u doorgaat met de verkoop. Vergelijk het product- en Safety Gate-bewijsmateriaal en leg vervolgens uw beslissing vast.",
+          "criticalEyebrow": "Dringende beoordeling",
+          "criticalTitle": "{{count}} mogelijke overeenkomst met een ernstige risicowaarschuwing heeft beoordeling nodig",
+          "criticalTitle_few": "{{count}} mogelijke overeenkomsten met een ernstige risicowaarschuwing hebben beoordeling nodig",
+          "criticalTitle_many": "{{count}} mogelijke overeenkomsten met een ernstig risico-alert moeten worden beoordeeld",
+          "criticalTitle_one": "{{count}} mogelijke overeenkomst met een ernstig risico-alert moet worden beoordeeld",
+          "criticalTitle_other": "{{count}} mogelijke overeenkomsten met een ernstig risico-alert moeten worden beoordeeld",
+          "criticalTitle_plural": "{{count}} mogelijke overeenkomsten met een ernstig risico-alert moeten worden beoordeeld",
+          "description": "Potentiële Safety Gate-overeenkomsten vereisen een beslissing van de merchant. Beoordeel eerst de overeenkomsten; controleer of de resultaten voor andere producten beschikbaar blijven in de catalogus.",
+          "eyebrow": "Beoordeling nodig",
+          "title": "{{count}} mogelijke overeenkomst moet worden beoordeeld",
+          "title_few": "{{count}} mogelijke overeenkomsten moeten worden beoordeeld",
+          "title_many": "{{count}} mogelijke overeenkomsten moeten worden beoordeeld",
+          "title_one": "{{count}} mogelijke overeenkomst moet worden beoordeeld",
+          "title_other": "{{count}} mogelijke overeenkomsten moeten worden beoordeeld",
+          "title_plural": "{{count}} mogelijke overeenkomsten moeten worden beoordeeld"
+        },
+        "scheduledPlanned": "Geplande uitvoering"
+      },
+      "storeStatus": "Winkelstatus",
+      "valueMetrics": {
+        "decisionsRecorded": "Beslissingen vastgelegd",
+        "evidenceRetained": "Beslissingen met bewijs",
+        "checksRun": "Controles uitgevoerd",
+        "openDecisions": "Openstaande beslissingen",
+        "productsCovered": "Gecontroleerde producten"
+      },
+      "valueProofDescription": "Laat het team zien dat het abonnement geen eenmalige scan is: catalogusdekking, controles, beslissingen en alleen-lezen Shopify-toegang blijven actief.",
+      "valueProofDescriptionComplete": "Deze tellingen tonen de vastgelegde controleactiviteit voor de huidige catalogus.",
+      "valueProofDescriptionIncomplete": "Voer controles uit voor de resterende producten om resultaten toe te voegen aan het huidige catalogusrecord.",
+      "valueProofEyebrow": "Dekkingsactie",
+      "valueProofTitle": "Wat ZeroRecall blijft doen",
+      "valueProofTitleComplete": "Elk huidig product heeft een vastgelegde controle",
+      "valueProofTitleIncomplete": "{{count}} producten hebben een vastgelegde controle",
+      "warningBannerDescription": "Beoordeel deze overeenkomsten, negeer vals-positieven of los bevestigde problemen op, zodat de wachtrij bruikbaar blijft.",
+      "warningBannerTitle": "{{count}} actief alert vereist een beslissing van de merchant",
+      "warningBannerTitle_few": "{{count}} actieve alerts vereisen beslissingen van de merchant",
+      "warningBannerTitle_many": "{{count}} actieve alerts vereisen beslissingen van de merchant",
+      "warningBannerTitle_one": "{{count}} actief alert vereist een beslissing van de merchant",
+      "warningBannerTitle_other": "{{count}} actieve alerts vereisen beslissingen van de merchant",
+      "warningBannerTitle_plural": "{{count}} actieve alerts vereisen beslissingen van de merchant",
+      "withReadOnlyShopifyAccess": "Alleen-lezen Shopify-toegang"
+    },
+    "bulkCheck": {
+      "action": "Alle producten controleren",
+      "alerts": "Alerts {{count}}",
+      "alreadyChecked": "Al gecontroleerd",
+      "completed": "Voltooid in {{seconds}} seconden",
+      "description": "Scan elk product in uw winkel tegen de Safety Gate-database om verborgen risico's op te sporen.",
+      "errors": "Fouten {{count}}",
+      "checked": "Gecontroleerd {{count}}",
+      "includeAlreadyChecked": "Inclusief reeds gecontroleerde producten",
+      "notYetChecked": "Nog niet gecontroleerd",
+      "processed": "Verwerkt {{count}}",
+      "started": "Gestart {{date}}",
+      "title": "Bulkveiligheidscontrole",
+      "totalProducts": "Totaal aantal producten",
+      "willCheckAll": "Controleert alle {{count}} producten",
+      "willCheckUnchecked": "Controleert {{count}} ongecontroleerde producten (sla {{skip}} reeds gecontroleerde over)"
+    },
+    "bulkResults": {
+      "success": "Bulkcontrole voltooid: {{processed}} verwerkt, {{checked}} gecontroleerd, {{alertsCreated}} alerts aangemaakt."
+    },
+    "howItWorks": {
+      "alertGeneration": {
+        "description": "Overeenkomsten genereren alerts die u kunt negeren of oplossen om de naleving bij te houden.",
+        "title": "Alertgeneratie"
+      },
+      "autoMonitoring": {
+        "description": "Producten worden gecontroleerd tegen de EU-database wanneer ze worden aangemaakt of bijgewerkt.",
+        "title": "Automatische monitoring"
+      },
+      "title": "Hoe het werkt"
+    },
+    "liveScan": {
+      "completed": "Klaar",
+      "description": "Uw catalogus wordt geïmporteerd vanuit Shopify en producten worden gescand tegen meer dan 35.000 records in de officiële EU Safety Gate (RAPEX)-database. De resultaten verschijnen zo meteen hieronder.",
+      "eyebrow": "Geautomatiseerde veiligheidsaudit",
+      "failedDescription": "We konden deze audit niet voltooien. Uw catalogus is niet als volledig gecontroleerd gemarkeerd. Start de scan opnieuw of neem contact op met de ondersteuning als het probleem aanhoudt.",
+      "failedHeading": "Catalogusaudit moet opnieuw worden geprobeerd",
+      "heading": "Gratis catalogusveiligheidsaudit bezig...",
+      "inProgress": "Bezig...",
+      "pending": "In afwachting",
+      "progress": "{{imported}} van {{fetched}} producten geïmporteerd; {{scanned}} producten vergeleken met tot nu toe {{alerts}} Safety Gate-alerts.",
+      "stepAudit": "3. GPSR-auditspoor en nalevingsstatus voorbereiden",
+      "stepImport": "1. Producten importeren uit Shopify",
+      "stepScan": "2. Vergelijken met Safety Gate-database (35.000+ records)"
+    },
+    "metricsCard": {
+      "activeAlertsHeading": "Actieve waarschuwingen",
+      "productsCheckedHeading": "Gecontroleerde producten",
+      "resolutionHeading": "Oplossingspercentage",
+      "resolved": "{{count}} opgelost",
+      "resolvedAndDismissed": "{{resolved}} opgelost • {{dismissed}} genegeerd",
+      "scans": "Safety Gate-scans",
+      "totalRecorded": "{{count}} totaal vastgelegd"
+    },
+    "monitorCard": {
+      "description": "Volg alerts, voer cataloguscontroles uit en houd toezichthouders tevreden.",
+      "reviewAction": "Waarschuwingen beoordelen",
+      "title": "Productveiligheid in één oogopslag monitoren"
+    },
+    "quickActions": {
+      "browsePortal": "Blader door Safety Gate-portaal",
+      "description": "Regelmatige controles en documentatie helpen om zorgvuldigheid aan toezichthouders aan te tonen.",
+      "manualCheck": "Handmatige controle uitvoeren",
+      "title": "Snelle acties"
+    },
+    "recentAlerts": {
+      "active": "{{count}} actief",
+      "allResolved": "Alles opgelost",
+      "description": "Onderzoek de nieuwste overeenkomsten van Safety Gate voordat u bestellingen uitvoert.",
+      "emptyState": {
+        "content": "Geweldig nieuws — er zijn momenteel geen producten gemarkeerd. Blijf monitoren om de naleving te handhaven.",
+        "heading": "Nog geen veiligheidsalerts"
+      },
+      "matchCount": "{{count}} overeenkomst gevonden",
+      "matchCount_few": "{{count}} overeenkomsten gevonden",
+      "matchCount_many": "{{count}} overeenkomsten gevonden",
+      "matchCount_one": "{{count}} overeenkomst gevonden",
+      "matchCount_other": "{{count}} overeenkomsten gevonden",
+      "matchCount_plural": "{{count}} overeenkomsten gevonden",
+      "title": "Recente veiligheidsalerts"
+    },
+    "safetyBreakdown": {
+      "actionDesc": "Overeenkomsten gevonden met EU Safety Gate-rapporten die beoordeling en oplossing vereisen.",
+      "actionLabel": "Actie vereist",
+      "description": "Overzicht van de verificatie van je productcatalogus aan de hand van Europese veiligheidslijsten en de GPSR-richtlijn.",
+      "eyebrow": "Status catalogusbeveiliging",
+      "protectedDesc": "Producten waarbij de laatst geregistreerde controle geen waarschijnlijke overeenkomst heeft gevonden.",
+      "protectedLabel": "Gecontroleerde producten zonder openstaande bevindingen",
+      "protectRemainingAction": "Controleer resterende ({{count}})",
+      "reviewAlertsAction": "Waarschuwingen beoordelen",
+      "scanAllAction": "Volledige catalogusaudit uitvoeren",
+      "title": "Productveiligheidsstatus",
+      "unprotectedAllCovered": "Elk huidig product heeft een geregistreerd controleresultaat.",
+      "unprotectedDesc": "Producten zonder geregistreerde Safety Gate-controle.",
+      "unprotectedLabel": "Nog niet gecontroleerd"
+    },
+    "setup": {
+      "description": "Bereid je winkel voor op naleving van de EU-productveiligheid.",
+      "progress": "{{completed}} van de {{total}} stappen voltooid",
+      "steps": {
+        "step1": {
+          "description": "Klik op \"Alle producten controleren\" om je hele catalogus te scannen aan de hand van de EU Safety Gate-database.",
+          "label": "Voer je eerste bulkproductcontrole uit"
+        },
+        "step2": {
+          "description": "Controleer de waarschuwingspagina om producten te bekijken die overeenkomen met Safety Gate-waarschuwingen.",
+          "label": "Bekijk eventuele veiligheidswaarschuwingen"
+        },
+        "step3": {
+          "description": "Schakel automatische controles in via Instellingen om nieuwe producten automatisch te controleren.",
+          "label": "Automatische monitoring configureren"
+        }
+      },
+      "title": "Installatiegids"
+    },
+    "stats": {
+      "actionNeeded": "Actie vereist",
+      "activeAlerts": "Actieve waarschuwingen",
+      "alertsLogged": "Geregistreerde waarschuwingen",
+      "allClear": "Alles in orde",
+      "autoMonitoring": "Automatische monitoring",
+      "descriptions": {
+        "activeAlerts": "Bekijk deze producten vandaag nog om compliant te blijven.",
+        "activeAlertsZero": "Alle veiligheidsproblemen zijn opgelost.",
+        "alertsLogged": "Inclusief opgeloste en afgewezen waarschuwingen voor audit trail.",
+        "alertsLoggedZero": "Geen historische waarschuwingen. Blijf nieuwe producten controleren.",
+        "productsChecked": "Automatische Shopify-gebeurtenissen blijven updates controleren.",
+        "productsCheckedZero": "Voer een bulkcontrole uit om je huidige catalogus te scannen."
+      },
+      "newSetup": "Nieuwe installatie",
+      "open": "{{count}} open",
+      "productsChecked": "Gecontroleerde producten",
+      "resolved": "{{count}} opgelost"
+    },
+    "title": "ZeroRecall"
+  },
+  "dates": {
+    "daysAgo": "{{count}} dagen geleden",
+    "today": "Vandaag",
+    "weeksAgo": "{{count}} weken geleden",
+    "yesterday": "Gisteren"
+  },
+  "errors": {
+    "apiError": "Externe veiligheidsdienst is tijdelijk niet beschikbaar. Probeer het later opnieuw.",
+    "pageLoadFailed": "Pagina laden mislukt",
+    "unknown": "Er is iets misgegaan"
+  },
+  "evidence": {
+    "alertNumber": "Safety Gate-waarschuwing {{number}}",
+    "description": "Bekijk geregistreerde productveiligheidsbeslissingen, notities, risicocontext en bewijs van opvolging door leveranciers.",
+    "empty": "Er zijn nog geen productveiligheidsbeslissingen vastgelegd.",
+    "eyebrow": "Audit trail",
+    "filteredRecords": "{{visible}} van de {{total}} records",
+    "filters": {
+      "collapseForProduct": "Verberg volledig bewijs voor {{title}}",
+      "expandForProduct": "Toon volledig bewijs voor {{title}}",
+      "noResults": "Geen auditrecords komen overeen met deze filters.",
+      "searchLabel": "Zoek audit trail",
+      "searchPlaceholder": "Zoek product, waarschuwingsnummer of bewijs",
+      "showLess": "Verberg bewijs",
+      "showMore": "Toon bewijs",
+      "statusLabel": "Beslissingsstatus"
+    },
+    "fullEvidence": "Volledig bewijs",
+    "heading": "Beslissings- en bewijsgeschiedenis",
+    "noNotes": "Geen notitie vastgelegd",
+    "records": "{{count}} records",
+    "table": {
+      "accessibilityLabel": "Tabel met productveiligheidsbewijs",
+      "decision": "Beslissing",
+      "details": "Details",
+      "notes": "Notities / bewijs",
+      "product": "Product",
+      "status": "Status",
+      "summary": "Samenvatting bewijs",
+      "updated": "Bijgewerkt"
+    },
+    "title": "Audit Trail"
+  },
+  "experience": {
+    "delayed": "Monitoring vereist aandacht — de laatst voltooide run is ouder dan 48 uur",
+    "pausedHelp": "Automatische controles zijn gepauzeerd. Kies een abonnement om nieuwe Safety Gate-waarschuwingen en productwijzigingen te controleren terwijl Shopify gesloten is.",
+    "previewHelp": "Het openen van deze ontwikkelingspreview activeert geen achtergrondmonitoring. Geplande controles vereisen een geverifieerd actief Shopify-abonnement.",
+    "reviewSteps": "1. Vergelijk foto's en identificatiegegevens → 2. Kies de uitkomst van de beoordeling → 3. Leg je beslissing vast",
+    "valueBody": "Dagelijkse controles op nieuwe Safety Gate-waarschuwingen, controles wanneer producten wijzigen, e-mailmeldingen indien ingeschakeld, en opgeslagen beoordelingsbeslissingen.",
+    "valueTitle": "Wat continue monitoring toevoegt"
+  },
+  "manualCheck": {
+    "admin": {
+      "catalog": "Catalogus",
+      "catalogDescription": "Producten worden gesorteerd op de laatste Shopify-updates, zodat verkopers eerst recente wijzigingen opnieuw kunnen controleren.",
+      "checkFailed": "Controle mislukt",
+      "manualReview": "On-demand beoordeling",
+      "manualReviewDescription": "Kies een product uit je catalogus en voer een gerichte Safety Gate-controle uit wanneer je direct antwoord nodig hebt.",
+      "productFlagged": "Product gemarkeerd"
+    },
+    "badges": {
+      "flagged": "{{count}} gemarkeerd",
+      "checks": "{{count}} controles",
+      "needsReview": "{{count}} moeten worden beoordeeld"
+    },
+    "banners": {
+      "alertDescription": "Er is een potentieel veiligheidsprobleem gevonden voor dit product.",
+      "alertHeading": "Veiligheidswaarschuwing aangemaakt",
+      "failedHeading": "Controle mislukt",
+      "textOnlyDescription": "Dit resultaat gebruikte alleen tekstvelden. Als het product afhankelijk is van visuele verschillen, bekijk de overeenkomst dan zorgvuldiger.",
+      "textOnlyHeading": "Afbeeldingsvergelijking was niet beschikbaar"
+    },
+    "breadcrumbs": {
+      "current": "Catalogusdekking",
+      "dashboard": "Dashboard"
+    },
+    "bulk": {
+      "description": "Bekijk opgeslagen controles en voer een nieuwe Safety Gate-vergelijking uit voor producten in je huidige catalogus.",
+      "checkAllProducts": "Controleer resterende producten",
+      "checkingAll": "Catalogus controleren...",
+      "title": "Controleer je catalogus"
+    },
+    "catalogue": {
+      "accessibilityLabel": "Productcatalogustabel",
+      "actions": {
+        "checkAgain": "Opnieuw controleren",
+        "checkAgainForProduct": "Controleer {{title}} opnieuw",
+        "checkSafety": "Veiligheid controleren",
+        "checkSafetyForProduct": "Veiligheid controleren voor {{title}}",
+        "viewForProduct": "Bekijk de geregistreerde bevinding voor {{title}}"
+      },
+      "columns": {
+        "action": "Actie",
+        "checks": "Controles",
+        "product": "Product",
+        "status": "Status"
+      },
+      "emptyBody": "Er zijn geen producten beschikbaar voor controle.",
+      "emptyHeading": "Geen producten gevonden",
+      "firstCheck": "Voer uw eerste controle uit",
+      "heading": "Productcatalogus ({{count}})",
+      "lastChecked": "Laatst gecontroleerd op {{date}}",
+      "noType": "Geen type",
+      "searchLabel": "Product zoeken",
+      "searchPlaceholder": "Zoek producten op titel, SKU, leverancier of type",
+      "status": {
+        "notChecked": "Niet gecontroleerd",
+        "reviewed": "Beoordeeld",
+        "safe": "Geen overeenkomst gevonden",
+        "unsafe": "Moet worden beoordeeld"
+      },
+      "totalChecks": "{{count}} totaal",
+      "unknownVendor": "Onbekende leverancier"
+    },
+    "coverage": {
+      "completeDescription": "Elk huidig Shopify-product heeft een geregistreerde Safety Gate-controle. Nieuwe of gewijzigde producten hebben nog een nieuwe controle nodig.",
+      "completeTitle": "Elk huidig product heeft een opgeslagen controleresultaat",
+      "eyebrow": "Status cataloguscontrole",
+      "incompleteDescription": "Controleer de resterende producten om een Safety Gate-resultaat op te slaan voor de huidige catalogus.",
+      "incompleteTitle": "{{count}} producten hebben nog geen opgeslagen controle",
+      "lastProductNeedsReview": "De laatste productcontrole heeft een beoordelingsitem gemaakt of bijgewerkt.",
+      "lastProductSafe": "De laatste productcontrole heeft geen waarschijnlijke Safety Gate-overeenkomst gevonden.",
+      "lastRun": "Laatste controle",
+      "lastRunResultWithCounts": "Gecontroleerd {{checked}}, overgeslagen {{skipped}} ongewijzigd, {{alerts}} beoordelingsitems gemaakt, {{errors}} fouten.",
+      "noneRemaining": "Elk huidig product heeft een opgeslagen controleresultaat.",
+      "noRunYet": "Er is nog geen catalogus- of productcontrole uitgevoerd.",
+      "percent": "{{percent}}% met een huidige controle",
+      "productsCovered": "Gecontroleerde producten",
+      "productsCoveredDescription": "Producten met een opgeslagen resultaat voor hun huidige Shopify-versie.",
+      "remaining": "Nog niet gecontroleerd",
+      "remainingDescription": "Voer een controle uit om een Safety Gate-resultaat voor deze producten op te slaan."
+    },
+    "filters": {
+      "all": "Alle ({{count}})",
+      "needsReview": "Mogelijke overeenkomst ({{count}})",
+      "safe": "Geen overeenkomst gevonden ({{count}})",
+      "unprotected": "Niet gecontroleerd of gewijzigd ({{count}})"
+    },
+    "modal": {
+      "unknown": "Onbekend",
+      "unknownProduct": "Onbekend product"
+    },
+    "overview": {
+      "coverage": "{{coverage}}% dekking",
+      "manualCompleted": "Handmatige controles voltooid",
+      "manualCompletedDescription": "{{checked}} van {{total}} producten gecontroleerd",
+      "noOpenReviews": "Geen open productbeslissingen.",
+      "noRisks": "Nog geen risico's gedetecteerd.",
+      "prioritise": "Prioriteer deze producten voor actie.",
+      "productsDescription": "Nieuwste producten uit uw winkel.",
+      "productsFlagged": "Gemarkeerde producten",
+      "productsInScope": "Producten binnen bereik",
+      "productsNeedingReview": "Producten die beoordeling nodig hebben",
+      "title": "Overzicht controles"
+    },
+    "quickActions": {
+      "title": "Snelle acties"
+    },
+    "subtitle": "Bescherm de rest van uw catalogus, vernieuw de monitoring of controleer één geselecteerd product.",
+    "title": "Catalogusdekking",
+    "toasts": {
+      "completed": "Veiligheidscontrole voltooid",
+      "flagged": "Potentieel veiligheidsprobleem gevonden"
+    }
+  },
+  "nav": {
+    "catalogCoverage": "Catalogusdekking",
+    "dashboard": "Dashboard",
+    "evidence": "Audit Trail",
+    "manualCheck": "Catalogusdekking",
+    "safetyAlerts": "Beoordelingswachtrij",
+    "settings": "Instellingen"
+  },
+  "news": {
+    "items": {
+      "databaseUpdate": {
+        "date": "Dec 2025",
+        "description": "De Safety Gate-database wordt continu bijgewerkt met nieuwe productwaarschuwingen. Voer regelmatig controles uit om compliant te blijven.",
+        "title": "EU Safety Gate-database bijgewerkt"
+      },
+      "gpsr": {
+        "date": "GPSR 2024",
+        "description": "Meer informatie over GPSR-vereisten en hoe u ervoor kunt zorgen dat uw producten voldoen aan de EU-veiligheidsnormen.",
+        "title": "Algemene productveiligheidsverordening"
+      }
+    },
+    "title": "Nieuws"
+  },
+  "onboarding": {
+    "back": "Terug",
+    "finishButton": "Installatie voltooien en naar dashboard gaan",
+    "nextStep": "Volgende stap",
+    "stepIndicator": "Stap {{current}} van {{total}}",
+    "steps": {
+      "automation": {
+        "description": "Configureer prioriteitsbeoordeling en automatische veiligheidsregels voor uw winkel.",
+        "label": "Veiligheidsautomatisering",
+        "quarantine": {
+          "desc": "Markeer producten automatisch voor prioriteitsbeoordeling wanneer ze overeenkomen met Safety Gate-waarschuwingen met ernstig risico (drempel >= 95%).",
+          "label": "Prioriteitsbeoordeling inschakelen",
+          "title": "Prioriteer ernstige risico's"
+        },
+        "title": "Stap 3: Automatische monitoring en waarschuwingen",
+        "webhooks": {
+          "desc": "Producten worden automatisch gecontroleerd tegen de EU-database wanneer ze worden gemaakt of bijgewerkt.",
+          "title": "Realtime Webhook-scanning"
+        }
+      },
+      "scan": {
+        "alerts": "Risicowaarschuwingen gemaakt: {{count}}",
+        "complete": "Catalogus wordt nu gemonitord",
+        "description": "Importeer uw huidige Shopify-producten in Safety Gate-monitoring en vergelijk de catalogus vervolgens met recente Safety Gate-waarschuwingen.",
+        "imported": "Producten geïmporteerd voor monitoring: {{count}}",
+        "label": "Catalogusimport",
+        "monitored": "Producten vergeleken met Safety Gate-waarschuwingen: {{count}}",
+        "scanned": "Producten gescand: {{count}}",
+        "scanning": "Catalogus importeren en producten vergelijken met Safety Gate-waarschuwingen...",
+        "startButton": "Huidige catalogus importeren en monitoren",
+        "title": "Stap 2: Huidige catalogus importeren en monitoren",
+        "toScan": "Producten te importeren voor monitoring: {{count}}"
+      },
+      "sensitivity": {
+        "balanced": "70% (Aanbevolen - Gebalanceerd)",
+        "broad": "40% (Breed - Meer waarschuwingen)",
+        "calibration": {
+          "balancedDesc": "Standaard gevoeligheid. Geoptimaliseerde balans tussen precisie en het aantal waarschuwingen. Scant titels, beschrijvingen en komt overeen met belangrijke merken en modelstructuren.",
+          "balancedTitle": "Gebalanceerde detectiemodus",
+          "broadDesc": "Hoge gevoeligheid. Vindt losjes gerelateerde overeenkomsten. Aanbevolen als u risicovolle productcategorieën (speelgoed, elektronica) verkoopt en volledige dekking wilt, maar rekening houdt met enkele vals-positieven.",
+          "broadTitle": "Brede detectiemodus",
+          "strictDesc": "Hoge precisie. Filtert kleine overeenkomsten eruit. Waarschuwingen worden alleen geactiveerd bij zeer duidelijke merk-/modelnaamovereenkomsten. Laag aantal valse waarschuwingen.",
+          "strictTitle": "Strikte detectiemodus"
+        },
+        "description": "Kies hoe nauw een product moet overeenkomen met een Safety Gate-record voordat het moet worden beoordeeld.",
+        "label": "Striktheid van overeenkomst",
+        "strict": "90% (Strikt - Minder waarschuwingen)",
+        "thresholdLabel": "Overeenkomstdrempel: {{value}}%",
+        "title": "Stap 1: Stel de strictness van de overeenkomst in"
+      }
+    },
+    "subtitle": "Vind mogelijke overeenkomsten met gevaarlijke producten, beoordeel ze in Shopify en bewaar auditbewijs voor elke beslissing.",
+    "title": "Bewaak uw catalogus tegen EU Safety Gate",
+    "value": {
+      "audit": {
+        "description": "Opgeloste en afgewezen beslissingen bewaren notities voor export en opvolging met leveranciers.",
+        "title": "Auditklaar bewijs"
+      },
+      "monitor": {
+        "description": "Nieuwe Safety Gate-waarschuwingen worden gecontroleerd tegen uw Shopify-catalogus.",
+        "title": "Dagelijkse EU Safety Gate-monitoring"
+      },
+      "review": {
+        "description": "Vergelijk de overeenkomst, beslis wat u moet doen en houd de wachtrij bruikbaar.",
+        "title": "Workflow voor beslissingen van de handelaar"
+      }
+    }
+  },
+  "pagination": {
+    "pageOf": "Pagina {{current}} van {{total}} ({{count}} waarschuwingen)"
+  },
+  "portal": {
+    "description": "Toegang tot de officiële Europese Safety Gate-database om te zoeken naar gevaarlijke producten en gedetailleerde veiligheidswaarschuwingen te bekijken.",
+    "home": "Safety Gate Home",
+    "homeDescription": "Toegang tot het officiële portaal van de Europese Commissie",
+    "searchDatabase": "Database doorzoeken",
+    "searchDescription": "Zoek in de EU Safety Gate naar gevaarlijke producten",
+    "title": "Safety Gate-portaal"
+  },
+  "resolveActions": {
+    "actionTaken": "Ondergenomen actie",
+    "contactedSupplier": "Leverancier gecontacteerd (wacht op antwoord)",
+    "contactPending": "Wachten op antwoord van leverancier",
+    "falsePositive": "Vals-positief",
+    "menuLabel": "Acties voor oplossing",
+    "modifiedProduct": "Product gewijzigd",
+    "noActionNeeded": "Geen actie nodig",
+    "notMyProduct": "Niet mijn product",
+    "other": "Overig",
+    "removedFromSale": "Uit de verkoop gehaald",
+    "verifiedSafe": "Historische uitkomst: product veilig bevonden"
+  },
+  "settings": {
+    "monitoring": {
+      "automatic": {
+        "description": "Producten worden automatisch gecontroleerd wanneer ze worden aangemaakt of bijgewerkt via webhooks.",
+        "enabled": "Ingeschakeld",
+        "title": "Automatische controle"
+      },
+      "manual": {
+        "description": "Voer on-demand veiligheidscontroles uit voor elk product in uw catalogus.",
+        "goToManualCheck": "Ga naar handmatige controle",
+        "title": "Handmatige controles"
+      },
+      "title": "Monitoring"
+    },
+    "navigation": {
+      "dashboard": "Dashboard",
+      "manualCheck": "Handmatige controle",
+      "title": "Navigatie",
+      "viewAlerts": "Waarschuwingen bekijken"
+    },
+    "subtitle": "Bepaal hoe ZeroRecall uw Shopify-catalogus bewaakt.",
+    "threshold": {
+      "currentDefault": "Huidige omgevingsstandaard",
+      "description": "Kies hoeveel mogelijke Safety Gate-overeenkomsten uw team wil beoordelen. Gebalanceerde monitoring wordt aanbevolen voor de meeste Shopify-catalogi.",
+      "howItWorks": "Hoe dit werkt",
+      "label": "Geavanceerde overeenkomstdrempel (%)",
+      "resetToDefault": "Terugzetten naar standaard",
+      "save": "Opslaan",
+      "title": "Monitoringmodus"
+    },
+    "title": "Monitoringinstellingen"
+  },
+  "settingsAdmin": {
+    "advancedMatchingSettings": "Geavanceerde overeenkomstinstellingen",
+    "automation": {
+      "autoDraftDescription": "Markeer producten automatisch voor prioriteitsbeoordeling wanneer ze overeenkomen met Safety Gate-waarschuwingen met ernstig risico (drempel >= 95%).",
+      "autoDraftTitle": "Geef prioriteit aan ernstige risico's",
+      "description": "Configureer prioriteitsbeoordeling voor overeenkomsten met een hoog risico.",
+      "eyebrow": "Realtime operaties",
+      "title": "Veiligheidsautomatisering"
+    },
+    "automationStatus": {
+      "active": {
+        "badge": "Plan actief",
+        "description": "De initiële catalogusaudit is voltooid en deze winkel heeft een actief monitoringplan.",
+        "title": "Catalogusaudit voltooid"
+      },
+      "completedNoPlan": {
+        "badge": "Audit voltooid",
+        "description": "De initiële catalogusaudit is voltooid. Doorlopende automatische monitoring vereist een actief plan.",
+        "title": "Initiële catalogusaudit voltooid"
+      },
+      "failed": {
+        "badge": "Aandacht nodig",
+        "description": "De laatste import of audit is niet voltooid. Probeer de catalogusdekking opnieuw voordat u vertrouwt op de monitoringstatus.",
+        "title": "Initiële catalogusaudit heeft aandacht nodig"
+      },
+      "notStarted": {
+        "badge": "Niet geverifieerd",
+        "description": "De initiële import is niet voltooid, dus de catalogusdekking is nog niet bevestigd.",
+        "title": "Catalogusaudit niet bevestigd"
+      },
+      "openCatalog": "Open catalogusdekking",
+      "scanning": {
+        "badge": "Bezig",
+        "description": "Producten worden geïmporteerd en gecontroleerd. De catalogusdekking wordt bevestigd nadat de audit is voltooid.",
+        "title": "Initiële catalogusaudit bezig"
+      }
+    },
+    "automationStatusDescription": "Dagelijkse EU Safety Gate-updates, Shopify-productwijzigingen en auditrecords worden automatisch afgehandeld. Gebruik deze instellingen alleen om het beoordelingsvolume en de meldingen af te stemmen.",
+    "automationStatusEyebrow": "Automatische monitoring",
+    "automationStatusTitle": "Safety Gate-monitoring werkt voor deze winkel",
+    "configuration": "Configuratie",
+    "configurationDescription": "Houd de pagina gericht op één beslissing van de handelaar: hoe strikt de controleur moet zijn bij het vergelijken van producten met Safety Gate-waarschuwingen.",
+    "currentThreshold": "Huidige drempel",
+    "currentThresholdDescription": "Lagere waarden vangen meer mogelijke overeenkomsten. Hogere waarden verminderen vals-positieven.",
+    "environmentDefault": "Omgevingsstandaard",
+    "environmentDefaultDescription": "Wordt gebruikt wanneer de winkel nog geen aangepaste drempel heeft opgeslagen.",
+    "exclusions": {
+      "description": "Sluit specifieke leveranciers of productcategorieën uit van Safety Gate-controles om vals-positieven te verminderen.",
+      "eyebrow": "Filterregels",
+      "title": "Uitsluitingsregels",
+      "typesDescription": "Typ een productcategorie of -type en druk op Enter of een komma om deze toe te voegen.",
+      "typesPlaceholder": "Cadeaubon, Service, ...",
+      "typesTitle": "Uitgesloten producttypen",
+      "vendorsDescription": "Typ een leveranciersnaam en druk op Enter of een komma om deze toe te voegen.",
+      "vendorsPlaceholder": "Leverancier A, Leverancier B, ...",
+      "vendorsTitle": "Uitgesloten leveranciers"
+    },
+    "fallback": "Terugval",
+    "guidance": "Begeleiding",
+    "guidanceItems": {
+      "balancedDescription": "Aanbevolen voor de meeste catalogi (65-70%). Vangt waarschijnlijke risico's op en houdt valse meldingen laag.",
+      "balancedTitle": "Gebalanceerde standaard",
+      "broadDescription": "Gebruik ongeveer 50% als u meer mogelijke overeenkomsten wilt vangen en het geen probleem vindt om meer meldingen te beoordelen.",
+      "broadTitle": "Brede monitoring",
+      "strictDescription": "Gebruik 80%+ als uw catalogus stabiel is en u minder handmatige beoordelingen wilt.",
+      "strictTitle": "Strikte overeenkomst"
+    },
+    "included": {
+      "description": "De app controleert uw catalogus continu op Safety Gate-meldingen, bewaart nalevingsbewijs en waarschuwt u wanneer producten moeten worden beoordeeld.",
+      "evidenceDescription": "Opgeloste en afgewezen beslissingen bewaren notities, redenen, risicocontext en tijdstempels.",
+      "evidenceTitle": "Exporteerbaar bewijs",
+      "eyebrow": "Doorlopende monitoring",
+      "monitoringDescription": "Nieuwe Safety Gate-records worden vergeleken met gemonitorde Shopify-producten zonder handmatige scan.",
+      "monitoringTitle": "Doorlopende EU-monitoring",
+      "teamDescription": "Prioriteitsbeoordeling, leveranciersdocumentatie en filters helpen uw team sneller echte beslissingen te nemen.",
+      "teamTitle": "Beoordelingsworkflow",
+      "title": "Wat uw winkel gedekt houdt"
+    },
+    "matchingStrictness": "Striktness van overeenkomst",
+    "mode": {
+      "balanced": "Gebalanceerd",
+      "broad": "Meer overeenkomsten",
+      "strict": "Minder overeenkomsten"
+    },
+    "monitoringModeEyebrow": "Monitoringmodus",
+    "notifications": {
+      "emailHelp": "Aanvankelijk overgenomen van Shopify. U kunt een ander adres gebruiken.",
+      "emailLabel": "E-mailadres voor meldingen",
+      "enabledDescription": "Kies of u dringende bevindingen, een wekelijkse samenvatting of beide ontvangt.",
+      "enabledTitle": "E-mail veiligheidswaarschuwingen",
+      "immediateDescription": "E-mail me zodra een product moet worden beoordeeld.",
+      "immediateTitle": "Nieuwe bevindingen",
+      "invalidEmail": "Voer een geldig e-mailadres in voordat u e-mailmeldingen inschakelt.",
+      "languageLabel": "E-mailtaal",
+      "noRecipientDescription": "E-mailmeldingen zijn ingeschakeld, maar er is geen adres opgegeven. Er worden geen berichten bezorgd totdat een e-mailadres is ingevoerd.",
+      "noRecipientHeading": "Geen e-mailontvanger geconfigureerd",
+      "useShopifyEmail": "Gebruik contact-e-mailadres van de winkel ({{email}})",
+      "weeklyDescription": "Maandag monitoringoverzicht: bevestigt wanneer er geen nieuwe bevindingen zijn, of vat openstaande zaken samen die beoordeling nodig hebben.",
+      "weeklyTitle": "Wekelijks monitoringoverzicht"
+    },
+    "onDemand": "Op aanvraag",
+    "plans": {
+      "advancedDescription": "Voeg prioriteitsbeoordeling, opvolging van leveranciers en meertalige EU-workflows toe.",
+      "advancedTitle": "Geavanceerd: automatisering en meertalige workflows",
+      "description": "Functies en mogelijkheden die zijn opgenomen in uw winkelmonitoringplan.",
+      "eyebrow": "Abonnementswaarde",
+      "manualDescription": "Voer controles één product tegelijk uit en bekijk de nieuwste productstatus.",
+      "manualTitle": "Gratis: handmatige controles",
+      "monitorDescription": "Monitor nieuwe Safety Gate-meldingen tegen de catalogus, exporteer CSV-auditrapporten en houd een beslissingsspoor bij.",
+      "monitorTitle": "Betaald: dagelijkse monitoring en rapporten",
+      "title": "Planmogelijkheden"
+    },
+    "recommendedSetup": "Aanbevolen instellingen",
+    "saveAll": "Alle instellingen opslaan",
+    "status": {
+      "auditTrail": "Audit trail",
+      "autoQuarantine": "Prioriteitsbeoordeling",
+      "dailySafetyGateUpdates": "Dagelijkse Safety Gate-updates",
+      "emailDigest": "E-mailoverzicht",
+      "off": "Uit",
+      "on": "Aan",
+      "running": "Actief",
+      "shopifyProductUpdates": "Nieuwe/bijgewerkte Shopify-producten"
+    },
+    "storeSetting": "Winkelinstelling",
+    "strictnessHint": "40-60% is breder scannen. 70-85% is strikter en produceert meestal minder valse positieven.",
+    "valueDescription": "Doorlopende monitoring vergelijkt in aanmerking komende catalogusproducten met nieuw gepubliceerde Safety Gate-records.",
+    "valueEyebrow": "Catalogusmonitoring",
+    "valueItems": {
+      "auditDescription": "Opgeloste en afgewezen beslissingen bewaren notities, redenen en beoordelingsgeschiedenis voor exporteerbare rapporten.",
+      "auditTitle": "Auditklaar bewijs",
+      "dailyDescription": "Nieuwe Safety Gate-meldingen worden gecontroleerd op gemonitorde producten zonder dat de handelaar een handmatige scan start.",
+      "dailyTitle": "Dagelijkse catalogusmonitoring",
+      "workflowDescription": "Handelaren beoordelen alleen producten die een beslissing nodig hebben, lossen deze vervolgens op, wijzen ze af of volgen ze op met leveranciers.",
+      "workflowTitle": "Shopify-native beoordelingsworkflow"
+    },
+    "valueTitle": "Wat gedekt blijft",
+    "workspace": "Werkruimte"
+  },
+  "status": {
+    "actionRequired": "Actie vereist",
+    "allClear": "Alles in orde",
+    "archived": "Gearchiveerd",
+    "dismissed": "Genegeerd",
+    "flagged": "gemarkeerd",
+    "monitored": "Gemonitord",
+    "needsReview": "Moet worden beoordeeld",
+    "notChecked": "Niet gecontroleerd",
+    "protected": "Gecontroleerd",
+    "resolved": "Opgelost",
+    "runCheck": "Controle uitvoeren",
+    "safe": "Geen overeenkomst gevonden",
+    "scanning": "Scannen bezig",
+    "unprotected": "Niet gecontroleerd",
+    "unsafe": "Moet worden beoordeeld",
+    "updated": "Bijgewerkt"
+  },
+  "uxEnhancements": {
+    "activityTimeline": {
+      "actions": {
+        "dismiss": "Beslissing vastgelegd: afgewezen",
+        "check": "Product gecontroleerd",
+        "quarantine": "Product gemarkeerd voor beoordeling",
+        "resolve": "Beslissing vastgelegd: opgelost"
+      },
+      "description": "Vastgelegde veiligheidscontroles, productbeslissingen en bewijsmateriaal bewaard voor auditrapporten.",
+      "details": {
+        "autoDrafted": "Product gemarkeerd voor prioriteitsbeoordeling.",
+        "bulkScanned": "Bulkcatalogusscan voltooid.",
+        "checkSafe": "Geen overeenkomst gevonden bij deze controle.",
+        "checkUnsafe": "Product moet worden beoordeeld. Beslissingsrecord aangemaakt.",
+        "noReason": "Geen reden opgegeven.",
+        "reason": "Reden: {{reason}}"
+      },
+      "eyebrow": "Audit trail",
+      "noActivity": "Nog geen auditgebeurtenissen. Voer monitoring uit om bewijsmateriaal te verzamelen.",
+      "title": "Beslissings- en bewijsgeschiedenis",
+      "types": {
+        "automatic": "Systeemgebeurtenis",
+        "bulk": "Bulkgebeurtenis",
+        "manual": "Handmatige gebeurtenis"
+      }
+    },
+    "alerts": {
+      "floating": {
+        "dismissSelected": "Geselecteerde negeren",
+        "resolveSelected": "Geselecteerde oplossen",
+        "selectedCount": "{{count}} geselecteerde waarschuwing",
+        "selectedCount_few": "{{count}} geselecteerde waarschuwingen",
+        "selectedCount_many": "{{count}} geselecteerde waarschuwingen",
+        "selectedCount_one": "{{count}} geselecteerde waarschuwing",
+        "selectedCount_other": "{{count}} geselecteerde waarschuwingen",
+        "selectedCount_plural": "{{count}} geselecteerde waarschuwingen"
+      },
+      "quickFilters": {
+        "allAlerts": "Alle records",
+        "allAlertsDesc": "Toon alle veiligheidswaarschuwingen in de catalogus.",
+        "highRisk": "Alleen hoog risico",
+        "highRiskDesc": "Ernstige risiconiveaus die actie vereisen.",
+        "needsReview": "Moet worden beoordeeld",
+        "needsReviewDesc": "In afwachting van veiligheidswaarschuwingen.",
+        "resolved": "Opgelost/genegeerd",
+        "resolvedDesc": "Eerdere waarschuwingen bewaard voor auditing.",
+        "title": "Snelfilters"
+      }
+    },
+    "complianceRing": {
+      "scoreLabel": "Wissen",
+      "subtitle": "Aandeel gecontroleerde producten zonder openstaande beoordelingsitems",
+      "title": "Gezondheid van gemonitorde catalogus"
+    }
+  },
+  "workspace": {
+    "all": "Alles",
+    "appLanguage": "App-taal",
+    "apply": "Filters toepassen",
+    "applyFilters": "Filters toepassen",
+    "balancedHelp": "Gebalanceerde matching is het aanbevolen startpunt. Wijzig dit alleen als u meer of minder mogelijke overeenkomsten wilt beoordelen.",
+    "broadHelp": "Omvat meer mogelijke overeenkomsten en vereist mogelijk meer handmatige beoordeling.",
+    "cannotCompare": "Kan niet vergelijken",
+    "catalogGlobalAction": "Controleer {{count}} producten in de catalogus",
+    "catalogScopeHelp": "Dekking omvat alle Shopify-catalogusproducten, inclusief actieve, concept- en gearchiveerde items. Filters wijzigen alleen deze lijst, niet de dekking of monitoringbereik.",
+    "clearFilters": "Filters wissen",
+    "compare": "Producten vergelijken",
+    "compareProduct": "Producten vergelijken: {{title}}",
+    "coverageFiltersHelp": "Dekking en openstaande bevindingen zijn gescheiden: een gewijzigd product kan ook een bevinding hebben die wacht op beoordeling.",
+    "coverageIncomplete": "{{count}} producten hebben een huidige controle nodig",
+    "coverageScope": "Toont {{visible}} van {{total}} catalogusproducten.",
+    "csv": {
+      "action": "Beslissingsactie",
+      "actor": "Opgenomen door",
+      "caseNumber": "Safety Gate-zaak",
+      "decisionAt": "Beslissing op",
+      "detectedAt": "Gedetecteerd op",
+      "generatedAt": "Gegenereerd op",
+      "guidance": "Beoordelingsrichtlijnen",
+      "notes": "Beoordelingsnotities",
+      "product": "Product",
+      "productId": "Shopify product-ID",
+      "recordType": "Recordtype",
+      "resolution": "Oplossing",
+      "risk": "Risiconiveau",
+      "shop": "Winkel",
+      "source": "Officiële bron",
+      "sourceRisk": "Risico in officiële waarschuwing",
+      "status": "Status"
+    },
+    "csvGuidance": "Mogelijke overeenkomst. Vergelijk de productidentificatiegegevens en het officiële record voordat u een beslissing neemt.",
+    "currentFindingStatus": "Huidige status van bevinding",
+    "dateFilterTimezone": "Datums gebruiken de monitoringtijdzone: {{timeZone}}. Pas filters toe om resultaten en export bij te werken.",
+    "decisionAt": "Beslissing vastgelegd",
+    "decisionExportHelp": "Deze weergave en de CSV-export gebruiken beslissingsdatums. Ze omvatten beoordelingsgebeurtenissen voor oudere bevindingen, inclusief heropende zaken. Productnamen en officiële bronfeiten behouden hun oorspronkelijke tekst.",
+    "decisionFrom": "Beslissingsdatum vanaf",
+    "decisionLegacy": "Historische uitkomst: product veilig bevonden",
+    "decisionTo": "Beslissingsdatum tot",
+    "detectedAt": "Bevinding gedetecteerd",
+    "differentIdentifiers": "Verschillende identificatiegegevens: {{fields}}. Controleer deze voordat u een beslissing neemt.",
+    "documentedFindings": "Bevindingen die momenteel zijn opgelost of genegeerd",
+    "download": "CSV downloaden",
+    "emptyHelp": "Er zijn geen openstaande bevindingen geregistreerd. Dit garandeert niet dat uw producten veilig zijn. Controleer de catalogusdekking en de laatste monitoringrun.",
+    "eventCount": "{{count}} beslissingsgebeurtenissen",
+    "excluded": "{{count}} van {{total}} catalogusproducten voldoen aan deze regels voor handmatige controles. Automatische monitoring gebruikt deze uitsluitingen niet. Bestaande bevindingen blijven beschikbaar.",
+    "excludeHelp": "Deze regels zijn van toepassing op handmatige controles. Controleer de getroffen producten voordat u opslaat.",
+    "exportHelp": "De CSV bevat alle bevindingen in de geselecteerde periode en status, inclusief officiële referenties, beoordelingsnotities en geregistreerde beslissingsgebeurtenissen. Het is een registratie van controles, geen veiligheidscertificaat.",
+    "exportReady": "CSV voorbereid. Als de download niet is gestart, gebruik dan deze link:",
+    "findingCount": "Bevindingen in dit bereik: {{count}}.",
+    "findingFrom": "Bevinding gedetecteerd vanaf",
+    "findings": "Bevindingen en bewijsmateriaal",
+    "findingTo": "Bevinding gedetecteerd tot",
+    "from": "Vanaf datum",
+    "goReview": "Openstaande bevindingen beoordelen",
+    "groupAction": "Ondergenomen actie",
+    "groupDifferent": "Ander product",
+    "groupInformation": "Meer informatie nodig",
+    "history": "Beslissingsgeschiedenis",
+    "historyLimit": "Toont maximaal {{count}} recente bevindingen. Exporteer het volledige record voor alle bevindingen.",
+    "changed": "Gewijzigd sinds laatste controle",
+    "chooseOutcomeHelp": "Kies een uitkomst om het vastleggen van uw beslissing mogelijk te maken.",
+    "chooseOutcomeLink": "Kies uitkomst",
+    "lastSuccess": "Laatste succesvolle monitoringrun",
+    "matchingIdentifiers": "Overeenkomende identificatiegegevens: {{fields}}.",
+    "matchNeedsVerification": "Mogelijke overeenkomst. Vergelijk de foto's en identificatiegegevens met het officiële record voordat u een beslissing neemt.",
+    "matchNotConfirmed": "Overeenkomst niet bevestigd na beoordeling van bewijsmateriaal",
+    "missingIdentifiers": "Sommige identificatiegegevens ontbreken. Vergelijk de beschikbare foto's en vraag uw leverancier naar het model, de barcode en de batch.",
+    "monitoring": {
+      "enabled": "Ingeschakeld — dagelijkse controles",
+      "failed": "Laatste automatische controle mislukt",
+      "paused": "Gepauzeerd — geen huidig monitoringplan",
+      "preview": "Ontwikkelingsvoorbeeld — facturering omzeild",
+      "processing": "Controle in wachtrij of bezig",
+      "unknown": "Monitoringactiviteit niet bevestigd",
+      "unverified": "Gepauzeerd — abonnement kon niet worden geverifieerd"
+    },
+    "monitoringLabel": "Automatische monitoring",
+    "monitoringUnknownHelp": "Er is geen succesvolle monitoringrun beschikbaar om recente activiteit te bevestigen. Vernieuw om opnieuw te controleren.",
+    "neverRun": "Geen voltooide monitoringrun geregistreerd",
+    "noCurrentResult": "Een huidig resultaat is nodig",
+    "noDecisions": "Er zijn nog geen beslissingen vastgelegd. Open een bevinding, vergelijk de producten en leg vast wat u hebt beoordeeld.",
+    "noFilteredDecisions": "Geen beslissingsgebeurtenissen komen overeen met deze filters. Wis de filters om de volledige geschiedenis te zien.",
+    "noFilteredFindings": "Geen bevindingen komen overeen met deze filters. Wis de filters om de volledige lijst te zien.",
+    "noMatch": "Geen overeenkomst gevonden",
+    "noMatchAtCheck": "Geen overeenkomst gevonden bij deze controle.",
+    "notes": "Beoordelingsnotities",
+    "notificationLanguage": "E-mailtaal",
+    "notRecorded": "Geen huidig beoordelingsresultaat",
+    "oldest": "Open voor {{count}} dagen",
+    "onboarding": "Catalogus importeren → Safety Gate-records controleren → resultaten beoordelen",
+    "outcome": "Resultaat",
+    "outcomeHelp": {
+      "contacted_supplier": "De bevinding blijft open terwijl u wacht op uw leverancier.",
+      "false_positive": "Gebruik wanneer het bewijs aantoont dat de waarschuwing niet van toepassing is. De bevinding wordt afgewezen.",
+      "match_not_confirmed": "Gebruik wanneer het door u beoordeelde bewijs geen overeenkomst bevestigt. De bevinding wordt opgelost.",
+      "modified_product": "Werk eerst het product bij in Shopify. Het vastleggen van dit resultaat verandert het product niet; de bevinding wordt opgelost.",
+      "not_my_product": "Gebruik wanneer de waarschuwing een ander product betreft. De bevinding wordt afgewezen.",
+      "other": "Beschrijf het resultaat in de verplichte notitie. De bevinding wordt opgelost.",
+      "removed_from_sale": "Haal het product eerst uit de verkoop in Shopify. Het vastleggen van dit resultaat verandert het product niet; de bevinding wordt opgelost.",
+      "verified_safe": "Dit is een historisch resultaat."
+    },
+    "outcomeLabels": {
+      "contactedSupplier": "Wachten op leverancier",
+      "falsePositive": "Vals-positief",
+      "modifiedProduct": "Gewijzigd product",
+      "notMyProduct": "Niet mijn product",
+      "other": "Overig",
+      "removedFromSale": "Uit de verkoop gehaald",
+      "verifiedSafe": "Historisch: veilig verklaard"
+    },
+    "possibleMatch": "Mogelijke overeenkomst",
+    "possibleMatchAtCheck": "Deze controle vond een mogelijke Safety Gate-overeenkomst.",
+    "print": "Afdrukken / opslaan als PDF",
+    "priority": "Beoordelingsprioriteit",
+    "priorityHelp": "Eerst beslissingen, dan officiële waarschuwingsernst en oudste bevindingen. Items die wachten op leveranciers volgen.",
+    "productStatus": "Shopify-status",
+    "productStatusActive": "Actief",
+    "productStatusAll": "Alle Shopify-statussen",
+    "productStatusArchived": "Gearchiveerd",
+    "productStatusDraft": "Concept",
+    "productStatusUnknown": "Onbekend",
+    "recommended": "Aanbevolen instelling",
+    "referenceMissing": "Officieel dossiernummer niet beschikbaar",
+    "remaining": "Niet gecontroleerd of gewijzigd",
+    "reopened": "Heropend voor beoordeling",
+    "reportEmpty": "Geen bevindingen komen overeen met deze filters.",
+    "reportTitle": "Rapport controles en beslissingen",
+    "resultHelp": "Het vastleggen van een resultaat documenteert uw beoordeling in het auditspoor en wijzigt het Shopify-product niet.",
+    "reviewNext": "Volgende overeenkomst beoordelen: {{title}}",
+    "reviewPrompt": "Vergelijk het bewijs, kies het resultaat en noteer uw aantekeningen.",
+    "riskLabels": {
+      "electric": "Elektrische schok",
+      "fire": "Brand",
+      "health": "Gezondheidsrisico",
+      "high": "Hoog risico",
+      "chemical": "Chemisch",
+      "choking": "Verstikking",
+      "injuries": "Letsel",
+      "low": "Laag risico",
+      "medium": "Gemiddeld risico",
+      "serious": "Ernstig risico",
+      "unknown": "Risico in Safety Gate-waarschuwing"
+    },
+    "runScope": "Productcontroles: {{products}} · Overwogen Safety Gate-records: {{records}} · Nieuwe bevindingen: {{findings}}",
+    "saved": "Instellingen opgeslagen.",
+    "saveChanges": "Wijzigingen opslaan",
+    "scope": "Bevindingen van {{from}} tot {{to}}",
+    "scoreDetails": "Details overeenkomst",
+    "scoreHelp": "Dit zijn overeenkomstscores die worden gebruikt om de beoordeling te prioriteren, niet een waarschijnlijkheid dat uw product gevaarlijk is.",
+    "settingsAdvanced": "Geavanceerde overeenkomsten en uitsluitingen",
+    "shop": "Winkel",
+    "showMore": "Meer producten weergeven",
+    "scheduleHelp": "Nieuwe Safety Gate-waarschuwingen worden gecontroleerd terwijl het monitoringplan actief is. Het tijdstip van de volgende voltooide controle is afhankelijk van de wachtrij.",
+    "sourceMissing": "Officiële recordlink is niet beschikbaar voor deze opgeslagen bevinding.",
+    "sourceRisk": "Risico in de officiële waarschuwing (origineel EU-record)",
+    "status": "Status bevinding",
+    "strictHelp": "Toont minder mogelijke overeenkomsten en kan minder voor de hand liggende overeenkomsten missen.",
+    "to": "Tot datum",
+    "unconfirmedIdentifiers": "De beschikbare catalogusidentificatoren bevestigen deze overeenkomst niet. Vergelijk de verpakking en vraag uw leverancier naar het ontbrekende model, de barcode en de batch.",
+    "unchecked": "Nog niet gecontroleerd",
+    "unsaved": "U hebt niet-opgeslagen wijzigingen.",
+    "verifyScope": "Catalogusresultaten zijn van toepassing op de productversie die is gecontroleerd. Gewijzigde producten hebben een nieuwe controle nodig.",
+    "viewRemainingProducts": "{{count}} producten bekijken die een controle nodig hebben",
+    "viewShopify": "Shopify-product openen",
+    "waiting": "Wachten op leverancier",
+    "when": "Vastgelegd op",
+    "who": "Opgenomen door",
+    "whyMatch": "Waarom dit kan overeenkomen"
+  }
+}

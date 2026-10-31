@@ -604,13 +604,14 @@ export default function ManualCheckPage() {
     "all" | "unprotected" | "needs_review" | "safe"
   >("all");
   const [shopifyStatusFilter, setShopifyStatusFilter] = useState("all");
-  const dateLocale = i18n.language === "sk" ? "sk-SK" : "en-GB";
+  const dateLocale = i18n.language === "en" ? "en-GB" : i18n.language;
 
   const filterCounts = useMemo(() => {
     let unprotected = 0;
     let needsReview = 0;
     let safe = 0;
-    products.forEach((product: any) => {
+    const scopedProducts = products.filter((product: any) => shopifyStatusFilter === "all" || product.status === shopifyStatusFilter);
+    scopedProducts.forEach((product: any) => {
       const productId = product.id.replace("gid://shopify/Product/", "");
       const existingAlert = alertsByProduct[productId];
       const hasActiveAlert = existingAlert?.status === "active";
@@ -625,8 +626,8 @@ export default function ManualCheckPage() {
       )
         safe++;
     });
-    return { all: products.length, unprotected, needsReview, safe };
-  }, [products, alertsByProduct, productStates]);
+    return { all: scopedProducts.length, unprotected, needsReview, safe };
+  }, [products, alertsByProduct, productStates, shopifyStatusFilter]);
 
   const filteredProducts = useMemo(() => {
     return products.filter((product: any) => {
@@ -869,7 +870,7 @@ export default function ManualCheckPage() {
         {isCheckingAllProducts
           ? t("manualCheck.bulk.checkingAll")
           : coverage.uncheckedProductCount > 0
-            ? t("actions.protectRemainingProducts", {
+            ? t("workspace.catalogGlobalAction", {
                 count: coverage.uncheckedProductCount,
               })
             : t("actions.refreshCoverage")}
@@ -918,7 +919,7 @@ export default function ManualCheckPage() {
                 {isCheckingAllProducts
                   ? t("manualCheck.bulk.checkingAll")
                   : coverage.uncheckedProductCount > 0
-                    ? t("manualCheck.bulk.checkAllProducts")
+                    ? t("workspace.catalogGlobalAction", { count: coverage.uncheckedProductCount })
                     : t("actions.refreshCoverage")}
               </s-button>
             </div>
@@ -1073,6 +1074,7 @@ export default function ManualCheckPage() {
             style={{
               display: "flex",
               flexDirection: "column",
+              alignItems: "stretch",
               gap: "var(--s-space-300)",
             }}
           >
@@ -1114,7 +1116,7 @@ export default function ManualCheckPage() {
 
             <p className="admin-helper">{t("workspace.catalogScopeHelp")}</p>
             <p className="admin-helper">{t("workspace.coverageFiltersHelp")}</p>
-            <s-select label={t("workspace.productStatus")} value={shopifyStatusFilter} onChange={(event: any) => setShopifyStatusFilter(event.currentTarget.value)}>
+            <s-select label={t("workspace.productStatus")} value={shopifyStatusFilter} onChange={(event: any) => { setShopifyStatusFilter(event.currentTarget.value); setTabFilter("all"); }}>
               <s-option value="all">{t("workspace.productStatusAll")}</s-option>
               <s-option value="ACTIVE">{t("workspace.productStatusActive")}</s-option>
               <s-option value="DRAFT">{t("workspace.productStatusDraft")}</s-option>
@@ -1200,7 +1202,9 @@ export default function ManualCheckPage() {
 
                   if (hasActiveAlert) {
                     currentStatusTone = "critical";
-                    currentStatusLabel = t("status.needsReview");
+                    currentStatusLabel = t(
+                      "manualCheck.catalogue.status.unsafe",
+                    );
                   } else if (hasAlert) {
                     currentStatusTone = "info";
                     currentStatusLabel = t(

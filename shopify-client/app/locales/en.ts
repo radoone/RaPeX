@@ -214,7 +214,7 @@ const en = {
           "monitoringStatusNeedsReview_plural": "{{count}} products need merchant decisions",
           "monitoringStatusAllClear": "Catalog monitoring is running",
           "monitoringStatusDescription": "ZeroRecall checks your catalog against new EU Safety Gate updates, highlights products needing review, and keeps evidence for audit reports.",
-          "productsMonitored": "Products with saved checks",
+          "productsMonitored": "Current product versions checked",
           "lastSafetyGateUpdateChecked": "Last Safety Gate update checked",
           "nextAutomaticCheck": "Next automatic check",
           "dailyAtTime": "Daily at 03:47 Europe/Bratislava",
@@ -493,7 +493,14 @@ const en = {
             "model": "Model",
             "barcode": "Barcode (GTIN/EAN)",
             "batch": "Batch / Lot"
-          }
+          },
+          "groupHelp": {
+            "information": "Keep the finding open while you ask your supplier for batch, model, or safety documents.",
+            "different": "Close or dismiss the finding because your product is a different model, brand, or batch.",
+            "action": "Close the finding after you removed the product from sale or updated it in Shopify.",
+            "other": "Record another outcome with a required explanatory note for your audit trail."
+          },
+          "languageDiffNote": "App interface language ({{appLang}}) and email notification language ({{emailLang}}) are set independently."
         },
         "yourProduct": "Your Shopify product",
         "editInShopify": "Edit Product in Shopify",
@@ -737,9 +744,9 @@ const en = {
           "incompleteTitle": "{{count}} products have no saved check yet",
           "completeDescription": "Every current Shopify product has a recorded Safety Gate check. New or changed products still need a fresh check.",
           "incompleteDescription": "Check the remaining products to save a Safety Gate result for the current catalog.",
-          "percent": "{{percent}}% with a saved check",
+          "percent": "{{percent}}% with a current check",
           "productsCovered": "Products checked",
-          "productsCoveredDescription": "Products with a recorded Safety Gate result.",
+          "productsCoveredDescription": "Products with a saved result for their current Shopify version.",
           "lastRun": "Last check",
           "lastRunResultWithCounts": "Checked {{checked}}, skipped {{skipped}} unchanged, created {{alerts}} review items, {{errors}} errors.",
           "lastProductSafe": "Latest product check found no likely Safety Gate match.",
@@ -757,8 +764,8 @@ const en = {
         },
         "filters": {
           "all": "All ({{count}})",
-          "unprotected": "Not checked ({{count}})",
-          "needsReview": "Needs review ({{count}})",
+          "unprotected": "Unchecked or changed ({{count}})",
+          "needsReview": "Possible match ({{count}})",
           "safe": "No match found ({{count}})"
         },
         "catalogue": {

@@ -447,7 +447,7 @@ function AlertRow({
   const { t, i18n } = useTranslation();
   const viewBtnRef = useRef<HTMLElement>(null);
 
-  const dateLocale = i18n.language === "sk" ? "sk-SK" : "en-GB";
+  const dateLocale = i18n.language === "en" ? "en-GB" : i18n.language;
 
   // View button handler
   useEffect(() => {

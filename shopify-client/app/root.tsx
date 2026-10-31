@@ -11,17 +11,14 @@ import {
 import { useEffect } from "react";
 import { AppProvider } from "@shopify/shopify-app-react-router/react";
 import { POLARIS_URL } from "./polaris";
-import i18n, { EU_LANGUAGES } from "./i18n";
+import i18n, { changeMerchantLanguage } from "./i18n";
+import { preferredInterfaceLanguage } from "./services/interface-language";
 import themeStyles from "./styles/theme.css?url";
 
 // Note: Polaris styles are loaded via CDN polaris.js - no need for duplicate import
 // Empty links array - all stylesheets loaded inline to prevent hydration mismatch
 export const links = () => [];
 
-const LANGUAGE_STORAGE_KEY = "safety-gate-language";
-const SUPPORTED_LANGUAGE_CODES: ReadonlySet<string> = new Set(
-  EU_LANGUAGES.map((language) => language.code),
-);
 
 export const loader = async () => {
   return { apiKey: process.env.SHOPIFY_API_KEY || "" };
@@ -37,16 +34,13 @@ export default function App() {
       document.documentElement.setAttribute("lang", lang);
     };
 
-    const savedLanguage =
-      window.localStorage.getItem(LANGUAGE_STORAGE_KEY) ||
-      window.localStorage.getItem("i18nextLng");
+    const savedLanguage = preferredInterfaceLanguage();
 
     if (
       savedLanguage &&
-      SUPPORTED_LANGUAGE_CODES.has(savedLanguage) &&
       savedLanguage !== i18n.language
     ) {
-      void i18n.changeLanguage(savedLanguage);
+      void changeMerchantLanguage(savedLanguage).catch(() => console.warn("Could not load the saved app language"));
     } else {
       syncLang();
     }

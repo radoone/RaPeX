@@ -270,7 +270,11 @@
       "reportDownload": "Descargar todos los resultados (CSV)",
       "reportBody": "Incluye todos los productos con posibles coincidencias. Análisis único. El enlace privado caduca a los 30 días.",
       "reportLoading": "Preparando el informe completo…",
-      "reportError": "Informe no disponible o enlace caducado. Reinténtalo o escribe a info@zerorecall.online."
+      "reportError": "Informe no disponible o enlace caducado. Reinténtalo o escribe a info@zerorecall.online.",
+      "detailsSummary": "¿Qué comprobamos exactamente en el escaneo gratuito?",
+      "detailsStep1": "<strong>1. Catálogo público de Shopify:</strong> Leemos títulos, descripciones, marcas, categorías y fotos públicas de su tienda (sin acceso al panel de administración).",
+      "detailsStep2": "<strong>2. Comparación de texto e imagen con Safety Gate:</strong> Convertimos textos e imágenes en vectores de búsqueda y los comparamos con toda la base de datos Safety Gate de la UE (antes RAPEX).",
+      "detailsStep3": "<strong>3. Resumen por correo y exportación CSV:</strong> Al finalizar, recibirá por correo las posibles coincidencias con números de caso, enlaces oficiales de la UE y descarga en CSV."
     },
     "quiet": {
       "eyebrow": "MÁS TRANQUILIDAD",

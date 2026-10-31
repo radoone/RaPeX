@@ -1,0 +1,1422 @@
+{
+  "actions": {
+    "auditReport": "Tuarascáil iniúchta",
+    "clear": "Glan",
+    "dashboard": "Painéal",
+    "downloadAuditReport": "Íoslódáil tuarascáil iniúchta",
+    "checkAll": "Seiceáil gach táirge",
+    "checkAllProducts": "Seiceáil gach {{count}} táirge",
+    "checking": "Ag seiceáil...",
+    "checkNewSafetyGateAlerts": "Seiceáil foláirimh nua Safety Gate",
+    "checkOneProduct": "Seiceáil táirge amháin",
+    "checkSelectedProduct": "Seiceáil an táirge roghnaithe",
+    "checkUnchecked": "Seiceáil {{count}} táirge neamhsheiceáilte",
+    "manualCheck": "Seiceáil táirge",
+    "next": "Ar Aghaidh",
+    "openFirstMatch": "Oscail an chéad mheaitseáil",
+    "previous": "Roimhe Seo",
+    "protectRemainingProducts": "Seiceáil {{count}} táirge atá fágtha",
+    "reactivate": "Athghníomhachtaigh",
+    "recordDecision": "Taifead cinneadh",
+    "refreshCoverage": "Athnuaigh clúdach catalóige",
+    "resolve": "Réitigh",
+    "retry": "Atriail",
+    "reviewActiveProducts": "Déan athbhreithniú ar tháirgí gníomhacha",
+    "reviewAlerts": "Déan athbhreithniú ar fholáirimh",
+    "reviewDecision": "Déan comparáid idir táirgí",
+    "reviewMultipleMatches": "Déan athbhreithniú ar {{count}} meaitseáil",
+    "reviewOneMatch": "Déan athbhreithniú ar 1 mheaitseáil",
+    "reviewProductsNeedingAction": "Déan athbhreithniú ar {{count}} táirge a dteastaíonn gníomh uaidh",
+    "reviewProductsNeedingAction_few": "Déan athbhreithniú ar {{count}} táirge a dteastaíonn gníomh uathu",
+    "reviewProductsNeedingAction_many": "Déan athbhreithniú ar {{count}} táirge a dteastaíonn gníomh uathu",
+    "reviewProductsNeedingAction_one": "Déan athbhreithniú ar {{count}} táirge a dteastaíonn gníomh uaidh",
+    "reviewProductsNeedingAction_other": "Déan athbhreithniú ar {{count}} táirge a dteastaíonn gníomh uathu",
+    "reviewProductsNeedingAction_plural": "Déan athbhreithniú ar {{count}} táirge a dteastaíonn gníomh uathu",
+    "reviewProductsNeedingAction_two": "Athbhreithnigh {{count}} táirgí a dteastaíonn gníomh uathu",
+    "search": "Cuardaigh",
+    "settings": "Socruithe",
+    "tryAgain": "Bain triail eile as",
+    "view": "Amharc",
+    "viewAlerts": "Amharc ar fholáirimh",
+    "viewDetails": "Amharc ar shonraí",
+    "viewEvidence": "Amharc ar stair an chinnidh"
+  },
+  "alerts": {
+    "admin": {
+      "actionNeeded": "Gníomh ag teastáil",
+      "actionNeededDescription": "Déan athbhreithniú ar mheaitseálacha, dífhostaigh dearfacha bréagacha, nó réitigh rioscaí deimhnithe ionas go bhfanfaidh an scuaine foláirimh inoibrithe.",
+      "actionNeededTitle": "Tá cinneadh fós ag teastáil ó {{count}} foláireamh gníomhach",
+      "actionNeededTitle_few": "Tá cinneadh fós ag teastáil ó {{count}} foláireamh gníomhach",
+      "actionNeededTitle_many": "Tá cinneadh fós ag teastáil ó {{count}} foláireamh gníomhach",
+      "actionNeededTitle_one": "Tá cinneadh fós ag teastáil ó {{count}} foláireamh gníomhach",
+      "actionNeededTitle_other": "Tá cinneadh fós ag teastáil ó {{count}} foláireamh gníomhach",
+      "actionNeededTitle_plural": "Tá cinneadh fós ag teastáil ó {{count}} foláireamh gníomhach",
+      "actionNeededTitle_two": "Tá cinneadh fós ag teastáil ó {{count}} foláireamh gníomhach",
+      "criticalBannerDescription": "Tá {{count}} meaitseáil ghníomhach marcáilte mar riosca ard nó tromchúiseach i Safety Gate. Réitigh na meaitseálacha sin ar dtús.",
+      "criticalBannerDescription_few": "Tá {{count}} meaitseáil ghníomhach marcáilte mar riosca ard nó tromchúiseach i Safety Gate. Réitigh na meaitseálacha sin ar dtús.",
+      "criticalBannerDescription_many": "Tá {{count}} meaitseáil ghníomhach marcáilte mar riosca ard nó tromchúiseach i Safety Gate. Réitigh na meaitseálacha sin ar dtús.",
+      "criticalBannerDescription_one": "Tá {{count}} meaitseáil ghníomhach marcáilte mar riosca ard nó tromchúiseach i Safety Gate. Réitigh na meaitseálacha sin ar dtús.",
+      "criticalBannerDescription_other": "Tá {{count}} meaitseáil ghníomhach marcáilte mar riosca ard nó tromchúiseach i Safety Gate. Réitigh na meaitseálacha sin ar dtús.",
+      "criticalBannerDescription_plural": "Tá {{count}} meaitseáil ghníomhach marcáilte mar riosca ard nó tromchúiseach i Safety Gate. Réitigh na meaitseálacha sin ar dtús.",
+      "criticalBannerDescription_two": "Tá {{count}} meaitseáil ghníomhach marcáilte mar ardriosca nó riosca tromchúiseach i Safety Gate. Réitigh na meaitseálacha sin ar dtús.",
+      "criticalBannerTitle": "Teastaíonn athbhreithniú ó {{count}} meaitseáil ardriosca",
+      "criticalBannerTitle_few": "Teastaíonn athbhreithniú ó {{count}} meaitseáil ardriosca",
+      "criticalBannerTitle_many": "Teastaíonn athbhreithniú ó {{count}} meaitseáil ardriosca",
+      "criticalBannerTitle_one": "Teastaíonn athbhreithniú ó {{count}} meaitseáil ardriosca",
+      "criticalBannerTitle_other": "Teastaíonn athbhreithniú ó {{count}} meaitseáil ardriosca",
+      "criticalBannerTitle_plural": "Teastaíonn athbhreithniú ó {{count}} meaitseáil ardriosca",
+      "criticalBannerTitle_two": "Teastaíonn athbhreithniú ó {{count}} meaitseáil ardriosca",
+      "queue": "Scuaine cinntí táirge",
+      "queueDescription": "Deimhnigh meaitseálacha dóchúla, dífhostaigh dearfacha bréagacha, nó taifead an gníomh a rinneadh.",
+      "warningBannerDescription": "Úsáid an scuaine seo le haghaidh fíorchinnte amháin: réitigh rioscaí deimhnithe agus dífhostaigh dearfacha bréagacha go tapa.",
+      "warningBannerTitle": "Teastaíonn athbhreithniú fós ó {{count}} foláireamh gníomhach",
+      "warningBannerTitle_few": "Teastaíonn athbhreithniú fós ó {{count}} foláireamh gníomhach",
+      "warningBannerTitle_many": "Teastaíonn athbhreithniú fós ó {{count}} foláireamh gníomhach",
+      "warningBannerTitle_one": "Teastaíonn athbhreithniú fós ó {{count}} foláireamh gníomhach",
+      "warningBannerTitle_other": "Teastaíonn athbhreithniú fós ó {{count}} foláireamh gníomhach",
+      "warningBannerTitle_plural": "Teastaíonn athbhreithniú fós ó {{count}} foláireamh gníomhach",
+      "warningBannerTitle_two": "Teastaíonn athbhreithniú fós ó {{count}} foláireamh gníomhach"
+    },
+    "breadcrumbs": {
+      "current": "Scuaine athbhreithnithe",
+      "dashboard": "Painéal"
+    },
+    "checklist": {
+      "items": {
+        "0": "Tabhair tosaíocht d'fholáirimh ghníomhacha",
+        "1": "Doiciméadaigh céimeanna leasúcháin",
+        "2": "Fíoraigh sula ndífhostaítear"
+      },
+      "title": "Seicliosta freagartha"
+    },
+    "meta": {
+      "active": "{{count}} le hathbhreithniú",
+      "total": "{{count}} san iomlán"
+    },
+    "metrics": {
+      "activeHeading": "Foláirimh Ghníomhacha",
+      "archived": "Cartlannaithe",
+      "dismissedDescription": "Coinnigh nótaí le haghaidh iniúchta",
+      "dismissedDescriptionZero": "Níl aon fholáirimh dífhostaithe fós",
+      "dismissedHeading": "Dífhostaithe",
+      "resolutionHeading": "Ráta Réitigh",
+      "resolved": "{{count}} réitithe",
+      "resolvedAndDismissed": "{{resolved}} réitithe • {{dismissed}} dífhostaithe",
+      "totalRecorded": "{{count}} taifeadta san iomlán"
+    },
+    "pagination": {
+      "next": "Ar Aghaidh",
+      "previous": "Roimhe Seo"
+    },
+    "subtitle": "Déan athbhreithniú ar tháirgí a dteastaíonn cinneadh uathu.",
+    "table": {
+      "accessibilityLabel": "Tábla foláireamh sábháilteachta",
+      "empty": "Níl aon fholáirimh ag teacht le do scagairí",
+      "emptyAllClearBody": "Níl aon chinntí oscailte ag ceannaithe faoi láthair. Tá monatóireacht laethúil fós ar siúl agus fanann cinntí dúnta sa rian iniúchta.",
+      "emptyAllClearTitle": "Tá gach athbhreithniú táirge gníomhach láimhseáilte",
+      "emptyFilteredBody": "Coigeartaigh na scagairí nó cuardaigh táirge eile. D'fhéadfadh do scuaine gníomhach a bheith glan fós.",
+      "emptyFilteredTitle": "Níl aon mhíreanna athbhreithnithe ag teacht leis na scagairí seo",
+      "headers": {
+        "actions": "Gníomhartha",
+        "detected": "Braite",
+        "product": "Táirge",
+        "risk": "Riosca",
+        "status": "Stádas"
+      },
+      "order": "Ordú",
+      "orderOptions": {
+        "asc": "An ceann is sine ar dtús",
+        "desc": "An ceann is nua ar dtús"
+      },
+      "reviewProduct": "Cinneadh athbhreithnithe do {{title}}",
+      "searchLabel": "Cuardaigh foláirimh",
+      "searchPlaceholder": "Cuardaigh de réir ainm táirge...",
+      "selectAll": "Roghnaigh gach toradh infheicthe",
+      "selectedCount": "{{count}} roghnaithe",
+      "selectProduct": "Roghnaigh toradh do {{title}}",
+      "similarityTooltip": "Scór cosúlachta: {{score}}%",
+      "sort": "Sórtáil",
+      "sortBy": "Sórtáil de réir",
+      "sortOptions": {
+        "created": "Dáta braite",
+        "name": "Ainm an táirge",
+        "risk": "Leibhéal riosca"
+      },
+      "tabs": {
+        "active": "Éilíonn athbhreithniú",
+        "all": "Gach",
+        "dismissed": "Dífhostaithe",
+        "resolved": "Réitithe"
+      },
+      "thumbnailLabel": "Mionsamhail {{title}}",
+      "viewProduct": "Féach toradh taifeadta do {{title}}"
+    },
+    "title": "Scuaine Athbhreithnithe",
+    "toasts": {
+      "updated": "Foláireamh nuashonraithe"
+    }
+  },
+  "analysis": {
+    "alertImagesUsed": "Íomhánna foláirimh comparáide: {{count}}",
+    "alertNumber": "Foláireamh {{number}}",
+    "audit": {
+      "existingNotes": "Nótaí iniúchta",
+      "noteLabel": "Nóta iniúchta",
+      "notePlaceholder": "Cuir leis an méid a sheiceáil tú, fianaise soláthraí, nó cén fáth ar dhiúltaíodh dó seo."
+    },
+    "candidateAlerts": "Foláirimh iarrthóra: {{count}}",
+    "decisionContextDesc": "Trí chinneadh a thaifeadadh, déantar doiciméadú go ndearnadh athbhreithniú ar an meaitseáil sábháilteachta seo agus caomhnaítear do rian iniúchta. Ní athraíonn sé do tháirge Shopify go huathoibríoch ná ní dhífhoilsíonn sé ó do stór é.",
+    "decisionContextTitle": "Cinntí comhlíonta a thaifeadadh",
+    "decisionRecorded": "Cinneadh taifeadta",
+    "editInShopify": "Cuir Táirge in Eagar i Shopify",
+    "enlargedSafetyAlert": "Íomhá foláirimh sábháilteachta méadaithe",
+    "fields": {
+      "accessibilityLabel": "Tábla sonraí meaitseála foláirimh",
+      "alertDate": "Dáta an fholáirimh",
+      "brand": "Branda",
+      "category": "Catagóir",
+      "field": "Réimse",
+      "model": "Múnla",
+      "notifyingCountry": "Tír fógartha",
+      "origin": "Bunús",
+      "productDescription": "Cur síos ar an táirge",
+      "productName": "Ainm an táirge",
+      "value": "Luach"
+    },
+    "focus": {
+      "criticalLead": "Tá meaitseáil ard-mhuiníne ag an táirge seo. Ná taifead cinneadh ach amháin tar éis athbhreithnithe.",
+      "criticalStepCompare": "Déan comparáid idir grianghraf do tháirge agus an chéad mheaitseáil Safety Gate thíos.",
+      "criticalStepDecide": "Roghnaigh toradh sa roghchlár Taifead cinneadh bunaithe ar d'athbhreithniú.",
+      "criticalStepDocument": "Cuir nótaí inmheánacha leis le haghaidh inrianaitheachta agus leantach soláthraí.",
+      "criticalTitle": "Gníomh ag teastáil anois",
+      "recordedOutcome": "Toradh taifeadta: {{outcome}}",
+      "reviewedLead": "Níl an foláireamh seo gníomhach. Coinnigh taifid soiléir le haghaidh iniúchtaí.",
+      "reviewedStepAudit": "Fíoraigh an réiteach roghnaithe agus na nótaí.",
+      "reviewedStepReactivate": "Athghníomhachtaigh ach amháin má thagann fianaise nua táirge chun cinn.",
+      "reviewedTitle": "Athbhreithniú críochnaithe cheana féin",
+      "safeLead": "Tá an toradh reatha sábháilte. Coinnigh monatóireacht ar nuashonruithe táirge.",
+      "safeStepClose": "Dún an mionsonra seo agus lean ar aghaidh le foláirimh ghníomhacha eile.",
+      "safeStepMonitor": "Coinnigh an táirge seo i monatóireacht uathoibríoch.",
+      "safeStepRecheck": "Rith seiceáil nua má athraíonn íomhánna, pacáistiú, nó soláthraí.",
+      "safeTitle": "Níl aon ghníomh práinneach ag teastáil"
+    },
+    "hazardType": "Cineál guaise",
+    "checkedAt": "Seiceáilte: {{date}}",
+    "imageDominated": "Scóráileadh an meaitseáil seo le ualú íomhá-ar-dtús, mar sin bhí níos mó meáchain ag cosúlacht amhairc an phacáistithe ná neamhréir téacs.",
+    "imageMatch": "Meaitseáil íomhá",
+    "imageMatchShort": "{{count}}% íomhá",
+    "legalProvision": "Foráil dlíthiúil",
+    "matchesHint": "Tosaigh leis an gcárta meaitseála is fearr thíos agus deimhnigh an pacáistiú amhairc ar dtús, ansin sonraí an mhúnla agus an bhranda.",
+    "merchantRecommendation": {
+      "active": "Déan comparáid idir íomhánna an táirge agus Safety Gate, deimhnigh an branda nó an múnla, ansin taifead an gníomh a dhéanfaidh do stór.",
+      "reviewed": "Tá an toradh seo dúnta. Fíoraigh an toradh taifeadta agus an fhianaise sula ndéantar é a athghníomhachtú.",
+      "safe": "Níl aon ghníomh stórais ag teastáil anois. Déan athsheiceáil má athraíonn an táirge, an pacáistiú, na híomhánna, nó an soláthraí."
+    },
+    "modalAccessibilityLabel": "Sonraí meaitseála Safety Gate do {{title}}",
+    "modalHeading": "Athbhreithnigh meaitseáil Safety Gate",
+    "noIssuesFound": "Níor aimsíodh aon Saincheisteanna Sábháilteachta",
+    "openProductImage": "Oscail íomhá do {{title}}",
+    "overallMatch": "Meaitseáil foriomlán",
+    "overallMatchShort": "{{count}}% foriomlán",
+    "potentialRisk": "Riosca Sábháilteachta Féideartha",
+    "primaryRiskFocus": "Fócas príomhriosca: {{category}} ag leibhéal {{level}}. Deimhnigh é seo ar dtús sula ndéanann tú cinneadh.",
+    "productImagesUsed": "Íomhánna táirge: {{used}} / {{provided}}",
+    "reviewLayout": {
+      "actionNeeded": "Gníomh ag teastáil",
+      "compareHeading": "Déan comparáid idir na táirgí",
+      "compareHint": "Seiceáil na grianghraif, an branda, an tsamhail agus an chatagóir sula ndéanann tú cinneadh.",
+      "decisionHeading": "Taifead do chinneadh",
+      "decisionPrompt": "Roghnaigh toradh an athbhreithnithe. Is féidir leat nóta a chur leis faoin méid a sheiceáil tú.",
+      "fullEvidence": "Fianaise iomlán Safety Gate ({{count}})",
+      "groupHelp": {
+        "action": "Dún an toradh tar éis duit an táirge a bhaint den díol nó é a nuashonrú i Shopify.",
+        "different": "Dún nó dífhostaigh an toradh toisc gur samhail, branda, nó baisc dhifriúil é do tháirge.",
+        "information": "Coinnigh an toradh ar oscailt agus tú ag iarraidh do sholáthraí le haghaidh doiciméad baisce, samhail, nó sábháilteachta.",
+        "other": "Taifead toradh eile le nóta míniúcháin riachtanach do do rian iniúchta."
+      },
+      "chooseOutcome": "Roghnaigh toradh",
+      "identifiers": {
+        "barcode": "Barrachód (GTIN/EAN)",
+        "batch": "Baisc / Lot",
+        "brand": "Branda",
+        "field": "Aitheantóir",
+        "match": "Meaitseáil",
+        "mismatch": "Neamhréireacht",
+        "model": "Múnla",
+        "notSpecified": "gan sonrú",
+        "result": "Comparáid",
+        "safetyGate": "Foláireamh Safety Gate",
+        "yourProduct": "Do tháirge Shopify"
+      },
+      "identifiersHeading": "Comparáid aitheantóirí taobh le taobh",
+      "languageDiffNote": "Tá teanga chomhéadan an aip ({{appLang}}) agus teanga fógra ríomhphoist ({{emailLang}}) socraithe go neamhspleách.",
+      "noImage": "Níl íomhá ar fáil",
+      "noteLabel": "Cad a sheiceáil tú? (roghnach)",
+      "noteRequiredLabel": "Cad a sheiceáil tú? (riachtanach)",
+      "otherNoteRequired": "Cuir nóta leis chun an toradh eile a mhíniú.",
+      "outcomeLabel": "Toradh athbhreithnithe",
+      "possibleMatch": "Meaitseáil Féideartha Safety Gate",
+      "readyToRecord": "Réidh le taifeadadh",
+      "reviewPointsHeading": "Pointí le hathbhreithniú",
+      "unnamedRecord": "Taifead Safety Gate"
+    },
+    "riskDescription": "Cur síos ar an riosca",
+    "riskLevel": "Leibhéal riosca",
+    "riskSeverity": "Déine an riosca",
+    "safetyGateMatches": "Meaitseálacha Safety Gate",
+    "scoreHelper": "Is é an meaitseáil iomlán an scór athbhreithnithe deiridh. Ní léiríonn meaitseáil íomhá ach cosúlacht pacáistithe.",
+    "sections": {
+      "whatHappened": "Cad a tharla?",
+      "whatHappenedReviewed": "Rinneadh athbhreithniú agus taifeadadh ar an meaitseáil seo cheana féin.",
+      "whatHappenedRisk": "Tá an táirge Shopify seo cosúil le táirge a tuairiscíodh cheana féin i Safety Gate.",
+      "whatHappenedSafe": "Níor aimsigh an seiceáil is déanaí meaitseáil Safety Gate dóchúil.",
+      "whatToDo": "Cad ba cheart dom a dhéanamh?",
+      "whyMatched": "Cén fáth ar mheaitseáil sé"
+    },
+    "seriousRisk": "Riosca tromchúiseach {{category}}",
+    "summary": {
+      "confidence": "Muinín",
+      "confidenceUnknown": "Muinín anaithnid",
+      "decisionRecorded": "Cinneadh taifeadta",
+      "decisionRequired": "Cinneadh ag teastáil",
+      "highConfidence": "Ardmhuinín",
+      "likelyMatch": "Meaitseáil dóchúil",
+      "likelySafetyGateMatch": "Meaitseáil dóchúil Safety Gate",
+      "matchType": "Cineál meaitseála",
+      "nextStep": "An chéad chéim eile",
+      "noLikelyMatch": "Gan aon mheaitseáil dóchúil",
+      "overallMatch": "Scór iomlán",
+      "reviewRecommended": "Athbhreithniú molta"
+    },
+    "supplierFollowUp": {
+      "copy": "Cóipeáil an obair leantach soláthraí",
+      "template": "Dia duit, táimid ag athbhreithniú {{product}} toisc go bhféadfadh sé meaitseáil le foláireamh Safety Gate {{alert}} (riosca: {{risk}}). Deimhnigh le do thoil an é seo an tsamhail/baisc chéanna, cuir doiciméadú sábháilteachta táirge ar fáil, agus mínigh aon difríochtaí. Cúis an mheaitseála: {{reason}}"
+    },
+    "technicalDetails": {
+      "description": "Coimeádtar scóir agus líon aisghabhála anseo le haghaidh athbhreithniú níos doimhne. Tosaigh le grianghraif táirge, branda, samhail, agus an gníomh molta thuas.",
+      "hide": "Folaigh sonraí",
+      "show": "Taispeáin sonraí",
+      "title": "Sonraí teicniúla meaitseála"
+    },
+    "textOnly": "Seiceáil téacs-amháin",
+    "viewOnSafetyGate": "Féach ar Safety Gate",
+    "whyThisMatched": "Cén fáth ar mheaitseáil sé seo",
+    "withImage": "Seiceáilte le híomhánna",
+    "yourProduct": "Do tháirge Shopify"
+  },
+  "auditReport": {
+    "decision": "Cinneadh",
+    "description": "Déan athbhreithniú ar an taifead iomlán sula n-easpórtálann tú CSV do d'fhoireann, do sholáthraí, nó d'iniúchadh.",
+    "detected": "Braite",
+    "documented": "Cinntí doiciméadaithe",
+    "download": "Íoslódáil CSV",
+    "empty": "Níor taifeadadh aon torthaí sábháilteachta táirge fós.",
+    "eyebrow": "Taifead réidh le heaspórtáil",
+    "generated": "Ginte {{date}}",
+    "heading": "Torthaí agus cinntí",
+    "needsReview": "Ní mór athbhreithniú a dhéanamh orthu",
+    "notRecorded": "Gan taifeadadh",
+    "open": "Oscail tuarascáil iniúchta",
+    "product": "Táirge",
+    "risk": "Déine an riosca",
+    "status": "Stádas",
+    "summaryLabel": "Achoimre ar thuarascáil iniúchta",
+    "tableLabel": "Tuarascáil iniúchta sábháilteachta",
+    "title": "Tuarascáil iniúchta sábháilteachta",
+    "total": "Torthaí taifeadta",
+    "viewHistory": "Féach ar rian iniúchta"
+  },
+  "billing": {
+    "freeScanAvailableDescription": "Tá 1 scanadh catalóige saor in aisce ar fáil agat. Rith do chéad iniúchadh chun táirgí do shiopa a sheiceáil i gcoinne bhunachar sonraí Safety Gate an AE le haghaidh táirgí neamhbhia contúirteacha.",
+    "freeScanAvailableHeading": "Scanadh Catalóige Tosaigh Saor in Aisce Gníomhach",
+    "managePlanButton": "Bainistigh síntiús",
+    "planActiveDescription": "Tá monatóireacht cumasaithe don siopa Shopify seo. Déan athbhreithniú ar an rith is déanaí agus ar aon táirgí a dteastaíonn aird orthu.",
+    "planEyebrow": "Plean & Clúdach",
+    "planFreeAvailableDescription": "Tá scanadh tosaigh saor in aisce amháin ar chatalóg Safety Gate ar fáil.",
+    "planFreeUsedDescription": "Tá do scanadh tosaigh saor in aisce críochnaithe. Roghnaigh plean chun monatóireacht leanúnach a thosú agus chun an rian iniúchta a easpórtáil.",
+    "planTitle": "Síntiús & Monatóireacht Sábháilteachta",
+    "pricingUnavailable": "Níl praghsáil Shopify cumraithe don aip seo.",
+    "statusActivePro": "ZeroRecall Pro (Gníomhach)",
+    "statusDevelopmentBypass": "Réamhamharc forbartha (billí seachbhóthair)",
+    "statusFreeAvailable": "Scanadh Tosaigh Saor in Aisce",
+    "statusFreeUsed": "Scanadh Saor in Aisce Úsáidte",
+    "statusLabel": "Plean Reatha",
+    "statusUnverified": "Níorbh fhéidir an síntiús a fhíorú",
+    "upgradePlanButton": "Uasghrádaigh go Pro",
+    "upgradeRequiredDescription": "Tá do scanadh tosaigh saor in aisce críochnaithe. Roghnaigh plean Shopify chun foláirimh nua Safety Gate a mhonatóiriú agus táirgí athraithe a sheiceáil.",
+    "upgradeRequiredHeading": "Lean ar aghaidh le monatóireacht Safety Gate",
+    "verificationError": "Tá scananna nua curtha ar sos go dtí gur féidir billí Shopify a sheiceáil. Tá do thorthaí agus cinntí reatha fós ar fáil."
+  },
+  "billingRedirect": {
+    "opening": "Ag oscailt pleananna praghsála Shopify...",
+    "openPricingPlans": "Oscail pleananna praghsála"
+  },
+  "common": {
+    "all": "Gach",
+    "cancel": "Cealaigh",
+    "close": "Dún",
+    "confirm": "Deimhnigh",
+    "language": "Teanga",
+    "loading": "Ag lódáil...",
+    "unknown": "Anaithnid"
+  },
+  "dashboard": {
+    "activeAlertsBanner": {
+      "content": "Réitigh {{count}} foláireamh gníomhach chun táirgí a bhfuil tionchar orthu a choinneáil ar fáil i do stór.",
+      "content_few": "Réitigh {{count}} foláireamh gníomhach chun táirgí a bhfuil tionchar orthu a choinneáil ar fáil i do stór.",
+      "content_many": "Réitigh {{count}} foláireamh gníomhach chun táirgí a bhfuil tionchar orthu a choinneáil ar fáil i do stór.",
+      "content_one": "Réitigh {{count}} foláireamh gníomhach chun táirgí a bhfuil tionchar orthu a choinneáil ar fáil i do stór.",
+      "content_other": "Réitigh {{count}} foláireamh gníomhach chun táirgí a bhfuil tionchar orthu a choinneáil ar fáil i do stór.",
+      "content_plural": "Réitigh {{count}} foláireamh gníomhach chun táirgí a bhfuil tionchar orthu a choinneáil ar fáil i do stór.",
+      "content_two": "Réitigh {{count}} foláireamh gníomhach chun táirgí a bhfuil tionchar orthu a choinneáil ar fáil i do stór.",
+      "manualCheckAction": "Seiceáil láimhe",
+      "reviewAction": "Athbhreithnigh an chéad fholáireamh",
+      "title": "Teastaíonn aird ar fholáirimh sábháilteachta gníomhacha"
+    },
+    "admin": {
+      "actionNeeded": "Gníomh ag teastáil",
+      "actionNeededDescription": "Athbhreithnigh táirgí marcáilte ar dtús ionas gur féidir leat cinneadh a dhéanamh an bhfuil tú chun iad a choinneáil ar díol, an meaitseáil a dhíbhe, nó an foláireamh a réiteach.",
+      "actionNeededTitle": "Teastaíonn athbhreithniú ar {{count}} foláireamh gníomhach",
+      "actionNeededTitle_few": "Teastaíonn athbhreithniú ar {{count}} foláireamh gníomhach",
+      "actionNeededTitle_many": "Teastaíonn athbhreithniú ar {{count}} foláireamh gníomhach",
+      "actionNeededTitle_one": "Teastaíonn athbhreithniú ar {{count}} foláireamh gníomhach",
+      "actionNeededTitle_other": "Teastaíonn athbhreithniú ar {{count}} foláireamh gníomhach",
+      "actionNeededTitle_plural": "Teastaíonn athbhreithniú ar {{count}} foláireamh gníomhach",
+      "actionNeededTitle_two": "Teastaíonn athbhreithniú ó {{count}} foláireamh gníomhach",
+      "activeAlertsDescription": "Táirgí a dteastaíonn cinneadh ceannaí uathu fós sula mbíonn an scuaine glan.",
+      "auditHistoryKept": "Stair iniúchta coinnithe",
+      "auditReady": "Tuarascáil réidh",
+      "auditRecordsDescription": "Cinntí réitithe agus díchurtha le cúiseanna agus nótaí inmheánacha.",
+      "auditRecordsTitle": "Taifid iniúchta",
+      "auditReport": "Tuarascáil iniúchta",
+      "automaticChecks": "Seiceálacha uathoibríocha",
+      "bulkCheckAllSummary": "Rithfidh sé seo pas iomlán do gach {{count}} táirge.",
+      "bulkCheckDescription": "Scan táirgí neamhsheiceáilte ar dtús, nó cuir an catalóg iomlán san áireamh nuair is mian leat pas úr.",
+      "bulkCheckSummary": "Achoimre ar sheiceáil mórchóir",
+      "bulkCheckSummaryDescription": "Coinnigh an achoimre seo dlúth ionas gur féidir le ceannaithe torthaí a dhearbhú gan an dara scáileán a oscailt.",
+      "bulkCheckTitle": "Seiceáil catalóige mórchóir",
+      "bulkCheckUncheckedSummary": "Seiceálfaidh sé seo {{count}} táirge atá fágtha agus scipeálfaidh sé {{skip}} earra atá athbhreithnithe cheana féin.",
+      "catalogCoverageDescription": "Cuid den chatalóg atá seiceáilte cheana féin i gcoinne Safety Gate.",
+      "catalogCoverageTitle": "Clúdach catalóige",
+      "coverage": "Clúdach",
+      "coveragePercent": "Catalóg le seiceálacha sábháilte",
+      "criticalBannerDescription": "Tá {{count}} meaitseáil ghníomhach marcáilte mar riosca ard nó tromchúiseach. Tabhair tosaíocht do na táirgí seo sula leanann díolacháin nua ar aghaidh.",
+      "criticalBannerDescription_few": "Tá {{count}} meaitseáil ghníomhach marcáilte mar riosca ard nó tromchúiseach. Tabhair tosaíocht do na táirgí seo sula leanann díolacháin nua ar aghaidh.",
+      "criticalBannerDescription_many": "Tá {{count}} meaitseáil ghníomhach marcáilte mar riosca ard nó tromchúiseach. Tabhair tosaíocht do na táirgí seo sula leanann díolacháin nua ar aghaidh.",
+      "criticalBannerDescription_one": "Tá {{count}} meaitseáil ghníomhach marcáilte mar riosca ard nó tromchúiseach. Tabhair tosaíocht do na táirgí seo sula leanann díolacháin nua ar aghaidh.",
+      "criticalBannerDescription_other": "Tá {{count}} meaitseáil ghníomhach marcáilte mar riosca ard nó tromchúiseach. Tabhair tosaíocht do na táirgí seo sula leanann díolacháin nua ar aghaidh.",
+      "criticalBannerDescription_plural": "Tá {{count}} meaitseáil ghníomhach marcáilte mar riosca ard nó tromchúiseach. Tabhair tosaíocht do na táirgí seo sula leanann díolacháin nua ar aghaidh.",
+      "criticalBannerDescription_two": "Tá {{count}} meaitseáil ghníomhach marcáilte mar ardriosca nó riosca tromchúiseach. Tabhair tosaíocht do na táirgí seo sula leanann díolacháin nua ar aghaidh.",
+      "criticalBannerTitle": "Cuimsíonn {{count}} foláireamh gníomhach meaitseálacha ardriosca",
+      "criticalBannerTitle_few": "Cuimsíonn {{count}} foláireamh gníomhach meaitseálacha ardriosca",
+      "criticalBannerTitle_many": "Cuimsíonn {{count}} foláireamh gníomhach meaitseálacha ardriosca",
+      "criticalBannerTitle_one": "Cuimsíonn {{count}} foláireamh gníomhach meaitseálacha ardriosca",
+      "criticalBannerTitle_other": "Cuimsíonn {{count}} foláireamh gníomhach meaitseálacha ardriosca",
+      "criticalBannerTitle_plural": "Cuimsíonn {{count}} foláireamh gníomhach meaitseálacha ardriosca",
+      "criticalBannerTitle_two": "Cuimsíonn {{count}} foláireamh gníomhach meaitseálacha ardriosca",
+      "daily": "Laethúil",
+      "dailyAtTime": "Laethúil ag 03:47 Europe/Bratislava",
+      "dailyAtTimePlanned": "Sceidealta (laethúil ag 03:47)",
+      "decisionsClosed": "Cinntí dúnta",
+      "demoAlert": {
+        "action": "Réitigh, díchuir, nó lean suas leis an soláthraí",
+        "badge": "Sreabhadh oibre samplach",
+        "description": "Taispeánann an aip an táirge Shopify, an taifead Safety Gate, cén fáth ar mheaitseáil sé, agus an gníomh le taifeadadh.",
+        "evidence": "Coinnigh nótaí agus easpórtáil tuarascáil iniúchta",
+        "reason": "Déan comparáid idir branda, samhail, catagóir, agus grianghraif táirge",
+        "sample": "Cad a fheiceann ceannaithe nuair a bhíonn meaitseáil le feiceáil",
+        "title": "Meaitseáil dóchúil Safety Gate aimsithe"
+      },
+      "emptyProofCoverage": "Tá toradh seiceála taifeadta ag {{count}} táirge.",
+      "emptyProofEvidence": "Coinnítear {{count}} cinneadh dúnta le haghaidh stair iniúchta.",
+      "emptyProofMonitoring": "Tá monatóireacht laethúil Safety Gate fós ar siúl.",
+      "exportProof": "Easpórtáil cruthúnas",
+      "fallbackAlertDescription": "Meaitseáilte i gcoinne foláireamh Safety Gate.",
+      "finishCoverage": "Críochnaigh clúdach catalóige",
+      "highRiskMatchesDescription": "Meaitseálacha Safety Gate ardriosca nó tromchúiseacha le hathbhreithniú ar dtús.",
+      "highRiskMatchesTitle": "Meaitseálacha ardriosca",
+      "checkChangedProducts": "Seiceáil táirgí athraithe",
+      "checksCompletedDescription": "Seiceálacha uathoibríocha agus láimhe a laghdaíonn an obair athbhreithnithe catalóige láimhe.",
+      "checksCompletedTitle": "Seiceálacha críochnaithe",
+      "lastMonitoringRunDescription": "An seiceáil uathoibríoch, láimhe nó mórchóir Safety Gate is déanaí.",
+      "lastMonitoringRunTitle": "An rith monatóireachta deireanach",
+      "lastSafetyGateUpdateChecked": "An nuashonrú Safety Gate deireanach seiceáilte",
+      "latestRun": "An rith is déanaí",
+      "monitoringRunDateUnknown": "Am neamh-infhaighte",
+      "monitoringRunHistoryEmpty": "Níor taifeadadh aon rith monatóireachta sceidealta fós.",
+      "monitoringRunHistoryTitle": "Rith monatóireachta le déanaí",
+      "monitoringRunProgress": "{{products}} táirgí seiceáilte · {{alerts}} foláireamh nua",
+      "monitoringRunStatus": {
+        "completed": "Críochnaithe",
+        "enqueue_failed": "Níorbh fhéidir tús a chur leis",
+        "failed": "Theip",
+        "processing": "Ar siúl",
+        "queued": "Sa scuaine",
+        "retrying": "Ag iarraidh arís",
+        "skipped_unentitled": "Plean neamhghníomhach",
+        "unknown": "Stádas neamh-infhaighte"
+      },
+      "monitoringRunsTitle": "Seiceálacha monatóireachta",
+      "monitoringStatusAllClear": "Tá monatóireacht catalóige ar siúl",
+      "monitoringStatusDescription": "Seiceálann ZeroRecall do chatalóg i gcoinne nuashonruithe nua Safety Gate an AE, aibhsíonn sé táirgí a dteastaíonn athbhreithniú orthu, agus coimeádann sé fianaise le haghaidh tuarascálacha iniúchta.",
+      "monitoringStatusEyebrow": "Stádas monatóireachta",
+      "monitoringStatusNeedsReview": "Teastaíonn cinneadh ceannaí ó {{count}} táirge",
+      "monitoringStatusNeedsReview_few": "Teastaíonn cinntí ceannaí ó {{count}} táirge",
+      "monitoringStatusNeedsReview_many": "Teastaíonn cinntí ceannaí ó {{count}} táirge",
+      "monitoringStatusNeedsReview_one": "Teastaíonn cinneadh ceannaí ó {{count}} táirge",
+      "monitoringStatusNeedsReview_other": "Teastaíonn cinntí ceannaí ó {{count}} táirge",
+      "monitoringStatusNeedsReview_plural": "Teastaíonn cinntí ceannaí ó {{count}} táirge",
+      "monitoringStatusNeedsReview_two": "Tá cinntí ceannaí ag teastáil ó {{count}} táirge",
+      "needsReviewTitle": "Táirgí a dteastaíonn athbhreithniú orthu",
+      "nextAutomaticCheck": "An chéad seiceáil uathoibríoch eile",
+      "noActiveAlertsDescription": "Ní éilíonn do sheiceálacha is déanaí aon ghníomh faoi láthair. Coinnigh ag scanadh táirgí nua-bhreise chun clúdach a choinneáil.",
+      "noActiveAlertsTitle": "Gan foláirimh sábháilteachta gníomhacha",
+      "noAlertsDescription": "Níl aon athbhreithnithe táirge oscailte faoi láthair. Tá sé sin fós úsáideach: leanann monatóireacht laethúil sa chúlra agus fanann d'fhianaise réidh le haghaidh easpórtála.",
+      "noAlertsTitle": "Níl aon táirgí ag teastáil le hathbhreithniú",
+      "priorityQueue": "Scuaine cinntí",
+      "productsCoveredShort": "le toradh seiceála taifeadta",
+      "productsMonitored": "Leaganacha reatha táirgí seiceáilte",
+      "proofGridLabel": "Gníomhaíocht monatóireachta",
+      "protectionDescription": "Déanann cuntais cur síos ar thorthaí a taifeadadh san aip; ní deimhniú sábháilteachta táirge iad.",
+      "protectionEyebrow": "Do thaifead monatóireachta",
+      "protectionTitle": "Déan athbhreithniú ar sheiceálacha le déanaí agus ar chinntí ceannaí.",
+      "recentAlertsDescription": "Déan athbhreithniú ar mheaitseálacha dóchúla Safety Gate, taifead cinneadh, agus coinnigh fianaise le haghaidh iniúchtaí.",
+      "recentAlertsTitle": "Táirgí a dteastaíonn cinneadh ceannaí uathu",
+      "recommendedAction": "Gníomh molta: déan athbhreithniú ar an meaitseáil agus taifead cinneadh.",
+      "resolvedRateDescription": "Cé mhéad den ghníomhaíocht foláirimh logáilte atá dúnta cheana féin.",
+      "resolvedRateTitle": "Ráta réitithe",
+      "results": {
+        "alertCreated": "Foláireamh cruthaithe",
+        "completed": "Críochnaithe",
+        "error": "Earráid",
+        "checked": "Seiceáilte",
+        "skipped": "Sciorrtha"
+      },
+      "reviewOneProduct": "Seiceáil táirge amháin",
+      "riskInAlert": "Riosca a thuairiscítear i bhfoláireamh Safety Gate",
+      "runBulkCheck": "Rith seiceáil mórchóir",
+      "stats": {
+        "alertsCreated": "Foláirimh cruthaithe",
+        "alreadyChecked": "Seiceáilte cheana féin",
+        "errors": "Earráidí",
+        "checked": "Seiceáilte",
+        "skipped": "Sciorrtha",
+        "stillUnchecked": "Fós gan seiceáil",
+        "totalProducts": "Táirgí iomlána"
+      },
+      "status": {
+        "cachedEvidence": "Athúsáidtear fianaise taiscthe",
+        "coverageIncomplete": {
+          "description": "Níl aon mheaitseálacha Safety Gate ag teastáil le hathbhreithniú sna {{checked}} táirgí monatóireachta. Críochnaigh clúdach do gach {{total}} táirge reatha sula ndeimhnítear an chatalóg iomlán.",
+          "eyebrow": "Clúdach neamhiomlán",
+          "title": "Teastaíonn clúdach fós ó {{count}} táirge",
+          "title_few": "Teastaíonn clúdach fós ó {{count}} táirge",
+          "title_many": "Teastaíonn clúdach fós ó {{count}} táirge",
+          "title_one": "Teastaíonn clúdach fós ó {{count}} táirge",
+          "title_other": "Teastaíonn clúdach fós ó {{count}} táirge",
+          "title_plural": "Teastaíonn clúdach fós ó {{count}} táirge",
+          "title_two": "Tá clúdach fós ag teastáil ó {{count}} táirge"
+        },
+        "deltaMonitoring": "Ní sheiceáiltear ach foláirimh nua Safety Gate",
+        "factsLabel": "Fíricí monatóireachta reatha",
+        "matchesNeedingReview": "Meaitseálacha a dteastaíonn athbhreithniú orthu",
+        "monitoringNotConfirmed": "Níor deimhníodh monatóireacht fós",
+        "monitoringProblem": {
+          "action": "Athnuaigh clúdach catalóige",
+          "description": "Tá fianaise clúdaigh ag do tháirgí reatha, ach ní féidir leis an aip a dhearbhú cathain a críochnaíodh monatóireacht Safety Gate go deireanach. Athnuaigh clúdach catalóige chun stádas iontaofa a athbhunú.",
+          "eyebrow": "Teastaíonn aird ar mhonatóireacht",
+          "title": "Níl aon rith monatóireachta taifeadta ag clúdach catalóige"
+        },
+        "noActionNeeded": {
+          "action": "Féach clúdach catalóige",
+          "description": "Níl aon táirgí i do chatalóg monatóireachta ag teacht le foláirimh Safety Gate an AE faoi láthair. Leanann monatóireacht sa chúlra agus ní theastaíonn obair ach ó fholáirimh nua nó ó tháirgí athraithe.",
+          "emptyCatalogDescription": "Cuir táirgí le do chatalóg Shopify agus beidh ZeroRecall réidh chun iad a chlúdach.",
+          "emptyCatalogTitle": "Níl aon táirgí le monatóireacht fós",
+          "eyebrow": "Stádas reatha Safety Gate",
+          "title": "Níl aon ghníomh ag teastáil"
+        },
+        "none": "Níl aon",
+        "reviewNeeded": {
+          "criticalDescription": "Déan athbhreithniú ar na meaitseálacha féideartha seo sula leanann tú ar aghaidh le díolacháin. Déan comparáid idir an táirge agus fianaise Safety Gate, ansin taifead do chinneadh.",
+          "criticalEyebrow": "Athbhreithniú práinneach",
+          "criticalTitle": "Teastaíonn athbhreithniú ó {{count}} meaitseáil fhéideartha le foláireamh ardriosca",
+          "criticalTitle_few": "Teastaíonn athbhreithniú ó {{count}} meaitseáil fhéideartha le foláireamh ardriosca",
+          "criticalTitle_many": "{{count}} meaitseáil fhéideartha le foláireamh ardriosca a dteastaíonn athbhreithniú uathu",
+          "criticalTitle_one": "{{count}} meaitseáil fhéideartha le foláireamh ardriosca a dteastaíonn athbhreithniú uaidh",
+          "criticalTitle_other": "{{count}} meaitseáil fhéideartha le foláireamh ardriosca a dteastaíonn athbhreithniú uathu",
+          "criticalTitle_plural": "{{count}} meaitseáil fhéideartha le foláireamh ardriosca a dteastaíonn athbhreithniú uathu",
+          "criticalTitle_two": "Ní mór {{count}} chluiche fhéideartha le foláireamh ardriosca a athbhreithniú",
+          "description": "Teastaíonn cinneadh ceannaí ó mheaitseálacha féideartha Safety Gate. Déan athbhreithniú ar na meaitseálacha ar dtús; tá torthaí seiceála do tháirgí eile fós ar fáil sa chatalóg.",
+          "eyebrow": "Athbhreithniú ag teastáil",
+          "title": "Teastaíonn athbhreithniú ó {{count}} meaitseáil fhéideartha",
+          "title_few": "Teastaíonn athbhreithniú ó {{count}} meaitseáil fhéideartha",
+          "title_many": "Teastaíonn athbhreithniú ó {{count}} meaitseáil fhéideartha",
+          "title_one": "Teastaíonn athbhreithniú ó {{count}} meaitseáil fhéideartha",
+          "title_other": "Teastaíonn athbhreithniú ó {{count}} meaitseáil fhéideartha",
+          "title_plural": "Teastaíonn athbhreithniú ó {{count}} meaitseáil fhéideartha",
+          "title_two": "Ní mór {{count}} chluiche fhéideartha a athbhreithniú"
+        },
+        "scheduledPlanned": "Rith sceidealta"
+      },
+      "storeStatus": "Stádas siopa",
+      "valueMetrics": {
+        "decisionsRecorded": "Cinntí taifeadta",
+        "evidenceRetained": "Cinntí le fianaise",
+        "checksRun": "Seiceálacha rite",
+        "openDecisions": "Cinntí oscailte",
+        "productsCovered": "Táirgí seiceáilte"
+      },
+      "valueProofDescription": "Taispeáin don fhoireann nach scanadh aonuaire é an síntiús: fanann clúdach catalóige, seiceálacha, cinntí, agus rochtain léite amháin ar Shopify gníomhach.",
+      "valueProofDescriptionComplete": "Taispeánann na comhaireamh seo gníomhaíocht seiceála taifeadta don chatalóg reatha.",
+      "valueProofDescriptionIncomplete": "Rith seiceálacha do na táirgí atá fágtha chun torthaí a chur leis an taifead catalóige reatha.",
+      "valueProofEyebrow": "Gníomh clúdaigh",
+      "valueProofTitle": "Cad a choinníonn ZeroRecall ag déanamh",
+      "valueProofTitleComplete": "Tá seiceáil taifeadta ag gach táirge reatha",
+      "valueProofTitleIncomplete": "Tá seiceáil taifeadta ag {{count}} táirge",
+      "warningBannerDescription": "Déan athbhreithniú ar na meaitseálacha seo, dífhostaigh dearfacha bréagacha, nó réitigh saincheisteanna deimhnithe ionas go bhfanfaidh an scuaine inoibrithe.",
+      "warningBannerTitle": "Teastaíonn cinneadh ceannaí ó {{count}} foláireamh gníomhach",
+      "warningBannerTitle_few": "Teastaíonn cinntí ceannaí ó {{count}} foláireamh gníomhach",
+      "warningBannerTitle_many": "Teastaíonn cinntí ceannaí ó {{count}} foláireamh gníomhach",
+      "warningBannerTitle_one": "Teastaíonn cinneadh ceannaí ó {{count}} foláireamh gníomhach",
+      "warningBannerTitle_other": "Teastaíonn cinntí ceannaí ó {{count}} foláireamh gníomhach",
+      "warningBannerTitle_plural": "Teastaíonn cinntí ceannaí ó {{count}} foláireamh gníomhach",
+      "warningBannerTitle_two": "Tá cinntí ceannaí ag teastáil ó {{count}} fholáireamh gníomhach",
+      "withReadOnlyShopifyAccess": "Rochtain léite amháin ar Shopify"
+    },
+    "bulkCheck": {
+      "action": "Seiceáil gach táirge",
+      "alerts": "Foláirimh {{count}}",
+      "alreadyChecked": "Seiceáilte cheana féin",
+      "completed": "Críochnaithe i {{seconds}} soicind",
+      "description": "Scan gach táirge i do stór i gcoinne bhunachar sonraí Safety Gate chun rioscaí ceilte a aimsiú.",
+      "errors": "Earráidí {{count}}",
+      "checked": "Seiceáilte {{count}}",
+      "includeAlreadyChecked": "Cuir táirgí atá seiceáilte cheana san áireamh",
+      "notYetChecked": "Gan seiceáil fós",
+      "processed": "Próiseáilte {{count}}",
+      "started": "Tosaíodh {{date}}",
+      "title": "Seiceáil sábháilteachta mórchóir",
+      "totalProducts": "Táirgí iomlána",
+      "willCheckAll": "Seiceálfar gach {{count}} táirge",
+      "willCheckUnchecked": "Seiceálfar {{count}} táirge gan seiceáil (scipeáil {{skip}} atá seiceáilte cheana)"
+    },
+    "bulkResults": {
+      "success": "Seiceáil mórchóir críochnaithe: {{processed}} próiseáilte, {{checked}} seiceáilte, {{alertsCreated}} foláireamh cruthaithe."
+    },
+    "howItWorks": {
+      "alertGeneration": {
+        "description": "Gineann meaitseálacha foláirimh is féidir leat a dhíbhe nó a réiteach chun comhlíonadh a rianú.",
+        "title": "Giniúint foláirimh"
+      },
+      "autoMonitoring": {
+        "description": "Déantar táirgí a sheiceáil i gcoinne bhunachar sonraí an AE aon uair a chruthaítear nó a nuashonraítear iad.",
+        "title": "Uath-fhaireachán"
+      },
+      "title": "Conas a oibríonn sé"
+    },
+    "liveScan": {
+      "completed": "Déanta",
+      "description": "Ag iompórtáil do chatalóg ó Shopify agus ag scanadh táirgí i gcoinne 35,000+ taifead i mbunachar sonraí oifigiúil EU Safety Gate (RAPEX). Beidh torthaí le feiceáil thíos go luath.",
+      "eyebrow": "Iniúchadh Sábháilteachta Uathoibrithe",
+      "failedDescription": "Níorbh fhéidir linn an t-iniúchadh seo a chríochnú. Níor marcáladh do chatalóg mar atá seiceáilte go hiomlán. Tosaigh an scanadh arís nó déan teagmháil le tacaíocht má leanann an fhadhb.",
+      "failedHeading": "Teastaíonn iarracht eile ar iniúchadh catalóige",
+      "heading": "Iniúchadh sábháilteachta catalóige saor in aisce ar siúl...",
+      "inProgress": "Ar siúl...",
+      "pending": "Ar feitheamh",
+      "progress": "Iompórtáladh {{imported}} de {{fetched}} táirge; comparáid déanta ar {{scanned}} táirge le {{alerts}} foláireamh Safety Gate go dtí seo.",
+      "stepAudit": "3. Ullmhaigh rian iniúchta GPSR agus stádas comhlíonta",
+      "stepImport": "1. Iompórtáil táirgí ó Shopify",
+      "stepScan": "2. Déan comparáid le bunachar sonraí Safety Gate (35,000+ taifead)"
+    },
+    "metricsCard": {
+      "activeAlertsHeading": "Foláirimh Ghníomhacha",
+      "productsCheckedHeading": "Táirgí Seiceáilte",
+      "resolutionHeading": "Ráta Réitigh",
+      "resolved": "{{count}} réitithe",
+      "resolvedAndDismissed": "{{resolved}} réitithe • {{dismissed}} dífhostaithe",
+      "scans": "Scananna Safety Gate",
+      "totalRecorded": "{{count}} taifeadta san iomlán"
+    },
+    "monitorCard": {
+      "description": "Rianaigh foláirimh, rith seiceálacha catalóige, agus coinnigh rialtóirí sásta.",
+      "reviewAction": "Déan athbhreithniú ar fholáirimh",
+      "title": "Déan monatóireacht ar shábháilteacht táirgí go sracfhéachaint"
+    },
+    "quickActions": {
+      "browsePortal": "Brabhsáil tairseach Safety Gate",
+      "description": "Cuidíonn seiceálacha rialta agus doiciméadú le dícheall cuí a léiriú do rialtóirí.",
+      "manualCheck": "Rith seiceáil láimhe",
+      "title": "Gníomhartha tapa"
+    },
+    "recentAlerts": {
+      "active": "{{count}} gníomhach",
+      "allResolved": "Gach réitithe",
+      "description": "Déan imscrúdú ar na meaitseálacha is déanaí ó Safety Gate sula gcomhlíonann tú orduithe.",
+      "emptyState": {
+        "content": "Dea-scéal—níl aon táirgí marcáilte faoi láthair. Coinnigh ag déanamh monatóireachta chun comhlíonadh a choinneáil.",
+        "heading": "Gan foláirimh sábháilteachta fós"
+      },
+      "matchCount": "Aimsíodh {{count}} meaitseáil",
+      "matchCount_few": "Aimsíodh {{count}} meaitseáil",
+      "matchCount_many": "Aimsíodh {{count}} meaitseáil",
+      "matchCount_one": "Aimsíodh {{count}} meaitseáil",
+      "matchCount_other": "Aimsíodh {{count}} meaitseáil",
+      "matchCount_plural": "Aimsíodh {{count}} meaitseáil",
+      "matchCount_two": "Fuarthas {{count}} chluiche",
+      "title": "Foláirimh sábháilteachta le déanaí"
+    },
+    "safetyBreakdown": {
+      "actionDesc": "Meaitseálacha a aimsíodh le tuarascálacha EU Safety Gate a dteastaíonn athbhreithniú agus réiteach uathu.",
+      "actionLabel": "Gníomh Riachtanach",
+      "description": "Forbhreathnú ar fhíorú do chatalóige táirgí i gcoinne liostaí sábháilteachta Eorpacha agus threoir an GPSR.",
+      "eyebrow": "Stádas Cosanta Catalóige",
+      "protectedDesc": "Táirgí nár aimsigh an seiceáil is déanaí aon mheaitseáil dhóchúil dóibh.",
+      "protectedLabel": "Táirgí seiceáilte gan torthaí oscailte",
+      "protectRemainingAction": "Seiceáil an chuid eile ({{count}})",
+      "reviewAlertsAction": "Déan athbhreithniú ar fholáirimh",
+      "scanAllAction": "Rith iniúchadh iomlán catalóige",
+      "title": "Stádas Sábháilteachta Táirge",
+      "unprotectedAllCovered": "Tá toradh seiceála taifeadta ag gach táirge reatha.",
+      "unprotectedDesc": "Táirgí nach bhfuil aon seiceáil Safety Gate taifeadta orthu.",
+      "unprotectedLabel": "Gan seiceáil fós"
+    },
+    "setup": {
+      "description": "Ullmhaigh do stór do chomhlíonadh sábháilteachta táirgí an AE.",
+      "progress": "{{completed}} as {{total}} céim críochnaithe",
+      "steps": {
+        "step1": {
+          "description": "Cliceáil \"Seiceáil gach táirge\" chun do chatalóg iomlán a scanadh i gcoinne bhunachar sonraí Safety Gate an AE.",
+          "label": "Rith do chéad seiceáil táirge mórchóir"
+        },
+        "step2": {
+          "description": "Seiceáil an leathanach foláirimh chun athbhreithniú a dhéanamh ar aon táirgí a mheaitseálann rabhaidhean Safety Gate.",
+          "label": "Athbhreithnigh aon fholáirimh sábháilteachta"
+        },
+        "step3": {
+          "description": "Cumasaigh seiceálacha uathoibríocha i Socruithe chun monatóireacht a dhéanamh ar tháirgí nua go huathoibríoch.",
+          "label": "Cumraigh monatóireacht uathoibríoch"
+        }
+      },
+      "title": "Treoir Socraithe"
+    },
+    "stats": {
+      "actionNeeded": "Gníomh ag teastáil",
+      "activeAlerts": "Foláirimh ghníomhacha",
+      "alertsLogged": "Foláirimh logáilte",
+      "allClear": "Gach rud glan",
+      "autoMonitoring": "Monatóireacht uathoibríoch",
+      "descriptions": {
+        "activeAlerts": "Athbhreithnigh na táirgí seo inniu chun fanacht comhlíontach.",
+        "activeAlertsZero": "Tá gach saincheist sábháilteachta réitithe.",
+        "alertsLogged": "Áirítear foláirimh réitithe agus díchurtha le haghaidh rian iniúchta.",
+        "alertsLoggedZero": "Gan foláirimh stairiúla. Lean ar aghaidh ag monatóireacht táirgí nua.",
+        "productsChecked": "Leanann imeachtaí uathoibríocha Shopify ag monatóireacht nuashonruithe.",
+        "productsCheckedZero": "Rith seiceáil mórchóir chun do chatalóg reatha a scanadh."
+      },
+      "newSetup": "Socrú nua",
+      "open": "{{count}} oscailte",
+      "productsChecked": "Táirgí seiceáilte",
+      "resolved": "{{count}} réitithe"
+    },
+    "title": "ZeroRecall"
+  },
+  "dates": {
+    "daysAgo": "{{count}} lá ó shin",
+    "today": "Inniu",
+    "weeksAgo": "{{count}} seachtain ó shin",
+    "yesterday": "Inné"
+  },
+  "errors": {
+    "apiError": "Níl an tseirbhís sábháilteachta sheachtrach ar fáil go sealadach. Bain triail eile as níos déanaí.",
+    "pageLoadFailed": "Theip ar luchtú an leathanaigh",
+    "unknown": "Chuaigh rud éigin mícheart"
+  },
+  "evidence": {
+    "alertNumber": "Foláireamh Safety Gate {{number}}",
+    "description": "Athbhreithnigh cinntí sábháilteachta táirgí taifeadta, nótaí, comhthéacs riosca, agus fianaise leantach soláthraí.",
+    "empty": "Níl aon chinntí sábháilteachta táirgí taifeadta fós.",
+    "eyebrow": "Rian iniúchta",
+    "filteredRecords": "{{visible}} de {{total}} taifead",
+    "filters": {
+      "collapseForProduct": "Folaigh fianaise iomlán do {{title}}",
+      "expandForProduct": "Taispeáin fianaise iomlán do {{title}}",
+      "noResults": "Níl aon taifid iniúchta ag teacht leis na scagairí seo.",
+      "searchLabel": "Cuardaigh rian iniúchta",
+      "searchPlaceholder": "Cuardaigh táirge, uimhir foláirimh, nó fianaise",
+      "showLess": "Folaigh fianaise",
+      "showMore": "Taispeáin fianaise",
+      "statusLabel": "Stádas cinnidh"
+    },
+    "fullEvidence": "Fianaise iomlán",
+    "heading": "Stair cinntí agus fianaise",
+    "noNotes": "Gan nóta taifeadta",
+    "records": "{{count}} taifead",
+    "table": {
+      "accessibilityLabel": "Tábla fianaise sábháilteachta táirgí",
+      "decision": "Cinneadh",
+      "details": "Sonraí",
+      "notes": "Nótaí / fianaise",
+      "product": "Táirge",
+      "status": "Stádas",
+      "summary": "Achoimre fianaise",
+      "updated": "Nuashonraithe"
+    },
+    "title": "Rian Iniúchta"
+  },
+  "experience": {
+    "delayed": "Teastaíonn aird ar mhonatóireacht — tá an rith deireanach críochnaithe níos mó ná 48 uair an chloig ó shin",
+    "pausedHelp": "Tá seiceálacha uathoibríocha curtha ar sos. Roghnaigh plean chun foláirimh nua Safety Gate agus athruithe táirgí a sheiceáil fad is atá Shopify dúnta.",
+    "previewHelp": "Ní ghníomhaíonn oscailt an réamhamhairc forbartha seo monatóireacht chúlra. Teastaíonn plean Shopify gníomhach fíoraithe le haghaidh seiceálacha sceidealta.",
+    "reviewSteps": "1. Déan comparáid idir grianghraif agus aitheantóirí → 2. Roghnaigh toradh an athbhreithnithe → 3. Taifead do chinneadh",
+    "valueBody": "Seiceálacha laethúla le haghaidh foláirimh nua Safety Gate, seiceálacha nuair a athraíonn táirgí, fógraí ríomhphoist nuair a chumasaítear iad, agus cinntí athbhreithnithe sábháilte.",
+    "valueTitle": "Cad a chuireann monatóireacht leanúnach leis"
+  },
+  "manualCheck": {
+    "admin": {
+      "catalog": "Catalóg",
+      "catalogDescription": "Déantar táirgí a shórtáil de réir na nuashonruithe Shopify is déanaí ionas gur féidir le ceannaithe athruithe le déanaí a athsheiceáil ar dtús.",
+      "checkFailed": "Theip ar an seiceáil",
+      "manualReview": "Athbhreithniú ar éileamh",
+      "manualReviewDescription": "Roghnaigh aon táirge ó do chatalóg agus rith seiceáil spriocdhírithe Safety Gate nuair a bhíonn freagra láithreach uait.",
+      "productFlagged": "Táirge marcáilte"
+    },
+    "badges": {
+      "flagged": "{{count}} marcáilte",
+      "checks": "{{count}} seiceáil",
+      "needsReview": "Teastaíonn athbhreithniú ó {{count}}"
+    },
+    "banners": {
+      "alertDescription": "Aimsíodh saincheist sábháilteachta fhéideartha don táirge seo.",
+      "alertHeading": "Foláireamh sábháilteachta cruthaithe",
+      "failedHeading": "Theip ar an seiceáil",
+      "textOnlyDescription": "Níor úsáideadh ach réimsí téacs sa toradh seo. Má bhraitheann an táirge ar dhifríochtaí amhairc, déan athbhreithniú níos cúramach ar an meaitseáil.",
+      "textOnlyHeading": "Ní raibh comparáid íomhá ar fáil"
+    },
+    "breadcrumbs": {
+      "current": "Clúdach catalóige",
+      "dashboard": "Painéal"
+    },
+    "bulk": {
+      "description": "Athbhreithnigh seiceálacha sábháilte agus rith comparáid úr Safety Gate do tháirgí i do chatalóg reatha.",
+      "checkAllProducts": "Seiceáil na táirgí atá fágtha",
+      "checkingAll": "Ag seiceáil catalóige...",
+      "title": "Seiceáil do chatalóg"
+    },
+    "catalogue": {
+      "accessibilityLabel": "Tábla catalóige táirgí",
+      "actions": {
+        "checkAgain": "Seiceáil arís",
+        "checkAgainForProduct": "Seiceáil {{title}} arís",
+        "checkSafety": "Seiceáil sábháilteacht",
+        "checkSafetyForProduct": "Seiceáil sábháilteacht do {{title}}",
+        "viewForProduct": "Féach toradh taifeadta do {{title}}"
+      },
+      "columns": {
+        "action": "Gníomh",
+        "checks": "Seiceálacha",
+        "product": "Táirge",
+        "status": "Stádas"
+      },
+      "emptyBody": "Níl aon táirgí ar fáil le seiceáil.",
+      "emptyHeading": "Níor aimsíodh aon táirgí",
+      "firstCheck": "Rith do chéad seiceáil",
+      "heading": "Catalóg Táirgí ({{count}})",
+      "lastChecked": "Seiceáladh go deireanach {{date}}",
+      "noType": "Gan cineál",
+      "searchLabel": "Aimsigh táirge",
+      "searchPlaceholder": "Cuardaigh táirgí de réir teidil, SKU, díoltóra, nó cineáil",
+      "status": {
+        "notChecked": "Gan seiceáil",
+        "reviewed": "Athbhreithnithe",
+        "safe": "Níor aimsíodh aon mheaitseáil",
+        "unsafe": "Éilíonn athbhreithniú"
+      },
+      "totalChecks": "{{count}} san iomlán",
+      "unknownVendor": "Díoltóir anaithnid"
+    },
+    "coverage": {
+      "completeDescription": "Tá seiceáil Safety Gate taifeadta ag gach táirge reatha Shopify. Teastaíonn seiceáil úr fós ó tháirgí nua nó athraithe.",
+      "completeTitle": "Tá toradh seiceála sábháilte ag gach táirge reatha",
+      "eyebrow": "Stádas seiceála catalóige",
+      "incompleteDescription": "Seiceáil na táirgí atá fágtha chun toradh Safety Gate a shábháil don chatalóg reatha.",
+      "incompleteTitle": "Níl seiceáil sábháilte fós ag {{count}} táirge",
+      "lastProductNeedsReview": "Chruthaigh nó nuashonraigh an seiceáil táirge is déanaí mír athbhreithnithe.",
+      "lastProductSafe": "Níor aimsigh an seiceáil táirge is déanaí aon mheaitseáil dóchúil Safety Gate.",
+      "lastRun": "An rith deireanach",
+      "lastRunResultWithCounts": "Seiceáladh {{checked}}, scipeáladh {{skipped}} gan athrú, cruthaíodh {{alerts}} mír athbhreithnithe, {{errors}} earráid.",
+      "noneRemaining": "Tá toradh seiceála sábháilte ag gach táirge reatha.",
+      "noRunYet": "Níor rith aon chatalóg nó seiceáil táirge fós.",
+      "percent": "{{percent}}% le seiceáil reatha",
+      "productsCovered": "Táirgí seiceáilte",
+      "productsCoveredDescription": "Táirgí le toradh sábháilte dá leagan reatha Shopify.",
+      "remaining": "Gan seiceáil fós",
+      "remainingDescription": "Rith seiceáil chun toradh Safety Gate a shábháil do na táirgí seo."
+    },
+    "filters": {
+      "all": "Gach ({{count}})",
+      "needsReview": "Meaitseáil fhéideartha ({{count}})",
+      "safe": "Níor aimsíodh aon mheaitseáil ({{count}})",
+      "unprotected": "Gan seiceáil nó athraithe ({{count}})"
+    },
+    "modal": {
+      "unknown": "Anaithnid",
+      "unknownProduct": "Táirge Anaithnid"
+    },
+    "overview": {
+      "coverage": "Clúdach {{coverage}}%",
+      "manualCompleted": "Seiceálacha láimhe críochnaithe",
+      "manualCompletedDescription": "{{checked}} de {{total}} táirge seiceáilte",
+      "noOpenReviews": "Gan cinntí táirge oscailte.",
+      "noRisks": "Níor aimsíodh aon rioscaí fós.",
+      "prioritise": "Tabhair tús áite do na táirgí seo le haghaidh gníomhaíochta.",
+      "productsDescription": "Na táirgí is déanaí ó do stór.",
+      "productsFlagged": "Táirgí marcáilte",
+      "productsInScope": "Táirgí faoi raon feidhme",
+      "productsNeedingReview": "Táirgí a dteastaíonn athbhreithniú orthu",
+      "title": "Forbhreathnú ar sheiceálacha"
+    },
+    "quickActions": {
+      "title": "Gníomhartha Meara"
+    },
+    "subtitle": "Cosain an chuid eile de do chatalóg, athnuachan monatóireachta, nó seiceáil táirge amháin roghnaithe.",
+    "title": "Clúdach catalóige",
+    "toasts": {
+      "completed": "Seiceáil sábháilteachta críochnaithe",
+      "flagged": "Aimsíodh saincheist sábháilteachta fhéideartha"
+    }
+  },
+  "nav": {
+    "catalogCoverage": "Clúdach Catalóige",
+    "dashboard": "Painéal",
+    "evidence": "Rian Iniúchta",
+    "manualCheck": "Clúdach Catalóige",
+    "safetyAlerts": "Scuaine Athbhreithnithe",
+    "settings": "Socruithe"
+  },
+  "news": {
+    "items": {
+      "databaseUpdate": {
+        "date": "Nollaig 2025",
+        "description": "Déantar bunachar sonraí Safety Gate a nuashonrú go leanúnach le foláirimh táirgí nua. Rith seiceálacha rialta chun fanacht comhlíontach.",
+        "title": "Bunachar Sonraí Safety Gate an AE Nuashonraithe"
+      },
+      "gpsr": {
+        "date": "GPSR 2024",
+        "description": "Foghlaim faoi riachtanais GPSR agus conas a chinntiú go gcomhlíonann do tháirgí caighdeáin sábháilteachta an AE.",
+        "title": "Rialachán Ginearálta um Shábháilteacht Táirgí"
+      }
+    },
+    "title": "Nuacht"
+  },
+  "onboarding": {
+    "back": "Ar ais",
+    "finishButton": "Críochnaigh an Socrú & Téigh go dtí an Painéal",
+    "nextStep": "An Chéad Chéim Eile",
+    "stepIndicator": "Céim {{current}} de {{total}}",
+    "steps": {
+      "automation": {
+        "description": "Cumraigh athbhreithniú tosaíochta agus rialacha sábháilteachta uathoibríocha do do stór.",
+        "label": "Uathoibriú Sábháilteachta",
+        "quarantine": {
+          "desc": "Marcáil táirgí go huathoibríoch le haghaidh athbhreithniú tosaíochta nuair a mheaitseálann siad foláirimh Safety Gate le riosca tromchúiseach (tairseach >= 95%).",
+          "label": "Cumasaigh athbhreithniú tosaíochta",
+          "title": "Tabhair Tús Áite do Rioscaí Tromchúiseacha"
+        },
+        "title": "Céim 3: Uath-Mhonatóireacht & Foláirimh",
+        "webhooks": {
+          "desc": "Déantar táirgí a sheiceáil go huathoibríoch i gcoinne bhunachar sonraí an AE aon uair a chruthaítear nó a nuashonraítear iad.",
+          "title": "Scanadh Webhook Fíor-Ama"
+        }
+      },
+      "scan": {
+        "alerts": "Foláirimh Riosca Cruthaithe: {{count}}",
+        "complete": "Tá an chatalóg á monatóireacht anois",
+        "description": "Iompórtáil do tháirgí reatha Shopify isteach i monatóireacht Safety Gate, ansin déan comparáid idir an chatalóg agus foláirimh Safety Gate le déanaí.",
+        "imported": "Táirgí iompórtáilte le haghaidh monatóireachta: {{count}}",
+        "label": "Iompórtáil catalóige",
+        "monitored": "Táirgí i gcomparáid le foláirimh Safety Gate: {{count}}",
+        "scanned": "Táirgí Scanáilte: {{count}}",
+        "scanning": "Ag iompórtáil catalóige agus ag déanamh comparáide idir táirgí agus foláirimh Safety Gate...",
+        "startButton": "Iompórtáil agus monatóireacht ar an gcatalóg reatha",
+        "title": "Céim 2: Iompórtáil agus monatóireacht ar an gcatalóg reatha",
+        "toScan": "Táirgí le hiompórtáil le haghaidh monatóireachta: {{count}}"
+      },
+      "sensitivity": {
+        "balanced": "70% (Molta - Cothromaithe)",
+        "broad": "40% (Leathan - Níos mó rabhaidh)",
+        "calibration": {
+          "balancedDesc": "Íogaireacht chaighdeánach. Cothromaíocht optamaithe idir cruinneas agus líon na bhfoláireamh. Déanann sé scanadh ar theidil, ar thuairiscí, agus meaitseálann sé príomhbhrandaí agus struchtúir mhúnla.",
+          "balancedTitle": "Mód Braite Cothromaithe",
+          "broadDesc": "Ard-íogaireacht. Gabhann sé meaitseálacha atá scaoilte. Moltar é má dhíolann tú catagóirí táirgí ardriosca (bréagáin, leictreonaic) agus má theastaíonn clúdach iomlán uait, ach bí ag súil le roinnt dearfacha bréagacha.",
+          "broadTitle": "Mód Braite Leathan",
+          "strictDesc": "Ardchruinneas. Scagann sé amach mionchosúlachtaí. Ní spreagfar foláirimh ach amháin le haghaidh meaitseálacha an-soiléire d'ainmneacha branda/múnla. Ráta íseal foláireamh bréagach.",
+          "strictTitle": "Mód Braite Dian"
+        },
+        "description": "Roghnaigh cé chomh dlúth agus ba chóir do tháirge meaitseáil le taifead Safety Gate sula gcaithfear é a athbhreithniú.",
+        "label": "Déine meaitseála",
+        "strict": "90% (Dian - Níos lú rabhaidhean)",
+        "thresholdLabel": "Tairseach meaitseála: {{value}}%",
+        "title": "Céim 1: Socraigh déine meaitseála"
+      }
+    },
+    "subtitle": "Faigh meaitseálacha féideartha táirgí contúirteacha, athbhreithnigh iad i Shopify, agus coinnigh fianaise iniúchta do gach cinneadh.",
+    "title": "Déan monatóireacht ar do chatalóg i gcoinne Geata Sábháilteachta an AE",
+    "value": {
+      "audit": {
+        "description": "Coinníonn cinntí réitithe agus díchurtha nótaí le haghaidh easpórtálacha agus obair leantach soláthraí.",
+        "title": "Fianaise réidh le hiniúchadh"
+      },
+      "monitor": {
+        "description": "Déantar foláirimh nua Safety Gate a sheiceáil i gcoinne do chatalóige Shopify.",
+        "title": "Monatóireacht laethúil ar Gheata Sábháilteachta an AE"
+      },
+      "review": {
+        "description": "Déan comparáid idir an meaitseáil, déan cinneadh ar cad atá le déanamh, agus coinnigh an scuaine inchurtha i ngníomh.",
+        "title": "Sreabhadh oibre cinntí an cheannaí"
+      }
+    }
+  },
+  "pagination": {
+    "pageOf": "Leathanach {{current}} de {{total}} ({{count}} foláireamh)"
+  },
+  "portal": {
+    "description": "Rochtain ar bhunachar sonraí oifigiúil Geata Sábháilteachta na hEorpa chun táirgí contúirteacha a chuardach agus foláirimh sábháilteachta mionsonraithe a fheiceáil.",
+    "home": "Baile Geata Sábháilteachta",
+    "homeDescription": "Rochtain ar thairseach oifigiúil an Choimisiúin Eorpaigh",
+    "searchDatabase": "Cuardaigh Bunachar Sonraí",
+    "searchDescription": "Cuardaigh Geata Sábháilteachta an AE le haghaidh táirgí contúirteacha",
+    "title": "Tairseach Geata Sábháilteachta"
+  },
+  "resolveActions": {
+    "actionTaken": "Gníomh déanta",
+    "contactedSupplier": "Teagmháil déanta le soláthraí (Freagra ar feitheamh)",
+    "contactPending": "Ag fanacht le freagra an tsoláthraí",
+    "falsePositive": "Dearfach bréagach",
+    "menuLabel": "Gníomhartha réitigh",
+    "modifiedProduct": "Táirge modhnaithe",
+    "noActionNeeded": "Níl aon ghníomh ag teastáil",
+    "notMyProduct": "Ní hé mo tháirge é",
+    "other": "Eile",
+    "removedFromSale": "Bainte den díol",
+    "verifiedSafe": "Toradh stairiúil: táirge fíoraithe sábháilte"
+  },
+  "settings": {
+    "monitoring": {
+      "automatic": {
+        "description": "Déantar táirgí a sheiceáil go huathoibríoch nuair a chruthaítear nó a nuashonraítear iad trí ghréasáin.",
+        "enabled": "Cumasaithe",
+        "title": "Seiceáil uathoibríoch"
+      },
+      "manual": {
+        "description": "Rith seiceálacha sábháilteachta ar éileamh d'aon táirge i do chatalóg.",
+        "goToManualCheck": "Téigh go Seiceáil Láimhe",
+        "title": "Seiceálacha láimhe"
+      },
+      "title": "Monatóireacht"
+    },
+    "navigation": {
+      "dashboard": "Painéal",
+      "manualCheck": "Seiceáil láimhe",
+      "title": "Nascleanúint",
+      "viewAlerts": "Amharc ar fholáirimh"
+    },
+    "subtitle": "Rialaigh an chaoi a bhféachann ZeroRecall ar do chatalóg Shopify.",
+    "threshold": {
+      "currentDefault": "Réamhshocrú reatha an timpeallachta",
+      "description": "Roghnaigh cé mhéad meaitseáil féideartha Safety Gate is mian le do fhoireann a athbhreithniú. Moltar monatóireacht chothromaithe don chuid is mó de chatalóga Shopify.",
+      "howItWorks": "Conas a oibríonn sé seo",
+      "label": "Tairseach meaitseála chun cinn (%)",
+      "resetToDefault": "Athshocraigh go réamhshocrú",
+      "save": "Sábháil",
+      "title": "Mód monatóireachta"
+    },
+    "title": "Socruithe Monatóireachta"
+  },
+  "settingsAdmin": {
+    "advancedMatchingSettings": "Socruithe meaitseála chun cinn",
+    "automation": {
+      "autoDraftDescription": "Marcáil táirgí go huathoibríoch le haghaidh athbhreithniú tosaíochta nuair a mheaitseálann siad foláirimh Safety Gate le riosca tromchúiseach (tairseach >= 95%).",
+      "autoDraftTitle": "Tabhair tosaíocht do rioscaí tromchúiseacha",
+      "description": "Cumraigh athbhreithniú tosaíochta le haghaidh meaitseálacha ardriosca.",
+      "eyebrow": "Oibríochtaí fíor-ama",
+      "title": "Uathoibriú sábháilteachta"
+    },
+    "automationStatus": {
+      "active": {
+        "badge": "Plean gníomhach",
+        "description": "Críochnaíodh an t-iniúchadh tosaigh ar an gcatalóg agus tá plean monatóireachta gníomhach ag an siopa seo.",
+        "title": "Iniúchadh catalóige críochnaithe"
+      },
+      "completedNoPlan": {
+        "badge": "Iniúchadh críochnaithe",
+        "description": "Tá an t-iniúchadh tosaigh ar an gcatalóg críochnaithe. Teastaíonn plean gníomhach le haghaidh monatóireacht uathoibríoch leanúnach.",
+        "title": "Iniúchadh tosaigh ar an gcatalóg críochnaithe"
+      },
+      "failed": {
+        "badge": "Teastaíonn aird",
+        "description": "Níor críochnaíodh an t-allmhairiú nó an t-iniúchadh deireanach. Déan iarracht clúdach catalóige arís sula mbraitheann tú ar stádas monatóireachta.",
+        "title": "Teastaíonn aird ar iniúchadh tosaigh ar an gcatalóg"
+      },
+      "notStarted": {
+        "badge": "Gan fíorú",
+        "description": "Níor críochnaíodh an t-allmhairiú tosaigh, mar sin níl clúdach catalóige deimhnithe fós.",
+        "title": "Iniúchadh catalóige gan deimhniú"
+      },
+      "openCatalog": "Clúdach catalóige oscailte",
+      "scanning": {
+        "badge": "Ar siúl",
+        "description": "Táirgí á n-allmhairiú agus á seiceáil. Deimhneofar clúdach catalóige tar éis don iniúchadh a bheith críochnaithe.",
+        "title": "Iniúchadh tosaigh ar an gcatalóg ar siúl"
+      }
+    },
+    "automationStatusDescription": "Déantar nuashonruithe laethúla ar Gheata Sábháilteachta an AE, athruithe ar tháirgí Shopify, agus taifid iniúchta a láimhseáil go huathoibríoch. Ná húsáid na socruithe seo ach amháin chun toirt athbhreithnithe agus fógraí a choigeartú.",
+    "automationStatusEyebrow": "Monatóireacht uathoibríoch",
+    "automationStatusTitle": "Tá monatóireacht Geata Sábháilteachta ag obair don siopa seo",
+    "configuration": "Cumraíocht",
+    "configurationDescription": "Coinnigh an leathanach dírithe ar chinneadh amháin an cheannaí: cé chomh dian agus ba chóir don seiceálaí a bheith agus táirgí á gcomparáid le foláirimh Safety Gate.",
+    "currentThreshold": "Tairseach reatha",
+    "currentThresholdDescription": "Gabhann luachanna níos ísle níos mó meaitseálacha féideartha. Laghdaíonn luachanna níos airde dearfacha bréagacha.",
+    "environmentDefault": "Réamhshocrú an timpeallachta",
+    "environmentDefaultDescription": "Úsáidtear é nuair nach bhfuil tairseach saincheaptha sábháilte ag an siopa fós.",
+    "exclusions": {
+      "description": "Eisiata díoltóirí nó catagóirí táirgí ar leith ó sheiceálacha Safety Gate chun dearfacha bréagacha a laghdú.",
+      "eyebrow": "Rialacha scagtha",
+      "title": "Rialacha eisiaimh",
+      "typesDescription": "Clóscríobh catagóir táirge nó cineál agus brúigh Iontráil nó camóg chun é a chur leis.",
+      "typesPlaceholder": "Cárta Bronntanais, Seirbhís, ...",
+      "typesTitle": "Cineálacha táirgí eisiata",
+      "vendorsDescription": "Clóscríobh ainm díoltóra agus brúigh Iontráil nó camóg chun é a chur leis.",
+      "vendorsPlaceholder": "Díoltóir A, Díoltóir B, ...",
+      "vendorsTitle": "Díoltóirí eisiata"
+    },
+    "fallback": "Cúlú",
+    "guidance": "Treoir",
+    "guidanceItems": {
+      "balancedDescription": "Molta don chuid is mó de chatalóga (65-70%). Gabhann sé rioscaí dóchúla agus coinníonn sé foláirimh bhréagacha íseal.",
+      "balancedTitle": "Réamhshocrú cothromaithe",
+      "broadDescription": "Úsáid timpeall 50% nuair is fearr leat níos mó meaitseanna féideartha a ghabháil agus go bhfuil tú compordach ag athbhreithniú níos mó foláireamh.",
+      "broadTitle": "Monatóireacht leathan",
+      "strictDescription": "Úsáid 80%+ nuair a bhíonn do chatalóg seasmhach agus gur mian leat níos lú athbhreithnithe láimhe.",
+      "strictTitle": "Meaitseáil dhian"
+    },
+    "included": {
+      "description": "Déanann an aip monatóireacht leanúnach ar do chatalóg i gcoinne foláirimh Safety Gate, caomhnaíonn sé fianaise comhlíonta, agus cuireann sé foláireamh chugat nuair is gá táirgí a athbhreithniú.",
+      "evidenceDescription": "Coinníonn cinntí réitithe agus díchurtha nótaí, cúiseanna, comhthéacs riosca, agus stampaí ama.",
+      "evidenceTitle": "Cruthúnas in easpórtáilte",
+      "eyebrow": "Monatóireacht leanúnach",
+      "monitoringDescription": "Déantar taifid nua Safety Gate a chur i gcomparáid le táirgí Shopify a ndéantar monatóireacht orthu gan scanadh láimhe.",
+      "monitoringTitle": "Monatóireacht leanúnach AE",
+      "teamDescription": "Cuidíonn athbhreithniú tosaíochta, doiciméadú soláthraí, agus scagairí le do fhoireann cinntí fíor a láimhseáil níos tapúla.",
+      "teamTitle": "Sreabhadh oibre athbhreithnithe",
+      "title": "Cad a choinníonn do stór clúdaithe"
+    },
+    "matchingStrictness": "Déine meaitseála",
+    "mode": {
+      "balanced": "Cothromaithe",
+      "broad": "Níos mó meaitseanna",
+      "strict": "Níos lú meaitseanna"
+    },
+    "monitoringModeEyebrow": "Mód monatóireachta",
+    "notifications": {
+      "emailHelp": "Tógtha ar dtús ó Shopify. Is féidir leat seoladh difriúil a úsáid.",
+      "emailLabel": "Ríomhphost fógra",
+      "enabledDescription": "Roghnaigh an bhfaigheann tú torthaí práinneacha, achoimre sheachtainiúil, nó an dá rud.",
+      "enabledTitle": "Foláirimh sábháilteachta ríomhphoist",
+      "immediateDescription": "Seol ríomhphost chugam a luaithe is gá táirge a athbhreithniú.",
+      "immediateTitle": "Torthaí nua",
+      "invalidEmail": "Cuir isteach seoladh ríomhphoist bailí sula gcumasaíonn tú fógraí ríomhphoist.",
+      "languageLabel": "Teanga ríomhphoist",
+      "noRecipientDescription": "Tá fógraí ríomhphoist cumasaithe, ach níl aon seoladh sonraithe. Ní sheachadfar aon teachtaireachtaí go dtí go gcuirfear ríomhphost isteach.",
+      "noRecipientHeading": "Níl aon fhaighteoir ríomhphoist cumraithe",
+      "useShopifyEmail": "Úsáid ríomhphost teagmhála an tsiopa ({{email}})",
+      "weeklyDescription": "Achoimre monatóireachta Dé Luain: deimhníonn sé nuair nach raibh aon torthaí nua ann, nó déanann sé achoimre ar chásanna oscailte a dteastaíonn athbhreithniú uathu.",
+      "weeklyTitle": "Achoimre monatóireachta seachtainiúil"
+    },
+    "onDemand": "Ar éileamh",
+    "plans": {
+      "advancedDescription": "Cuir athbhreithniú tosaíochta, obair leantach soláthraí, agus sreafaí oibre teanga AE leis.",
+      "advancedTitle": "Ardleibhéal: uathoibriú agus sreafaí oibre ilteangacha",
+      "description": "Gnéithe agus cumais atá san áireamh i do phlean monatóireachta siopa.",
+      "eyebrow": "Luach síntiúis",
+      "manualDescription": "Rith seiceálacha táirge amháin ag an am agus féach stádas an táirge is déanaí.",
+      "manualTitle": "Saor in aisce: seiceálacha láimhe",
+      "monitorDescription": "Déan monatóireacht ar fholáirimh nua Safety Gate i gcoinne an chatalóige, easpórtáil tuarascálacha iniúchta CSV, agus coinnigh rian cinntí.",
+      "monitorTitle": "Íoctha: monatóireacht laethúil agus tuarascálacha",
+      "title": "Cumais an phlean"
+    },
+    "recommendedSetup": "Socrú molta",
+    "saveAll": "Sábháil na socruithe go léir",
+    "status": {
+      "auditTrail": "Rian iniúchta",
+      "autoQuarantine": "Athbhreithniú tosaíochta",
+      "dailySafetyGateUpdates": "Nuashonruithe laethúla Safety Gate",
+      "emailDigest": "Díleá ríomhphoist",
+      "off": "Múchta",
+      "on": "Ar siúl",
+      "running": "Ag rith",
+      "shopifyProductUpdates": "Táirgí nua/nuashonraithe Shopify"
+    },
+    "storeSetting": "Socrú siopa",
+    "strictnessHint": "Is scanadh níos leithne é 40-60%. Tá 70-85% níos déine agus de ghnáth táirgeann sé níos lú dearfacha bréagacha.",
+    "valueDescription": "Déanann monatóireacht leanúnach comparáid idir táirgí catalóige incháilithe agus taifid Safety Gate nua-fhoilsithe.",
+    "valueEyebrow": "Monatóireacht catalóige",
+    "valueItems": {
+      "auditDescription": "Coinníonn cinntí réitithe agus díchurtha nótaí, cúiseanna, agus stair athbhreithnithe le haghaidh tuarascálacha in easpórtáilte.",
+      "auditTitle": "Fianaise réidh le hiniúchadh",
+      "dailyDescription": "Déantar foláirimh nua Safety Gate a sheiceáil i gcoinne táirgí a ndéantar monatóireacht orthu gan an ceannaí scanadh láimhe a thosú.",
+      "dailyTitle": "Monatóireacht laethúil catalóige",
+      "workflowDescription": "Ní dhéanann ceannaithe ach táirgí a dteastaíonn cinneadh uathu a athbhreithniú, ansin réitíonn, díchuireann, nó déanann siad obair leantach le soláthraithe.",
+      "workflowTitle": "Sreabhadh oibre athbhreithnithe dúchasach Shopify"
+    },
+    "valueTitle": "Cad a fhanann clúdaithe",
+    "workspace": "Spás oibre"
+  },
+  "status": {
+    "actionRequired": "Gníomh ag teastáil",
+    "allClear": "Gach rud glan",
+    "archived": "Cartlannaithe",
+    "dismissed": "Dífhostaithe",
+    "flagged": "bratachaithe",
+    "monitored": "Monatóireacht",
+    "needsReview": "Éilíonn athbhreithniú",
+    "notChecked": "Gan seiceáil",
+    "protected": "Seiceáilte",
+    "resolved": "Réitithe",
+    "runCheck": "Rith seiceáil",
+    "safe": "Níor aimsíodh aon mheaitseáil",
+    "scanning": "Scanadh ar siúl",
+    "unprotected": "Gan seiceáil",
+    "unsafe": "Éilíonn athbhreithniú",
+    "updated": "Nuashonraithe"
+  },
+  "uxEnhancements": {
+    "activityTimeline": {
+      "actions": {
+        "dismiss": "Cinneadh taifeadta: díchurtha",
+        "check": "Táirge seiceáilte",
+        "quarantine": "Táirge marcáilte le haghaidh athbhreithnithe",
+        "resolve": "Cinneadh taifeadta: réitithe"
+      },
+      "description": "Seiceálacha sábháilteachta taifeadta, cinntí táirge, agus fianaise a choinnítear le haghaidh tuarascálacha iniúchta.",
+      "details": {
+        "autoDrafted": "Táirge marcáilte le haghaidh athbhreithnithe tosaíochta.",
+        "bulkScanned": "Scanadh catalóige mórchóir críochnaithe.",
+        "checkSafe": "Níor aimsíodh aon mheaitseáil sa seiceáil seo.",
+        "checkUnsafe": "Táirge ag teastáil athbhreithniú. Taifead cinntí cruthaithe.",
+        "noReason": "Gan aon chúis sonraithe.",
+        "reason": "Cúis: {{reason}}"
+      },
+      "eyebrow": "Rian iniúchta",
+      "noActivity": "Níl aon imeachtaí iniúchta fós. Rith monatóireacht chun tús a chur le fianaise a thógáil.",
+      "title": "Stair cinntí agus fianaise",
+      "types": {
+        "automatic": "Imeacht Córais",
+        "bulk": "Mór-Imeacht",
+        "manual": "Imeacht Ceannaí"
+      }
+    },
+    "alerts": {
+      "floating": {
+        "dismissSelected": "Díbhe Roghnaithe",
+        "resolveSelected": "Réitigh Roghnaithe",
+        "selectedCount": "{{count}} foláireamh roghnaithe",
+        "selectedCount_few": "{{count}} foláireamh roghnaithe",
+        "selectedCount_many": "{{count}} foláireamh roghnaithe",
+        "selectedCount_one": "{{count}} foláireamh roghnaithe",
+        "selectedCount_other": "{{count}} foláireamh roghnaithe",
+        "selectedCount_plural": "{{count}} foláireamh roghnaithe",
+        "selectedCount_two": "{{count}} fholáireamh roghnaithe"
+      },
+      "quickFilters": {
+        "allAlerts": "Gach taifead",
+        "allAlertsDesc": "Taispeáin gach rabhadh sábháilteachta sa chatalóg.",
+        "highRisk": "Ardriosca Amháin",
+        "highRiskDesc": "Leibhéil riosca tromchúiseacha a éilíonn gníomh.",
+        "needsReview": "Ní mór Athbhreithniú a Dhéanamh",
+        "needsReviewDesc": "Foláirimh sábháilteachta ar feitheamh.",
+        "resolved": "Réitithe / Díbeartha",
+        "resolvedDesc": "Foláirimh san am atá caite a coinníodh le haghaidh iniúchta.",
+        "title": "Scagairí Tapa"
+      }
+    },
+    "complianceRing": {
+      "scoreLabel": "Glan",
+      "subtitle": "Cion de tháirgí seiceáilte gan míreanna athbhreithnithe oscailte",
+      "title": "Sláinte catalóige monatóireachta"
+    }
+  },
+  "workspace": {
+    "all": "Gach",
+    "appLanguage": "Teanga an aip",
+    "apply": "Cuir scagairí i bhfeidhm",
+    "applyFilters": "Cuir scagairí i bhfeidhm",
+    "balancedHelp": "Is é meaitseáil chothrom an pointe tosaigh molta. Ná hathraigh é ach amháin más mian leat níos mó nó níos lú meaitseálacha féideartha a athbhreithniú.",
+    "broadHelp": "Áirítear níos mó meaitseálacha féideartha agus d'fhéadfadh go mbeadh níos mó athbhreithnithe láimhe ag teastáil.",
+    "cannotCompare": "Ní féidir comparáid a dhéanamh",
+    "catalogGlobalAction": "Seiceáil {{count}} táirge ar fud na catalóige",
+    "catalogScopeHelp": "Áirítear le clúdach gach táirge catalóige Shopify, lena n-áirítear míreanna gníomhacha, dréachta agus cartlainne. Ní athraíonn scagairí ach an liosta seo, ní an clúdach ná an raon feidhme monatóireachta.",
+    "clearFilters": "Glan scagairí",
+    "compare": "Déan comparáid idir táirgí",
+    "compareProduct": "Déan comparáid idir táirgí: {{title}}",
+    "coverageFiltersHelp": "Tá clúdach agus torthaí oscailte ar leithligh: is féidir go mbeidh toradh ag táirge athraithe atá ag fanacht le hathbhreithniú freisin.",
+    "coverageIncomplete": "Teastaíonn seiceáil reatha ó {{count}} táirge",
+    "coverageScope": "Ag taispeáint {{visible}} de {{total}} táirge catalóige.",
+    "csv": {
+      "action": "Gníomh cinnidh",
+      "actor": "Taifeadta ag",
+      "caseNumber": "Cás Safety Gate",
+      "decisionAt": "Cinneadh ag",
+      "detectedAt": "Braite ag",
+      "generatedAt": "Ginte ag",
+      "guidance": "Treoir athbhreithnithe",
+      "notes": "Nótaí athbhreithnithe",
+      "product": "Táirge",
+      "productId": "ID táirge Shopify",
+      "recordType": "Cineál taifid",
+      "resolution": "Réiteach",
+      "risk": "Leibhéal riosca",
+      "shop": "Siopa",
+      "source": "Foinse oifigiúil",
+      "sourceRisk": "Riosca san fholáireamh oifigiúil",
+      "status": "Stádas"
+    },
+    "csvGuidance": "Meaitseáil fhéideartha. Déan comparáid idir aitheantóirí an táirge agus an taifead oifigiúil sula ndéanann tú cinneadh.",
+    "currentFindingStatus": "Stádas reatha an toraidh",
+    "dateFilterTimezone": "Úsáideann dátaí crios ama na monatóireachta: {{timeZone}}. Cuir scagairí i bhfeidhm chun torthaí agus easpórtáil a nuashonrú.",
+    "decisionAt": "Cinneadh taifeadta",
+    "decisionExportHelp": "Úsáideann an radharc seo agus a easpórtáil CSV dátaí cinnidh. Áirítear leo imeachtaí athbhreithnithe le haghaidh torthaí níos sine, lena n-áirítear cásanna athoscailte. Coinníonn ainmneacha táirgí agus fíricí foinse oifigiúla a dtéacs bunaidh.",
+    "decisionFrom": "Dáta cinnidh ó",
+    "decisionLegacy": "Toradh stairiúil: táirge fíoraithe sábháilte",
+    "decisionTo": "Dáta cinnidh go",
+    "detectedAt": "Toradh braite",
+    "differentIdentifiers": "Aitheantóirí éagsúla: {{fields}}. Seiceáil iad sula ndéanann tú cinneadh.",
+    "documentedFindings": "Torthaí réitithe nó díbeartha faoi láthair",
+    "download": "Íoslódáil CSV",
+    "emptyHelp": "Níl aon torthaí oscailte taifeadta. Ní dheimhníonn sé seo go bhfuil do tháirgí sábháilte. Seiceáil clúdach na catalóige agus an rith monatóireachta is déanaí.",
+    "eventCount": "{{count}} imeacht cinnidh",
+    "excluded": "Meaitseálann {{count}} de {{total}} táirge catalóige na rialacha seo le haghaidh seiceálacha láimhe. Ní úsáideann monatóireacht uathoibríoch na heisiaimh seo. Fanann torthaí atá ann cheana ar fáil.",
+    "excludeHelp": "Baineann na rialacha seo le seiceálacha láimhe. Seiceáil na táirgí lena mbaineann sula sábhálann tú.",
+    "exportHelp": "Tá gach toradh sa tréimhse agus sa stádas roghnaithe sa CSV, lena n-áirítear tagairtí oifigiúla, nótaí athbhreithnithe agus imeachtaí cinnidh taifeadta. Is taifead seiceálacha é, ní deimhniú sábháilteachta.",
+    "exportReady": "CSV ullmhaithe. Mura bhfuil an íoslódáil tosaithe, bain úsáid as an nasc seo:",
+    "findingCount": "Torthaí sa raon feidhme seo: {{count}}.",
+    "findingFrom": "Toradh braite ó",
+    "findings": "Torthaí agus fianaise",
+    "findingTo": "Toradh braite go",
+    "from": "Ó dháta",
+    "goReview": "Athbhreithnigh torthaí oscailte",
+    "groupAction": "Gníomh déanta",
+    "groupDifferent": "Táirge difriúil",
+    "groupInformation": "Teastaíonn tuilleadh faisnéise",
+    "history": "Stair cinnidh",
+    "historyLimit": "Ag taispeáint suas le {{count}} toradh le déanaí. Easpórtáil an taifead iomlán le haghaidh gach toraidh.",
+    "changed": "Athraithe ó sheiceáil dheireanach",
+    "chooseOutcomeHelp": "Roghnaigh toradh chun do chinneadh a thaifeadadh.",
+    "chooseOutcomeLink": "Roghnaigh toradh",
+    "lastSuccess": "Rith monatóireachta rathúil deireanach",
+    "matchingIdentifiers": "Aitheantóirí meaitseála: {{fields}}.",
+    "matchNeedsVerification": "Meaitseáil fhéideartha. Déan comparáid idir na grianghraif agus na haitheantóirí leis an taifead oifigiúil sula ndéanann tú cinneadh.",
+    "matchNotConfirmed": "Níor deimhníodh an meaitseáil tar éis athbhreithniú a dhéanamh ar an bhfianaise",
+    "missingIdentifiers": "Tá roinnt aitheantóirí in easnamh. Déan comparáid idir na grianghraif atá ar fáil agus iarr ar do sholáthraí an tsamhail, an barrachód agus an bhaisc.",
+    "monitoring": {
+      "enabled": "Cumasaithe — seiceálacha laethúla",
+      "failed": "Theip ar an seiceáil uathoibríoch deireanach",
+      "paused": "Sosaithe — gan aon phlean monatóireachta reatha",
+      "preview": "Réamhamharc forbartha — billeáil seachanta",
+      "processing": "Seiceáil curtha sa scuaine nó ar siúl",
+      "unknown": "Gníomhaíocht monatóireachta neamhdheimhnithe",
+      "unverified": "Sosaithe — níorbh fhéidir an síntiús a fhíorú"
+    },
+    "monitoringLabel": "Monatóireacht uathoibríoch",
+    "monitoringUnknownHelp": "Níl aon rith monatóireachta rathúil ar fáil chun gníomhaíocht le déanaí a dhearbhú. Athnuaigh chun seiceáil arís.",
+    "neverRun": "Níl aon rith monatóireachta críochnaithe taifeadta",
+    "noCurrentResult": "Tá toradh reatha ag teastáil",
+    "noDecisions": "Níl aon cinntí taifeadta fós. Oscail fionnachtain, déan comparáid idir na táirgí agus taifead an méid a ndearna tú athbhreithniú air.",
+    "noFilteredDecisions": "Níl aon imeachtaí cinntí ag teacht leis na scagairí seo. Glan na scagairí chun an stair iomlán a fheiceáil.",
+    "noFilteredFindings": "Níl aon fionnachtana ag teacht leis na scagairí seo. Glan na scagairí chun an liosta iomlán a fheiceáil.",
+    "noMatch": "Níor aimsíodh aon mheaitseáil",
+    "noMatchAtCheck": "Níor aimsíodh aon mheaitseáil sa seiceáil seo.",
+    "notes": "Nótaí athbhreithnithe",
+    "notificationLanguage": "Teanga ríomhphoist",
+    "notRecorded": "Níl aon toradh athbhreithnithe reatha",
+    "oldest": "Oscailte ar feadh {{count}} lá",
+    "onboarding": "Iompórtáil catalóg → seiceáil taifid Safety Gate → athbhreithnigh torthaí",
+    "outcome": "Toradh",
+    "outcomeHelp": {
+      "contacted_supplier": "Fanann an fionnachtain oscailte fad is atá tú ag fanacht le do sholáthraí.",
+      "false_positive": "Úsáid nuair a léiríonn an fhianaise nach mbaineann an foláireamh. Díbhfear an fionnachtain.",
+      "match_not_confirmed": "Úsáid nuair nach ndeimhníonn an fhianaise a ndearna tú athbhreithniú uirthi meaitseáil. Réiteofar an fionnachtain.",
+      "modified_product": "Nuashonraigh an táirge i Shopify ar dtús. Ní athraíonn taifeadadh an toraidh seo an táirge; réiteofar an fionnachtain.",
+      "not_my_product": "Úsáid nuair a bhaineann an foláireamh le táirge difriúil. Díbhfear an fionnachtain.",
+      "other": "Déan cur síos ar an toradh sa nóta riachtanach. Réiteofar an fionnachtain.",
+      "removed_from_sale": "Bain an táirge den díol i Shopify ar dtús. Ní athraíonn taifeadadh an toraidh seo an táirge; réiteofar an fionnachtain.",
+      "verified_safe": "Is toradh stairiúil é seo."
+    },
+    "outcomeLabels": {
+      "contactedSupplier": "Ag fanacht le soláthraí",
+      "falsePositive": "Dearfach bréagach",
+      "modifiedProduct": "Táirge modhnaithe",
+      "notMyProduct": "Ní hé mo tháirge é",
+      "other": "Eile",
+      "removedFromSale": "Bainte den díol",
+      "verifiedSafe": "Stairiúil: sábháilte fíoraithe"
+    },
+    "possibleMatch": "Meaitseáil fhéideartha",
+    "possibleMatchAtCheck": "Fuair an seiceáil seo meaitseáil fhéideartha Safety Gate.",
+    "print": "Priontáil / sábháil PDF",
+    "priority": "Tosaíocht athbhreithnithe",
+    "priorityHelp": "Cinntí ar dtús, ansin déine foláirimh oifigiúil agus na fionnachtana is sine. Tagann míreanna atá ag fanacht le soláthraithe ina dhiaidh sin.",
+    "productStatus": "Stádas Shopify",
+    "productStatusActive": "Gníomhach",
+    "productStatusAll": "Gach stádas Shopify",
+    "productStatusArchived": "Cartlannaithe",
+    "productStatusDraft": "Dréacht",
+    "productStatusUnknown": "Anaithnid",
+    "recommended": "Socrú molta",
+    "referenceMissing": "Uimhir cháis oifigiúil neamh-infhaighte",
+    "remaining": "Gan seiceáil nó athraithe",
+    "reopened": "Athoscailte le haghaidh athbhreithnithe",
+    "reportEmpty": "Níl aon fionnachtana ag teacht leis na scagairí seo.",
+    "reportTitle": "Tuarascáil seiceálacha agus cinntí",
+    "resultHelp": "Déanann taifeadadh toraidh do athbhreithniú a dhoiciméadú sa rian iniúchta agus ní athraíonn sé táirge Shopify.",
+    "reviewNext": "Athbhreithnigh an chéad mheaitseáil eile: {{title}}",
+    "reviewPrompt": "Déan comparáid idir an fhianaise, roghnaigh an toradh agus taifead do nótaí.",
+    "riskLabels": {
+      "electric": "Turraing leictreach",
+      "fire": "Dóiteán",
+      "health": "Riosca sláinte",
+      "high": "Riosca ard",
+      "chemical": "Ceimiceach",
+      "choking": "Plúchadh",
+      "injuries": "Gortuithe",
+      "low": "Riosca íseal",
+      "medium": "Riosca meánach",
+      "serious": "Riosca tromchúiseach",
+      "unknown": "Riosca i bhfoláireamh Safety Gate"
+    },
+    "runScope": "Seiceálacha táirge: {{products}} · Taifid Safety Gate a measadh: {{records}} · Fionnachtana nua: {{findings}}",
+    "saved": "Socruithe sábháilte.",
+    "saveChanges": "Sábháil athruithe",
+    "scope": "Fionnachtana ó {{from}} go {{to}}",
+    "scoreDetails": "Sonraí cosúlachta",
+    "scoreHelp": "Is scóir cosúlachta iad seo a úsáidtear chun athbhreithniú a thosaíocht, ní dóchúlacht go bhfuil do tháirge contúirteach.",
+    "settingsAdvanced": "Meaitseáil chun cinn agus eisiaimh",
+    "shop": "Siopa",
+    "showMore": "Taispeáin níos mó táirgí",
+    "scheduleHelp": "Déantar foláirimh nua Safety Gate a sheiceáil fad is atá an plean monatóireachta gníomhach. Braitheann am an chéad seiceála críochnaithe eile ar an scuaine.",
+    "sourceMissing": "Níl nasc taifead oifigiúil ar fáil don fionnachtain sábháilte seo.",
+    "sourceRisk": "Riosca sa foláireamh oifigiúil (taifead bunaidh an AE)",
+    "status": "Stádas fionnachtana",
+    "strictHelp": "Taispeánann níos lú meaitseálacha féideartha agus d'fhéadfadh sé cosúlachtaí nach bhfuil chomh soiléir a chailleadh.",
+    "to": "Go dtí an dáta",
+    "unconfirmedIdentifiers": "Ní dhearbhaíonn na haitheantóirí catalóige atá ar fáil an meaitseáil seo. Déan comparáid idir an pacáistiú agus iarr ar do sholáthraí an tsamhail, an barrachód agus an bhaisc atá in easnamh.",
+    "unchecked": "Gan seiceáil fós",
+    "unsaved": "Tá athruithe neamhshábháilte agat.",
+    "verifyScope": "Baineann torthaí catalóige leis an leagan táirge a seiceáladh. Teastaíonn seiceáil nua ó tháirgí athraithe.",
+    "viewRemainingProducts": "Féach {{count}} táirgí a dteastaíonn seiceáil uathu",
+    "viewShopify": "Oscail táirge Shopify",
+    "waiting": "Ag fanacht le soláthraí",
+    "when": "Taifeadta ag",
+    "who": "Taifeadta ag",
+    "whyMatch": "Cén fáth a bhféadfadh sé seo a mheaitseáil"
+  }
+}

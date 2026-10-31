@@ -214,7 +214,7 @@ const sk = {
           "monitoringStatusNeedsReview_plural": "{{count}} produkty potrebujú rozhodnutie obchodníkaa",
           "monitoringStatusAllClear": "Monitoring katalógu beží",
           "monitoringStatusDescription": "ZeroRecall kontroluje katalóg voči novým aktualizáciám EÚ Safety Gate, zvýrazní produkty na kontrolu a uchováva dôkazy pre auditné reporty.",
-          "productsMonitored": "Produkty so uloženými kontrolami",
+          "productsMonitored": "Produkty s aktuálnym výsledkom",
           "lastSafetyGateUpdateChecked": "Posledná kontrola Safety Gate aktualizácie",
           "nextAutomaticCheck": "Ďalšia automatická kontrola",
           "dailyAtTime": "Denne o 03:47 (Europe/Bratislava)",
@@ -267,7 +267,7 @@ const sk = {
           "exportProof": "Exportovať dôkazy",
           "proofGridLabel": "Aktivita monitoringu",
           "coveragePercent": "Katalóg s uloženou kontrolou",
-          "productsCoveredShort": "s uloženým výsledkom kontroly",
+          "productsCoveredShort": "s aktuálnym výsledkom kontroly",
           "decisionsClosed": "Uzavreté rozhodnutia",
           "auditHistoryKept": "Auditná história uložená",
           "automaticChecks": "Automatické kontroly",
@@ -406,8 +406,8 @@ const sk = {
         "settings": "Nastavenia",
         "viewAlerts": "Zobraziť upozornenia",
         "reviewAlerts": "Skontrolovať upozornenia",
-        "reviewOneMatch": "Preveriť 1 zhodu",
-        "reviewMultipleMatches": "Preveriť {{count}} zhôd",
+        "reviewOneMatch": "Preveriť 1 možnú zhodu",
+        "reviewMultipleMatches": "Preveriť možné zhody ({{count}})",
         "openFirstMatch": "Otvoriť prvú zhodu",
         "dashboard": "Nástenka",
         "tryAgain": "Skúsiť znova",
@@ -493,7 +493,14 @@ const sk = {
             "model": "Model",
             "barcode": "Čiarový kód (GTIN/EAN)",
             "batch": "Šarža (Batch)"
-          }
+          },
+          "groupHelp": {
+            "information": "Nález zostane otvorený, kým od dodávateľa zistíte šaržu, model alebo dokumentáciu.",
+            "different": "Uzavrieť alebo zamietnuť nález, pretože predávate iný model, značku alebo šaržu.",
+            "action": "Uzavrieť nález po tom, čo ste produkt stiahli z predaja alebo upravili v Shopify.",
+            "other": "Zaznamenať iný výsledok s povinnou poznámkou pre vašu auditnú stopu."
+          },
+          "languageDiffNote": "Jazyk prostredia aplikácie ({{appLang}}) a jazyk e-mailových upozornení ({{emailLang}}) sa nastavujú samostatne."
         },
         "yourProduct": "Váš produkt v Shopify",
         "editInShopify": "Upraviť produkt v Shopify",
@@ -737,9 +744,9 @@ const sk = {
           "incompleteTitle": "{{count}} produktov ešte nemá uložený výsledok",
           "completeDescription": "Každý aktuálny Shopify produkt chráni Safety Gate monitoring. Ďalšie kontroly sa sústredia na zmenené produkty a nové Safety Gate alerty.",
           "incompleteDescription": "Ochráňte zostávajúce produkty, aby sa každá aktuálna položka monitorovala voči budúcim Safety Gate alertom.",
-          "percent": "{{percent}}% s uloženým výsledkom",
+          "percent": "{{percent}}% s aktuálnym výsledkom",
           "productsCovered": "Skontrolované produkty",
-          "productsCoveredDescription": "Produkty so zaznamenaným výsledkom Safety Gate kontroly.",
+          "productsCoveredDescription": "Produkty s uloženým výsledkom pre aktuálnu verziu v Shopify.",
           "lastRun": "Posledná kontrola",
           "lastRunResultWithCounts": "Skontrolované {{checked}}, preskočené {{skipped}} nezmenené, vytvorených {{alerts}} položiek na kontrolu, {{errors}} chýb.",
           "lastProductSafe": "Posledná kontrola produktu nenašla pravdepodobnú zhodu so Safety Gate.",
@@ -757,8 +764,8 @@ const sk = {
         },
         "filters": {
           "all": "Všetky ({{count}})",
-          "unprotected": "Neskontrolované ({{count}})",
-          "needsReview": "Na kontrolu ({{count}})",
+          "unprotected": "Neskontrolované alebo zmenené ({{count}})",
+          "needsReview": "Možná zhoda na preverenie ({{count}})",
           "safe": "Bez nájdenej zhody ({{count}})"
         },
         "catalogue": {
@@ -781,7 +788,7 @@ const sk = {
           "firstCheck": "Spustite prvú kontrolu",
           "status": {
             "safe": "Bez nájdenej zhody",
-            "unsafe": "Vyžaduje kontrolu",
+            "unsafe": "Možná zhoda na preverenie",
             "reviewed": "Skontrolované",
             "notChecked": "Nekontrolované"
           },

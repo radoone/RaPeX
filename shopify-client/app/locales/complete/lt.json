@@ -1,0 +1,1406 @@
+{
+  "actions": {
+    "auditReport": "Audito ataskaita",
+    "clear": "Išvalyti",
+    "dashboard": "Prietaisų skydelis",
+    "downloadAuditReport": "Atsisiųsti audito ataskaitą",
+    "checkAll": "Patikrinti visus produktus",
+    "checkAllProducts": "Patikrinti visus {{count}} produktus",
+    "checking": "Tikrinama...",
+    "checkNewSafetyGateAlerts": "Patikrinti naujus „Safety Gate“ įspėjimus",
+    "checkOneProduct": "Patikrinti vieną produktą",
+    "checkSelectedProduct": "Patikrinti pasirinktą produktą",
+    "checkUnchecked": "Patikrinti {{count}} nepatikrintus produktus",
+    "manualCheck": "Patikrinti produktą",
+    "next": "Kitas",
+    "openFirstMatch": "Atidaryti pirmą atitikmenį",
+    "previous": "Ankstesnis",
+    "protectRemainingProducts": "Patikrinti likusius {{count}} produktus",
+    "reactivate": "Reaktyvuoti",
+    "recordDecision": "Įrašyti sprendimą",
+    "refreshCoverage": "Atnaujinti katalogo aprėptį",
+    "resolve": "Išspręsti",
+    "retry": "Bandyti dar kartą",
+    "reviewActiveProducts": "Peržiūrėti aktyvius produktus",
+    "reviewAlerts": "Peržiūrėti įspėjimus",
+    "reviewDecision": "Palyginti produktus",
+    "reviewMultipleMatches": "Peržiūrėti {{count}} atitikmenis",
+    "reviewOneMatch": "Peržiūrėti 1 atitikmenį",
+    "reviewProductsNeedingAction": "Peržiūrėti {{count}} produktą, kuriam reikia veiksmų",
+    "reviewProductsNeedingAction_few": "Peržiūrėti {{count}} produktus, kuriems reikia veiksmų",
+    "reviewProductsNeedingAction_many": "Peržiūrėti {{count}} produktus, kuriems reikia veiksmų",
+    "reviewProductsNeedingAction_one": "Peržiūrėti {{count}} produktą, kuriam reikia veiksmų",
+    "reviewProductsNeedingAction_other": "Peržiūrėti {{count}} produktus, kuriems reikia veiksmų",
+    "reviewProductsNeedingAction_plural": "Peržiūrėti {{count}} produktus, kuriems reikia veiksmų",
+    "search": "Ieškoti",
+    "settings": "Nustatymai",
+    "tryAgain": "Bandyti dar kartą",
+    "view": "Peržiūrėti",
+    "viewAlerts": "Peržiūrėti įspėjimus",
+    "viewDetails": "Peržiūrėti išsamią informaciją",
+    "viewEvidence": "Peržiūrėti sprendimų istoriją"
+  },
+  "alerts": {
+    "admin": {
+      "actionNeeded": "Reikia veiksmų",
+      "actionNeededDescription": "Peržiūrėkite atitikmenis, atmeskite klaidingus teigiamus rezultatus arba išspręskite patvirtintas rizikas, kad įspėjimų eilė išliktų veiksminga.",
+      "actionNeededTitle": "{{count}} aktyviam įspėjimui vis dar reikia sprendimo",
+      "actionNeededTitle_few": "{{count}} aktyviems įspėjimams vis dar reikia sprendimo",
+      "actionNeededTitle_many": "{{count}} aktyviems įspėjimams vis dar reikia sprendimo",
+      "actionNeededTitle_one": "{{count}} aktyviam įspėjimui vis dar reikia sprendimo",
+      "actionNeededTitle_other": "{{count}} aktyviems įspėjimams vis dar reikia sprendimo",
+      "actionNeededTitle_plural": "{{count}} aktyviems įspėjimams vis dar reikia sprendimo",
+      "criticalBannerDescription": "{{count}} aktyvus atitikmuo „Safety Gate“ sistemoje pažymėtas kaip didelės arba rimtos rizikos. Pirmiausia išspręskite tuos atitikmenis.",
+      "criticalBannerDescription_few": "{{count}} aktyvūs atitikmenys „Safety Gate“ sistemoje pažymėti kaip didelės arba rimtos rizikos. Pirmiausia išspręskite tuos atitikmenis.",
+      "criticalBannerDescription_many": "{{count}} aktyvūs atitikmenys „Safety Gate“ sistemoje pažymėti kaip didelės arba rimtos rizikos. Pirmiausia išspręskite tuos atitikmenis.",
+      "criticalBannerDescription_one": "{{count}} aktyvus atitikmuo „Safety Gate“ sistemoje pažymėtas kaip didelės arba rimtos rizikos. Pirmiausia išspręskite tuos atitikmenis.",
+      "criticalBannerDescription_other": "{{count}} aktyvūs atitikmenys „Safety Gate“ sistemoje pažymėti kaip didelės arba rimtos rizikos. Pirmiausia išspręskite tuos atitikmenis.",
+      "criticalBannerDescription_plural": "{{count}} aktyvūs atitikmenys „Safety Gate“ sistemoje pažymėti kaip didelės arba rimtos rizikos. Pirmiausia išspręskite tuos atitikmenis.",
+      "criticalBannerTitle": "{{count}} didelės rizikos atitikmeniui reikia peržiūros",
+      "criticalBannerTitle_few": "{{count}} didelės rizikos atitikmenims reikia peržiūros",
+      "criticalBannerTitle_many": "{{count}} didelės rizikos atitikmenims reikia peržiūros",
+      "criticalBannerTitle_one": "{{count}} didelės rizikos atitikmeniui reikia peržiūros",
+      "criticalBannerTitle_other": "{{count}} didelės rizikos atitikmenims reikia peržiūros",
+      "criticalBannerTitle_plural": "{{count}} didelės rizikos atitikmenims reikia peržiūros",
+      "queue": "Produktų sprendimų eilė",
+      "queueDescription": "Patvirtinkite galimus atitikmenis, atmeskite klaidingus teigiamus rezultatus arba įrašykite, kokie veiksmai buvo atlikti.",
+      "warningBannerDescription": "Naudokite šią eilę tik tikriems sprendimams: greitai išspręskite patvirtintas rizikas ir atmeskite klaidingus teigiamus rezultatus.",
+      "warningBannerTitle": "{{count}} aktyviam įspėjimui vis dar reikia peržiūros",
+      "warningBannerTitle_few": "{{count}} aktyviems įspėjimams vis dar reikia peržiūros",
+      "warningBannerTitle_many": "{{count}} aktyviems įspėjimams vis dar reikia peržiūros",
+      "warningBannerTitle_one": "{{count}} aktyviam įspėjimui vis dar reikia peržiūros",
+      "warningBannerTitle_other": "{{count}} aktyviems įspėjimams vis dar reikia peržiūros",
+      "warningBannerTitle_plural": "{{count}} aktyviems įspėjimams vis dar reikia peržiūros"
+    },
+    "breadcrumbs": {
+      "current": "Peržiūros eilė",
+      "dashboard": "Prietaisų skydelis"
+    },
+    "checklist": {
+      "items": {
+        "0": "Prioritetizuoti aktyvius įspėjimus",
+        "1": "Dokumentuoti taisomuosius veiksmus",
+        "2": "Patikrinti prieš atmetant"
+      },
+      "title": "Atsakymo kontrolinis sąrašas"
+    },
+    "meta": {
+      "active": "{{count}} peržiūrėti",
+      "total": "Iš viso {{count}}"
+    },
+    "metrics": {
+      "activeHeading": "Aktyvūs įspėjimai",
+      "archived": "Archyvuota",
+      "dismissedDescription": "Pasilikti pastabas auditui",
+      "dismissedDescriptionZero": "Dar nėra atmestų įspėjimų",
+      "dismissedHeading": "Atmesta",
+      "resolutionHeading": "Sprendimo rodiklis",
+      "resolved": "Išspręsta: {{count}}",
+      "resolvedAndDismissed": "Išspręsta: {{resolved}} • Atmesta: {{dismissed}}",
+      "totalRecorded": "Iš viso įrašyta: {{count}}"
+    },
+    "pagination": {
+      "next": "Kitas",
+      "previous": "Ankstesnis"
+    },
+    "subtitle": "Peržiūrėkite produktus, kuriems reikia sprendimo.",
+    "table": {
+      "accessibilityLabel": "Saugos įspėjimų lentelė",
+      "empty": "Nėra įspėjimų, atitinkančių jūsų filtrus",
+      "emptyAllClearBody": "Šiuo metu nėra atvirų prekybininko sprendimų. Kasdienis stebėjimas vis dar vykdomas, o uždaryti sprendimai lieka audito sekoje.",
+      "emptyAllClearTitle": "Visi aktyvūs produktų peržiūros atvejai yra apdoroti",
+      "emptyFilteredBody": "Koreguokite filtrus arba ieškokite kito produkto. Jūsų aktyvi eilė vis dar gali būti tuščia.",
+      "emptyFilteredTitle": "Nėra peržiūros elementų, atitinkančių šiuos filtrus",
+      "headers": {
+        "actions": "Veiksmai",
+        "detected": "Aptikta",
+        "product": "Produktas",
+        "risk": "Rizika",
+        "status": "Būsena"
+      },
+      "order": "Užsakymas",
+      "orderOptions": {
+        "asc": "Seniausi pirmiausia",
+        "desc": "Naujausi pirmiausia"
+      },
+      "reviewProduct": "Peržiūrėti sprendimą dėl {{title}}",
+      "searchLabel": "Ieškoti įspėjimų",
+      "searchPlaceholder": "Ieškoti pagal produkto pavadinimą...",
+      "selectAll": "Pasirinkti visus matomus radinius",
+      "selectedCount": "Pasirinkta: {{count}}",
+      "selectProduct": "Pasirinkti radinį dėl {{title}}",
+      "similarityTooltip": "Panašumo balas: {{score}}%",
+      "sort": "Rūšiuoti",
+      "sortBy": "Rūšiuoti pagal",
+      "sortOptions": {
+        "created": "Aptikimo data",
+        "name": "Produkto pavadinimas",
+        "risk": "Rizikos lygis"
+      },
+      "tabs": {
+        "active": "Reikia peržiūros",
+        "all": "Visi",
+        "dismissed": "Atmesta",
+        "resolved": "Išspręsta"
+      },
+      "thumbnailLabel": "{{title}} miniatiūra",
+      "viewProduct": "Peržiūrėti įrašytą radinį dėl {{title}}"
+    },
+    "title": "Peržiūros eilė",
+    "toasts": {
+      "updated": "Įspėjimas atnaujintas"
+    }
+  },
+  "analysis": {
+    "alertImagesUsed": "Palyginti įspėjimo vaizdai: {{count}}",
+    "alertNumber": "Įspėjimas {{number}}",
+    "audit": {
+      "existingNotes": "Audito pastabos",
+      "noteLabel": "Audito pastaba",
+      "notePlaceholder": "Pridėkite, ką patikrinote, tiekėjo įrodymus arba kodėl tai buvo atmesta."
+    },
+    "candidateAlerts": "Kandidatų įspėjimai: {{count}}",
+    "decisionContextDesc": "Sprendimo įrašymas dokumentuoja, kad šis saugos atitikimas buvo peržiūrėtas ir išsaugo jūsų audito seką. Tai automatiškai nekeičia jūsų Shopify produkto ir nepanaikina jo iš jūsų parduotuvės.",
+    "decisionContextTitle": "Atitikties sprendimų įrašymas",
+    "decisionRecorded": "Sprendimas įrašytas",
+    "editInShopify": "Redaguoti produktą Shopify",
+    "enlargedSafetyAlert": "Padidintas saugos įspėjimo vaizdas",
+    "fields": {
+      "accessibilityLabel": "Įspėjimo atitikimo detalių lentelė",
+      "alertDate": "Įspėjimo data",
+      "brand": "Prekės ženklas",
+      "category": "Kategorija",
+      "field": "Laukas",
+      "model": "Modelis",
+      "notifyingCountry": "Pranešanti šalis",
+      "origin": "Kilmė",
+      "productDescription": "Produkto aprašymas",
+      "productName": "Produkto pavadinimas",
+      "value": "Vertė"
+    },
+    "focus": {
+      "criticalLead": "Šis produktas turi didelio patikimumo atitikimą. Įrašykite sprendimą tik po peržiūros.",
+      "criticalStepCompare": "Palyginkite savo produkto nuotrauką su pirmuoju „Safety Gate“ atitikmeniu žemiau.",
+      "criticalStepDecide": "Pasirinkite rezultatą meniu „Įrašyti sprendimą“ pagal savo peržiūrą.",
+      "criticalStepDocument": "Pridėkite vidinių pastabų atsekamumui ir tolesniems veiksmams su tiekėju.",
+      "criticalTitle": "Reikia imtis veiksmų dabar",
+      "recordedOutcome": "Įrašytas rezultatas: {{outcome}}",
+      "reviewedLead": "Šis įspėjimas nėra aktyvus. Laikykite įrašus aiškiais auditams.",
+      "reviewedStepAudit": "Patikrinkite pasirinktą sprendimą ir pastabas.",
+      "reviewedStepReactivate": "Reaktyvuokite tik tuo atveju, jei atsiranda naujų produkto įrodymų.",
+      "reviewedTitle": "Peržiūra jau baigta",
+      "safeLead": "Dabartinis rezultatas yra saugus. Stebėkite produkto atnaujinimus.",
+      "safeStepClose": "Uždarykite šią detalę ir tęskite su kitais aktyviais įspėjimais.",
+      "safeStepMonitor": "Laikykite šį produktą automatiniame stebėjime.",
+      "safeStepRecheck": "Paleiskite naują patikrinimą, jei pasikeičia vaizdai, pakuotė ar tiekėjas.",
+      "safeTitle": "Nereikia skubių veiksmų"
+    },
+    "hazardType": "Pavojaus tipas",
+    "checkedAt": "Patikrinta: {{date}}",
+    "imageDominated": "Šis atitikimas buvo įvertintas pirmiausia atsižvelgiant į vaizdą, todėl vizualinis pakuotės panašumas turėjo didesnį svorį nei teksto neatitikimas.",
+    "imageMatch": "Vaizdo atitikimas",
+    "imageMatchShort": "{{count}}% vaizdas",
+    "legalProvision": "Teisinė nuostata",
+    "matchesHint": "Pradėkite nuo viršutinės atitikimo kortelės žemiau ir pirmiausia patvirtinkite vizualinę pakuotę, tada modelio ir prekės ženklo detales.",
+    "merchantRecommendation": {
+      "active": "Palyginkite produkto ir „Safety Gate“ vaizdus, patvirtinkite prekės ženklą ar modelį, tada įrašykite veiksmą, kurio imsis jūsų parduotuvė.",
+      "reviewed": "Šis radinys yra uždarytas. Prieš jį reaktyvuodami patikrinkite įrašytą rezultatą ir įrodymus.",
+      "safe": "Šiuo metu nereikia jokių parduotuvės veiksmų. Pakartotinai patikrinkite, jei pasikeičia produktas, pakuotė, vaizdai ar tiekėjas."
+    },
+    "modalAccessibilityLabel": "„Safety Gate“ atitikimo detalės {{title}}",
+    "modalHeading": "Peržiūrėti „Safety Gate“ atitikimą",
+    "noIssuesFound": "Saugos problemų nerasta",
+    "openProductImage": "Atidaryti {{title}} vaizdą",
+    "overallMatch": "Bendras atitikimas",
+    "overallMatchShort": "{{count}}% bendras",
+    "potentialRisk": "Galima saugos rizika",
+    "primaryRiskFocus": "Pagrindinis rizikos fokusas: {{category}} {{level}} lygiu. Pirmiausia tai patvirtinkite, prieš priimdami sprendimą.",
+    "productImagesUsed": "Produkto vaizdai: {{used}} / {{provided}}",
+    "reviewLayout": {
+      "actionNeeded": "Reikia veiksmų",
+      "compareHeading": "Palyginkite produktus",
+      "compareHint": "Prieš priimdami sprendimą, patikrinkite nuotraukas, prekės ženklą, modelį ir kategoriją.",
+      "decisionHeading": "Įrašykite savo sprendimą",
+      "decisionPrompt": "Pasirinkite peržiūros rezultatą. Galite pridėti pastabą apie tai, ką patikrinote.",
+      "fullEvidence": "Visi „Safety Gate“ įrodymai ({{count}})",
+      "groupHelp": {
+        "action": "Uždarykite radinį, pašalinę produktą iš prekybos arba atnaujinę jį „Shopify“.",
+        "different": "Uždarykite arba atmeskite radinį, nes jūsų produktas yra kitokio modelio, prekės ženklo ar partijos.",
+        "information": "Palikite radinį atvirą, kol prašote iš tiekėjo partijos, modelio ar saugos dokumentų.",
+        "other": "Įrašykite kitą rezultatą su privaloma paaiškinamąja pastaba jūsų audito sekai."
+      },
+      "chooseOutcome": "Pasirinkite rezultatą",
+      "identifiers": {
+        "barcode": "Brūkšninis kodas (GTIN/EAN)",
+        "batch": "Partija / Serija",
+        "brand": "Prekės ženklas",
+        "field": "Identifikatorius",
+        "match": "Atitikimas",
+        "mismatch": " neatitikimas",
+        "model": "Modelis",
+        "notSpecified": "nenurodyta",
+        "result": "Palyginimas",
+        "safetyGate": "„Safety Gate“ įspėjimas",
+        "yourProduct": "Jūsų „Shopify“ produktas"
+      },
+      "identifiersHeading": "Identifikatorių palyginimas vienas šalia kito",
+      "languageDiffNote": "Programos sąsajos kalba ({{appLang}}) ir el. pašto pranešimų kalba ({{emailLang}}) nustatomos nepriklausomai.",
+      "noImage": "Nėra vaizdo",
+      "noteLabel": "Ką patikrinote? (neprivaloma)",
+      "noteRequiredLabel": "Ką patikrinote? (privaloma)",
+      "otherNoteRequired": "Pridėkite pastabą, kad paaiškintumėte kitą rezultatą.",
+      "outcomeLabel": "Peržiūros rezultatas",
+      "possibleMatch": "Galimas „Safety Gate“ atitikimas",
+      "readyToRecord": "Paruošta įrašyti",
+      "reviewPointsHeading": "Peržiūros punktai",
+      "unnamedRecord": "„Safety Gate“ įrašas"
+    },
+    "riskDescription": "Rizikos aprašymas",
+    "riskLevel": "Rizikos lygis",
+    "riskSeverity": "Rizikos sunkumas",
+    "safetyGateMatches": "„Safety Gate“ atitikimai",
+    "scoreHelper": "Bendras atitikimas yra galutinis peržiūros balas. Vaizdo atitikimas atspindi tik pakuotės panašumą.",
+    "sections": {
+      "whatHappened": "Kas nutiko?",
+      "whatHappenedReviewed": "Šis atitikimas jau buvo peržiūrėtas ir įrašytas.",
+      "whatHappenedRisk": "Šis „Shopify“ produktas atrodo kaip produktas, jau praneštas „Safety Gate“.",
+      "whatHappenedSafe": "Naujausias patikrinimas nerado tikėtino „Safety Gate“ atitikimo.",
+      "whatToDo": "Ką turėčiau daryti?",
+      "whyMatched": "Kodėl atitiko"
+    },
+    "seriousRisk": "Rimta {{category}} rizika",
+    "summary": {
+      "confidence": "Pasitikėjimas",
+      "confidenceUnknown": "Pasitikėjimas nežinomas",
+      "decisionRecorded": "Sprendimas įrašytas",
+      "decisionRequired": "Reikalingas sprendimas",
+      "highConfidence": "Didelis pasitikėjimas",
+      "likelyMatch": "Tikėtinas atitikimas",
+      "likelySafetyGateMatch": "Tikėtinas „Safety Gate“ atitikimas",
+      "matchType": "Atitikimo tipas",
+      "nextStep": "Kitas žingsnis",
+      "noLikelyMatch": "Nėra tikėtino atitikimo",
+      "overallMatch": "Bendras balas",
+      "reviewRecommended": "Rekomenduojama peržiūra"
+    },
+    "supplierFollowUp": {
+      "copy": "Kopijuoti tiekėjo tolesnius veiksmus",
+      "template": "Sveiki, peržiūrime {{product}}, nes jis gali atitikti „Safety Gate“ įspėjimą {{alert}} (rizika: {{risk}}). Prašome patvirtinti, ar tai tas pats modelis/partija, pateikti produkto saugos dokumentaciją ir paaiškinti visus skirtumus. Atitikimo priežastis: {{reason}}"
+    },
+    "technicalDetails": {
+      "description": "Balai ir paieškos skaičiai saugomi čia gilesnei peržiūrai. Pradėkite nuo produkto nuotraukų, prekės ženklo, modelio ir aukščiau pateikto rekomenduojamo veiksmo.",
+      "hide": "Slėpti detales",
+      "show": "Rodyti detales",
+      "title": "Techninės atitikimo detalės"
+    },
+    "textOnly": "Tik teksto patikrinimas",
+    "viewOnSafetyGate": "Peržiūrėti „Safety Gate“",
+    "whyThisMatched": "Kodėl tai atitiko",
+    "withImage": "Patikrinta su vaizdais",
+    "yourProduct": "Jūsų „Shopify“ produktas"
+  },
+  "auditReport": {
+    "decision": "Sprendimas",
+    "description": "Peržiūrėkite visą įrašą prieš eksportuodami CSV savo komandai, tiekėjui ar auditui.",
+    "detected": "Aptikta",
+    "documented": "Sprendimai dokumentuoti",
+    "download": "Atsisiųsti CSV",
+    "empty": "Dar nebuvo įrašyta jokių produktų saugos išvadų.",
+    "eyebrow": "Paruošta eksportuoti",
+    "generated": "Sugeneruota {{date}}",
+    "heading": "Išvados ir sprendimai",
+    "needsReview": "Reikia peržiūrėti",
+    "notRecorded": "Neįrašyta",
+    "open": "Atidaryti audito ataskaitą",
+    "product": "Produktas",
+    "risk": "Rizikos sunkumas",
+    "status": "Būsena",
+    "summaryLabel": "Audito ataskaitos santrauka",
+    "tableLabel": "Saugos audito ataskaita",
+    "title": "Saugos audito ataskaita",
+    "total": "Įrašytos išvados",
+    "viewHistory": "Peržiūrėti audito seką"
+  },
+  "billing": {
+    "freeScanAvailableDescription": "Turite 1 nemokamą katalogo nuskaitymą. Atlikite pirmąjį auditą, kad patikrintumėte savo parduotuvės produktus pagal ES „Safety Gate“ pavojingų ne maisto produktų duomenų bazę.",
+    "freeScanAvailableHeading": "Nemokamas pradinis katalogo nuskaitymas aktyvus",
+    "managePlanButton": "Tvarkyti prenumeratą",
+    "planActiveDescription": "Šiai „Shopify“ parduotuvei įjungtas stebėjimas. Peržiūrėkite naujausią paleidimą ir visus produktus, kuriems reikia dėmesio.",
+    "planEyebrow": "Planas ir aprėptis",
+    "planFreeAvailableDescription": "Galimas vienas nemokamas pradinis „Safety Gate“ katalogo nuskaitymas.",
+    "planFreeUsedDescription": "Jūsų nemokamas pradinis nuskaitymas baigtas. Pasirinkite planą, kad pradėtumėte nuolatinį stebėjimą ir toliau eksportuotumėte audito seką.",
+    "planTitle": "Prenumerata ir saugos stebėjimas",
+    "pricingUnavailable": "„Shopify“ kainodara šiai programai nesukonfigūruota.",
+    "statusActivePro": "„ZeroRecall Pro“ (aktyvus)",
+    "statusDevelopmentBypass": "Kūrimo peržiūra (aplenkiant atsiskaitymą)",
+    "statusFreeAvailable": "Nemokamas pradinis nuskaitymas",
+    "statusFreeUsed": "Nemokamas nuskaitymas panaudotas",
+    "statusLabel": "Dabartinis planas",
+    "statusUnverified": "Prenumeratos patvirtinti nepavyko",
+    "upgradePlanButton": "Atnaujinti į „Pro“",
+    "upgradeRequiredDescription": "Jūsų nemokamas pradinis nuskaitymas baigtas. Pasirinkite „Shopify“ planą, kad stebėtumėte naujus „Safety Gate“ įspėjimus ir tikrintumėte pakeistus produktus.",
+    "upgradeRequiredHeading": "Tęsti „Safety Gate“ stebėjimą",
+    "verificationError": "Nauji nuskaitymai pristabdyti, kol bus patikrintas „Shopify“ atsiskaitymas. Jūsų esami radiniai ir sprendimai lieka prieinami."
+  },
+  "billingRedirect": {
+    "opening": "Atidaromi „Shopify“ kainodaros planai...",
+    "openPricingPlans": "Atidaryti kainodaros planus"
+  },
+  "common": {
+    "all": "Visi",
+    "cancel": "Atšaukti",
+    "close": "Uždaryti",
+    "confirm": "Patvirtinti",
+    "language": "Kalba",
+    "loading": "Įkeliama...",
+    "unknown": "Nežinoma"
+  },
+  "dashboard": {
+    "activeAlertsBanner": {
+      "content": "Išspręskite {{count}} aktyvų įspėjimą, kad paveikti produktai liktų prieinami jūsų parduotuvėje.",
+      "content_few": "Išspręskite {{count}} aktyvius įspėjimus, kad paveikti produktai liktų prieinami jūsų parduotuvėje.",
+      "content_many": "Išspręskite {{count}} aktyvių įspėjimų, kad paveikti produktai liktų prieinami jūsų parduotuvėje.",
+      "content_one": "Išspręskite {{count}} aktyvų įspėjimą, kad paveikti produktai liktų prieinami jūsų parduotuvėje.",
+      "content_other": "Išspręskite {{count}} aktyvių įspėjimų, kad paveikti produktai liktų prieinami jūsų parduotuvėje.",
+      "content_plural": "Išspręskite {{count}} aktyvių įspėjimų, kad paveikti produktai liktų prieinami jūsų parduotuvėje.",
+      "manualCheckAction": "Rankinis patikrinimas",
+      "reviewAction": "Peržiūrėti pirmąjį įspėjimą",
+      "title": "Aktyviems saugos įspėjimams reikia dėmesio"
+    },
+    "admin": {
+      "actionNeeded": "Reikia veiksmų",
+      "actionNeededDescription": "Pirmiausia peržiūrėkite pažymėtus produktus, kad galėtumėte nuspręsti, ar juos palikti pardavime, atmesti atitikimą, ar išspręsti įspėjimą.",
+      "actionNeededTitle": "{{count}} aktyviam įspėjimui reikia peržiūros",
+      "actionNeededTitle_few": "{{count}} aktyviems įspėjimams reikia peržiūros",
+      "actionNeededTitle_many": "{{count}} aktyvių įspėjimų reikia peržiūros",
+      "actionNeededTitle_one": "{{count}} aktyviam įspėjimui reikia peržiūros",
+      "actionNeededTitle_other": "{{count}} aktyvių įspėjimų reikia peržiūros",
+      "actionNeededTitle_plural": "{{count}} aktyvių įspėjimų reikia peržiūros",
+      "activeAlertsDescription": "Produktai, kuriems vis dar reikia prekybininko sprendimo, kol eilė bus išvalyta.",
+      "auditHistoryKept": "Audito istorija išsaugota",
+      "auditReady": "Ataskaita paruošta",
+      "auditRecordsDescription": "Išspręsti ir atmesti sprendimai su priežastimis ir vidinėmis pastabomis.",
+      "auditRecordsTitle": "Audito įrašai",
+      "auditReport": "Audito ataskaita",
+      "automaticChecks": "Automatiniai patikrinimai",
+      "bulkCheckAllSummary": "Tai atliks visą {{count}} produktų patikrinimą.",
+      "bulkCheckDescription": "Pirmiausia nuskaitykite nepatikrintus produktus arba įtraukite visą katalogą, kai norite naujo patikrinimo.",
+      "bulkCheckSummary": "Masinio patikrinimo suvestinė",
+      "bulkCheckSummaryDescription": "Šią suvestinę laikykite kompaktiška, kad prekybininkai galėtų patvirtinti rezultatus neatidarydami antrojo ekrano.",
+      "bulkCheckTitle": "Masinis katalogo patikrinimas",
+      "bulkCheckUncheckedSummary": "Tai patikrins {{count}} likusius produktus ir praleis {{skip}} jau peržiūrėtus elementus.",
+      "catalogCoverageDescription": "Katalogo dalis, jau patikrinta pagal „Safety Gate“.",
+      "catalogCoverageTitle": "Katalogo aprėptis",
+      "coverage": "Aprėptis",
+      "coveragePercent": "Katalogas su išsaugotais patikrinimais",
+      "criticalBannerDescription": "{{count}} aktyvus atitikimas pažymėtas kaip didelės arba rimtos rizikos. Prioritetą teikite šiems produktams prieš tęsiant naujus pardavimus.",
+      "criticalBannerDescription_few": "{{count}} aktyvūs atitikimai pažymėti kaip didelės arba rimtos rizikos. Prioritetą teikite šiems produktams prieš tęsiant naujus pardavimus.",
+      "criticalBannerDescription_many": "{{count}} aktyvių atitikimų pažymėti kaip didelės arba rimtos rizikos. Prioritetą teikite šiems produktams prieš tęsiant naujus pardavimus.",
+      "criticalBannerDescription_one": "{{count}} aktyvus atitikimas pažymėtas kaip didelės arba rimtos rizikos. Prioritetą teikite šiems produktams prieš tęsiant naujus pardavimus.",
+      "criticalBannerDescription_other": "{{count}} aktyvių atitikimų pažymėti kaip didelės arba rimtos rizikos. Prioritetą teikite šiems produktams prieš tęsiant naujus pardavimus.",
+      "criticalBannerDescription_plural": "{{count}} aktyvių atitikimų pažymėti kaip didelės arba rimtos rizikos. Prioritetą teikite šiems produktams prieš tęsiant naujus pardavimus.",
+      "criticalBannerTitle": "{{count}} aktyvus įspėjimas apima didelės rizikos atitikimus",
+      "criticalBannerTitle_few": "{{count}} aktyvūs įspėjimai apima didelės rizikos atitikimus",
+      "criticalBannerTitle_many": "{{count}} aktyvių įspėjimų apima didelės rizikos atitikimus",
+      "criticalBannerTitle_one": "{{count}} aktyvus įspėjimas apima didelės rizikos atitikimus",
+      "criticalBannerTitle_other": "{{count}} aktyvių įspėjimų apima didelės rizikos atitikimus",
+      "criticalBannerTitle_plural": "{{count}} aktyvių įspėjimų apima didelės rizikos atitikimus",
+      "daily": "Kasdien",
+      "dailyAtTime": "Kasdien 03:47 Europos / Bratislavos laiku",
+      "dailyAtTimePlanned": "Suplanuota (kasdien 03:47)",
+      "decisionsClosed": "Sprendimai uždaryti",
+      "demoAlert": {
+        "action": "Išspręskite, atmeskite arba susisiekite su tiekėju",
+        "badge": "Pavyzdinis darbo procesas",
+        "description": "Programa rodo „Shopify“ produktą, „Safety Gate“ įrašą, kodėl jis atitiko, ir veiksmą, kurį reikia įrašyti.",
+        "evidence": "Laikykite užrašus ir eksportuokite audito ataskaitą",
+        "reason": "Palyginkite prekės ženklą, modelį, kategoriją ir produkto nuotraukas",
+        "sample": "Ką prekybininkai mato, kai atsiranda atitikimas",
+        "title": "Tikėtinas „Safety Gate“ atitikimas rastas"
+      },
+      "emptyProofCoverage": "{{count}} produktai turi įrašytą patikrinimo rezultatą.",
+      "emptyProofEvidence": "{{count}} uždaryti sprendimai saugomi audito istorijai.",
+      "emptyProofMonitoring": "Kasdienis „Safety Gate“ stebėjimas vis dar vykdomas.",
+      "exportProof": "Eksportuoti įrodymus",
+      "fallbackAlertDescription": "Atitiko „Safety Gate“ įspėjimą.",
+      "finishCoverage": "Užbaigti katalogo aprėptį",
+      "highRiskMatchesDescription": "Rimti arba didelės rizikos „Safety Gate“ atitikimai, kuriuos reikia peržiūrėti pirmiausia.",
+      "highRiskMatchesTitle": "Didelės rizikos atitikimai",
+      "checkChangedProducts": "Patikrinti pakeistus produktus",
+      "checksCompletedDescription": "Automatiniai ir rankiniai patikrinimai, kurie sumažina rankinio katalogo peržiūros darbą.",
+      "checksCompletedTitle": "Patikrinimai baigti",
+      "lastMonitoringRunDescription": "Naujausias automatinis, rankinis arba masinis „Safety Gate“ patikrinimas.",
+      "lastMonitoringRunTitle": "Paskutinis stebėjimo vykdymas",
+      "lastSafetyGateUpdateChecked": "Paskutinis patikrintas „Safety Gate“ atnaujinimas",
+      "latestRun": "Naujausias vykdymas",
+      "monitoringRunDateUnknown": "Laikas nepasiekiamas",
+      "monitoringRunHistoryEmpty": "Dar nebuvo įrašytas joks suplanuotas stebėjimo vykdymas.",
+      "monitoringRunHistoryTitle": "Naujausi stebėjimo vykdymo rezultatai",
+      "monitoringRunProgress": "{{products}} patikrinti produktai · {{alerts}} nauji įspėjimai",
+      "monitoringRunStatus": {
+        "completed": "Baigta",
+        "enqueue_failed": "Nepavyko paleisti",
+        "failed": "Nepavyko",
+        "processing": "Vykdoma",
+        "queued": "Eilėje",
+        "retrying": "Bandoma dar kartą",
+        "skipped_unentitled": "Planas neaktyvus",
+        "unknown": "Būsena nepasiekiama"
+      },
+      "monitoringRunsTitle": "Stebėjimo patikrinimai",
+      "monitoringStatusAllClear": "Katalogo stebėjimas veikia",
+      "monitoringStatusDescription": "„ZeroRecall“ tikrina jūsų katalogą pagal naujus ES „Safety Gate“ atnaujinimus, išskiria produktus, kuriuos reikia peržiūrėti, ir saugo įrodymus audito ataskaitoms.",
+      "monitoringStatusEyebrow": "Stebėjimo būsena",
+      "monitoringStatusNeedsReview": "{{count}} produktui reikia prekybininko sprendimo",
+      "monitoringStatusNeedsReview_few": "{{count}} produktams reikia prekybininko sprendimų",
+      "monitoringStatusNeedsReview_many": "{{count}} produktams reikia prekybininko sprendimų",
+      "monitoringStatusNeedsReview_one": "{{count}} produktui reikia prekybininko sprendimo",
+      "monitoringStatusNeedsReview_other": "{{count}} produktams reikia prekybininko sprendimų",
+      "monitoringStatusNeedsReview_plural": "{{count}} produktams reikia prekybininko sprendimų",
+      "needsReviewTitle": "Produktų, kuriuos reikia peržiūrėti",
+      "nextAutomaticCheck": "Kitas automatinis patikrinimas",
+      "noActiveAlertsDescription": "Jūsų naujausi patikrinimai šiuo metu nereikalauja veiksmų. Tęskite naujai pridėtų produktų nuskaitymą, kad išlaikytumėte aprėptį.",
+      "noActiveAlertsTitle": "Nėra aktyvių saugos įspėjimų",
+      "noAlertsDescription": "Šiuo metu nėra atvirų produktų peržiūrų. Tai vis dar naudinga: kasdienis stebėjimas tęsiasi fone, o jūsų įrodymai lieka paruošti eksportui.",
+      "noAlertsTitle": "Nėra produktų, kuriuos reikia peržiūrėti",
+      "priorityQueue": "Sprendimų eilė",
+      "productsCoveredShort": "su įrašytu patikrinimo rezultatu",
+      "productsMonitored": "Patikrintos dabartinės produkto versijos",
+      "proofGridLabel": "Stebėjimo veikla",
+      "protectionDescription": "Skaičiai apibūdina programoje įrašytus rezultatus; jie nėra produkto saugos sertifikatas.",
+      "protectionEyebrow": "Jūsų stebėjimo įrašas",
+      "protectionTitle": "Peržiūrėkite naujausius patikrinimus ir prekybininkų sprendimus.",
+      "recentAlertsDescription": "Peržiūrėkite galimus „Safety Gate“ atitikmenis, įrašykite sprendimą ir saugokite įrodymus auditams.",
+      "recentAlertsTitle": "Produktų, kuriems reikia prekybininko sprendimo",
+      "recommendedAction": "Rekomenduojamas veiksmas: peržiūrėkite atitikmenį ir įrašykite sprendimą.",
+      "resolvedRateDescription": "Kiek užregistruotos įspėjimų veiklos jau buvo uždaryta.",
+      "resolvedRateTitle": "Išspręstų problemų rodiklis",
+      "results": {
+        "alertCreated": "Įspėjimas sukurtas",
+        "completed": "Baigta",
+        "error": "Klaida",
+        "checked": "Patikrinta",
+        "skipped": "Praleista"
+      },
+      "reviewOneProduct": "Patikrinti vieną produktą",
+      "riskInAlert": "Rizika, aprašyta „Safety Gate“ įspėjime",
+      "runBulkCheck": "Vykdyti masinį patikrinimą",
+      "stats": {
+        "alertsCreated": "Sukurti įspėjimai",
+        "alreadyChecked": "Jau patikrinta",
+        "errors": "Klaidos",
+        "checked": "Patikrinta",
+        "skipped": "Praleista",
+        "stillUnchecked": "Vis dar nepatikrinta",
+        "totalProducts": "Iš viso produktų"
+      },
+      "status": {
+        "cachedEvidence": "Pakartotinai naudojami talpykloje saugomi įrodymai",
+        "coverageIncomplete": {
+          "description": "Nėra „Safety Gate“ atitikmenų, kuriuos reikėtų peržiūrėti {{checked}} stebimuose produktuose. Užbaikite visų {{total}} dabartinių produktų aprėptį prieš patvirtindami visą katalogą.",
+          "eyebrow": "Nepilna aprėptis",
+          "title": "{{count}} produktui vis dar reikia aprėpties",
+          "title_few": "{{count}} produktams vis dar reikia aprėpties",
+          "title_many": "{{count}} produktams vis dar reikia aprėpties",
+          "title_one": "{{count}} produktui vis dar reikia aprėpties",
+          "title_other": "{{count}} produktams vis dar reikia aprėpties",
+          "title_plural": "{{count}} produktams vis dar reikia aprėpties"
+        },
+        "deltaMonitoring": "Tikrinami tik nauji „Safety Gate“ įspėjimai",
+        "factsLabel": "Dabartiniai stebėjimo faktai",
+        "matchesNeedingReview": "Atitikmenys, kuriuos reikia peržiūrėti",
+        "monitoringNotConfirmed": "Stebėjimas dar nepatvirtintas",
+        "monitoringProblem": {
+          "action": "Atnaujinti katalogo aprėptį",
+          "description": "Jūsų dabartiniai produktai turi aprėpties įrodymų, tačiau programa negali patvirtinti, kada paskutinį kartą buvo baigtas „Safety Gate“ stebėjimas. Atnaujinkite katalogo aprėptį, kad atkurtumėte patikimą būseną.",
+          "eyebrow": "Stebėjimui reikia dėmesio",
+          "title": "Katalogo aprėptis neturi įrašyto stebėjimo vykdymo"
+        },
+        "noActionNeeded": {
+          "action": "Peržiūrėti katalogo aprėptį",
+          "description": "Nė vienas jūsų stebimo katalogo produktas šiuo metu neatitinka ES „Safety Gate“ įspėjimų. Stebėjimas tęsiasi fone, o dirbti reikia tik su naujais įspėjimais arba pakeistais produktais.",
+          "emptyCatalogDescription": "Pridėkite produktų į savo „Shopify“ katalogą, ir „ZeroRecall“ bus pasirengusi juos apimti.",
+          "emptyCatalogTitle": "Dar nėra produktų, kuriuos būtų galima stebėti",
+          "eyebrow": "Dabartinė „Safety Gate“ būsena",
+          "title": "Veiksmų nereikia"
+        },
+        "none": "Nėra",
+        "reviewNeeded": {
+          "criticalDescription": "Peržiūrėkite šiuos galimus atitikmenis prieš tęsdami pardavimus. Palyginkite produktą ir „Safety Gate“ įrodymus, tada įrašykite savo sprendimą.",
+          "criticalEyebrow": "Skubi peržiūra",
+          "criticalTitle": "{{count}} galimas atitikmuo su rimtos rizikos įspėjimu, kurį reikia peržiūrėti",
+          "criticalTitle_few": "{{count}} galimi atitikmenys su rimtos rizikos įspėjimu, kuriuos reikia peržiūrėti",
+          "criticalTitle_many": "{{count}} galimi atitikmenys su didelės rizikos įspėjimu reikalauja peržiūros",
+          "criticalTitle_one": "{{count}} galimas atitikmuo su didelės rizikos įspėjimu reikalauja peržiūros",
+          "criticalTitle_other": "{{count}} galimi atitikmenys su didelės rizikos įspėjimu reikalauja peržiūros",
+          "criticalTitle_plural": "{{count}} galimi atitikmenys su didelės rizikos įspėjimu reikalauja peržiūros",
+          "description": "Galimi „Safety Gate“ atitikmenys reikalauja prekybininko sprendimo. Pirmiausia peržiūrėkite atitikmenis; kitų produktų patikrinimo rezultatai lieka pasiekiami kataloge.",
+          "eyebrow": "Reikia peržiūrėti",
+          "title": "{{count}} galimas atitikmuo reikalauja peržiūros",
+          "title_few": "{{count}} galimi atitikmenys reikalauja peržiūros",
+          "title_many": "{{count}} galimi atitikmenys reikalauja peržiūros",
+          "title_one": "{{count}} galimas atitikmuo reikalauja peržiūros",
+          "title_other": "{{count}} galimi atitikmenys reikalauja peržiūros",
+          "title_plural": "{{count}} galimi atitikmenys reikalauja peržiūros"
+        },
+        "scheduledPlanned": "Suplanuotas vykdymas"
+      },
+      "storeStatus": "Parduotuvės būsena",
+      "valueMetrics": {
+        "decisionsRecorded": "Įrašyti sprendimai",
+        "evidenceRetained": "Sprendimai su įrodymais",
+        "checksRun": "Atlikti patikrinimai",
+        "openDecisions": "Neišspręsti sprendimai",
+        "productsCovered": "Patikrinti produktai"
+      },
+      "valueProofDescription": "Parodykite komandai, kad prenumerata nėra vienkartinis nuskaitymas: katalogo aprėptis, patikrinimai, sprendimai ir tik skaitymo prieiga prie „Shopify“ išlieka aktyvūs.",
+      "valueProofDescriptionComplete": "Šie skaičiai rodo įrašytą patikrinimo veiklą dabartiniam katalogui.",
+      "valueProofDescriptionIncomplete": "Paleiskite likusių produktų patikrinimus, kad pridėtumėte rezultatus prie dabartinio katalogo įrašo.",
+      "valueProofEyebrow": "Aprėpties veiksmas",
+      "valueProofTitle": "Ką „ZeroRecall“ toliau daro",
+      "valueProofTitleComplete": "Kiekvienas dabartinis produktas turi įrašytą patikrinimą",
+      "valueProofTitleIncomplete": "{{count}} produktai turi įrašytą patikrinimą",
+      "warningBannerDescription": "Peržiūrėkite šiuos atitikmenis, atmeskite klaidingus teigiamus rezultatus arba išspręskite patvirtintas problemas, kad eilė išliktų veiksminga.",
+      "warningBannerTitle": "{{count}} aktyvus įspėjimas reikalauja prekybininko sprendimo",
+      "warningBannerTitle_few": "{{count}} aktyvūs įspėjimai reikalauja prekybininkų sprendimų",
+      "warningBannerTitle_many": "{{count}} aktyvūs įspėjimai reikalauja prekybininkų sprendimų",
+      "warningBannerTitle_one": "{{count}} aktyvus įspėjimas reikalauja prekybininko sprendimo",
+      "warningBannerTitle_other": "{{count}} aktyvūs įspėjimai reikalauja prekybininkų sprendimų",
+      "warningBannerTitle_plural": "{{count}} aktyvūs įspėjimai reikalauja prekybininkų sprendimų",
+      "withReadOnlyShopifyAccess": "Tik skaitymo prieiga prie „Shopify“"
+    },
+    "bulkCheck": {
+      "action": "Patikrinti visus produktus",
+      "alerts": "Įspėjimai {{count}}",
+      "alreadyChecked": "Jau patikrinta",
+      "completed": "Atlikta per {{seconds}} sekundes",
+      "description": "Nuskaitykite kiekvieną savo parduotuvės produktą „Safety Gate“ duomenų bazėje, kad aptiktumėte paslėptas rizikas.",
+      "errors": "Klaidos {{count}}",
+      "checked": "Patikrinta {{count}}",
+      "includeAlreadyChecked": "Įtraukti jau patikrintus produktus",
+      "notYetChecked": "Dar nepatikrinta",
+      "processed": "Apdorota {{count}}",
+      "started": "Pradėta {{date}}",
+      "title": "Masinis saugos patikrinimas",
+      "totalProducts": "Iš viso produktų",
+      "willCheckAll": "Bus patikrinti visi {{count}} produktai",
+      "willCheckUnchecked": "Bus patikrinti {{count}} nepatikrinti produktai (praleisti {{skip}} jau patikrintus)"
+    },
+    "bulkResults": {
+      "success": "Masinis patikrinimas baigtas: apdorota {{processed}}, patikrinta {{checked}}, sukurta {{alertsCreated}} įspėjimų."
+    },
+    "howItWorks": {
+      "alertGeneration": {
+        "description": "Atitikmenys generuoja įspėjimus, kuriuos galite atmesti arba išspręsti, kad stebėtumėte atitiktį.",
+        "title": "Įspėjimų generavimas"
+      },
+      "autoMonitoring": {
+        "description": "Produktai tikrinami pagal ES duomenų bazę kiekvieną kartą, kai jie sukuriami ar atnaujinami.",
+        "title": "Automatinis stebėjimas"
+      },
+      "title": "Kaip tai veikia"
+    },
+    "liveScan": {
+      "completed": "Atlikta",
+      "description": "Importuojamas jūsų katalogas iš „Shopify“ ir nuskaitomi produktai pagal daugiau nei 35 000 įrašų oficialioje ES „Safety Gate“ (RAPEX) duomenų bazėje. Rezultatai netrukus pasirodys žemiau.",
+      "eyebrow": "Automatinis saugos auditas",
+      "failedDescription": "Nepavyko užbaigti šio audito. Jūsų katalogas nebuvo pažymėtas kaip visiškai patikrintas. Paleiskite nuskaitymą iš naujo arba susisiekite su palaikymo komanda, jei problema kartojasi.",
+      "failedHeading": "Katalogo auditui reikia dar vieno bandymo",
+      "heading": "Vykdomas nemokamas katalogo saugos auditas...",
+      "inProgress": "Vykdoma...",
+      "pending": "Laukiama",
+      "progress": "Importuota {{imported}} iš {{fetched}} produktų; palyginta {{scanned}} produktų su {{alerts}} „Safety Gate“ įspėjimais iki šiol.",
+      "stepAudit": "3. Paruoškite GPSR audito seką ir atitikties būseną",
+      "stepImport": "1. Importuoti produktus iš „Shopify“",
+      "stepScan": "2. Palyginti su „Safety Gate“ duomenų baze (daugiau nei 35 000 įrašų)"
+    },
+    "metricsCard": {
+      "activeAlertsHeading": "Aktyvūs įspėjimai",
+      "productsCheckedHeading": "Patikrinti produktai",
+      "resolutionHeading": "Sprendimo rodiklis",
+      "resolved": "Išspręsta: {{count}}",
+      "resolvedAndDismissed": "Išspręsta: {{resolved}} • Atmesta: {{dismissed}}",
+      "scans": "„Safety Gate“ nuskaitymai",
+      "totalRecorded": "Iš viso įrašyta: {{count}}"
+    },
+    "monitorCard": {
+      "description": "Stebėkite įspėjimus, vykdykite katalogo patikrinimus ir išlaikykite reguliuotojų pasitenkinimą.",
+      "reviewAction": "Peržiūrėti įspėjimus",
+      "title": "Stebėkite produktų saugumą iš pirmo žvilgsnio"
+    },
+    "quickActions": {
+      "browsePortal": "Naršyti „Safety Gate“ portalą",
+      "description": "Reguliarūs patikrinimai ir dokumentacija padeda įrodyti deramą kruopštumą reguliuotojams.",
+      "manualCheck": "Atlikti rankinį patikrinimą",
+      "title": "Greiti veiksmai"
+    },
+    "recentAlerts": {
+      "active": "{{count}} aktyvus",
+      "allResolved": "Visi išspręsti",
+      "description": "Ištirkite naujausius „Safety Gate“ atitikmenis prieš vykdydami užsakymus.",
+      "emptyState": {
+        "content": "Puikios naujienos – šiuo metu jokie produktai nėra pažymėti. Tęskite stebėjimą, kad išlaikytumėte atitiktį.",
+        "heading": "Kol kas nėra saugos įspėjimų"
+      },
+      "matchCount": "Rastas {{count}} atitikmuo",
+      "matchCount_few": "Rasti {{count}} atitikmenys",
+      "matchCount_many": "Rasti {{count}} atitikmenys",
+      "matchCount_one": "Rastas {{count}} atitikmuo",
+      "matchCount_other": "Rasti {{count}} atitikmenys",
+      "matchCount_plural": "Rasti {{count}} atitikmenys",
+      "title": "Naujausi saugos įspėjimai"
+    },
+    "safetyBreakdown": {
+      "actionDesc": "Rasti atitikmenys su ES „Safety Gate“ ataskaitomis, kuriuos reikia peržiūrėti ir išspręsti.",
+      "actionLabel": "Reikia veiksmų",
+      "description": "Jūsų produktų katalogo patikros, atliekamos pagal Europos saugos sąrašus ir GPSR direktyvą, apžvalga.",
+      "eyebrow": "Katalogo apsaugos būsena",
+      "protectedDesc": "Produktai, kurių naujausia patikra nerado tikėtino atitikimo.",
+      "protectedLabel": "Patikrinti produktai be atvirų radinių",
+      "protectRemainingAction": "Patikrinti likusius ({{count}})",
+      "reviewAlertsAction": "Peržiūrėti įspėjimus",
+      "scanAllAction": "Vykdyti viso katalogo auditą",
+      "title": "Produkto saugos būsena",
+      "unprotectedAllCovered": "Kiekvienas dabartinis produktas turi įrašytą patikros rezultatą.",
+      "unprotectedDesc": "Produktai, kuriems nebuvo atlikta „Safety Gate“ patikra.",
+      "unprotectedLabel": "Dar nepatikrinta"
+    },
+    "setup": {
+      "description": "Paruoškite savo parduotuvę ES produktų saugos atitikčiai.",
+      "progress": "Atlikta {{completed}} iš {{total}} žingsnių",
+      "steps": {
+        "step1": {
+          "description": "Spustelėkite „Patikrinti visus produktus“, kad nuskaitytumėte visą savo katalogą pagal ES „Safety Gate“ duomenų bazę.",
+          "label": "Atlikite pirmąjį masinį produktų patikrinimą"
+        },
+        "step2": {
+          "description": "Patikrinkite įspėjimų puslapį, kad peržiūrėtumėte visus produktus, kurie atitinka „Safety Gate“ įspėjimus.",
+          "label": "Peržiūrėkite visus saugos įspėjimus"
+        },
+        "step3": {
+          "description": "Nustatymuose įjunkite automatinius patikrinimus, kad nauji produktai būtų stebimi automatiškai.",
+          "label": "Konfigūruoti automatinį stebėjimą"
+        }
+      },
+      "title": "Sąrankos vadovas"
+    },
+    "stats": {
+      "actionNeeded": "Reikia veiksmų",
+      "activeAlerts": "Aktyvūs įspėjimai",
+      "alertsLogged": "Užregistruoti įspėjimai",
+      "allClear": "Viskas gerai",
+      "autoMonitoring": "Automatinis stebėjimas",
+      "descriptions": {
+        "activeAlerts": "Peržiūrėkite šiuos produktus šiandien, kad išliktumėte atitinkantys reikalavimus.",
+        "activeAlertsZero": "Visos saugos problemos išspręstos.",
+        "alertsLogged": "Apima išspręstus ir atmestus įspėjimus audito sekai.",
+        "alertsLoggedZero": "Nėra istorinių įspėjimų. Tęskite naujų produktų stebėjimą.",
+        "productsChecked": "Automatiniai „Shopify“ įvykiai toliau stebi atnaujinimus.",
+        "productsCheckedZero": "Paleiskite masinį patikrinimą, kad nuskaitytumėte dabartinį katalogą."
+      },
+      "newSetup": "Nauja sąranka",
+      "open": "{{count}} atidaryta",
+      "productsChecked": "Patikrinti produktai",
+      "resolved": "Išspręsta: {{count}}"
+    },
+    "title": "ZeroRecall"
+  },
+  "dates": {
+    "daysAgo": "Prieš {{count}} dienų",
+    "today": "Šiandien",
+    "weeksAgo": "Prieš {{count}} savaites",
+    "yesterday": "Vakar"
+  },
+  "errors": {
+    "apiError": "Išorinė saugos tarnyba laikinai nepasiekiama. Bandykite dar kartą vėliau.",
+    "pageLoadFailed": "Puslapio įkėlimas nepavyko",
+    "unknown": "Kažkas nutiko ne taip"
+  },
+  "evidence": {
+    "alertNumber": "„Safety Gate“ įspėjimas Nr. {{number}}",
+    "description": "Peržiūrėkite įrašytus produktų saugos sprendimus, pastabas, rizikos kontekstą ir tiekėjo tolesnių veiksmų įrodymus.",
+    "empty": "Dar nebuvo įrašyta jokių produktų saugos sprendimų.",
+    "eyebrow": "Audito seka",
+    "filteredRecords": "{{visible}} iš {{total}} įrašų",
+    "filters": {
+      "collapseForProduct": "Slėpti visus įrodymus apie {{title}}",
+      "expandForProduct": "Rodyti visus įrodymus apie {{title}}",
+      "noResults": "Nėra audito įrašų, atitinkančių šiuos filtrus.",
+      "searchLabel": "Ieškoti audito sekoje",
+      "searchPlaceholder": "Ieškoti produkto, įspėjimo numerio ar įrodymų",
+      "showLess": "Slėpti įrodymus",
+      "showMore": "Rodyti įrodymus",
+      "statusLabel": "Sprendimo būsena"
+    },
+    "fullEvidence": "Visi įrodymai",
+    "heading": "Sprendimų ir įrodymų istorija",
+    "noNotes": "Pastaba neįrašyta",
+    "records": "{{count}} įrašų",
+    "table": {
+      "accessibilityLabel": "Produktų saugos įrodymų lentelė",
+      "decision": "Sprendimas",
+      "details": "Išsami informacija",
+      "notes": "Pastabos / įrodymai",
+      "product": "Produktas",
+      "status": "Būsena",
+      "summary": "Įrodymų santrauka",
+      "updated": "Atnaujinta"
+    },
+    "title": "Audito seka"
+  },
+  "experience": {
+    "delayed": "Stebėjimui reikia dėmesio – paskutinis atliktas paleidimas yra senesnis nei 48 valandos",
+    "pausedHelp": "Automatiniai patikrinimai pristabdyti. Pasirinkite planą, kad patikrintumėte naujus „Safety Gate“ įspėjimus ir produktų pakeitimus, kol „Shopify“ uždaryta.",
+    "previewHelp": "Atidarius šią kūrimo peržiūrą, foninis stebėjimas neaktyvuojamas. Suplanuoti patikrinimai reikalauja patvirtinto aktyvaus „Shopify“ plano.",
+    "reviewSteps": "1. Palyginkite nuotraukas ir identifikatorius → 2. Pasirinkite peržiūros rezultatą → 3. Įrašykite savo sprendimą",
+    "valueBody": "Kasdieniai naujų „Safety Gate“ įspėjimų patikrinimai, patikrinimai pasikeitus produktams, el. pašto pranešimai, kai įjungta, ir išsaugoti peržiūros sprendimai.",
+    "valueTitle": "Ką suteikia nuolatinis stebėjimas"
+  },
+  "manualCheck": {
+    "admin": {
+      "catalog": "Katalogas",
+      "catalogDescription": "Produktai rūšiuojami pagal naujausius „Shopify“ atnaujinimus, kad prekybininkai pirmiausia galėtų iš naujo patikrinti naujausius pakeitimus.",
+      "checkFailed": "Patikrinimas nepavyko",
+      "manualReview": "Peržiūra pagal pareikalavimą",
+      "manualReviewDescription": "Pasirinkite bet kurį produktą iš savo katalogo ir atlikite tikslinį „Safety Gate“ patikrinimą, kai jums reikia nedelsiamo atsakymo.",
+      "productFlagged": "Produktas pažymėtas"
+    },
+    "badges": {
+      "flagged": "{{count}} pažymėta",
+      "checks": "{{count}} patikrinimų",
+      "needsReview": "{{count}} reikia peržiūrėti"
+    },
+    "banners": {
+      "alertDescription": "Šiam produktui rasta galima saugos problema.",
+      "alertHeading": "Saugos įspėjimas sukurtas",
+      "failedHeading": "Patikrinimas nepavyko",
+      "textOnlyDescription": "Šis rezultatas naudojo tik teksto laukus. Jei produktas priklauso nuo vizualinių skirtumų, atidžiau peržiūrėkite atitikimą.",
+      "textOnlyHeading": "Vaizdo palyginimas nebuvo galimas"
+    },
+    "breadcrumbs": {
+      "current": "Katalogo aprėptis",
+      "dashboard": "Prietaisų skydelis"
+    },
+    "bulk": {
+      "description": "Peržiūrėkite išsaugotus patikrinimus ir atlikite naują „Safety Gate“ palyginimą su produktais jūsų dabartiniame kataloge.",
+      "checkAllProducts": "Patikrinti likusius produktus",
+      "checkingAll": "Tikrinamas katalogas...",
+      "title": "Patikrinkite savo katalogą"
+    },
+    "catalogue": {
+      "accessibilityLabel": "Produktų katalogo lentelė",
+      "actions": {
+        "checkAgain": "Patikrinti dar kartą",
+        "checkAgainForProduct": "Patikrinti „{{title}}“ dar kartą",
+        "checkSafety": "Patikrinti saugumą",
+        "checkSafetyForProduct": "Patikrinti „{{title}}“ saugumą",
+        "viewForProduct": "Peržiūrėti įrašytą radinį dėl {{title}}"
+      },
+      "columns": {
+        "action": "Veiksmas",
+        "checks": "Patikrinimai",
+        "product": "Produktas",
+        "status": "Būsena"
+      },
+      "emptyBody": "Nėra produktų, kuriuos būtų galima patikrinti.",
+      "emptyHeading": "Produktų nerasta",
+      "firstCheck": "Atlikite pirmąjį patikrinimą",
+      "heading": "Produktų katalogas ({{count}})",
+      "lastChecked": "Paskutinį kartą patikrinta {{date}}",
+      "noType": "Nėra tipo",
+      "searchLabel": "Rasti produktą",
+      "searchPlaceholder": "Ieškoti produktų pagal pavadinimą, SKU, tiekėją ar tipą",
+      "status": {
+        "notChecked": "Nepatikrinta",
+        "reviewed": "Peržiūrėta",
+        "safe": "Atitikmenų nerasta",
+        "unsafe": "Reikia peržiūros"
+      },
+      "totalChecks": "Iš viso {{count}}",
+      "unknownVendor": "Nežinomas tiekėjas"
+    },
+    "coverage": {
+      "completeDescription": "Kiekvienas dabartinis „Shopify“ produktas turi įrašytą „Safety Gate“ patikrinimą. Naujiems ar pakeistiems produktams vis dar reikia naujo patikrinimo.",
+      "completeTitle": "Kiekvienas dabartinis produktas turi išsaugotą patikrinimo rezultatą",
+      "eyebrow": "Katalogo patikrinimo būsena",
+      "incompleteDescription": "Patikrinkite likusius produktus, kad išsaugotumėte „Safety Gate“ rezultatą dabartiniam katalogui.",
+      "incompleteTitle": "{{count}} produktų dar neturi išsaugoto patikrinimo",
+      "lastProductNeedsReview": "Naujausias produkto patikrinimas sukūrė arba atnaujino peržiūros elementą.",
+      "lastProductSafe": "Naujausias produkto patikrinimas nerado tikėtino „Safety Gate“ atitikmens.",
+      "lastRun": "Paskutinis patikrinimas",
+      "lastRunResultWithCounts": "Patikrinta: {{checked}}, praleista nepakeistų: {{skipped}}, sukurta peržiūros elementų: {{alerts}}, klaidų: {{errors}}.",
+      "noneRemaining": "Kiekvienas dabartinis produktas turi išsaugotą patikrinimo rezultatą.",
+      "noRunYet": "Dar nebuvo atliktas joks katalogo ar produkto patikrinimas.",
+      "percent": "{{percent}}% su dabartiniu patikrinimu",
+      "productsCovered": "Patikrinti produktai",
+      "productsCoveredDescription": "Produktai su išsaugotu rezultatu dabartinei „Shopify“ versijai.",
+      "remaining": "Dar nepatikrinta",
+      "remainingDescription": "Atlikite patikrinimą, kad išsaugotumėte „Safety Gate“ rezultatą šiems produktams."
+    },
+    "filters": {
+      "all": "Visi ({{count}})",
+      "needsReview": "Galimas atitikmuo ({{count}})",
+      "safe": "Atitikmenų nerasta ({{count}})",
+      "unprotected": "Nepatikrinta arba pakeista ({{count}})"
+    },
+    "modal": {
+      "unknown": "Nežinoma",
+      "unknownProduct": "Nežinomas produktas"
+    },
+    "overview": {
+      "coverage": "{{coverage}}% padengimas",
+      "manualCompleted": "Rankiniai patikrinimai baigti",
+      "manualCompletedDescription": "Patikrinta {{checked}} iš {{total}} produktų",
+      "noOpenReviews": "Nėra atvirų produktų sprendimų.",
+      "noRisks": "Rizikų dar neaptikta.",
+      "prioritise": "Suteikite šiems produktams prioritetą veiksmams.",
+      "productsDescription": "Naujausi produktai iš jūsų parduotuvės.",
+      "productsFlagged": "Pažymėti produktai",
+      "productsInScope": "Produktai, įtraukti į sritį",
+      "productsNeedingReview": "Produktų, kuriuos reikia peržiūrėti",
+      "title": "Patikrinimų apžvalga"
+    },
+    "quickActions": {
+      "title": "Greiti veiksmai"
+    },
+    "subtitle": "Apsaugokite likusią katalogo dalį, atnaujinkite stebėjimą arba patikrinkite vieną pasirinktą produktą.",
+    "title": "Katalogo aprėptis",
+    "toasts": {
+      "completed": "Saugos patikrinimas baigtas",
+      "flagged": "Rasta galima saugos problema"
+    }
+  },
+  "nav": {
+    "catalogCoverage": "Katalogo aprėptis",
+    "dashboard": "Prietaisų skydelis",
+    "evidence": "Audito seka",
+    "manualCheck": "Katalogo aprėptis",
+    "safetyAlerts": "Peržiūros eilė",
+    "settings": "Nustatymai"
+  },
+  "news": {
+    "items": {
+      "databaseUpdate": {
+        "date": "2025 m. gruodis",
+        "description": "„Safety Gate“ duomenų bazė nuolat atnaujinama naujais produktų įspėjimais. Reguliariai atlikite patikrinimus, kad atitiktumėte reikalavimus.",
+        "title": "Atnaujinta ES „Safety Gate“ duomenų bazė"
+      },
+      "gpsr": {
+        "date": "GPSR 2024",
+        "description": "Sužinokite apie GPSR reikalavimus ir kaip užtikrinti, kad jūsų produktai atitiktų ES saugos standartus.",
+        "title": "Bendrasis produktų saugos reglamentas"
+      }
+    },
+    "title": "Naujienos"
+  },
+  "onboarding": {
+    "back": "Atgal",
+    "finishButton": "Baigti sąranką ir pereiti į prietaisų skydelį",
+    "nextStep": "Kitas žingsnis",
+    "stepIndicator": "{{current}} iš {{total}} žingsnis",
+    "steps": {
+      "automation": {
+        "description": "Konfigūruokite prioritetinę peržiūrą ir automatines saugos taisykles savo parduotuvei.",
+        "label": "Saugos automatizavimas",
+        "quarantine": {
+          "desc": "Automatiškai pažymėti produktus prioritetinei peržiūrai, kai jie atitinka „Safety Gate“ įspėjimus su didele rizika (slenkstis >= 95%).",
+          "label": "Įjungti prioritetinę peržiūrą",
+          "title": "Prioritetizuoti rimtas rizikas"
+        },
+        "title": "3 žingsnis: automatinis stebėjimas ir įspėjimai",
+        "webhooks": {
+          "desc": "Produktai automatiškai tikrinami pagal ES duomenų bazę, kai jie sukuriami arba atnaujinami.",
+          "title": "Realaus laiko „Webhook“ nuskaitymas"
+        }
+      },
+      "scan": {
+        "alerts": "Sukurti rizikos įspėjimai: {{count}}",
+        "complete": "Katalogas dabar stebimas",
+        "description": "Importuokite dabartinius „Shopify“ produktus į „Safety Gate“ stebėjimą, tada palyginkite katalogą su naujausiais „Safety Gate“ įspėjimais.",
+        "imported": "Importuoti produktai stebėjimui: {{count}}",
+        "label": "Katalogo importavimas",
+        "monitored": "Produktai, palyginti su „Safety Gate“ įspėjimais: {{count}}",
+        "scanned": "Nuskaityti produktai: {{count}}",
+        "scanning": "Importuojamas katalogas ir lyginami produktai su „Safety Gate“ įspėjimais...",
+        "startButton": "Importuoti ir stebėti dabartinį katalogą",
+        "title": "2 žingsnis: importuoti ir stebėti dabartinį katalogą",
+        "toScan": "Produktų, kuriuos reikia importuoti stebėjimui: {{count}}"
+      },
+      "sensitivity": {
+        "balanced": "70% (rekomenduojama – subalansuota)",
+        "broad": "40% (platus – daugiau įspėjimų)",
+        "calibration": {
+          "balancedDesc": "Standartinis jautrumas. Optimizuota pusiausvyra tarp tikslumo ir įspėjimų kiekio. Nuskaito pavadinimus, aprašymus ir atitinka pagrindinius prekės ženklus bei modelių struktūras.",
+          "balancedTitle": "Subalansuotas aptikimo režimas",
+          "broadDesc": "Didelis jautrumas. Aptinka laisvai susijusius atitikmenis. Rekomenduojama, jei parduodate didelės rizikos produktų kategorijas (žaislus, elektroniką) ir norite visiško padengimo, tačiau tikėkitės klaidingų teigiamų rezultatų.",
+          "broadTitle": "Platus aptikimo režimas",
+          "strictDesc": "Didelis tikslumas. Filtruoja nedidelius panašumus. Įspėjimai bus suaktyvinti tik esant labai aiškiems prekės ženklo / modelio pavadinimo atitikmenims. Mažas klaidingų įspėjimų skaičius.",
+          "strictTitle": "Griežtas aptikimo režimas"
+        },
+        "description": "Pasirinkite, kaip tiksliai produktas turėtų atitikti „Safety Gate“ įrašą, prieš jam reikės peržiūros.",
+        "label": "Atitikimo griežtumas",
+        "strict": "90% (Griežtas – mažiau įspėjimų)",
+        "thresholdLabel": "Atitikimo slenkstis: {{value}}%",
+        "title": "1 žingsnis: nustatykite atitikimo griežtumą"
+      }
+    },
+    "subtitle": "Raskite galimus pavojingų produktų atitikmenis, peržiūrėkite juos „Shopify“ ir saugokite audito įrodymus kiekvienam sprendimui.",
+    "title": "Stebėkite savo katalogą pagal ES „Safety Gate“",
+    "value": {
+      "audit": {
+        "description": "Išspręsti ir atmesti sprendimai saugo pastabas eksportui ir tiekėjo tolesniems veiksmams.",
+        "title": "Auditui paruošti įrodymai"
+      },
+      "monitor": {
+        "description": "Nauji „Safety Gate“ įspėjimai tikrinami pagal jūsų „Shopify“ katalogą.",
+        "title": "Kasdienis ES „Safety Gate“ stebėjimas"
+      },
+      "review": {
+        "description": "Palyginkite atitikmenį, nuspręskite, ką daryti, ir palaikykite eilę veiksmingą.",
+        "title": "Prekybininko sprendimų darbo eiga"
+      }
+    }
+  },
+  "pagination": {
+    "pageOf": "Puslapis {{current}} iš {{total}} ({{count}} įspėjimų)"
+  },
+  "portal": {
+    "description": "Pasiekite oficialią Europos „Safety Gate“ duomenų bazę, kad ieškotumėte pavojingų produktų ir peržiūrėtumėte išsamius saugos įspėjimus.",
+    "home": "„Safety Gate“ pagrindinis puslapis",
+    "homeDescription": "Pasiekite oficialų Europos Komisijos portalą",
+    "searchDatabase": "Ieškoti duomenų bazėje",
+    "searchDescription": "Ieškokite pavojingų produktų ES „Safety Gate“",
+    "title": "„Safety Gate“ portalas"
+  },
+  "resolveActions": {
+    "actionTaken": "Imtasi veiksmų",
+    "contactedSupplier": "Susisiekta su tiekėju (laukiamas atsakymas)",
+    "contactPending": "Laukiama tiekėjo atsakymo",
+    "falsePositive": "Klaidingai teigiamas",
+    "menuLabel": "Sprendimo veiksmai",
+    "modifiedProduct": "Produktas modifikuotas",
+    "noActionNeeded": "Veiksmų nereikia",
+    "notMyProduct": "Ne mano produktas",
+    "other": "Kita",
+    "removedFromSale": "Pašalinta iš prekybos",
+    "verifiedSafe": "Istorinis rezultatas: produktas patvirtintas saugiu"
+  },
+  "settings": {
+    "monitoring": {
+      "automatic": {
+        "description": "Produktai automatiškai tikrinami, kai sukuriami arba atnaujinami per „webhooks“.",
+        "enabled": "Įjungta",
+        "title": "Automatinis tikrinimas"
+      },
+      "manual": {
+        "description": "Vykdykite saugos patikrinimus pagal poreikį bet kuriam jūsų katalogo produktui.",
+        "goToManualCheck": "Eiti į rankinį patikrinimą",
+        "title": "Rankiniai patikrinimai"
+      },
+      "title": "Stebėjimas"
+    },
+    "navigation": {
+      "dashboard": "Prietaisų skydelis",
+      "manualCheck": "Rankinis patikrinimas",
+      "title": "Navigacija",
+      "viewAlerts": "Peržiūrėti įspėjimus"
+    },
+    "subtitle": "Valdykite, kaip „ZeroRecall“ stebi jūsų „Shopify“ katalogą.",
+    "threshold": {
+      "currentDefault": "Dabartinis aplinkos numatytasis",
+      "description": "Pasirinkite, kiek galimų „Safety Gate“ atitikmenų jūsų komanda nori peržiūrėti. Daugumai „Shopify“ katalogų rekomenduojamas subalansuotas stebėjimas.",
+      "howItWorks": "Kaip tai veikia",
+      "label": "Išplėstinis atitikimo slenkstis (%)",
+      "resetToDefault": "Atstatyti į numatytuosius",
+      "save": "Išsaugoti",
+      "title": "Stebėjimo režimas"
+    },
+    "title": "Stebėjimo nustatymai"
+  },
+  "settingsAdmin": {
+    "advancedMatchingSettings": "Išplėstiniai atitikimo nustatymai",
+    "automation": {
+      "autoDraftDescription": "Automatiškai pažymėti produktus prioritetinei peržiūrai, kai jie atitinka „Safety Gate“ įspėjimus su didele rizika (slenkstis >= 95%).",
+      "autoDraftTitle": "Prioritetas rimtoms rizikoms",
+      "description": "Konfigūruokite prioritetinę peržiūrą didelės rizikos atitikmenims.",
+      "eyebrow": "Realaus laiko operacijos",
+      "title": "Saugos automatizavimas"
+    },
+    "automationStatus": {
+      "active": {
+        "badge": "Planas aktyvus",
+        "description": "Pradinis katalogo auditas baigtas ir ši parduotuvė turi aktyvų stebėjimo planą.",
+        "title": "Katalogo auditas baigtas"
+      },
+      "completedNoPlan": {
+        "badge": "Auditas baigtas",
+        "description": "Pradinis katalogo auditas baigtas. Nuolatiniam automatiniam stebėjimui reikalingas aktyvus planas.",
+        "title": "Pradinis katalogo auditas baigtas"
+      },
+      "failed": {
+        "badge": "Reikia dėmesio",
+        "description": "Paskutinis importas arba auditas nebuvo baigtas. Pakartotinai patikrinkite katalogo aprėptį prieš pasikliaudami stebėjimo būsena.",
+        "title": "Pradiniam katalogo auditui reikia dėmesio"
+      },
+      "notStarted": {
+        "badge": "Nepatvirtinta",
+        "description": "Pradinis importas nebuvo baigtas, todėl katalogo aprėptis dar nepatvirtinta.",
+        "title": "Katalogo auditas nepatvirtintas"
+      },
+      "openCatalog": "Atidaryti katalogo aprėptį",
+      "scanning": {
+        "badge": "Vykdoma",
+        "description": "Produktai importuojami ir tikrinami. Katalogo aprėptis bus patvirtinta po audito pabaigos.",
+        "title": "Vyksta pradinis katalogo auditas"
+      }
+    },
+    "automationStatusDescription": "Kasdieniai ES „Safety Gate“ atnaujinimai, „Shopify“ produktų pakeitimai ir audito įrašai tvarkomi automatiškai. Naudokite šiuos nustatymus tik peržiūros apimčiai ir pranešimams koreguoti.",
+    "automationStatusEyebrow": "Automatinis stebėjimas",
+    "automationStatusTitle": "„Safety Gate“ stebėjimas veikia šiai parduotuvei",
+    "configuration": "Konfigūracija",
+    "configurationDescription": "Sutelkti puslapį į vieną prekybininko sprendimą: koks griežtas turėtų būti tikrintuvas, lyginant produktus su „Safety Gate“ įspėjimais.",
+    "currentThreshold": "Dabartinis slenkstis",
+    "currentThresholdDescription": "Mažesnės vertės aptinka daugiau galimų atitikmenų. Didesnės vertės sumažina klaidingų teigiamų rezultatų skaičių.",
+    "environmentDefault": "Aplinkos numatytasis",
+    "environmentDefaultDescription": "Naudojama, kai parduotuvė dar neturi išsaugoto pasirinktinio slenksčio.",
+    "exclusions": {
+      "description": "Išskirkite konkrečius tiekėjus ar produktų kategorijas iš „Safety Gate“ patikrinimų, kad sumažintumėte klaidingų teigiamų rezultatų skaičių.",
+      "eyebrow": "Filtravimo taisyklės",
+      "title": "Išskyrimo taisyklės",
+      "typesDescription": "Įveskite produkto kategoriją arba tipą ir paspauskite „Enter“ arba kablelį, kad pridėtumėte.",
+      "typesPlaceholder": "Dovanų kortelė, Paslauga, ...",
+      "typesTitle": "Išskirti produktų tipai",
+      "vendorsDescription": "Įveskite tiekėjo pavadinimą ir paspauskite „Enter“ arba kablelį, kad pridėtumėte.",
+      "vendorsPlaceholder": "Tiekėjas A, Tiekėjas B, ...",
+      "vendorsTitle": "Išskirti tiekėjai"
+    },
+    "fallback": "Atsarginis variantas",
+    "guidance": "Gairės",
+    "guidanceItems": {
+      "balancedDescription": "Rekomenduojama daugumai katalogų (65–70 %). Aptinka galimą riziką, išlaikant mažą klaidingų įspėjimų skaičių.",
+      "balancedTitle": "Subalansuotas numatytasis",
+      "broadDescription": "Naudokite apie 50 %, kai norite aptikti daugiau galimų atitikmenų ir esate pasirengę peržiūrėti daugiau įspėjimų.",
+      "broadTitle": "Platus stebėjimas",
+      "strictDescription": "Naudokite 80 % ir daugiau, kai jūsų katalogas yra stabilus ir norite mažiau rankinių peržiūrų.",
+      "strictTitle": "Griežtas atitikimas"
+    },
+    "included": {
+      "description": "Programa nuolat stebi jūsų katalogą, lygindama jį su „Safety Gate“ įspėjimais, išsaugo atitikties įrodymus ir įspėja, kai produktus reikia peržiūrėti.",
+      "evidenceDescription": "Išspręsti ir atmesti sprendimai išsaugo pastabas, priežastis, rizikos kontekstą ir laiko žymas.",
+      "evidenceTitle": "Eksportuojamas įrodymas",
+      "eyebrow": "Nuolatinis stebėjimas",
+      "monitoringDescription": "Nauji „Safety Gate“ įrašai lyginami su stebimais „Shopify“ produktais be rankinio nuskaitymo.",
+      "monitoringTitle": "Nuolatinis ES stebėjimas",
+      "teamDescription": "Prioritetinė peržiūra, tiekėjų dokumentacija ir filtrai padeda jūsų komandai greičiau priimti realius sprendimus.",
+      "teamTitle": "Peržiūros darbo eiga",
+      "title": "Ką apima jūsų parduotuvė"
+    },
+    "matchingStrictness": "Atitikimo griežtumas",
+    "mode": {
+      "balanced": "Subalansuotas",
+      "broad": "Daugiau atitikmenų",
+      "strict": "Mažiau atitikmenų"
+    },
+    "monitoringModeEyebrow": "Stebėjimo režimas",
+    "notifications": {
+      "emailHelp": "Iš pradžių paimta iš „Shopify“. Galite naudoti kitą adresą.",
+      "emailLabel": "Pranešimų el. paštas",
+      "enabledDescription": "Pasirinkite, ar norite gauti skubius radinius, savaitės suvestinę, ar abu.",
+      "enabledTitle": "El. pašto saugos įspėjimai",
+      "immediateDescription": "Atsiųskite man el. laišką, kai tik produktą reikia peržiūrėti.",
+      "immediateTitle": "Nauji radiniai",
+      "invalidEmail": "Įveskite galiojantį el. pašto adresą prieš įjungdami el. pašto pranešimus.",
+      "languageLabel": "El. pašto kalba",
+      "noRecipientDescription": "El. pašto pranešimai įjungti, bet nenurodytas adresas. Pranešimai nebus pristatyti, kol nebus įvestas el. paštas.",
+      "noRecipientHeading": "Nenustatytas el. pašto gavėjas",
+      "useShopifyEmail": "Naudoti parduotuvės kontaktinį el. paštą ({{email}})",
+      "weeklyDescription": "Pirmadienio stebėjimo suvestinė: patvirtina, kai nebuvo naujų radinių, arba apibendrina atviras bylas, kurias reikia peržiūrėti.",
+      "weeklyTitle": "Savaitės stebėjimo suvestinė"
+    },
+    "onDemand": "Pagal pareikalavimą",
+    "plans": {
+      "advancedDescription": "Pridėkite prioritetinę peržiūrą, tiekėjų tolesnius veiksmus ir ES kalbos darbo eigas.",
+      "advancedTitle": "Išplėstinė: automatizavimas ir daugiakalbės darbo eigos",
+      "description": "Funkcijos ir galimybės, įtrauktos į jūsų parduotuvės stebėjimo planą.",
+      "eyebrow": "Prenumeratos vertė",
+      "manualDescription": "Vykdykite patikrinimus po vieną produktą ir matykite naujausią produkto būseną.",
+      "manualTitle": "Nemokama: rankiniai patikrinimai",
+      "monitorDescription": "Stebėkite naujus „Safety Gate“ įspėjimus, lygindami juos su katalogu, eksportuokite CSV audito ataskaitas ir saugokite sprendimų seką.",
+      "monitorTitle": "Mokama: kasdienis stebėjimas ir ataskaitos",
+      "title": "Plano galimybės"
+    },
+    "recommendedSetup": "Rekomenduojama sąranka",
+    "saveAll": "Išsaugoti visus nustatymus",
+    "status": {
+      "auditTrail": "Audito seka",
+      "autoQuarantine": "Prioritetinė peržiūra",
+      "dailySafetyGateUpdates": "Kasdieniai „Safety Gate“ atnaujinimai",
+      "emailDigest": "El. pašto santrauka",
+      "off": "Išjungta",
+      "on": "Įjungta",
+      "running": "Vykdoma",
+      "shopifyProductUpdates": "Nauji / atnaujinti „Shopify“ produktai"
+    },
+    "storeSetting": "Parduotuvės nustatymas",
+    "strictnessHint": "40–60 % yra platesnis nuskaitymas. 70–85 % yra griežtesnis ir paprastai sukelia mažiau klaidingų teigiamų rezultatų.",
+    "valueDescription": "Nuolatinis stebėjimas lygina tinkamus katalogo produktus su naujai paskelbtais „Safety Gate“ įrašais.",
+    "valueEyebrow": "Katalogo stebėjimas",
+    "valueItems": {
+      "auditDescription": "Išspręsti ir atmesti sprendimai išsaugo pastabas, priežastis ir peržiūros istoriją eksportuojamoms ataskaitoms.",
+      "auditTitle": "Auditui paruošti įrodymai",
+      "dailyDescription": "Nauji „Safety Gate“ įspėjimai tikrinami, lyginant juos su stebimais produktais, prekybininkui nepradedant rankinio nuskaitymo.",
+      "dailyTitle": "Kasdienis katalogo stebėjimas",
+      "workflowDescription": "Prekybininkai peržiūri tik tuos produktus, kuriems reikia sprendimo, tada juos išsprendžia, atmeta arba susisiekia su tiekėjais.",
+      "workflowTitle": "„Shopify“ integruota peržiūros darbo eiga"
+    },
+    "valueTitle": "Kas lieka apimta",
+    "workspace": "Darbo sritis"
+  },
+  "status": {
+    "actionRequired": "Reikalingas veiksmas",
+    "allClear": "Viskas gerai",
+    "archived": "Archyvuota",
+    "dismissed": "Atmesta",
+    "flagged": "pažymėta",
+    "monitored": "Stebima",
+    "needsReview": "Reikia peržiūros",
+    "notChecked": "Nepatikrinta",
+    "protected": "Patikrinta",
+    "resolved": "Išspręsta",
+    "runCheck": "Vykdyti patikrinimą",
+    "safe": "Atitikmenų nerasta",
+    "scanning": "Vykdomas nuskaitymas",
+    "unprotected": "Nepatikrinta",
+    "unsafe": "Reikia peržiūros",
+    "updated": "Atnaujinta"
+  },
+  "uxEnhancements": {
+    "activityTimeline": {
+      "actions": {
+        "dismiss": "Sprendimas įrašytas: atmestas",
+        "check": "Produktas patikrintas",
+        "quarantine": "Produktas pažymėtas peržiūrai",
+        "resolve": "Sprendimas įrašytas: išspręstas"
+      },
+      "description": "Įrašyti saugos patikrinimai, produktų sprendimai ir įrodymai, saugomi audito ataskaitoms.",
+      "details": {
+        "autoDrafted": "Produktas pažymėtas prioritetinei peržiūrai.",
+        "bulkScanned": "Masinis katalogo nuskaitymas baigtas.",
+        "checkSafe": "Šiame patikrinime atitikmenų nerasta.",
+        "checkUnsafe": "Produktą reikia peržiūrėti. Sukurtas sprendimo įrašas.",
+        "noReason": "Nenurodyta priežastis.",
+        "reason": "Priežastis: {{reason}}"
+      },
+      "eyebrow": "Audito seka",
+      "noActivity": "Kol kas nėra audito įvykių. Paleiskite stebėjimą, kad pradėtumėte rinkti įrodymus.",
+      "title": "Sprendimų ir įrodymų istorija",
+      "types": {
+        "automatic": "Sistemos įvykis",
+        "bulk": "Masinis įvykis",
+        "manual": "Prekybininko įvykis"
+      }
+    },
+    "alerts": {
+      "floating": {
+        "dismissSelected": "Atmesti pasirinktus",
+        "resolveSelected": "Išspręsti pasirinktus",
+        "selectedCount": "Pasirinktas {{count}} įspėjimas",
+        "selectedCount_few": "Pasirinkti {{count}} įspėjimai",
+        "selectedCount_many": "Pasirinkti {{count}} įspėjimai",
+        "selectedCount_one": "Pasirinktas {{count}} įspėjimas",
+        "selectedCount_other": "Pasirinkti {{count}} įspėjimai",
+        "selectedCount_plural": "Pasirinkti {{count}} įspėjimai"
+      },
+      "quickFilters": {
+        "allAlerts": "Visi įrašai",
+        "allAlertsDesc": "Rodyti visus saugos įspėjimus kataloge.",
+        "highRisk": "Tik didelė rizika",
+        "highRiskDesc": "Rimti rizikos lygiai, reikalaujantys veiksmų.",
+        "needsReview": "Reikia peržiūrėti",
+        "needsReviewDesc": "Laukiantys saugos įspėjimai.",
+        "resolved": "Išspręsta / atmesta",
+        "resolvedDesc": "Praeities įspėjimai, saugomi auditui.",
+        "title": "Greitieji filtrai"
+      }
+    },
+    "complianceRing": {
+      "scoreLabel": "Išvalyti",
+      "subtitle": "Patikrintų produktų dalis be atvirų peržiūros elementų",
+      "title": "Stebimo katalogo būklė"
+    }
+  },
+  "workspace": {
+    "all": "Visi",
+    "appLanguage": "Programos kalba",
+    "apply": "Taikyti filtrus",
+    "applyFilters": "Taikyti filtrus",
+    "balancedHelp": "Subalansuotas atitikimas yra rekomenduojamas pradinis taškas. Keiskite jį tik tuo atveju, jei norite peržiūrėti daugiau ar mažiau galimų atitikimų.",
+    "broadHelp": "Apima daugiau galimų atitikimų ir gali reikalauti daugiau rankinės peržiūros.",
+    "cannotCompare": "Negalima palyginti",
+    "catalogGlobalAction": "Patikrinti {{count}} produktus visame kataloge",
+    "catalogScopeHelp": "Aprėptis apima visus Shopify katalogo produktus, įskaitant aktyvius, juodraščius ir archyvuotus elementus. Filtrai keičia tik šį sąrašą, o ne aprėptį ar stebėjimo sritį.",
+    "clearFilters": "Išvalyti filtrus",
+    "compare": "Palyginti produktus",
+    "compareProduct": "Palyginti produktus: {{title}}",
+    "coverageFiltersHelp": "Aprėptis ir atviri radiniai yra atskiri: pakeistas produktas taip pat gali turėti radinį, laukiantį peržiūros.",
+    "coverageIncomplete": "{{count}} produktams reikia dabartinio patikrinimo",
+    "coverageScope": "Rodoma {{visible}} iš {{total}} katalogo produktų.",
+    "csv": {
+      "action": "Sprendimo veiksmas",
+      "actor": "Įrašė",
+      "caseNumber": "Safety Gate atvejis",
+      "decisionAt": "Sprendimas priimtas",
+      "detectedAt": "Aptikta",
+      "generatedAt": "Sugeneruota",
+      "guidance": "Peržiūros gairės",
+      "notes": "Peržiūros pastabos",
+      "product": "Produktas",
+      "productId": "Shopify produkto ID",
+      "recordType": "Įrašo tipas",
+      "resolution": "Sprendimas",
+      "risk": "Rizikos lygis",
+      "shop": "Parduotuvė",
+      "source": "Oficialus šaltinis",
+      "sourceRisk": "Rizika oficialiame įspėjime",
+      "status": "Būsena"
+    },
+    "csvGuidance": "Galimas atitikimas. Prieš priimdami sprendimą, palyginkite produkto identifikatorius ir oficialų įrašą.",
+    "currentFindingStatus": "Dabartinė radinio būsena",
+    "dateFilterTimezone": "Datoms naudojama stebėjimo laiko juosta: {{timeZone}}. Taikykite filtrus, kad atnaujintumėte rezultatus ir eksportuotumėte.",
+    "decisionAt": "Sprendimas įrašytas",
+    "decisionExportHelp": "Šis rodinys ir jo CSV eksportas naudoja sprendimų datas. Jie apima peržiūros įvykius senesniems radiniams, įskaitant iš naujo atidarytus atvejus. Produktų pavadinimai ir oficialūs šaltinio faktai išlaiko savo originalų tekstą.",
+    "decisionFrom": "Sprendimo data nuo",
+    "decisionLegacy": "Istorinis rezultatas: produktas patvirtintas saugiu",
+    "decisionTo": "Sprendimo data iki",
+    "detectedAt": "Radinys aptiktas",
+    "differentIdentifiers": "Skirtingi identifikatoriai: {{fields}}. Prieš priimdami sprendimą, patikrinkite juos.",
+    "documentedFindings": "Šiuo metu išspręsti arba atmesti radiniai",
+    "download": "Atsisiųsti CSV",
+    "emptyHelp": "Nėra įrašytų atvirų radinių. Tai nepatvirtina, kad jūsų produktai yra saugūs. Patikrinkite katalogo aprėptį ir naujausią stebėjimo paleidimą.",
+    "eventCount": "{{count}} sprendimo įvykiai",
+    "excluded": "{{count}} iš {{total}} katalogo produktų atitinka šias taisykles rankiniams patikrinimams. Automatinis stebėjimas nenaudoja šių išimčių. Esami radiniai lieka prieinami.",
+    "excludeHelp": "Šios taisyklės taikomos rankiniams patikrinimams. Prieš išsaugodami patikrinkite paveiktus produktus.",
+    "exportHelp": "CSV faile yra visi pasirinkto laikotarpio ir būsenos radiniai, įskaitant oficialias nuorodas, peržiūros pastabas ir įrašytus sprendimo įvykius. Tai yra patikrinimų įrašas, o ne saugos sertifikatas.",
+    "exportReady": "CSV paruoštas. Jei atsisiuntimas neprasidėjo, naudokite šią nuorodą:",
+    "findingCount": "Radiniai šioje srityje: {{count}}.",
+    "findingFrom": "Radinys aptiktas nuo",
+    "findings": "Radiniai ir įrodymai",
+    "findingTo": "Radinys aptiktas iki",
+    "from": "Nuo datos",
+    "goReview": "Peržiūrėti atvirus radinius",
+    "groupAction": "Imtasi veiksmų",
+    "groupDifferent": "Skirtingas produktas",
+    "groupInformation": "Reikia daugiau informacijos",
+    "history": "Sprendimų istorija",
+    "historyLimit": "Rodoma iki {{count}} naujausių radinių. Eksportuokite visą įrašą, kad gautumėte visus radinius.",
+    "changed": "Pakeista nuo paskutinio patikrinimo",
+    "chooseOutcomeHelp": "Pasirinkite rezultatą, kad galėtumėte įrašyti savo sprendimą.",
+    "chooseOutcomeLink": "Pasirinkti rezultatą",
+    "lastSuccess": "Paskutinis sėkmingas stebėjimo paleidimas",
+    "matchingIdentifiers": "Atitinkantys identifikatoriai: {{fields}}.",
+    "matchNeedsVerification": "Galimas atitikimas. Prieš priimdami sprendimą, palyginkite nuotraukas ir identifikatorius su oficialiu įrašu.",
+    "matchNotConfirmed": "Atitikimas nepatvirtintas peržiūrėjus įrodymus",
+    "missingIdentifiers": "Trūksta kai kurių identifikatorių. Palyginkite turimas nuotraukas ir paprašykite tiekėjo pateikti modelį, brūkšninį kodą ir partiją.",
+    "monitoring": {
+      "enabled": "Įjungta – kasdieniai patikrinimai",
+      "failed": "Paskutinis automatinis patikrinimas nepavyko",
+      "paused": "Pristabdyta – nėra dabartinio stebėjimo plano",
+      "preview": "Kūrimo peržiūra – apmokėjimas apeinamas",
+      "processing": "Tikrinimas eilėje arba vykdomas",
+      "unknown": "Stebėjimo veikla nepatvirtinta",
+      "unverified": "Pristabdyta – prenumeratos nepavyko patvirtinti"
+    },
+    "monitoringLabel": "Automatinis stebėjimas",
+    "monitoringUnknownHelp": "Nėra sėkmingo stebėjimo paleidimo, kad būtų patvirtinta naujausia veikla. Atnaujinkite, kad patikrintumėte dar kartą.",
+    "neverRun": "Nėra įrašyto užbaigto stebėjimo paleidimo",
+    "noCurrentResult": "Reikalingas dabartinis rezultatas",
+    "noDecisions": "Dar nebuvo įrašyta jokių sprendimų. Atidarykite radinį, palyginkite produktus ir įrašykite, ką peržiūrėjote.",
+    "noFilteredDecisions": "Nėra sprendimų įvykių, atitinkančių šiuos filtrus. Išvalykite filtrus, kad pamatytumėte visą istoriją.",
+    "noFilteredFindings": "Nėra radinių, atitinkančių šiuos filtrus. Išvalykite filtrus, kad pamatytumėte visą sąrašą.",
+    "noMatch": "Atitikmenų nerasta",
+    "noMatchAtCheck": "Šiame patikrinime atitikmenų nerasta.",
+    "notes": "Peržiūros pastabos",
+    "notificationLanguage": "El. pašto kalba",
+    "notRecorded": "Nėra dabartinio peržiūros rezultato",
+    "oldest": "Atidaryta {{count}} dienų",
+    "onboarding": "Importuoti katalogą → patikrinti „Safety Gate“ įrašus → peržiūrėti rezultatus",
+    "outcome": "Rezultatas",
+    "outcomeHelp": {
+      "contacted_supplier": "Radinys lieka atviras, kol laukiate savo tiekėjo.",
+      "false_positive": "Naudokite, kai įrodymai rodo, kad įspėjimas netaikomas. Radinys bus atmestas.",
+      "match_not_confirmed": "Naudokite, kai jūsų peržiūrėti įrodymai nepatvirtina atitikimo. Radinys bus išspręstas.",
+      "modified_product": "Pirmiausia atnaujinkite produktą „Shopify“. Įrašius šį rezultatą, produktas nepasikeis; radinys bus išspręstas.",
+      "not_my_product": "Naudokite, kai įspėjimas susijęs su kitu produktu. Radinys bus atmestas.",
+      "other": "Aprašykite rezultatą reikalingame užraše. Radinys bus išspręstas.",
+      "removed_from_sale": "Pirmiausia pašalinkite produktą iš prekybos „Shopify“. Įrašius šį rezultatą, produktas nepasikeis; radinys bus išspręstas.",
+      "verified_safe": "Tai yra istorinis rezultatas."
+    },
+    "outcomeLabels": {
+      "contactedSupplier": "Laukiama tiekėjo",
+      "falsePositive": "Klaidingai teigiamas",
+      "modifiedProduct": "Pakeistas produktas",
+      "notMyProduct": "Ne mano produktas",
+      "other": "Kita",
+      "removedFromSale": "Pašalinta iš prekybos",
+      "verifiedSafe": "Istorinis: patvirtintas saugus"
+    },
+    "possibleMatch": "Galimas atitikimas",
+    "possibleMatchAtCheck": "Šis patikrinimas rado galimą „Safety Gate“ atitikimą.",
+    "print": "Spausdinti / išsaugoti PDF",
+    "priority": "Peržiūros prioritetas",
+    "priorityHelp": "Pirmiausia sprendimai, tada oficialus įspėjimo rimtumas ir seniausi radiniai. Po to seka prekės, laukiančios tiekėjų.",
+    "productStatus": "„Shopify“ būsena",
+    "productStatusActive": "Aktyvus",
+    "productStatusAll": "Visos „Shopify“ būsenos",
+    "productStatusArchived": "Archyvuota",
+    "productStatusDraft": "Juodraštis",
+    "productStatusUnknown": "Nežinoma",
+    "recommended": "Rekomenduojamas nustatymas",
+    "referenceMissing": "Oficialus bylos numeris nepasiekiamas",
+    "remaining": "Nepatikrinta arba pakeista",
+    "reopened": "Atnaujinta peržiūrai",
+    "reportEmpty": "Nėra radinių, atitinkančių šiuos filtrus.",
+    "reportTitle": "Patikrinimų ir sprendimų ataskaita",
+    "resultHelp": "Rezultato įrašymas dokumentuoja jūsų peržiūrą audito sekoje ir nekeičia „Shopify“ produkto.",
+    "reviewNext": "Peržiūrėti kitą atitikimą: {{title}}",
+    "reviewPrompt": "Palyginkite įrodymus, pasirinkite rezultatą ir įrašykite savo pastabas.",
+    "riskLabels": {
+      "electric": "Elektros smūgis",
+      "fire": "Gaisras",
+      "health": "Pavojus sveikatai",
+      "high": "Didelė rizika",
+      "chemical": "Cheminis",
+      "choking": "Užspringimas",
+      "injuries": "Sužalojimai",
+      "low": "Maža rizika",
+      "medium": "Vidutinė rizika",
+      "serious": "Rimta rizika",
+      "unknown": "Rizika „Safety Gate“ įspėjime"
+    },
+    "runScope": "Produktų patikrinimai: {{products}} · Apsvarstyti „Safety Gate“ įrašai: {{records}} · Nauji radiniai: {{findings}}",
+    "saved": "Nustatymai išsaugoti.",
+    "saveChanges": "Išsaugoti pakeitimus",
+    "scope": "Radiniai nuo {{from}} iki {{to}}",
+    "scoreDetails": "Panašumo detalės",
+    "scoreHelp": "Tai yra panašumo balai, naudojami peržiūros prioritetams nustatyti, o ne tikimybė, kad jūsų produktas yra pavojingas.",
+    "settingsAdvanced": "Išplėstinis atitikimas ir išimtys",
+    "shop": "Parduotuvė",
+    "showMore": "Rodyti daugiau produktų",
+    "scheduleHelp": "Nauji „Safety Gate“ įspėjimai tikrinami, kol stebėjimo planas yra aktyvus. Kito užbaigto patikrinimo laikas priklauso nuo eilės.",
+    "sourceMissing": "Oficiali įrašo nuoroda nepasiekiama šiam išsaugotam radiniui.",
+    "sourceRisk": "Rizika oficialiame įspėjime (originalus ES įrašas)",
+    "status": "Radinio būsena",
+    "strictHelp": "Rodo mažiau galimų atitikimų ir gali praleisti mažiau akivaizdžius panašumus.",
+    "to": "Iki datos",
+    "unconfirmedIdentifiers": "Turimi katalogo identifikatoriai nepatvirtina šio atitikimo. Palyginkite pakuotę ir paprašykite savo tiekėjo trūkstamo modelio, brūkšninio kodo ir partijos.",
+    "unchecked": "Dar nepatikrinta",
+    "unsaved": "Turite neįrašytų pakeitimų.",
+    "verifyScope": "Katalogo rezultatai taikomi patikrinto produkto versijai. Pakeistiems produktams reikia naujo patikrinimo.",
+    "viewRemainingProducts": "Peržiūrėti {{count}} produktų, kuriems reikia patikrinimo",
+    "viewShopify": "Atidaryti „Shopify“ produktą",
+    "waiting": "Laukiama tiekėjo",
+    "when": "Įrašyta",
+    "who": "Įrašė",
+    "whyMatch": "Kodėl tai gali atitikti"
+  }
+}

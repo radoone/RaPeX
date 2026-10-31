@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { EU_LANGUAGES } from "../i18n";
+import { EU_LANGUAGES, changeMerchantLanguage } from "../i18n";
 
-const LANGUAGE_STORAGE_KEY = "safety-gate-language";
+import { LANGUAGE_STORAGE_KEY } from "../services/interface-language";
 
 export function LanguageSwitcher() {
     const { i18n, t } = useTranslation();
     const [mounted, setMounted] = useState(false);
     const [currentLang, setCurrentLang] = useState('en');
+    const [changing, setChanging] = useState(false);
+    const [failed, setFailed] = useState(false);
 
     // Only render language state after client mount to avoid hydration mismatch
     useEffect(() => {
@@ -24,16 +26,26 @@ export function LanguageSwitcher() {
         };
     }, [i18n]);
 
-    const changeLanguage = (lng: string) => {
-        window.localStorage.setItem(LANGUAGE_STORAGE_KEY, lng);
-        void i18n.changeLanguage(lng);
+    const changeLanguage = async (lng: string) => {
+        setChanging(true);
+        setFailed(false);
+        const previous = currentLang;
         setCurrentLang(lng);
+        try {
+            await changeMerchantLanguage(lng);
+            try { window.localStorage.setItem(LANGUAGE_STORAGE_KEY, lng); } catch { /* Keep the selection for this visit when storage is blocked. */ }
+            setCurrentLang(lng);
+        } catch {
+            setCurrentLang(previous);
+            setFailed(true);
+        } finally { setChanging(false); }
     };
 
     return (
-        <s-select
+        <div><s-select
             label={t("common.language")}
             value={mounted ? currentLang : "en"}
+            disabled={changing}
             onChange={(event: any) => changeLanguage(event.currentTarget.value)}
         >
             {EU_LANGUAGES.map((language) => (
@@ -41,6 +53,6 @@ export function LanguageSwitcher() {
                     {language.label}
                 </s-option>
             ))}
-        </s-select>
+        </s-select>{failed ? <p role="alert">{t("errors.apiError")} {t("actions.retry")}</p> : null}</div>
     );
 }

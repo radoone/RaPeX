@@ -3,7 +3,7 @@ import { firestore } from "../firestore.server";
 import { withOfficialReferences } from "./review-evidence.server";
 import { parseEvidence } from "./review-evidence";
 import { toIsoString } from "./monitoring-runs";
-import { type ReviewFilters, matchesReviewFilters } from "./review-records";
+import { type ReviewFilters, matchesReviewFilters, matchesReviewSearch, selectedDecisionEvents } from "./review-records";
 export { reviewFilters } from "./review-records";
 export async function reviewRecords(
   shop: string,
@@ -21,11 +21,11 @@ export async function reviewRecords(
     alerts.push(...batch);
     if (batch.length < 500) break;
   }
-  const selected = alerts.filter((alert) =>
-    matchesReviewFilters(alert, filters),
+  const candidates = alerts.filter((alert) =>
+    matchesReviewFilters(alert, filters.dateBasis === "decisions" ? { ...filters, from: "", to: "" } : filters),
   );
   const visible = await withOfficialReferences(
-    previewLimit ? selected.slice(0, previewLimit) : selected,
+    candidates,
   );
   const records: any[] = [];
   for (let offset = 0; offset < visible.length; offset += 10) {
@@ -69,18 +69,24 @@ export async function reviewRecords(
     );
     records.push(...group);
   }
+  const selected = records.filter(record => filters.dateBasis === "decisions"
+    ? selectedDecisionEvents(record, filters).length > 0
+    : matchesReviewSearch(record, filters.query));
+  if (filters.dateBasis === "decisions") {
+    for (const record of selected) record.decisions = selectedDecisionEvents(record, filters);
+    selected.sort((a, b) => (b.decisions[0]?.createdAt || "").localeCompare(a.decisions[0]?.createdAt || ""));
+  }
+  const timestamps = selected.flatMap(record => filters.dateBasis === "decisions" ? record.decisions.map((event: any) => event.createdAt) : [record.createdAt]).filter(Boolean).sort();
   return {
-    records,
+    records: previewLimit ? selected.slice(0, previewLimit) : selected,
     total: selected.length,
     summary: {
       active: selected.filter((alert) => alert.status === "active").length,
-      documented: selected.filter((alert) =>
-        Boolean(alert.resolutionType || alert.resolvedAt || alert.dismissedAt),
-      ).length,
+      documented: selected.filter((alert) => alert.status === "resolved" || alert.status === "dismissed").length,
     },
     scope: {
-      from: toIsoString(selected.at(-1)?.createdAt),
-      to: toIsoString(selected[0]?.createdAt),
+      from: timestamps[0] || null,
+      to: timestamps.at(-1) || null,
     },
     shop,
     filters,

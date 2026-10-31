@@ -16,16 +16,60 @@ for (const language of EMAIL_LANGUAGES) {
   const exampleCopy = JSON.parse(await readFile(resolve(root, `localization/catalogs/${language}.json`), "utf8")).web;
   const metrics = { products: 124, checks: 38, safetyGateRecords: 17, newFindings: 0, openFindings: 2, monitoringComplete: true, lastSuccessfulRun: new Date("2026-10-19T06:00:00Z") };
   const week = (m) => renderWeeklyEmail(language, shop, new Date("2026-10-12T06:00:00Z"), new Date("2026-10-19T06:00:00Z"), m, app, `${app}/settings`);
+  const sampleProduct1 = language === "sk" ? "Detské odrážadlo Mini" : `${exampleCopy.hero.mockProductName} Mini`;
+  const sampleAlert1 = language === "sk" ? "Detské odrážadlo" : exampleCopy.hero.mockProductName;
+  const sampleProduct2 = language === "sk" ? "Detská hračka" : exampleCopy.example.productTitle;
+  const sampleAlert2 = language === "sk" ? "Hračka" : exampleCopy.example.alertTitle;
   const examples = {
-    alert: renderAlertEmail(language, { productTitle: "Detské odrážadlo Mini", safetyGateProduct: "Detské odrážadlo", riskLevel: "High", overallSimilarity: 92, reason: language === "sk" ? "Podobný názov a model. Pred rozhodnutím porovnajte identifikátory produktu a údaje v upozornení." : "Similar name and model. Compare product identifiers and the alert details before deciding.", safetyGateImage: "https://email-preview.invalid/illustrative-product.png" }, shop, `${app}/alerts?open=illustrative-example`, `${app}/settings`),
+    alert: renderAlertEmail(language, { productTitle: sampleProduct1, safetyGateProduct: sampleAlert1, riskLevel: "High", overallSimilarity: 92, reason: exampleCopy.hero.mockReason, safetyGateImage: "https://email-preview.invalid/illustrative-product.png" }, shop, `${app}/alerts?open=illustrative-example`, `${app}/settings`),
     weekly: week(metrics),
     "weekly-findings": week({ ...metrics, newFindings: 3, findings: [
-      { productTitle: "Detské odrážadlo Mini", safetyGateProduct: "Detské odrážadlo", riskLevel: "High", overallSimilarity: 92, reason: language === "sk" ? "Podobný názov a model. Porovnajte model a šaržu." : "Similar name and model. Compare the model and batch.", safetyGateImage: "https://email-preview.invalid/illustrative-product.png", url: `${app}/alerts?open=illustrative-example`, reviewState: "needs_review", isNew: true },
-      { productTitle: "Detská hračka", safetyGateProduct: "Hračka", riskLevel: "Serious", overallSimilarity: 88, reason: language === "sk" ? "Podobné označenie modelu. Fotografia v zázname chýba." : "Similar model identifier. No photo is available in the record.", url: `${app}/alerts?open=illustrative-no-image`, reviewState: "resolved", isNew: true },
+      { productTitle: sampleProduct1, safetyGateProduct: sampleAlert1, riskLevel: "High", overallSimilarity: 92, reason: exampleCopy.hero.mockReason, safetyGateImage: "https://email-preview.invalid/illustrative-product.png", url: `${app}/alerts?open=illustrative-example`, reviewState: "needs_review", isNew: true },
+      { productTitle: sampleProduct2, safetyGateProduct: sampleAlert2, riskLevel: "Serious", overallSimilarity: 88, reason: exampleCopy.hero.mockReason, url: `${app}/alerts?open=illustrative-no-image`, reviewState: "resolved", isNew: true },
     ] }),
     "weekly-incomplete": week({ ...metrics, monitoringComplete: false }),
     verification: renderVerificationEmail(language, shop, `https://zerorecall.online/index.html?lang=${language}#verify=ILLUSTRATIVE_ONLY.NOT_A_REAL_TOKEN`),
-    report: renderScanReportEmail(language, shop, { totalProductsScanned: 100, flaggedProductsCount: 2, matches: [{ productTitle: "Detské odrážadlo Mini", productUrl: `https://${shop}/products/mini`, result: { warnings: [{ alertId: "ILLUSTRATIVE-EXAMPLE", reason: language === "sk" ? "Podobné označenie modelu. Pred rozhodnutím overte model a šaržu." : "Similar model identifier. Verify the model and batch before deciding.", alertDetails: { fields: { caseNumber: "ILLUSTRATIVE-ONLY", type_numberOfModel: "Mini 100 (example)", url: "https://ec.europa.eu/safety-gate-alerts/screen/webReport/alertDetail/ILLUSTRATIVE_ONLY" } } }] } }, { productTitle: "Detská hračka", productUrl: `https://${shop}/products/toy` }] }),
+    report: renderScanReportEmail(language, shop, {
+      totalProductsScanned: 100,
+      flaggedProductsCount: 2,
+      matches: [
+        {
+          productTitle: sampleProduct1,
+          productUrl: `https://${shop}/products/mini`,
+          result: {
+            warnings: [{
+              alertId: "ILLUSTRATIVE-EXAMPLE",
+              reason: exampleCopy.hero.mockReason,
+              alertDetails: {
+                fields: {
+                  caseNumber: "ILLUSTRATIVE-ONLY",
+                  type_numberOfModel: "Mini 100 (example)",
+                  pictures: ["https://email-preview.invalid/illustrative-product.png"],
+                  url: "https://ec.europa.eu/safety-gate-alerts/screen/webReport/alertDetail/ILLUSTRATIVE_ONLY",
+                },
+              },
+            }],
+          },
+        },
+        {
+          productTitle: sampleProduct2,
+          productUrl: `https://${shop}/products/toy`,
+          result: {
+            warnings: [{
+              alertId: "ILLUSTRATIVE-EXAMPLE-2",
+              reason: exampleCopy.example.findingReason,
+              alertDetails: {
+                fields: {
+                  caseNumber: "ILLUSTRATIVE-ONLY-2",
+                  type_numberOfModel: "Toy 200 (example)",
+                  url: "https://ec.europa.eu/safety-gate-alerts/screen/webReport/alertDetail/ILLUSTRATIVE_ONLY_2",
+                },
+              },
+            }],
+          },
+        },
+      ],
+    }),
     "report-clear": renderScanReportEmail(language, shop, { totalProductsScanned: 64, flaggedProductsCount: 0 }),
   };
   for (const [kind, content] of Object.entries(examples)) {

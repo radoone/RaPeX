@@ -284,10 +284,11 @@ export function AlertDetailModal({
               </button>
             </div>
           )}
-          <section
-            className="review-modal__section"
-            aria-label={t("analysis.reviewLayout.compareHeading")}
-          >
+          <div className="review-modal__body-grid">
+            <section
+              className="review-modal__section"
+              aria-label={t("analysis.reviewLayout.compareHeading")}
+            >
             <div className="review-modal__section-heading">
               <h3>{t("analysis.reviewLayout.compareHeading")}</h3>
               <span>{t("analysis.reviewLayout.compareHint")}</span>
@@ -404,7 +405,7 @@ export function AlertDetailModal({
               )}
               {identifierRows.some((row) => row.status === "unspecified") && (
                 <p className="admin-note">
-                  {t("workspace.missingIdentifiers")}
+                  {t(identifierRows.every(row => row.status === "unspecified") ? "workspace.unconfirmedIdentifiers" : "workspace.missingIdentifiers")}
                 </p>
               )}
               {(fields.danger ||
@@ -556,9 +557,17 @@ export function AlertDetailModal({
                       selected={outcomeGroup === group}
                     >
                       {t(label)}
+                      <span slot="details">
+                        {t(`analysis.reviewLayout.groupHelp.${group}`)}
+                      </span>
                     </s-choice>
                   ))}
                 </s-choice-list>
+                {outcomeGroup && !selectedOutcome && (
+                  <p className="admin-helper">
+                    {t(`analysis.reviewLayout.groupHelp.${outcomeGroup}`)}
+                  </p>
+                )}
                 {outcomeGroup === "information" && (
                   <strong>{t("resolveActions.contactedSupplier")}</strong>
                 )}
@@ -685,6 +694,7 @@ export function AlertDetailModal({
                 </ol>
               </section>
             )}
+          </div>
           </div>
           {warnings.length > 0 && (
             <details className="review-modal__evidence">

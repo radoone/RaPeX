@@ -1,0 +1,1422 @@
+{
+  "actions": {
+    "auditReport": "Rapport tal-verifika",
+    "clear": "Ikklerja",
+    "dashboard": "Dashboard",
+    "downloadAuditReport": "Niżżel ir-rapport tal-verifika",
+    "checkAll": "Iċċekkja l-prodotti kollha",
+    "checkAllProducts": "Iċċekkja l-{{count}} prodotti kollha",
+    "checking": "Qed jiġi ċċekkjat...",
+    "checkNewSafetyGateAlerts": "Iċċekkja twissijiet ġodda ta' Safety Gate",
+    "checkOneProduct": "Iċċekkja prodott wieħed",
+    "checkSelectedProduct": "Iċċekkja l-prodott magħżul",
+    "checkUnchecked": "Iċċekkja {{count}} prodotti mhux iċċekkjati",
+    "manualCheck": "Iċċekkja l-prodott",
+    "next": "Li jmiss",
+    "openFirstMatch": "Iftaħ l-ewwel taqbila",
+    "previous": "Preċedenti",
+    "protectRemainingProducts": "Iċċekkja {{count}} prodotti li fadal",
+    "reactivate": "Erġa' attiva",
+    "recordDecision": "Irreġistra d-deċiżjoni",
+    "refreshCoverage": "Aġġorna l-kopertura tal-katalogu",
+    "resolve": "Issolvi",
+    "retry": "Erġa' pprova",
+    "reviewActiveProducts": "Irrevedi prodotti attivi",
+    "reviewAlerts": "Irrevedi twissijiet",
+    "reviewDecision": "Qabbel il-prodotti",
+    "reviewMultipleMatches": "Irrevedi {{count}} taqbiliet",
+    "reviewOneMatch": "Irrevedi taqbila 1",
+    "reviewProductsNeedingAction": "Irrevedi {{count}} prodott li jeħtieġ azzjoni",
+    "reviewProductsNeedingAction_few": "Irrevedi {{count}} prodotti li jeħtieġu azzjoni",
+    "reviewProductsNeedingAction_many": "Irrevedi {{count}} prodotti li jeħtieġu azzjoni",
+    "reviewProductsNeedingAction_one": "Irrevedi {{count}} prodott li jeħtieġ azzjoni",
+    "reviewProductsNeedingAction_other": "Irrevedi {{count}} prodotti li jeħtieġu azzjoni",
+    "reviewProductsNeedingAction_plural": "Irrevedi {{count}} prodotti li jeħtieġu azzjoni",
+    "reviewProductsNeedingAction_two": "Irrevedi {{count}} prodotti li jeħtieġu azzjoni",
+    "search": "Fittex",
+    "settings": "Settings",
+    "tryAgain": "Erġa' pprova",
+    "view": "Ara",
+    "viewAlerts": "Ara t-twissijiet",
+    "viewDetails": "Ara d-dettalji",
+    "viewEvidence": "Ara l-istorja tad-deċiżjonijiet"
+  },
+  "alerts": {
+    "admin": {
+      "actionNeeded": "Azzjoni meħtieġa",
+      "actionNeededDescription": "Irrevedi t-taqbiliet, ċaħħad il-pożittivi foloz, jew issolvi r-riskji kkonfermati sabiex il-kju tat-twissijiet jibqa' azzjonabbli.",
+      "actionNeededTitle": "{{count}} twissija attiva għad trid deċiżjoni",
+      "actionNeededTitle_few": "{{count}} twissijiet attivi għadhom jeħtieġu deċiżjoni",
+      "actionNeededTitle_many": "{{count}} twissijiet attivi għadhom jeħtieġu deċiżjoni",
+      "actionNeededTitle_one": "{{count}} twissija attiva għad trid deċiżjoni",
+      "actionNeededTitle_other": "{{count}} twissijiet attivi għadhom jeħtieġu deċiżjoni",
+      "actionNeededTitle_plural": "{{count}} twissijiet attivi għadhom jeħtieġu deċiżjoni",
+      "actionNeededTitle_two": "{{count}} allerti attivi għadhom jeħtieġu deċiżjoni",
+      "criticalBannerDescription": "{{count}} taqbila attiva hija mmarkata b'riskju għoli jew serju f'Safety Gate. Issolvi dawk it-taqbiliet l-ewwel.",
+      "criticalBannerDescription_few": "{{count}} taqbiliet attivi huma mmarkati b'riskju għoli jew serju f'Safety Gate. Issolvi dawk it-taqbiliet l-ewwel.",
+      "criticalBannerDescription_many": "{{count}} taqbiliet attivi huma mmarkati b'riskju għoli jew serju f'Safety Gate. Issolvi dawk it-taqbiliet l-ewwel.",
+      "criticalBannerDescription_one": "{{count}} taqbila attiva hija mmarkata b'riskju għoli jew serju f'Safety Gate. Issolvi dawk it-taqbiliet l-ewwel.",
+      "criticalBannerDescription_other": "{{count}} taqbiliet attivi huma mmarkati b'riskju għoli jew serju f'Safety Gate. Issolvi dawk it-taqbiliet l-ewwel.",
+      "criticalBannerDescription_plural": "{{count}} taqbiliet attivi huma mmarkati b'riskju għoli jew serju f'Safety Gate. Issolvi dawk it-taqbiliet l-ewwel.",
+      "criticalBannerDescription_two": "{{count}} taqbiliet attivi huma mmarkati b'riskju għoli jew serju fi Safety Gate. Issolvi dawk it-taqbiliet l-ewwel.",
+      "criticalBannerTitle": "{{count}} taqbila b'riskju għoli teħtieġ reviżjoni",
+      "criticalBannerTitle_few": "{{count}} taqbiliet b'riskju għoli jeħtieġu reviżjoni",
+      "criticalBannerTitle_many": "{{count}} taqbiliet b'riskju għoli jeħtieġu reviżjoni",
+      "criticalBannerTitle_one": "{{count}} taqbila b'riskju għoli teħtieġ reviżjoni",
+      "criticalBannerTitle_other": "{{count}} taqbiliet b'riskju għoli jeħtieġu reviżjoni",
+      "criticalBannerTitle_plural": "{{count}} taqbiliet b'riskju għoli jeħtieġu reviżjoni",
+      "criticalBannerTitle_two": "{{count}} taqbiliet b'riskju għoli jeħtieġu reviżjoni",
+      "queue": "Kju tad-deċiżjonijiet tal-prodott",
+      "queueDescription": "Ikkonferma taqbiliet probabbli, ċaħħad pożittivi foloz, jew irreġistra liema azzjoni ttieħdet.",
+      "warningBannerDescription": "Uża dan il-kju għal deċiżjonijiet reali biss: issolvi r-riskji kkonfermati u ċaħħad il-pożittivi foloz malajr.",
+      "warningBannerTitle": "{{count}} twissija attiva għad trid reviżjoni",
+      "warningBannerTitle_few": "{{count}} twissijiet attivi għadhom jeħtieġu reviżjoni",
+      "warningBannerTitle_many": "{{count}} twissijiet attivi għadhom jeħtieġu reviżjoni",
+      "warningBannerTitle_one": "{{count}} twissija attiva għad trid reviżjoni",
+      "warningBannerTitle_other": "{{count}} twissijiet attivi għadhom jeħtieġu reviżjoni",
+      "warningBannerTitle_plural": "{{count}} twissijiet attivi għadhom jeħtieġu reviżjoni",
+      "warningBannerTitle_two": "{{count}} allerti attivi għadhom jeħtieġu reviżjoni"
+    },
+    "breadcrumbs": {
+      "current": "Kju tar-reviżjoni",
+      "dashboard": "Dashboard"
+    },
+    "checklist": {
+      "items": {
+        "0": "Ipprijoritizza twissijiet attivi",
+        "1": "Iddokumenta l-passi ta' rimedjazzjoni",
+        "2": "Ivverifika qabel ma tiċħad"
+      },
+      "title": "Lista ta' kontroll tar-rispons"
+    },
+    "meta": {
+      "active": "{{count}} biex tirrevedi",
+      "total": "{{count}} total"
+    },
+    "metrics": {
+      "activeHeading": "Twissijiet Attivi",
+      "archived": "Arkivjati",
+      "dismissedDescription": "Żomm noti għall-verifika",
+      "dismissedDescriptionZero": "Għad m'hemmx twissijiet miċħuda",
+      "dismissedHeading": "Miċħuda",
+      "resolutionHeading": "Rata ta' Riżoluzzjoni",
+      "resolved": "{{count}} issoluti",
+      "resolvedAndDismissed": "{{resolved}} issoluti • {{dismissed}} miċħuda",
+      "totalRecorded": "{{count}} irreġistrati total"
+    },
+    "pagination": {
+      "next": "Li jmiss",
+      "previous": "Preċedenti"
+    },
+    "subtitle": "Irrevedi prodotti li jeħtieġu deċiżjoni.",
+    "table": {
+      "accessibilityLabel": "Tabella ta' twissijiet ta' sigurtà",
+      "empty": "L-ebda twissija li taqbel mal-filtri tiegħek",
+      "emptyAllClearBody": "Bħalissa m'hemm l-ebda deċiżjoni miftuħa tal-merkant. Il-monitoraġġ ta' kuljum għadu għaddej u d-deċiżjonijiet magħluqa jibqgħu fir-reġistru tal-verifika.",
+      "emptyAllClearTitle": "Ir-reviżjonijiet attivi kollha tal-prodotti ġew ittrattati",
+      "emptyFilteredBody": "Aġġusta l-filtri jew fittex prodott ieħor. Il-kju attiv tiegħek jista' jkun għadu vojt.",
+      "emptyFilteredTitle": "L-ebda oġġett ta' reviżjoni ma jaqbel ma' dawn il-filtri",
+      "headers": {
+        "actions": "Azzjonijiet",
+        "detected": "Misjub",
+        "product": "Prodott",
+        "risk": "Riskju",
+        "status": "Status"
+      },
+      "order": "Ordni",
+      "orderOptions": {
+        "asc": "L-eqdem l-ewwel",
+        "desc": "L-aktar ġdid l-ewwel"
+      },
+      "reviewProduct": "Irrevedi d-deċiżjoni għal {{title}}",
+      "searchLabel": "Fittex twissijiet",
+      "searchPlaceholder": "Fittex skont l-isem tal-prodott...",
+      "selectAll": "Agħżel is-sejbiet viżibbli kollha",
+      "selectedCount": "{{count}} magħżula",
+      "selectProduct": "Agħżel sejba għal {{title}}",
+      "similarityTooltip": "Punteġġ ta' similarità: {{score}}%",
+      "sort": "Issortja",
+      "sortBy": "Issortja skont",
+      "sortOptions": {
+        "created": "Data misjuba",
+        "name": "Isem tal-prodott",
+        "risk": "Livell ta' riskju"
+      },
+      "tabs": {
+        "active": "Jeħtieġ reviżjoni",
+        "all": "Kollha",
+        "dismissed": "Miċħuda",
+        "resolved": "Riżolti"
+      },
+      "thumbnailLabel": "Thumbnail ta' {{title}}",
+      "viewProduct": "Ara s-sejba rreġistrata għal {{title}}"
+    },
+    "title": "Kju ta' Reviżjoni",
+    "toasts": {
+      "updated": "Twissija aġġornata"
+    }
+  },
+  "analysis": {
+    "alertImagesUsed": "Immaġini ta' twissija mqabbla: {{count}}",
+    "alertNumber": "Twissija {{number}}",
+    "audit": {
+      "existingNotes": "Noti tal-verifika",
+      "noteLabel": "Nota tal-verifika",
+      "notePlaceholder": "Żid dak li ċċekkjajt, evidenza tal-fornitur, jew għaliex dan ġie miċħud."
+    },
+    "candidateAlerts": "Twissijiet kandidati: {{count}}",
+    "decisionContextDesc": "Ir-reġistrazzjoni ta' deċiżjoni tiddokumenta li din il-korrispondenza ta' sigurtà ġiet riveduta u tippreserva r-reġistru tal-verifika tiegħek. Ma timmodifikax awtomatikament il-prodott Shopify tiegħek jew tneħħih mill-pubblikazzjoni mill-ħanut tiegħek.",
+    "decisionContextTitle": "Ir-reġistrazzjoni ta' deċiżjonijiet ta' konformità",
+    "decisionRecorded": "Deċiżjoni rreġistrata",
+    "editInShopify": "Editja l-Prodott f'Shopify",
+    "enlargedSafetyAlert": "Immaġini mkabbra ta' twissija ta' sigurtà",
+    "fields": {
+      "accessibilityLabel": "Tabella tad-dettalji tal-korrispondenza tat-twissija",
+      "alertDate": "Data tat-twissija",
+      "brand": "Marka",
+      "category": "Kategorija",
+      "field": "Qasam",
+      "model": "Mudell",
+      "notifyingCountry": "Pajjiż notifikanti",
+      "origin": "Oriġini",
+      "productDescription": "Deskrizzjoni tal-prodott",
+      "productName": "Isem tal-prodott",
+      "value": "Valur"
+    },
+    "focus": {
+      "criticalLead": "Dan il-prodott għandu korrispondenza ta' kunfidenza għolja. Irreġistra deċiżjoni biss wara reviżjoni.",
+      "criticalStepCompare": "Qabbel ir-ritratt tal-prodott tiegħek mal-ewwel korrispondenza ta' Safety Gate hawn taħt.",
+      "criticalStepDecide": "Agħżel riżultat fil-menu 'Irreġistra deċiżjoni' abbażi tar-reviżjoni tiegħek.",
+      "criticalStepDocument": "Żid noti interni għat-traċċabilità u s-segwitu tal-fornitur.",
+      "criticalTitle": "Azzjoni meħtieġa issa",
+      "recordedOutcome": "Riżultat irreġistrat: {{outcome}}",
+      "reviewedLead": "Din it-twissija mhix attiva. Żomm ir-rekords ċari għall-verifiki.",
+      "reviewedStepAudit": "Ivverifika r-riżoluzzjoni u n-noti magħżula.",
+      "reviewedStepReactivate": "Erġa' attiva biss jekk tidher evidenza ġdida tal-prodott.",
+      "reviewedTitle": "Reviżjoni diġà tlestiet",
+      "safeLead": "Ir-riżultat attwali huwa sigur. Kompli ssegwi l-aġġornamenti tal-prodott.",
+      "safeStepClose": "Agħlaq dan id-dettall u kompli b'twissijiet attivi oħra.",
+      "safeStepMonitor": "Żomm dan il-prodott f'monitoraġġ awtomatiku.",
+      "safeStepRecheck": "Mexxi kontroll ġdid jekk jinbidlu l-immaġini, l-ippakkjar, jew il-fornitur.",
+      "safeTitle": "L-ebda azzjoni urġenti meħtieġa"
+    },
+    "hazardType": "Tip ta' periklu",
+    "checkedAt": "Iċċekkjat: {{date}}",
+    "imageDominated": "Din il-korrispondenza ġiet skurjata b'peżar tal-immaġni l-ewwel, għalhekk is-similarità viżwali tal-ippakkjar kellha aktar piż minn nuqqas ta' qbil tat-test.",
+    "imageMatch": "Korrispondenza tal-immaġni",
+    "imageMatchShort": "{{count}}% immaġni",
+    "legalProvision": "Dispożizzjoni legali",
+    "matchesHint": "Ibda bil-karta tal-korrispondenza ta' fuq hawn taħt u kkonferma l-ippakkjar viżwali l-ewwel, imbagħad id-dettalji tal-mudell u l-marka.",
+    "merchantRecommendation": {
+      "active": "Qabbel l-immaġini tal-prodott u ta' Safety Gate, ikkonferma l-marka jew il-mudell, imbagħad irreġistra l-azzjoni li se tieħu l-ħanut tiegħek.",
+      "reviewed": "Din is-sejba hija magħluqa. Ivverifika r-riżultat irreġistrat u l-evidenza qabel ma terġa' tattivaha.",
+      "safe": "L-ebda azzjoni tal-ħanut mhija meħtieġa issa. Erġa' iċċekkja jekk jinbidlu l-prodott, l-ippakkjar, l-immaġini, jew il-fornitur."
+    },
+    "modalAccessibilityLabel": "Dettalji tal-korrispondenza ta' Safety Gate għal {{title}}",
+    "modalHeading": "Irrevedi l-korrispondenza ta' Safety Gate",
+    "noIssuesFound": "L-ebda Kwistjoni ta' Sigurtà Misjuba",
+    "openProductImage": "Iftaħ l-immaġni għal {{title}}",
+    "overallMatch": "Korrispondenza ġenerali",
+    "overallMatchShort": "{{count}}% ġenerali",
+    "potentialRisk": "Riskju Potenzjali għas-Sigurtà",
+    "primaryRiskFocus": "Fokus primarju tar-riskju: {{category}} fil-livell {{level}}. Ikkonferma dan l-ewwel qabel tiddeċiedi.",
+    "productImagesUsed": "Stampi tal-prodott: {{used}} / {{provided}}",
+    "reviewLayout": {
+      "actionNeeded": "Azzjoni meħtieġa",
+      "compareHeading": "Qabbel il-prodotti",
+      "compareHint": "Iċċekkja r-ritratti, il-marka, il-mudell u l-kategorija qabel tiddeċiedi.",
+      "decisionHeading": "Irreġistra d-deċiżjoni tiegħek",
+      "decisionPrompt": "Agħżel ir-riżultat tar-reviżjoni. Tista' żżid nota dwar dak li ċċekkjajt.",
+      "fullEvidence": "Evidenza sħiħa ta' Safety Gate ({{count}})",
+      "groupHelp": {
+        "action": "Agħlaq is-sejba wara li tneħħi l-prodott mill-bejgħ jew taġġornah f'Shopify.",
+        "different": "Agħlaq jew tiċħad is-sejba minħabba li l-prodott tiegħek huwa mudell, marka, jew lott differenti.",
+        "information": "Żomm is-sejba miftuħa waqt li titlob lill-fornitur tiegħek għal dokumenti tal-lott, mudell, jew sigurtà.",
+        "other": "Irreġistra riżultat ieħor b'nota spjegattiva meħtieġa għat-traċċa tal-awditjar tiegħek."
+      },
+      "chooseOutcome": "Agħżel riżultat",
+      "identifiers": {
+        "barcode": "Barcode (GTIN/EAN)",
+        "batch": "Lott / Batch",
+        "brand": "Marka",
+        "field": "Identifikatur",
+        "match": "Tqabbil",
+        "mismatch": "Diskordanza",
+        "model": "Mudell",
+        "notSpecified": "mhux speċifikat",
+        "result": "Tqabbil",
+        "safetyGate": "Twissija ta' Safety Gate",
+        "yourProduct": "Il-prodott Shopify tiegħek"
+      },
+      "identifiersHeading": "Tqabbil tal-identifikaturi ħdejn xulxin",
+      "languageDiffNote": "Il-lingwa tal-interface tal-app ({{appLang}}) u l-lingwa tan-notifika bl-email ({{emailLang}}) huma ssettjati b'mod indipendenti.",
+      "noImage": "Ebda immaġni disponibbli",
+      "noteLabel": "X'iċċekkjajt? (mhux obbligatorju)",
+      "noteRequiredLabel": "X'iċċekkjajt? (meħtieġ)",
+      "otherNoteRequired": "Żid nota biex tispjega r-riżultat l-ieħor.",
+      "outcomeLabel": "Riżultat tar-reviżjoni",
+      "possibleMatch": "Tqabbil possibbli ta' Safety Gate",
+      "readyToRecord": "Lest biex tirreġistra",
+      "reviewPointsHeading": "Punti biex tirrevedi",
+      "unnamedRecord": "Rekord ta' Safety Gate"
+    },
+    "riskDescription": "Deskrizzjoni tar-riskju",
+    "riskLevel": "Livell ta' riskju",
+    "riskSeverity": "Severità tar-riskju",
+    "safetyGateMatches": "Tqabbil ta' Safety Gate",
+    "scoreHelper": "It-tqabbil ġenerali huwa l-punteġġ finali tar-reviżjoni. It-tqabbil tal-immaġni jirrifletti biss ix-xebh tal-ippakkjar.",
+    "sections": {
+      "whatHappened": "X'ġara?",
+      "whatHappenedReviewed": "Dan it-tqabbil diġà ġie rivedut u rreġistrat.",
+      "whatHappenedRisk": "Dan il-prodott Shopify jidher qisu prodott diġà rrappurtat f'Safety Gate.",
+      "whatHappenedSafe": "L-aħħar verifika ma sabet l-ebda tqabbil probabbli ta' Safety Gate.",
+      "whatToDo": "X'għandi nagħmel?",
+      "whyMatched": "Għaliex tqabbel"
+    },
+    "seriousRisk": "Riskju serju ta' {{category}}",
+    "summary": {
+      "confidence": "Kunfidenza",
+      "confidenceUnknown": "Kunfidenza mhux magħrufa",
+      "decisionRecorded": "Deċiżjoni rreġistrata",
+      "decisionRequired": "Deċiżjoni meħtieġa",
+      "highConfidence": "Kunfidenza għolja",
+      "likelyMatch": "Tqabbil probabbli",
+      "likelySafetyGateMatch": "Tqabbil probabbli ta' Safety Gate",
+      "matchType": "Tip ta' tqabbil",
+      "nextStep": "Pass li jmiss",
+      "noLikelyMatch": "Ebda tqabbil probabbli",
+      "overallMatch": "Punteġġ ġenerali",
+      "reviewRecommended": "Reviżjoni rakkomandata"
+    },
+    "supplierFollowUp": {
+      "copy": "Ikkopja s-segwitu tal-fornitur",
+      "template": "Hello, qed nirrevedu {{product}} minħabba li jista' jaqbel mal-allert ta' Safety Gate {{alert}} (riskju: {{risk}}). Jekk jogħġbok ikkonferma jekk dan huwiex l-istess mudell/lott, ipprovdi dokumentazzjoni tas-sigurtà tal-prodott, u spjega kwalunkwe differenza. Raġuni tat-tqabbil: {{reason}}"
+    },
+    "technicalDetails": {
+      "description": "Il-punteġġi u l-għadd ta' rkupri jinżammu hawn għal reviżjoni aktar profonda. Ibda bir-ritratti tal-prodott, il-marka, il-mudell, u l-azzjoni rakkomandata hawn fuq.",
+      "hide": "Aħbi d-dettalji",
+      "show": "Uri d-dettalji",
+      "title": "Dettalji tekniċi tat-tqabbil"
+    },
+    "textOnly": "Verifika b'test biss",
+    "viewOnSafetyGate": "Ara fuq Safety Gate",
+    "whyThisMatched": "Għaliex dan tqabbel",
+    "withImage": "Iċċekkjat bl-immaġini",
+    "yourProduct": "Il-prodott Shopify tiegħek"
+  },
+  "auditReport": {
+    "decision": "Deċiżjoni",
+    "description": "Irrevedi r-rekord komplut qabel ma tesporta CSV għat-tim tiegħek, il-fornitur, jew l-awditjar.",
+    "detected": "Misjub",
+    "documented": "Deċiżjonijiet dokumentati",
+    "download": "Niżżel CSV",
+    "empty": "Għadhom ma ġew irreġistrati l-ebda sejbiet dwar is-sigurtà tal-prodott.",
+    "eyebrow": "Rekord lest għall-esportazzjoni",
+    "generated": "Ġġenerat {{date}}",
+    "heading": "Sejbiet u deċiżjonijiet",
+    "needsReview": "Jeħtieġ reviżjoni",
+    "notRecorded": "Mhux irreġistrat",
+    "open": "Iftaħ ir-rapport tal-awditjar",
+    "product": "Prodott",
+    "risk": "Severità tar-riskju",
+    "status": "Status",
+    "summaryLabel": "Sommarju tar-rapport tal-awditjar",
+    "tableLabel": "Rapport tal-awditjar tas-sigurtà",
+    "title": "Rapport tal-awditjar tas-sigurtà",
+    "total": "Sejbiet irreġistrati",
+    "viewHistory": "Ara t-traċċa tal-awditjar"
+  },
+  "billing": {
+    "freeScanAvailableDescription": "Għandek skan tal-katalgu b'xejn disponibbli. Mexxi l-ewwel awditjar tiegħek biex tiċċekkja l-prodotti tal-ħanut tiegħek kontra d-database tal-UE Safety Gate għal prodotti perikolużi mhux tal-ikel.",
+    "freeScanAvailableHeading": "Skan Inizjali tal-Katalgu B'xejn Attiv",
+    "managePlanButton": "Immaniġġja l-abbonament",
+    "planActiveDescription": "Il-monitoraġġ huwa attivat għal dan il-ħanut Shopify. Irrevedi l-aħħar tħaddim u kwalunkwe prodott li jeħtieġ attenzjoni.",
+    "planEyebrow": "Pjan u Kopertura",
+    "planFreeAvailableDescription": "Skannjar inizjali b'xejn tal-katalogu ta' Safety Gate huwa disponibbli.",
+    "planFreeUsedDescription": "L-iskannjar inizjali b'xejn tiegħek intemm. Agħżel pjan biex tibda monitoraġġ kontinwu u żomm l-esportazzjoni tar-reġistru tal-verifika.",
+    "planTitle": "Abbonament u Monitoraġġ tas-Sigurtà",
+    "pricingUnavailable": "Il-prezzijiet ta' Shopify mhumiex ikkonfigurati għal din l-app.",
+    "statusActivePro": "ZeroRecall Pro (Attiv)",
+    "statusDevelopmentBypass": "Preview tal-iżvilupp (kontijiet injorati)",
+    "statusFreeAvailable": "Skannjar Inizjali B'xejn",
+    "statusFreeUsed": "Skannjar B'xejn Użat",
+    "statusLabel": "Pjan Kurrenti",
+    "statusUnverified": "L-abbonament ma setax jiġi vverifikat",
+    "upgradePlanButton": "Aġġorna għal Pro",
+    "upgradeRequiredDescription": "L-iskannjar inizjali b'xejn tiegħek huwa komplut. Agħżel pjan ta' Shopify biex timmonitorja twissijiet ġodda ta' Safety Gate u tiċċekkja prodotti mibdula.",
+    "upgradeRequiredHeading": "Kompli l-monitoraġġ ta' Safety Gate",
+    "verificationError": "Skannjar ġdid huwa sospiż sakemm il-kontijiet ta' Shopify ikunu jistgħu jiġu ċċekkjati. Is-sejbiet u d-deċiżjonijiet eżistenti tiegħek jibqgħu disponibbli."
+  },
+  "billingRedirect": {
+    "opening": "Qed niftħu l-pjanijiet tal-prezzijiet ta' Shopify...",
+    "openPricingPlans": "Iftaħ il-pjanijiet tal-prezzijiet"
+  },
+  "common": {
+    "all": "Kollha",
+    "cancel": "Ikkanċella",
+    "close": "Agħlaq",
+    "confirm": "Ikkonferma",
+    "language": "Lingwa",
+    "loading": "Qed jitgħabba...",
+    "unknown": "Mhux magħruf"
+  },
+  "dashboard": {
+    "activeAlertsBanner": {
+      "content": "Issolvi {{count}} twissija attiva biex iżżomm il-prodotti affettwati disponibbli fil-ħanut tiegħek.",
+      "content_few": "Issolvi {{count}} twissijiet attivi biex iżżomm il-prodotti affettwati disponibbli fil-ħanut tiegħek.",
+      "content_many": "Issolvi {{count}} twissijiet attivi biex iżżomm il-prodotti affettwati disponibbli fil-ħanut tiegħek.",
+      "content_one": "Issolvi {{count}} twissija attiva biex iżżomm il-prodotti affettwati disponibbli fil-ħanut tiegħek.",
+      "content_other": "Issolvi {{count}} twissijiet attivi biex iżżomm il-prodotti affettwati disponibbli fil-ħanut tiegħek.",
+      "content_plural": "Issolvi {{count}} twissijiet attivi biex iżżomm il-prodotti affettwati disponibbli fil-ħanut tiegħek.",
+      "content_two": "Issolvi {{count}} allerti attivi biex iżżomm il-prodotti affettwati disponibbli fil-ħanut tiegħek.",
+      "manualCheckAction": "Verifika manwali",
+      "reviewAction": "Irrevedi l-ewwel twissija",
+      "title": "Twissijiet ta' sigurtà attivi jeħtieġu attenzjoni"
+    },
+    "admin": {
+      "actionNeeded": "Azzjoni meħtieġa",
+      "actionNeededDescription": "Irrevedi l-prodotti mmarkati l-ewwel sabiex tkun tista' tiddeċiedi jekk iżżommhomx għall-bejgħ, tiċħadx il-logħba, jew issolvix it-twissija.",
+      "actionNeededTitle": "{{count}} twissija attiva teħtieġ reviżjoni",
+      "actionNeededTitle_few": "{{count}} twissijiet attivi jeħtieġu reviżjoni",
+      "actionNeededTitle_many": "{{count}} twissijiet attivi jeħtieġu reviżjoni",
+      "actionNeededTitle_one": "{{count}} twissija attiva teħtieġ reviżjoni",
+      "actionNeededTitle_other": "{{count}} twissijiet attivi jeħtieġu reviżjoni",
+      "actionNeededTitle_plural": "{{count}} twissijiet attivi jeħtieġu reviżjoni",
+      "actionNeededTitle_two": "{{count}} allerti attivi jeħtieġu reviżjoni",
+      "activeAlertsDescription": "Prodotti li għadhom jeħtieġu deċiżjoni tal-merkant qabel ma l-kju jkun ċar.",
+      "auditHistoryKept": "Storja tal-verifika miżmuma",
+      "auditReady": "Rapport lest",
+      "auditRecordsDescription": "Deċiżjonijiet solvuti u miċħuda b'raġunijiet u noti interni.",
+      "auditRecordsTitle": "Rekords tal-verifika",
+      "auditReport": "Rapport tal-verifika",
+      "automaticChecks": "Verifiki awtomatiċi",
+      "bulkCheckAllSummary": "Dan se jmexxi pass sħiħ għall-prodotti kollha {{count}}.",
+      "bulkCheckDescription": "Skennja l-prodotti mhux iċċekkjati l-ewwel, jew inkludi l-katalogu kollu meta trid pass ġdid.",
+      "bulkCheckSummary": "Sommarju tal-verifika bl-ingrossa",
+      "bulkCheckSummaryDescription": "Żomm dan is-sommarju kompatt sabiex il-merkanti jkunu jistgħu jikkonfermaw ir-riżultati mingħajr ma jiftħu t-tieni skrin.",
+      "bulkCheckTitle": "Verifika tal-katalogu bl-ingrossa",
+      "bulkCheckUncheckedSummary": "Dan se jiċċekkja {{count}} prodotti li fadal u jaqbeż {{skip}} oġġetti diġà riveduti.",
+      "catalogCoverageDescription": "Sehem tal-katalogu diġà ċċekkjat kontra Safety Gate.",
+      "catalogCoverageTitle": "Kopertura tal-katalogu",
+      "coverage": "Kopertura",
+      "coveragePercent": "Katalogu b'verifiki ssejvjati",
+      "criticalBannerDescription": "{{count}} logħba attiva hija mmarkata b'riskju għoli jew serju. Ipprijoritizza dawn il-prodotti qabel ma jkomplu l-bejgħ ġdid.",
+      "criticalBannerDescription_few": "{{count}} logħbiet attivi huma mmarkati b'riskju għoli jew serju. Ipprijoritizza dawn il-prodotti qabel ma jkomplu l-bejgħ ġdid.",
+      "criticalBannerDescription_many": "{{count}} logħbiet attivi huma mmarkati b'riskju għoli jew serju. Ipprijoritizza dawn il-prodotti qabel ma jkomplu l-bejgħ ġdid.",
+      "criticalBannerDescription_one": "{{count}} logħba attiva hija mmarkata b'riskju għoli jew serju. Ipprijoritizza dawn il-prodotti qabel ma jkomplu l-bejgħ ġdid.",
+      "criticalBannerDescription_other": "{{count}} logħbiet attivi huma mmarkati b'riskju għoli jew serju. Ipprijoritizza dawn il-prodotti qabel ma jkomplu l-bejgħ ġdid.",
+      "criticalBannerDescription_plural": "{{count}} logħbiet attivi huma mmarkati b'riskju għoli jew serju. Ipprijoritizza dawn il-prodotti qabel ma jkomplu l-bejgħ ġdid.",
+      "criticalBannerDescription_two": "{{count}} taqbiliet attivi huma mmarkati b'riskju għoli jew serju. Ipprijoritizza dawn il-prodotti qabel ma jkomplu l-bejgħ ġdid.",
+      "criticalBannerTitle": "{{count}} twissija attiva tinkludi logħbiet b'riskju għoli",
+      "criticalBannerTitle_few": "{{count}} twissijiet attivi jinkludu logħbiet b'riskju għoli",
+      "criticalBannerTitle_many": "{{count}} twissijiet attivi jinkludu logħbiet b'riskju għoli",
+      "criticalBannerTitle_one": "{{count}} twissija attiva tinkludi logħbiet b'riskju għoli",
+      "criticalBannerTitle_other": "{{count}} twissijiet attivi jinkludu logħbiet b'riskju għoli",
+      "criticalBannerTitle_plural": "{{count}} twissijiet attivi jinkludu logħbiet b'riskju għoli",
+      "criticalBannerTitle_two": "{{count}} allerti attivi jinkludu taqbiliet b'riskju għoli",
+      "daily": "Kuljum",
+      "dailyAtTime": "Kuljum fit-03:47 Europe/Bratislava",
+      "dailyAtTimePlanned": "Skedat (kuljum fit-03:47)",
+      "decisionsClosed": "Deċiżjonijiet magħluqa",
+      "demoAlert": {
+        "action": "Issolvi, tiċħad, jew segwi mal-fornitur",
+        "badge": "Eżempju ta' fluss tax-xogħol",
+        "description": "L-app turi l-prodott Shopify, ir-rekord ta' Safety Gate, għaliex qabbel, u l-azzjoni li trid tirreġistra.",
+        "evidence": "Żomm noti u esporta rapport ta' verifika",
+        "reason": "Qabbel il-marka, il-mudell, il-kategorija, u r-ritratti tal-prodott",
+        "sample": "Dak li jaraw il-merkanti meta tidher logħba",
+        "title": "Logħba probabbli ta' Safety Gate misjuba"
+      },
+      "emptyProofCoverage": "{{count}} prodotti għandhom riżultat ta' verifika rreġistrat.",
+      "emptyProofEvidence": "{{count}} deċiżjonijiet magħluqa jinżammu għall-istorja tal-verifika.",
+      "emptyProofMonitoring": "Il-monitoraġġ ta' Safety Gate ta' kuljum għadu għaddej.",
+      "exportProof": "Esporta prova",
+      "fallbackAlertDescription": "Qabbel ma' twissija ta' Safety Gate.",
+      "finishCoverage": "Lesta l-kopertura tal-katalogu",
+      "highRiskMatchesDescription": "Logħbiet ta' Safety Gate b'riskju serju jew għoli biex tirrevedi l-ewwel.",
+      "highRiskMatchesTitle": "Logħbiet b'riskju għoli",
+      "checkChangedProducts": "Iċċekkja prodotti mibdula",
+      "checksCompletedDescription": "Kontrolli awtomatiċi u manwali li jnaqqsu x-xogħol ta' reviżjoni manwali tal-katalgu.",
+      "checksCompletedTitle": "Kontrolli kompluti",
+      "lastMonitoringRunDescription": "L-aktar kontroll awtomatiku, manwali, jew bl-ingrossa reċenti ta' Safety Gate.",
+      "lastMonitoringRunTitle": "L-aħħar eżekuzzjoni ta' monitoraġġ",
+      "lastSafetyGateUpdateChecked": "L-aħħar aġġornament ta' Safety Gate iċċekkjat",
+      "latestRun": "L-aħħar eżekuzzjoni",
+      "monitoringRunDateUnknown": "Ħin mhux disponibbli",
+      "monitoringRunHistoryEmpty": "Għadhom ma ġew irreġistrati l-ebda eżekuzzjonijiet ta' monitoraġġ skedati.",
+      "monitoringRunHistoryTitle": "Eżekuzzjonijiet reċenti ta' monitoraġġ",
+      "monitoringRunProgress": "{{products}} prodotti ċċekkjati · {{alerts}} twissijiet ġodda",
+      "monitoringRunStatus": {
+        "completed": "Kompluta",
+        "enqueue_failed": "Ma setax jibda",
+        "failed": "Falla",
+        "processing": "Fil-progress",
+        "queued": "Fil-kju",
+        "retrying": "Qed jerġa' jipprova",
+        "skipped_unentitled": "Pjan inattiv",
+        "unknown": "Status mhux disponibbli"
+      },
+      "monitoringRunsTitle": "Kontrolli ta' monitoraġġ",
+      "monitoringStatusAllClear": "Il-monitoraġġ tal-katalgu qed jaħdem",
+      "monitoringStatusDescription": "ZeroRecall jiċċekkja l-katalgu tiegħek kontra aġġornamenti ġodda ta' Safety Gate tal-UE, jenfasizza prodotti li jeħtieġu reviżjoni, u jżomm evidenza għal rapporti ta' verifika.",
+      "monitoringStatusEyebrow": "Status ta' monitoraġġ",
+      "monitoringStatusNeedsReview": "{{count}} prodott jeħtieġ deċiżjoni tal-merkant",
+      "monitoringStatusNeedsReview_few": "{{count}} prodotti jeħtieġu deċiżjonijiet tal-merkant",
+      "monitoringStatusNeedsReview_many": "{{count}} prodotti jeħtieġu deċiżjonijiet tal-merkant",
+      "monitoringStatusNeedsReview_one": "{{count}} prodott jeħtieġ deċiżjoni tal-merkant",
+      "monitoringStatusNeedsReview_other": "{{count}} prodotti jeħtieġu deċiżjonijiet tal-merkant",
+      "monitoringStatusNeedsReview_plural": "{{count}} prodotti jeħtieġu deċiżjonijiet tal-merkant",
+      "monitoringStatusNeedsReview_two": "{{count}} prodott jeħtieġ deċiżjonijiet tal-merkant",
+      "needsReviewTitle": "Prodotti li jeħtieġu reviżjoni",
+      "nextAutomaticCheck": "Kontroll awtomatiku li jmiss",
+      "noActiveAlertsDescription": "L-aħħar kontrolli tiegħek bħalissa ma jeħtiġux azzjoni. Kompli skennja prodotti miżjuda ġodda biex iżżomm il-kopertura.",
+      "noActiveAlertsTitle": "L-ebda twissija ta' sigurtà attiva",
+      "noAlertsDescription": "Bħalissa m'hemm l-ebda reviżjonijiet ta' prodotti miftuħa. Dan xorta huwa utli: il-monitoraġġ ta' kuljum ikompli fl-isfond u l-evidenza tiegħek tibqa' lesta għall-esportazzjoni.",
+      "noAlertsTitle": "L-ebda prodott ma jeħtieġ reviżjoni",
+      "priorityQueue": "Kju tad-deċiżjonijiet",
+      "productsCoveredShort": "b'riżultat ta' kontroll irreġistrat",
+      "productsMonitored": "Verżjonijiet kurrenti tal-prodott iċċekkjati",
+      "proofGridLabel": "Attività ta' monitoraġġ",
+      "protectionDescription": "L-għadd jiddeskrivi r-riżultati rreġistrati fl-app; mhumiex ċertifikazzjoni tas-sigurtà tal-prodott.",
+      "protectionEyebrow": "Ir-rekord tal-monitoraġġ tiegħek",
+      "protectionTitle": "Irrevedi kontrolli reċenti u deċiżjonijiet tal-merkant.",
+      "recentAlertsDescription": "Irrevedi tqabbil probabbli ta' Safety Gate, irreġistra deċiżjoni, u żomm evidenza għal verifiki.",
+      "recentAlertsTitle": "Prodotti li jeħtieġu deċiżjoni tal-merkant",
+      "recommendedAction": "Azzjoni rakkomandata: irrevedi t-tqabbil u rreġistra deċiżjoni.",
+      "resolvedRateDescription": "Kemm mill-attività ta' twissija rreġistrata diġà ġiet magħluqa.",
+      "resolvedRateTitle": "Rata solvuta",
+      "results": {
+        "alertCreated": "Twissija maħluqa",
+        "completed": "Kompluta",
+        "error": "Żball",
+        "checked": "Iċċekkjat",
+        "skipped": "Maqlugħ"
+      },
+      "reviewOneProduct": "Iċċekkja prodott wieħed",
+      "riskInAlert": "Riskju deskritt fit-twissija ta' Safety Gate",
+      "runBulkCheck": "Mexxi kontroll bl-ingrossa",
+      "stats": {
+        "alertsCreated": "Twissijiet maħluqa",
+        "alreadyChecked": "Diġà ċċekkjat",
+        "errors": "Żbalji",
+        "checked": "Iċċekkjat",
+        "skipped": "Maqlugħ",
+        "stillUnchecked": "Għadu mhux iċċekkjat",
+        "totalProducts": "Prodotti totali"
+      },
+      "status": {
+        "cachedEvidence": "Evidenza cached qed terġa' tintuża",
+        "coverageIncomplete": {
+          "description": "L-ebda tqabbil ta' Safety Gate ma jeħtieġ reviżjoni fil-prodotti {{checked}} monitorjati. Imla l-kopertura għall-prodotti kurrenti kollha {{total}} qabel ma tikkonferma l-katalgu kollu.",
+          "eyebrow": "Kopertura mhux kompluta",
+          "title": "{{count}} prodott għad għandu bżonn kopertura",
+          "title_few": "{{count}} prodotti għad għandhom bżonn kopertura",
+          "title_many": "{{count}} prodotti għad għandhom bżonn kopertura",
+          "title_one": "{{count}} prodott għad għandu bżonn kopertura",
+          "title_other": "{{count}} prodotti għad għandhom bżonn kopertura",
+          "title_plural": "{{count}} prodotti għad għandhom bżonn kopertura",
+          "title_two": "{{count}} prodott għadhom jeħtieġu kopertura"
+        },
+        "deltaMonitoring": "Jiġu ċċekkjati biss twissijiet ġodda ta' Safety Gate",
+        "factsLabel": "Fatti kurrenti ta' monitoraġġ",
+        "matchesNeedingReview": "Tqabbil li jeħtieġ reviżjoni",
+        "monitoringNotConfirmed": "Monitoraġġ għadu mhux ikkonfermat",
+        "monitoringProblem": {
+          "action": "Aġġorna l-kopertura tal-katalogu",
+          "description": "Il-prodotti kurrenti tiegħek għandhom evidenza ta' kopertura, iżda l-app ma tistax tikkonferma meta l-monitoraġġ ta' Safety Gate l-aħħar tlesta. Aġġorna l-kopertura tal-katalgu biex tirrestawra status affidabbli.",
+          "eyebrow": "Il-monitoraġġ jeħtieġ attenzjoni",
+          "title": "Il-kopertura tal-katalgu m'għandha l-ebda eżekuzzjoni ta' monitoraġġ irreġistrata"
+        },
+        "noActionNeeded": {
+          "action": "Ara l-kopertura tal-katalgu",
+          "description": "L-ebda prodott fil-katalgu monitorjat tiegħek bħalissa ma jaqbel ma' twissijiet ta' Safety Gate tal-UE. Il-monitoraġġ ikompli fl-isfond u jeħtieġ xogħol biss twissijiet ġodda jew prodotti mibdula.",
+          "emptyCatalogDescription": "Żid prodotti mal-katalgu Shopify tiegħek u ZeroRecall se jkun lest biex ikoprihom.",
+          "emptyCatalogTitle": "Għad m'hemmx prodotti x'jiġu monitorjati",
+          "eyebrow": "Status kurrenti ta' Safety Gate",
+          "title": "L-ebda azzjoni meħtieġa"
+        },
+        "none": "Xejn",
+        "reviewNeeded": {
+          "criticalDescription": "Irrevedi dawn it-tqabbil possibbli qabel ma tkompli l-bejgħ. Qabbel il-prodott u l-evidenza ta' Safety Gate, imbagħad irreġistra d-deċiżjoni tiegħek.",
+          "criticalEyebrow": "Reviżjoni urġenti",
+          "criticalTitle": "{{count}} tqabbil possibbli b'twissija ta' riskju serju jeħtieġ reviżjoni",
+          "criticalTitle_few": "{{count}} tqabbil possibbli b'twissija ta' riskju serju jeħtieġ reviżjoni",
+          "criticalTitle_many": "{{count}} taqbiliet possibbli b'twissija ta' riskju serju jeħtieġu reviżjoni",
+          "criticalTitle_one": "{{count}} taqbila possibbli b'twissija ta' riskju serju teħtieġ reviżjoni",
+          "criticalTitle_other": "{{count}} taqbiliet possibbli b'twissija ta' riskju serju jeħtieġu reviżjoni",
+          "criticalTitle_plural": "{{count}} taqbiliet possibbli b'twissija ta' riskju serju jeħtieġu reviżjoni",
+          "criticalTitle_two": "{{count}} taqbila possibbli b'twissija ta' riskju serju jeħtieġu reviżjoni",
+          "description": "Taqbiliet potenzjali ta' Safety Gate jeħtieġu deċiżjoni tal-merkant. Irrevedi t-taqbiliet l-ewwel; ir-riżultati tal-kontroll għal prodotti oħra jibqgħu disponibbli fil-katalgu.",
+          "eyebrow": "Reviżjoni meħtieġa",
+          "title": "{{count}} taqbila possibbli teħtieġ reviżjoni",
+          "title_few": "{{count}} taqbiliet possibbli jeħtieġu reviżjoni",
+          "title_many": "{{count}} taqbiliet possibbli jeħtieġu reviżjoni",
+          "title_one": "{{count}} taqbila possibbli teħtieġ reviżjoni",
+          "title_other": "{{count}} taqbiliet possibbli jeħtieġu reviżjoni",
+          "title_plural": "{{count}} taqbiliet possibbli jeħtieġu reviżjoni",
+          "title_two": "{{count}} taqbila possibbli jeħtieġu reviżjoni"
+        },
+        "scheduledPlanned": "Tmexxija skedata"
+      },
+      "storeStatus": "Status tal-ħanut",
+      "valueMetrics": {
+        "decisionsRecorded": "Deċiżjonijiet irreġistrati",
+        "evidenceRetained": "Deċiżjonijiet b'evidenza",
+        "checksRun": "Kontrolli mwettqa",
+        "openDecisions": "Deċiżjonijiet miftuħa",
+        "productsCovered": "Prodotti kkontrollati"
+      },
+      "valueProofDescription": "Uri lit-tim li l-abbonament mhuwiex skan ta' darba: il-kopertura tal-katalgu, il-kontrolli, id-deċiżjonijiet, u l-aċċess ta' Shopify b'qari biss jibqgħu attivi.",
+      "valueProofDescriptionComplete": "Dawn l-għadd juru attività ta' kontroll irreġistrata għall-katalgu attwali.",
+      "valueProofDescriptionIncomplete": "Mexxi kontrolli għall-prodotti li fadal biex iżżid ir-riżultati mar-rekord tal-katalgu attwali.",
+      "valueProofEyebrow": "Azzjoni ta' kopertura",
+      "valueProofTitle": "X'jibqa' jagħmel ZeroRecall",
+      "valueProofTitleComplete": "Kull prodott attwali għandu kontroll irreġistrat",
+      "valueProofTitleIncomplete": "{{count}} prodotti għandhom kontroll irreġistrat",
+      "warningBannerDescription": "Irrevedi dawn it-taqbiliet, injora l-pożittivi foloz, jew issolvi kwistjonijiet ikkonfermati biex il-kju jibqa' azzjonabbli.",
+      "warningBannerTitle": "{{count}} twissija attiva teħtieġ deċiżjoni tal-merkant",
+      "warningBannerTitle_few": "{{count}} twissijiet attivi jeħtieġu deċiżjonijiet tal-merkant",
+      "warningBannerTitle_many": "{{count}} twissijiet attivi jeħtieġu deċiżjonijiet tal-merkant",
+      "warningBannerTitle_one": "{{count}} twissija attiva teħtieġ deċiżjoni tal-merkant",
+      "warningBannerTitle_other": "{{count}} twissijiet attivi jeħtieġu deċiżjonijiet tal-merkant",
+      "warningBannerTitle_plural": "{{count}} twissijiet attivi jeħtieġu deċiżjonijiet tal-merkant",
+      "warningBannerTitle_two": "{{count}} twissija attiva jeħtieġu deċiżjonijiet tal-merkant",
+      "withReadOnlyShopifyAccess": "Aċċess ta' Shopify b'qari biss"
+    },
+    "bulkCheck": {
+      "action": "Iċċekkja l-prodotti kollha",
+      "alerts": "Twissijiet {{count}}",
+      "alreadyChecked": "Diġà ċċekkjat",
+      "completed": "Tlestiet f' {{seconds}} sekondi",
+      "description": "Skennja kull prodott fil-ħanut tiegħek kontra d-database ta' Safety Gate biex taqbad riskji moħbija.",
+      "errors": "Żbalji {{count}}",
+      "checked": "Iċċekkjat {{count}}",
+      "includeAlreadyChecked": "Inkludi prodotti diġà kkontrollati",
+      "notYetChecked": "Għadu mhux iċċekkjat",
+      "processed": "Ipproċessat {{count}}",
+      "started": "Beda {{date}}",
+      "title": "Kontroll tas-sigurtà bl-ingrossa",
+      "totalProducts": "Prodotti totali",
+      "willCheckAll": "Se jiċċekkja l- {{count}} prodotti kollha",
+      "willCheckUnchecked": "Se jiċċekkja {{count}} prodotti mhux iċċekkjati (aqbeż {{skip}} diġà kkontrollati)"
+    },
+    "bulkResults": {
+      "success": "Kontroll bl-ingrossa tlesta: {{processed}} ipproċessati, {{checked}} iċċekkjati, {{alertsCreated}} twissijiet maħluqa."
+    },
+    "howItWorks": {
+      "alertGeneration": {
+        "description": "Taqbiliet jiġġeneraw twissijiet li tista' tinjora jew issolvi biex issegwi l-konformità.",
+        "title": "Ġenerazzjoni ta' twissijiet"
+      },
+      "autoMonitoring": {
+        "description": "Il-prodotti jiġu kkontrollati kontra d-database tal-UE kull meta jinħolqu jew jiġu aġġornati.",
+        "title": "Monitoraġġ awtomatiku"
+      },
+      "title": "Kif taħdem"
+    },
+    "liveScan": {
+      "completed": "Lest",
+      "description": "Qed nimportaw il-katalgu tiegħek minn Shopify u niskennjaw il-prodotti kontra aktar minn 35,000 rekord fid-database uffiċjali tal-UE Safety Gate (RAPEX). Ir-riżultati se jidhru hawn taħt fi ftit mumenti.",
+      "eyebrow": "Awditjar Awtomatizzat tas-Sigurtà",
+      "failedDescription": "Ma stajniex inlestu dan l-awditjar. Il-katalgu tiegħek ma ġiex immarkat bħala kompletament iċċekkjat. Ibda l-iskannjar mill-ġdid jew ikkuntattja l-appoġġ jekk il-problema tkompli.",
+      "failedHeading": "L-awditjar tal-katalgu jeħtieġ prova oħra",
+      "heading": "Awditjar tas-sigurtà tal-katalgu b'xejn għaddej...",
+      "inProgress": "Għaddej...",
+      "pending": "Pendenti",
+      "progress": "Importati {{imported}} minn {{fetched}} prodotti; imqabbla {{scanned}} prodotti b' {{alerts}} twissijiet ta' Safety Gate s'issa.",
+      "stepAudit": "3. Ipprepara traċċa tal-awditjar tal-GPSR u status ta' konformità",
+      "stepImport": "1. Importa prodotti minn Shopify",
+      "stepScan": "2. Qabbel mad-database ta' Safety Gate (aktar minn 35,000 rekord)"
+    },
+    "metricsCard": {
+      "activeAlertsHeading": "Twissijiet Attivi",
+      "productsCheckedHeading": "Prodotti Iċċekkjati",
+      "resolutionHeading": "Rata ta' Riżoluzzjoni",
+      "resolved": "{{count}} issoluti",
+      "resolvedAndDismissed": "{{resolved}} issoluti • {{dismissed}} miċħuda",
+      "scans": "Skans ta' Safety Gate",
+      "totalRecorded": "{{count}} irreġistrati total"
+    },
+    "monitorCard": {
+      "description": "Segwi t-twissijiet, mexxi kontrolli tal-katalgu, u żomm ir-regolaturi sodisfatti.",
+      "reviewAction": "Irrevedi twissijiet",
+      "title": "Immonitorja s-sigurtà tal-prodott f'daqqa t'għajn"
+    },
+    "quickActions": {
+      "browsePortal": "Ibbrawżja l-portal ta' Safety Gate",
+      "description": "Kontrolli u dokumentazzjoni regolari jgħinu juru diliġenza dovuta lir-regolaturi.",
+      "manualCheck": "Mexxi kontroll manwali",
+      "title": "Azzjonijiet rapidi"
+    },
+    "recentAlerts": {
+      "active": "{{count}} attivi",
+      "allResolved": "Kollha solvuti",
+      "description": "Investiga l-aħħar taqbiliet minn Safety Gate qabel ma twettaq ordnijiet.",
+      "emptyState": {
+        "content": "Aħbar tajba—l-ebda prodott mhu mmarkat bħalissa. Kompli immonitorja biex iżżomm il-konformità.",
+        "heading": "L-ebda twissija ta' sigurtà s'issa"
+      },
+      "matchCount": "{{count}} taqbila misjuba",
+      "matchCount_few": "{{count}} taqbiliet misjuba",
+      "matchCount_many": "{{count}} taqbiliet misjuba",
+      "matchCount_one": "{{count}} taqbila misjuba",
+      "matchCount_other": "{{count}} taqbiliet misjuba",
+      "matchCount_plural": "{{count}} taqbiliet misjuba",
+      "matchCount_two": "Instabu {{count}} taqbila",
+      "title": "Twissijiet ta' sigurtà reċenti"
+    },
+    "safetyBreakdown": {
+      "actionDesc": "Taqbiliet misjuba b'rapporti ta' Safety Gate tal-UE li jeħtieġu reviżjoni u riżoluzzjoni.",
+      "actionLabel": "Azzjoni Meħtieġa",
+      "description": "Ħarsa ġenerali tal-verifika tal-katalgu tal-prodotti tiegħek kontra l-listi Ewropej tas-sikurezza u d-direttiva GPSR.",
+      "eyebrow": "Status tal-Protezzjoni tal-Katalgu",
+      "protectedDesc": "Prodotti li l-aħħar verifika rreġistrata tagħhom ma sabet l-ebda taqbila probabbli.",
+      "protectedLabel": "Prodotti vverifikati mingħajr sejbiet miftuħa",
+      "protectRemainingAction": "Iċċekkja l-bqija ({{count}})",
+      "reviewAlertsAction": "Irrevedi twissijiet",
+      "scanAllAction": "Mexxi awditjar sħiħ tal-katalgu",
+      "title": "Status tas-Sikurezza tal-Prodott",
+      "unprotectedAllCovered": "Kull prodott kurrenti għandu riżultat ta' verifika rreġistrat.",
+      "unprotectedDesc": "Prodotti mingħajr verifika rreġistrata ta' Safety Gate.",
+      "unprotectedLabel": "Għadu mhux ivverifikat"
+    },
+    "setup": {
+      "description": "Ipprepara l-ħanut tiegħek għall-konformità mas-sikurezza tal-prodotti tal-UE.",
+      "progress": "{{completed}} minn {{total}} passi kompluti",
+      "steps": {
+        "step1": {
+          "description": "Ikklikkja \"Iċċekkja l-prodotti kollha\" biex tiskannja l-katalgu kollu tiegħek kontra d-database tal-EU Safety Gate.",
+          "label": "Mexxi l-ewwel verifika tal-prodotti bl-ingrossa tiegħek"
+        },
+        "step2": {
+          "description": "Iċċekkja l-paġna tal-allerti biex tirrevedi kwalunkwe prodott li jaqbel ma' twissijiet ta' Safety Gate.",
+          "label": "Irrevedi kwalunkwe allert ta' sikurezza"
+        },
+        "step3": {
+          "description": "Ippermetti verifiki awtomatiċi fis-Settings biex tissorvelja prodotti ġodda awtomatikament.",
+          "label": "Ikkonfigura monitoraġġ awtomatiku"
+        }
+      },
+      "title": "Gwida tas-Setup"
+    },
+    "stats": {
+      "actionNeeded": "Azzjoni meħtieġa",
+      "activeAlerts": "Allerti attivi",
+      "alertsLogged": "Allerti rreġistrati",
+      "allClear": "Kollox ċar",
+      "autoMonitoring": "Monitoraġġ awtomatiku",
+      "descriptions": {
+        "activeAlerts": "Irrevedi dawn il-prodotti llum biex tibqa' konformi.",
+        "activeAlertsZero": "Il-kwistjonijiet kollha ta' sikurezza huma solvuti.",
+        "alertsLogged": "Jinkludi allerti solvuti u miċħuda għal traċċa ta' awditjar.",
+        "alertsLoggedZero": "L-ebda allert storiku. Kompli tissorvelja prodotti ġodda.",
+        "productsChecked": "Avvenimenti awtomatiċi ta' Shopify ikomplu jissorveljaw l-aġġornamenti.",
+        "productsCheckedZero": "Mexxi verifika bl-ingrossa biex tiskannja l-katalgu kurrenti tiegħek."
+      },
+      "newSetup": "Setup ġdid",
+      "open": "{{count}} miftuħa",
+      "productsChecked": "Prodotti kkontrollati",
+      "resolved": "{{count}} issoluti"
+    },
+    "title": "ZeroRecall"
+  },
+  "dates": {
+    "daysAgo": "{{count}} jiem ilu",
+    "today": "Illum",
+    "weeksAgo": "{{count}} ġimgħat ilu",
+    "yesterday": "Ilbieraħ"
+  },
+  "errors": {
+    "apiError": "Is-servizz estern tas-sikurezza huwa temporanjament mhux disponibbli. Jekk jogħġbok erġa' pprova aktar tard.",
+    "pageLoadFailed": "It-tagħbija tal-paġna falliet",
+    "unknown": "Xi ħaġa marret ħażin"
+  },
+  "evidence": {
+    "alertNumber": "Allert Safety Gate {{number}}",
+    "description": "Irrevedi deċiżjonijiet irreġistrati dwar is-sikurezza tal-prodott, noti, kuntest tar-riskju, u evidenza ta' segwitu tal-fornitur.",
+    "empty": "L-ebda deċiżjoni dwar is-sikurezza tal-prodott ma ġiet irreġistrata s'issa.",
+    "eyebrow": "Traċċa ta' awditjar",
+    "filteredRecords": "{{visible}} minn {{total}} rekords",
+    "filters": {
+      "collapseForProduct": "Aħbi evidenza sħiħa għal {{title}}",
+      "expandForProduct": "Uri evidenza sħiħa għal {{title}}",
+      "noResults": "L-ebda rekord ta' awditjar ma jaqbel ma' dawn il-filtri.",
+      "searchLabel": "Fittex traċċa ta' awditjar",
+      "searchPlaceholder": "Fittex prodott, numru ta' allert, jew evidenza",
+      "showLess": "Aħbi evidenza",
+      "showMore": "Uri evidenza",
+      "statusLabel": "Status tad-deċiżjoni"
+    },
+    "fullEvidence": "Evidenza sħiħa",
+    "heading": "Storja tad-deċiżjonijiet u l-evidenza",
+    "noNotes": "L-ebda nota rreġistrata",
+    "records": "{{count}} rekords",
+    "table": {
+      "accessibilityLabel": "Tabella tal-evidenza tas-sikurezza tal-prodott",
+      "decision": "Deċiżjoni",
+      "details": "Dettalji",
+      "notes": "Noti / evidenza",
+      "product": "Prodott",
+      "status": "Status",
+      "summary": "Sommarju tal-evidenza",
+      "updated": "Aġġornat"
+    },
+    "title": "Traċċa ta' Awditjar"
+  },
+  "experience": {
+    "delayed": "Il-monitoraġġ jeħtieġ attenzjoni — l-aħħar eżekuzzjoni kompluta għandha aktar minn 48 siegħa",
+    "pausedHelp": "Il-verifiki awtomatiċi huma waqfu. Agħżel pjan biex tiċċekkja allerti ġodda ta' Safety Gate u bidliet fil-prodotti waqt li Shopify tkun magħluqa.",
+    "previewHelp": "Il-ftuħ ta' din il-preview tal-iżvilupp ma jattiva l-monitoraġġ fl-isfond. Il-verifiki skedati jeħtieġu pjan attiv verifikat ta' Shopify.",
+    "reviewSteps": "1. Qabbel ritratti u identifikaturi → 2. Agħżel ir-riżultat tar-reviżjoni → 3. Irreġistra d-deċiżjoni tiegħek",
+    "valueBody": "Verifiki ta' kuljum għal allerti ġodda ta' Safety Gate, verifiki meta l-prodotti jinbidlu, notifiki bl-email meta attivati, u deċiżjonijiet ta' reviżjoni ssejvjati.",
+    "valueTitle": "X'iżid il-monitoraġġ kontinwu"
+  },
+  "manualCheck": {
+    "admin": {
+      "catalog": "Katalgu",
+      "catalogDescription": "Il-prodotti huma magħżula skont l-aħħar aġġornamenti ta' Shopify sabiex il-merkanti jkunu jistgħu jerġgħu jiċċekkjaw il-bidliet reċenti l-ewwel.",
+      "checkFailed": "Il-verifika falliet",
+      "manualReview": "Reviżjoni fuq talba",
+      "manualReviewDescription": "Agħżel kwalunkwe prodott mill-katalgu tiegħek u mexxi verifika mmirata ta' Safety Gate meta jkollok bżonn tweġiba immedjata.",
+      "productFlagged": "Prodott immarkat"
+    },
+    "badges": {
+      "flagged": "{{count}} immarkati",
+      "checks": "{{count}} verifiki",
+      "needsReview": "{{count}} jeħtieġu reviżjoni"
+    },
+    "banners": {
+      "alertDescription": "Instabet kwistjoni potenzjali ta' sikurezza għal dan il-prodott.",
+      "alertHeading": "Allert ta' sikurezza maħluq",
+      "failedHeading": "Il-verifika falliet",
+      "textOnlyDescription": "Dan ir-riżultat uża biss oqsma ta' test. Jekk il-prodott jiddependi fuq differenzi viżwali, irrevedi t-taqbila b'aktar attenzjoni.",
+      "textOnlyHeading": "Tqabbil tal-immaġni ma kienx disponibbli"
+    },
+    "breadcrumbs": {
+      "current": "Kopertura tal-katalogu",
+      "dashboard": "Dashboard"
+    },
+    "bulk": {
+      "description": "Irrevedi verifiki ssejvjati u mexxi tqabbil ġdid ta' Safety Gate għall-prodotti fil-katalgu kurrenti tiegħek.",
+      "checkAllProducts": "Iċċekkja l-prodotti li fadal",
+      "checkingAll": "Qed jiġi ċċekkjat il-katalgu...",
+      "title": "Iċċekkja l-katalgu tiegħek"
+    },
+    "catalogue": {
+      "accessibilityLabel": "Tabella tal-katalogu tal-prodotti",
+      "actions": {
+        "checkAgain": "Iċċekkja mill-ġdid",
+        "checkAgainForProduct": "Iċċekkja {{title}} mill-ġdid",
+        "checkSafety": "Iċċekkja s-sigurtà",
+        "checkSafetyForProduct": "Iċċekkja s-sigurtà għal {{title}}",
+        "viewForProduct": "Ara s-sejba rreġistrata għal {{title}}"
+      },
+      "columns": {
+        "action": "Azzjoni",
+        "checks": "Kontrolli",
+        "product": "Prodott",
+        "status": "Status"
+      },
+      "emptyBody": "L-ebda prodott mhu disponibbli għall-kontroll.",
+      "emptyHeading": "L-ebda prodott misjub",
+      "firstCheck": "Agħmel l-ewwel kontroll tiegħek",
+      "heading": "Katalogu tal-Prodotti ({{count}})",
+      "lastChecked": "L-aħħar iċċekkjat {{date}}",
+      "noType": "L-ebda tip",
+      "searchLabel": "Sib prodott",
+      "searchPlaceholder": "Fittex prodotti skont it-titlu, SKU, il-fornitur, jew it-tip",
+      "status": {
+        "notChecked": "Mhux iċċekkjat",
+        "reviewed": "Irrevedut",
+        "safe": "L-ebda taqbila misjuba",
+        "unsafe": "Jeħtieġ reviżjoni"
+      },
+      "totalChecks": "{{count}} total",
+      "unknownVendor": "Fornitur mhux magħruf"
+    },
+    "coverage": {
+      "completeDescription": "Kull prodott attwali ta' Shopify għandu kontroll irreġistrat ta' Safety Gate. Prodotti ġodda jew mibdula għad għandhom bżonn kontroll ġdid.",
+      "completeTitle": "Kull prodott attwali għandu riżultat ta' kontroll salvat",
+      "eyebrow": "Status tal-kontroll tal-katalogu",
+      "incompleteDescription": "Iċċekkja l-prodotti li fadal biex issalva riżultat ta' Safety Gate għall-katalogu attwali.",
+      "incompleteTitle": "{{count}} prodotti m'għandhomx kontroll salvat s'issa",
+      "lastProductNeedsReview": "L-aħħar kontroll tal-prodott ħoloq jew aġġorna oġġett ta' reviżjoni.",
+      "lastProductSafe": "L-aħħar kontroll tal-prodott ma sab l-ebda taqbila probabbli ta' Safety Gate.",
+      "lastRun": "L-aħħar kontroll",
+      "lastRunResultWithCounts": "Iċċekkjati {{checked}}, injorati {{skipped}} mhux mibdula, inħolqu {{alerts}} oġġetti ta' reviżjoni, {{errors}} żbalji.",
+      "noneRemaining": "Kull prodott attwali għandu riżultat ta' kontroll salvat.",
+      "noRunYet": "L-ebda katalogu jew kontroll tal-prodott ma tħaddem s'issa.",
+      "percent": "{{percent}}% b'kontroll attwali",
+      "productsCovered": "Prodotti kkontrollati",
+      "productsCoveredDescription": "Prodotti b'riżultat salvat għall-verżjoni attwali tagħhom ta' Shopify.",
+      "remaining": "Għadu mhux ivverifikat",
+      "remainingDescription": "Ħaddem kontroll biex issalva riżultat ta' Safety Gate għal dawn il-prodotti."
+    },
+    "filters": {
+      "all": "Kollha ({{count}})",
+      "needsReview": "Taqbila possibbli ({{count}})",
+      "safe": "L-ebda taqbila misjuba ({{count}})",
+      "unprotected": "Mhux iċċekkjat jew mibdul ({{count}})"
+    },
+    "modal": {
+      "unknown": "Mhux magħruf",
+      "unknownProduct": "Prodott Mhux Magħruf"
+    },
+    "overview": {
+      "coverage": "{{coverage}}% kopertura",
+      "manualCompleted": "Kontrolli manwali kompluti",
+      "manualCompletedDescription": "{{checked}} minn {{total}} prodotti ċċekkjati",
+      "noOpenReviews": "L-ebda deċiżjoni tal-prodott miftuħa.",
+      "noRisks": "L-ebda riskju misjub s'issa.",
+      "prioritise": "Ipprijoritizza dawn il-prodotti għall-azzjoni.",
+      "productsDescription": "L-aħħar prodotti mill-ħanut tiegħek.",
+      "productsFlagged": "Prodotti mmarkati",
+      "productsInScope": "Prodotti fl-ambitu",
+      "productsNeedingReview": "Prodotti li jeħtieġu reviżjoni",
+      "title": "Ħarsa ġenerali tal-kontrolli"
+    },
+    "quickActions": {
+      "title": "Azzjonijiet Mgħaġġla"
+    },
+    "subtitle": "Ipproteġi l-bqija tal-katalogu tiegħek, aġġorna l-monitoraġġ, jew iċċekkja prodott wieħed magħżul.",
+    "title": "Kopertura tal-katalogu",
+    "toasts": {
+      "completed": "Kontroll tas-sigurtà tlesta",
+      "flagged": "Problema potenzjali ta' sigurtà misjuba"
+    }
+  },
+  "nav": {
+    "catalogCoverage": "Kopertura tal-Katalogu",
+    "dashboard": "Dashboard",
+    "evidence": "Traċċa ta' Awditjar",
+    "manualCheck": "Kopertura tal-Katalogu",
+    "safetyAlerts": "Kju ta' Reviżjoni",
+    "settings": "Settings"
+  },
+  "news": {
+    "items": {
+      "databaseUpdate": {
+        "date": "Diċembru 2025",
+        "description": "Id-database ta' Safety Gate tiġi aġġornata kontinwament b'twissijiet ġodda dwar il-prodotti. Agħmel kontrolli regolari biex tibqa' konformi.",
+        "title": "Database tal-UE Safety Gate Aġġornata"
+      },
+      "gpsr": {
+        "date": "GPSR 2024",
+        "description": "Tgħallem dwar ir-rekwiżiti tal-GPSR u kif tiżgura li l-prodotti tiegħek jissodisfaw l-istandards ta' sigurtà tal-UE.",
+        "title": "Regolament Ġenerali dwar is-Sigurtà tal-Prodotti"
+      }
+    },
+    "title": "Aħbarijiet"
+  },
+  "onboarding": {
+    "back": "Lura",
+    "finishButton": "Lesti s-Setup u Mur fid-Dashboard",
+    "nextStep": "Pass Li Jmiss",
+    "stepIndicator": "Pass {{current}} minn {{total}}",
+    "steps": {
+      "automation": {
+        "description": "Ikkonfigura reviżjoni prijoritarja u regoli awtomatiċi ta' sigurtà għall-ħanut tiegħek.",
+        "label": "Awtomazzjoni tas-Sigurtà",
+        "quarantine": {
+          "desc": "Immarka awtomatikament il-prodotti għal reviżjoni prijoritarja meta jaqblu ma' twissijiet ta' Safety Gate b'riskju serju (limitu >= 95%).",
+          "label": "Ippermetti reviżjoni prijoritarja",
+          "title": "Ipprijoritizza Riskji Serji"
+        },
+        "title": "Pass 3: Monitoraġġ Awtomatiku u Twissijiet",
+        "webhooks": {
+          "desc": "Il-prodotti jiġu ċċekkjati awtomatikament kontra d-database tal-UE kull meta jinħolqu jew jiġu aġġornati.",
+          "title": "Skannjar f'Ħin Real permezz ta' Webhook"
+        }
+      },
+      "scan": {
+        "alerts": "Twissijiet ta' Riskju Maħluqa: {{count}}",
+        "complete": "Il-katalogu issa huwa mmonitorjat",
+        "description": "Importa l-prodotti attwali tiegħek ta' Shopify fil-monitoraġġ ta' Safety Gate, imbagħad qabbel il-katalogu ma' twissijiet reċenti ta' Safety Gate.",
+        "imported": "Prodotti importati għall-monitoraġġ: {{count}}",
+        "label": "Importazzjoni tal-katalogu",
+        "monitored": "Prodotti mqabbla ma' twissijiet ta' Safety Gate: {{count}}",
+        "scanned": "Prodotti Skannjati: {{count}}",
+        "scanning": "Qed nimportaw il-katalogu u nqabblu l-prodotti ma' twissijiet ta' Safety Gate...",
+        "startButton": "Importa u mmonitorja l-katalogu attwali",
+        "title": "Pass 2: Importa u mmonitorja l-katalogu attwali",
+        "toScan": "Prodotti li għandhom jiġu importati għall-monitoraġġ: {{count}}"
+      },
+      "sensitivity": {
+        "balanced": "70% (Rakkomandat - Bilanċjat)",
+        "broad": "40% (Wiesa' - Aktar twissijiet)",
+        "calibration": {
+          "balancedDesc": "Sensittività standard. Bilanċ ottimizzat bejn il-preċiżjoni u l-volum ta' twissijiet. Jiskenja titli, deskrizzjonijiet, u jaqbel ma' marki ewlenin u strutturi ta' mudelli.",
+          "balancedTitle": "Modalità ta' Sejbien Ibbilanċjat",
+          "broadDesc": "Sensittività għolja. Jaqbad tqabbil relatat b'mod laxk. Rakkomandat jekk tbigħ kategoriji ta' prodotti b'riskju għoli (ġugarelli, elettronika) u trid kopertura kompleta, iżda tistenna xi pożittivi foloz.",
+          "broadTitle": "Modalità ta' Sejbien Wiesgħa",
+          "strictDesc": "Preċiżjoni għolja. Tiffiltra xebh minuri. It-twissijiet jattivaw biss għal tqabbil ċar ħafna ta' isem ta' marka/mudell. Rata baxxa ta' twissijiet foloz.",
+          "strictTitle": "Modalità ta' Sejbien Stretta"
+        },
+        "description": "Agħżel kemm prodott għandu jaqbel mill-qrib ma' rekord ta' Safety Gate qabel ma jkollu bżonn reviżjoni.",
+        "label": "Strettezza tat-tqabbil",
+        "strict": "90% (Strett - Inqas twissijiet)",
+        "thresholdLabel": "Limitu tat-tqabbil: {{value}}%",
+        "title": "Pass 1: Issettja l-istrettezza tat-tqabbil"
+      }
+    },
+    "subtitle": "Sib tqabbil possibbli ta' prodotti perikolużi, irrevedihom f'Shopify, u żomm evidenza ta' verifika għal kull deċiżjoni.",
+    "title": "Immonitorja l-katalgu tiegħek kontra l-EU Safety Gate",
+    "value": {
+      "audit": {
+        "description": "Deċiżjonijiet solvuti u miċħuda jżommu noti għall-esportazzjonijiet u s-segwitu tal-fornitur.",
+        "title": "Evidenza lesta għall-verifika"
+      },
+      "monitor": {
+        "description": "Twissijiet ġodda ta' Safety Gate jiġu kkontrollati kontra l-katalgu Shopify tiegħek.",
+        "title": "Monitoraġġ ta' kuljum tal-EU Safety Gate"
+      },
+      "review": {
+        "description": "Qabbel it-tqabbil, iddeċiedi x'għandek tagħmel, u żomm il-kju azzjonabbli.",
+        "title": "Fluss tax-xogħol tad-deċiżjoni tal-merkant"
+      }
+    }
+  },
+  "pagination": {
+    "pageOf": "Paġna {{current}} minn {{total}} ({{count}} twissijiet)"
+  },
+  "portal": {
+    "description": "Aċċessa d-database uffiċjali Ewropea ta' Safety Gate biex tfittex prodotti perikolużi u tara twissijiet dettaljati dwar is-sigurtà.",
+    "home": "Paġna Ewlenija ta' Safety Gate",
+    "homeDescription": "Aċċessa l-portal uffiċjali tal-Kummissjoni Ewropea",
+    "searchDatabase": "Fittex fid-Database",
+    "searchDescription": "Fittex fl-EU Safety Gate għal prodotti perikolużi",
+    "title": "Portal ta' Safety Gate"
+  },
+  "resolveActions": {
+    "actionTaken": "Azzjoni meħuda",
+    "contactedSupplier": "Ikkuntattjat il-fornitur (Rispons pendenti)",
+    "contactPending": "Qed tistenna rispons mill-fornitur",
+    "falsePositive": "Pożittiv falz",
+    "menuLabel": "Azzjonijiet ta' riżoluzzjoni",
+    "modifiedProduct": "Prodott modifikat",
+    "noActionNeeded": "L-ebda azzjoni meħtieġa",
+    "notMyProduct": "Mhux il-prodott tiegħi",
+    "other": "Oħrajn",
+    "removedFromSale": "Imneħħi mill-bejgħ",
+    "verifiedSafe": "Riżultat storiku: prodott ivverifikat sikur"
+  },
+  "settings": {
+    "monitoring": {
+      "automatic": {
+        "description": "Il-prodotti jiġu kkontrollati awtomatikament meta jinħolqu jew jiġu aġġornati permezz ta' webhooks.",
+        "enabled": "Attivat",
+        "title": "Kontroll awtomatiku"
+      },
+      "manual": {
+        "description": "Mexxi kontrolli ta' sigurtà fuq talba għal kwalunkwe prodott fil-katalgu tiegħek.",
+        "goToManualCheck": "Mur għall-Kontroll Manwali",
+        "title": "Kontrolli manwali"
+      },
+      "title": "Monitoraġġ"
+    },
+    "navigation": {
+      "dashboard": "Dashboard",
+      "manualCheck": "Verifika manwali",
+      "title": "Navigazzjoni",
+      "viewAlerts": "Ara t-twissijiet"
+    },
+    "subtitle": "Ikkontrolla kif ZeroRecall jissorvelja l-katalgu Shopify tiegħek.",
+    "threshold": {
+      "currentDefault": "Default tal-ambjent attwali",
+      "description": "Agħżel kemm tqabbil possibbli ta' Safety Gate it-tim tiegħek irid jirrevedi. Il-monitoraġġ ibbilanċjat huwa rakkomandat għall-biċċa l-kbira tal-katalgi ta' Shopify.",
+      "howItWorks": "Kif jaħdem dan",
+      "label": "Limitu avvanzat tat-tqabbil (%)",
+      "resetToDefault": "Irrisettja għal default",
+      "save": "Ħlief",
+      "title": "Modalità ta' monitoraġġ"
+    },
+    "title": "Settings tal-Monitoraġġ"
+  },
+  "settingsAdmin": {
+    "advancedMatchingSettings": "Settings avvanzati tat-tqabbil",
+    "automation": {
+      "autoDraftDescription": "Immarka awtomatikament il-prodotti għal reviżjoni prijoritarja meta jaqblu ma' twissijiet ta' Safety Gate b'riskju serju (limitu >= 95%).",
+      "autoDraftTitle": "Ipprijoritizza riskji serji",
+      "description": "Ikkonfigura reviżjoni prijoritarja għal tqabbil b'riskju għoli.",
+      "eyebrow": "Operazzjonijiet f'ħin reali",
+      "title": "Awtomazzjoni tas-sigurtà"
+    },
+    "automationStatus": {
+      "active": {
+        "badge": "Pjan attiv",
+        "description": "Il-verifika inizjali tal-katalgu tlestiet u dan il-ħanut għandu pjan ta' monitoraġġ attiv.",
+        "title": "Verifika tal-katalgu tlestiet"
+      },
+      "completedNoPlan": {
+        "badge": "Verifika kompluta",
+        "description": "Il-verifika inizjali tal-katalgu hija kompluta. Il-monitoraġġ awtomatiku kontinwu jeħtieġ pjan attiv.",
+        "title": "Verifika inizjali tal-katalgu tlestiet"
+      },
+      "failed": {
+        "badge": "Jeħtieġ attenzjoni",
+        "description": "L-aħħar importazzjoni jew verifika ma tlestietx. Erġa' pprova l-kopertura tal-katalgu qabel ma tiddependi fuq l-istatus tal-monitoraġġ.",
+        "title": "Il-verifika inizjali tal-katalgu teħtieġ attenzjoni"
+      },
+      "notStarted": {
+        "badge": "Mhux ivverifikat",
+        "description": "L-importazzjoni inizjali ma tlestietx, għalhekk il-kopertura tal-katalgu għadha mhix ikkonfermata.",
+        "title": "Verifika tal-katalgu mhux ikkonfermata"
+      },
+      "openCatalog": "Iftaħ il-kopertura tal-katalgu",
+      "scanning": {
+        "badge": "Fil-progress",
+        "description": "Il-prodotti qed jiġu importati u kkontrollati. Il-kopertura tal-katalgu tiġi kkonfermata wara li tispiċċa l-verifika.",
+        "title": "Verifika inizjali tal-katalgu għaddejja"
+      }
+    },
+    "automationStatusDescription": "Aġġornamenti ta' kuljum tal-EU Safety Gate, bidliet fil-prodotti ta' Shopify, u rekords ta' verifika huma mmaniġġjati awtomatikament. Uża dawn is-settings biss biex tirfina l-volum ta' reviżjoni u n-notifiki.",
+    "automationStatusEyebrow": "Monitoraġġ awtomatiku",
+    "automationStatusTitle": "Il-monitoraġġ ta' Safety Gate qed jaħdem għal dan il-ħanut",
+    "configuration": "Konfigurazzjoni",
+    "configurationDescription": "Żomm il-paġna ffukata fuq deċiżjoni waħda tal-merkant: kemm għandu jkun strett il-kontrollur meta jqabbel prodotti ma' twissijiet ta' Safety Gate.",
+    "currentThreshold": "Limitu attwali",
+    "currentThresholdDescription": "Valuri aktar baxxi jaqbdu aktar tqabbil possibbli. Valuri ogħla jnaqqsu l-pożittivi foloz.",
+    "environmentDefault": "Default tal-ambjent",
+    "environmentDefaultDescription": "Użat meta l-ħanut ma jkollux limitu personalizzat salvat għadu.",
+    "exclusions": {
+      "description": "Eskludi bejjiegħa speċifiċi jew kategoriji ta' prodotti mill-kontrolli ta' Safety Gate biex tnaqqas il-pożittivi foloz.",
+      "eyebrow": "Regoli ta' filtrazzjoni",
+      "title": "Regoli ta' esklużjoni",
+      "typesDescription": "Ittajpja kategorija jew tip ta' prodott u agħfas Enter jew virgola biex iżżidha.",
+      "typesPlaceholder": "Gift Card, Servizz, ...",
+      "typesTitle": "Tipi ta' prodotti esklużi",
+      "vendorsDescription": "Ittajpja isem ta' fornitur u agħfas Enter jew virgola biex iżżidha.",
+      "vendorsPlaceholder": "Fornitur A, Fornitur B, ...",
+      "vendorsTitle": "Fornituri esklużi"
+    },
+    "fallback": "Fallback",
+    "guidance": "Gwida",
+    "guidanceItems": {
+      "balancedDescription": "Rakkomandat għall-biċċa l-kbira tal-katalgi (65-70%). Jaqbad ir-riskji probabbli filwaqt li jżomm allerti foloz baxxi.",
+      "balancedTitle": "Default ibbilanċjat",
+      "broadDescription": "Uża madwar 50% meta tippreferi taqbad aktar tqabbil possibbli u tkun komdu tirrevedi aktar allerti.",
+      "broadTitle": "Monitoraġġ wiesa'",
+      "strictDescription": "Uża 80%+ meta l-katalogu tiegħek ikun stabbli u trid inqas reviżjonijiet manwali.",
+      "strictTitle": "Tqabbil strett"
+    },
+    "included": {
+      "description": "L-app timmonitorja kontinwament il-katalogu tiegħek kontra l-allerti ta' Safety Gate, tippreserva l-evidenza tal-konformità, u tavżak meta l-prodotti jkollhom bżonn reviżjoni.",
+      "evidenceDescription": "Deċiżjonijiet solvuti u miċħuda jżommu noti, raġunijiet, kuntest ta' riskju, u timestamps.",
+      "evidenceTitle": "Prova esportabbli",
+      "eyebrow": "Monitoraġġ kontinwu",
+      "monitoringDescription": "Rekords ġodda ta' Safety Gate jitqabblu ma' prodotti Shopify immonitorjati mingħajr skan manwali.",
+      "monitoringTitle": "Monitoraġġ kontinwu tal-UE",
+      "teamDescription": "Reviżjoni prijoritarja, dokumentazzjoni tal-fornitur, u filtri jgħinu lit-tim tiegħek jimmaniġġja deċiżjonijiet reali aktar malajr.",
+      "teamTitle": "Fluss tax-xogħol ta' reviżjoni",
+      "title": "X'tibqa' koperta mill-ħanut tiegħek"
+    },
+    "matchingStrictness": "Strettezza tat-tqabbil",
+    "mode": {
+      "balanced": "Ibbilanċjat",
+      "broad": "Aktar tqabbil",
+      "strict": "Inqas tqabbil"
+    },
+    "monitoringModeEyebrow": "Modalità ta' monitoraġġ",
+    "notifications": {
+      "emailHelp": "Inizjalment meħud minn Shopify. Tista' tuża indirizz differenti.",
+      "emailLabel": "Email ta' notifika",
+      "enabledDescription": "Agħżel jekk tirċevix sejbiet urġenti, sommarju ta' kull ġimgħa, jew it-tnejn.",
+      "enabledTitle": "Allerti ta' sigurtà bl-email",
+      "immediateDescription": "Ibgħatli email hekk kif prodott ikollu bżonn reviżjoni.",
+      "immediateTitle": "Sejbiet ġodda",
+      "invalidEmail": "Daħħal indirizz email validu qabel ma tippermetti n-notifiki bl-email.",
+      "languageLabel": "Lingwa tal-email",
+      "noRecipientDescription": "In-notifiki bl-email huma attivati, iżda l-ebda indirizz ma huwa speċifikat. L-ebda messaġġ ma jiġi kkunsinnat sakemm ma jiddaħħalx email.",
+      "noRecipientHeading": "L-ebda riċevitur tal-email ikkonfigurat",
+      "useShopifyEmail": "Uża l-email ta' kuntatt tal-ħanut ({{email}})",
+      "weeklyDescription": "Sommarju tal-monitoraġġ tat-Tnejn: jikkonferma meta ma jkunx hemm sejbiet ġodda, jew jiġbor fil-qosor każijiet miftuħa li jeħtieġu reviżjoni.",
+      "weeklyTitle": "Sommarju tal-monitoraġġ ta' kull ġimgħa"
+    },
+    "onDemand": "Fuq talba",
+    "plans": {
+      "advancedDescription": "Żid reviżjoni prijoritarja, segwitu tal-fornitur, u flussi tax-xogħol bil-lingwa tal-UE.",
+      "advancedTitle": "Avvanzat: awtomazzjoni u flussi tax-xogħol multilingwi",
+      "description": "Karatteristiċi u kapaċitajiet inklużi fil-pjan ta' monitoraġġ tal-ħanut tiegħek.",
+      "eyebrow": "Valur tal-abbonament",
+      "manualDescription": "Mexxi kontrolli prodott wieħed kull darba u ara l-aħħar status tal-prodott.",
+      "manualTitle": "B'xejn: kontrolli manwali",
+      "monitorDescription": "Immonitorja allerti ġodda ta' Safety Gate kontra l-katalogu, esporta rapporti ta' verifika CSV, u żomm traċċa tad-deċiżjonijiet.",
+      "monitorTitle": "Imħallas: monitoraġġ u rapporti ta' kuljum",
+      "title": "Kapaċitajiet tal-pjan"
+    },
+    "recommendedSetup": "Setup rakkomandat",
+    "saveAll": "Issejvja s-settings kollha",
+    "status": {
+      "auditTrail": "Traċċa ta' awditjar",
+      "autoQuarantine": "Reviżjoni prijoritarja",
+      "dailySafetyGateUpdates": "Aġġornamenti ta' kuljum ta' Safety Gate",
+      "emailDigest": "Digest tal-email",
+      "off": "Mitfi",
+      "on": "Mixgħul",
+      "running": "Għaddej",
+      "shopifyProductUpdates": "Prodotti Shopify ġodda/aġġornati"
+    },
+    "storeSetting": "Setting tal-ħanut",
+    "strictnessHint": "40-60% huwa skanjar usa'. 70-85% huwa aktar strett u ġeneralment jipproduċi inqas pożittivi foloz.",
+    "valueDescription": "Il-monitoraġġ kontinwu jqabbel prodotti tal-katalogu eliġibbli ma' rekords ta' Safety Gate ippubblikati ġodda.",
+    "valueEyebrow": "Monitoraġġ tal-katalogu",
+    "valueItems": {
+      "auditDescription": "Deċiżjonijiet solvuti u miċħuda jżommu noti, raġunijiet, u storja ta' reviżjoni għal rapporti esportabbli.",
+      "auditTitle": "Evidenza lesta għall-verifika",
+      "dailyDescription": "Allerti ġodda ta' Safety Gate jiġu kkontrollati kontra prodotti mmonitorjati mingħajr ma l-merkant jibda skan manwali.",
+      "dailyTitle": "Monitoraġġ tal-katalogu ta' kuljum",
+      "workflowDescription": "Il-merkanti jirrevedu biss prodotti li jeħtieġu deċiżjoni, imbagħad isolvu, jiċħdu, jew isegwu mal-fornituri.",
+      "workflowTitle": "Fluss tax-xogħol ta' reviżjoni nattiv ta' Shopify"
+    },
+    "valueTitle": "X'jibqa' kopert",
+    "workspace": "Spazju tax-xogħol"
+  },
+  "status": {
+    "actionRequired": "Azzjoni meħtieġa",
+    "allClear": "Kollox ċar",
+    "archived": "Arkivjati",
+    "dismissed": "Miċħuda",
+    "flagged": "immarkat",
+    "monitored": "Immonitorjat",
+    "needsReview": "Jeħtieġ reviżjoni",
+    "notChecked": "Mhux iċċekkjat",
+    "protected": "Iċċekkjat",
+    "resolved": "Riżolti",
+    "runCheck": "Mexxi kontroll",
+    "safe": "L-ebda taqbila misjuba",
+    "scanning": "Skanjar għaddej",
+    "unprotected": "Mhux iċċekkjat",
+    "unsafe": "Jeħtieġ reviżjoni",
+    "updated": "Aġġornat"
+  },
+  "uxEnhancements": {
+    "activityTimeline": {
+      "actions": {
+        "dismiss": "Deċiżjoni rreġistrata: miċħuda",
+        "check": "Prodott iċċekkjat",
+        "quarantine": "Prodott immarkat għal reviżjoni",
+        "resolve": "Deċiżjoni rreġistrata: solvuta"
+      },
+      "description": "Kontrolli ta' sigurtà rreġistrati, deċiżjonijiet tal-prodott, u evidenza miżmuma għal rapporti ta' verifika.",
+      "details": {
+        "autoDrafted": "Prodott immarkat għal reviżjoni prijoritarja.",
+        "bulkScanned": "Skan tal-katalogu bl-ingrossa tlesta.",
+        "checkSafe": "L-ebda tqabbil ma nstab f'dan il-kontroll.",
+        "checkUnsafe": "Il-prodott jeħtieġ reviżjoni. Rekord tad-deċiżjoni maħluq.",
+        "noReason": "L-ebda raġuni speċifikata.",
+        "reason": "Raġuni: {{reason}}"
+      },
+      "eyebrow": "Traċċa ta' awditjar",
+      "noActivity": "Għad m'hemmx avvenimenti ta' verifika. Mexxi l-monitoraġġ biex tibda tibni l-evidenza.",
+      "title": "Storja tad-deċiżjonijiet u l-evidenza",
+      "types": {
+        "automatic": "Avveniment tas-Sistema",
+        "bulk": "Avveniment tal-Massa",
+        "manual": "Avveniment tal-Merkant"
+      }
+    },
+    "alerts": {
+      "floating": {
+        "dismissSelected": "Neħħi Magħżula",
+        "resolveSelected": "Issolvi Magħżula",
+        "selectedCount": "{{count}} twissija magħżula",
+        "selectedCount_few": "{{count}} twissijiet magħżula",
+        "selectedCount_many": "{{count}} twissijiet magħżula",
+        "selectedCount_one": "{{count}} twissija magħżula",
+        "selectedCount_other": "{{count}} twissijiet magħżula",
+        "selectedCount_plural": "{{count}} twissijiet magħżula",
+        "selectedCount_two": "{{count}} twissija magħżula"
+      },
+      "quickFilters": {
+        "allAlerts": "Ir-rekords kollha",
+        "allAlertsDesc": "Uri t-twissijiet kollha tas-sigurtà fil-katalgu.",
+        "highRisk": "Riskju Għoli Biss",
+        "highRiskDesc": "Livelli serji ta' riskju li jeħtieġu azzjoni.",
+        "needsReview": "Jeħtieġ Reviżjoni",
+        "needsReviewDesc": "Twissijiet ta' sigurtà pendenti.",
+        "resolved": "Issolvuti / Imneħħija",
+        "resolvedDesc": "Twissijiet tal-passat miżmuma għall-verifika.",
+        "title": "Filtri Mgħaġġla"
+      }
+    },
+    "complianceRing": {
+      "scoreLabel": "Ikklerja",
+      "subtitle": "Sehem ta' prodotti ċċekkjati mingħajr oġġetti ta' reviżjoni miftuħa",
+      "title": "Saħħa tal-katalgu monitorjat"
+    }
+  },
+  "workspace": {
+    "all": "Kollha",
+    "appLanguage": "Lingwa tal-app",
+    "apply": "Applika filtri",
+    "applyFilters": "Applika filtri",
+    "balancedHelp": "It-tqabbil ibbilanċjat huwa l-punt tat-tluq rakkomandat. Biddlu biss jekk trid tirrevedi aktar jew inqas tqabbil possibbli.",
+    "broadHelp": "Jinkludi aktar tqabbil possibbli u jista' jeħtieġ aktar reviżjoni manwali.",
+    "cannotCompare": "Ma jistax jitqabbel",
+    "catalogGlobalAction": "Iċċekkja {{count}} prodotti fil-katalgu",
+    "catalogScopeHelp": "Il-kopertura tinkludi l-prodotti kollha tal-katalgu ta' Shopify, inklużi oġġetti attivi, abbozzi u arkivjati. Il-filtri jibdlu din il-lista biss, mhux il-kopertura jew l-ambitu tal-monitoraġġ.",
+    "clearFilters": "Neħħi l-filtri",
+    "compare": "Qabbel il-prodotti",
+    "compareProduct": "Qabbel il-prodotti: {{title}}",
+    "coverageFiltersHelp": "Il-kopertura u s-sejbiet miftuħa huma separati: prodott mibdul jista' jkollu wkoll sejba li qed tistenna reviżjoni.",
+    "coverageIncomplete": "{{count}} prodotti jeħtieġu verifika kurrenti",
+    "coverageScope": "Qed jintwerew {{visible}} minn {{total}} prodotti tal-katalgu.",
+    "csv": {
+      "action": "Azzjoni ta' deċiżjoni",
+      "actor": "Irreġistrat minn",
+      "caseNumber": "Każ Safety Gate",
+      "decisionAt": "Deċiżjoni fi",
+      "detectedAt": "Misjub fi",
+      "generatedAt": "Ġenerat fi",
+      "guidance": "Gwida għar-reviżjoni",
+      "notes": "Noti ta' reviżjoni",
+      "product": "Prodott",
+      "productId": "ID tal-prodott Shopify",
+      "recordType": "Tip ta' rekord",
+      "resolution": "Riżoluzzjoni",
+      "risk": "Livell ta' riskju",
+      "shop": "Ħanut",
+      "source": "Sors uffiċjali",
+      "sourceRisk": "Riskju fit-twissija uffiċjali",
+      "status": "Status"
+    },
+    "csvGuidance": "Tqabbil possibbli. Qabbel l-identifikaturi tal-prodott u r-rekord uffiċjali qabel ma tiddeċiedi.",
+    "currentFindingStatus": "Status attwali tas-sejba",
+    "dateFilterTimezone": "Id-dati jużaw iż-żona tal-ħin tal-monitoraġġ: {{timeZone}}. Applika l-filtri biex taġġorna r-riżultati u tesporta.",
+    "decisionAt": "Deċiżjoni rreġistrata",
+    "decisionExportHelp": "Din il-veduta u l-esportazzjoni CSV tagħha jużaw id-dati tad-deċiżjoni. Jinkludu avvenimenti ta' reviżjoni għal sejbiet anzjani, inklużi każijiet miftuħa mill-ġdid. L-ismijiet tal-prodotti u l-fatti tas-sors uffiċjali jżommu t-test oriġinali tagħhom.",
+    "decisionFrom": "Data tad-deċiżjoni minn",
+    "decisionLegacy": "Riżultat storiku: prodott ivverifikat sikur",
+    "decisionTo": "Data tad-deċiżjoni sa",
+    "detectedAt": "Sejba misjuba",
+    "differentIdentifiers": "Identifikaturi differenti: {{fields}}. Iċċekkjahom qabel ma tiddeċiedi.",
+    "documentedFindings": "Sejbiet dokumentati bħalissa solvuti jew imneħħija",
+    "download": "Niżżel CSV",
+    "emptyHelp": "Ma hemmx sejbiet miftuħa rreġistrati. Dan ma jiċċertifikax li l-prodotti tiegħek huma sikuri. Iċċekkja l-kopertura tal-katalgu u l-aħħar eżekuzzjoni tal-monitoraġġ.",
+    "eventCount": "{{count}} avveniment ta' deċiżjoni",
+    "excluded": "{{count}} minn {{total}} prodotti tal-katalgu jaqblu ma' dawn ir-regoli għal verifiki manwali. Il-monitoraġġ awtomatiku ma jużax dawn l-esklużjonijiet. Sejbiet eżistenti jibqgħu disponibbli.",
+    "excludeHelp": "Dawn ir-regoli japplikaw għal verifiki manwali. Iċċekkja l-prodotti affettwati qabel ma tissejvja.",
+    "exportHelp": "Is-CSV fih is-sejbiet kollha fil-perjodu u l-istatus magħżula, inklużi referenzi uffiċjali, noti ta' reviżjoni u avvenimenti ta' deċiżjoni rreġistrati. Huwa rekord ta' verifiki, mhux ċertifikat ta' sigurtà.",
+    "exportReady": "CSV ippreparat. Jekk it-tniżżil ma bediex, uża din il-link:",
+    "findingCount": "Sejbiet f'dan l-ambitu: {{count}}.",
+    "findingFrom": "Sejba misjuba minn",
+    "findings": "Sejbiet u evidenza",
+    "findingTo": "Sejba misjuba sa",
+    "from": "Mid-data",
+    "goReview": "Irrevedi sejbiet miftuħa",
+    "groupAction": "Azzjoni meħuda",
+    "groupDifferent": "Prodott differenti",
+    "groupInformation": "Bżonn aktar informazzjoni",
+    "history": "Storja tad-deċiżjonijiet",
+    "historyLimit": "Qed jintwerew sa {{count}} sejbiet reċenti. Esporta r-rekord sħiħ għas-sejbiet kollha.",
+    "changed": "Mibdul mill-aħħar verifika",
+    "chooseOutcomeHelp": "Agħżel riżultat biex tippermetti r-reġistrazzjoni tad-deċiżjoni tiegħek.",
+    "chooseOutcomeLink": "Agħżel riżultat",
+    "lastSuccess": "L-aħħar eżekuzzjoni ta' monitoraġġ b'suċċess",
+    "matchingIdentifiers": "Identifikaturi li jaqblu: {{fields}}.",
+    "matchNeedsVerification": "Tqabbil possibbli. Qabbel ir-ritratti u l-identifikaturi mar-rekord uffiċjali qabel ma tiddeċiedi.",
+    "matchNotConfirmed": "Tqabbil mhux ikkonfermat wara li ġiet riveduta l-evidenza",
+    "missingIdentifiers": "Xi identifikaturi huma neqsin. Qabbel ir-ritratti disponibbli u staqsi lill-fornitur tiegħek għall-mudell, il-barcode u l-lott.",
+    "monitoring": {
+      "enabled": "Attivat — verifiki ta' kuljum",
+      "failed": "L-aħħar verifika awtomatika falliet",
+      "paused": "Pawżat — l-ebda pjan ta' monitoraġġ attwali",
+      "preview": "Preview tal-iżvilupp — il-kontijiet injorati",
+      "processing": "Qed jiġi pproċessat — il-kontroll fil-kju jew għaddej",
+      "unknown": "Attività ta' monitoraġġ mhux ikkonfermata",
+      "unverified": "Pawżat — l-abbonament ma setax jiġi vverifikat"
+    },
+    "monitoringLabel": "Monitoraġġ awtomatiku",
+    "monitoringUnknownHelp": "L-ebda tħaddim ta' monitoraġġ b'suċċess mhu disponibbli biex tikkonferma l-attività reċenti. Aġġorna biex terġa' tiċċekkja.",
+    "neverRun": "L-ebda tħaddim ta' monitoraġġ komplut irreġistrat",
+    "noCurrentResult": "Huwa meħtieġ riżultat attwali",
+    "noDecisions": "L-ebda deċiżjoni ma ġiet irreġistrata s'issa. Iftaħ sejba, qabbel il-prodotti u rreġistra dak li rrevedejt.",
+    "noFilteredDecisions": "L-ebda avveniment ta' deċiżjoni ma jaqbel ma' dawn il-filtri. Neħħi l-filtri biex tara l-istorja sħiħa.",
+    "noFilteredFindings": "L-ebda sejba ma taqbel ma' dawn il-filtri. Neħħi l-filtri biex tara l-lista sħiħa.",
+    "noMatch": "L-ebda taqbila misjuba",
+    "noMatchAtCheck": "L-ebda tqabbil ma nstab f'dan il-kontroll.",
+    "notes": "Noti ta' reviżjoni",
+    "notificationLanguage": "Lingwa tal-email",
+    "notRecorded": "L-ebda riżultat ta' reviżjoni attwali",
+    "oldest": "Miftuħ għal {{count}} jum",
+    "onboarding": "Importa l-katalgu → iċċekkja r-rekords ta' Safety Gate → irrevedi r-riżultati",
+    "outcome": "Riżultat",
+    "outcomeHelp": {
+      "contacted_supplier": "Is-sejba tibqa' miftuħa waqt li tkun qed tistenna lill-fornitur tiegħek.",
+      "false_positive": "Uża meta l-evidenza turi li l-allert ma japplikax. Is-sejba tiġi miċħuda.",
+      "match_not_confirmed": "Uża meta l-evidenza li rrevedejt ma tikkonfermax taqbila. Is-sejba tiġi solvuta.",
+      "modified_product": "L-ewwel aġġorna l-prodott fi Shopify. Ir-reġistrazzjoni ta' dan ir-riżultat ma tibdilx il-prodott; is-sejba tiġi solvuta.",
+      "not_my_product": "Uża meta l-allert jikkonċerna prodott differenti. Is-sejba tiġi miċħuda.",
+      "other": "Iddeskrivi r-riżultat fin-nota meħtieġa. Is-sejba tiġi solvuta.",
+      "removed_from_sale": "L-ewwel neħħi l-prodott mill-bejgħ fi Shopify. Ir-reġistrazzjoni ta' dan ir-riżultat ma tibdilx il-prodott; is-sejba tiġi solvuta.",
+      "verified_safe": "Dan huwa riżultat storiku."
+    },
+    "outcomeLabels": {
+      "contactedSupplier": "Qed tistenna lill-fornitur",
+      "falsePositive": "Pożittiv falz",
+      "modifiedProduct": "Prodott modifikat",
+      "notMyProduct": "Mhux il-prodott tiegħi",
+      "other": "Oħrajn",
+      "removedFromSale": "Imneħħi mill-bejgħ",
+      "verifiedSafe": "Storiku: ivverifikat sikur"
+    },
+    "possibleMatch": "Taqbila possibbli",
+    "possibleMatchAtCheck": "Din il-verifika sabet taqbila possibbli ta' Safety Gate.",
+    "print": "Stampa / issalva PDF",
+    "priority": "Prijorità tar-reviżjoni",
+    "priorityHelp": "Deċiżjonijiet l-ewwel, imbagħad is-severità tal-allert u l-eqdem sejbiet. Oġġetti li qed jistennew il-fornituri jsegwu.",
+    "productStatus": "Status ta' Shopify",
+    "productStatusActive": "Attiv",
+    "productStatusAll": "L-istatusijiet kollha ta' Shopify",
+    "productStatusArchived": "Arkivjati",
+    "productStatusDraft": "Abbozz",
+    "productStatusUnknown": "Mhux magħruf",
+    "recommended": "Setting rakkomandat",
+    "referenceMissing": "Numru uffiċjali tal-każ mhux disponibbli",
+    "remaining": "Mhux iċċekkjat jew mibdul",
+    "reopened": "Miftuħ mill-ġdid għar-reviżjoni",
+    "reportEmpty": "L-ebda sejba ma taqbel ma' dawn il-filtri.",
+    "reportTitle": "Rapport tal-verifiki u d-deċiżjonijiet",
+    "resultHelp": "Ir-reġistrazzjoni ta' riżultat tiddokumenta r-reviżjoni tiegħek fil-binarju tal-awditjar u ma timmodifikax il-prodott ta' Shopify.",
+    "reviewNext": "Irrevedi t-taqbila li jmiss: {{title}}",
+    "reviewPrompt": "Qabbel l-evidenza, agħżel ir-riżultat u rreġistra n-noti tiegħek.",
+    "riskLabels": {
+      "electric": "Xokk elettriku",
+      "fire": "Nar",
+      "health": "Riskju għas-saħħa",
+      "high": "Riskju għoli",
+      "chemical": "Kimiku",
+      "choking": "Fgar",
+      "injuries": "Korrimenti",
+      "low": "Riskju baxx",
+      "medium": "Riskju medju",
+      "serious": "Riskju serju",
+      "unknown": "Riskju fl-allert ta' Safety Gate"
+    },
+    "runScope": "Verifiki tal-prodotti: {{products}} · Rekords ta' Safety Gate ikkunsidrati: {{records}} · Sejbiet ġodda: {{findings}}",
+    "saved": "Settings salvati.",
+    "saveChanges": "Salva l-bidliet",
+    "scope": "Sejbiet minn {{from}} sa {{to}}",
+    "scoreDetails": "Dettalji tas-similarità",
+    "scoreHelp": "Dawn huma punteġġi ta' similarità użati biex tiġi prijoritizzata r-reviżjoni, mhux probabbiltà li l-prodott tiegħek huwa perikoluż.",
+    "settingsAdvanced": "Tqabbil avvanzat u esklużjonijiet",
+    "shop": "Ħanut",
+    "showMore": "Uri aktar prodotti",
+    "scheduleHelp": "Allerti ġodda ta' Safety Gate jiġu ċċekkjati waqt li l-pjan ta' monitoraġġ ikun attiv. Il-ħin tal-verifika kompluta li jmiss jiddependi mill-kju.",
+    "sourceMissing": "Il-link tar-rekord uffiċjali mhux disponibbli għal din is-sejba ssejvjata.",
+    "sourceRisk": "Riskju fl-allert uffiċjali (rekord oriġinali tal-UE)",
+    "status": "Status tas-sejba",
+    "strictHelp": "Juri inqas taqbiliet possibbli u jista' jitlef similaritajiet inqas ovvji.",
+    "to": "Sal-lum",
+    "unconfirmedIdentifiers": "L-identifikaturi tal-katalgu disponibbli ma jikkonfermawx din it-taqbila. Qabbel l-ippakkjar u staqsi lill-fornitur tiegħek għall-mudell, il-barcode u l-lott nieqsa.",
+    "unchecked": "Għadu mhux ivverifikat",
+    "unsaved": "Għandek bidliet mhux salvati.",
+    "verifyScope": "Ir-riżultati tal-katalgu japplikaw għall-verżjoni tal-prodott li ġiet iċċekkjata. Prodotti mibdula jeħtieġu verifika ġdida.",
+    "viewRemainingProducts": "Ara {{count}} prodotti li jeħtieġu verifika",
+    "viewShopify": "Iftaħ il-prodott ta' Shopify",
+    "waiting": "Qed tistenna lill-fornitur",
+    "when": "Irreġistrat fi",
+    "who": "Irreġistrat minn",
+    "whyMatch": "Għaliex dan jista' jaqbel"
+  }
+}

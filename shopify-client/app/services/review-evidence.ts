@@ -86,3 +86,7 @@ export function decisionKey(type?: string | null) {
     ? keys[type]
     : "workspace.notRecorded";
 }
+export function formatActorId(actorId?: string | null, fallback = ""): string {
+  if (!actorId) return fallback;
+  return actorId.replace(/^(?:offline|online)_/i, "").trim() || fallback;
+}

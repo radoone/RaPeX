@@ -6,6 +6,20 @@ import { EMAIL_LANGUAGES, emailText } from "../lib/email-localization.js";
 const app = "https://admin.shopify.com/store/example/apps/zerorecall/app";
 const details = { productTitle: 'Toy <img src=x onerror="alert(1)">', riskLevel: "High", overallSimilarity: null, safetyGateProduct: "Toy & parts", reason: "Compare <model> & batch", safetyGateImage: "javascript:alert(1)" };
 
+test("early review actions and older open findings are prominent in every language", () => {
+  for (const language of EMAIL_LANGUAGES) {
+    const alert = renderAlertEmail(language, details, "example.myshopify.com", `${app}/alerts?open=a`, app);
+    assert.ok(alert.htmlContent.indexOf('class="button"') < alert.htmlContent.indexOf(emailText(language, "your_product")));
+    const weekly = renderWeeklyEmail(language, "example.myshopify.com", new Date("2026-10-12"), new Date("2026-10-19"), {
+      products: 10, checks: 2, safetyGateRecords: 5, newFindings: 0, openFindings: 2, monitoringComplete: true, lastSuccessfulRun: null,
+    }, app, app);
+    assert.ok(weekly.htmlContent.includes(emailText(language, "attention_needed")));
+    assert.ok(weekly.htmlContent.includes(`${app}/alerts`));
+    assert.ok(weekly.htmlContent.indexOf(emailText(language, "open_findings")) < weekly.htmlContent.indexOf(emailText(language, "monitored_products")));
+    assert.ok(weekly.textContent.includes(`${app}/alerts`));
+  }
+});
+
 test("all 24 languages give cautious review guidance instead of unverified model claims", () => {
   assert.equal(EMAIL_LANGUAGES.length, 24);
   for (const language of EMAIL_LANGUAGES) {
@@ -16,7 +30,8 @@ test("all 24 languages give cautious review guidance instead of unverified model
       monitoringComplete: true, lastSuccessfulRun: null,
       findings: [{ ...details, reason, url: app, reviewState: "needs_review", isNew: true }],
     }, app, app);
-    for (const message of [alert, weekly]) {
+    const report = renderScanReportEmail(language, "example.myshopify.com", { totalProductsScanned: 1, flaggedProductsCount: 1, matches: [{ productTitle: "Toy", result: { warnings: [{ reason }] } }] });
+    for (const message of [alert, weekly, report]) {
       assert.doesNotMatch(message.htmlContent + message.textContent, new RegExp(reason));
       assert.ok(message.textContent.includes(emailText(language, "compare_the_model_brand_and_batch_with_the_official_record_sav")));
     }
@@ -68,7 +83,8 @@ test("reports provide actual official evidence, omit internal IDs and preserve t
   const content = renderScanReportEmail("sk", "example.myshopify.com", { totalProductsScanned: 10, flaggedProductsCount: 1, matches: [match] });
   assert.ok(content.textContent.includes(record));
   assert.match(content.htmlContent, /A12\/EXAMPLE\/26|Model &lt;1&gt;/);
-  assert.match(content.htmlContent, /Compare &lt;model&gt; and batch/);
+  assert.doesNotMatch(content.htmlContent + content.textContent, /Compare/);
+  assert.ok(content.textContent.includes(emailText("sk", "compare_the_model_brand_and_batch_with_the_official_record_sav")));
   assert.doesNotMatch(content.htmlContent + content.textContent, new RegExp(internalId));
   assert.match(content.htmlContent, /href="https:\/\/zerorecall.online\/\?lang=sk#pricing"/);
   assert.ok(content.textContent.includes("https://zerorecall.online/?lang=sk#pricing"));

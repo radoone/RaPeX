@@ -1,0 +1,1406 @@
+{
+  "actions": {
+    "auditReport": "Tarkastusraportti",
+    "clear": "Tyhjennä",
+    "dashboard": "Hallintapaneeli",
+    "downloadAuditReport": "Lataa tarkastusraportti",
+    "checkAll": "Tarkista kaikki tuotteet",
+    "checkAllProducts": "Tarkista kaikki {{count}} tuotetta",
+    "checking": "Tarkistetaan...",
+    "checkNewSafetyGateAlerts": "Tarkista uudet Safety Gate -hälytykset",
+    "checkOneProduct": "Tarkista yksi tuote",
+    "checkSelectedProduct": "Tarkista valittu tuote",
+    "checkUnchecked": "Tarkista {{count}} tarkistamatonta tuotetta",
+    "manualCheck": "Tarkista tuote",
+    "next": "Seuraava",
+    "openFirstMatch": "Avaa ensimmäinen osuma",
+    "previous": "Edellinen",
+    "protectRemainingProducts": "Tarkista {{count}} jäljellä olevaa tuotetta",
+    "reactivate": "Aktivoi uudelleen",
+    "recordDecision": "Tallenna päätös",
+    "refreshCoverage": "Päivitä luettelon kattavuus",
+    "resolve": "Ratkaise",
+    "retry": "Yritä uudelleen",
+    "reviewActiveProducts": "Tarkista aktiiviset tuotteet",
+    "reviewAlerts": "Tarkista hälytykset",
+    "reviewDecision": "Vertaa tuotteita",
+    "reviewMultipleMatches": "Tarkista {{count}} osumaa",
+    "reviewOneMatch": "Tarkista 1 osuma",
+    "reviewProductsNeedingAction": "Tarkista {{count}} toimenpidettä vaativa tuote",
+    "reviewProductsNeedingAction_few": "Tarkista {{count}} toimenpidettä vaativaa tuotetta",
+    "reviewProductsNeedingAction_many": "Tarkista {{count}} toimenpidettä vaativaa tuotetta",
+    "reviewProductsNeedingAction_one": "Tarkista {{count}} toimenpidettä vaativa tuote",
+    "reviewProductsNeedingAction_other": "Tarkista {{count}} toimenpidettä vaativaa tuotetta",
+    "reviewProductsNeedingAction_plural": "Tarkista {{count}} toimenpidettä vaativaa tuotetta",
+    "search": "Haku",
+    "settings": "Asetukset",
+    "tryAgain": "Yritä uudelleen",
+    "view": "Näytä",
+    "viewAlerts": "Näytä hälytykset",
+    "viewDetails": "Näytä tiedot",
+    "viewEvidence": "Näytä päätöshistoria"
+  },
+  "alerts": {
+    "admin": {
+      "actionNeeded": "Toimenpide vaaditaan",
+      "actionNeededDescription": "Tarkista osumat, hylkää väärät positiiviset tai ratkaise vahvistetut riskit, jotta hälytysjono pysyy toimintakykyisenä.",
+      "actionNeededTitle": "{{count}} aktiivinen hälytys odottaa edelleen päätöstä",
+      "actionNeededTitle_few": "{{count}} aktiivista hälytystä odottaa edelleen päätöstä",
+      "actionNeededTitle_many": "{{count}} aktiivista hälytystä odottaa edelleen päätöstä",
+      "actionNeededTitle_one": "{{count}} aktiivinen hälytys odottaa edelleen päätöstä",
+      "actionNeededTitle_other": "{{count}} aktiivista hälytystä odottaa edelleen päätöstä",
+      "actionNeededTitle_plural": "{{count}} aktiivista hälytystä odottaa edelleen päätöstä",
+      "criticalBannerDescription": "{{count}} aktiivinen osuma on merkitty korkeaksi tai vakavaksi riskiksi Safety Gatessa. Ratkaise nämä osumat ensin.",
+      "criticalBannerDescription_few": "{{count}} aktiivista osumaa on merkitty korkeaksi tai vakavaksi riskiksi Safety Gatessa. Ratkaise nämä osumat ensin.",
+      "criticalBannerDescription_many": "{{count}} aktiivista osumaa on merkitty korkeaksi tai vakavaksi riskiksi Safety Gatessa. Ratkaise nämä osumat ensin.",
+      "criticalBannerDescription_one": "{{count}} aktiivinen osuma on merkitty korkeaksi tai vakavaksi riskiksi Safety Gatessa. Ratkaise nämä osumat ensin.",
+      "criticalBannerDescription_other": "{{count}} aktiivista osumaa on merkitty korkeaksi tai vakavaksi riskiksi Safety Gatessa. Ratkaise nämä osumat ensin.",
+      "criticalBannerDescription_plural": "{{count}} aktiivista osumaa on merkitty korkeaksi tai vakavaksi riskiksi Safety Gatessa. Ratkaise nämä osumat ensin.",
+      "criticalBannerTitle": "{{count}} korkean riskin osumaa vaatii tarkistusta",
+      "criticalBannerTitle_few": "{{count}} korkean riskin osumaa vaatii tarkistusta",
+      "criticalBannerTitle_many": "{{count}} korkean riskin osumaa vaatii tarkistusta",
+      "criticalBannerTitle_one": "{{count}} korkean riskin osuma vaatii tarkistusta",
+      "criticalBannerTitle_other": "{{count}} korkean riskin osumaa vaatii tarkistusta",
+      "criticalBannerTitle_plural": "{{count}} korkean riskin osumaa vaatii tarkistusta",
+      "queue": "Tuotepäätösjono",
+      "queueDescription": "Vahvista todennäköiset osumat, hylkää väärät positiiviset tai kirjaa tehdyt toimenpiteet.",
+      "warningBannerDescription": "Käytä tätä jonoa vain todellisiin päätöksiin: ratkaise vahvistetut riskit ja hylkää väärät positiiviset nopeasti.",
+      "warningBannerTitle": "{{count}} aktiivinen hälytys odottaa edelleen tarkistusta",
+      "warningBannerTitle_few": "{{count}} aktiivista hälytystä odottaa edelleen tarkistusta",
+      "warningBannerTitle_many": "{{count}} aktiivista hälytystä odottaa edelleen tarkistusta",
+      "warningBannerTitle_one": "{{count}} aktiivinen hälytys odottaa edelleen tarkistusta",
+      "warningBannerTitle_other": "{{count}} aktiivista hälytystä odottaa edelleen tarkistusta",
+      "warningBannerTitle_plural": "{{count}} aktiivista hälytystä odottaa edelleen tarkistusta"
+    },
+    "breadcrumbs": {
+      "current": "Tarkistusjono",
+      "dashboard": "Hallintapaneeli"
+    },
+    "checklist": {
+      "items": {
+        "0": "Priorisoi aktiiviset hälytykset",
+        "1": "Dokumentoi korjaavat toimenpiteet",
+        "2": "Varmista ennen hylkäämistä"
+      },
+      "title": "Vastausmuistilista"
+    },
+    "meta": {
+      "active": "{{count}} tarkistettavana",
+      "total": "{{count}} yhteensä"
+    },
+    "metrics": {
+      "activeHeading": "Aktiiviset hälytykset",
+      "archived": "Arkistoitu",
+      "dismissedDescription": "Pidä muistiinpanoja tarkastusta varten",
+      "dismissedDescriptionZero": "Ei hylättyjä hälytyksiä vielä",
+      "dismissedHeading": "Hylätty",
+      "resolutionHeading": "Ratkaisunopeus",
+      "resolved": "{{count}} ratkaistu",
+      "resolvedAndDismissed": "{{resolved}} ratkaistu • {{dismissed}} hylätty",
+      "totalRecorded": "{{count}} yhteensä tallennettu"
+    },
+    "pagination": {
+      "next": "Seuraava",
+      "previous": "Edellinen"
+    },
+    "subtitle": "Tarkista tuotteet, jotka vaativat päätöksen.",
+    "table": {
+      "accessibilityLabel": "Turvallisuusvaroitusten taulukko",
+      "empty": "Ei suodattimia vastaavia varoituksia",
+      "emptyAllClearBody": "Avoimia kauppiaan päätöksiä ei ole tällä hetkellä. Päivittäinen seuranta on edelleen käynnissä ja suljetut päätökset pysyvät tarkastusketjussa.",
+      "emptyAllClearTitle": "Kaikki aktiiviset tuotearvostelut on käsitelty",
+      "emptyFilteredBody": "Säädä suodattimia tai etsi toista tuotetta. Aktiivinen jonosi voi silti olla tyhjä.",
+      "emptyFilteredTitle": "Nämä suodattimet eivät vastaa yhtään tarkistettavaa kohdetta",
+      "headers": {
+        "actions": "Toiminnot",
+        "detected": "Havaittu",
+        "product": "Tuote",
+        "risk": "Riski",
+        "status": "Tila"
+      },
+      "order": "Järjestys",
+      "orderOptions": {
+        "asc": "Vanhin ensin",
+        "desc": "Uusin ensin"
+      },
+      "reviewProduct": "Tarkista päätös tuotteelle {{title}}",
+      "searchLabel": "Hae varoituksia",
+      "searchPlaceholder": "Hae tuotteen nimellä...",
+      "selectAll": "Valitse kaikki näkyvät löydökset",
+      "selectedCount": "{{count}} valittu",
+      "selectProduct": "Valitse löydös tuotteelle {{title}}",
+      "similarityTooltip": "Samankaltaisuusaste: {{score}}%",
+      "sort": "Lajittele",
+      "sortBy": "Lajitteluperuste",
+      "sortOptions": {
+        "created": "Havaitsemispäivämäärä",
+        "name": "Tuotteen nimi",
+        "risk": "Riskitaso"
+      },
+      "tabs": {
+        "active": "Vaatii tarkistuksen",
+        "all": "Kaikki",
+        "dismissed": "Hylätty",
+        "resolved": "Ratkaistu"
+      },
+      "thumbnailLabel": "{{title}}-pikkukuva",
+      "viewProduct": "Näytä tallennettu löydös tuotteelle {{title}}"
+    },
+    "title": "Tarkistusjono",
+    "toasts": {
+      "updated": "Varoitus päivitetty"
+    }
+  },
+  "analysis": {
+    "alertImagesUsed": "Varoituskuvia verrattu: {{count}}",
+    "alertNumber": "Varoitus {{number}}",
+    "audit": {
+      "existingNotes": "Tarkastusmuistiinpanot",
+      "noteLabel": "Tarkastusmuistiinpano",
+      "notePlaceholder": "Lisää, mitä tarkistit, toimittajan todisteet tai miksi tämä hylättiin."
+    },
+    "candidateAlerts": "Ehdokasvaroitukset: {{count}}",
+    "decisionContextDesc": "Päätöksen tallentaminen dokumentoi, että tämä turvallisuusvastaavuus on tarkistettu ja säilyttää tarkastusketjusi. Se ei automaattisesti muokkaa Shopify-tuotettasi tai poista sitä julkaisusta kaupastasi.",
+    "decisionContextTitle": "Vaatimustenmukaisuuspäätösten tallentaminen",
+    "decisionRecorded": "Päätös tallennettu",
+    "editInShopify": "Muokkaa tuotetta Shopifyssa",
+    "enlargedSafetyAlert": "Suurennettu turvallisuusvaroituksen kuva",
+    "fields": {
+      "accessibilityLabel": "Varoituksen vastaavuustietojen taulukko",
+      "alertDate": "Varoituksen päivämäärä",
+      "brand": "Merkki",
+      "category": "Kategoria",
+      "field": "Kenttä",
+      "model": "Malli",
+      "notifyingCountry": "Ilmoittava maa",
+      "origin": "Alkuperä",
+      "productDescription": "Tuotekuvaus",
+      "productName": "Tuotteen nimi",
+      "value": "Arvo"
+    },
+    "focus": {
+      "criticalLead": "Tällä tuotteella on korkean luottamuksen vastaavuus. Tallenna päätös vasta tarkistuksen jälkeen.",
+      "criticalStepCompare": "Vertaa tuotekuvaasi ensimmäiseen Safety Gate -vastaavuuteen alla.",
+      "criticalStepDecide": "Valitse lopputulos Tallenna päätös -valikosta tarkistuksesi perusteella.",
+      "criticalStepDocument": "Lisää sisäisiä muistiinpanoja jäljitettävyyttä ja toimittajan seurantaa varten.",
+      "criticalTitle": "Toimenpide vaaditaan nyt",
+      "recordedOutcome": "Tallennettu lopputulos: {{outcome}}",
+      "reviewedLead": "Tämä varoitus ei ole aktiivinen. Pidä tiedot selkeinä tarkastuksia varten.",
+      "reviewedStepAudit": "Vahvista valittu ratkaisu ja muistiinpanot.",
+      "reviewedStepReactivate": "Aktivoi uudelleen vain, jos uusia tuotetodisteita ilmestyy.",
+      "reviewedTitle": "Tarkistus jo suoritettu",
+      "safeLead": "Nykyinen tulos on turvallinen. Jatka tuotepäivitysten seurantaa.",
+      "safeStepClose": "Sulje tämä yksityiskohta ja jatka muiden aktiivisten varoitusten käsittelyä.",
+      "safeStepMonitor": "Pidä tämä tuote automaattisessa seurannassa.",
+      "safeStepRecheck": "Suorita uusi tarkistus, jos kuvat, pakkaukset tai toimittaja muuttuvat.",
+      "safeTitle": "Ei kiireellisiä toimenpiteitä tarvita"
+    },
+    "hazardType": "Vaaran tyyppi",
+    "checkedAt": "Tarkistettu: {{date}}",
+    "imageDominated": "Tämä vastaavuus pisteytettiin kuva edellä -painotuksella, joten visuaalinen pakkausten samankaltaisuus painoi enemmän kuin tekstin epäsuhta.",
+    "imageMatch": "Kuvan vastaavuus",
+    "imageMatchShort": "{{count}}% kuva",
+    "legalProvision": "Lakisäädös",
+    "matchesHint": "Aloita ylhäältä olevasta vastaavuuskortista ja vahvista ensin visuaalinen pakkaus, sitten malli- ja merkkitiedot.",
+    "merchantRecommendation": {
+      "active": "Vertaa tuotteen ja Safety Gate -kuvia, vahvista merkki tai malli ja tallenna sitten toimenpide, jonka kauppasi tekee.",
+      "reviewed": "Tämä löydös on suljettu. Vahvista tallennettu lopputulos ja todisteet ennen sen uudelleenaktivointia.",
+      "safe": "Kaupan toimenpiteitä ei tarvita nyt. Tarkista uudelleen, jos tuote, pakkaus, kuvat tai toimittaja muuttuvat."
+    },
+    "modalAccessibilityLabel": "Safety Gate -vastaavuuden tiedot tuotteelle {{title}}",
+    "modalHeading": "Tarkista Safety Gate -vastaavuus",
+    "noIssuesFound": "Ei turvallisuusongelmia löydetty",
+    "openProductImage": "Avaa kuva tuotteelle {{title}}",
+    "overallMatch": "Yleinen vastaavuus",
+    "overallMatchShort": "{{count}}% yleinen",
+    "potentialRisk": "Mahdollinen turvallisuusriski",
+    "primaryRiskFocus": "Ensisijainen riskikohta: {{category}} tasolla {{level}}. Vahvista tämä ensin ennen päätöksen tekemistä.",
+    "productImagesUsed": "Tuotekuvat: {{used}} / {{provided}}",
+    "reviewLayout": {
+      "actionNeeded": "Toimenpide vaaditaan",
+      "compareHeading": "Vertaa tuotteita",
+      "compareHint": "Tarkista kuvat, merkki, malli ja luokka ennen päätöksen tekemistä.",
+      "decisionHeading": "Tallenna päätöksesi",
+      "decisionPrompt": "Valitse tarkistuksen lopputulos. Voit lisätä muistiinpanon siitä, mitä tarkistit.",
+      "fullEvidence": "Kaikki Safety Gate -todisteet ({{count}})",
+      "groupHelp": {
+        "action": "Sulje havainto, kun olet poistanut tuotteen myynnistä tai päivittänyt sen Shopifyhin.",
+        "different": "Sulje tai hylkää havainto, koska tuotteesi on eri mallia, merkkiä tai erää.",
+        "information": "Pidä havainto avoinna, kun pyydät toimittajaltasi erä-, malli- tai turvallisuusasiakirjoja.",
+        "other": "Tallenna toinen lopputulos pakollisella selittävällä huomautuksella tarkastusketjuasi varten."
+      },
+      "chooseOutcome": "Valitse lopputulos",
+      "identifiers": {
+        "barcode": "Viivakoodi (GTIN/EAN)",
+        "batch": "Erä / Lot",
+        "brand": "Merkki",
+        "field": "Tunniste",
+        "match": "Osuma",
+        "mismatch": "Ero",
+        "model": "Malli",
+        "notSpecified": "ei määritelty",
+        "result": "Vertailu",
+        "safetyGate": "Safety Gate -hälytys",
+        "yourProduct": "Shopify-tuotteesi"
+      },
+      "identifiersHeading": "Tunnisteiden rinnakkaisvertailu",
+      "languageDiffNote": "Sovelluksen käyttöliittymän kieli ({{appLang}}) ja sähköposti-ilmoitusten kieli ({{emailLang}}) asetetaan erikseen.",
+      "noImage": "Kuvaa ei saatavilla",
+      "noteLabel": "Mitä tarkistit? (valinnainen)",
+      "noteRequiredLabel": "Mitä tarkistit? (pakollinen)",
+      "otherNoteRequired": "Lisää huomautus selittääksesi toisen lopputuloksen.",
+      "outcomeLabel": "Tarkistuksen lopputulos",
+      "possibleMatch": "Mahdollinen Safety Gate -osuma",
+      "readyToRecord": "Valmis tallennettavaksi",
+      "reviewPointsHeading": "Tarkistettavat kohdat",
+      "unnamedRecord": "Safety Gate -tietue"
+    },
+    "riskDescription": "Riskikuvaus",
+    "riskLevel": "Riskitaso",
+    "riskSeverity": "Riskin vakavuus",
+    "safetyGateMatches": "Safety Gate -osumat",
+    "scoreHelper": "Yleinen osuma on lopullinen tarkistuspiste. Kuvaosuma heijastaa vain pakkausten samankaltaisuutta.",
+    "sections": {
+      "whatHappened": "Mitä tapahtui?",
+      "whatHappenedReviewed": "Tämä osuma on jo tarkistettu ja tallennettu.",
+      "whatHappenedRisk": "Tämä Shopify-tuote näyttää tuotteelta, josta on jo ilmoitettu Safety Gatessa.",
+      "whatHappenedSafe": "Viimeisin tarkistus ei löytänyt todennäköistä Safety Gate -osumaa.",
+      "whatToDo": "Mitä minun pitäisi tehdä?",
+      "whyMatched": "Miksi se täsmäsi"
+    },
+    "seriousRisk": "Vakava {{category}}-riski",
+    "summary": {
+      "confidence": "Luottamus",
+      "confidenceUnknown": "Luottamus tuntematon",
+      "decisionRecorded": "Päätös tallennettu",
+      "decisionRequired": "Päätös vaaditaan",
+      "highConfidence": "Korkea luottamus",
+      "likelyMatch": "Todennäköinen osuma",
+      "likelySafetyGateMatch": "Todennäköinen Safety Gate -osuma",
+      "matchType": "Osuman tyyppi",
+      "nextStep": "Seuraava vaihe",
+      "noLikelyMatch": "Ei todennäköistä osumaa",
+      "overallMatch": "Yleinen pistemäärä",
+      "reviewRecommended": "Tarkistus suositeltava"
+    },
+    "supplierFollowUp": {
+      "copy": "Kopioi toimittajan seuranta",
+      "template": "Hei, tarkistamme tuotetta {{product}}, koska se saattaa vastata Safety Gate -hälytystä {{alert}} (riski: {{risk}}). Vahvista, onko kyseessä sama malli/erä, toimita tuoteturvallisuusasiakirjat ja selitä mahdolliset erot. Osuman syy: {{reason}}"
+    },
+    "technicalDetails": {
+      "description": "Pisteet ja hakumäärät säilytetään täällä syvempää tarkastelua varten. Aloita tuotekuvista, merkistä, mallista ja yllä olevasta suositellusta toiminnosta.",
+      "hide": "Piilota tiedot",
+      "show": "Näytä tiedot",
+      "title": "Tekniset osumatiedot"
+    },
+    "textOnly": "Vain tekstin tarkistus",
+    "viewOnSafetyGate": "Näytä Safety Gatessa",
+    "whyThisMatched": "Miksi tämä täsmäsi",
+    "withImage": "Tarkistettu kuvien kanssa",
+    "yourProduct": "Shopify-tuotteesi"
+  },
+  "auditReport": {
+    "decision": "Päätös",
+    "description": "Tarkista koko tietue ennen CSV-tiedoston viemistä tiimillesi, toimittajallesi tai tarkastusta varten.",
+    "detected": "Havaittu",
+    "documented": "Päätökset dokumentoitu",
+    "download": "Lataa CSV",
+    "empty": "Tuoteturvallisuushavaintoja ei ole vielä tallennettu.",
+    "eyebrow": "Vientivalmis tietue",
+    "generated": "Luotu {{date}}",
+    "heading": "Havainnot ja päätökset",
+    "needsReview": "Tarvitsee tarkistusta",
+    "notRecorded": "Ei tallennettu",
+    "open": "Avaa tarkastusraportti",
+    "product": "Tuote",
+    "risk": "Riskin vakavuus",
+    "status": "Tila",
+    "summaryLabel": "Tarkastusraportin yhteenveto",
+    "tableLabel": "Turvallisuustarkastusraportti",
+    "title": "Turvallisuustarkastusraportti",
+    "total": "Tallennetut havainnot",
+    "viewHistory": "Näytä tarkastusketju"
+  },
+  "billing": {
+    "freeScanAvailableDescription": "Sinulla on 1 ilmainen luettelon skannaus käytettävissä. Suorita ensimmäinen tarkastus tarkistaaksesi kauppasi tuotteet EU:n Safety Gate -tietokannasta vaarallisten elintarvikkeettomien tuotteiden osalta.",
+    "freeScanAvailableHeading": "Ilmainen alkuperäinen luettelon skannaus aktiivinen",
+    "managePlanButton": "Hallinnoi tilausta",
+    "planActiveDescription": "Valvonta on käytössä tässä Shopify-kaupassa. Tarkista viimeisin ajo ja kaikki tuotteet, jotka vaativat huomiota.",
+    "planEyebrow": "Tilaus ja kattavuus",
+    "planFreeAvailableDescription": "Yksi ilmainen Safety Gate -luettelon aloitusskannaus on saatavilla.",
+    "planFreeUsedDescription": "Ilmainen aloitusskannaus on valmis. Valitse tilaus, jos haluat aloittaa jatkuvan valvonnan ja viedä tarkastusketjun.",
+    "planTitle": "Tilaus ja turvallisuuden valvonta",
+    "pricingUnavailable": "Shopifyn hinnoittelua ei ole määritetty tälle sovellukselle.",
+    "statusActivePro": "ZeroRecall Pro (aktiivinen)",
+    "statusDevelopmentBypass": "Kehityksen esikatselu (laskutus ohitettu)",
+    "statusFreeAvailable": "Ilmainen aloitusskannaus",
+    "statusFreeUsed": "Ilmainen skannaus käytetty",
+    "statusLabel": "Nykyinen tilaus",
+    "statusUnverified": "Tilausta ei voitu vahvistaa",
+    "upgradePlanButton": "Päivitä Pro-versioon",
+    "upgradeRequiredDescription": "Ilmainen aloitusskannaus on valmis. Valitse Shopify-tilaus, jos haluat seurata uusia Safety Gate -hälytyksiä ja tarkistaa muuttuneet tuotteet.",
+    "upgradeRequiredHeading": "Jatka Safety Gate -valvontaa",
+    "verificationError": "Uudet skannaukset on keskeytetty, kunnes Shopifyn laskutus voidaan tarkistaa. Olemassa olevat löydökset ja päätökset ovat edelleen saatavilla."
+  },
+  "billingRedirect": {
+    "opening": "Avataan Shopifyn hinnoittelusuunnitelmia...",
+    "openPricingPlans": "Avaa hinnoittelusuunnitelmat"
+  },
+  "common": {
+    "all": "Kaikki",
+    "cancel": "Peruuta",
+    "close": "Sulje",
+    "confirm": "Vahvista",
+    "language": "Kieli",
+    "loading": "Ladataan...",
+    "unknown": "Tuntematon"
+  },
+  "dashboard": {
+    "activeAlertsBanner": {
+      "content": "Ratkaise {{count}} aktiivinen hälytys, jotta kyseiset tuotteet pysyvät saatavilla kaupassasi.",
+      "content_few": "Ratkaise {{count}} aktiivista hälytystä, jotta kyseiset tuotteet pysyvät saatavilla kaupassasi.",
+      "content_many": "Ratkaise {{count}} aktiivista hälytystä, jotta kyseiset tuotteet pysyvät saatavilla kaupassasi.",
+      "content_one": "Ratkaise {{count}} aktiivinen hälytys, jotta kyseiset tuotteet pysyvät saatavilla kaupassasi.",
+      "content_other": "Ratkaise {{count}} aktiivista hälytystä, jotta kyseiset tuotteet pysyvät saatavilla kaupassasi.",
+      "content_plural": "Ratkaise {{count}} aktiivista hälytystä, jotta kyseiset tuotteet pysyvät saatavilla kaupassasi.",
+      "manualCheckAction": "Manuaalinen tarkistus",
+      "reviewAction": "Tarkista ensimmäinen hälytys",
+      "title": "Aktiiviset turvallisuushälytykset vaativat huomiota"
+    },
+    "admin": {
+      "actionNeeded": "Toimenpide vaaditaan",
+      "actionNeededDescription": "Tarkista ensin merkityt tuotteet, jotta voit päättää, pidätkö ne myynnissä, hylkäätkö vastaavuuden vai ratkaisetko hälytyksen.",
+      "actionNeededTitle": "{{count}} aktiivinen hälytys vaatii tarkistusta",
+      "actionNeededTitle_few": "{{count}} aktiivista hälytystä vaatii tarkistusta",
+      "actionNeededTitle_many": "{{count}} aktiivista hälytystä vaatii tarkistusta",
+      "actionNeededTitle_one": "{{count}} aktiivinen hälytys vaatii tarkistusta",
+      "actionNeededTitle_other": "{{count}} aktiivista hälytystä vaatii tarkistusta",
+      "actionNeededTitle_plural": "{{count}} aktiivista hälytystä vaatii tarkistusta",
+      "activeAlertsDescription": "Tuotteet, jotka vaativat edelleen kauppiaan päätöksen ennen kuin jono on tyhjä.",
+      "auditHistoryKept": "Tarkastushistoria säilytetty",
+      "auditReady": "Raportti valmis",
+      "auditRecordsDescription": "Ratkaistut ja hylätyt päätökset syineen ja sisäisine muistiinpanoineen.",
+      "auditRecordsTitle": "Tarkastustiedot",
+      "auditReport": "Tarkastusraportti",
+      "automaticChecks": "Automaattiset tarkistukset",
+      "bulkCheckAllSummary": "Tämä suorittaa täyden tarkistuksen kaikille {{count}} tuotteelle.",
+      "bulkCheckDescription": "Skannaa ensin tarkistamattomat tuotteet tai sisällytä koko luettelo, kun haluat uuden tarkistuksen.",
+      "bulkCheckSummary": "Massatarkistuksen yhteenveto",
+      "bulkCheckSummaryDescription": "Pidä tämä yhteenveto tiiviinä, jotta kauppiaat voivat vahvistaa tulokset avaamatta toista näyttöä.",
+      "bulkCheckTitle": "Luettelon massatarkistus",
+      "bulkCheckUncheckedSummary": "Tämä tarkistaa {{count}} jäljellä olevaa tuotetta ja ohittaa {{skip}} jo tarkistettua kohdetta.",
+      "catalogCoverageDescription": "Luettelon osuus, joka on jo tarkistettu Safety Gate -palvelua vastaan.",
+      "catalogCoverageTitle": "Luettelon kattavuus",
+      "coverage": "Kattavuus",
+      "coveragePercent": "Luettelo tallennetuilla tarkistuksilla",
+      "criticalBannerDescription": "{{count}} aktiivinen vastaavuus on merkitty korkeaksi tai vakavaksi riskiksi. Priorisoi nämä tuotteet ennen uusien myyntien jatkamista.",
+      "criticalBannerDescription_few": "{{count}} aktiivista vastaavuutta on merkitty korkeaksi tai vakavaksi riskiksi. Priorisoi nämä tuotteet ennen uusien myyntien jatkamista.",
+      "criticalBannerDescription_many": "{{count}} aktiivista vastaavuutta on merkitty korkeaksi tai vakavaksi riskiksi. Priorisoi nämä tuotteet ennen uusien myyntien jatkamista.",
+      "criticalBannerDescription_one": "{{count}} aktiivinen vastaavuus on merkitty korkeaksi tai vakavaksi riskiksi. Priorisoi nämä tuotteet ennen uusien myyntien jatkamista.",
+      "criticalBannerDescription_other": "{{count}} aktiivista vastaavuutta on merkitty korkeaksi tai vakavaksi riskiksi. Priorisoi nämä tuotteet ennen uusien myyntien jatkamista.",
+      "criticalBannerDescription_plural": "{{count}} aktiivista vastaavuutta on merkitty korkeaksi tai vakavaksi riskiksi. Priorisoi nämä tuotteet ennen uusien myyntien jatkamista.",
+      "criticalBannerTitle": "{{count}} aktiivinen hälytys sisältää korkean riskin vastaavuuksia",
+      "criticalBannerTitle_few": "{{count}} aktiivista hälytystä sisältää korkean riskin vastaavuuksia",
+      "criticalBannerTitle_many": "{{count}} aktiivista hälytystä sisältää korkean riskin vastaavuuksia",
+      "criticalBannerTitle_one": "{{count}} aktiivinen hälytys sisältää korkean riskin vastaavuuksia",
+      "criticalBannerTitle_other": "{{count}} aktiivista hälytystä sisältää korkean riskin vastaavuuksia",
+      "criticalBannerTitle_plural": "{{count}} aktiivista hälytystä sisältää korkean riskin vastaavuuksia",
+      "daily": "Päivittäin",
+      "dailyAtTime": "Päivittäin klo 03:47 Eurooppa/Bratislava",
+      "dailyAtTimePlanned": "Ajastettu (päivittäin klo 03:47)",
+      "decisionsClosed": "Päätökset suljettu",
+      "demoAlert": {
+        "action": "Ratkaise, hylkää tai seuraa toimittajan kanssa",
+        "badge": "Esimerkkityönkulku",
+        "description": "Sovellus näyttää Shopify-tuotteen, Safety Gate -tiedon, miksi se täsmäsi ja tallennettavan toimenpiteen.",
+        "evidence": "Pidä muistiinpanoja ja vie tarkastusraportti",
+        "reason": "Vertaa merkkiä, mallia, luokkaa ja tuotekuvia",
+        "sample": "Mitä kauppiaat näkevät, kun vastaavuus ilmestyy",
+        "title": "Todennäköinen Safety Gate -vastaavuus löytyi"
+      },
+      "emptyProofCoverage": "{{count}} tuotteella on tallennettu tarkistustulos.",
+      "emptyProofEvidence": "{{count}} suljettua päätöstä säilytetään tarkastushistoriaa varten.",
+      "emptyProofMonitoring": "Päivittäinen Safety Gate -valvonta on edelleen käynnissä.",
+      "exportProof": "Vie todiste",
+      "fallbackAlertDescription": "Vastasi Safety Gate -hälytykseen.",
+      "finishCoverage": "Viimeistele luettelon kattavuus",
+      "highRiskMatchesDescription": "Vakavat tai korkean riskin Safety Gate -vastaavuudet, jotka on tarkistettava ensin.",
+      "highRiskMatchesTitle": "Korkean riskin vastaavuudet",
+      "checkChangedProducts": "Tarkista muuttuneet tuotteet",
+      "checksCompletedDescription": "Automaattiset ja manuaaliset tarkistukset, jotka vähentävät manuaalista luettelon tarkistustyötä.",
+      "checksCompletedTitle": "Tarkistukset valmiina",
+      "lastMonitoringRunDescription": "Viimeisin automaattinen, manuaalinen tai massamuotoinen Safety Gate -tarkistus.",
+      "lastMonitoringRunTitle": "Viimeisin valvontakierros",
+      "lastSafetyGateUpdateChecked": "Viimeisin Safety Gate -päivitys tarkistettu",
+      "latestRun": "Viimeisin kierros",
+      "monitoringRunDateUnknown": "Aika ei saatavilla",
+      "monitoringRunHistoryEmpty": "Ajoitettuja valvontakierroksia ei ole vielä tallennettu.",
+      "monitoringRunHistoryTitle": "Viimeisimmät valvontakierrokset",
+      "monitoringRunProgress": "{{products}} tuotetta tarkistettu · {{alerts}} uutta hälytystä",
+      "monitoringRunStatus": {
+        "completed": "Valmis",
+        "enqueue_failed": "Ei voitu aloittaa",
+        "failed": "Epäonnistui",
+        "processing": "Käsittelyssä",
+        "queued": "Jonossa",
+        "retrying": "Uudelleenyritys",
+        "skipped_unentitled": "Tilaus ei aktiivinen",
+        "unknown": "Tila ei saatavilla"
+      },
+      "monitoringRunsTitle": "Valvontatarkistukset",
+      "monitoringStatusAllClear": "Luettelon valvonta käynnissä",
+      "monitoringStatusDescription": "ZeroRecall tarkistaa luettelosi uusien EU Safety Gate -päivitysten varalta, korostaa tarkistusta vaativat tuotteet ja säilyttää todisteet auditointiraportteja varten.",
+      "monitoringStatusEyebrow": "Valvonnan tila",
+      "monitoringStatusNeedsReview": "{{count}} tuote vaatii kauppiaan päätöksen",
+      "monitoringStatusNeedsReview_few": "{{count}} tuotetta vaatii kauppiaan päätöksen",
+      "monitoringStatusNeedsReview_many": "{{count}} tuotetta vaatii kauppiaan päätöksen",
+      "monitoringStatusNeedsReview_one": "{{count}} tuote vaatii kauppiaan päätöksen",
+      "monitoringStatusNeedsReview_other": "{{count}} tuotetta vaatii kauppiaan päätöksen",
+      "monitoringStatusNeedsReview_plural": "{{count}} tuotetta vaatii kauppiaan päätöksen",
+      "needsReviewTitle": "Tarkistusta vaativat tuotteet",
+      "nextAutomaticCheck": "Seuraava automaattinen tarkistus",
+      "noActiveAlertsDescription": "Viimeisimmät tarkistuksesi eivät tällä hetkellä vaadi toimenpiteitä. Jatka uusien tuotteiden skannaamista kattavuuden ylläpitämiseksi.",
+      "noActiveAlertsTitle": "Ei aktiivisia turvallisuushälytyksiä",
+      "noAlertsDescription": "Tällä hetkellä ei ole avoimia tuotearviointeja. Tämä on silti hyödyllistä: päivittäinen valvonta jatkuu taustalla ja todisteesi pysyvät valmiina vientiä varten.",
+      "noAlertsTitle": "Yksikään tuote ei vaadi tarkistusta",
+      "priorityQueue": "Päätösjono",
+      "productsCoveredShort": "tallennetulla tarkistustuloksella",
+      "productsMonitored": "Nykyiset tuoteversiot tarkistettu",
+      "proofGridLabel": "Valvontatoiminta",
+      "protectionDescription": "Luvut kuvaavat sovellukseen tallennettuja tuloksia; ne eivät ole tuoteturvallisuussertifikaatti.",
+      "protectionEyebrow": "Valvontatietueesi",
+      "protectionTitle": "Tarkista viimeisimmät tarkistukset ja kauppiaan päätökset.",
+      "recentAlertsDescription": "Tarkista todennäköiset Safety Gate -vastineet, tallenna päätös ja säilytä todisteet auditointeja varten.",
+      "recentAlertsTitle": "Kauppiaan päätöstä vaativat tuotteet",
+      "recommendedAction": "Suositeltu toimenpide: tarkista vastaavuus ja tallenna päätös.",
+      "resolvedRateDescription": "Kuinka suuri osa kirjatuista hälytystoiminnoista on jo suljettu.",
+      "resolvedRateTitle": "Ratkaistujen osuus",
+      "results": {
+        "alertCreated": "Hälytys luotu",
+        "completed": "Valmis",
+        "error": "Virhe",
+        "checked": "Tarkistettu",
+        "skipped": "Ohitettu"
+      },
+      "reviewOneProduct": "Tarkista yksi tuote",
+      "riskInAlert": "Safety Gate -hälytyksessä kuvattu riski",
+      "runBulkCheck": "Suorita massatarkistus",
+      "stats": {
+        "alertsCreated": "Luodut hälytykset",
+        "alreadyChecked": "Jo tarkistettu",
+        "errors": "Virheet",
+        "checked": "Tarkistettu",
+        "skipped": "Ohitettu",
+        "stillUnchecked": "Edelleen tarkistamatta",
+        "totalProducts": "Tuotteita yhteensä"
+      },
+      "status": {
+        "cachedEvidence": "Välimuistissa olevia todisteita käytetään uudelleen",
+        "coverageIncomplete": {
+          "description": "Yksikään Safety Gate -vastine ei vaadi tarkistusta {{checked}} valvotussa tuotteessa. Viimeistele kaikkien {{total}} nykyisen tuotteen kattavuus ennen koko luettelon vahvistamista.",
+          "eyebrow": "Kattavuus puutteellinen",
+          "title": "{{count}} tuote tarvitsee edelleen kattavuutta",
+          "title_few": "{{count}} tuotetta tarvitsee edelleen kattavuutta",
+          "title_many": "{{count}} tuotetta tarvitsee edelleen kattavuutta",
+          "title_one": "{{count}} tuote tarvitsee edelleen kattavuutta",
+          "title_other": "{{count}} tuotetta tarvitsee edelleen kattavuutta",
+          "title_plural": "{{count}} tuotetta tarvitsee edelleen kattavuutta"
+        },
+        "deltaMonitoring": "Vain uudet Safety Gate -hälytykset tarkistetaan",
+        "factsLabel": "Nykyiset valvontatiedot",
+        "matchesNeedingReview": "Tarkistusta vaativat vastineet",
+        "monitoringNotConfirmed": "Valvontaa ei vielä vahvistettu",
+        "monitoringProblem": {
+          "action": "Päivitä luettelon kattavuus",
+          "description": "Nykyisillä tuotteillasi on kattavuustodisteet, mutta sovellus ei voi vahvistaa, milloin Safety Gate -valvonta viimeksi valmistui. Päivitä luettelon kattavuus palauttaaksesi luotettavan tilan.",
+          "eyebrow": "Valvonta vaatii huomiota",
+          "title": "Luettelon kattavuudella ei ole tallennettua valvontakierrosta"
+        },
+        "noActionNeeded": {
+          "action": "Näytä luettelon kattavuus",
+          "description": "Yksikään valvotun luettelosi tuote ei tällä hetkellä vastaa EU Safety Gate -hälytyksiä. Valvonta jatkuu taustalla, ja vain uudet hälytykset tai muuttuneet tuotteet vaativat työtä.",
+          "emptyCatalogDescription": "Lisää tuotteita Shopify-luetteloosi, ja ZeroRecall on valmis kattamaan ne.",
+          "emptyCatalogTitle": "Ei vielä valvottavia tuotteita",
+          "eyebrow": "Nykyinen Safety Gate -tila",
+          "title": "Toimenpiteitä ei tarvita"
+        },
+        "none": "Ei mitään",
+        "reviewNeeded": {
+          "criticalDescription": "Tarkista nämä mahdolliset vastineet ennen myynnin jatkamista. Vertaa tuotetta ja Safety Gate -todisteita ja tallenna sitten päätöksesi.",
+          "criticalEyebrow": "Kiireellinen tarkistus",
+          "criticalTitle": "{{count}} mahdollinen vastine vakavan riskin hälytyksellä vaatii tarkistuksen",
+          "criticalTitle_few": "{{count}} mahdollista vastinetta vakavan riskin hälytyksellä vaatii tarkistuksen",
+          "criticalTitle_many": "{{count}} mahdollinen osuma vakavan riskin hälytyksellä vaatii tarkistuksen",
+          "criticalTitle_one": "{{count}} mahdollinen osuma vakavan riskin hälytyksellä vaatii tarkistuksen",
+          "criticalTitle_other": "{{count}} mahdollinen osuma vakavan riskin hälytyksellä vaatii tarkistuksen",
+          "criticalTitle_plural": "{{count}} mahdollinen osuma vakavan riskin hälytyksellä vaatii tarkistuksen",
+          "description": "Mahdolliset Safety Gate -osumat edellyttävät kauppiaan päätöstä. Tarkista ensin osumat; muiden tuotteiden tarkistustulokset ovat edelleen saatavilla luettelossa.",
+          "eyebrow": "Tarkistus tarvitaan",
+          "title": "{{count}} mahdollinen osuma vaatii tarkistuksen",
+          "title_few": "{{count}} mahdollista osumaa vaatii tarkistuksen",
+          "title_many": "{{count}} mahdollista osumaa vaatii tarkistuksen",
+          "title_one": "{{count}} mahdollinen osuma vaatii tarkistuksen",
+          "title_other": "{{count}} mahdollista osumaa vaatii tarkistuksen",
+          "title_plural": "{{count}} mahdollista osumaa vaatii tarkistuksen"
+        },
+        "scheduledPlanned": "Ajastettu ajo"
+      },
+      "storeStatus": "Kaupan tila",
+      "valueMetrics": {
+        "decisionsRecorded": "Kirjatut päätökset",
+        "evidenceRetained": "Päätökset todisteineen",
+        "checksRun": "Tarkistuksia suoritettu",
+        "openDecisions": "Avoimet päätökset",
+        "productsCovered": "Tarkistetut tuotteet"
+      },
+      "valueProofDescription": "Näytä tiimille, että tilaus ei ole kertaluonteinen skannaus: luettelon kattavuus, tarkistukset, päätökset ja vain luku -oikeus Shopifyhin pysyvät aktiivisina.",
+      "valueProofDescriptionComplete": "Nämä luvut osoittavat tallennetun tarkistustoiminnan nykyiselle luettelolle.",
+      "valueProofDescriptionIncomplete": "Suorita tarkistukset jäljellä oleville tuotteille lisätäksesi tulokset nykyiseen luettelotietueeseen.",
+      "valueProofEyebrow": "Kattavuustoiminto",
+      "valueProofTitle": "Mitä ZeroRecall jatkaa tekemistä",
+      "valueProofTitleComplete": "Jokaisella nykyisellä tuotteella on tallennettu tarkistus",
+      "valueProofTitleIncomplete": "{{count}} tuotteella on tallennettu tarkistus",
+      "warningBannerDescription": "Tarkista nämä osumat, hylkää väärät positiiviset tai ratkaise vahvistetut ongelmat, jotta jono pysyy toimintakykyisenä.",
+      "warningBannerTitle": "{{count}} aktiivinen hälytys vaatii kauppiaan päätöksen",
+      "warningBannerTitle_few": "{{count}} aktiivista hälytystä vaatii kauppiaan päätöksen",
+      "warningBannerTitle_many": "{{count}} aktiivista hälytystä vaatii kauppiaan päätöksen",
+      "warningBannerTitle_one": "{{count}} aktiivinen hälytys vaatii kauppiaan päätöksen",
+      "warningBannerTitle_other": "{{count}} aktiivista hälytystä vaatii kauppiaan päätöksen",
+      "warningBannerTitle_plural": "{{count}} aktiivista hälytystä vaatii kauppiaan päätöksen",
+      "withReadOnlyShopifyAccess": "Vain luku -oikeus Shopifyhin"
+    },
+    "bulkCheck": {
+      "action": "Tarkista kaikki tuotteet",
+      "alerts": "Hälytykset {{count}}",
+      "alreadyChecked": "Jo tarkistettu",
+      "completed": "Valmistui {{seconds}} sekunnissa",
+      "description": "Skannaa kaikki kauppasi tuotteet Safety Gate -tietokantaa vasten piilevien riskien löytämiseksi.",
+      "errors": "Virheet {{count}}",
+      "checked": "Tarkistettu {{count}}",
+      "includeAlreadyChecked": "Sisällytä jo tarkistetut tuotteet",
+      "notYetChecked": "Ei vielä tarkistettu",
+      "processed": "Käsitelty {{count}}",
+      "started": "Aloitettu {{date}}",
+      "title": "Massaturvatarkistus",
+      "totalProducts": "Tuotteita yhteensä",
+      "willCheckAll": "Tarkistaa kaikki {{count}} tuotteet",
+      "willCheckUnchecked": "Tarkistaa {{count}} tarkistamatonta tuotetta (ohita {{skip}} jo tarkistettua)"
+    },
+    "bulkResults": {
+      "success": "Massatarkistus valmis: {{processed}} käsitelty, {{checked}} tarkistettu, {{alertsCreated}} hälytystä luotu."
+    },
+    "howItWorks": {
+      "alertGeneration": {
+        "description": "Osumat luovat hälytyksiä, jotka voit hylätä tai ratkaista vaatimustenmukaisuuden seuraamiseksi.",
+        "title": "Hälytysten luominen"
+      },
+      "autoMonitoring": {
+        "description": "Tuotteet tarkistetaan EU-tietokantaa vasten aina, kun ne luodaan tai päivitetään.",
+        "title": "Automaattinen valvonta"
+      },
+      "title": "Miten se toimii"
+    },
+    "liveScan": {
+      "completed": "Valmis",
+      "description": "Tuoteluettelosi tuonti Shopifysta ja tuotteiden skannaus yli 35 000 tietueen virallista EU Safety Gate (RAPEX) -tietokantaa vasten. Tulokset ilmestyvät hetken kuluttua.",
+      "eyebrow": "Automatisoitu turvallisuustarkastus",
+      "failedDescription": "Emme voineet suorittaa tätä tarkastusta loppuun. Luetteloasi ei merkitty täysin tarkistetuksi. Aloita skannaus uudelleen tai ota yhteyttä tukeen, jos ongelma jatkuu.",
+      "failedHeading": "Luettelon tarkastus vaatii uuden yrityksen",
+      "heading": "Ilmainen luettelon turvallisuustarkastus käynnissä...",
+      "inProgress": "Käynnissä...",
+      "pending": "Odottaa",
+      "progress": "Tuotu {{imported}} / {{fetched}} tuotetta; verrattu {{scanned}} tuotetta, joissa {{alerts}} Safety Gate -hälytystä tähän mennessä.",
+      "stepAudit": "3. Valmistele GPSR-tarkastuspolku ja vaatimustenmukaisuustila",
+      "stepImport": "1. Tuo tuotteet Shopifysta",
+      "stepScan": "2. Vertaa Safety Gate -tietokantaan (yli 35 000 tietuetta)"
+    },
+    "metricsCard": {
+      "activeAlertsHeading": "Aktiiviset hälytykset",
+      "productsCheckedHeading": "Tarkistetut tuotteet",
+      "resolutionHeading": "Ratkaisunopeus",
+      "resolved": "{{count}} ratkaistu",
+      "resolvedAndDismissed": "{{resolved}} ratkaistu • {{dismissed}} hylätty",
+      "scans": "Safety Gate -skannaukset",
+      "totalRecorded": "{{count}} yhteensä tallennettu"
+    },
+    "monitorCard": {
+      "description": "Seuraa hälytyksiä, suorita luettelotarkistuksia ja pidä sääntelyviranomaiset tyytyväisinä.",
+      "reviewAction": "Tarkista hälytykset",
+      "title": "Seuraa tuoteturvallisuutta yhdellä silmäyksellä"
+    },
+    "quickActions": {
+      "browsePortal": "Selaa Safety Gate -portaalia",
+      "description": "Säännölliset tarkistukset ja dokumentaatio auttavat osoittamaan huolellisuutta sääntelyviranomaisille.",
+      "manualCheck": "Suorita manuaalinen tarkistus",
+      "title": "Pikatoiminnot"
+    },
+    "recentAlerts": {
+      "active": "{{count}} aktiivista",
+      "allResolved": "Kaikki ratkaistu",
+      "description": "Tutki uusimmat Safety Gate -osumista ennen tilausten täyttämistä.",
+      "emptyState": {
+        "content": "Hienoja uutisia – tällä hetkellä ei ole merkittyjä tuotteita. Jatka seurantaa vaatimustenmukaisuuden ylläpitämiseksi.",
+        "heading": "Ei turvallisuushälytyksiä vielä"
+      },
+      "matchCount": "{{count}} osuma löydetty",
+      "matchCount_few": "{{count}} osumaa löydetty",
+      "matchCount_many": "{{count}} osumaa löydetty",
+      "matchCount_one": "{{count}} osuma löydetty",
+      "matchCount_other": "{{count}} osumaa löydetty",
+      "matchCount_plural": "{{count}} osumaa löydetty",
+      "title": "Viimeisimmät turvallisuushälytykset"
+    },
+    "safetyBreakdown": {
+      "actionDesc": "Osumia löydetty EU Safety Gate -raporteista, jotka vaativat tarkistusta ja ratkaisua.",
+      "actionLabel": "Toiminto vaaditaan",
+      "description": "Yleiskatsaus tuoteluettelosi tarkistuksesta eurooppalaisia turvallisuusluetteloita ja GPSR-direktiiviä vastaan.",
+      "eyebrow": "Luettelon suojaustila",
+      "protectedDesc": "Tuotteet, joiden viimeisin tallennettu tarkistus ei löytänyt todennäköistä vastaavuutta.",
+      "protectedLabel": "Tarkistetut tuotteet ilman avoimia löydöksiä",
+      "protectRemainingAction": "Tarkista jäljellä olevat ({{count}})",
+      "reviewAlertsAction": "Tarkista hälytykset",
+      "scanAllAction": "Suorita koko luettelon auditointi",
+      "title": "Tuoteturvallisuuden tila",
+      "unprotectedAllCovered": "Jokaisella nykyisellä tuotteella on tallennettu tarkistustulos.",
+      "unprotectedDesc": "Tuotteet, joilla ei ole tallennettua Safety Gate -tarkistusta.",
+      "unprotectedLabel": "Ei vielä tarkistettu"
+    },
+    "setup": {
+      "description": "Valmistele kauppasi EU:n tuoteturvallisuusvaatimusten mukaiseksi.",
+      "progress": "{{completed}} / {{total}} vaihetta suoritettu",
+      "steps": {
+        "step1": {
+          "description": "Napsauta \"Tarkista kaikki tuotteet\" skannataksesi koko luettelosi EU:n Safety Gate -tietokantaa vastaan.",
+          "label": "Suorita ensimmäinen massatuotetarkistus"
+        },
+        "step2": {
+          "description": "Tarkista hälytyssivulta kaikki tuotteet, jotka vastaavat Safety Gate -varoituksia.",
+          "label": "Tarkista kaikki turvallisuushälytykset"
+        },
+        "step3": {
+          "description": "Ota automaattiset tarkistukset käyttöön asetuksista valvoaksesi uusia tuotteita automaattisesti.",
+          "label": "Määritä automaattinen valvonta"
+        }
+      },
+      "title": "Asennusopas"
+    },
+    "stats": {
+      "actionNeeded": "Toimenpide vaaditaan",
+      "activeAlerts": "Aktiiviset hälytykset",
+      "alertsLogged": "Kirjatut hälytykset",
+      "allClear": "Kaikki kunnossa",
+      "autoMonitoring": "Automaattinen valvonta",
+      "descriptions": {
+        "activeAlerts": "Tarkista nämä tuotteet tänään pysyäksesi vaatimusten mukaisena.",
+        "activeAlertsZero": "Kaikki turvallisuusongelmat on ratkaistu.",
+        "alertsLogged": "Sisältää ratkaistut ja hylätyt hälytykset auditointia varten.",
+        "alertsLoggedZero": "Ei historiallisia hälytyksiä. Jatka uusien tuotteiden valvontaa.",
+        "productsChecked": "Automaattiset Shopify-tapahtumat jatkavat päivitysten valvontaa.",
+        "productsCheckedZero": "Suorita massatarkistus skannataksesi nykyisen luettelosi."
+      },
+      "newSetup": "Uusi asennus",
+      "open": "{{count}} avoinna",
+      "productsChecked": "Tarkistetut tuotteet",
+      "resolved": "{{count}} ratkaistu"
+    },
+    "title": "ZeroRecall"
+  },
+  "dates": {
+    "daysAgo": "{{count}} päivää sitten",
+    "today": "Tänään",
+    "weeksAgo": "{{count}} viikkoa sitten",
+    "yesterday": "Eilen"
+  },
+  "errors": {
+    "apiError": "Ulkoinen turvallisuuspalvelu on tilapäisesti poissa käytöstä. Yritä myöhemmin uudelleen.",
+    "pageLoadFailed": "Sivun lataus epäonnistui",
+    "unknown": "Jokin meni pieleen"
+  },
+  "evidence": {
+    "alertNumber": "Safety Gate -hälytys {{number}}",
+    "description": "Tarkista tallennetut tuoteturvallisuuspäätökset, muistiinpanot, riskikonteksti ja toimittajan seurantatiedot.",
+    "empty": "Tuoteturvallisuuspäätöksiä ei ole vielä tallennettu.",
+    "eyebrow": "Auditointipolku",
+    "filteredRecords": "{{visible}} / {{total}} tietuetta",
+    "filters": {
+      "collapseForProduct": "Piilota kaikki tiedot tuotteesta {{title}}",
+      "expandForProduct": "Näytä kaikki tiedot tuotteesta {{title}}",
+      "noResults": "Yksikään auditointitietue ei vastaa näitä suodattimia.",
+      "searchLabel": "Hae auditointipolusta",
+      "searchPlaceholder": "Hae tuotetta, hälytysnumeroa tai todisteita",
+      "showLess": "Piilota tiedot",
+      "showMore": "Näytä tiedot",
+      "statusLabel": "Päätöksen tila"
+    },
+    "fullEvidence": "Kaikki tiedot",
+    "heading": "Päätös- ja todistehistoria",
+    "noNotes": "Ei muistiinpanoa tallennettu",
+    "records": "{{count}} tietuetta",
+    "table": {
+      "accessibilityLabel": "Tuoteturvallisuustietojen taulukko",
+      "decision": "Päätös",
+      "details": "Tiedot",
+      "notes": "Muistiinpanot / todisteet",
+      "product": "Tuote",
+      "status": "Tila",
+      "summary": "Todisteiden yhteenveto",
+      "updated": "Päivitetty"
+    },
+    "title": "Auditointipolku"
+  },
+  "experience": {
+    "delayed": "Valvonta vaatii huomiota – viimeisin suoritettu ajo on yli 48 tuntia vanha",
+    "pausedHelp": "Automaattiset tarkistukset on keskeytetty. Valitse suunnitelma tarkistaaksesi uudet Safety Gate -hälytykset ja tuotemuutokset, kun Shopify on suljettu.",
+    "previewHelp": "Tämän kehitysesikatselun avaaminen ei aktivoi taustavalvontaa. Aikataulutetut tarkistukset edellyttävät vahvistettua aktiivista Shopify-suunnitelmaa.",
+    "reviewSteps": "1. Vertaa kuvia ja tunnisteita → 2. Valitse tarkistuksen tulos → 3. Tallenna päätöksesi",
+    "valueBody": "Päivittäiset tarkistukset uusien Safety Gate -hälytysten varalta, tarkistukset tuotteiden muuttuessa, sähköposti-ilmoitukset käytössä ollessa ja tallennetut tarkistuspäätökset.",
+    "valueTitle": "Mitä jatkuva valvonta lisää"
+  },
+  "manualCheck": {
+    "admin": {
+      "catalog": "Luettelo",
+      "catalogDescription": "Tuotteet on lajiteltu viimeisimpien Shopify-päivitysten mukaan, jotta kauppiaat voivat tarkistaa viimeisimmät muutokset ensin.",
+      "checkFailed": "Tarkistus epäonnistui",
+      "manualReview": "Tilauksesta tehtävä tarkistus",
+      "manualReviewDescription": "Valitse mikä tahansa tuote luettelostasi ja suorita kohdennettu Safety Gate -tarkistus, kun tarvitset välittömän vastauksen.",
+      "productFlagged": "Tuote merkitty"
+    },
+    "badges": {
+      "flagged": "{{count}} merkitty",
+      "checks": "{{count}} tarkistusta",
+      "needsReview": "{{count}} vaatii tarkistusta"
+    },
+    "banners": {
+      "alertDescription": "Tästä tuotteesta löytyi mahdollinen turvallisuusongelma.",
+      "alertHeading": "Turvallisuushälytys luotu",
+      "failedHeading": "Tarkistus epäonnistui",
+      "textOnlyDescription": "Tämä tulos käytti vain tekstikenttiä. Jos tuote perustuu visuaalisiin eroihin, tarkista vastaavuus huolellisemmin.",
+      "textOnlyHeading": "Kuvien vertailu ei ollut käytettävissä"
+    },
+    "breadcrumbs": {
+      "current": "Luettelon kattavuus",
+      "dashboard": "Hallintapaneeli"
+    },
+    "bulk": {
+      "description": "Tarkista tallennetut tarkistukset ja suorita uusi Safety Gate -vertailu nykyisen luettelosi tuotteille.",
+      "checkAllProducts": "Tarkista jäljellä olevat tuotteet",
+      "checkingAll": "Tarkistetaan luetteloa...",
+      "title": "Tarkista luettelosi"
+    },
+    "catalogue": {
+      "accessibilityLabel": "Tuoteluettelotaulukko",
+      "actions": {
+        "checkAgain": "Tarkista uudelleen",
+        "checkAgainForProduct": "Tarkista {{title}} uudelleen",
+        "checkSafety": "Tarkista turvallisuus",
+        "checkSafetyForProduct": "Tarkista tuotteen {{title}} turvallisuus",
+        "viewForProduct": "Näytä tallennettu löydös tuotteelle {{title}}"
+      },
+      "columns": {
+        "action": "Toiminto",
+        "checks": "Tarkistukset",
+        "product": "Tuote",
+        "status": "Tila"
+      },
+      "emptyBody": "Tuotteita ei ole saatavilla tarkistettavaksi.",
+      "emptyHeading": "Tuotteita ei löytynyt",
+      "firstCheck": "Suorita ensimmäinen tarkistus",
+      "heading": "Tuoteluettelo ({{count}})",
+      "lastChecked": "Viimeksi tarkistettu {{date}}",
+      "noType": "Ei tyyppiä",
+      "searchLabel": "Etsi tuote",
+      "searchPlaceholder": "Hae tuotteita nimikkeen, SKU:n, myyjän tai tyypin mukaan",
+      "status": {
+        "notChecked": "Ei tarkistettu",
+        "reviewed": "Arvosteltu",
+        "safe": "Ei vastaavuutta löydy",
+        "unsafe": "Vaatii tarkistuksen"
+      },
+      "totalChecks": "{{count}} yhteensä",
+      "unknownVendor": "Tuntematon myyjä"
+    },
+    "coverage": {
+      "completeDescription": "Jokaisella nykyisellä Shopify-tuotteella on tallennettu Safety Gate -tarkistus. Uudet tai muuttuneet tuotteet tarvitsevat edelleen uuden tarkistuksen.",
+      "completeTitle": "Jokaisella nykyisellä tuotteella on tallennettu tarkistustulos",
+      "eyebrow": "Luettelon tarkistustila",
+      "incompleteDescription": "Tarkista jäljellä olevat tuotteet tallentaaksesi Safety Gate -tuloksen nykyiselle luettelolle.",
+      "incompleteTitle": "{{count}} tuotteella ei ole vielä tallennettua tarkistusta",
+      "lastProductNeedsReview": "Viimeisin tuotetarkistus loi tai päivitti arvostelukohteen.",
+      "lastProductSafe": "Viimeisin tuotetarkistus ei löytänyt todennäköistä Safety Gate -vastaavuutta.",
+      "lastRun": "Viimeisin tarkistus",
+      "lastRunResultWithCounts": "Tarkistettu {{checked}}, ohitettu {{skipped}} muuttumaton, luotu {{alerts}} arvostelukohdetta, {{errors}} virhettä.",
+      "noneRemaining": "Jokaisella nykyisellä tuotteella on tallennettu tarkistustulos.",
+      "noRunYet": "Luetteloa tai tuotetarkistusta ei ole vielä suoritettu.",
+      "percent": "{{percent}}% nykyisellä tarkistuksella",
+      "productsCovered": "Tarkistetut tuotteet",
+      "productsCoveredDescription": "Tuotteet, joilla on tallennettu tulos nykyiselle Shopify-versiolleen.",
+      "remaining": "Ei vielä tarkistettu",
+      "remainingDescription": "Suorita tarkistus tallentaaksesi Safety Gate -tuloksen näille tuotteille."
+    },
+    "filters": {
+      "all": "Kaikki ({{count}})",
+      "needsReview": "Mahdollinen vastaavuus ({{count}})",
+      "safe": "Ei vastaavuutta löydy ({{count}})",
+      "unprotected": "Tarkistamaton tai muutettu ({{count}})"
+    },
+    "modal": {
+      "unknown": "Tuntematon",
+      "unknownProduct": "Tuntematon tuote"
+    },
+    "overview": {
+      "coverage": "{{coverage}}% kattavuus",
+      "manualCompleted": "Manuaaliset tarkistukset suoritettu",
+      "manualCompletedDescription": "{{checked}} / {{total}} tuotteesta tarkistettu",
+      "noOpenReviews": "Ei avoimia tuotepäätöksiä.",
+      "noRisks": "Riskiä ei havaittu vielä.",
+      "prioritise": "Priorisoi nämä tuotteet toimenpiteitä varten.",
+      "productsDescription": "Uusimmat tuotteet kaupastasi.",
+      "productsFlagged": "Merkityt tuotteet",
+      "productsInScope": "Soveltamisalaan kuuluvat tuotteet",
+      "productsNeedingReview": "Tarkistusta vaativat tuotteet",
+      "title": "Tarkistusten yleiskatsaus"
+    },
+    "quickActions": {
+      "title": "Pikatoiminnot"
+    },
+    "subtitle": "Suojaa muu luettelosi, päivitä valvonta tai tarkista yksi valittu tuote.",
+    "title": "Luettelon kattavuus",
+    "toasts": {
+      "completed": "Turvallisuustarkistus suoritettu",
+      "flagged": "Mahdollinen turvallisuusongelma havaittu"
+    }
+  },
+  "nav": {
+    "catalogCoverage": "Luettelon kattavuus",
+    "dashboard": "Hallintapaneeli",
+    "evidence": "Auditointipolku",
+    "manualCheck": "Luettelon kattavuus",
+    "safetyAlerts": "Tarkistusjono",
+    "settings": "Asetukset"
+  },
+  "news": {
+    "items": {
+      "databaseUpdate": {
+        "date": "Joulu 2025",
+        "description": "Safety Gate -tietokantaa päivitetään jatkuvasti uusilla tuotehälytyksillä. Suorita säännöllisiä tarkistuksia pysyäksesi vaatimusten mukaisena.",
+        "title": "EU:n Safety Gate -tietokanta päivitetty"
+      },
+      "gpsr": {
+        "date": "GPSR 2024",
+        "description": "Lue GPSR-vaatimuksista ja siitä, miten varmistat, että tuotteesi täyttävät EU:n turvallisuusstandardit.",
+        "title": "Yleinen tuoteturvallisuusasetus"
+      }
+    },
+    "title": "Uutiset"
+  },
+  "onboarding": {
+    "back": "Takaisin",
+    "finishButton": "Viimeistele asennus ja siirry hallintapaneeliin",
+    "nextStep": "Seuraava vaihe",
+    "stepIndicator": "Vaihe {{current}} / {{total}}",
+    "steps": {
+      "automation": {
+        "description": "Määritä prioriteettiarviointi ja automaattiset turvallisuussäännöt kaupallesi.",
+        "label": "Turvallisuusautomaatio",
+        "quarantine": {
+          "desc": "Merkitse tuotteet automaattisesti prioriteettiarviointiin, kun ne vastaavat Safety Gate -hälytyksiä vakavalla riskillä (kynnysarvo >= 95%).",
+          "label": "Ota prioriteettiarviointi käyttöön",
+          "title": "Priorisoi vakavat riskit"
+        },
+        "title": "Vaihe 3: Automaattinen valvonta ja hälytykset",
+        "webhooks": {
+          "desc": "Tuotteet tarkistetaan automaattisesti EU-tietokannasta aina, kun ne luodaan tai päivitetään.",
+          "title": "Reaaliaikainen Webhook-skannaus"
+        }
+      },
+      "scan": {
+        "alerts": "Luodut riskihälytykset: {{count}}",
+        "complete": "Luettelo on nyt valvottu",
+        "description": "Tuo nykyiset Shopify-tuotteesi Safety Gate -valvontaan ja vertaa sitten luetteloa viimeisimpiin Safety Gate -hälytyksiin.",
+        "imported": "Valvontaan tuodut tuotteet: {{count}}",
+        "label": "Luettelon tuonti",
+        "monitored": "Safety Gate -hälytyksiin verratut tuotteet: {{count}}",
+        "scanned": "Skannatut tuotteet: {{count}}",
+        "scanning": "Tuodaan luetteloa ja verrataan tuotteita Safety Gate -hälytyksiin...",
+        "startButton": "Tuo ja valvo nykyistä luetteloa",
+        "title": "Vaihe 2: Tuo ja valvo nykyistä luetteloa",
+        "toScan": "Valvontaan tuotavat tuotteet: {{count}}"
+      },
+      "sensitivity": {
+        "balanced": "70% (Suositeltu – Tasapainoinen)",
+        "broad": "40% (Laaja – Enemmän varoituksia)",
+        "calibration": {
+          "balancedDesc": "Vakiotarkkuus. Optimoitu tasapaino tarkkuuden ja hälytysten määrän välillä. Skannaa otsikot, kuvaukset ja täsmää avainbrändit ja mallirakenteet.",
+          "balancedTitle": "Tasapainoinen tunnistustila",
+          "broadDesc": "Korkea herkkyys. Tunnistaa löyhästi liittyvät osumat. Suositellaan, jos myyt korkean riskin tuotekategorioita (lelut, elektroniikka) ja haluat täydellisen kattavuuden, mutta odota joitakin vääriä positiivisia.",
+          "broadTitle": "Laaja tunnistustila",
+          "strictDesc": "Korkea tarkkuus. Suodattaa pois pienet samankaltaisuudet. Hälytykset laukeavat vain hyvin selkeistä brändi-/mallinimitäsmäyksistä. Alhainen väärien hälytysten määrä.",
+          "strictTitle": "Tiukka tunnistustila"
+        },
+        "description": "Valitse, kuinka tarkasti tuotteen tulee vastata Safety Gate -tietuetta, ennen kuin se vaatii tarkistuksen.",
+        "label": "Osuman tiukkuus",
+        "strict": "90 % (Tiukka – Vähemmän varoituksia)",
+        "thresholdLabel": "Osumakynnys: {{value}}%",
+        "title": "Vaihe 1: Aseta osuman tiukkuus"
+      }
+    },
+    "subtitle": "Löydä mahdollisesti vaarallisten tuotteiden osumia, tarkista ne Shopify-järjestelmässä ja säilytä tarkastustodisteet jokaisesta päätöksestä.",
+    "title": "Valvo tuoteluetteloasi EU:n Safety Gate -järjestelmää vastaan",
+    "value": {
+      "audit": {
+        "description": "Ratkaistut ja hylätyt päätökset säilyttävät muistiinpanoja vientiä ja toimittajan seurantaa varten.",
+        "title": "Tarkastusvalmiit todisteet"
+      },
+      "monitor": {
+        "description": "Uudet Safety Gate -hälytykset tarkistetaan Shopify-tuoteluetteloasi vasten.",
+        "title": "Päivittäinen EU:n Safety Gate -valvonta"
+      },
+      "review": {
+        "description": "Vertaa osumaa, päätä mitä tehdä ja pidä jono toimintakykyisenä.",
+        "title": "Kauppiaan päätöksentekoprosessi"
+      }
+    }
+  },
+  "pagination": {
+    "pageOf": "Sivu {{current}}/{{total}} ({{count}} hälytystä)"
+  },
+  "portal": {
+    "description": "Pääset viralliseen Euroopan Safety Gate -tietokantaan etsiäksesi vaarallisia tuotteita ja tarkastellaksesi yksityiskohtaisia turvallisuushälytyksiä.",
+    "home": "Safety Gate -etusivu",
+    "homeDescription": "Pääsy Euroopan komission viralliseen portaaliin",
+    "searchDatabase": "Hae tietokannasta",
+    "searchDescription": "Hae vaarallisia tuotteita EU:n Safety Gate -järjestelmästä",
+    "title": "Safety Gate -portaali"
+  },
+  "resolveActions": {
+    "actionTaken": "Suoritettu toimenpide",
+    "contactedSupplier": "Toimittajaan otettu yhteyttä (vastausta odotetaan)",
+    "contactPending": "Odotetaan toimittajan vastausta",
+    "falsePositive": "Väärä positiivinen",
+    "menuLabel": "Ratkaisutoiminnot",
+    "modifiedProduct": "Tuotetta muokattu",
+    "noActionNeeded": "Toimenpiteitä ei tarvita",
+    "notMyProduct": "Ei minun tuotteeni",
+    "other": "Muu",
+    "removedFromSale": "Poistettu myynnistä",
+    "verifiedSafe": "Historiallinen tulos: tuote varmistettu turvalliseksi"
+  },
+  "settings": {
+    "monitoring": {
+      "automatic": {
+        "description": "Tuotteet tarkistetaan automaattisesti, kun ne luodaan tai päivitetään webhookien kautta.",
+        "enabled": "Käytössä",
+        "title": "Automaattinen tarkistus"
+      },
+      "manual": {
+        "description": "Suorita tarvittaessa turvallisuustarkistuksia mille tahansa tuotteelle luettelossasi.",
+        "goToManualCheck": "Siirry manuaaliseen tarkistukseen",
+        "title": "Manuaaliset tarkistukset"
+      },
+      "title": "Valvonta"
+    },
+    "navigation": {
+      "dashboard": "Hallintapaneeli",
+      "manualCheck": "Manuaalinen tarkistus",
+      "title": "Navigointi",
+      "viewAlerts": "Näytä hälytykset"
+    },
+    "subtitle": "Hallitse, miten ZeroRecall valvoo Shopify-tuoteluetteloasi.",
+    "threshold": {
+      "currentDefault": "Nykyinen ympäristön oletusarvo",
+      "description": "Valitse, kuinka monta mahdollista Safety Gate -osumaa tiimisi haluaa tarkistaa. Tasapainoinen valvonta on suositeltavaa useimmille Shopify-tuoteluetteloille.",
+      "howItWorks": "Näin tämä toimii",
+      "label": "Edistynyt osumakynnys (%)",
+      "resetToDefault": "Palauta oletusarvoihin",
+      "save": "Tallenna",
+      "title": "Valvontatila"
+    },
+    "title": "Valvonta-asetukset"
+  },
+  "settingsAdmin": {
+    "advancedMatchingSettings": "Edistyneet täsmäytysasetukset",
+    "automation": {
+      "autoDraftDescription": "Merkitse tuotteet automaattisesti prioriteettiarviointiin, kun ne vastaavat Safety Gate -hälytyksiä vakavalla riskillä (kynnysarvo >= 95%).",
+      "autoDraftTitle": "Priorisoi vakavat riskit",
+      "description": "Määritä priorisoitu tarkistus korkean riskin osumille.",
+      "eyebrow": "Reaaliaikaiset toiminnot",
+      "title": "Turvallisuusautomaatio"
+    },
+    "automationStatus": {
+      "active": {
+        "badge": "Suunnitelma aktiivinen",
+        "description": "Alkuperäinen luettelon tarkastus on valmis ja tällä kaupalla on aktiivinen valvontasuunnitelma.",
+        "title": "Luettelon tarkastus valmis"
+      },
+      "completedNoPlan": {
+        "badge": "Tarkastus valmis",
+        "description": "Alkuperäinen luettelon tarkastus on valmis. Jatkuva automaattinen valvonta edellyttää aktiivista suunnitelmaa.",
+        "title": "Alkuperäinen luettelon tarkastus valmis"
+      },
+      "failed": {
+        "badge": "Vaatii huomiota",
+        "description": "Viimeisin tuonti tai tarkastus ei valmistunut. Yritä luettelon kattavuutta uudelleen ennen kuin luotat valvontatilaan.",
+        "title": "Alkuperäinen luettelon tarkastus vaatii huomiota"
+      },
+      "notStarted": {
+        "badge": "Vahvistamaton",
+        "description": "Alkuperäinen tuonti ei ole valmistunut, joten luettelon kattavuutta ei ole vielä vahvistettu.",
+        "title": "Luettelon tarkastusta ei ole vahvistettu"
+      },
+      "openCatalog": "Avaa luettelon kattavuus",
+      "scanning": {
+        "badge": "Käsittelyssä",
+        "description": "Tuotteita tuodaan ja tarkistetaan. Luettelon kattavuus vahvistetaan tarkastuksen päätyttyä.",
+        "title": "Alkuperäinen luettelon tarkastus käynnissä"
+      }
+    },
+    "automationStatusDescription": "Päivittäiset EU:n Safety Gate -päivitykset, Shopify-tuotemuutokset ja tarkastustiedot käsitellään automaattisesti. Käytä näitä asetuksia vain tarkistusmäärän ja ilmoitusten säätämiseen.",
+    "automationStatusEyebrow": "Automaattinen valvonta",
+    "automationStatusTitle": "Safety Gate -valvonta toimii tässä kaupassa",
+    "configuration": "Konfiguraatio",
+    "configurationDescription": "Pidä sivu keskittyneenä yhteen kauppiaan päätökseen: kuinka tiukka tarkistajan tulisi olla verratessaan tuotteita Safety Gate -hälytyksiin.",
+    "currentThreshold": "Nykyinen kynnysarvo",
+    "currentThresholdDescription": "Matalammat arvot havaitsevat enemmän mahdollisia osumia. Korkeammat arvot vähentävät vääriä positiivisia.",
+    "environmentDefault": "Ympäristön oletusarvo",
+    "environmentDefaultDescription": "Käytetään, kun kaupalla ei ole vielä tallennettua mukautettua kynnysarvoa.",
+    "exclusions": {
+      "description": "Jätä tietyt myyjät tai tuotekategoriat Safety Gate -tarkistusten ulkopuolelle vähentääksesi vääriä positiivisia.",
+      "eyebrow": "Suodatus säännöt",
+      "title": "Poissulkemissäännöt",
+      "typesDescription": "Kirjoita tuoteluokka tai -tyyppi ja paina Enteriä tai pilkkua lisätäksesi sen.",
+      "typesPlaceholder": "Lahjakortti, Palvelu, ...",
+      "typesTitle": "Poissuljetut tuotetyypit",
+      "vendorsDescription": "Kirjoita myyjän nimi ja paina Enteriä tai pilkkua lisätäksesi sen.",
+      "vendorsPlaceholder": "Myyjä A, Myyjä B, ...",
+      "vendorsTitle": "Poissuljetut myyjät"
+    },
+    "fallback": "Vararatkaisu",
+    "guidance": "Ohjeistus",
+    "guidanceItems": {
+      "balancedDescription": "Suositellaan useimmille tuoteluetteloille (65-70 %). Tunnistaa todennäköiset riskit pitäen samalla väärät hälytykset vähäisinä.",
+      "balancedTitle": "Tasapainoinen oletus",
+      "broadDescription": "Käytä noin 50 %, kun haluat löytää enemmän mahdollisia osumia ja olet valmis tarkistamaan enemmän hälytyksiä.",
+      "broadTitle": "Laaja seuranta",
+      "strictDescription": "Käytä yli 80 %, kun tuoteluettelosi on vakaa ja haluat vähemmän manuaalisia tarkistuksia.",
+      "strictTitle": "Tiukka vastaavuus"
+    },
+    "included": {
+      "description": "Sovellus valvoo jatkuvasti tuoteluetteloasi Safety Gate -hälytyksiä vastaan, säilyttää vaatimustenmukaisuustodisteet ja hälyttää, kun tuotteet tarvitsevat tarkistusta.",
+      "evidenceDescription": "Ratkaistut ja hylätyt päätökset säilyttävät muistiinpanot, syyt, riskikontekstin ja aikaleimat.",
+      "evidenceTitle": "Vietävissä oleva todiste",
+      "eyebrow": "Jatkuva seuranta",
+      "monitoringDescription": "Uudet Safety Gate -tiedot verrataan seurattuihin Shopify-tuotteisiin ilman manuaalista skannausta.",
+      "monitoringTitle": "Jatkuva EU-seuranta",
+      "teamDescription": "Prioriteettitarkistus, toimittajadokumentaatio ja suodattimet auttavat tiimiäsi käsittelemään todellisia päätöksiä nopeammin.",
+      "teamTitle": "Tarkistustyönkulku",
+      "title": "Mitä kauppasi kattaa"
+    },
+    "matchingStrictness": "Vastaavuuden tiukkuus",
+    "mode": {
+      "balanced": "Tasapainoinen",
+      "broad": "Enemmän osumia",
+      "strict": "Vähemmän osumia"
+    },
+    "monitoringModeEyebrow": "Valvontatila",
+    "notifications": {
+      "emailHelp": "Alun perin otettu Shopifysta. Voit käyttää eri osoitetta.",
+      "emailLabel": "Ilmoitussähköposti",
+      "enabledDescription": "Valitse, vastaanotatko kiireellisiä löydöksiä, viikoittaisen yhteenvedon vai molemmat.",
+      "enabledTitle": "Sähköposti turvallisuushälytykset",
+      "immediateDescription": "Lähetä minulle sähköpostia heti, kun tuote tarvitsee tarkistusta.",
+      "immediateTitle": "Uudet löydökset",
+      "invalidEmail": "Anna kelvollinen sähköpostiosoite ennen sähköposti-ilmoitusten ottamista käyttöön.",
+      "languageLabel": "Sähköpostin kieli",
+      "noRecipientDescription": "Sähköposti-ilmoitukset ovat käytössä, mutta osoitetta ei ole määritetty. Viestejä ei toimiteta ennen kuin sähköpostiosoite on syötetty.",
+      "noRecipientHeading": "Sähköpostin vastaanottajaa ei ole määritetty",
+      "useShopifyEmail": "Käytä kaupan yhteyssähköpostia ({{email}})",
+      "weeklyDescription": "Maanantain seurantayhteenveto: vahvistaa, kun uusia löydöksiä ei ole, tai tiivistää avoimet tapaukset, jotka vaativat tarkistusta.",
+      "weeklyTitle": "Viikoittainen seurantayhteenveto"
+    },
+    "onDemand": "Tarvittaessa",
+    "plans": {
+      "advancedDescription": "Lisää prioriteettitarkistus, toimittajaseuranta ja EU-kieliset työnkulut.",
+      "advancedTitle": "Edistynyt: automaatio ja monikieliset työnkulut",
+      "description": "Kauppasi seurantasuunnitelmaan sisältyvät ominaisuudet ja toiminnot.",
+      "eyebrow": "Tilauksen arvo",
+      "manualDescription": "Suorita tarkistuksia yksi tuote kerrallaan ja näe tuotteen viimeisin tila.",
+      "manualTitle": "Ilmainen: manuaaliset tarkistukset",
+      "monitorDescription": "Seuraa uusia Safety Gate -hälytyksiä tuoteluetteloa vastaan, vie CSV-auditointiraportteja ja pidä päätöshistoriaa.",
+      "monitorTitle": "Maksettu: päivittäinen seuranta ja raportit",
+      "title": "Suunnitelman ominaisuudet"
+    },
+    "recommendedSetup": "Suositeltu asennus",
+    "saveAll": "Tallenna kaikki asetukset",
+    "status": {
+      "auditTrail": "Auditointipolku",
+      "autoQuarantine": "Prioriteettitarkistus",
+      "dailySafetyGateUpdates": "Päivittäiset Safety Gate -päivitykset",
+      "emailDigest": "Sähköpostiyhteenveto",
+      "off": "Pois päältä",
+      "on": "Päällä",
+      "running": "Käynnissä",
+      "shopifyProductUpdates": "Uudet/päivitetyt Shopify-tuotteet"
+    },
+    "storeSetting": "Kaupan asetus",
+    "strictnessHint": "40-60 % on laajempi skannaus. 70-85 % on tiukempi ja tuottaa yleensä vähemmän vääriä positiivisia tuloksia.",
+    "valueDescription": "Jatkuva seuranta vertaa kelvollisia luettelotuotteita äskettäin julkaistuihin Safety Gate -tietoihin.",
+    "valueEyebrow": "Luettelon seuranta",
+    "valueItems": {
+      "auditDescription": "Ratkaistut ja hylätyt päätökset säilyttävät muistiinpanot, syyt ja tarkistushistorian vietäviä raportteja varten.",
+      "auditTitle": "Tarkastusvalmiit todisteet",
+      "dailyDescription": "Uudet Safety Gate -hälytykset tarkistetaan seurattuja tuotteita vastaan ilman, että kauppias aloittaa manuaalisen skannauksen.",
+      "dailyTitle": "Päivittäinen luettelon seuranta",
+      "workflowDescription": "Kauppiaat tarkistavat vain tuotteet, jotka vaativat päätöksen, ja sitten ratkaisevat, hylkäävät tai seuraavat toimittajien kanssa.",
+      "workflowTitle": "Shopify-natiivi tarkistustyönkulku"
+    },
+    "valueTitle": "Mitä pysyy katettuna",
+    "workspace": "Työtila"
+  },
+  "status": {
+    "actionRequired": "Toimenpide vaaditaan",
+    "allClear": "Kaikki kunnossa",
+    "archived": "Arkistoitu",
+    "dismissed": "Hylätty",
+    "flagged": "merkitty",
+    "monitored": "Seurattu",
+    "needsReview": "Vaatii tarkistuksen",
+    "notChecked": "Ei tarkistettu",
+    "protected": "Tarkistettu",
+    "resolved": "Ratkaistu",
+    "runCheck": "Suorita tarkistus",
+    "safe": "Ei vastaavuutta löydy",
+    "scanning": "Skannaus käynnissä",
+    "unprotected": "Ei tarkistettu",
+    "unsafe": "Vaatii tarkistuksen",
+    "updated": "Päivitetty"
+  },
+  "uxEnhancements": {
+    "activityTimeline": {
+      "actions": {
+        "dismiss": "Päätös kirjattu: hylätty",
+        "check": "Tuote tarkistettu",
+        "quarantine": "Tuote merkitty tarkistettavaksi",
+        "resolve": "Päätös kirjattu: ratkaistu"
+      },
+      "description": "Tallennetut turvallisuustarkistukset, tuotepäätökset ja todisteet säilytetään auditointiraportteja varten.",
+      "details": {
+        "autoDrafted": "Tuote merkitty prioriteettitarkistukseen.",
+        "bulkScanned": "Massaluettelon skannaus valmis.",
+        "checkSafe": "Tässä tarkistuksessa ei löytynyt vastaavuutta.",
+        "checkUnsafe": "Tuote tarvitsee tarkistusta. Päätöstieto luotu.",
+        "noReason": "Syytä ei määritetty.",
+        "reason": "Syy: {{reason}}"
+      },
+      "eyebrow": "Auditointipolku",
+      "noActivity": "Ei auditointitapahtumia vielä. Suorita valvonta aloittaaksesi todisteiden keräämisen.",
+      "title": "Päätös- ja todistehistoria",
+      "types": {
+        "automatic": "Järjestelmätapahtuma",
+        "bulk": "Massatapahtuma",
+        "manual": "Kauppiaan tapahtuma"
+      }
+    },
+    "alerts": {
+      "floating": {
+        "dismissSelected": "Hylkää valitut",
+        "resolveSelected": "Ratkaise valitut",
+        "selectedCount": "{{count}} valittu hälytys",
+        "selectedCount_few": "{{count}} valittua hälytystä",
+        "selectedCount_many": "{{count}} valittua hälytystä",
+        "selectedCount_one": "{{count}} valittu hälytys",
+        "selectedCount_other": "{{count}} valittua hälytystä",
+        "selectedCount_plural": "{{count}} valittua hälytystä"
+      },
+      "quickFilters": {
+        "allAlerts": "Kaikki tietueet",
+        "allAlertsDesc": "Näytä kaikki turvallisuusvaroitukset luettelossa.",
+        "highRisk": "Vain korkea riski",
+        "highRiskDesc": "Vakavat riskitasot, jotka vaativat toimenpiteitä.",
+        "needsReview": "Vaatii tarkistuksen",
+        "needsReviewDesc": "Odottaa turvallisuushälytyksiä.",
+        "resolved": "Ratkaistu / Hylätty",
+        "resolvedDesc": "Menneet hälytykset säilytetty auditointia varten.",
+        "title": "Pikasuodattimet"
+      }
+    },
+    "complianceRing": {
+      "scoreLabel": "Tyhjennä",
+      "subtitle": "Tarkistettujen tuotteiden osuus ilman avoimia tarkistuskohteita",
+      "title": "Valvotun luettelon tila"
+    }
+  },
+  "workspace": {
+    "all": "Kaikki",
+    "appLanguage": "Sovelluksen kieli",
+    "apply": "Käytä suodattimia",
+    "applyFilters": "Käytä suodattimia",
+    "balancedHelp": "Tasapainoinen vastaavuus on suositeltu lähtökohta. Muuta sitä vain, jos haluat tarkistaa enemmän tai vähemmän mahdollisia osumia.",
+    "broadHelp": "Sisältää enemmän mahdollisia osumia ja saattaa vaatia enemmän manuaalista tarkistusta.",
+    "cannotCompare": "Ei voi verrata",
+    "catalogGlobalAction": "Tarkista {{count}} tuotetta koko luettelosta",
+    "catalogScopeHelp": "Kattavuus sisältää kaikki Shopifyn luettelotuotteet, mukaan lukien aktiiviset, luonnos- ja arkistoidut tuotteet. Suodattimet muuttavat vain tätä luetteloa, eivät kattavuutta tai valvonta-aluetta.",
+    "clearFilters": "Tyhjennä suodattimet",
+    "compare": "Vertaa tuotteita",
+    "compareProduct": "Vertaa tuotteita: {{title}}",
+    "coverageFiltersHelp": "Kattavuus ja avoimet löydökset ovat erillisiä: muuttuneella tuotteella voi olla myös löydös odottamassa tarkistusta.",
+    "coverageIncomplete": "{{count}} tuotetta tarvitsee ajantasaisen tarkistuksen",
+    "coverageScope": "Näytetään {{visible}} / {{total}} luettelotuotteesta.",
+    "csv": {
+      "action": "Päätöstoiminto",
+      "actor": "Tallentanut",
+      "caseNumber": "Safety Gate -tapaus",
+      "decisionAt": "Päätös tehty",
+      "detectedAt": "Havaittu",
+      "generatedAt": "Luotu",
+      "guidance": "Tarkistusohjeet",
+      "notes": "Tarkistusmuistiinpanot",
+      "product": "Tuote",
+      "productId": "Shopify-tuotetunnus",
+      "recordType": "Tietueen tyyppi",
+      "resolution": "Ratkaisu",
+      "risk": "Riskitaso",
+      "shop": "Kauppa",
+      "source": "Virallinen lähde",
+      "sourceRisk": "Riski virallisessa hälytyksessä",
+      "status": "Tila"
+    },
+    "csvGuidance": "Mahdollinen osuma. Vertaa tuotetunnisteita ja virallista tietuetta ennen päätöksen tekemistä.",
+    "currentFindingStatus": "Nykyinen löydöksen tila",
+    "dateFilterTimezone": "Päivämäärät käyttävät valvonta-aikavyöhykettä: {{timeZone}}. Käytä suodattimia päivittääksesi tulokset ja viedäksesi tiedot.",
+    "decisionAt": "Päätös tallennettu",
+    "decisionExportHelp": "Tämä näkymä ja sen CSV-vienti käyttävät päätöspäivämääriä. Ne sisältävät tarkistustapahtumat vanhemmille löydöksille, mukaan lukien uudelleen avatut tapaukset. Tuotenimet ja viralliset lähdetiedot säilyttävät alkuperäisen tekstinsä.",
+    "decisionFrom": "Päätöspäivämäärä alkaen",
+    "decisionLegacy": "Historiallinen tulos: tuote varmistettu turvalliseksi",
+    "decisionTo": "Päätöspäivämäärä asti",
+    "detectedAt": "Löydös havaittu",
+    "differentIdentifiers": "Erilaiset tunnisteet: {{fields}}. Tarkista ne ennen päätöksen tekemistä.",
+    "documentedFindings": "Tällä hetkellä ratkaistut tai hylätyt löydökset",
+    "download": "Lataa CSV",
+    "emptyHelp": "Avoimia löydöksiä ei ole kirjattu. Tämä ei todista, että tuotteesi ovat turvallisia. Tarkista luettelon kattavuus ja viimeisin valvontakierros.",
+    "eventCount": "{{count}} päätöstapahtumaa",
+    "excluded": "{{count}} / {{total}} luettelotuotteesta vastaa näitä sääntöjä manuaalisissa tarkistuksissa. Automaattinen valvonta ei käytä näitä poissulkemisia. Olemassa olevat löydökset ovat edelleen saatavilla.",
+    "excludeHelp": "Nämä säännöt koskevat manuaalisia tarkistuksia. Tarkista kyseiset tuotteet ennen tallentamista.",
+    "exportHelp": "CSV sisältää kaikki valitun ajanjakson ja tilan löydökset, mukaan lukien viralliset viitteet, tarkistusmuistiinpanot ja tallennetut päätöstapahtumat. Se on tarkistusten kirjaus, ei turvallisuustodistus.",
+    "exportReady": "CSV valmisteltu. Jos lataus ei alkanut, käytä tätä linkkiä:",
+    "findingCount": "Löydöksiä tässä laajuudessa: {{count}}.",
+    "findingFrom": "Löydös havaittu alkaen",
+    "findings": "Löydökset ja todisteet",
+    "findingTo": "Löydös havaittu asti",
+    "from": "Alkaen päivämäärä",
+    "goReview": "Tarkista avoimet löydökset",
+    "groupAction": "Suoritettu toimenpide",
+    "groupDifferent": "Erilainen tuote",
+    "groupInformation": "Tarvitaan lisätietoja",
+    "history": "Päätöshistoria",
+    "historyLimit": "Näytetään enintään {{count}} viimeisintä löydöstä. Vie koko tietue kaikkiin löydöksiin.",
+    "changed": "Muuttunut viime tarkistuksen jälkeen",
+    "chooseOutcomeHelp": "Valitse lopputulos, jotta voit tallentaa päätöksesi.",
+    "chooseOutcomeLink": "Valitse lopputulos",
+    "lastSuccess": "Viimeisin onnistunut valvontakierros",
+    "matchingIdentifiers": "Vastaavat tunnisteet: {{fields}}.",
+    "matchNeedsVerification": "Mahdollinen osuma. Vertaa kuvia ja tunnisteita viralliseen tietueeseen ennen päätöksen tekemistä.",
+    "matchNotConfirmed": "Osumaa ei vahvistettu todisteiden tarkistamisen jälkeen",
+    "missingIdentifiers": "Jotkin tunnisteet puuttuvat. Vertaa saatavilla olevia kuvia ja pyydä toimittajaltasi mallia, viivakoodia ja erää.",
+    "monitoring": {
+      "enabled": "Käytössä – päivittäiset tarkistukset",
+      "failed": "Viimeisin automaattinen tarkistus epäonnistui",
+      "paused": "Keskeytetty – ei nykyistä valvontasuunnitelmaa",
+      "preview": "Kehityksen esikatselu – laskutus ohitettu",
+      "processing": "Tarkistus jonossa tai käynnissä",
+      "unknown": "Valvontatoimintaa ei vahvistettu",
+      "unverified": "Keskeytetty – tilausta ei voitu vahvistaa"
+    },
+    "monitoringLabel": "Automaattinen valvonta",
+    "monitoringUnknownHelp": "Viimeisintä toimintaa ei voida vahvistaa, koska onnistunutta valvontasuoritusta ei ole saatavilla. Päivitä tarkistaaksesi uudelleen.",
+    "neverRun": "Ei tallennettuja suoritettuja valvontakertoja",
+    "noCurrentResult": "Tarvitaan nykyinen tulos",
+    "noDecisions": "Päätöksiä ei ole vielä tallennettu. Avaa havainto, vertaa tuotteita ja tallenna, mitä olet tarkistanut.",
+    "noFilteredDecisions": "Yksikään päätöstapahtuma ei vastaa näitä suodattimia. Tyhjennä suodattimet nähdäksesi koko historian.",
+    "noFilteredFindings": "Yksikään havainto ei vastaa näitä suodattimia. Tyhjennä suodattimet nähdäksesi koko luettelon.",
+    "noMatch": "Ei vastaavuutta löydy",
+    "noMatchAtCheck": "Tässä tarkistuksessa ei löytynyt vastaavuutta.",
+    "notes": "Tarkistusmuistiinpanot",
+    "notificationLanguage": "Sähköpostin kieli",
+    "notRecorded": "Ei nykyistä tarkistustulosta",
+    "oldest": "Avoinna {{count}} päivää",
+    "onboarding": "Tuo luettelo → tarkista Safety Gate -tiedot → tarkista tulokset",
+    "outcome": "Tulos",
+    "outcomeHelp": {
+      "contacted_supplier": "Havainto pysyy avoimena, kun odotat toimittajaasi.",
+      "false_positive": "Käytä, kun todisteet osoittavat, ettei hälytys koske tuotetta. Havainto hylätään.",
+      "match_not_confirmed": "Käytä, kun tarkistamasi todisteet eivät vahvista vastaavuutta. Havainto ratkaistaan.",
+      "modified_product": "Päivitä ensin tuote Shopifyhin. Tämän tuloksen tallentaminen ei muuta tuotetta; havainto ratkaistaan.",
+      "not_my_product": "Käytä, kun hälytys koskee eri tuotetta. Havainto hylätään.",
+      "other": "Kuvaile tulos vaaditussa huomautuksessa. Havainto ratkaistaan.",
+      "removed_from_sale": "Poista ensin tuote myynnistä Shopifyssa. Tämän tuloksen tallentaminen ei muuta tuotetta; havainto ratkaistaan.",
+      "verified_safe": "Tämä on historiallinen tulos."
+    },
+    "outcomeLabels": {
+      "contactedSupplier": "Odotetaan toimittajaa",
+      "falsePositive": "Väärä positiivinen",
+      "modifiedProduct": "Muokattu tuote",
+      "notMyProduct": "Ei minun tuotteeni",
+      "other": "Muu",
+      "removedFromSale": "Poistettu myynnistä",
+      "verifiedSafe": "Historiallinen: varmistettu turvalliseksi"
+    },
+    "possibleMatch": "Mahdollinen vastaavuus",
+    "possibleMatchAtCheck": "Tämä tarkistus löysi mahdollisen Safety Gate -vastaavuuden.",
+    "print": "Tulosta / tallenna PDF",
+    "priority": "Tarkistuksen prioriteetti",
+    "priorityHelp": "Ensin päätökset, sitten virallisen hälytyksen vakavuus ja vanhimmat havainnot. Toimittajia odottavat kohteet seuraavat.",
+    "productStatus": "Shopify-tila",
+    "productStatusActive": "Aktiivinen",
+    "productStatusAll": "Kaikki Shopify-tilat",
+    "productStatusArchived": "Arkistoitu",
+    "productStatusDraft": "Luonnos",
+    "productStatusUnknown": "Tuntematon",
+    "recommended": "Suositeltu asetus",
+    "referenceMissing": "Virallinen tapausnumero ei saatavilla",
+    "remaining": "Tarkistamatta tai muutettu",
+    "reopened": "Avattu uudelleen tarkistettavaksi",
+    "reportEmpty": "Yksikään havainto ei vastaa näitä suodattimia.",
+    "reportTitle": "Tarkistusten ja päätösten raportti",
+    "resultHelp": "Tuloksen tallentaminen dokumentoi tarkistuksesi tarkastusketjuun eikä muokkaa Shopify-tuotetta.",
+    "reviewNext": "Tarkista seuraava vastaavuus: {{title}}",
+    "reviewPrompt": "Vertaa todisteita, valitse tulos ja tallenna muistiinpanosi.",
+    "riskLabels": {
+      "electric": "Sähköisku",
+      "fire": "Palo",
+      "health": "Terveysriski",
+      "high": "Korkea riski",
+      "chemical": "Kemiallinen",
+      "choking": "Tukehtuminen",
+      "injuries": "Loukkaantumiset",
+      "low": "Matala riski",
+      "medium": "Keskisuuri riski",
+      "serious": "Vakava riski",
+      "unknown": "Riski Safety Gate -hälytyksessä"
+    },
+    "runScope": "Tuotetarkistukset: {{products}} · Huomioidut Safety Gate -tiedot: {{records}} · Uudet havainnot: {{findings}}",
+    "saved": "Asetukset tallennettu.",
+    "saveChanges": "Tallenna muutokset",
+    "scope": "Havainnot ajalta {{from}} – {{to}}",
+    "scoreDetails": "Samankaltaisuuden tiedot",
+    "scoreHelp": "Nämä ovat samankaltaisuuspisteitä, joita käytetään tarkistuksen priorisointiin, eivät todennäköisyyttä, että tuotteesi on vaarallinen.",
+    "settingsAdvanced": "Tarkennettu vastaavuus ja poissulkemiset",
+    "shop": "Kauppa",
+    "showMore": "Näytä lisää tuotteita",
+    "scheduleHelp": "Uudet Safety Gate -hälytykset tarkistetaan valvontasuunnitelman ollessa aktiivinen. Seuraavan suoritetun tarkistuksen aika riippuu jonosta.",
+    "sourceMissing": "Virallinen tietueen linkki ei ole saatavilla tälle tallennetulle havainnolle.",
+    "sourceRisk": "Riski virallisessa hälytyksessä (alkuperäinen EU-tietue)",
+    "status": "Havainnon tila",
+    "strictHelp": "Näyttää vähemmän mahdollisia vastaavuuksia ja saattaa jättää huomaamatta vähemmän ilmeisiä samankaltaisuuksia.",
+    "to": "Päivämäärään asti",
+    "unconfirmedIdentifiers": "Saatavilla olevat luettelotunnisteet eivät vahvista tätä vastaavuutta. Vertaa pakkausta ja kysy toimittajaltasi puuttuvat malli, viivakoodi ja erä.",
+    "unchecked": "Ei vielä tarkistettu",
+    "unsaved": "Sinulla on tallentamattomia muutoksia.",
+    "verifyScope": "Luettelon tulokset koskevat tarkistettua tuoteversiota. Muutetut tuotteet tarvitsevat uuden tarkistuksen.",
+    "viewRemainingProducts": "Näytä {{count}} tarkistusta tarvitsevaa tuotetta",
+    "viewShopify": "Avaa Shopify-tuote",
+    "waiting": "Odotetaan toimittajaa",
+    "when": "Tallennettu",
+    "who": "Tallentanut",
+    "whyMatch": "Miksi tämä voi vastata"
+  }
+}

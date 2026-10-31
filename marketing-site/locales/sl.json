@@ -269,7 +269,11 @@
     "reportDownload": "Prenesi vse ugotovitve (CSV)",
     "reportBody": "Vključuje vse izdelke z možnimi ujemanji. Enkraten pregled. Zasebna povezava poteče po 30 dneh.",
     "reportLoading": "Priprava celotnega poročila…",
-    "reportError": "Poročilo ni na voljo ali je povezava potekla. Poskusite znova ali pišite na info@zerorecall.online."
+    "reportError": "Poročilo ni na voljo ali je povezava potekla. Poskusite znova ali pišite na info@zerorecall.online.",
+    "detailsSummary": "Kaj natančno preverimo pri brezplačnem pregledu?",
+    "detailsStep1": "<strong>1. Javni katalog Shopify:</strong> Preberemo javno dostopne nazive, opise, znamke, kategorije in fotografije izdelkov iz vaše trgovine (brez skrbniškega dostopa).",
+    "detailsStep2": "<strong>2. Primerjava besedila in slik s Safety Gate:</strong> Besedilo in slike pretvorimo v iskalne vektorje ter jih primerjamo s celotno zbirko EU Safety Gate (prej RAPEX).",
+    "detailsStep3": "<strong>3. Povzetek po e-pošti in izvoz CSV:</strong> Po zaključku prejmete e-poštni povzetek možnih ujemanj s številkami zadev, uradnimi povezavami EU in datoteko CSV."
   },
   "quiet": {
     "eyebrow": "VEČ MIRU",

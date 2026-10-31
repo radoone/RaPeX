@@ -6,6 +6,7 @@ import {
   parseEvidence,
   isWaitingForSupplier,
   decisionKey,
+  formatActorId,
 } from "../app/services/review-evidence";
 import {
   reviewFilters,
@@ -176,10 +177,10 @@ describe("report scope and exclusions", () => {
       reviewFilters(
         new URL("https://example.com/?from=2026-02-31&status=other"),
       ),
-    ).toEqual({ from: "", to: "", status: "" });
+    ).toMatchObject({ from: "", to: "", status: "", dateBasis: "findings" });
     const filters = reviewFilters(
       new URL(
-        "https://example.com/?from=2026-10-01&to=2026-10-23&status=active",
+        "https://example.com/?from=2026-10-01&to=2026-10-23&status=active&timeZone=UTC",
       ),
     );
     expect(
@@ -221,5 +222,14 @@ describe("report scope and exclusions", () => {
       expect(workspace.changed).toBeTruthy();
       expect(workspace.saveChanges).toBeTruthy();
     }
+  });
+  it("strips session prefixes from actor IDs for merchant-facing history and audit exports", () => {
+    expect(formatActorId("offline_rozlicnytovar.myshopify.com")).toBe(
+      "rozlicnytovar.myshopify.com",
+    );
+    expect(formatActorId("online_rozlicnytovar.myshopify.com")).toBe(
+      "rozlicnytovar.myshopify.com",
+    );
+    expect(formatActorId(undefined, "merchant")).toBe("merchant");
   });
 });

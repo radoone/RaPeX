@@ -1,39 +1,35 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { authenticate } from "../shopify.server";
+import { createInstance } from "i18next";
+import { localizedResources } from "../locales";
+import { loadCompleteLocale } from "../locales/complete-loader";
 import { csvCell } from "../services/audit-csv";
+import { formatActorId } from "../services/review-evidence";
 import {
   reviewRecords,
   reviewFilters,
 } from "../services/review-records.server";
 export async function loader({ request, url }: LoaderFunctionArgs) {
   const { session } = await authenticate.admin(request);
+  const filters = reviewFilters(url);
+  const language = url.searchParams.get("lang") || "en";
+  const i18n = createInstance();
+  const locale = Object.hasOwn(localizedResources, language) ? language : "en";
+  await i18n.init({ resources: structuredClone(localizedResources), lng: locale, fallbackLng: "en", interpolation: { escapeValue: false } });
+  const catalog = await loadCompleteLocale(locale);
+  if (catalog) i18n.addResourceBundle(locale, "translation", catalog, true, true);
+  const t = i18n.t.bind(i18n);
   const { records, generatedAt } = await reviewRecords(
     session.shop,
-    reviewFilters(url),
+    filters,
   );
-  const headers = [
-    "Shop",
-    "Generated at",
-    "Record type",
-    "Product",
-    "Shopify product ID",
-    "Status",
-    "Resolution",
-    "Safety Gate case",
-    "Official source",
-    "Risk level",
-    "Review guidance",
-    "Risk in official alert",
-    "Detected at",
-    "Decision at",
-    "Recorded by",
-    "Review notes",
-  ];
+  const headers = ["shop", "generatedAt", "recordType", "action", "product", "productId", "status", "resolution", "caseNumber", "source", "risk", "guidance", "sourceRisk", "detectedAt", "decisionAt", "actor", "notes"].map(key => t(`workspace.csv.${key}`));
   const rows = records.flatMap((record) => {
     const base = [
       session.shop,
       generatedAt,
       "finding",
+      "",
       record.productTitle,
       record.productId,
       record.status,
@@ -41,21 +37,22 @@ export async function loader({ request, url }: LoaderFunctionArgs) {
       record.caseNumber,
       record.url,
       record.riskLevel,
-      "Possible match. Compare the product identifiers and official record before deciding.",
+      t("workspace.csvGuidance"),
       record.sourceRisk,
       record.createdAt,
     ];
     return [
-      [
+      ...(filters.dateBasis === "decisions" ? [] : [[
         ...base,
-        record.resolvedAt || record.dismissedAt,
-        record.decisions[0]?.actorId,
+        record.resolutionType ? record.decisions.find((event: any) => event.resolutionType === record.resolutionType)?.createdAt || record.resolvedAt || record.dismissedAt : null,
+        record.resolutionType ? formatActorId(record.decisions.find((event: any) => event.resolutionType === record.resolutionType)?.actorId) : "",
         record.notes,
-      ],
+      ]]),
       ...record.decisions.map((event: any) => [
         session.shop,
         generatedAt,
         "decision",
+        event.action,
         record.productTitle,
         record.productId,
         event.reviewState,
@@ -63,11 +60,11 @@ export async function loader({ request, url }: LoaderFunctionArgs) {
         record.caseNumber,
         record.url,
         record.riskLevel,
-        "Possible match. Compare the product identifiers and official record before deciding.",
+        t("workspace.csvGuidance"),
         record.sourceRisk,
         record.createdAt,
         event.createdAt,
-        event.actorId,
+        formatActorId(event.actorId),
         event.notes,
       ]),
     ];

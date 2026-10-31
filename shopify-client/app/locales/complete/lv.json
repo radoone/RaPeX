@@ -1,0 +1,1422 @@
+{
+  "actions": {
+    "auditReport": "Audita pārskats",
+    "clear": "Notīrīt",
+    "dashboard": "Informācijas panelis",
+    "downloadAuditReport": "Lejupielādēt audita pārskatu",
+    "checkAll": "Pārbaudīt visus produktus",
+    "checkAllProducts": "Pārbaudīt visus {{count}} produktus",
+    "checking": "Pārbaude...",
+    "checkNewSafetyGateAlerts": "Pārbaudīt jaunus Safety Gate brīdinājumus",
+    "checkOneProduct": "Pārbaudīt vienu produktu",
+    "checkSelectedProduct": "Pārbaudīt atlasīto produktu",
+    "checkUnchecked": "Pārbaudīt {{count}} nepārbaudītus produktus",
+    "manualCheck": "Pārbaudīt produktu",
+    "next": "Nākamais",
+    "openFirstMatch": "Atvērt pirmo atbilstību",
+    "previous": "Iepriekšējais",
+    "protectRemainingProducts": "Pārbaudīt {{count}} atlikušos produktus",
+    "reactivate": "Reaktivizēt",
+    "recordDecision": "Ierakstīt lēmumu",
+    "refreshCoverage": "Atsvaidzināt kataloga pārklājumu",
+    "resolve": "Atrisināt",
+    "retry": "Mēģināt vēlreiz",
+    "reviewActiveProducts": "Pārskatīt aktīvos produktus",
+    "reviewAlerts": "Pārskatīt brīdinājumus",
+    "reviewDecision": "Salīdzināt produktus",
+    "reviewMultipleMatches": "Pārskatīt {{count}} atbilstības",
+    "reviewOneMatch": "Pārskatīt 1 atbilstību",
+    "reviewProductsNeedingAction": "Pārskatīt {{count}} produktu, kam nepieciešama darbība",
+    "reviewProductsNeedingAction_few": "Pārskatīt {{count}} produktus, kam nepieciešama darbība",
+    "reviewProductsNeedingAction_many": "Pārskatīt {{count}} produktus, kam nepieciešama darbība",
+    "reviewProductsNeedingAction_one": "Pārskatīt {{count}} produktu, kam nepieciešama darbība",
+    "reviewProductsNeedingAction_other": "Pārskatīt {{count}} produktus, kam nepieciešama darbība",
+    "reviewProductsNeedingAction_plural": "Pārskatīt {{count}} produktus, kam nepieciešama darbība",
+    "reviewProductsNeedingAction_zero": "Pārskatīt {{count}} produktus, kuriem nepieciešama darbība",
+    "search": "Meklēt",
+    "settings": "Iestatījumi",
+    "tryAgain": "Mēģināt vēlreiz",
+    "view": "Skatīt",
+    "viewAlerts": "Skatīt brīdinājumus",
+    "viewDetails": "Skatīt detalizētu informāciju",
+    "viewEvidence": "Skatīt lēmumu vēsturi"
+  },
+  "alerts": {
+    "admin": {
+      "actionNeeded": "Nepieciešama darbība",
+      "actionNeededDescription": "Pārskatiet atbilstības, noraidiet viltus pozitīvos rezultātus vai atrisiniet apstiprinātos riskus, lai brīdinājumu rinda paliktu darboties spējīga.",
+      "actionNeededTitle": "{{count}} aktīvam brīdinājumam joprojām nepieciešams lēmums",
+      "actionNeededTitle_few": "{{count}} aktīviem brīdinājumiem joprojām nepieciešams lēmums",
+      "actionNeededTitle_many": "{{count}} aktīviem brīdinājumiem joprojām nepieciešams lēmums",
+      "actionNeededTitle_one": "{{count}} aktīvam brīdinājumam joprojām nepieciešams lēmums",
+      "actionNeededTitle_other": "{{count}} aktīviem brīdinājumiem joprojām nepieciešams lēmums",
+      "actionNeededTitle_plural": "{{count}} aktīviem brīdinājumiem joprojām nepieciešams lēmums",
+      "actionNeededTitle_zero": "{{count}} aktīviem brīdinājumiem joprojām nepieciešams lēmums",
+      "criticalBannerDescription": "{{count}} aktīva atbilstība ir atzīmēta kā augsta vai nopietna riska Safety Gate. Vispirms atrisiniet šīs atbilstības.",
+      "criticalBannerDescription_few": "{{count}} aktīvas atbilstības ir atzīmētas kā augsta vai nopietna riska Safety Gate. Vispirms atrisiniet šīs atbilstības.",
+      "criticalBannerDescription_many": "{{count}} aktīvas atbilstības ir atzīmētas kā augsta vai nopietna riska Safety Gate. Vispirms atrisiniet šīs atbilstības.",
+      "criticalBannerDescription_one": "{{count}} aktīva atbilstība ir atzīmēta kā augsta vai nopietna riska Safety Gate. Vispirms atrisiniet šīs atbilstības.",
+      "criticalBannerDescription_other": "{{count}} aktīvas atbilstības ir atzīmētas kā augsta vai nopietna riska Safety Gate. Vispirms atrisiniet šīs atbilstības.",
+      "criticalBannerDescription_plural": "{{count}} aktīvas atbilstības ir atzīmētas kā augsta vai nopietna riska Safety Gate. Vispirms atrisiniet šīs atbilstības.",
+      "criticalBannerDescription_zero": "{{count}} aktīvas atbilstības ir atzīmētas kā augsta vai nopietna riska Safety Gate. Vispirms atrisiniet šīs atbilstības.",
+      "criticalBannerTitle": "{{count}} augsta riska atbilstībai nepieciešama pārskatīšana",
+      "criticalBannerTitle_few": "{{count}} augsta riska atbilstībām nepieciešama pārskatīšana",
+      "criticalBannerTitle_many": "{{count}} augsta riska atbilstībām nepieciešama pārskatīšana",
+      "criticalBannerTitle_one": "{{count}} augsta riska atbilstībai nepieciešama pārskatīšana",
+      "criticalBannerTitle_other": "{{count}} augsta riska atbilstībām nepieciešama pārskatīšana",
+      "criticalBannerTitle_plural": "{{count}} augsta riska atbilstībām nepieciešama pārskatīšana",
+      "criticalBannerTitle_zero": "{{count}} augsta riska atbilstības jāpārskata",
+      "queue": "Produktu lēmumu rinda",
+      "queueDescription": "Apstipriniet iespējamās atbilstības, noraidiet viltus pozitīvos rezultātus vai ierakstiet veiktās darbības.",
+      "warningBannerDescription": "Izmantojiet šo rindu tikai reāliem lēmumiem: ātri atrisiniet apstiprinātos riskus un noraidiet viltus pozitīvos rezultātus.",
+      "warningBannerTitle": "{{count}} aktīvam brīdinājumam joprojām nepieciešama pārskatīšana",
+      "warningBannerTitle_few": "{{count}} aktīviem brīdinājumiem joprojām nepieciešama pārskatīšana",
+      "warningBannerTitle_many": "{{count}} aktīviem brīdinājumiem joprojām nepieciešama pārskatīšana",
+      "warningBannerTitle_one": "{{count}} aktīvam brīdinājumam joprojām nepieciešama pārskatīšana",
+      "warningBannerTitle_other": "{{count}} aktīviem brīdinājumiem joprojām nepieciešama pārskatīšana",
+      "warningBannerTitle_plural": "{{count}} aktīviem brīdinājumiem joprojām nepieciešama pārskatīšana",
+      "warningBannerTitle_zero": "{{count}} aktīviem brīdinājumiem joprojām nepieciešama pārskatīšana"
+    },
+    "breadcrumbs": {
+      "current": "Pārskatīšanas rinda",
+      "dashboard": "Informācijas panelis"
+    },
+    "checklist": {
+      "items": {
+        "0": "Prioritizēt aktīvos brīdinājumus",
+        "1": "Dokumentēt labošanas soļus",
+        "2": "Pārbaudīt pirms noraidīšanas"
+      },
+      "title": "Atbildes kontrolsaraksts"
+    },
+    "meta": {
+      "active": "{{count}} pārskatīšanai",
+      "total": "Kopā {{count}}"
+    },
+    "metrics": {
+      "activeHeading": "Aktīvie brīdinājumi",
+      "archived": "Arhivēts",
+      "dismissedDescription": "Saglabāt piezīmes auditam",
+      "dismissedDescriptionZero": "Vēl nav noraidītu brīdinājumu",
+      "dismissedHeading": "Noraidīts",
+      "resolutionHeading": "Atrisināšanas ātrums",
+      "resolved": "{{count}} atrisināts",
+      "resolvedAndDismissed": "{{resolved}} atrisināts • {{dismissed}} noraidīts",
+      "totalRecorded": "Kopā ierakstīts {{count}}"
+    },
+    "pagination": {
+      "next": "Nākamais",
+      "previous": "Iepriekšējais"
+    },
+    "subtitle": "Pārskatīt produktus, kam nepieciešams lēmums.",
+    "table": {
+      "accessibilityLabel": "Drošības brīdinājumu tabula",
+      "empty": "Nav brīdinājumu, kas atbilst jūsu filtriem",
+      "emptyAllClearBody": "Pašlaik nav atvērtu tirgotāja lēmumu. Ikdienas uzraudzība joprojām darbojas, un slēgtie lēmumi paliek audita pierakstos.",
+      "emptyAllClearTitle": "Visi aktīvie produktu pārskati ir apstrādāti",
+      "emptyFilteredBody": "Pielāgojiet filtrus vai meklējiet citu produktu. Jūsu aktīvā rinda joprojām var būt tukša.",
+      "emptyFilteredTitle": "Šiem filtriem neatbilst neviens pārskatīšanas vienums",
+      "headers": {
+        "actions": "Darbības",
+        "detected": "Konstatēts",
+        "product": "Produkts",
+        "risk": "Risks",
+        "status": "Statuss"
+      },
+      "order": "Pasūtījums",
+      "orderOptions": {
+        "asc": "Vecākie pirmie",
+        "desc": "Jaunākie pirmie"
+      },
+      "reviewProduct": "Pārskatīt lēmumu par {{title}}",
+      "searchLabel": "Meklēt brīdinājumus",
+      "searchPlaceholder": "Meklēt pēc produkta nosaukuma...",
+      "selectAll": "Atlasīt visus redzamos atklājumus",
+      "selectedCount": "Atlasīti {{count}}",
+      "selectProduct": "Atlasīt atklājumu par {{title}}",
+      "similarityTooltip": "Līdzības rādītājs: {{score}}%",
+      "sort": "Kārtot",
+      "sortBy": "Kārtot pēc",
+      "sortOptions": {
+        "created": "Konstatēšanas datums",
+        "name": "Produkta nosaukums",
+        "risk": "Riska līmenis"
+      },
+      "tabs": {
+        "active": "Nepieciešams pārskats",
+        "all": "Visi",
+        "dismissed": "Noraidīts",
+        "resolved": "Atrisināts"
+      },
+      "thumbnailLabel": "{{title}} sīktēls",
+      "viewProduct": "Skatīt ierakstīto atklājumu par {{title}}"
+    },
+    "title": "Pārskatīšanas rinda",
+    "toasts": {
+      "updated": "Brīdinājums atjaunināts"
+    }
+  },
+  "analysis": {
+    "alertImagesUsed": "Salīdzinātie brīdinājuma attēli: {{count}}",
+    "alertNumber": "Brīdinājums {{number}}",
+    "audit": {
+      "existingNotes": "Audita piezīmes",
+      "noteLabel": "Audita piezīme",
+      "notePlaceholder": "Pievienojiet, ko pārbaudījāt, piegādātāja pierādījumus vai iemeslu, kāpēc tas tika noraidīts."
+    },
+    "candidateAlerts": "Kandidātu brīdinājumi: {{count}}",
+    "decisionContextDesc": "Lēmuma ierakstīšana dokumentē, ka šī drošības atbilstība tika pārskatīta un saglabā jūsu audita pierakstus. Tas automātiski nemodificē jūsu Shopify produktu vai neatpublicē to no jūsu veikala.",
+    "decisionContextTitle": "Atbilstības lēmumu ierakstīšana",
+    "decisionRecorded": "Lēmums ierakstīts",
+    "editInShopify": "Rediģēt produktu Shopify",
+    "enlargedSafetyAlert": "Palielināts drošības brīdinājuma attēls",
+    "fields": {
+      "accessibilityLabel": "Brīdinājuma atbilstības detaļu tabula",
+      "alertDate": "Brīdinājuma datums",
+      "brand": "Zīmols",
+      "category": "Kategorija",
+      "field": "Lauks",
+      "model": "Modelis",
+      "notifyingCountry": "Paziņojošā valsts",
+      "origin": "Izcelsme",
+      "productDescription": "Produkta apraksts",
+      "productName": "Produkta nosaukums",
+      "value": "Vērtība"
+    },
+    "focus": {
+      "criticalLead": "Šim produktam ir augstas ticamības atbilstība. Ierakstiet lēmumu tikai pēc pārskatīšanas.",
+      "criticalStepCompare": "Salīdziniet sava produkta fotoattēlu ar pirmo Safety Gate atbilstību zemāk.",
+      "criticalStepDecide": "Izvēlieties rezultātu ierakstīšanas lēmuma izvēlnē, pamatojoties uz jūsu pārskatu.",
+      "criticalStepDocument": "Pievienojiet iekšējās piezīmes izsekojamībai un piegādātāja turpmākajai rīcībai.",
+      "criticalTitle": "Darbība nepieciešama nekavējoties",
+      "recordedOutcome": "Ierakstītais rezultāts: {{outcome}}",
+      "reviewedLead": "Šis brīdinājums nav aktīvs. Saglabājiet skaidrus ierakstus auditiem.",
+      "reviewedStepAudit": "Pārbaudiet izvēlēto izšķirtspēju un piezīmes.",
+      "reviewedStepReactivate": "Reaktivizēt tikai tad, ja parādās jauni produkta pierādījumi.",
+      "reviewedTitle": "Pārskats jau pabeigts",
+      "safeLead": "Pašreizējais rezultāts ir drošs. Turpiniet uzraudzīt produkta atjauninājumus.",
+      "safeStepClose": "Aizveriet šo detaļu un turpiniet ar citiem aktīviem brīdinājumiem.",
+      "safeStepMonitor": "Saglabājiet šo produktu automātiskajā uzraudzībā.",
+      "safeStepRecheck": "Veiciet jaunu pārbaudi, ja mainās attēli, iepakojums vai piegādātājs.",
+      "safeTitle": "Nav nepieciešama steidzama darbība"
+    },
+    "hazardType": "Bīstamības veids",
+    "checkedAt": "Pārbaudīts: {{date}}",
+    "imageDominated": "Šī atbilstība tika novērtēta ar attēla prioritātes svērumu, tāpēc vizuālajai iepakojuma līdzībai bija lielāks svars nekā teksta neatbilstībai.",
+    "imageMatch": "Attēla atbilstība",
+    "imageMatchShort": "{{count}}% attēls",
+    "legalProvision": "Tiesību norma",
+    "matchesHint": "Sāciet ar augšējo atbilstības karti zemāk un vispirms apstipriniet vizuālo iepakojumu, pēc tam modeļa un zīmola detaļas.",
+    "merchantRecommendation": {
+      "active": "Salīdziniet produkta un Safety Gate attēlus, apstipriniet zīmolu vai modeli, pēc tam ierakstiet darbību, ko veiks jūsu veikals.",
+      "reviewed": "Šis atklājums ir slēgts. Pirms reaktivizēšanas pārbaudiet ierakstīto rezultātu un pierādījumus.",
+      "safe": "Pašlaik nav nepieciešama veikala darbība. Pārbaudiet vēlreiz, ja mainās produkts, iepakojums, attēli vai piegādātājs."
+    },
+    "modalAccessibilityLabel": "Safety Gate atbilstības detaļas par {{title}}",
+    "modalHeading": "Pārskatīt Safety Gate atbilstību",
+    "noIssuesFound": "Nav konstatētas drošības problēmas",
+    "openProductImage": "Atvērt attēlu priekš {{title}}",
+    "overallMatch": "Kopējā atbilstība",
+    "overallMatchShort": "{{count}}% kopumā",
+    "potentialRisk": "Potenciāls drošības risks",
+    "primaryRiskFocus": "Galvenais riska fokuss: {{category}} {{level}} līmenī. Pirms lēmuma pieņemšanas vispirms apstipriniet to.",
+    "productImagesUsed": "Produkta attēli: {{used}} / {{provided}}",
+    "reviewLayout": {
+      "actionNeeded": "Nepieciešama darbība",
+      "compareHeading": "Salīdzināt produktus",
+      "compareHint": "Pirms lēmuma pieņemšanas pārbaudiet fotoattēlus, zīmolu, modeli un kategoriju.",
+      "decisionHeading": "Ierakstiet savu lēmumu",
+      "decisionPrompt": "Izvēlieties pārskatīšanas rezultātu. Varat pievienot piezīmi par to, ko pārbaudījāt.",
+      "fullEvidence": "Pilni Safety Gate pierādījumi ({{count}})",
+      "groupHelp": {
+        "action": "Aizveriet konstatējumu pēc tam, kad esat noņēmis produktu no pārdošanas vai atjauninājis to Shopify.",
+        "different": "Aizveriet vai noraidiet konstatējumu, jo jūsu produkts ir cits modelis, zīmols vai partija.",
+        "information": "Saglabājiet konstatējumu atvērtu, kamēr lūdzat piegādātājam partijas, modeļa vai drošības dokumentus.",
+        "other": "Ierakstiet citu rezultātu ar nepieciešamo paskaidrojošo piezīmi jūsu audita izsekojamībai."
+      },
+      "chooseOutcome": "Izvēlieties rezultātu",
+      "identifiers": {
+        "barcode": "Svītrkods (GTIN/EAN)",
+        "batch": "Partija / Sērija",
+        "brand": "Zīmols",
+        "field": "Identifikators",
+        "match": "Atbilstība",
+        "mismatch": "Neatbilstība",
+        "model": "Modelis",
+        "notSpecified": "nav norādīts",
+        "result": "Salīdzinājums",
+        "safetyGate": "Safety Gate brīdinājums",
+        "yourProduct": "Jūsu Shopify produkts"
+      },
+      "identifiersHeading": "Identifikatoru salīdzinājums blakus",
+      "languageDiffNote": "Lietotnes saskarnes valoda ({{appLang}}) un e-pasta paziņojumu valoda ({{emailLang}}) tiek iestatītas neatkarīgi.",
+      "noImage": "Nav pieejams attēls",
+      "noteLabel": "Ko pārbaudījāt? (neobligāti)",
+      "noteRequiredLabel": "Ko pārbaudījāt? (obligāti)",
+      "otherNoteRequired": "Pievienojiet piezīmi, lai izskaidrotu citu rezultātu.",
+      "outcomeLabel": "Pārskatīšanas rezultāts",
+      "possibleMatch": "Iespējama Safety Gate atbilstība",
+      "readyToRecord": "Gatavs ierakstīšanai",
+      "reviewPointsHeading": "Pārskatāmie punkti",
+      "unnamedRecord": "Safety Gate ieraksts"
+    },
+    "riskDescription": "Riska apraksts",
+    "riskLevel": "Riska līmenis",
+    "riskSeverity": "Riska nopietnība",
+    "safetyGateMatches": "Safety Gate atbilstības",
+    "scoreHelper": "Kopējā atbilstība ir galīgais pārskatīšanas rezultāts. Attēla atbilstība atspoguļo tikai iepakojuma līdzību.",
+    "sections": {
+      "whatHappened": "Kas notika?",
+      "whatHappenedReviewed": "Šī atbilstība jau ir pārskatīta un ierakstīta.",
+      "whatHappenedRisk": "Šis Shopify produkts izskatās līdzīgs produktam, kas jau ir ziņots Safety Gate.",
+      "whatHappenedSafe": "Jaunākā pārbaude neatrada iespējamu Safety Gate atbilstību.",
+      "whatToDo": "Kas man jādara?",
+      "whyMatched": "Kāpēc tas atbilda"
+    },
+    "seriousRisk": "Nopietns {{category}} risks",
+    "summary": {
+      "confidence": "Pārliecība",
+      "confidenceUnknown": "Pārliecība nezināma",
+      "decisionRecorded": "Lēmums ierakstīts",
+      "decisionRequired": "Nepieciešams lēmums",
+      "highConfidence": "Augsta pārliecība",
+      "likelyMatch": "Iespējama atbilstība",
+      "likelySafetyGateMatch": "Iespējama Safety Gate atbilstība",
+      "matchType": "Atbilstības veids",
+      "nextStep": "Nākamais solis",
+      "noLikelyMatch": "Nav iespējamas atbilstības",
+      "overallMatch": "Kopējais rezultāts",
+      "reviewRecommended": "Ieteicams pārskatīt"
+    },
+    "supplierFollowUp": {
+      "copy": "Kopēt piegādātāja pēcpārbaudi",
+      "template": "Sveiki, mēs pārskatām {{product}}, jo tas var atbilst Safety Gate brīdinājumam {{alert}} (risks: {{risk}}). Lūdzu, apstipriniet, vai tas ir tas pats modelis/partija, sniedziet produkta drošības dokumentāciju un izskaidrojiet visas atšķirības. Atbilstības iemesls: {{reason}}"
+    },
+    "technicalDetails": {
+      "description": "Rezultāti un izguves skaits tiek glabāti šeit padziļinātai pārskatīšanai. Sāciet ar produkta fotoattēliem, zīmolu, modeli un iepriekš ieteikto darbību.",
+      "hide": "Paslēpt detaļas",
+      "show": "Rādīt detaļas",
+      "title": "Tehniskās atbilstības detaļas"
+    },
+    "textOnly": "Tikai teksta pārbaude",
+    "viewOnSafetyGate": "Skatīt Safety Gate",
+    "whyThisMatched": "Kāpēc tas atbilda",
+    "withImage": "Pārbaudīts ar attēliem",
+    "yourProduct": "Jūsu Shopify produkts"
+  },
+  "auditReport": {
+    "decision": "Lēmums",
+    "description": "Pirms CSV eksportēšanas savai komandai, piegādātājam vai auditam pārskatiet pilnu ierakstu.",
+    "detected": "Konstatēts",
+    "documented": "Dokumentēti lēmumi",
+    "download": "Lejupielādēt CSV",
+    "empty": "Vēl nav ierakstīti nekādi produktu drošības konstatējumi.",
+    "eyebrow": "Eksportēšanai gatavs ieraksts",
+    "generated": "Ģenerēts {{date}}",
+    "heading": "Konstatējumi un lēmumi",
+    "needsReview": "Nepieciešama pārskatīšana",
+    "notRecorded": "Nav ierakstīts",
+    "open": "Atvērt audita ziņojumu",
+    "product": "Produkts",
+    "risk": "Riska nopietnība",
+    "status": "Statuss",
+    "summaryLabel": "Audita ziņojuma kopsavilkums",
+    "tableLabel": "Drošības audita ziņojums",
+    "title": "Drošības audita ziņojums",
+    "total": "Ierakstītie konstatējumi",
+    "viewHistory": "Skatīt audita izsekojamību"
+  },
+  "billing": {
+    "freeScanAvailableDescription": "Jums ir pieejama 1 bezmaksas kataloga skenēšana. Veiciet savu pirmo auditu, lai pārbaudītu sava veikala produktus pret ES Safety Gate datubāzi par bīstamiem nepārtikas produktiem.",
+    "freeScanAvailableHeading": "Aktīva bezmaksas sākotnējā kataloga skenēšana",
+    "managePlanButton": "Pārvaldīt abonementu",
+    "planActiveDescription": "Šim Shopify veikalam ir iespējota uzraudzība. Pārskatiet jaunāko izpildi un visus produktus, kuriem nepieciešama uzmanība.",
+    "planEyebrow": "Plāns un pārklājums",
+    "planFreeAvailableDescription": "Pieejama viena bezmaksas sākotnējā Safety Gate kataloga skenēšana.",
+    "planFreeUsedDescription": "Jūsu bezmaksas sākotnējā skenēšana ir pabeigta. Izvēlieties plānu, lai sāktu nepārtrauktu uzraudzību un turpinātu eksportēt audita pierakstus.",
+    "planTitle": "Abonements un drošības uzraudzība",
+    "pricingUnavailable": "Shopify cenas šai lietotnei nav konfigurētas.",
+    "statusActivePro": "ZeroRecall Pro (aktīvs)",
+    "statusDevelopmentBypass": "Izstrādes priekšskatījums (norēķini apieti)",
+    "statusFreeAvailable": "Bezmaksas sākotnējā skenēšana",
+    "statusFreeUsed": "Bezmaksas skenēšana izmantota",
+    "statusLabel": "Pašreizējais plāns",
+    "statusUnverified": "Abonementu nevarēja pārbaudīt",
+    "upgradePlanButton": "Jaunināt uz Pro",
+    "upgradeRequiredDescription": "Jūsu bezmaksas sākotnējā skenēšana ir pabeigta. Izvēlieties Shopify plānu, lai uzraudzītu jaunus Safety Gate brīdinājumus un pārbaudītu mainītos produktus.",
+    "upgradeRequiredHeading": "Turpināt Safety Gate uzraudzību",
+    "verificationError": "Jaunas skenēšanas ir apturētas, līdz var pārbaudīt Shopify norēķinus. Jūsu esošie atklājumi un lēmumi joprojām ir pieejami."
+  },
+  "billingRedirect": {
+    "opening": "Atver Shopify cenu plānus...",
+    "openPricingPlans": "Atvērt cenu plānus"
+  },
+  "common": {
+    "all": "Visi",
+    "cancel": "Atcelt",
+    "close": "Aizvērt",
+    "confirm": "Apstiprināt",
+    "language": "Valoda",
+    "loading": "Ielādē...",
+    "unknown": "Nezināms"
+  },
+  "dashboard": {
+    "activeAlertsBanner": {
+      "content": "Atrisiniet {{count}} aktīvo brīdinājumu, lai saglabātu ietekmētos produktus pieejamus jūsu veikalā.",
+      "content_few": "Atrisiniet {{count}} aktīvos brīdinājumus, lai saglabātu ietekmētos produktus pieejamus jūsu veikalā.",
+      "content_many": "Atrisiniet {{count}} aktīvos brīdinājumus, lai saglabātu ietekmētos produktus pieejamus jūsu veikalā.",
+      "content_one": "Atrisiniet {{count}} aktīvo brīdinājumu, lai saglabātu ietekmētos produktus pieejamus jūsu veikalā.",
+      "content_other": "Atrisiniet {{count}} aktīvos brīdinājumus, lai saglabātu ietekmētos produktus pieejamus jūsu veikalā.",
+      "content_plural": "Atrisiniet {{count}} aktīvos brīdinājumus, lai saglabātu ietekmētos produktus pieejamus jūsu veikalā.",
+      "content_zero": "Atrisiniet {{count}} aktīvus brīdinājumus, lai saglabātu ietekmētos produktus pieejamus jūsu veikalā.",
+      "manualCheckAction": "Manuāla pārbaude",
+      "reviewAction": "Pārskatīt pirmo brīdinājumu",
+      "title": "Aktīviem drošības brīdinājumiem nepieciešama uzmanība"
+    },
+    "admin": {
+      "actionNeeded": "Nepieciešama darbība",
+      "actionNeededDescription": "Vispirms pārskatiet atzīmētos produktus, lai varētu izlemt, vai tos paturēt pārdošanā, noraidīt atbilstību vai atrisināt brīdinājumu.",
+      "actionNeededTitle": "{{count}} aktīvam brīdinājumam nepieciešama pārskatīšana",
+      "actionNeededTitle_few": "{{count}} aktīviem brīdinājumiem nepieciešama pārskatīšana",
+      "actionNeededTitle_many": "{{count}} aktīviem brīdinājumiem nepieciešama pārskatīšana",
+      "actionNeededTitle_one": "{{count}} aktīvam brīdinājumam nepieciešama pārskatīšana",
+      "actionNeededTitle_other": "{{count}} aktīviem brīdinājumiem nepieciešama pārskatīšana",
+      "actionNeededTitle_plural": "{{count}} aktīviem brīdinājumiem nepieciešama pārskatīšana",
+      "actionNeededTitle_zero": "{{count}} aktīviem brīdinājumiem nepieciešama pārskatīšana",
+      "activeAlertsDescription": "Produkti, kuriem joprojām nepieciešams tirgotāja lēmums, pirms rinda ir notīrīta.",
+      "auditHistoryKept": "Audita vēsture saglabāta",
+      "auditReady": "Ziņojums gatavs",
+      "auditRecordsDescription": "Atrisināti un noraidīti lēmumi ar iemesliem un iekšējām piezīmēm.",
+      "auditRecordsTitle": "Audita ieraksti",
+      "auditReport": "Audita pārskats",
+      "automaticChecks": "Automātiskās pārbaudes",
+      "bulkCheckAllSummary": "Tas veiks pilnu pārbaudi visiem {{count}} produktiem.",
+      "bulkCheckDescription": "Vispirms skenējiet nepārbaudītus produktus vai iekļaujiet visu katalogu, kad vēlaties jaunu pārbaudi.",
+      "bulkCheckSummary": "Masveida pārbaudes kopsavilkums",
+      "bulkCheckSummaryDescription": "Saglabājiet šo kopsavilkumu kompaktu, lai tirgotāji varētu apstiprināt rezultātus, neatverot otru ekrānu.",
+      "bulkCheckTitle": "Masveida kataloga pārbaude",
+      "bulkCheckUncheckedSummary": "Tas pārbaudīs {{count}} atlikušos produktus un izlaidīs {{skip}} jau pārskatītos vienumus.",
+      "catalogCoverageDescription": "Kataloga daļa, kas jau pārbaudīta pret Safety Gate.",
+      "catalogCoverageTitle": "Kataloga pārklājums",
+      "coverage": "Pārklājums",
+      "coveragePercent": "Katalogs ar saglabātām pārbaudēm",
+      "criticalBannerDescription": "{{count}} aktīvā atbilstība ir atzīmēta kā augsta vai nopietna riska. Prioritizējiet šos produktus pirms jaunu pārdošanas turpināšanas.",
+      "criticalBannerDescription_few": "{{count}} aktīvās atbilstības ir atzīmētas kā augsta vai nopietna riska. Prioritizējiet šos produktus pirms jaunu pārdošanas turpināšanas.",
+      "criticalBannerDescription_many": "{{count}} aktīvās atbilstības ir atzīmētas kā augsta vai nopietna riska. Prioritizējiet šos produktus pirms jaunu pārdošanas turpināšanas.",
+      "criticalBannerDescription_one": "{{count}} aktīvā atbilstība ir atzīmēta kā augsta vai nopietna riska. Prioritizējiet šos produktus pirms jaunu pārdošanas turpināšanas.",
+      "criticalBannerDescription_other": "{{count}} aktīvās atbilstības ir atzīmētas kā augsta vai nopietna riska. Prioritizējiet šos produktus pirms jaunu pārdošanas turpināšanas.",
+      "criticalBannerDescription_plural": "{{count}} aktīvās atbilstības ir atzīmētas kā augsta vai nopietna riska. Prioritizējiet šos produktus pirms jaunu pārdošanas turpināšanas.",
+      "criticalBannerDescription_zero": "{{count}} aktīvas atbilstības ir atzīmētas kā augsta vai nopietna riska. Prioritizējiet šos produktus, pirms turpinās jauni pārdošanas darījumi.",
+      "criticalBannerTitle": "{{count}} aktīvais brīdinājums ietver augsta riska atbilstības",
+      "criticalBannerTitle_few": "{{count}} aktīvie brīdinājumi ietver augsta riska atbilstības",
+      "criticalBannerTitle_many": "{{count}} aktīvie brīdinājumi ietver augsta riska atbilstības",
+      "criticalBannerTitle_one": "{{count}} aktīvais brīdinājums ietver augsta riska atbilstības",
+      "criticalBannerTitle_other": "{{count}} aktīvie brīdinājumi ietver augsta riska atbilstības",
+      "criticalBannerTitle_plural": "{{count}} aktīvie brīdinājumi ietver augsta riska atbilstības",
+      "criticalBannerTitle_zero": "{{count}} aktīvi brīdinājumi ietver augsta riska atbilstības",
+      "daily": "Katru dienu",
+      "dailyAtTime": "Katru dienu plkst. 03:47 Eiropa/Bratislava",
+      "dailyAtTimePlanned": "Ieplānots (katru dienu plkst. 03:47)",
+      "decisionsClosed": "Lēmumi slēgti",
+      "demoAlert": {
+        "action": "Atrisināt, noraidīt vai sazināties ar piegādātāju",
+        "badge": "Piemēra darbplūsma",
+        "description": "Lietotne parāda Shopify produktu, Safety Gate ierakstu, iemeslu, kāpēc tas atbilst, un veicamo darbību.",
+        "evidence": "Saglabājiet piezīmes un eksportējiet audita ziņojumu",
+        "reason": "Salīdziniet zīmolu, modeli, kategoriju un produkta fotoattēlus",
+        "sample": "Ko tirgotāji redz, kad parādās atbilstība",
+        "title": "Atrasta iespējama Safety Gate atbilstība"
+      },
+      "emptyProofCoverage": "{{count}} produktiem ir ierakstīts pārbaudes rezultāts.",
+      "emptyProofEvidence": "{{count}} slēgtie lēmumi tiek saglabāti audita vēsturei.",
+      "emptyProofMonitoring": "Ikdienas Safety Gate uzraudzība joprojām darbojas.",
+      "exportProof": "Eksportēt pierādījumus",
+      "fallbackAlertDescription": "Atbilst Safety Gate brīdinājumam.",
+      "finishCoverage": "Pabeigt kataloga pārklājumu",
+      "highRiskMatchesDescription": "Nopietnas vai augsta riska Safety Gate atbilstības, kas jāpārskata vispirms.",
+      "highRiskMatchesTitle": "Augsta riska atbilstības",
+      "checkChangedProducts": "Pārbaudīt mainītos produktus",
+      "checksCompletedDescription": "Automātiskās un manuālās pārbaudes, kas samazina manuālo kataloga pārskatīšanas darbu.",
+      "checksCompletedTitle": "Pārbaudes pabeigtas",
+      "lastMonitoringRunDescription": "Jaunākā automātiskā, manuālā vai masveida Safety Gate pārbaude.",
+      "lastMonitoringRunTitle": "Pēdējā uzraudzības palaišana",
+      "lastSafetyGateUpdateChecked": "Pēdējā pārbaudītā Safety Gate atjauninājums",
+      "latestRun": "Jaunākā palaišana",
+      "monitoringRunDateUnknown": "Laiks nav pieejams",
+      "monitoringRunHistoryEmpty": "Vēl nav ierakstītas plānotās uzraudzības palaišanas.",
+      "monitoringRunHistoryTitle": "Nesenās uzraudzības palaišanas",
+      "monitoringRunProgress": "{{products}} produkti pārbaudīti · {{alerts}} jauni brīdinājumi",
+      "monitoringRunStatus": {
+        "completed": "Pabeigts",
+        "enqueue_failed": "Nevarēja sākt",
+        "failed": "Neizdevās",
+        "processing": "Notiek apstrāde",
+        "queued": "Rindā",
+        "retrying": "Mēģina vēlreiz",
+        "skipped_unentitled": "Plāns neaktīvs",
+        "unknown": "Statuss nav pieejams"
+      },
+      "monitoringRunsTitle": "Uzraudzības pārbaudes",
+      "monitoringStatusAllClear": "Kataloga uzraudzība darbojas",
+      "monitoringStatusDescription": "ZeroRecall pārbauda jūsu katalogu pret jauniem ES Safety Gate atjauninājumiem, izceļ produktus, kuriem nepieciešama pārskatīšana, un saglabā pierādījumus audita ziņojumiem.",
+      "monitoringStatusEyebrow": "Uzraudzības statuss",
+      "monitoringStatusNeedsReview": "{{count}} produktam nepieciešams tirgotāja lēmums",
+      "monitoringStatusNeedsReview_few": "{{count}} produktiem nepieciešami tirgotāja lēmumi",
+      "monitoringStatusNeedsReview_many": "{{count}} produktiem nepieciešami tirgotāja lēmumi",
+      "monitoringStatusNeedsReview_one": "{{count}} produktam nepieciešams tirgotāja lēmums",
+      "monitoringStatusNeedsReview_other": "{{count}} produktiem nepieciešami tirgotāja lēmumi",
+      "monitoringStatusNeedsReview_plural": "{{count}} produktiem nepieciešami tirgotāja lēmumi",
+      "monitoringStatusNeedsReview_zero": "{{count}} produktiem nepieciešami tirgotāja lēmumi",
+      "needsReviewTitle": "Produkti, kuriem nepieciešama pārskatīšana",
+      "nextAutomaticCheck": "Nākamā automātiskā pārbaude",
+      "noActiveAlertsDescription": "Jūsu jaunākās pārbaudes pašlaik neprasa rīcību. Turpiniet skenēt jaunpievienotos produktus, lai saglabātu pārklājumu.",
+      "noActiveAlertsTitle": "Nav aktīvu drošības brīdinājumu",
+      "noAlertsDescription": "Pašlaik nav atvērtu produktu pārskatu. Tas joprojām ir noderīgi: ikdienas uzraudzība turpinās fonā, un jūsu pierādījumi ir gatavi eksportēšanai.",
+      "noAlertsTitle": "Nevienam produktam nav nepieciešama pārskatīšana",
+      "priorityQueue": "Lēmumu rinda",
+      "productsCoveredShort": "ar ierakstītu pārbaudes rezultātu",
+      "productsMonitored": "Pārbaudītas pašreizējās produktu versijas",
+      "proofGridLabel": "Uzraudzības aktivitāte",
+      "protectionDescription": "Skaits apraksta lietotnē ierakstītos rezultātus; tie nav produkta drošības sertifikācija.",
+      "protectionEyebrow": "Jūsu uzraudzības ieraksts",
+      "protectionTitle": "Pārskatiet nesenās pārbaudes un tirgotāja lēmumus.",
+      "recentAlertsDescription": "Pārskatiet iespējamās Safety Gate atbilstības, ierakstiet lēmumu un saglabājiet pierādījumus auditiem.",
+      "recentAlertsTitle": "Produkti, kuriem nepieciešams tirgotāja lēmums",
+      "recommendedAction": "Ieteicamā darbība: pārskatiet atbilstību un ierakstiet lēmumu.",
+      "resolvedRateDescription": "Cik daudz no reģistrētās brīdinājumu aktivitātes jau ir slēgts.",
+      "resolvedRateTitle": "Atrisināto problēmu īpatsvars",
+      "results": {
+        "alertCreated": "Brīdinājums izveidots",
+        "completed": "Pabeigts",
+        "error": "Kļūda",
+        "checked": "Pārbaudīts",
+        "skipped": "Izlaists"
+      },
+      "reviewOneProduct": "Pārbaudīt vienu produktu",
+      "riskInAlert": "Risks, kas aprakstīts Safety Gate brīdinājumā",
+      "runBulkCheck": "Veikt masveida pārbaudi",
+      "stats": {
+        "alertsCreated": "Izveidoti brīdinājumi",
+        "alreadyChecked": "Jau pārbaudīts",
+        "errors": "Kļūdas",
+        "checked": "Pārbaudīts",
+        "skipped": "Izlaists",
+        "stillUnchecked": "Joprojām nepārbaudīts",
+        "totalProducts": "Kopējais produktu skaits"
+      },
+      "status": {
+        "cachedEvidence": "Kešatmiņā saglabātie pierādījumi tiek atkārtoti izmantoti",
+        "coverageIncomplete": {
+          "description": "Neviena Safety Gate atbilstība nav jāpārskata {{checked}} uzraudzītajos produktos. Pabeidziet visu {{total}} pašreizējo produktu pārklājumu, pirms apstiprināt visu katalogu.",
+          "eyebrow": "Nepilnīgs pārklājums",
+          "title": "{{count}} produktam joprojām nepieciešams pārklājums",
+          "title_few": "{{count}} produktiem joprojām nepieciešams pārklājums",
+          "title_many": "{{count}} produktiem joprojām nepieciešams pārklājums",
+          "title_one": "{{count}} produktam joprojām nepieciešams pārklājums",
+          "title_other": "{{count}} produktiem joprojām nepieciešams pārklājums",
+          "title_plural": "{{count}} produktiem joprojām nepieciešams pārklājums",
+          "title_zero": "{{count}} produktiem joprojām nepieciešams pārklājums"
+        },
+        "deltaMonitoring": "Tiek pārbaudīti tikai jauni Safety Gate brīdinājumi",
+        "factsLabel": "Pašreizējie uzraudzības fakti",
+        "matchesNeedingReview": "Atbilstības, kurām nepieciešama pārskatīšana",
+        "monitoringNotConfirmed": "Uzraudzība vēl nav apstiprināta",
+        "monitoringProblem": {
+          "action": "Atsvaidzināt kataloga pārklājumu",
+          "description": "Jūsu pašreizējiem produktiem ir pārklājuma pierādījumi, taču lietotne nevar apstiprināt, kad pēdējo reizi tika pabeigta Safety Gate uzraudzība. Atsvaidziniet kataloga pārklājumu, lai atjaunotu uzticamu statusu.",
+          "eyebrow": "Uzraudzībai nepieciešama uzmanība",
+          "title": "Kataloga pārklājumam nav ierakstītas uzraudzības palaišanas"
+        },
+        "noActionNeeded": {
+          "action": "Skatīt kataloga pārklājumu",
+          "description": "Neviens produkts jūsu uzraudzītajā katalogā pašlaik neatbilst ES Safety Gate brīdinājumiem. Uzraudzība turpinās fonā, un darbs nepieciešams tikai jauniem brīdinājumiem vai mainītiem produktiem.",
+          "emptyCatalogDescription": "Pievienojiet produktus savam Shopify katalogam, un ZeroRecall būs gatavs tos aptvert.",
+          "emptyCatalogTitle": "Vēl nav produktu, ko uzraudzīt",
+          "eyebrow": "Pašreizējais Safety Gate statuss",
+          "title": "Nav nepieciešama nekāda darbība"
+        },
+        "none": "Nav",
+        "reviewNeeded": {
+          "criticalDescription": "Pārskatiet šīs iespējamās atbilstības pirms pārdošanas turpināšanas. Salīdziniet produktu un Safety Gate pierādījumus, pēc tam ierakstiet savu lēmumu.",
+          "criticalEyebrow": "Steidzama pārskatīšana",
+          "criticalTitle": "{{count}} iespējamai atbilstībai ar nopietna riska brīdinājumu nepieciešama pārskatīšana",
+          "criticalTitle_few": "{{count}} iespējamām atbilstībām ar nopietna riska brīdinājumu nepieciešama pārskatīšana",
+          "criticalTitle_many": "{{count}} iespējamās atbilstības ar nopietna riska brīdinājumu ir jāpārskata",
+          "criticalTitle_one": "{{count}} iespējamā atbilstība ar nopietna riska brīdinājumu ir jāpārskata",
+          "criticalTitle_other": "{{count}} iespējamās atbilstības ar nopietna riska brīdinājumu ir jāpārskata",
+          "criticalTitle_plural": "{{count}} iespējamās atbilstības ar nopietna riska brīdinājumu ir jāpārskata",
+          "criticalTitle_zero": "{{count}} iespējamās atbilstības ar nopietna riska brīdinājumu ir jāpārskata",
+          "description": "Potenciālās Safety Gate atbilstības prasa tirgotāja lēmumu. Vispirms pārskatiet atbilstības; citu produktu pārbaudes rezultāti joprojām ir pieejami katalogā.",
+          "eyebrow": "Nepieciešama pārskatīšana",
+          "title": "{{count}} iespējamā atbilstība ir jāpārskata",
+          "title_few": "{{count}} iespējamās atbilstības ir jāpārskata",
+          "title_many": "{{count}} iespējamās atbilstības ir jāpārskata",
+          "title_one": "{{count}} iespējamā atbilstība ir jāpārskata",
+          "title_other": "{{count}} iespējamās atbilstības ir jāpārskata",
+          "title_plural": "{{count}} iespējamās atbilstības ir jāpārskata",
+          "title_zero": "{{count}} iespējamās atbilstības ir jāpārskata"
+        },
+        "scheduledPlanned": "Ieplānota palaišana"
+      },
+      "storeStatus": "Veikala statuss",
+      "valueMetrics": {
+        "decisionsRecorded": "Reģistrēti lēmumi",
+        "evidenceRetained": "Lēmumi ar pierādījumiem",
+        "checksRun": "Veiktas pārbaudes",
+        "openDecisions": "Atvērti lēmumi",
+        "productsCovered": "Pārbaudīti produkti"
+      },
+      "valueProofDescription": "Parādiet komandai, ka abonements nav vienreizēja skenēšana: kataloga pārklājums, pārbaudes, lēmumi un tikai lasīšanas piekļuve Shopify paliek aktīva.",
+      "valueProofDescriptionComplete": "Šie skaitļi parāda reģistrēto pārbaudes aktivitāti pašreizējam katalogam.",
+      "valueProofDescriptionIncomplete": "Veiciet pārbaudes atlikušajiem produktiem, lai pievienotu rezultātus pašreizējam kataloga ierakstam.",
+      "valueProofEyebrow": "Pārklājuma darbība",
+      "valueProofTitle": "Ko ZeroRecall turpina darīt",
+      "valueProofTitleComplete": "Katram pašreizējam produktam ir reģistrēta pārbaude",
+      "valueProofTitleIncomplete": "{{count}} produktiem ir reģistrēta pārbaude",
+      "warningBannerDescription": "Pārskatiet šīs atbilstības, noraidiet viltus pozitīvos rezultātus vai atrisiniet apstiprinātās problēmas, lai rinda paliktu darboties spējīga.",
+      "warningBannerTitle": "{{count}} aktīvs brīdinājums prasa tirgotāja lēmumu",
+      "warningBannerTitle_few": "{{count}} aktīvi brīdinājumi prasa tirgotāja lēmumus",
+      "warningBannerTitle_many": "{{count}} aktīvi brīdinājumi prasa tirgotāja lēmumus",
+      "warningBannerTitle_one": "{{count}} aktīvs brīdinājums prasa tirgotāja lēmumu",
+      "warningBannerTitle_other": "{{count}} aktīvi brīdinājumi prasa tirgotāja lēmumus",
+      "warningBannerTitle_plural": "{{count}} aktīvi brīdinājumi prasa tirgotāja lēmumus",
+      "warningBannerTitle_zero": "{{count}} aktīviem brīdinājumiem nepieciešami tirgotāja lēmumi",
+      "withReadOnlyShopifyAccess": "Tikai lasīšanas piekļuve Shopify"
+    },
+    "bulkCheck": {
+      "action": "Pārbaudīt visus produktus",
+      "alerts": "Brīdinājumi {{count}}",
+      "alreadyChecked": "Jau pārbaudīts",
+      "completed": "Pabeigts {{seconds}} sekundēs",
+      "description": "Skenējiet katru produktu savā veikalā pret Safety Gate datubāzi, lai atklātu slēptos riskus.",
+      "errors": "Kļūdas {{count}}",
+      "checked": "Pārbaudīts {{count}}",
+      "includeAlreadyChecked": "Iekļaut jau pārbaudītus produktus",
+      "notYetChecked": "Vēl nav pārbaudīts",
+      "processed": "Apstrādāts {{count}}",
+      "started": "Sākts {{date}}",
+      "title": "Masveida drošības pārbaude",
+      "totalProducts": "Kopējais produktu skaits",
+      "willCheckAll": "Pārbaudīs visus {{count}} produktus",
+      "willCheckUnchecked": "Pārbaudīs {{count}} nepārbaudītus produktus (izlaist {{skip}} jau pārbaudītus)"
+    },
+    "bulkResults": {
+      "success": "Masveida pārbaude pabeigta: apstrādāti {{processed}}, pārbaudīti {{checked}}, izveidoti {{alertsCreated}} brīdinājumi."
+    },
+    "howItWorks": {
+      "alertGeneration": {
+        "description": "Atbilstības ģenerē brīdinājumus, kurus varat noraidīt vai atrisināt, lai sekotu atbilstībai.",
+        "title": "Brīdinājumu ģenerēšana"
+      },
+      "autoMonitoring": {
+        "description": "Produkti tiek pārbaudīti pret ES datubāzi ikreiz, kad tie tiek izveidoti vai atjaunināti.",
+        "title": "Automātiska uzraudzība"
+      },
+      "title": "Kā tas darbojas"
+    },
+    "liveScan": {
+      "completed": "Pabeigts",
+      "description": "Importējam jūsu katalogu no Shopify un skenējam produktus pret 35 000+ ierakstiem oficiālajā ES Safety Gate (RAPEX) datubāzē. Rezultāti drīz parādīsies zemāk.",
+      "eyebrow": "Automātiska drošības revīzija",
+      "failedDescription": "Mēs nevarējām pabeigt šo revīziju. Jūsu katalogs netika atzīmēts kā pilnībā pārbaudīts. Sāciet skenēšanu vēlreiz vai sazinieties ar atbalsta dienestu, ja problēma turpinās.",
+      "failedHeading": "Kataloga revīzijai nepieciešams vēl viens mēģinājums",
+      "heading": "Notiek bezmaksas kataloga drošības revīzija...",
+      "inProgress": "Notiek...",
+      "pending": "Gaida",
+      "progress": "Importēti {{imported}} no {{fetched}} produktiem; salīdzināti {{scanned}} produkti ar {{alerts}} Safety Gate brīdinājumiem līdz šim.",
+      "stepAudit": "3. Sagatavojiet GPSR audita ceļu un atbilstības statusu",
+      "stepImport": "1. Importējiet produktus no Shopify",
+      "stepScan": "2. Salīdziniet ar Safety Gate datubāzi (35 000+ ierakstu)"
+    },
+    "metricsCard": {
+      "activeAlertsHeading": "Aktīvie brīdinājumi",
+      "productsCheckedHeading": "Pārbaudītie produkti",
+      "resolutionHeading": "Atrisināšanas ātrums",
+      "resolved": "{{count}} atrisināts",
+      "resolvedAndDismissed": "{{resolved}} atrisināts • {{dismissed}} noraidīts",
+      "scans": "Safety Gate skenēšana",
+      "totalRecorded": "Kopā ierakstīts {{count}}"
+    },
+    "monitorCard": {
+      "description": "Sekojiet brīdinājumiem, veiciet kataloga pārbaudes un uzturiet regulatorus apmierinātus.",
+      "reviewAction": "Pārskatīt brīdinājumus",
+      "title": "Pārraugiet produktu drošību vienā mirklī"
+    },
+    "quickActions": {
+      "browsePortal": "Pārlūkot Safety Gate portālu",
+      "description": "Regulāras pārbaudes un dokumentācija palīdz demonstrēt pienācīgu rūpību regulatoriem.",
+      "manualCheck": "Veikt manuālu pārbaudi",
+      "title": "Ātrās darbības"
+    },
+    "recentAlerts": {
+      "active": "{{count}} aktīvi",
+      "allResolved": "Visi atrisināti",
+      "description": "Izpētiet jaunākās atbilstības no Safety Gate pirms pasūtījumu izpildes.",
+      "emptyState": {
+        "content": "Lieliskas ziņas — pašlaik neviens produkts nav atzīmēts. Turpiniet uzraudzību, lai saglabātu atbilstību.",
+        "heading": "Vēl nav drošības brīdinājumu"
+      },
+      "matchCount": "Atrasta {{count}} atbilstība",
+      "matchCount_few": "Atrastas {{count}} atbilstības",
+      "matchCount_many": "Atrastas {{count}} atbilstības",
+      "matchCount_one": "Atrasta {{count}} atbilstība",
+      "matchCount_other": "Atrastas {{count}} atbilstības",
+      "matchCount_plural": "Atrastas {{count}} atbilstības",
+      "matchCount_zero": "Atrastas {{count}} atbilstības",
+      "title": "Jaunākie drošības brīdinājumi"
+    },
+    "safetyBreakdown": {
+      "actionDesc": "Atrastas atbilstības ar ES Safety Gate ziņojumiem, kas prasa pārskatīšanu un atrisināšanu.",
+      "actionLabel": "Nepieciešama darbība",
+      "description": "Pārskats par jūsu produktu kataloga verifikāciju atbilstoši Eiropas drošības sarakstiem un GPSR direktīvai.",
+      "eyebrow": "Kataloga aizsardzības statuss",
+      "protectedDesc": "Produkti, kuru pēdējā reģistrētajā pārbaudē netika atrasta iespējama atbilstība.",
+      "protectedLabel": "Pārbaudīti produkti bez atklātiem konstatējumiem",
+      "protectRemainingAction": "Pārbaudīt atlikušos ({{count}})",
+      "reviewAlertsAction": "Pārskatīt brīdinājumus",
+      "scanAllAction": "Veikt pilnu kataloga auditu",
+      "title": "Produktu drošības statuss",
+      "unprotectedAllCovered": "Katram pašreizējam produktam ir reģistrēts pārbaudes rezultāts.",
+      "unprotectedDesc": "Produkti bez reģistrētas Safety Gate pārbaudes.",
+      "unprotectedLabel": "Vēl nav pārbaudīts"
+    },
+    "setup": {
+      "description": "Sagatavojiet savu veikalu ES produktu drošības atbilstībai.",
+      "progress": "Pabeigti {{completed}} no {{total}} soļiem",
+      "steps": {
+        "step1": {
+          "description": "Noklikšķiniet uz “Pārbaudīt visus produktus”, lai skenētu visu savu katalogu pret ES Safety Gate datubāzi.",
+          "label": "Veiciet pirmo masveida produktu pārbaudi"
+        },
+        "step2": {
+          "description": "Pārbaudiet brīdinājumu lapu, lai pārskatītu visus produktus, kas atbilst Safety Gate brīdinājumiem.",
+          "label": "Pārskatiet visus drošības brīdinājumus"
+        },
+        "step3": {
+          "description": "Iespējojiet automātiskās pārbaudes iestatījumos, lai automātiski uzraudzītu jaunus produktus.",
+          "label": "Konfigurēt automātisko uzraudzību"
+        }
+      },
+      "title": "Iestatīšanas ceļvedis"
+    },
+    "stats": {
+      "actionNeeded": "Nepieciešama darbība",
+      "activeAlerts": "Aktīvie brīdinājumi",
+      "alertsLogged": "Reģistrētie brīdinājumi",
+      "allClear": "Viss kārtībā",
+      "autoMonitoring": "Automātiskā uzraudzība",
+      "descriptions": {
+        "activeAlerts": "Pārskatiet šos produktus šodien, lai saglabātu atbilstību.",
+        "activeAlertsZero": "Visas drošības problēmas ir atrisinātas.",
+        "alertsLogged": "Ietver atrisinātus un noraidītus brīdinājumus audita izsekošanai.",
+        "alertsLoggedZero": "Nav vēsturisku brīdinājumu. Turpiniet uzraudzīt jaunus produktus.",
+        "productsChecked": "Automātiskie Shopify notikumi turpina uzraudzīt atjauninājumus.",
+        "productsCheckedZero": "Veiciet masveida pārbaudi, lai skenētu savu pašreizējo katalogu."
+      },
+      "newSetup": "Jauna iestatīšana",
+      "open": "{{count}} atvērti",
+      "productsChecked": "Pārbaudīti produkti",
+      "resolved": "{{count}} atrisināts"
+    },
+    "title": "ZeroRecall"
+  },
+  "dates": {
+    "daysAgo": "Pirms {{count}} dienām",
+    "today": "Šodien",
+    "weeksAgo": "Pirms {{count}} nedēļām",
+    "yesterday": "Vakar"
+  },
+  "errors": {
+    "apiError": "Ārējais drošības pakalpojums īslaicīgi nav pieejams. Lūdzu, mēģiniet vēlreiz vēlāk.",
+    "pageLoadFailed": "Lapas ielāde neizdevās",
+    "unknown": "Kaut kas nogāja greizi"
+  },
+  "evidence": {
+    "alertNumber": "Safety Gate brīdinājums {{number}}",
+    "description": "Pārskatiet reģistrētos produktu drošības lēmumus, piezīmes, riska kontekstu un piegādātāja pēcpārbaudes pierādījumus.",
+    "empty": "Vēl nav reģistrēti nekādi produktu drošības lēmumi.",
+    "eyebrow": "Audita izsekošana",
+    "filteredRecords": "{{visible}} no {{total}} ierakstiem",
+    "filters": {
+      "collapseForProduct": "Slēpt pilnus pierādījumus par {{title}}",
+      "expandForProduct": "Rādīt pilnus pierādījumus par {{title}}",
+      "noResults": "Neviens audita ieraksts neatbilst šiem filtriem.",
+      "searchLabel": "Meklēt audita izsekošanā",
+      "searchPlaceholder": "Meklēt produktu, brīdinājuma numuru vai pierādījumus",
+      "showLess": "Slēpt pierādījumus",
+      "showMore": "Rādīt pierādījumus",
+      "statusLabel": "Lēmuma statuss"
+    },
+    "fullEvidence": "Pilni pierādījumi",
+    "heading": "Lēmumu un pierādījumu vēsture",
+    "noNotes": "Nav reģistrēta piezīme",
+    "records": "{{count}} ieraksti",
+    "table": {
+      "accessibilityLabel": "Produktu drošības pierādījumu tabula",
+      "decision": "Lēmums",
+      "details": "Detaļas",
+      "notes": "Piezīmes / pierādījumi",
+      "product": "Produkts",
+      "status": "Statuss",
+      "summary": "Pierādījumu kopsavilkums",
+      "updated": "Atjaunināts"
+    },
+    "title": "Audita izsekošana"
+  },
+  "experience": {
+    "delayed": "Uzraudzībai nepieciešama uzmanība — pēdējā pabeigtā darbība ir vecāka par 48 stundām",
+    "pausedHelp": "Automātiskās pārbaudes ir apturētas. Izvēlieties plānu, lai pārbaudītu jaunus Safety Gate brīdinājumus un produktu izmaiņas, kamēr Shopify ir slēgts.",
+    "previewHelp": "Šī izstrādes priekšskatījuma atvēršana neaktivizē fona uzraudzību. Plānotajām pārbaudēm nepieciešams verificēts aktīvs Shopify plāns.",
+    "reviewSteps": "1. Salīdziniet fotoattēlus un identifikatorus → 2. Izvēlieties pārskatīšanas rezultātu → 3. Ierakstiet savu lēmumu",
+    "valueBody": "Ikdienas pārbaudes par jauniem Safety Gate brīdinājumiem, pārbaudes, kad produkti mainās, e-pasta paziņojumi, ja iespējoti, un saglabāti pārskatīšanas lēmumi.",
+    "valueTitle": "Ko pievieno nepārtraukta uzraudzība"
+  },
+  "manualCheck": {
+    "admin": {
+      "catalog": "Katalogs",
+      "catalogDescription": "Produkti tiek kārtoti pēc jaunākajiem Shopify atjauninājumiem, lai tirgotāji vispirms varētu atkārtoti pārbaudīt nesenās izmaiņas.",
+      "checkFailed": "Pārbaude neizdevās",
+      "manualReview": "Pārskatīšana pēc pieprasījuma",
+      "manualReviewDescription": "Izvēlieties jebkuru produktu no sava kataloga un veiciet mērķtiecīgu Safety Gate pārbaudi, kad jums nepieciešama tūlītēja atbilde.",
+      "productFlagged": "Produkts atzīmēts"
+    },
+    "badges": {
+      "flagged": "{{count}} atzīmēti",
+      "checks": "{{count}} pārbaudes",
+      "needsReview": "{{count}} nepieciešama pārskatīšana"
+    },
+    "banners": {
+      "alertDescription": "Šim produktam tika atrasta potenciāla drošības problēma.",
+      "alertHeading": "Izveidots drošības brīdinājums",
+      "failedHeading": "Pārbaude neizdevās",
+      "textOnlyDescription": "Šis rezultāts izmantoja tikai teksta laukus. Ja produkts balstās uz vizuālām atšķirībām, rūpīgāk pārskatiet atbilstību.",
+      "textOnlyHeading": "Attēlu salīdzināšana nebija pieejama"
+    },
+    "breadcrumbs": {
+      "current": "Kataloga pārklājums",
+      "dashboard": "Informācijas panelis"
+    },
+    "bulk": {
+      "description": "Pārskatiet saglabātās pārbaudes un veiciet jaunu Safety Gate salīdzināšanu produktiem jūsu pašreizējā katalogā.",
+      "checkAllProducts": "Pārbaudīt atlikušos produktus",
+      "checkingAll": "Kataloga pārbaude...",
+      "title": "Pārbaudiet savu katalogu"
+    },
+    "catalogue": {
+      "accessibilityLabel": "Produktu kataloga tabula",
+      "actions": {
+        "checkAgain": "Pārbaudīt vēlreiz",
+        "checkAgainForProduct": "Pārbaudīt {{title}} vēlreiz",
+        "checkSafety": "Pārbaudīt drošību",
+        "checkSafetyForProduct": "Pārbaudīt {{title}} drošību",
+        "viewForProduct": "Skatīt ierakstīto atklājumu par {{title}}"
+      },
+      "columns": {
+        "action": "Darbība",
+        "checks": "Pārbaudes",
+        "product": "Produkts",
+        "status": "Statuss"
+      },
+      "emptyBody": "Nav pieejami produkti pārbaudei.",
+      "emptyHeading": "Produkti nav atrasti",
+      "firstCheck": "Veikt pirmo pārbaudi",
+      "heading": "Produktu katalogs ({{count}})",
+      "lastChecked": "Pēdējoreiz pārbaudīts {{date}}",
+      "noType": "Nav veida",
+      "searchLabel": "Atrast produktu",
+      "searchPlaceholder": "Meklēt produktus pēc nosaukuma, SKU, piegādātāja vai veida",
+      "status": {
+        "notChecked": "Nav pārbaudīts",
+        "reviewed": "Pārskatīts",
+        "safe": "Nav atrasta atbilstība",
+        "unsafe": "Nepieciešams pārskats"
+      },
+      "totalChecks": "Kopā {{count}}",
+      "unknownVendor": "Nezināms piegādātājs"
+    },
+    "coverage": {
+      "completeDescription": "Katram pašreizējam Shopify produktam ir reģistrēta Safety Gate pārbaude. Jauniem vai mainītiem produktiem joprojām ir nepieciešama jauna pārbaude.",
+      "completeTitle": "Katram pašreizējam produktam ir saglabāts pārbaudes rezultāts",
+      "eyebrow": "Kataloga pārbaudes statuss",
+      "incompleteDescription": "Pārbaudiet atlikušos produktus, lai saglabātu Safety Gate rezultātu pašreizējam katalogam.",
+      "incompleteTitle": "{{count}} produktiem vēl nav saglabāta pārbaude",
+      "lastProductNeedsReview": "Jaunākā produkta pārbaude izveidoja vai atjaunināja pārskatīšanas vienumu.",
+      "lastProductSafe": "Jaunākā produkta pārbaude neatrada iespējamu Safety Gate atbilstību.",
+      "lastRun": "Pēdējā pārbaude",
+      "lastRunResultWithCounts": "Pārbaudīti {{checked}}, izlaisti {{skipped}} nemainīti, izveidoti {{alerts}} pārskatīšanas vienumi, {{errors}} kļūdas.",
+      "noneRemaining": "Katram pašreizējam produktam ir saglabāts pārbaudes rezultāts.",
+      "noRunYet": "Vēl nav veikta kataloga vai produkta pārbaude.",
+      "percent": "{{percent}}% ar pašreizējo pārbaudi",
+      "productsCovered": "Pārbaudīti produkti",
+      "productsCoveredDescription": "Produkti ar saglabātu rezultātu to pašreizējai Shopify versijai.",
+      "remaining": "Vēl nav pārbaudīts",
+      "remainingDescription": "Veiciet pārbaudi, lai saglabātu Safety Gate rezultātu šiem produktiem."
+    },
+    "filters": {
+      "all": "Visi ({{count}})",
+      "needsReview": "Iespējamā atbilstība ({{count}})",
+      "safe": "Nav atrasta atbilstība ({{count}})",
+      "unprotected": "Nepārbaudīts vai mainīts ({{count}})"
+    },
+    "modal": {
+      "unknown": "Nezināms",
+      "unknownProduct": "Nezināms produkts"
+    },
+    "overview": {
+      "coverage": "{{coverage}}% pārklājums",
+      "manualCompleted": "Manuālās pārbaudes pabeigtas",
+      "manualCompletedDescription": "Pārbaudīti {{checked}} no {{total}} produktiem",
+      "noOpenReviews": "Nav atvērtu produktu lēmumu.",
+      "noRisks": "Vēl nav konstatēti riski.",
+      "prioritise": "Prioritizēt šos produktus darbībai.",
+      "productsDescription": "Jaunākie produkti no jūsu veikala.",
+      "productsFlagged": "Atzīmētie produkti",
+      "productsInScope": "Produkti tvērumā",
+      "productsNeedingReview": "Produkti, kuriem nepieciešama pārskatīšana",
+      "title": "Pārbaudes pārskats"
+    },
+    "quickActions": {
+      "title": "Ātrās darbības"
+    },
+    "subtitle": "Aizsargājiet pārējo katalogu, atsvaidziniet uzraudzību vai pārbaudiet vienu izvēlēto produktu.",
+    "title": "Kataloga pārklājums",
+    "toasts": {
+      "completed": "Drošības pārbaude pabeigta",
+      "flagged": "Konstatēta iespējama drošības problēma"
+    }
+  },
+  "nav": {
+    "catalogCoverage": "Kataloga pārklājums",
+    "dashboard": "Informācijas panelis",
+    "evidence": "Audita izsekošana",
+    "manualCheck": "Kataloga pārklājums",
+    "safetyAlerts": "Pārskatīšanas rinda",
+    "settings": "Iestatījumi"
+  },
+  "news": {
+    "items": {
+      "databaseUpdate": {
+        "date": "2025. gada decembris",
+        "description": "Safety Gate datubāze tiek nepārtraukti atjaunināta ar jauniem produktu brīdinājumiem. Veiciet regulāras pārbaudes, lai saglabātu atbilstību.",
+        "title": "ES Safety Gate datubāze atjaunināta"
+      },
+      "gpsr": {
+        "date": "GPSR 2024",
+        "description": "Uzziniet par GPSR prasībām un to, kā nodrošināt, ka jūsu produkti atbilst ES drošības standartiem.",
+        "title": "Vispārējā produktu drošības regula"
+      }
+    },
+    "title": "Jaunumi"
+  },
+  "onboarding": {
+    "back": "Atpakaļ",
+    "finishButton": "Pabeigt iestatīšanu un doties uz informācijas paneli",
+    "nextStep": "Nākamais solis",
+    "stepIndicator": "Solis {{current}} no {{total}}",
+    "steps": {
+      "automation": {
+        "description": "Konfigurējiet prioritāro pārskatīšanu un automātiskos drošības noteikumus savam veikalam.",
+        "label": "Drošības automatizācija",
+        "quarantine": {
+          "desc": "Automātiski atzīmēt produktus prioritārai pārskatīšanai, ja tie atbilst Safety Gate brīdinājumiem ar nopietnu risku (slieksnis >= 95%).",
+          "label": "Iespējot prioritāro pārskatīšanu",
+          "title": "Prioritizēt nopietnus riskus"
+        },
+        "title": "3. solis: Automātiskā uzraudzība un brīdinājumi",
+        "webhooks": {
+          "desc": "Produkti tiek automātiski pārbaudīti pret ES datubāzi ikreiz, kad tie tiek izveidoti vai atjaunināti.",
+          "title": "Reāllaika Webhook skenēšana"
+        }
+      },
+      "scan": {
+        "alerts": "Izveidoti riska brīdinājumi: {{count}}",
+        "complete": "Katalogs tagad tiek uzraudzīts",
+        "description": "Importējiet savus pašreizējos Shopify produktus Safety Gate uzraudzībā, pēc tam salīdziniet katalogu ar jaunākajiem Safety Gate brīdinājumiem.",
+        "imported": "Importēti produkti uzraudzībai: {{count}}",
+        "label": "Kataloga imports",
+        "monitored": "Produkti salīdzināti ar Safety Gate brīdinājumiem: {{count}}",
+        "scanned": "Skenēti produkti: {{count}}",
+        "scanning": "Importē katalogu un salīdzina produktus ar Safety Gate brīdinājumiem...",
+        "startButton": "Importēt un uzraudzīt pašreizējo katalogu",
+        "title": "2. solis: Importēt un uzraudzīt pašreizējo katalogu",
+        "toScan": "Produkti importēšanai uzraudzībai: {{count}}"
+      },
+      "sensitivity": {
+        "balanced": "70% (Ieteicams — līdzsvarots)",
+        "broad": "40% (Plašs — vairāk brīdinājumu)",
+        "calibration": {
+          "balancedDesc": "Standarta jutība. Optimizēta precizitātes un brīdinājumu apjoma līdzsvarošana. Skenē nosaukumus, aprakstus un saskaņo galvenos zīmolus un modeļu struktūras.",
+          "balancedTitle": "Līdzsvarots noteikšanas režīms",
+          "broadDesc": "Augsta jutība. Uztver brīvi saistītas atbilstības. Ieteicams, ja pārdodat augsta riska produktu kategorijas (rotaļlietas, elektronika) un vēlaties pilnīgu pārklājumu, taču sagaidiet dažus viltus pozitīvus rezultātus.",
+          "broadTitle": "Plaša noteikšanas režīms",
+          "strictDesc": "Augsta precizitāte. Filtrē mazas līdzības. Brīdinājumi tiks aktivizēti tikai ļoti skaidriem zīmolu/modeļu nosaukumu atbilstībām. Zems viltus brīdinājumu līmenis.",
+          "strictTitle": "Stingrs noteikšanas režīms"
+        },
+        "description": "Izvēlieties, cik cieši produktam jāatbilst Safety Gate ierakstam, pirms tas ir jāpārskata.",
+        "label": "Atbilstības stingrība",
+        "strict": "90% (Stingri – mazāk brīdinājumu)",
+        "thresholdLabel": "Atbilstības slieksnis: {{value}}%",
+        "title": "1. solis: Iestatiet atbilstības stingrību"
+      }
+    },
+    "subtitle": "Atrodiet iespējamās bīstamo produktu atbilstības, pārskatiet tās Shopify un saglabājiet audita pierādījumus katram lēmumam.",
+    "title": "Pārraugiet savu katalogu pret ES Safety Gate",
+    "value": {
+      "audit": {
+        "description": "Atrisinātie un noraidītie lēmumi saglabā piezīmes eksportam un piegādātāja turpmākajai rīcībai.",
+        "title": "Auditēšanai gatavi pierādījumi"
+      },
+      "monitor": {
+        "description": "Jauni Safety Gate brīdinājumi tiek pārbaudīti pret jūsu Shopify katalogu.",
+        "title": "Ikdienas ES Safety Gate uzraudzība"
+      },
+      "review": {
+        "description": "Salīdziniet atbilstību, izlemiet, ko darīt, un saglabājiet rindu darboties spējīgu.",
+        "title": "Tirgotāja lēmumu darbplūsma"
+      }
+    }
+  },
+  "pagination": {
+    "pageOf": "{{current}}. lapa no {{total}} ({{count}} brīdinājumi)"
+  },
+  "portal": {
+    "description": "Piekļūstiet oficiālajai Eiropas Safety Gate datubāzei, lai meklētu bīstamus produktus un skatītu detalizētus drošības brīdinājumus.",
+    "home": "Safety Gate sākumlapa",
+    "homeDescription": "Piekļūstiet oficiālajam Eiropas Komisijas portālam",
+    "searchDatabase": "Meklēt datubāzē",
+    "searchDescription": "Meklēt bīstamus produktus ES Safety Gate",
+    "title": "Safety Gate portāls"
+  },
+  "resolveActions": {
+    "actionTaken": "Veiktā darbība",
+    "contactedSupplier": "Sazinājās ar piegādātāju (gaida atbildi)",
+    "contactPending": "Gaida piegādātāja atbildi",
+    "falsePositive": "Viltus pozitīvs",
+    "menuLabel": "Izšķiršanas darbības",
+    "modifiedProduct": "Produkts modificēts",
+    "noActionNeeded": "Nav nepieciešama nekāda darbība",
+    "notMyProduct": "Nav mans produkts",
+    "other": "Cits",
+    "removedFromSale": "Izņemts no pārdošanas",
+    "verifiedSafe": "Vēsturisks rezultāts: produkts pārbaudīts kā drošs"
+  },
+  "settings": {
+    "monitoring": {
+      "automatic": {
+        "description": "Produkti tiek automātiski pārbaudīti, kad tie tiek izveidoti vai atjaunināti, izmantojot tīmekļa āķus.",
+        "enabled": "Iespējots",
+        "title": "Automātiska pārbaude"
+      },
+      "manual": {
+        "description": "Veiciet drošības pārbaudes pēc pieprasījuma jebkuram produktam jūsu katalogā.",
+        "goToManualCheck": "Doties uz manuālo pārbaudi",
+        "title": "Manuālās pārbaudes"
+      },
+      "title": "Uzraudzība"
+    },
+    "navigation": {
+      "dashboard": "Informācijas panelis",
+      "manualCheck": "Manuāla pārbaude",
+      "title": "Navigācija",
+      "viewAlerts": "Skatīt brīdinājumus"
+    },
+    "subtitle": "Kontrolējiet, kā ZeroRecall uzrauga jūsu Shopify katalogu.",
+    "threshold": {
+      "currentDefault": "Pašreizējais vides noklusējums",
+      "description": "Izvēlieties, cik daudz iespējamo Safety Gate atbilstību jūsu komanda vēlas pārskatīt. Lielākajai daļai Shopify katalogu ieteicama līdzsvarota uzraudzība.",
+      "howItWorks": "Kā tas darbojas",
+      "label": "Papildu atbilstības slieksnis (%)",
+      "resetToDefault": "Atiestatīt uz noklusējumu",
+      "save": "Saglabāt",
+      "title": "Uzraudzības režīms"
+    },
+    "title": "Uzraudzības iestatījumi"
+  },
+  "settingsAdmin": {
+    "advancedMatchingSettings": "Papildu atbilstības iestatījumi",
+    "automation": {
+      "autoDraftDescription": "Automātiski atzīmēt produktus prioritārai pārskatīšanai, ja tie atbilst Safety Gate brīdinājumiem ar nopietnu risku (slieksnis >= 95%).",
+      "autoDraftTitle": "Prioritizēt nopietnus riskus",
+      "description": "Konfigurējiet prioritāru pārskatīšanu augsta riska atbilstībām.",
+      "eyebrow": "Reāllaika darbības",
+      "title": "Drošības automatizācija"
+    },
+    "automationStatus": {
+      "active": {
+        "badge": "Plāns aktīvs",
+        "description": "Sākotnējā kataloga audita pabeigta, un šim veikalam ir aktīvs uzraudzības plāns.",
+        "title": "Kataloga audits pabeigts"
+      },
+      "completedNoPlan": {
+        "badge": "Audits pabeigts",
+        "description": "Sākotnējā kataloga audita ir pabeigta. Nepārtrauktai automātiskai uzraudzībai nepieciešams aktīvs plāns.",
+        "title": "Sākotnējā kataloga audita pabeigta"
+      },
+      "failed": {
+        "badge": "Nepieciešama uzmanība",
+        "description": "Pēdējā importēšana vai audits netika pabeigts. Pirms paļaušanās uz uzraudzības statusu atkārtoti mēģiniet veikt kataloga pārklājumu.",
+        "title": "Sākotnējā kataloga auditam nepieciešama uzmanība"
+      },
+      "notStarted": {
+        "badge": "Nav verificēts",
+        "description": "Sākotnējā importēšana nav pabeigta, tāpēc kataloga pārklājums vēl nav apstiprināts.",
+        "title": "Kataloga audits nav apstiprināts"
+      },
+      "openCatalog": "Atvērt kataloga pārklājumu",
+      "scanning": {
+        "badge": "Notiek apstrāde",
+        "description": "Produkti tiek importēti un pārbaudīti. Kataloga pārklājums tiks apstiprināts pēc audita pabeigšanas.",
+        "title": "Sākotnējā kataloga audita notiek"
+      }
+    },
+    "automationStatusDescription": "Ikdienas ES Safety Gate atjauninājumi, Shopify produktu izmaiņas un audita ieraksti tiek apstrādāti automātiski. Izmantojiet šos iestatījumus tikai, lai pielāgotu pārskatīšanas apjomu un paziņojumus.",
+    "automationStatusEyebrow": "Automātiska uzraudzība",
+    "automationStatusTitle": "Safety Gate uzraudzība darbojas šim veikalam",
+    "configuration": "Konfigurācija",
+    "configurationDescription": "Saglabājiet lapu vērstu uz vienu tirgotāja lēmumu: cik stingram jābūt pārbaudītājam, salīdzinot produktus ar Safety Gate brīdinājumiem.",
+    "currentThreshold": "Pašreizējais slieksnis",
+    "currentThresholdDescription": "Zemākas vērtības uztver vairāk iespējamo atbilstību. Augstākas vērtības samazina viltus pozitīvos rezultātus.",
+    "environmentDefault": "Vides noklusējums",
+    "environmentDefaultDescription": "Izmanto, ja veikalam vēl nav saglabāts pielāgots slieksnis.",
+    "exclusions": {
+      "description": "Izslēdziet konkrētus piegādātājus vai produktu kategorijas no Safety Gate pārbaudēm, lai samazinātu viltus pozitīvos rezultātus.",
+      "eyebrow": "Filtrēšanas noteikumi",
+      "title": "Izslēgšanas noteikumi",
+      "typesDescription": "Ierakstiet produkta kategoriju vai veidu un nospiediet Enter vai komatu, lai to pievienotu.",
+      "typesPlaceholder": "Dāvanu karte, pakalpojums, ...",
+      "typesTitle": "Izslēgtie produktu veidi",
+      "vendorsDescription": "Ierakstiet piegādātāja nosaukumu un nospiediet Enter vai komatu, lai to pievienotu.",
+      "vendorsPlaceholder": "Piegādātājs A, Piegādātājs B, ...",
+      "vendorsTitle": "Izslēgtie piegādātāji"
+    },
+    "fallback": "Atkāpšanās",
+    "guidance": "Norādījumi",
+    "guidanceItems": {
+      "balancedDescription": "Ieteicams lielākajai daļai katalogu (65–70 %). Uztver iespējamos riskus, vienlaikus saglabājot zemu viltus brīdinājumu skaitu.",
+      "balancedTitle": "Līdzsvarots noklusējums",
+      "broadDescription": "Izmantojiet aptuveni 50 %, ja vēlaties uztvert vairāk iespējamo atbilstību un esat gatavs pārskatīt vairāk brīdinājumu.",
+      "broadTitle": "Plaša uzraudzība",
+      "strictDescription": "Izmantojiet 80 %+, ja jūsu katalogs ir stabils un vēlaties mazāk manuālu pārskatīšanu.",
+      "strictTitle": "Stingra atbilstība"
+    },
+    "included": {
+      "description": "Lietotne nepārtraukti uzrauga jūsu katalogu, salīdzinot ar Safety Gate brīdinājumiem, saglabā atbilstības pierādījumus un brīdina jūs, kad produkti ir jāpārskata.",
+      "evidenceDescription": "Atrisinātie un noraidītie lēmumi saglabā piezīmes, iemeslus, riska kontekstu un laika zīmogus.",
+      "evidenceTitle": "Eksportējams pierādījums",
+      "eyebrow": "Nepārtraukta uzraudzība",
+      "monitoringDescription": "Jauni Safety Gate ieraksti tiek salīdzināti ar uzraudzītajiem Shopify produktiem bez manuālas skenēšanas.",
+      "monitoringTitle": "Nepārtraukta ES uzraudzība",
+      "teamDescription": "Prioritāra pārskatīšana, piegādātāja dokumentācija un filtri palīdz jūsu komandai ātrāk pieņemt reālus lēmumus.",
+      "teamTitle": "Pārskatīšanas darbplūsma",
+      "title": "Kas tiek segts jūsu veikalā"
+    },
+    "matchingStrictness": "Atbilstības stingrība",
+    "mode": {
+      "balanced": "Līdzsvarots",
+      "broad": "Vairāk atbilstību",
+      "strict": "Mazāk atbilstību"
+    },
+    "monitoringModeEyebrow": "Uzraudzības režīms",
+    "notifications": {
+      "emailHelp": "Sākotnēji ņemts no Shopify. Varat izmantot citu adresi.",
+      "emailLabel": "Paziņojumu e-pasts",
+      "enabledDescription": "Izvēlieties, vai vēlaties saņemt steidzamus atklājumus, iknedēļas kopsavilkumu vai abus.",
+      "enabledTitle": "E-pasta drošības brīdinājumi",
+      "immediateDescription": "Nosūtiet man e-pastu, tiklīdz produkts ir jāpārskata.",
+      "immediateTitle": "Jauni atklājumi",
+      "invalidEmail": "Pirms e-pasta paziņojumu iespējošanas ievadiet derīgu e-pasta adresi.",
+      "languageLabel": "E-pasta valoda",
+      "noRecipientDescription": "E-pasta paziņojumi ir iespējoti, taču nav norādīta adrese. Ziņojumi netiks piegādāti, kamēr netiks ievadīts e-pasts.",
+      "noRecipientHeading": "Nav konfigurēts e-pasta saņēmējs",
+      "useShopifyEmail": "Izmantot veikala kontaktpersonas e-pastu ({{email}})",
+      "weeklyDescription": "Pirmdienas uzraudzības kopsavilkums: apstiprina, ja nav jaunu atklājumu, vai apkopo atvērtās lietas, kuras jāpārskata.",
+      "weeklyTitle": "Iknedēļas uzraudzības kopsavilkums"
+    },
+    "onDemand": "Pēc pieprasījuma",
+    "plans": {
+      "advancedDescription": "Pievienojiet prioritāru pārskatīšanu, piegādātāju saziņu un ES valodu darbplūsmas.",
+      "advancedTitle": "Paplašināts: automatizācija un daudzvalodu darbplūsmas",
+      "description": "Funkcijas un iespējas, kas iekļautas jūsu veikala uzraudzības plānā.",
+      "eyebrow": "Abonementa vērtība",
+      "manualDescription": "Veiciet pārbaudes pa vienam produktam un skatiet jaunāko produkta statusu.",
+      "manualTitle": "Bezmaksas: manuālas pārbaudes",
+      "monitorDescription": "Uzraugiet jaunus Safety Gate brīdinājumus, salīdzinot ar katalogu, eksportējiet CSV audita pārskatus un saglabājiet lēmumu ceļu.",
+      "monitorTitle": "Maksas: ikdienas uzraudzība un pārskati",
+      "title": "Plāna iespējas"
+    },
+    "recommendedSetup": "Ieteicamā iestatīšana",
+    "saveAll": "Saglabāt visus iestatījumus",
+    "status": {
+      "auditTrail": "Audita izsekošana",
+      "autoQuarantine": "Prioritāra pārskatīšana",
+      "dailySafetyGateUpdates": "Ikdienas Safety Gate atjauninājumi",
+      "emailDigest": "E-pasta apkopojums",
+      "off": "Izslēgts",
+      "on": "Ieslēgts",
+      "running": "Darbojas",
+      "shopifyProductUpdates": "Jauni/atjaunināti Shopify produkti"
+    },
+    "storeSetting": "Veikala iestatījums",
+    "strictnessHint": "40–60 % ir plašāka skenēšana. 70–85 % ir stingrāka un parasti rada mazāk viltus pozitīvu rezultātu.",
+    "valueDescription": "Nepārtraukta uzraudzība salīdzina atbilstošos kataloga produktus ar jaunpublicētajiem Safety Gate ierakstiem.",
+    "valueEyebrow": "Kataloga uzraudzība",
+    "valueItems": {
+      "auditDescription": "Atrisinātie un noraidītie lēmumi saglabā piezīmes, iemeslus un pārskatīšanas vēsturi eksportējamiem pārskatiem.",
+      "auditTitle": "Auditēšanai gatavi pierādījumi",
+      "dailyDescription": "Jauni Safety Gate brīdinājumi tiek pārbaudīti, salīdzinot ar uzraudzītajiem produktiem, tirgotājam neuzsākot manuālu skenēšanu.",
+      "dailyTitle": "Ikdienas kataloga uzraudzība",
+      "workflowDescription": "Tirgotāji pārskata tikai tos produktus, kuriem nepieciešams lēmums, pēc tam atrisina, noraida vai sazinās ar piegādātājiem.",
+      "workflowTitle": "Shopify-vietējā pārskatīšanas darbplūsma"
+    },
+    "valueTitle": "Kas paliek segts",
+    "workspace": "Darbvieta"
+  },
+  "status": {
+    "actionRequired": "Nepieciešama darbība",
+    "allClear": "Viss kārtībā",
+    "archived": "Arhivēts",
+    "dismissed": "Noraidīts",
+    "flagged": "atzīmēts",
+    "monitored": "Uzraudzīts",
+    "needsReview": "Nepieciešams pārskats",
+    "notChecked": "Nav pārbaudīts",
+    "protected": "Pārbaudīts",
+    "resolved": "Atrisināts",
+    "runCheck": "Veikt pārbaudi",
+    "safe": "Nav atrasta atbilstība",
+    "scanning": "Skenēšana notiek",
+    "unprotected": "Nav pārbaudīts",
+    "unsafe": "Nepieciešams pārskats",
+    "updated": "Atjaunināts"
+  },
+  "uxEnhancements": {
+    "activityTimeline": {
+      "actions": {
+        "dismiss": "Lēmums ierakstīts: noraidīts",
+        "check": "Produkts pārbaudīts",
+        "quarantine": "Produkts atzīmēts pārskatīšanai",
+        "resolve": "Lēmums ierakstīts: atrisināts"
+      },
+      "description": "Ierakstītas drošības pārbaudes, produktu lēmumi un pierādījumi, kas saglabāti audita pārskatiem.",
+      "details": {
+        "autoDrafted": "Produkts atzīmēts prioritārai pārskatīšanai.",
+        "bulkScanned": "Lielapjoma kataloga skenēšana pabeigta.",
+        "checkSafe": "Šajā pārbaudē netika atrasta atbilstība.",
+        "checkUnsafe": "Produkts ir jāpārskata. Izveidots lēmuma ieraksts.",
+        "noReason": "Nav norādīts iemesls.",
+        "reason": "Iemesls: {{reason}}"
+      },
+      "eyebrow": "Audita izsekošana",
+      "noActivity": "Vēl nav audita notikumu. Palaidiet uzraudzību, lai sāktu veidot pierādījumus.",
+      "title": "Lēmumu un pierādījumu vēsture",
+      "types": {
+        "automatic": "Sistēmas notikums",
+        "bulk": "Lielapjoma notikums",
+        "manual": "Tirgotāja notikums"
+      }
+    },
+    "alerts": {
+      "floating": {
+        "dismissSelected": "Atcelt atlasīto",
+        "resolveSelected": "Atrisināt atlasīto",
+        "selectedCount": "{{count}} atlasīts brīdinājums",
+        "selectedCount_few": "{{count}} atlasīti brīdinājumi",
+        "selectedCount_many": "{{count}} atlasīti brīdinājumi",
+        "selectedCount_one": "{{count}} atlasīts brīdinājums",
+        "selectedCount_other": "{{count}} atlasīti brīdinājumi",
+        "selectedCount_plural": "{{count}} atlasīti brīdinājumi",
+        "selectedCount_zero": "Atlasīti {{count}} brīdinājumi"
+      },
+      "quickFilters": {
+        "allAlerts": "Visi ieraksti",
+        "allAlertsDesc": "Rādīt visus drošības brīdinājumus katalogā.",
+        "highRisk": "Tikai augsts risks",
+        "highRiskDesc": "Nopietni riska līmeņi, kas prasa rīcību.",
+        "needsReview": "Nepieciešama pārskatīšana",
+        "needsReviewDesc": "Gaidošie drošības brīdinājumi.",
+        "resolved": "Atrisināts/atcelts",
+        "resolvedDesc": "Iepriekšējie brīdinājumi saglabāti auditēšanai.",
+        "title": "Ātrie filtri"
+      }
+    },
+    "complianceRing": {
+      "scoreLabel": "Notīrīt",
+      "subtitle": "Pārbaudīto produktu daļa bez atvērtiem pārskatīšanas vienumiem",
+      "title": "Uzraudzītā kataloga veselība"
+    }
+  },
+  "workspace": {
+    "all": "Visi",
+    "appLanguage": "Lietotnes valoda",
+    "apply": "Lietot filtrus",
+    "applyFilters": "Lietot filtrus",
+    "balancedHelp": "Līdzsvarota atbilstība ir ieteicamais sākumpunkts. Mainiet to tikai tad, ja vēlaties pārskatīt vairāk vai mazāk iespējamo atbilstību.",
+    "broadHelp": "Ietver vairāk iespējamo atbilstību un var prasīt vairāk manuālas pārskatīšanas.",
+    "cannotCompare": "Nevar salīdzināt",
+    "catalogGlobalAction": "Pārbaudīt {{count}} produktus visā katalogā",
+    "catalogScopeHelp": "Pārklājums ietver visus Shopify kataloga produktus, tostarp aktīvos, melnrakstus un arhivētos vienumus. Filtri maina tikai šo sarakstu, nevis pārklājumu vai uzraudzības tvērumu.",
+    "clearFilters": "Notīrīt filtrus",
+    "compare": "Salīdzināt produktus",
+    "compareProduct": "Salīdzināt produktus: {{title}}",
+    "coverageFiltersHelp": "Pārklājums un atvērtie atklājumi ir atsevišķi: mainītam produktam var būt arī atklājums, kas gaida pārskatīšanu.",
+    "coverageIncomplete": "{{count}} produktiem nepieciešama pašreizējā pārbaude",
+    "coverageScope": "Tiek rādīti {{visible}} no {{total}} kataloga produktiem.",
+    "csv": {
+      "action": "Lēmuma darbība",
+      "actor": "Ierakstījis",
+      "caseNumber": "Safety Gate lieta",
+      "decisionAt": "Lēmums pieņemts",
+      "detectedAt": "Atklāts",
+      "generatedAt": "Ģenerēts",
+      "guidance": "Pārskatīšanas norādījumi",
+      "notes": "Pārskatīšanas piezīmes",
+      "product": "Produkts",
+      "productId": "Shopify produkta ID",
+      "recordType": "Ieraksta veids",
+      "resolution": "Izšķirtspēja",
+      "risk": "Riska līmenis",
+      "shop": "Veikals",
+      "source": "Oficiālais avots",
+      "sourceRisk": "Risks oficiālajā brīdinājumā",
+      "status": "Statuss"
+    },
+    "csvGuidance": "Iespējama atbilstība. Pirms lēmuma pieņemšanas salīdziniet produkta identifikatorus un oficiālo ierakstu.",
+    "currentFindingStatus": "Pašreizējais atklājuma statuss",
+    "dateFilterTimezone": "Datumi izmanto uzraudzības laika joslu: {{timeZone}}. Lietojiet filtrus, lai atjauninātu rezultātus un eksportētu.",
+    "decisionAt": "Lēmums ierakstīts",
+    "decisionExportHelp": "Šis skats un tā CSV eksports izmanto lēmumu datumus. Tie ietver pārskatīšanas notikumus vecākiem atklājumiem, tostarp atkārtoti atvērtām lietām. Produktu nosaukumi un oficiālie avota fakti saglabā savu sākotnējo tekstu.",
+    "decisionFrom": "Lēmuma datums no",
+    "decisionLegacy": "Vēsturisks rezultāts: produkts pārbaudīts kā drošs",
+    "decisionTo": "Lēmuma datums līdz",
+    "detectedAt": "Atklājums atklāts",
+    "differentIdentifiers": "Dažādi identifikatori: {{fields}}. Pārbaudiet tos pirms lēmuma pieņemšanas.",
+    "documentedFindings": "Pašlaik atrisinātie vai atceltie atklājumi",
+    "download": "Lejupielādēt CSV",
+    "emptyHelp": "Nav reģistrētu atvērtu atklājumu. Tas neapliecina, ka jūsu produkti ir droši. Pārbaudiet kataloga pārklājumu un jaunāko uzraudzības izpildi.",
+    "eventCount": "{{count}} lēmumu notikumi",
+    "excluded": "{{count}} no {{total}} kataloga produktiem atbilst šiem noteikumiem manuālām pārbaudēm. Automātiskā uzraudzība neizmanto šos izņēmumus. Esošie atklājumi joprojām ir pieejami.",
+    "excludeHelp": "Šie noteikumi attiecas uz manuālām pārbaudēm. Pirms saglabāšanas pārbaudiet ietekmētos produktus.",
+    "exportHelp": "CSV satur visus atklājumus izvēlētajā periodā un statusā, tostarp oficiālās atsauces, pārskatīšanas piezīmes un reģistrētos lēmumu notikumus. Tas ir pārbaužu ieraksts, nevis drošības sertifikāts.",
+    "exportReady": "CSV sagatavots. Ja lejupielāde nesākās, izmantojiet šo saiti:",
+    "findingCount": "Atklājumi šajā tvērumā: {{count}}.",
+    "findingFrom": "Atklājums atklāts no",
+    "findings": "Atklājumi un pierādījumi",
+    "findingTo": "Atklājums atklāts līdz",
+    "from": "No datuma",
+    "goReview": "Pārskatīt atvērtos atklājumus",
+    "groupAction": "Veiktā darbība",
+    "groupDifferent": "Cits produkts",
+    "groupInformation": "Nepieciešama papildu informācija",
+    "history": "Lēmumu vēsture",
+    "historyLimit": "Tiek rādīti līdz {{count}} jaunākie atklājumi. Eksportējiet pilnu ierakstu visiem atklājumiem.",
+    "changed": "Mainīts kopš pēdējās pārbaudes",
+    "chooseOutcomeHelp": "Izvēlieties rezultātu, lai iespējotu lēmuma ierakstīšanu.",
+    "chooseOutcomeLink": "Izvēlēties rezultātu",
+    "lastSuccess": "Pēdējā veiksmīgā uzraudzības izpilde",
+    "matchingIdentifiers": "Atbilstošie identifikatori: {{fields}}.",
+    "matchNeedsVerification": "Iespējama atbilstība. Pirms lēmuma pieņemšanas salīdziniet fotoattēlus un identifikatorus ar oficiālo ierakstu.",
+    "matchNotConfirmed": "Atbilstība nav apstiprināta pēc pierādījumu pārskatīšanas",
+    "missingIdentifiers": "Trūkst dažu identifikatoru. Salīdziniet pieejamos fotoattēlus un jautājiet savam piegādātājam par modeli, svītrkodu un partiju.",
+    "monitoring": {
+      "enabled": "Iespējots — ikdienas pārbaudes",
+      "failed": "Pēdējā automātiskā pārbaude neizdevās",
+      "paused": "Apturēts — nav pašreizējā uzraudzības plāna",
+      "preview": "Izstrādes priekšskatījums — norēķini apieti",
+      "processing": "Pārbaude rindā vai notiek",
+      "unknown": "Uzraudzības darbība nav apstiprināta",
+      "unverified": "Apturēts — abonementu nevarēja verificēt"
+    },
+    "monitoringLabel": "Automātiska uzraudzība",
+    "monitoringUnknownHelp": "Nav pieejama veiksmīga uzraudzības darbība, lai apstiprinātu neseno aktivitāti. Atsvaidziniet, lai pārbaudītu vēlreiz.",
+    "neverRun": "Nav reģistrēta pabeigta uzraudzības darbība",
+    "noCurrentResult": "Nepieciešams pašreizējais rezultāts",
+    "noDecisions": "Lēmumi vēl nav reģistrēti. Atveriet atradumu, salīdziniet produktus un reģistrējiet pārskatīto.",
+    "noFilteredDecisions": "Neviens lēmuma notikums neatbilst šiem filtriem. Notīriet filtrus, lai redzētu pilnu vēsturi.",
+    "noFilteredFindings": "Neviens atradums neatbilst šiem filtriem. Notīriet filtrus, lai redzētu pilnu sarakstu.",
+    "noMatch": "Nav atrasta atbilstība",
+    "noMatchAtCheck": "Šajā pārbaudē netika atrasta atbilstība.",
+    "notes": "Pārskatīšanas piezīmes",
+    "notificationLanguage": "E-pasta valoda",
+    "notRecorded": "Nav pašreizējā pārskatīšanas rezultāta",
+    "oldest": "Atvērts {{count}} dienas",
+    "onboarding": "Importēt katalogu → pārbaudīt Safety Gate ierakstus → pārskatīt rezultātus",
+    "outcome": "Izpildījums",
+    "outcomeHelp": {
+      "contacted_supplier": "Atradums paliek atvērts, kamēr gaidāt piegādātāju.",
+      "false_positive": "Izmantojiet, ja pierādījumi liecina, ka brīdinājums nav piemērojams. Atradums tiks noraidīts.",
+      "match_not_confirmed": "Izmantojiet, ja pārskatītie pierādījumi neapstiprina atbilstību. Atradums tiks atrisināts.",
+      "modified_product": "Vispirms atjauniniet produktu Shopify. Šī rezultāta reģistrēšana nemaina produktu; atradums tiks atrisināts.",
+      "not_my_product": "Izmantojiet, ja brīdinājums attiecas uz citu produktu. Atradums tiks noraidīts.",
+      "other": "Aprakstiet rezultātu nepieciešamajā piezīmē. Atradums tiks atrisināts.",
+      "removed_from_sale": "Vispirms noņemiet produktu no pārdošanas Shopify. Šī rezultāta reģistrēšana nemaina produktu; atradums tiks atrisināts.",
+      "verified_safe": "Šis ir vēsturisks rezultāts."
+    },
+    "outcomeLabels": {
+      "contactedSupplier": "Gaida piegādātāju",
+      "falsePositive": "Viltus pozitīvs",
+      "modifiedProduct": "Modificēts produkts",
+      "notMyProduct": "Nav mans produkts",
+      "other": "Cits",
+      "removedFromSale": "Izņemts no pārdošanas",
+      "verifiedSafe": "Vēsturisks: verificēts drošs"
+    },
+    "possibleMatch": "Iespējama atbilstība",
+    "possibleMatchAtCheck": "Šī pārbaude atklāja iespējamu Safety Gate atbilstību.",
+    "print": "Drukāt / saglabāt PDF",
+    "priority": "Pārskatīšanas prioritāte",
+    "priorityHelp": "Vispirms lēmumi, tad oficiālā brīdinājuma nopietnība un vecākie atradumi. Pēc tam seko preces, kas gaida piegādātājus.",
+    "productStatus": "Shopify statuss",
+    "productStatusActive": "Aktīvs",
+    "productStatusAll": "Visi Shopify statusi",
+    "productStatusArchived": "Arhivēts",
+    "productStatusDraft": "Melnraksts",
+    "productStatusUnknown": "Nezināms",
+    "recommended": "Ieteicamais iestatījums",
+    "referenceMissing": "Oficiālais lietas numurs nav pieejams",
+    "remaining": "Nepārbaudīts vai mainīts",
+    "reopened": "Atkārtoti atvērts pārskatīšanai",
+    "reportEmpty": "Neviens atradums neatbilst šiem filtriem.",
+    "reportTitle": "Pārbaudes un lēmumu ziņojums",
+    "resultHelp": "Rezultāta reģistrēšana dokumentē jūsu pārskatīšanu audita takā un nemodificē Shopify produktu.",
+    "reviewNext": "Pārskatīt nākamo atbilstību: {{title}}",
+    "reviewPrompt": "Salīdziniet pierādījumus, izvēlieties rezultātu un reģistrējiet savas piezīmes.",
+    "riskLabels": {
+      "electric": "Elektriskais šoks",
+      "fire": "Ugunsgrēks",
+      "health": "Veselības risks",
+      "high": "Augsts risks",
+      "chemical": "Ķīmisks",
+      "choking": "Aizrīšanās",
+      "injuries": "Traumas",
+      "low": "Zems risks",
+      "medium": "Vidējs risks",
+      "serious": "Nopietns risks",
+      "unknown": "Risks Safety Gate brīdinājumā"
+    },
+    "runScope": "Produktu pārbaudes: {{products}} · Apsvērtie Safety Gate ieraksti: {{records}} · Jauni atradumi: {{findings}}",
+    "saved": "Iestatījumi saglabāti.",
+    "saveChanges": "Saglabāt izmaiņas",
+    "scope": "Atradumi no {{from}} līdz {{to}}",
+    "scoreDetails": "Līdzības detaļas",
+    "scoreHelp": "Šie ir līdzības rādītāji, ko izmanto pārskatīšanas prioritātes noteikšanai, nevis varbūtība, ka jūsu produkts ir bīstams.",
+    "settingsAdvanced": "Papildu atbilstība un izņēmumi",
+    "shop": "Veikals",
+    "showMore": "Rādīt vairāk produktu",
+    "scheduleHelp": "Jauni Safety Gate brīdinājumi tiek pārbaudīti, kamēr uzraudzības plāns ir aktīvs. Nākamās pabeigtās pārbaudes laiks ir atkarīgs no rindas.",
+    "sourceMissing": "Oficiālā ieraksta saite nav pieejama šim saglabātajam atradumam.",
+    "sourceRisk": "Risks oficiālajā brīdinājumā (oriģinālais ES ieraksts)",
+    "status": "Atraduma statuss",
+    "strictHelp": "Parāda mazāk iespējamu atbilstību un var palaist garām mazāk acīmredzamas līdzības.",
+    "to": "Līdz datumam",
+    "unconfirmedIdentifiers": "Pieejamie kataloga identifikatori neapstiprina šo atbilstību. Salīdziniet iepakojumu un jautājiet piegādātājam par trūkstošo modeli, svītrkodu un partiju.",
+    "unchecked": "Vēl nav pārbaudīts",
+    "unsaved": "Jums ir nesaglabātas izmaiņas.",
+    "verifyScope": "Kataloga rezultāti attiecas uz pārbaudīto produkta versiju. Mainītiem produktiem nepieciešama jauna pārbaude.",
+    "viewRemainingProducts": "Skatīt {{count}} produktus, kuriem nepieciešama pārbaude",
+    "viewShopify": "Atvērt Shopify produktu",
+    "waiting": "Gaida piegādātāju",
+    "when": "Reģistrēts",
+    "who": "Ierakstījis",
+    "whyMatch": "Kāpēc tas varētu atbilst"
+  }
+}

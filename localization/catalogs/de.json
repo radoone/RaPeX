@@ -270,7 +270,11 @@
       "reportDownload": "Alle Funde herunterladen (CSV)",
       "reportBody": "Enthält alle Produkte mit möglichen Übereinstimmungen. Einmalige Prüfung. Der private Link ist 30 Tage gültig.",
       "reportLoading": "Vollständiger Bericht wird vorbereitet…",
-      "reportError": "Bericht nicht verfügbar oder Link abgelaufen. Erneut versuchen oder info@zerorecall.online kontaktieren."
+      "reportError": "Bericht nicht verfügbar oder Link abgelaufen. Erneut versuchen oder info@zerorecall.online kontaktieren.",
+      "detailsSummary": "Was genau prüfen wir beim kostenlosen Scan?",
+      "detailsStep1": "<strong>1. Öffentlicher Shopify-Katalog:</strong> Wir lesen öffentlich zugängliche Titel, Beschreibungen, Marken, Kategorien und Produktfotos aus Ihrem öffentlichen Shop (ohne Admin-Zugriff).",
+      "detailsStep2": "<strong>2. Text- und Bildabgleich mit Safety Gate:</strong> Text und Bilder werden in Suchvektoren umgewandelt und mit der gesamten EU-Safety-Gate-Datenbank (vormals RAPEX) abgeglichen, auch bei abweichenden Handelsnamen.",
+      "detailsStep3": "<strong>3. E-Mail-Übersicht und CSV-Export:</strong> Nach Abschluss erhalten Sie per E-Mail eine Übersicht möglicher Treffer mit Fallnummern, Links zu offiziellen EU-Einträgen und einem CSV-Download."
     },
     "quiet": {
       "eyebrow": "MEHR SORGENFREIHEIT",

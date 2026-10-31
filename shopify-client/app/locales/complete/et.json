@@ -1,0 +1,1406 @@
+{
+  "actions": {
+    "auditReport": "Auditiaruanne",
+    "clear": "Tühjenda",
+    "dashboard": "Armatuurlaud",
+    "downloadAuditReport": "Laadi auditiaruanne alla",
+    "checkAll": "Kontrolli kõiki tooteid",
+    "checkAllProducts": "Kontrolli kõiki {{count}} toodet",
+    "checking": "Kontrollin...",
+    "checkNewSafetyGateAlerts": "Kontrolli uusi Safety Gate'i hoiatusi",
+    "checkOneProduct": "Kontrolli ühte toodet",
+    "checkSelectedProduct": "Kontrolli valitud toodet",
+    "checkUnchecked": "Kontrolli {{count}} kontrollimata toodet",
+    "manualCheck": "Kontrolli toodet",
+    "next": "Järgmine",
+    "openFirstMatch": "Ava esimene vaste",
+    "previous": "Eelmine",
+    "protectRemainingProducts": "Kontrolli {{count}} ülejäänud toodet",
+    "reactivate": "Aktiveeri uuesti",
+    "recordDecision": "Salvesta otsus",
+    "refreshCoverage": "Värskenda kataloogi katvust",
+    "resolve": "Lahenda",
+    "retry": "Proovi uuesti",
+    "reviewActiveProducts": "Vaata aktiivseid tooteid üle",
+    "reviewAlerts": "Vaata hoiatusi üle",
+    "reviewDecision": "Võrdle tooteid",
+    "reviewMultipleMatches": "Vaata üle {{count}} vastet",
+    "reviewOneMatch": "Vaata üle 1 vaste",
+    "reviewProductsNeedingAction": "Vaata üle {{count}} toode, mis vajab tegevust",
+    "reviewProductsNeedingAction_few": "Vaata üle {{count}} toodet, mis vajavad tegevust",
+    "reviewProductsNeedingAction_many": "Vaata üle {{count}} toodet, mis vajavad tegevust",
+    "reviewProductsNeedingAction_one": "Vaata üle {{count}} toode, mis vajab tegevust",
+    "reviewProductsNeedingAction_other": "Vaata üle {{count}} toodet, mis vajavad tegevust",
+    "reviewProductsNeedingAction_plural": "Vaata üle {{count}} toodet, mis vajavad tegevust",
+    "search": "Otsi",
+    "settings": "Seaded",
+    "tryAgain": "Proovi uuesti",
+    "view": "Vaata",
+    "viewAlerts": "Vaata hoiatusi",
+    "viewDetails": "Vaata üksikasju",
+    "viewEvidence": "Vaata otsuste ajalugu"
+  },
+  "alerts": {
+    "admin": {
+      "actionNeeded": "Vajalik tegevus",
+      "actionNeededDescription": "Vaadake vasted üle, lükake tagasi valepositiivsed tulemused või lahendage kinnitatud riskid, et hoiatuste järjekord oleks hallatav.",
+      "actionNeededTitle": "{{count}} aktiivne hoiatus vajab endiselt otsust",
+      "actionNeededTitle_few": "{{count}} aktiivset hoiatust vajavad endiselt otsust",
+      "actionNeededTitle_many": "{{count}} aktiivset hoiatust vajavad endiselt otsust",
+      "actionNeededTitle_one": "{{count}} aktiivne hoiatus vajab endiselt otsust",
+      "actionNeededTitle_other": "{{count}} aktiivset hoiatust vajavad endiselt otsust",
+      "actionNeededTitle_plural": "{{count}} aktiivset hoiatust vajavad endiselt otsust",
+      "criticalBannerDescription": "{{count}} aktiivne vaste on Safety Gate'is märgitud kõrge või tõsise riskiga. Lahendage need vasted esimesena.",
+      "criticalBannerDescription_few": "{{count}} aktiivset vastet on Safety Gate'is märgitud kõrge või tõsise riskiga. Lahendage need vasted esimesena.",
+      "criticalBannerDescription_many": "{{count}} aktiivset vastet on Safety Gate'is märgitud kõrge või tõsise riskiga. Lahendage need vasted esimesena.",
+      "criticalBannerDescription_one": "{{count}} aktiivne vaste on Safety Gate'is märgitud kõrge või tõsise riskiga. Lahendage need vasted esimesena.",
+      "criticalBannerDescription_other": "{{count}} aktiivset vastet on Safety Gate'is märgitud kõrge või tõsise riskiga. Lahendage need vasted esimesena.",
+      "criticalBannerDescription_plural": "{{count}} aktiivset vastet on Safety Gate'is märgitud kõrge või tõsise riskiga. Lahendage need vasted esimesena.",
+      "criticalBannerTitle": "{{count}} kõrge riskiga vaste vajab ülevaatamist",
+      "criticalBannerTitle_few": "{{count}} kõrge riskiga vastet vajavad ülevaatamist",
+      "criticalBannerTitle_many": "{{count}} kõrge riskiga vastet vajavad ülevaatamist",
+      "criticalBannerTitle_one": "{{count}} kõrge riskiga vaste vajab ülevaatamist",
+      "criticalBannerTitle_other": "{{count}} kõrge riskiga vastet vajavad ülevaatamist",
+      "criticalBannerTitle_plural": "{{count}} kõrge riskiga vastet vajavad ülevaatamist",
+      "queue": "Tooteotsuste järjekord",
+      "queueDescription": "Kinnitage tõenäolised vasted, lükake tagasi valepositiivsed tulemused või registreerige, milliseid meetmeid võeti.",
+      "warningBannerDescription": "Kasutage seda järjekorda ainult tegelike otsuste jaoks: lahendage kinnitatud riskid ja lükake valepositiivsed tulemused kiiresti tagasi.",
+      "warningBannerTitle": "{{count}} aktiivne hoiatus vajab endiselt ülevaatamist",
+      "warningBannerTitle_few": "{{count}} aktiivset hoiatust vajavad endiselt ülevaatamist",
+      "warningBannerTitle_many": "{{count}} aktiivset hoiatust vajavad endiselt ülevaatamist",
+      "warningBannerTitle_one": "{{count}} aktiivne hoiatus vajab endiselt ülevaatamist",
+      "warningBannerTitle_other": "{{count}} aktiivset hoiatust vajavad endiselt ülevaatamist",
+      "warningBannerTitle_plural": "{{count}} aktiivset hoiatust vajavad endiselt ülevaatamist"
+    },
+    "breadcrumbs": {
+      "current": "Ülevaatamise järjekord",
+      "dashboard": "Armatuurlaud"
+    },
+    "checklist": {
+      "items": {
+        "0": "Prioriseeri aktiivsed hoiatused",
+        "1": "Dokumenteeri parandusmeetmed",
+        "2": "Kontrolli enne tagasilükkamist"
+      },
+      "title": "Reageerimise kontrollnimekiri"
+    },
+    "meta": {
+      "active": "{{count}} ülevaatamiseks",
+      "total": "{{count}} kokku"
+    },
+    "metrics": {
+      "activeHeading": "Aktiivsed hoiatused",
+      "archived": "Arhiveeritud",
+      "dismissedDescription": "Hoidke märkmeid auditi jaoks",
+      "dismissedDescriptionZero": "Tagasilükatud hoiatusi veel pole",
+      "dismissedHeading": "Tagasilükatud",
+      "resolutionHeading": "Lahendamise määr",
+      "resolved": "{{count}} lahendatud",
+      "resolvedAndDismissed": "{{resolved}} lahendatud • {{dismissed}} tagasi lükatud",
+      "totalRecorded": "{{count}} kokku salvestatud"
+    },
+    "pagination": {
+      "next": "Järgmine",
+      "previous": "Eelmine"
+    },
+    "subtitle": "Vaadake üle tooted, mis vajavad otsust.",
+    "table": {
+      "accessibilityLabel": "Ohutusteavituste tabel",
+      "empty": "Filtreid vastavaid teavitusi ei leitud",
+      "emptyAllClearBody": "Praegu pole ühtegi avatud kaupmehe otsust. Igapäevane jälgimine jätkub ja suletud otsused jäävad auditi logisse.",
+      "emptyAllClearTitle": "Kõik aktiivsed tooteülevaatused on käsitletud",
+      "emptyFilteredBody": "Kohandage filtreid või otsige teist toodet. Teie aktiivne järjekord võib siiski olla tühi.",
+      "emptyFilteredTitle": "Ülevaatuse üksused ei vasta nendele filtritele",
+      "headers": {
+        "actions": "Tegevused",
+        "detected": "Tuvastatud",
+        "product": "Toode",
+        "risk": "Risk",
+        "status": "Olek"
+      },
+      "order": "Järjekord",
+      "orderOptions": {
+        "asc": "Vanimad ees",
+        "desc": "Uuemad ees"
+      },
+      "reviewProduct": "Vaata üle otsus toote {{title}} kohta",
+      "searchLabel": "Otsi teavitusi",
+      "searchPlaceholder": "Otsi tootenime järgi...",
+      "selectAll": "Vali kõik nähtavad leiud",
+      "selectedCount": "{{count}} valitud",
+      "selectProduct": "Vali leid toote {{title}} kohta",
+      "similarityTooltip": "Sarnasuse skoor: {{score}}%",
+      "sort": "Sorteeri",
+      "sortBy": "Sorteeri",
+      "sortOptions": {
+        "created": "Tuvastamise kuupäev",
+        "name": "Toote nimi",
+        "risk": "Riski tase"
+      },
+      "tabs": {
+        "active": "Vajab ülevaatamist",
+        "all": "Kõik",
+        "dismissed": "Tagasilükatud",
+        "resolved": "Lahendatud"
+      },
+      "thumbnailLabel": "Toote {{title}} pisipilt",
+      "viewProduct": "Vaata salvestatud leidu toote {{title}} kohta"
+    },
+    "title": "Ülevaatuse järjekord",
+    "toasts": {
+      "updated": "Teavitus uuendatud"
+    }
+  },
+  "analysis": {
+    "alertImagesUsed": "Võrreldud teavituste pilte: {{count}}",
+    "alertNumber": "Teavitus {{number}}",
+    "audit": {
+      "existingNotes": "Auditi märkused",
+      "noteLabel": "Auditi märkus",
+      "notePlaceholder": "Lisage, mida kontrollisite, tarnija tõendid või miks see tagasi lükati."
+    },
+    "candidateAlerts": "Kandidaatteavitused: {{count}}",
+    "decisionContextDesc": "Otsuse salvestamine dokumenteerib, et see ohutusvastavus on üle vaadatud ja säilitab teie auditi logi. See ei muuda automaatselt teie Shopify toodet ega eemalda seda teie poest.",
+    "decisionContextTitle": "Vastavusotsuste salvestamine",
+    "decisionRecorded": "Otsus salvestatud",
+    "editInShopify": "Muuda toodet Shopifys",
+    "enlargedSafetyAlert": "Suurendatud ohutusteavituse pilt",
+    "fields": {
+      "accessibilityLabel": "Teavituse vastavuse üksikasjade tabel",
+      "alertDate": "Teavituse kuupäev",
+      "brand": "Bränd",
+      "category": "Kategooria",
+      "field": "Väli",
+      "model": "Mudel",
+      "notifyingCountry": "Teavitav riik",
+      "origin": "Päritolu",
+      "productDescription": "Toote kirjeldus",
+      "productName": "Toote nimi",
+      "value": "Väärtus"
+    },
+    "focus": {
+      "criticalLead": "Sellel tootel on suure usaldusväärsusega vaste. Salvestage otsus alles pärast ülevaatamist.",
+      "criticalStepCompare": "Võrrelge oma toote fotot alloleva esimese Safety Gate'i vastega.",
+      "criticalStepDecide": "Valige tulemus menüüst „Salvesta otsus“ oma ülevaatuse põhjal.",
+      "criticalStepDocument": "Lisage sisekaemused jälgitavuse ja tarnija järelkontrolli jaoks.",
+      "criticalTitle": "Vajalik tegevus kohe",
+      "recordedOutcome": "Salvestatud tulemus: {{outcome}}",
+      "reviewedLead": "See teavitus ei ole aktiivne. Hoidke kirjed auditite jaoks selged.",
+      "reviewedStepAudit": "Kontrollige valitud lahendust ja märkmeid.",
+      "reviewedStepReactivate": "Aktiveerige uuesti ainult siis, kui ilmneb uus toote tõend.",
+      "reviewedTitle": "Ülevaatus juba lõpetatud",
+      "safeLead": "Praegune tulemus on ohutu. Jätkake tooteuuenduste jälgimist.",
+      "safeStepClose": "Sulgege see detail ja jätkake teiste aktiivsete teavitustega.",
+      "safeStepMonitor": "Hoidke see toode automaatses jälgimises.",
+      "safeStepRecheck": "Käivitage uus kontroll, kui pildid, pakend või tarnija muutuvad.",
+      "safeTitle": "Kiiret tegutsemist pole vaja"
+    },
+    "hazardType": "Ohu tüüp",
+    "checkedAt": "Kontrollitud: {{date}}",
+    "imageDominated": "See vaste hinnati pildi esikohale seadmisega, nii et visuaalne pakendi sarnasus kaalus üles teksti mittevastavuse.",
+    "imageMatch": "Pildi vaste",
+    "imageMatchShort": "{{count}}% pilt",
+    "legalProvision": "Õiguslik säte",
+    "matchesHint": "Alustage alloleva ülemise vastavuskaardiga ja kinnitage esmalt visuaalne pakend, seejärel mudeli ja brändi üksikasjad.",
+    "merchantRecommendation": {
+      "active": "Võrrelge toote ja Safety Gate'i pilte, kinnitage bränd või mudel, seejärel salvestage tegevus, mida teie pood ette võtab.",
+      "reviewed": "See leid on suletud. Enne uuesti aktiveerimist kontrollige salvestatud tulemust ja tõendeid.",
+      "safe": "Praegu ei ole vaja poe tegevust. Kontrollige uuesti, kui toode, pakend, pildid või tarnija muutuvad."
+    },
+    "modalAccessibilityLabel": "Safety Gate'i vastavuse üksikasjad toote {{title}} kohta",
+    "modalHeading": "Vaata üle Safety Gate'i vaste",
+    "noIssuesFound": "Ohutusprobleeme ei leitud",
+    "openProductImage": "Ava pilt toote {{title}} kohta",
+    "overallMatch": "Üldine vaste",
+    "overallMatchShort": "{{count}}% üldine",
+    "potentialRisk": "Võimalik ohutusrisk",
+    "primaryRiskFocus": "Peamine riski fookus: {{category}} tasemel {{level}}. Kinnita see enne otsustamist.",
+    "productImagesUsed": "Tootepildid: {{used}} / {{provided}}",
+    "reviewLayout": {
+      "actionNeeded": "Vajalik tegevus",
+      "compareHeading": "Võrdle tooteid",
+      "compareHint": "Enne otsustamist kontrolli fotosid, brändi, mudelit ja kategooriat.",
+      "decisionHeading": "Salvesta oma otsus",
+      "decisionPrompt": "Vali ülevaatuse tulemus. Saate lisada märkuse selle kohta, mida kontrollisite.",
+      "fullEvidence": "Täielik Safety Gate'i tõendusmaterjal ({{count}})",
+      "groupHelp": {
+        "action": "Sulge leid pärast toote müügilt eemaldamist või Shopify's värskendamist.",
+        "different": "Sulge või lükka leid tagasi, sest teie toode on erinev mudel, bränd või partii.",
+        "information": "Hoia leid avatuna, kuni küsite oma tarnijalt partii, mudeli või ohutusdokumente.",
+        "other": "Salvesta muu tulemus koos nõutava selgitava märkusega oma auditi jälgimiseks."
+      },
+      "chooseOutcome": "Vali tulemus",
+      "identifiers": {
+        "barcode": "Vöötkood (GTIN/EAN)",
+        "batch": "Partii / Loti number",
+        "brand": "Bränd",
+        "field": "Identifikaator",
+        "match": "Vaste",
+        "mismatch": "Lahknevus",
+        "model": "Mudel",
+        "notSpecified": "määramata",
+        "result": "Võrdlus",
+        "safetyGate": "Safety Gate'i hoiatus",
+        "yourProduct": "Teie Shopify toode"
+      },
+      "identifiersHeading": "Identifikaatorite kõrvuti võrdlus",
+      "languageDiffNote": "Rakenduse liidese keel ({{appLang}}) ja e-posti teavituste keel ({{emailLang}}) on määratud eraldi.",
+      "noImage": "Pilt puudub",
+      "noteLabel": "Mida te kontrollisite? (valikuline)",
+      "noteRequiredLabel": "Mida te kontrollisite? (nõutav)",
+      "otherNoteRequired": "Lisage märkus muu tulemuse selgitamiseks.",
+      "outcomeLabel": "Ülevaatuse tulemus",
+      "possibleMatch": "Võimalik Safety Gate'i vaste",
+      "readyToRecord": "Valmis salvestama",
+      "reviewPointsHeading": "Ülevaatamist vajavad punktid",
+      "unnamedRecord": "Safety Gate'i kirje"
+    },
+    "riskDescription": "Riski kirjeldus",
+    "riskLevel": "Riski tase",
+    "riskSeverity": "Riski tõsidus",
+    "safetyGateMatches": "Safety Gate'i vasted",
+    "scoreHelper": "Üldine vaste on lõplik ülevaatuse tulemus. Pildi vaste peegeldab ainult pakendi sarnasust.",
+    "sections": {
+      "whatHappened": "Mis juhtus?",
+      "whatHappenedReviewed": "See vaste on juba üle vaadatud ja salvestatud.",
+      "whatHappenedRisk": "See Shopify toode näeb välja nagu toode, millest on juba Safety Gate'is teatatud.",
+      "whatHappenedSafe": "Viimane kontroll ei leidnud tõenäolist Safety Gate'i vastet.",
+      "whatToDo": "Mida ma peaksin tegema?",
+      "whyMatched": "Miks see sobis"
+    },
+    "seriousRisk": "Tõsine {{category}} risk",
+    "summary": {
+      "confidence": "Usaldusväärsus",
+      "confidenceUnknown": "Usaldusväärsus teadmata",
+      "decisionRecorded": "Otsus salvestatud",
+      "decisionRequired": "Otsus on vajalik",
+      "highConfidence": "Kõrge usaldusväärsus",
+      "likelyMatch": "Tõenäoline vaste",
+      "likelySafetyGateMatch": "Tõenäoline Safety Gate'i vaste",
+      "matchType": "Vaste tüüp",
+      "nextStep": "Järgmine samm",
+      "noLikelyMatch": "Tõenäolist vastet ei leitud",
+      "overallMatch": "Üldine tulemus",
+      "reviewRecommended": "Ülevaatus soovitatav"
+    },
+    "supplierFollowUp": {
+      "copy": "Kopeeri tarnija järelkontroll",
+      "template": "Tere, me vaatame üle toote {{product}}, sest see võib sobida Safety Gate'i hoiatusega {{alert}} (risk: {{risk}}). Palun kinnitage, kas tegemist on sama mudeli/partiiga, esitage tooteohutuse dokumendid ja selgitage kõiki erinevusi. Vaste põhjus: {{reason}}"
+    },
+    "technicalDetails": {
+      "description": "Tulemused ja otsingute arvud on siin sügavama ülevaatuse jaoks. Alustage tootefotode, brändi, mudeli ja ülaltoodud soovitatud tegevusega.",
+      "hide": "Peida üksikasjad",
+      "show": "Näita üksikasju",
+      "title": "Tehnilised vaste üksikasjad"
+    },
+    "textOnly": "Ainult teksti kontroll",
+    "viewOnSafetyGate": "Vaata Safety Gate'is",
+    "whyThisMatched": "Miks see sobis",
+    "withImage": "Kontrollitud piltidega",
+    "yourProduct": "Teie Shopify toode"
+  },
+  "auditReport": {
+    "decision": "Otsus",
+    "description": "Enne CSV eksportimist oma meeskonnale, tarnijale või auditiks vaadake läbi kogu kirje.",
+    "detected": "Tuvastatud",
+    "documented": "Otsused dokumenteeritud",
+    "download": "Laadi alla CSV",
+    "empty": "Tooteohutuse leide pole veel salvestatud.",
+    "eyebrow": "Ekspordiks valmis kirje",
+    "generated": "Genereeritud {{date}}",
+    "heading": "Leidud ja otsused",
+    "needsReview": "Vajab ülevaatamist",
+    "notRecorded": "Salvestamata",
+    "open": "Ava auditiaruanne",
+    "product": "Toode",
+    "risk": "Riski tõsidus",
+    "status": "Olek",
+    "summaryLabel": "Auditiaruande kokkuvõte",
+    "tableLabel": "Ohutusauditi aruanne",
+    "title": "Ohutusauditi aruanne",
+    "total": "Salvestatud leiud",
+    "viewHistory": "Vaata auditi ajalugu"
+  },
+  "billing": {
+    "freeScanAvailableDescription": "Teil on saadaval 1 tasuta kataloogi skaneerimine. Käivitage oma esimene audit, et kontrollida oma poe tooteid EL-i Safety Gate'i andmebaasi ohtlike mitte-toidukaupade osas.",
+    "freeScanAvailableHeading": "Tasuta esialgne kataloogi skaneerimine aktiivne",
+    "managePlanButton": "Halda tellimust",
+    "planActiveDescription": "Jälgimine on selle Shopify poe jaoks lubatud. Vaadake üle viimane käivitus ja kõik tooted, mis vajavad tähelepanu.",
+    "planEyebrow": "Plaan ja katvus",
+    "planFreeAvailableDescription": "Saadaval on üks tasuta esialgne Safety Gate'i kataloogi skaneerimine.",
+    "planFreeUsedDescription": "Teie tasuta esialgne skaneerimine on lõppenud. Valige plaan, et alustada pidevat jälgimist ja jätkata auditi jälje eksportimist.",
+    "planTitle": "Tellimus ja ohutusjälgimine",
+    "pricingUnavailable": "Shopify hinnakujundus pole selle rakenduse jaoks konfigureeritud.",
+    "statusActivePro": "ZeroRecall Pro (aktiivne)",
+    "statusDevelopmentBypass": "Arenduse eelvaade (arveldamine mööda hiilitud)",
+    "statusFreeAvailable": "Tasuta esialgne skaneerimine",
+    "statusFreeUsed": "Tasuta skaneerimine kasutatud",
+    "statusLabel": "Praegune plaan",
+    "statusUnverified": "Tellimust ei saanud kontrollida",
+    "upgradePlanButton": "Uuenda Pro-le",
+    "upgradeRequiredDescription": "Teie tasuta esialgne skaneerimine on lõppenud. Valige Shopify plaan, et jälgida uusi Safety Gate'i hoiatusi ja kontrollida muudetud tooteid.",
+    "upgradeRequiredHeading": "Jätka Safety Gate'i jälgimist",
+    "verificationError": "Uued skaneerimised on peatatud, kuni Shopify arveldust saab kontrollida. Teie olemasolevad leiud ja otsused jäävad kättesaadavaks."
+  },
+  "billingRedirect": {
+    "opening": "Avatakse Shopify hinnaplaanid...",
+    "openPricingPlans": "Ava hinnaplaanid"
+  },
+  "common": {
+    "all": "Kõik",
+    "cancel": "Tühista",
+    "close": "Sulge",
+    "confirm": "Kinnita",
+    "language": "Keel",
+    "loading": "Laadimine...",
+    "unknown": "Tundmatu"
+  },
+  "dashboard": {
+    "activeAlertsBanner": {
+      "content": "Lahendage {{count}} aktiivne hoiatus, et hoida mõjutatud tooted teie poes saadaval.",
+      "content_few": "Lahendage {{count}} aktiivset hoiatust, et hoida mõjutatud tooted teie poes saadaval.",
+      "content_many": "Lahendage {{count}} aktiivset hoiatust, et hoida mõjutatud tooted teie poes saadaval.",
+      "content_one": "Lahendage {{count}} aktiivne hoiatus, et hoida mõjutatud tooted teie poes saadaval.",
+      "content_other": "Lahendage {{count}} aktiivset hoiatust, et hoida mõjutatud tooted teie poes saadaval.",
+      "content_plural": "Lahendage {{count}} aktiivset hoiatust, et hoida mõjutatud tooted teie poes saadaval.",
+      "manualCheckAction": "Käsitsi kontroll",
+      "reviewAction": "Vaata esimest hoiatust",
+      "title": "Aktiivsed ohutushoiatused vajavad tähelepanu"
+    },
+    "admin": {
+      "actionNeeded": "Vajalik tegevus",
+      "actionNeededDescription": "Vaadake esmalt märgistatud tooted üle, et saaksite otsustada, kas jätta need müüki, tühistada vaste või lahendada hoiatus.",
+      "actionNeededTitle": "{{count}} aktiivne hoiatus vajab ülevaatamist",
+      "actionNeededTitle_few": "{{count}} aktiivset hoiatust vajavad ülevaatamist",
+      "actionNeededTitle_many": "{{count}} aktiivset hoiatust vajavad ülevaatamist",
+      "actionNeededTitle_one": "{{count}} aktiivne hoiatus vajab ülevaatamist",
+      "actionNeededTitle_other": "{{count}} aktiivset hoiatust vajavad ülevaatamist",
+      "actionNeededTitle_plural": "{{count}} aktiivset hoiatust vajavad ülevaatamist",
+      "activeAlertsDescription": "Tooted, mis vajavad endiselt kaupmehe otsust, enne kui järjekord on tühi.",
+      "auditHistoryKept": "Auditi ajalugu säilitatud",
+      "auditReady": "Aruanne valmis",
+      "auditRecordsDescription": "Lahendatud ja tagasi lükatud otsused koos põhjuste ja sisemiste märkustega.",
+      "auditRecordsTitle": "Auditi kirjed",
+      "auditReport": "Auditiaruanne",
+      "automaticChecks": "Automaatsed kontrollid",
+      "bulkCheckAllSummary": "See käivitab kõigi {{count}} toote täieliku läbivaatuse.",
+      "bulkCheckDescription": "Skaneerige esmalt kontrollimata tooted või kaasake kogu kataloog, kui soovite värsket läbivaatust.",
+      "bulkCheckSummary": "Hulgikontrolli kokkuvõte",
+      "bulkCheckSummaryDescription": "Hoidke see kokkuvõte kompaktne, et kaupmehed saaksid tulemusi kinnitada ilma teist ekraani avamata.",
+      "bulkCheckTitle": "Kataloogi hulgikontroll",
+      "bulkCheckUncheckedSummary": "See kontrollib {{count}} ülejäänud toodet ja jätab vahele {{skip}} juba üle vaadatud üksust.",
+      "catalogCoverageDescription": "Kataloogi osa, mis on juba Safety Gate'i vastu kontrollitud.",
+      "catalogCoverageTitle": "Kataloogi katvus",
+      "coverage": "Katvus",
+      "coveragePercent": "Kataloog salvestatud kontrollidega",
+      "criticalBannerDescription": "{{count}} aktiivne vaste on märgitud kõrge või tõsise riskiga. Prioriseerige need tooted enne uue müügi jätkamist.",
+      "criticalBannerDescription_few": "{{count}} aktiivset vastet on märgitud kõrge või tõsise riskiga. Prioriseerige need tooted enne uue müügi jätkamist.",
+      "criticalBannerDescription_many": "{{count}} aktiivset vastet on märgitud kõrge või tõsise riskiga. Prioriseerige need tooted enne uue müügi jätkamist.",
+      "criticalBannerDescription_one": "{{count}} aktiivne vaste on märgitud kõrge või tõsise riskiga. Prioriseerige need tooted enne uue müügi jätkamist.",
+      "criticalBannerDescription_other": "{{count}} aktiivset vastet on märgitud kõrge või tõsise riskiga. Prioriseerige need tooted enne uue müügi jätkamist.",
+      "criticalBannerDescription_plural": "{{count}} aktiivset vastet on märgitud kõrge või tõsise riskiga. Prioriseerige need tooted enne uue müügi jätkamist.",
+      "criticalBannerTitle": "{{count}} aktiivne hoiatus sisaldab kõrge riskiga vasteid",
+      "criticalBannerTitle_few": "{{count}} aktiivset hoiatust sisaldavad kõrge riskiga vasteid",
+      "criticalBannerTitle_many": "{{count}} aktiivset hoiatust sisaldavad kõrge riskiga vasteid",
+      "criticalBannerTitle_one": "{{count}} aktiivne hoiatus sisaldab kõrge riskiga vasteid",
+      "criticalBannerTitle_other": "{{count}} aktiivset hoiatust sisaldavad kõrge riskiga vasteid",
+      "criticalBannerTitle_plural": "{{count}} aktiivset hoiatust sisaldavad kõrge riskiga vasteid",
+      "daily": "Igapäevane",
+      "dailyAtTime": "Igapäevaselt kell 03:47 Euroopa/Bratislava",
+      "dailyAtTimePlanned": "Planeeritud (iga päev kell 03:47)",
+      "decisionsClosed": "Otsused suletud",
+      "demoAlert": {
+        "action": "Lahenda, lükka tagasi või võta tarnijaga ühendust",
+        "badge": "Näidis töövoog",
+        "description": "Rakendus näitab Shopify toodet, Safety Gate'i kirjet, miks see sobis, ja salvestatavat toimingut.",
+        "evidence": "Hoidke märkmeid ja eksportige auditi aruanne",
+        "reason": "Võrdle brändi, mudelit, kategooriat ja tootefotosid",
+        "sample": "Mida kaupmehed näevad, kui vaste ilmub",
+        "title": "Tõenäoline Safety Gate'i vaste leitud"
+      },
+      "emptyProofCoverage": "{{count}} tootel on salvestatud kontrollitulemus.",
+      "emptyProofEvidence": "{{count}} suletud otsust säilitatakse auditi ajaloo jaoks.",
+      "emptyProofMonitoring": "Igapäevane Safety Gate'i jälgimine töötab endiselt.",
+      "exportProof": "Ekspordi tõend",
+      "fallbackAlertDescription": "Vastab Safety Gate'i hoiatusele.",
+      "finishCoverage": "Lõpeta kataloogi katvus",
+      "highRiskMatchesDescription": "Tõsised või kõrge riskiga Safety Gate'i vasted, mis tuleb esmalt üle vaadata.",
+      "highRiskMatchesTitle": "Kõrge riskiga vasted",
+      "checkChangedProducts": "Kontrolli muudetud tooteid",
+      "checksCompletedDescription": "Automaatsed ja käsitsi kontrollid, mis vähendavad käsitsi kataloogi ülevaatamise tööd.",
+      "checksCompletedTitle": "Kontrollid lõpetatud",
+      "lastMonitoringRunDescription": "Viimane automaatne, käsitsi või hulgi Safety Gate'i kontroll.",
+      "lastMonitoringRunTitle": "Viimane jälgimiskäivitus",
+      "lastSafetyGateUpdateChecked": "Viimane kontrollitud Safety Gate'i uuendus",
+      "latestRun": "Viimane käivitus",
+      "monitoringRunDateUnknown": "Aeg pole saadaval",
+      "monitoringRunHistoryEmpty": "Ühtegi plaanitud jälgimiskäivitust pole veel salvestatud.",
+      "monitoringRunHistoryTitle": "Hiljutised jälgimiskäivitused",
+      "monitoringRunProgress": "{{products}} toodet kontrollitud · {{alerts}} uut hoiatust",
+      "monitoringRunStatus": {
+        "completed": "Lõpetatud",
+        "enqueue_failed": "Ei saanud alustada",
+        "failed": "Ebaõnnestus",
+        "processing": "Töötlemisel",
+        "queued": "Järjekorras",
+        "retrying": "Uuesti proovimine",
+        "skipped_unentitled": "Plaan mitteaktiivne",
+        "unknown": "Olek pole saadaval"
+      },
+      "monitoringRunsTitle": "Jälgimiskontrollid",
+      "monitoringStatusAllClear": "Kataloogi jälgimine töötab",
+      "monitoringStatusDescription": "ZeroRecall kontrollib teie kataloogi uute EL-i Safety Gate'i uuenduste vastu, tõstab esile ülevaatamist vajavad tooted ja säilitab tõendid auditiaruannete jaoks.",
+      "monitoringStatusEyebrow": "Jälgimise olek",
+      "monitoringStatusNeedsReview": "{{count}} toode vajab kaupmehe otsust",
+      "monitoringStatusNeedsReview_few": "{{count}} toodet vajavad kaupmehe otsuseid",
+      "monitoringStatusNeedsReview_many": "{{count}} toodet vajavad kaupmehe otsuseid",
+      "monitoringStatusNeedsReview_one": "{{count}} toode vajab kaupmehe otsust",
+      "monitoringStatusNeedsReview_other": "{{count}} toodet vajavad kaupmehe otsuseid",
+      "monitoringStatusNeedsReview_plural": "{{count}} toodet vajavad kaupmehe otsuseid",
+      "needsReviewTitle": "Ülevaatamist vajavad tooted",
+      "nextAutomaticCheck": "Järgmine automaatne kontroll",
+      "noActiveAlertsDescription": "Teie viimased kontrollid ei vaja praegu tegutsemist. Jätkake äsja lisatud toodete skannimist, et säilitada katvus.",
+      "noActiveAlertsTitle": "Aktiivseid ohutusalaseid hoiatusi pole",
+      "noAlertsDescription": "Praegu pole avatud tooteülevaatusi. See on siiski kasulik: igapäevane jälgimine jätkub taustal ja teie tõendid on ekspordiks valmis.",
+      "noAlertsTitle": "Ükski toode ei vaja ülevaatamist",
+      "priorityQueue": "Otsuste järjekord",
+      "productsCoveredShort": "salvestatud kontrollitulemusega",
+      "productsMonitored": "Praegused tooteversioonid kontrollitud",
+      "proofGridLabel": "Jälgimistegevus",
+      "protectionDescription": "Arvud kirjeldavad rakenduses salvestatud tulemusi; need ei ole tooteohutuse sertifikaat.",
+      "protectionEyebrow": "Teie jälgimisandmed",
+      "protectionTitle": "Vaadake üle hiljutised kontrollid ja kaupmehe otsused.",
+      "recentAlertsDescription": "Vaadake üle tõenäolised Safety Gate'i vasted, salvestage otsus ja säilitage tõendid auditite jaoks.",
+      "recentAlertsTitle": "Kaupmehe otsust vajavad tooted",
+      "recommendedAction": "Soovitatav tegevus: vaadake vaste üle ja salvestage otsus.",
+      "resolvedRateDescription": "Kui suur osa logitud hoiatustegevusest on juba suletud.",
+      "resolvedRateTitle": "Lahendatud määr",
+      "results": {
+        "alertCreated": "Hoiatus loodud",
+        "completed": "Lõpetatud",
+        "error": "Viga",
+        "checked": "Kontrollitud",
+        "skipped": "Vahele jäetud"
+      },
+      "reviewOneProduct": "Kontrolli ühte toodet",
+      "riskInAlert": "Safety Gate'i hoiatuses kirjeldatud risk",
+      "runBulkCheck": "Käivita hulgikontroll",
+      "stats": {
+        "alertsCreated": "Hoiatusi loodud",
+        "alreadyChecked": "Juba kontrollitud",
+        "errors": "Vead",
+        "checked": "Kontrollitud",
+        "skipped": "Vahele jäetud",
+        "stillUnchecked": "Ikka kontrollimata",
+        "totalProducts": "Tooteid kokku"
+      },
+      "status": {
+        "cachedEvidence": "Vahemällu salvestatud tõendeid kasutatakse uuesti",
+        "coverageIncomplete": {
+          "description": "Ükski Safety Gate'i vaste ei vaja ülevaatamist {{checked}} jälgitud toote hulgas. Lõpetage kõigi {{total}} praeguse toote katvus enne kogu kataloogi kinnitamist.",
+          "eyebrow": "Katvus puudulik",
+          "title": "{{count}} toode vajab veel katvust",
+          "title_few": "{{count}} toodet vajavad veel katvust",
+          "title_many": "{{count}} toodet vajavad veel katvust",
+          "title_one": "{{count}} toode vajab veel katvust",
+          "title_other": "{{count}} toodet vajavad veel katvust",
+          "title_plural": "{{count}} toodet vajavad veel katvust"
+        },
+        "deltaMonitoring": "Kontrollitakse ainult uusi Safety Gate'i hoiatusi",
+        "factsLabel": "Praegused jälgimisfaktid",
+        "matchesNeedingReview": "Ülevaatamist vajavad vasted",
+        "monitoringNotConfirmed": "Jälgimine pole veel kinnitatud",
+        "monitoringProblem": {
+          "action": "Värskenda kataloogi katvust",
+          "description": "Teie praegustel toodetel on katvuse tõendid, kuid rakendus ei saa kinnitada, millal Safety Gate'i jälgimine viimati lõppes. Värskendage kataloogi katvust, et taastada usaldusväärne olek.",
+          "eyebrow": "Jälgimine vajab tähelepanu",
+          "title": "Kataloogi katvusel puudub salvestatud jälgimiskäivitus"
+        },
+        "noActionNeeded": {
+          "action": "Vaata kataloogi katvust",
+          "description": "Ükski teie jälgitava kataloogi toode ei vasta praegu EL-i Safety Gate'i hoiatustele. Jälgimine jätkub taustal ja tööd vajavad ainult uued hoiatused või muudetud tooted.",
+          "emptyCatalogDescription": "Lisage tooteid oma Shopify kataloogi ja ZeroRecall on valmis neid katma.",
+          "emptyCatalogTitle": "Jälgitavaid tooteid pole veel",
+          "eyebrow": "Praegune Safety Gate'i olek",
+          "title": "Tegevust pole vaja"
+        },
+        "none": "Puudub",
+        "reviewNeeded": {
+          "criticalDescription": "Vaadake need võimalikud vasted üle enne müügi jätkamist. Võrrelge toote ja Safety Gate'i tõendeid, seejärel salvestage oma otsus.",
+          "criticalEyebrow": "Kiire ülevaatus",
+          "criticalTitle": "{{count}} võimalik vaste tõsise riskiga hoiatusega vajab ülevaatamist",
+          "criticalTitle_few": "{{count}} võimalikku vastet tõsise riskiga hoiatusega vajavad ülevaatamist",
+          "criticalTitle_many": "{{count}} võimalikku vastet tõsise riskiga hoiatusega vajavad ülevaatamist",
+          "criticalTitle_one": "{{count}} võimalik vaste tõsise riskiga hoiatusega vajab ülevaatamist",
+          "criticalTitle_other": "{{count}} võimalikku vastet tõsise riskiga hoiatusega vajavad ülevaatamist",
+          "criticalTitle_plural": "{{count}} võimalikku vastet tõsise riskiga hoiatusega vajavad ülevaatamist",
+          "description": "Võimalikud Safety Gate'i vasted vajavad kaupmehe otsust. Vaadake vasted esmalt üle; teiste toodete kontrollimise tulemused on kataloogis endiselt saadaval.",
+          "eyebrow": "Vajab ülevaatamist",
+          "title": "{{count}} võimalik vaste vajab ülevaatamist",
+          "title_few": "{{count}} võimalikku vastet vajavad ülevaatamist",
+          "title_many": "{{count}} võimalikku vastet vajavad ülevaatamist",
+          "title_one": "{{count}} võimalik vaste vajab ülevaatamist",
+          "title_other": "{{count}} võimalikku vastet vajavad ülevaatamist",
+          "title_plural": "{{count}} võimalikku vastet vajavad ülevaatamist"
+        },
+        "scheduledPlanned": "Planeeritud käivitus"
+      },
+      "storeStatus": "Poe staatus",
+      "valueMetrics": {
+        "decisionsRecorded": "Salvestatud otsused",
+        "evidenceRetained": "Tõenditega otsused",
+        "checksRun": "Tehtud kontrollid",
+        "openDecisions": "Avatud otsused",
+        "productsCovered": "Kontrollitud tooted"
+      },
+      "valueProofDescription": "Näidake meeskonnale, et tellimus ei ole ühekordne skaneerimine: kataloogi katvus, kontrollid, otsused ja ainult lugemiseks mõeldud Shopify juurdepääs jäävad aktiivseks.",
+      "valueProofDescriptionComplete": "Need arvud näitavad praeguse kataloogi salvestatud kontrollitegevust.",
+      "valueProofDescriptionIncomplete": "Käivitage ülejäänud toodete kontrollid, et lisada tulemused praegusesse kataloogi kirjele.",
+      "valueProofEyebrow": "Katvuse tegevus",
+      "valueProofTitle": "Mida ZeroRecall edasi teeb",
+      "valueProofTitleComplete": "Igal praegusel tootel on salvestatud kontroll",
+      "valueProofTitleIncomplete": "{{count}} tootel on salvestatud kontroll",
+      "warningBannerDescription": "Vaadake need vasted üle, lükake tagasi valepositiivsed tulemused või lahendage kinnitatud probleemid, et järjekord jääks tegutsemisvõimeliseks.",
+      "warningBannerTitle": "{{count}} aktiivne hoiatus vajab kaupmehe otsust",
+      "warningBannerTitle_few": "{{count}} aktiivset hoiatust vajavad kaupmehe otsuseid",
+      "warningBannerTitle_many": "{{count}} aktiivset hoiatust vajavad kaupmehe otsuseid",
+      "warningBannerTitle_one": "{{count}} aktiivne hoiatus vajab kaupmehe otsust",
+      "warningBannerTitle_other": "{{count}} aktiivset hoiatust vajavad kaupmehe otsuseid",
+      "warningBannerTitle_plural": "{{count}} aktiivset hoiatust vajavad kaupmehe otsuseid",
+      "withReadOnlyShopifyAccess": "Ainult lugemiseks mõeldud Shopify juurdepääs"
+    },
+    "bulkCheck": {
+      "action": "Kontrolli kõiki tooteid",
+      "alerts": "Hoiatused {{count}}",
+      "alreadyChecked": "Juba kontrollitud",
+      "completed": "Lõpetatud {{seconds}} sekundiga",
+      "description": "Skaneerige iga toode oma poes Safety Gate'i andmebaasi vastu, et tabada varjatud riske.",
+      "errors": "Vead {{count}}",
+      "checked": "Kontrollitud {{count}}",
+      "includeAlreadyChecked": "Kaasa juba kontrollitud tooted",
+      "notYetChecked": "Veel kontrollimata",
+      "processed": "Töödeldud {{count}}",
+      "started": "Alustatud {{date}}",
+      "title": "Hulgikontroll",
+      "totalProducts": "Tooteid kokku",
+      "willCheckAll": "Kontrollitakse kõiki {{count}} toodet",
+      "willCheckUnchecked": "Kontrollitakse {{count}} kontrollimata toodet (jäetakse vahele {{skip}} juba kontrollitud)"
+    },
+    "bulkResults": {
+      "success": "Hulgikontroll lõpetatud: {{processed}} töödeldud, {{checked}} kontrollitud, {{alertsCreated}} hoiatust loodud."
+    },
+    "howItWorks": {
+      "alertGeneration": {
+        "description": "Vasted genereerivad hoiatusi, mida saate vastavuse jälgimiseks tagasi lükata või lahendada.",
+        "title": "Hoiatuste genereerimine"
+      },
+      "autoMonitoring": {
+        "description": "Tooteid kontrollitakse EL-i andmebaasi vastu iga kord, kui need luuakse või uuendatakse.",
+        "title": "Automaatne jälgimine"
+      },
+      "title": "Kuidas see töötab"
+    },
+    "liveScan": {
+      "completed": "Valmis",
+      "description": "Impordime teie kataloogi Shopifyst ja skaneerime tooteid enam kui 35 000 kirje vastu ametlikus EL-i Safety Gate'i (RAPEX) andmebaasis. Tulemused ilmuvad kohe allpool.",
+      "eyebrow": "Automatiseeritud ohutusaudit",
+      "failedDescription": "Me ei saanud seda auditit lõpetada. Teie kataloogi ei märgitud täielikult kontrollituks. Alustage skaneerimist uuesti või võtke ühendust toega, kui probleem püsib.",
+      "failedHeading": "Kataloogi audit vajab uut katset",
+      "heading": "Tasuta kataloogi ohutusaudit käib...",
+      "inProgress": "Käib...",
+      "pending": "Ootel",
+      "progress": "Imporditud {{imported}} toodet {{fetched}}-st; võrreldud {{scanned}} toodet {{alerts}} Safety Gate'i hoiatusega seni.",
+      "stepAudit": "3. Valmistage ette GPSR-i auditi jälg ja vastavusstaatus",
+      "stepImport": "1. Importige tooted Shopifyst",
+      "stepScan": "2. Võrrelge Safety Gate'i andmebaasiga (üle 35 000 kirje)"
+    },
+    "metricsCard": {
+      "activeAlertsHeading": "Aktiivsed hoiatused",
+      "productsCheckedHeading": "Kontrollitud tooted",
+      "resolutionHeading": "Lahendamise määr",
+      "resolved": "{{count}} lahendatud",
+      "resolvedAndDismissed": "{{resolved}} lahendatud • {{dismissed}} tagasi lükatud",
+      "scans": "Safety Gate'i skaneeringud",
+      "totalRecorded": "{{count}} kokku salvestatud"
+    },
+    "monitorCard": {
+      "description": "Jälgige hoiatusi, käivitage kataloogi kontrollid ja hoidke regulaatoreid rahulolevana.",
+      "reviewAction": "Vaata hoiatusi üle",
+      "title": "Jälgige tooteohutust lühidalt"
+    },
+    "quickActions": {
+      "browsePortal": "Sirvige Safety Gate'i portaali",
+      "description": "Regulaarsed kontrollid ja dokumentatsioon aitavad näidata hoolsust regulaatoritele.",
+      "manualCheck": "Käivita käsitsi kontroll",
+      "title": "Kiirtegevused"
+    },
+    "recentAlerts": {
+      "active": "{{count}} aktiivset",
+      "allResolved": "Kõik lahendatud",
+      "description": "Uurige Safety Gate'i uusimaid vasteid enne tellimuste täitmist.",
+      "emptyState": {
+        "content": "Suurepärane uudis – praegu pole ühtegi toodet märgistatud. Jätkake jälgimist, et säilitada vastavus.",
+        "heading": "Ohutushoiatusi veel pole"
+      },
+      "matchCount": "{{count}} vaste leitud",
+      "matchCount_few": "{{count}} vastet leitud",
+      "matchCount_many": "{{count}} vastet leitud",
+      "matchCount_one": "{{count}} vaste leitud",
+      "matchCount_other": "{{count}} vastet leitud",
+      "matchCount_plural": "{{count}} vastet leitud",
+      "title": "Viimased ohutushoiatused"
+    },
+    "safetyBreakdown": {
+      "actionDesc": "Leitud vasted EL-i Safety Gate'i aruannetega, mis vajavad ülevaatamist ja lahendamist.",
+      "actionLabel": "Nõuab tegevust",
+      "description": "Ülevaade teie tootekataloogi kontrollimisest Euroopa ohutusnimekirjade ja GPSR-direktiivi alusel.",
+      "eyebrow": "Kataloogi kaitse olek",
+      "protectedDesc": "Tooted, mille viimane salvestatud kontroll ei leidnud tõenäolist vastet.",
+      "protectedLabel": "Kontrollitud tooted ilma avatud leidudeta",
+      "protectRemainingAction": "Kontrolli ülejäänud ({{count}})",
+      "reviewAlertsAction": "Vaata hoiatusi üle",
+      "scanAllAction": "Käivita kogu kataloogi audit",
+      "title": "Toote ohutuse olek",
+      "unprotectedAllCovered": "Igal praegusel tootel on salvestatud kontrollitulemus.",
+      "unprotectedDesc": "Tooted, millel puudub salvestatud Safety Gate'i kontroll.",
+      "unprotectedLabel": "Pole veel kontrollitud"
+    },
+    "setup": {
+      "description": "Valmistage oma pood ette EL-i tooteohutuse nõuetele vastavaks.",
+      "progress": "{{completed}} {{total}}-st sammust on läbitud",
+      "steps": {
+        "step1": {
+          "description": "Klõpsake „Kontrolli kõiki tooteid“, et skannida kogu oma kataloog EL-i Safety Gate'i andmebaasi vastu.",
+          "label": "Käivitage oma esimene toodete hulgikontroll"
+        },
+        "step2": {
+          "description": "Kontrollige hoiatuste lehte, et vaadata üle kõik tooted, mis vastavad Safety Gate'i hoiatustele.",
+          "label": "Vaadake üle kõik ohutushoiatused"
+        },
+        "step3": {
+          "description": "Lülitage seadetes sisse automaatsed kontrollid, et uusi tooteid automaatselt jälgida.",
+          "label": "Konfigureeri automaatne jälgimine"
+        }
+      },
+      "title": "Seadistusjuhend"
+    },
+    "stats": {
+      "actionNeeded": "Vajalik tegevus",
+      "activeAlerts": "Aktiivsed hoiatused",
+      "alertsLogged": "Hoiatused logitud",
+      "allClear": "Kõik korras",
+      "autoMonitoring": "Automaatne jälgimine",
+      "descriptions": {
+        "activeAlerts": "Vaadake need tooted täna üle, et jääda nõuetele vastavaks.",
+        "activeAlertsZero": "Kõik ohutusprobleemid on lahendatud.",
+        "alertsLogged": "Sisaldab lahendatud ja tagasi lükatud hoiatusi auditi jälgimiseks.",
+        "alertsLoggedZero": "Ajaloolisi hoiatusi pole. Jätkake uute toodete jälgimist.",
+        "productsChecked": "Automaatsed Shopify sündmused jätkavad uuenduste jälgimist.",
+        "productsCheckedZero": "Käivitage hulgikontroll, et skannida oma praegune kataloog."
+      },
+      "newSetup": "Uus seadistus",
+      "open": "{{count}} avatud",
+      "productsChecked": "Kontrollitud tooted",
+      "resolved": "{{count}} lahendatud"
+    },
+    "title": "ZeroRecall"
+  },
+  "dates": {
+    "daysAgo": "{{count}} päeva tagasi",
+    "today": "Täna",
+    "weeksAgo": "{{count}} nädalat tagasi",
+    "yesterday": "Eile"
+  },
+  "errors": {
+    "apiError": "Väline ohutusteenus on ajutiselt saadaval. Palun proovige hiljem uuesti.",
+    "pageLoadFailed": "Lehe laadimine ebaõnnestus",
+    "unknown": "Midagi läks valesti"
+  },
+  "evidence": {
+    "alertNumber": "Safety Gate'i hoiatus {{number}}",
+    "description": "Vaadake üle salvestatud tooteohutuse otsused, märkmed, riski kontekst ja tarnija järelkontrolli tõendid.",
+    "empty": "Tooteohutuse otsuseid pole veel salvestatud.",
+    "eyebrow": "Auditi jälg",
+    "filteredRecords": "{{visible}} {{total}}-st kirjest",
+    "filters": {
+      "collapseForProduct": "Peida kogu tõendusmaterjal toote {{title}} kohta",
+      "expandForProduct": "Näita kogu tõendusmaterjal toote {{title}} kohta",
+      "noResults": "Ükski auditi kirje ei vasta nendele filtritele.",
+      "searchLabel": "Otsi auditi jäljest",
+      "searchPlaceholder": "Otsi toodet, hoiatuse numbrit või tõendusmaterjali",
+      "showLess": "Peida tõendusmaterjal",
+      "showMore": "Näita tõendusmaterjali",
+      "statusLabel": "Otsuse staatus"
+    },
+    "fullEvidence": "Täielik tõendusmaterjal",
+    "heading": "Otsuste ja tõendusmaterjali ajalugu",
+    "noNotes": "Märkmeid pole salvestatud",
+    "records": "{{count}} kirjet",
+    "table": {
+      "accessibilityLabel": "Tooteohutuse tõendusmaterjali tabel",
+      "decision": "Otsus",
+      "details": "Üksikasjad",
+      "notes": "Märkmed / tõendusmaterjal",
+      "product": "Toode",
+      "status": "Olek",
+      "summary": "Tõendusmaterjali kokkuvõte",
+      "updated": "Uuendatud"
+    },
+    "title": "Auditi jälg"
+  },
+  "experience": {
+    "delayed": "Jälgimine vajab tähelepanu – viimane lõpetatud käivitus on üle 48 tunni vana",
+    "pausedHelp": "Automaatsed kontrollid on peatatud. Valige plaan, et kontrollida uusi Safety Gate'i hoiatusi ja toote muudatusi, kui Shopify on suletud.",
+    "previewHelp": "Selle arenduse eelvaate avamine ei aktiveeri taustal jälgimist. Planeeritud kontrollid nõuavad kinnitatud aktiivset Shopify plaani.",
+    "reviewSteps": "1. Võrdle fotosid ja identifikaatoreid → 2. Vali ülevaatuse tulemus → 3. Salvesta oma otsus",
+    "valueBody": "Igapäevased kontrollid uute Safety Gate'i hoiatuste osas, kontrollid toodete muutumisel, e-posti teavitused, kui need on lubatud, ja salvestatud ülevaatuse otsused.",
+    "valueTitle": "Mida pidev jälgimine lisab"
+  },
+  "manualCheck": {
+    "admin": {
+      "catalog": "Kataloog",
+      "catalogDescription": "Tooted on sorteeritud viimaste Shopify uuenduste järgi, et kaupmehed saaksid esmalt hiljutisi muudatusi uuesti kontrollida.",
+      "checkFailed": "Kontroll ebaõnnestus",
+      "manualReview": "Nõudmisel ülevaatus",
+      "manualReviewDescription": "Valige oma kataloogist mis tahes toode ja käivitage sihipärane Safety Gate'i kontroll, kui vajate kohest vastust.",
+      "productFlagged": "Toode märgistatud"
+    },
+    "badges": {
+      "flagged": "{{count}} märgistatud",
+      "checks": "{{count}} kontrolli",
+      "needsReview": "{{count}} vajab ülevaatust"
+    },
+    "banners": {
+      "alertDescription": "Selle toote puhul leiti potentsiaalne ohutusprobleem.",
+      "alertHeading": "Ohutushoiatus loodud",
+      "failedHeading": "Kontroll ebaõnnestus",
+      "textOnlyDescription": "See tulemus kasutas ainult tekstivälju. Kui toode tugineb visuaalsetele erinevustele, vaadake vastet hoolikamalt üle.",
+      "textOnlyHeading": "Pildi võrdlus polnud saadaval"
+    },
+    "breadcrumbs": {
+      "current": "Kataloogi katvus",
+      "dashboard": "Armatuurlaud"
+    },
+    "bulk": {
+      "description": "Vaadake üle salvestatud kontrollid ja käivitage värske Safety Gate'i võrdlus oma praeguse kataloogi toodete jaoks.",
+      "checkAllProducts": "Kontrolli ülejäänud tooted",
+      "checkingAll": "Kataloogi kontrollimine...",
+      "title": "Kontrolli oma kataloogi"
+    },
+    "catalogue": {
+      "accessibilityLabel": "Tootekataloogi tabel",
+      "actions": {
+        "checkAgain": "Kontrolli uuesti",
+        "checkAgainForProduct": "Kontrolli toodet {{title}} uuesti",
+        "checkSafety": "Kontrolli ohutust",
+        "checkSafetyForProduct": "Kontrolli toote {{title}} ohutust",
+        "viewForProduct": "Vaata salvestatud leidu toote {{title}} kohta"
+      },
+      "columns": {
+        "action": "Tegevus",
+        "checks": "Kontrollid",
+        "product": "Toode",
+        "status": "Olek"
+      },
+      "emptyBody": "Kontrollimiseks pole tooteid saadaval.",
+      "emptyHeading": "Tooteid ei leitud",
+      "firstCheck": "Käivita esimene kontroll",
+      "heading": "Tootekataloog ({{count}})",
+      "lastChecked": "Viimati kontrollitud {{date}}",
+      "noType": "Tüüp puudub",
+      "searchLabel": "Otsi toodet",
+      "searchPlaceholder": "Otsi tooteid pealkirja, SKU, müüja või tüübi järgi",
+      "status": {
+        "notChecked": "Kontrollimata",
+        "reviewed": "Üle vaadatud",
+        "safe": "Vasteid ei leitud",
+        "unsafe": "Vajab ülevaatamist"
+      },
+      "totalChecks": "{{count}} kokku",
+      "unknownVendor": "Tundmatu müüja"
+    },
+    "coverage": {
+      "completeDescription": "Igal praegusel Shopify tootel on salvestatud Safety Gate'i kontroll. Uued või muudetud tooted vajavad endiselt uut kontrolli.",
+      "completeTitle": "Igal praegusel tootel on salvestatud kontrollitulemus",
+      "eyebrow": "Kataloogi kontrolli olek",
+      "incompleteDescription": "Kontrolli ülejäänud tooted, et salvestada praeguse kataloogi jaoks Safety Gate'i tulemus.",
+      "incompleteTitle": "{{count}} tootel pole veel salvestatud kontrolli",
+      "lastProductNeedsReview": "Viimane tootekontroll lõi või värskendas ülevaatekirje.",
+      "lastProductSafe": "Viimane tootekontroll ei leidnud tõenäolist Safety Gate'i vastet.",
+      "lastRun": "Viimane kontroll",
+      "lastRunResultWithCounts": "Kontrollitud {{checked}}, vahele jäetud {{skipped}} muutmata, loodud {{alerts}} ülevaatekirjet, {{errors}} viga.",
+      "noneRemaining": "Igal praegusel tootel on salvestatud kontrollitulemus.",
+      "noRunYet": "Kataloogi või toote kontrolli pole veel käivitatud.",
+      "percent": "{{percent}}% praeguse kontrolliga",
+      "productsCovered": "Kontrollitud tooted",
+      "productsCoveredDescription": "Tooted, millel on salvestatud tulemus nende praeguse Shopify versiooni kohta.",
+      "remaining": "Pole veel kontrollitud",
+      "remainingDescription": "Käivita kontroll, et salvestada nende toodete jaoks Safety Gate'i tulemus."
+    },
+    "filters": {
+      "all": "Kõik ({{count}})",
+      "needsReview": "Võimalik vaste ({{count}})",
+      "safe": "Vasteid ei leitud ({{count}})",
+      "unprotected": "Kontrollimata või muudetud ({{count}})"
+    },
+    "modal": {
+      "unknown": "Tundmatu",
+      "unknownProduct": "Tundmatu toode"
+    },
+    "overview": {
+      "coverage": "{{coverage}}% kaetus",
+      "manualCompleted": "Käsitsi kontrollid on lõpetatud",
+      "manualCompletedDescription": "{{checked}} {{total}}-st tootest kontrollitud",
+      "noOpenReviews": "Avatud tooteotsuseid pole.",
+      "noRisks": "Riski pole veel tuvastatud.",
+      "prioritise": "Prioriseeri need tooted tegevuseks.",
+      "productsDescription": "Teie poe uusimad tooted.",
+      "productsFlagged": "Märgistatud tooted",
+      "productsInScope": "Hõlmatud tooted",
+      "productsNeedingReview": "Ülevaatamist vajavad tooted",
+      "title": "Kontrollide ülevaade"
+    },
+    "quickActions": {
+      "title": "Kiirtegevused"
+    },
+    "subtitle": "Kaitske ülejäänud kataloogi, värskendage jälgimist või kontrollige ühte valitud toodet.",
+    "title": "Kataloogi katvus",
+    "toasts": {
+      "completed": "Ohutuskontroll lõpetatud",
+      "flagged": "Võimalik ohutusprobleem leitud"
+    }
+  },
+  "nav": {
+    "catalogCoverage": "Kataloogi katvus",
+    "dashboard": "Armatuurlaud",
+    "evidence": "Auditi jälg",
+    "manualCheck": "Kataloogi katvus",
+    "safetyAlerts": "Ülevaatuse järjekord",
+    "settings": "Seaded"
+  },
+  "news": {
+    "items": {
+      "databaseUpdate": {
+        "date": "Dets 2025",
+        "description": "Safety Gate'i andmebaasi uuendatakse pidevalt uute tootehoiatustega. Järgige nõudeid regulaarsete kontrollidega.",
+        "title": "EL-i Safety Gate'i andmebaas on uuendatud"
+      },
+      "gpsr": {
+        "date": "GPSR 2024",
+        "description": "Lisateave GPSR-i nõuete kohta ja kuidas tagada, et teie tooted vastavad EL-i ohutusstandarditele.",
+        "title": "Üldine tooteohutuse määrus"
+      }
+    },
+    "title": "Uudised"
+  },
+  "onboarding": {
+    "back": "Tagasi",
+    "finishButton": "Lõpeta seadistamine ja mine armatuurlauale",
+    "nextStep": "Järgmine samm",
+    "stepIndicator": "Samm {{current}} / {{total}}",
+    "steps": {
+      "automation": {
+        "description": "Konfigureerige oma poe jaoks prioriteetne ülevaatus ja automaatsed ohutusreeglid.",
+        "label": "Ohutuse automatiseerimine",
+        "quarantine": {
+          "desc": "Märgistage tooted automaatselt prioriteetseks ülevaatuseks, kui need vastavad Safety Gate'i hoiatustele tõsise riskiga (lävi >= 95%).",
+          "label": "Luba prioriteetne ülevaatus",
+          "title": "Prioriseeri tõsised riskid"
+        },
+        "title": "3. samm: automaatne jälgimine ja hoiatused",
+        "webhooks": {
+          "desc": "Tooteid kontrollitakse automaatselt EL-i andmebaasi vastu iga kord, kui need luuakse või uuendatakse.",
+          "title": "Reaalajas veebihaagi skaneerimine"
+        }
+      },
+      "scan": {
+        "alerts": "Loodud riskihoiatused: {{count}}",
+        "complete": "Kataloogi jälgitakse nüüd",
+        "description": "Importige oma praegused Shopify tooted Safety Gate'i jälgimisse, seejärel võrrelge kataloogi hiljutiste Safety Gate'i hoiatustega.",
+        "imported": "Jälgimiseks imporditud tooted: {{count}}",
+        "label": "Kataloogi import",
+        "monitored": "Safety Gate'i hoiatustega võrreldud tooted: {{count}}",
+        "scanned": "Skaneeritud tooted: {{count}}",
+        "scanning": "Kataloogi importimine ja toodete võrdlemine Safety Gate'i hoiatustega...",
+        "startButton": "Impordi ja jälgi praegust kataloogi",
+        "title": "2. samm: impordi ja jälgi praegust kataloogi",
+        "toScan": "Jälgimiseks imporditavad tooted: {{count}}"
+      },
+      "sensitivity": {
+        "balanced": "70% (soovitatav – tasakaalustatud)",
+        "broad": "40% (lai – rohkem hoiatusi)",
+        "calibration": {
+          "balancedDesc": "Standardne tundlikkus. Optimeeritud tasakaal täpsuse ja hoiatuste mahu vahel. Skaneerib pealkirju, kirjeldusi ning vastab peamistele brändidele ja mudelistruktuuridele.",
+          "balancedTitle": "Tasakaalustatud tuvastusrežiim",
+          "broadDesc": "Kõrge tundlikkus. Tuvastab kaudselt seotud vasteid. Soovitatav, kui müüte kõrge riskiga tootekategooriaid (mänguasjad, elektroonika) ja soovite täielikku katvust, kuid oodake mõningaid valepositiivseid tulemusi.",
+          "broadTitle": "Lai tuvastusrežiim",
+          "strictDesc": "Kõrge täpsus. Filtreerib välja väiksemad sarnasused. Hoiatused käivituvad ainult väga selgete brändi/mudeli nime vastete korral. Madal valehäirete määr.",
+          "strictTitle": "Range tuvastusrežiim"
+        },
+        "description": "Valige, kui täpselt peaks toode vastama Safety Gate'i kirjele, enne kui see vajab ülevaatamist.",
+        "label": "Vastavuse rangus",
+        "strict": "90% (Range – vähem hoiatusi)",
+        "thresholdLabel": "Vastavuse lävi: {{value}}%",
+        "title": "1. samm: Määra vastavuse rangus"
+      }
+    },
+    "subtitle": "Leidke võimalikud ohtlike toodete vasted, vaadake need Shopify's üle ja säilitage iga otsuse kohta auditi tõendid.",
+    "title": "Jälgige oma kataloogi EL-i Safety Gate'i vastu",
+    "value": {
+      "audit": {
+        "description": "Lahendatud ja tagasi lükatud otsused säilitavad märkmed ekspordiks ja tarnijaga suhtlemiseks.",
+        "title": "Auditi jaoks valmis tõendid"
+      },
+      "monitor": {
+        "description": "Uusi Safety Gate'i hoiatusi kontrollitakse teie Shopify kataloogi vastu.",
+        "title": "Igapäevane EL-i Safety Gate'i jälgimine"
+      },
+      "review": {
+        "description": "Võrrelge vastet, otsustage, mida teha, ja hoidke järjekord tegutsemisvalmis.",
+        "title": "Kaupmehe otsustusvoog"
+      }
+    }
+  },
+  "pagination": {
+    "pageOf": "Leht {{current}} / {{total}} ({{count}} hoiatust)"
+  },
+  "portal": {
+    "description": "Juurdepääs ametlikule Euroopa Safety Gate'i andmebaasile, et otsida ohtlikke tooteid ja vaadata üksikasjalikke ohutusalaseid hoiatusi.",
+    "home": "Safety Gate'i avaleht",
+    "homeDescription": "Juurdepääs ametlikule Euroopa Komisjoni portaalile",
+    "searchDatabase": "Otsi andmebaasist",
+    "searchDescription": "Otsi EL-i Safety Gate'ist ohtlikke tooteid",
+    "title": "Safety Gate'i portaal"
+  },
+  "resolveActions": {
+    "actionTaken": "Võetud meede",
+    "contactedSupplier": "Võeti ühendust tarnijaga (vastus ootel)",
+    "contactPending": "Ootan tarnija vastust",
+    "falsePositive": "Valepositiivne",
+    "menuLabel": "Lahenduse toimingud",
+    "modifiedProduct": "Toode muudetud",
+    "noActionNeeded": "Tegevust pole vaja",
+    "notMyProduct": "Mitte minu toode",
+    "other": "Muu",
+    "removedFromSale": "Müügilt eemaldatud",
+    "verifiedSafe": "Ajalooline tulemus: toode tunnistatud ohutuks"
+  },
+  "settings": {
+    "monitoring": {
+      "automatic": {
+        "description": "Tooteid kontrollitakse automaatselt veebikonksude kaudu loomisel või uuendamisel.",
+        "enabled": "Lubatud",
+        "title": "Automaatne kontrollimine"
+      },
+      "manual": {
+        "description": "Käivitage nõudmisel ohutuskontrollid mis tahes toote jaoks oma kataloogis.",
+        "goToManualCheck": "Mine käsitsi kontrolli",
+        "title": "Käsitsi kontrollid"
+      },
+      "title": "Jälgimine"
+    },
+    "navigation": {
+      "dashboard": "Armatuurlaud",
+      "manualCheck": "Käsitsi kontroll",
+      "title": "Navigeerimine",
+      "viewAlerts": "Vaata hoiatusi"
+    },
+    "subtitle": "Kontrollige, kuidas ZeroRecall jälgib teie Shopify kataloogi.",
+    "threshold": {
+      "currentDefault": "Praegune keskkonna vaikeseade",
+      "description": "Valige, kui palju võimalikke Safety Gate'i vasteid teie meeskond soovib üle vaadata. Enamiku Shopify kataloogide jaoks on soovitatav tasakaalustatud jälgimine.",
+      "howItWorks": "Kuidas see töötab",
+      "label": "Täpsem vastavuse lävi (%)",
+      "resetToDefault": "Lähtesta vaikeseadeks",
+      "save": "Salvesta",
+      "title": "Jälgimisrežiim"
+    },
+    "title": "Jälgimisseaded"
+  },
+  "settingsAdmin": {
+    "advancedMatchingSettings": "Täpsemad vastavusseaded",
+    "automation": {
+      "autoDraftDescription": "Märgistage tooted automaatselt prioriteetseks ülevaatuseks, kui need vastavad Safety Gate'i hoiatustele tõsise riskiga (lävi >= 95%).",
+      "autoDraftTitle": "Prioriseeri tõsised riskid",
+      "description": "Konfigureerige kõrge riskiga vastete prioriteetne ülevaatus.",
+      "eyebrow": "Reaalajas toimingud",
+      "title": "Ohutuse automatiseerimine"
+    },
+    "automationStatus": {
+      "active": {
+        "badge": "Plaan aktiivne",
+        "description": "Esialgne kataloogi audit on lõpetatud ja sellel poel on aktiivne jälgimisplaan.",
+        "title": "Kataloogi audit lõpetatud"
+      },
+      "completedNoPlan": {
+        "badge": "Audit lõpetatud",
+        "description": "Esialgne kataloogi audit on lõpetatud. Pidev automaatne jälgimine nõuab aktiivset plaani.",
+        "title": "Esialgne kataloogi audit lõpetatud"
+      },
+      "failed": {
+        "badge": "Vajab tähelepanu",
+        "description": "Viimane import või audit ei lõppenud. Enne jälgimisolekule tuginemist proovige kataloogi katvust uuesti.",
+        "title": "Esialgne kataloogi audit vajab tähelepanu"
+      },
+      "notStarted": {
+        "badge": "Kinnitamata",
+        "description": "Esialgne import ei ole lõppenud, seega ei ole kataloogi katvus veel kinnitatud.",
+        "title": "Kataloogi audit kinnitamata"
+      },
+      "openCatalog": "Ava kataloogi katvus",
+      "scanning": {
+        "badge": "Töötlemisel",
+        "description": "Tooteid imporditakse ja kontrollitakse. Kataloogi katvus kinnitatakse pärast auditi lõppemist.",
+        "title": "Esialgne kataloogi audit käib"
+      }
+    },
+    "automationStatusDescription": "Igapäevased EL-i Safety Gate'i uuendused, Shopify toodete muudatused ja auditi kirjed käsitletakse automaatselt. Kasutage neid seadeid ainult ülevaatuse mahu ja teavituste kohandamiseks.",
+    "automationStatusEyebrow": "Automaatne jälgimine",
+    "automationStatusTitle": "Safety Gate'i jälgimine töötab selle poe jaoks",
+    "configuration": "Konfiguratsioon",
+    "configurationDescription": "Hoidke leht keskendunud ühele kaupmehe otsusele: kui range peaks kontrollija olema toodete võrdlemisel Safety Gate'i hoiatustega.",
+    "currentThreshold": "Praegune lävi",
+    "currentThresholdDescription": "Madalamad väärtused tuvastavad rohkem võimalikke vasteid. Kõrgemad väärtused vähendavad valepositiivseid tulemusi.",
+    "environmentDefault": "Keskkonna vaikeseade",
+    "environmentDefaultDescription": "Kasutatakse, kui poel pole veel kohandatud läve salvestatud.",
+    "exclusions": {
+      "description": "Välistage konkreetsed müüjad või tootekategooriad Safety Gate'i kontrollidest, et vähendada valepositiivseid tulemusi.",
+      "eyebrow": "Filtreerimisreeglid",
+      "title": "Välistamisreeglid",
+      "typesDescription": "Sisestage tootekategooria või -tüüp ja vajutage selle lisamiseks sisestusklahvi või koma.",
+      "typesPlaceholder": "Kinkekaart, teenus, ...",
+      "typesTitle": "Välistatud tootetüübid",
+      "vendorsDescription": "Sisestage müüja nimi ja vajutage selle lisamiseks sisestusklahvi või koma.",
+      "vendorsPlaceholder": "Müüja A, Müüja B, ...",
+      "vendorsTitle": "Välistatud müüjad"
+    },
+    "fallback": "Tagavaralahendus",
+    "guidance": "Juhised",
+    "guidanceItems": {
+      "balancedDescription": "Soovitatav enamiku kataloogide jaoks (65–70%). Püüab kinni tõenäolised riskid, hoides samal ajal valehäirete arvu madalal.",
+      "balancedTitle": "Tasakaalustatud vaikeseade",
+      "broadDescription": "Kasutage umbes 50%, kui eelistate leida rohkem võimalikke vasteid ja olete valmis rohkem hoiatusi üle vaatama.",
+      "broadTitle": "Laiendatud jälgimine",
+      "strictDescription": "Kasutage 80%+ siis, kui teie kataloog on stabiilne ja soovite vähem käsitsi ülevaatusi.",
+      "strictTitle": "Range vastavus"
+    },
+    "included": {
+      "description": "Rakendus jälgib pidevalt teie kataloogi Safety Gate'i hoiatuste suhtes, säilitab vastavuse tõendid ja annab teile märku, kui tooted vajavad ülevaatamist.",
+      "evidenceDescription": "Lahendatud ja tagasi lükatud otsused säilitavad märkmed, põhjused, riski konteksti ja ajatemplid.",
+      "evidenceTitle": "Eksporditav tõend",
+      "eyebrow": "Pidev jälgimine",
+      "monitoringDescription": "Uusi Safety Gate'i kirjeid võrreldakse jälgitavate Shopify toodetega ilma käsitsi skannimiseta.",
+      "monitoringTitle": "Pidev EL-i jälgimine",
+      "teamDescription": "Prioriteetne ülevaatus, tarnija dokumentatsioon ja filtrid aitavad teie meeskonnal kiiremini tegeleda tegelike otsustega.",
+      "teamTitle": "Ülevaatuse töövoog",
+      "title": "Mida teie pood hõlmab"
+    },
+    "matchingStrictness": "Vastavuse rangus",
+    "mode": {
+      "balanced": "Tasakaalustatud",
+      "broad": "Rohkem vasteid",
+      "strict": "Vähem vasteid"
+    },
+    "monitoringModeEyebrow": "Jälgimisrežiim",
+    "notifications": {
+      "emailHelp": "Algselt võetud Shopify'st. Saate kasutada teist aadressi.",
+      "emailLabel": "Teavituse e-posti aadress",
+      "enabledDescription": "Valige, kas soovite saada kiireloomulisi leide, iganädalast kokkuvõtet või mõlemat.",
+      "enabledTitle": "E-posti ohutusteavitused",
+      "immediateDescription": "Saada mulle e-kiri kohe, kui toode vajab ülevaatamist.",
+      "immediateTitle": "Uued leiud",
+      "invalidEmail": "Enne e-posti teavituste lubamist sisestage kehtiv e-posti aadress.",
+      "languageLabel": "E-posti keel",
+      "noRecipientDescription": "E-posti teavitused on lubatud, kuid aadressi pole määratud. Sõnumeid ei edastata enne, kui e-posti aadress on sisestatud.",
+      "noRecipientHeading": "E-posti saajat pole konfigureeritud",
+      "useShopifyEmail": "Kasuta poe kontakt-e-posti aadressi ({{email}})",
+      "weeklyDescription": "Esmaspäevane jälgimise kokkuvõte: kinnitab, kui uusi leide ei esinenud, või võtab kokku avatud juhtumid, mis vajavad ülevaatamist.",
+      "weeklyTitle": "Iganädalane jälgimise kokkuvõte"
+    },
+    "onDemand": "Nõudmisel",
+    "plans": {
+      "advancedDescription": "Lisage prioriteetne ülevaatus, tarnijate järelkontroll ja EL-i keelte töövoogud.",
+      "advancedTitle": "Täiustatud: automatiseerimine ja mitmekeelsed töövoogud",
+      "description": "Funktsioonid ja võimalused, mis sisalduvad teie poe jälgimisplaanis.",
+      "eyebrow": "Tellimuse väärtus",
+      "manualDescription": "Käivitage kontrolle ükshaaval ja vaadake toote uusimat olekut.",
+      "manualTitle": "Tasuta: käsitsi kontrollid",
+      "monitorDescription": "Jälgige uusi Safety Gate'i hoiatusi kataloogi suhtes, eksportige CSV-auditi aruandeid ja säilitage otsuste jälg.",
+      "monitorTitle": "Tasuline: igapäevane jälgimine ja aruanded",
+      "title": "Plaani võimalused"
+    },
+    "recommendedSetup": "Soovitatav seadistus",
+    "saveAll": "Salvesta kõik seaded",
+    "status": {
+      "auditTrail": "Auditi jälg",
+      "autoQuarantine": "Prioriteetne ülevaatus",
+      "dailySafetyGateUpdates": "Igapäevased Safety Gate'i uuendused",
+      "emailDigest": "E-posti kokkuvõte",
+      "off": "Väljas",
+      "on": "Sees",
+      "running": "Töötab",
+      "shopifyProductUpdates": "Uued/uuendatud Shopify tooted"
+    },
+    "storeSetting": "Poe seade",
+    "strictnessHint": "40–60% on laiem skaneerimine. 70–85% on rangem ja annab tavaliselt vähem valepositiivseid tulemusi.",
+    "valueDescription": "Pidev jälgimine võrdleb sobivaid kataloogitooteid äsja avaldatud Safety Gate'i kirjetega.",
+    "valueEyebrow": "Kataloogi jälgimine",
+    "valueItems": {
+      "auditDescription": "Lahendatud ja tagasi lükatud otsused säilitavad märkmed, põhjused ja ülevaatuse ajaloo eksporditavate aruannete jaoks.",
+      "auditTitle": "Auditi jaoks valmis tõendid",
+      "dailyDescription": "Uusi Safety Gate'i hoiatusi kontrollitakse jälgitavate toodete suhtes ilma, et kaupmees peaks käsitsi skannimist alustama.",
+      "dailyTitle": "Igapäevane kataloogi jälgimine",
+      "workflowDescription": "Kaupmehed vaatavad üle ainult tooted, mis vajavad otsust, seejärel lahendavad, lükkavad tagasi või võtavad ühendust tarnijatega.",
+      "workflowTitle": "Shopify-põhine ülevaatuse töövoog"
+    },
+    "valueTitle": "Mis jääb kaetuks",
+    "workspace": "Tööruum"
+  },
+  "status": {
+    "actionRequired": "Vajalik tegevus",
+    "allClear": "Kõik korras",
+    "archived": "Arhiveeritud",
+    "dismissed": "Tagasilükatud",
+    "flagged": "märgistatud",
+    "monitored": "Jälgitav",
+    "needsReview": "Vajab ülevaatamist",
+    "notChecked": "Kontrollimata",
+    "protected": "Kontrollitud",
+    "resolved": "Lahendatud",
+    "runCheck": "Käivita kontroll",
+    "safe": "Vasteid ei leitud",
+    "scanning": "Skaneerimine pooleli",
+    "unprotected": "Kontrollimata",
+    "unsafe": "Vajab ülevaatamist",
+    "updated": "Uuendatud"
+  },
+  "uxEnhancements": {
+    "activityTimeline": {
+      "actions": {
+        "dismiss": "Otsus salvestatud: tagasi lükatud",
+        "check": "Toode kontrollitud",
+        "quarantine": "Toode märgitud ülevaatamiseks",
+        "resolve": "Otsus salvestatud: lahendatud"
+      },
+      "description": "Salvestatud ohutuskontrollid, tooteotsused ja tõendid auditiaruannete jaoks.",
+      "details": {
+        "autoDrafted": "Toode märgitud prioriteetseks ülevaatuseks.",
+        "bulkScanned": "Kataloogi massiline skaneerimine lõpetatud.",
+        "checkSafe": "Selles kontrollis vastet ei leitud.",
+        "checkUnsafe": "Toode vajab ülevaatamist. Otsuse kirje loodud.",
+        "noReason": "Põhjust pole täpsustatud.",
+        "reason": "Põhjus: {{reason}}"
+      },
+      "eyebrow": "Auditi jälg",
+      "noActivity": "Auditeerimissündmusi veel pole. Tõendite kogumise alustamiseks käivitage jälgimine.",
+      "title": "Otsuste ja tõendusmaterjali ajalugu",
+      "types": {
+        "automatic": "Süsteemisündmus",
+        "bulk": "Hulgi sündmus",
+        "manual": "Kaupmehe sündmus"
+      }
+    },
+    "alerts": {
+      "floating": {
+        "dismissSelected": "Loobu valitud",
+        "resolveSelected": "Lahenda valitud",
+        "selectedCount": "{{count}} valitud hoiatus",
+        "selectedCount_few": "{{count}} valitud hoiatust",
+        "selectedCount_many": "{{count}} valitud hoiatust",
+        "selectedCount_one": "{{count}} valitud hoiatus",
+        "selectedCount_other": "{{count}} valitud hoiatust",
+        "selectedCount_plural": "{{count}} valitud hoiatust"
+      },
+      "quickFilters": {
+        "allAlerts": "Kõik kirjed",
+        "allAlertsDesc": "Näita kõiki ohutushoiatusi kataloogis.",
+        "highRisk": "Ainult kõrge riskiga",
+        "highRiskDesc": "Tõsised riskitasemed, mis nõuavad tegutsemist.",
+        "needsReview": "Vajab ülevaatamist",
+        "needsReviewDesc": "Ootel ohutushoiatused.",
+        "resolved": "Lahendatud / tagasi lükatud",
+        "resolvedDesc": "Varasemad hoiatused auditeerimiseks säilitatud.",
+        "title": "Kiirfiltrid"
+      }
+    },
+    "complianceRing": {
+      "scoreLabel": "Tühjenda",
+      "subtitle": "Kontrollitud toodete osakaal ilma avatud ülevaatusobjektideta",
+      "title": "Jälgitava kataloogi seisund"
+    }
+  },
+  "workspace": {
+    "all": "Kõik",
+    "appLanguage": "Rakenduse keel",
+    "apply": "Rakenda filtreid",
+    "applyFilters": "Rakenda filtreid",
+    "balancedHelp": "Tasakaalustatud sobitamine on soovitatav alguspunkt. Muutke seda ainult siis, kui soovite üle vaadata rohkem või vähem võimalikke vasteid.",
+    "broadHelp": "Sisaldab rohkem võimalikke vasteid ja võib nõuda rohkem käsitsi ülevaatamist.",
+    "cannotCompare": "Ei saa võrrelda",
+    "catalogGlobalAction": "Kontrolli {{count}} toodet kogu kataloogis",
+    "catalogScopeHelp": "Katvus hõlmab kõiki Shopify kataloogi tooteid, sealhulgas aktiivseid, mustandeid ja arhiveeritud tooteid. Filtrid muudavad ainult seda loendit, mitte katvust ega jälgimisulatust.",
+    "clearFilters": "Tühjenda filtrid",
+    "compare": "Võrdle tooteid",
+    "compareProduct": "Võrdle tooteid: {{title}}",
+    "coverageFiltersHelp": "Katvus ja avatud leiud on eraldi: muudetud tootel võib olla ka leid, mis ootab ülevaatamist.",
+    "coverageIncomplete": "{{count}} toodet vajavad praegust kontrolli",
+    "coverageScope": "Näidatakse {{visible}} {{total}} kataloogi tootest.",
+    "csv": {
+      "action": "Otsuse tegevus",
+      "actor": "Salvestas",
+      "caseNumber": "Safety Gate'i juhtum",
+      "decisionAt": "Otsus tehtud",
+      "detectedAt": "Avastatud",
+      "generatedAt": "Genereeritud",
+      "guidance": "Ülevaatuse juhised",
+      "notes": "Ülevaatuse märkused",
+      "product": "Toode",
+      "productId": "Shopify toote ID",
+      "recordType": "Kirje tüüp",
+      "resolution": "Lahendus",
+      "risk": "Riski tase",
+      "shop": "Pood",
+      "source": "Ametlik allikas",
+      "sourceRisk": "Risk ametlikus hoiatuses",
+      "status": "Olek"
+    },
+    "csvGuidance": "Võimalik vaste. Enne otsustamist võrrelge toote identifikaatoreid ja ametlikku kirjet.",
+    "currentFindingStatus": "Praeguse leiu staatus",
+    "dateFilterTimezone": "Kuupäevad kasutavad jälgimise ajavööndit: {{timeZone}}. Tulemuste ja ekspordi värskendamiseks rakendage filtreid.",
+    "decisionAt": "Otsus salvestatud",
+    "decisionExportHelp": "See vaade ja selle CSV-eksport kasutavad otsuste kuupäevi. Need hõlmavad vanemate leidude ülevaatamise sündmusi, sealhulgas uuesti avatud juhtumeid. Tootenimed ja ametlikud allikaandmed säilitavad oma algse teksti.",
+    "decisionFrom": "Otsuse kuupäev alates",
+    "decisionLegacy": "Ajalooline tulemus: toode tunnistatud ohutuks",
+    "decisionTo": "Otsuse kuupäev kuni",
+    "detectedAt": "Leid avastatud",
+    "differentIdentifiers": "Erinevad identifikaatorid: {{fields}}. Kontrollige neid enne otsustamist.",
+    "documentedFindings": "Praegu lahendatud või tagasi lükatud leiud",
+    "download": "Laadi alla CSV",
+    "emptyHelp": "Avatud leide pole registreeritud. See ei kinnita, et teie tooted on ohutud. Kontrollige kataloogi katvust ja viimast jälgimiskäivitust.",
+    "eventCount": "{{count}} otsuse sündmust",
+    "excluded": "{{count}} {{total}} kataloogi tootest vastavad nendele reeglitele käsitsi kontrollimiseks. Automaatne jälgimine neid välistusi ei kasuta. Olemasolevad leiud jäävad kättesaadavaks.",
+    "excludeHelp": "Need reeglid kehtivad käsitsi kontrollidele. Kontrollige mõjutatud tooteid enne salvestamist.",
+    "exportHelp": "CSV sisaldab kõiki valitud perioodi ja staatuse leide, sealhulgas ametlikke viiteid, ülevaatuse märkusi ja salvestatud otsuste sündmusi. See on kontrollide register, mitte ohutussertifikaat.",
+    "exportReady": "CSV on ette valmistatud. Kui allalaadimine ei alanud, kasutage seda linki:",
+    "findingCount": "Leide selles ulatuses: {{count}}.",
+    "findingFrom": "Leid avastatud alates",
+    "findings": "Leiud ja tõendid",
+    "findingTo": "Leid avastatud kuni",
+    "from": "Alates kuupäevast",
+    "goReview": "Vaata avatud leide",
+    "groupAction": "Võetud meede",
+    "groupDifferent": "Erinev toode",
+    "groupInformation": "Vajab lisateavet",
+    "history": "Otsuste ajalugu",
+    "historyLimit": "Näidatakse kuni {{count}} hiljutist leidu. Kõigi leidude jaoks eksportige täielik kirje.",
+    "changed": "Muudetud pärast viimast kontrolli",
+    "chooseOutcomeHelp": "Valige tulemus, et saaksite oma otsuse salvestada.",
+    "chooseOutcomeLink": "Vali tulemus",
+    "lastSuccess": "Viimane edukas jälgimiskäivitus",
+    "matchingIdentifiers": "Vastavad identifikaatorid: {{fields}}.",
+    "matchNeedsVerification": "Võimalik vaste. Enne otsustamist võrrelge fotosid ja identifikaatoreid ametliku kirjetega.",
+    "matchNotConfirmed": "Vastavust ei kinnitatud pärast tõendite ülevaatamist",
+    "missingIdentifiers": "Mõned identifikaatorid puuduvad. Võrrelge olemasolevaid fotosid ja küsige oma tarnijalt mudelit, vöötkoodi ja partiid.",
+    "monitoring": {
+      "enabled": "Lubatud – igapäevased kontrollid",
+      "failed": "Viimane automaatne kontroll ebaõnnestus",
+      "paused": "Peatatud – puudub praegune jälgimiskava",
+      "preview": "Arenduse eelvaade – arveldamine on mööda hiilitud",
+      "processing": "Kontroll järjekorras või pooleli",
+      "unknown": "Jälgimistegevus kinnitamata",
+      "unverified": "Peatatud – tellimust ei saanud kinnitada"
+    },
+    "monitoringLabel": "Automaatne jälgimine",
+    "monitoringUnknownHelp": "Hiljutise tegevuse kinnitamiseks pole edukat jälgimiskäivitust saadaval. Värskendage, et uuesti kontrollida.",
+    "neverRun": "Salvestatud pole ühtegi lõpetatud jälgimiskäivitust",
+    "noCurrentResult": "Vajalik on praegune tulemus",
+    "noDecisions": "Ühtegi otsust pole veel salvestatud. Avage leid, võrrelge tooteid ja salvestage, mida te üle vaatasite.",
+    "noFilteredDecisions": "Ükski otsusesündmus ei vasta nendele filtritele. Kogu ajaloo nägemiseks tühjendage filtrid.",
+    "noFilteredFindings": "Ükski leid ei vasta nendele filtritele. Kogu loendi nägemiseks tühjendage filtrid.",
+    "noMatch": "Vasteid ei leitud",
+    "noMatchAtCheck": "Selles kontrollis vastet ei leitud.",
+    "notes": "Ülevaatuse märkused",
+    "notificationLanguage": "E-posti keel",
+    "notRecorded": "Praegune ülevaatuse tulemus puudub",
+    "oldest": "Avatud {{count}} päeva",
+    "onboarding": "Impordi kataloog → kontrolli Safety Gate'i kirjeid → vaata tulemused üle",
+    "outcome": "Tulemus",
+    "outcomeHelp": {
+      "contacted_supplier": "Leid jääb avatuks, kuni ootate oma tarnijat.",
+      "false_positive": "Kasutage, kui tõendid näitavad, et hoiatus ei kehti. Leid lükatakse tagasi.",
+      "match_not_confirmed": "Kasutage, kui teie üle vaadatud tõendid ei kinnita vastavust. Leid lahendatakse.",
+      "modified_product": "Kõigepealt värskendage toodet Shopifys. Selle tulemuse salvestamine ei muuda toodet; leid lahendatakse.",
+      "not_my_product": "Kasutage, kui hoiatus puudutab teist toodet. Leid lükatakse tagasi.",
+      "other": "Kirjeldage tulemust nõutavas märkuses. Leid lahendatakse.",
+      "removed_from_sale": "Kõigepealt eemaldage toode müügilt Shopifys. Selle tulemuse salvestamine ei muuda toodet; leid lahendatakse.",
+      "verified_safe": "See on ajalooline tulemus."
+    },
+    "outcomeLabels": {
+      "contactedSupplier": "Ootan tarnijat",
+      "falsePositive": "Valepositiivne",
+      "modifiedProduct": "Muudetud toode",
+      "notMyProduct": "Mitte minu toode",
+      "other": "Muu",
+      "removedFromSale": "Müügilt eemaldatud",
+      "verifiedSafe": "Ajalooline: ohutuks tunnistatud"
+    },
+    "possibleMatch": "Võimalik vaste",
+    "possibleMatchAtCheck": "See kontroll leidis võimaliku Safety Gate'i vaste.",
+    "print": "Prindi / salvesta PDF",
+    "priority": "Ülevaatuse prioriteet",
+    "priorityHelp": "Kõigepealt otsused, seejärel ametliku hoiatuse tõsidus ja vanimad leiud. Järgnevad tarnijaid ootavad üksused.",
+    "productStatus": "Shopify staatus",
+    "productStatusActive": "Aktiivne",
+    "productStatusAll": "Kõik Shopify staatused",
+    "productStatusArchived": "Arhiveeritud",
+    "productStatusDraft": "Mustand",
+    "productStatusUnknown": "Tundmatu",
+    "recommended": "Soovitatav seade",
+    "referenceMissing": "Ametlik juhtuminumber puudub",
+    "remaining": "Kontrollimata või muudetud",
+    "reopened": "Uuesti ülevaatamiseks avatud",
+    "reportEmpty": "Ükski leid ei vasta nendele filtritele.",
+    "reportTitle": "Kontrollide ja otsuste aruanne",
+    "resultHelp": "Tulemuse salvestamine dokumenteerib teie ülevaatuse auditi logis ega muuda Shopify toodet.",
+    "reviewNext": "Vaata üle järgmine vaste: {{title}}",
+    "reviewPrompt": "Võrrelge tõendeid, valige tulemus ja salvestage oma märkmed.",
+    "riskLabels": {
+      "electric": "Elektrilöök",
+      "fire": "Tulekahju",
+      "health": "Terviserisk",
+      "high": "Kõrge risk",
+      "chemical": "Keemiline",
+      "choking": "Lämbumine",
+      "injuries": "Vigastused",
+      "low": "Madal risk",
+      "medium": "Keskmine risk",
+      "serious": "Tõsine risk",
+      "unknown": "Risk Safety Gate'i hoiatuses"
+    },
+    "runScope": "Tootekontrollid: {{products}} · Arvesse võetud Safety Gate'i kirjed: {{records}} · Uued leiud: {{findings}}",
+    "saved": "Seaded salvestatud.",
+    "saveChanges": "Salvesta muudatused",
+    "scope": "Leiud alates {{from}} kuni {{to}}",
+    "scoreDetails": "Sarnasuse üksikasjad",
+    "scoreHelp": "Need on sarnasuse skoorid, mida kasutatakse ülevaatuse prioriseerimiseks, mitte tõenäosus, et teie toode on ohtlik.",
+    "settingsAdvanced": "Täpsem sobitamine ja välistused",
+    "shop": "Pood",
+    "showMore": "Näita rohkem tooteid",
+    "scheduleHelp": "Uusi Safety Gate'i hoiatusi kontrollitakse, kui jälgimiskava on aktiivne. Järgmise lõpetatud kontrolli aeg sõltub järjekorrast.",
+    "sourceMissing": "Selle salvestatud leiu jaoks pole ametlikku kirje linki saadaval.",
+    "sourceRisk": "Risk ametlikus hoiatuses (algne EL-i kirje)",
+    "status": "Leiu staatus",
+    "strictHelp": "Näitab vähem võimalikke vasteid ja võib jätta märkamata vähem ilmsed sarnasused.",
+    "to": "Kuupäevani",
+    "unconfirmedIdentifiers": "Saadaolevad kataloogi identifikaatorid ei kinnita seda vastet. Võrrelge pakendit ja küsige oma tarnijalt puuduvat mudelit, vöötkoodi ja partiid.",
+    "unchecked": "Pole veel kontrollitud",
+    "unsaved": "Teil on salvestamata muudatusi.",
+    "verifyScope": "Kataloogi tulemused kehtivad kontrollitud tooteversioonile. Muudetud tooted vajavad uut kontrolli.",
+    "viewRemainingProducts": "Vaata {{count}} toodet, mis vajavad kontrolli",
+    "viewShopify": "Ava Shopify toode",
+    "waiting": "Ootan tarnijat",
+    "when": "Salvestatud",
+    "who": "Salvestas",
+    "whyMatch": "Miks see võib sobida"
+  }
+}

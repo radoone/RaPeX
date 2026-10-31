@@ -90,7 +90,10 @@ function initLanguageSelectors() {
       option.lang = code;
       select.append(option);
     }
-    select.addEventListener("change", () => i18next.changeLanguage(select.value));
+    select.addEventListener("change", async () => {
+      await i18next.changeLanguage(select.value);
+      try { localStorage.setItem("marketing-site-locale", select.value); } catch { /* Selection still applies for this visit. */ }
+    });
     container.replaceChildren(select);
   });
 }
@@ -169,7 +172,7 @@ function initFormHandler() {
       widgetId = window.turnstile.render("#scan-turnstile", {
         sitekey,
         action: "free_scan",
-        size: "compact",
+        size: "flexible",
         language: i18next.resolvedLanguage === "sk" ? "sk" : "en",
         callback: (token) => {
           turnstileToken = token;
@@ -315,10 +318,32 @@ function initFormHandler() {
 
   loadChallenge();
 
+  function normalizeShopifyDomainInput(rawValue) {
+    const cleaned = String(rawValue || "").trim().toLowerCase().replace(/^https?:\/\//, "");
+    const adminMatch = cleaned.match(/^admin\.shopify\.com\/store\/([a-z0-9][a-z0-9-]{1,60})(?:[/?#]|$)/);
+    if (adminMatch) return `${adminMatch[1]}.myshopify.com`;
+    const hostOnly = cleaned.split(/[/?#]/)[0];
+    if (/^[a-z0-9][a-z0-9-]{1,60}$/.test(hostOnly)) {
+      return `${hostOnly}.myshopify.com`;
+    }
+    return hostOnly;
+  }
+
+  const domainInput = document.getElementById("scan-domain");
+  domainInput?.addEventListener("blur", () => {
+    const normalized = normalizeShopifyDomainInput(domainInput.value);
+    if (normalized && normalized.endsWith(".myshopify.com")) {
+      domainInput.value = normalized;
+    }
+  });
+
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     requestAttempted = true;
-    const domain = document.getElementById("scan-domain").value.trim().toLowerCase().replace(/^https?:\/\//, "").replace(/\/$/, "");
+    const domain = normalizeShopifyDomainInput(domainInput?.value || "");
+    if (domainInput && domain.endsWith(".myshopify.com")) {
+      domainInput.value = domain;
+    }
     const emailInput = document.getElementById("scan-email");
     const email = emailInput.value.trim();
     if (!/^[a-z0-9][a-z0-9-]{1,60}\.myshopify\.com$/.test(domain)) {
@@ -381,7 +406,8 @@ async function initI18n() {
       order: ["querystring", "localStorage", "navigator"],
       lookupQuerystring: "lang",
       lookupLocalStorage: "marketing-site-locale",
-      caches: ["localStorage"],
+      // Only an explicit user choice is saved; automatic detection must follow browser preferences.
+      caches: [],
     },
   });
 
@@ -400,6 +426,7 @@ async function initI18n() {
       }
 
       await i18next.changeLanguage(language);
+      try { localStorage.setItem("marketing-site-locale", language); } catch { /* Selection still applies for this visit. */ }
     });
   });
 

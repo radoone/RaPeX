@@ -269,7 +269,11 @@
     "reportDownload": "Preuzmi sve nalaze (CSV)",
     "reportBody": "Uključuje sve proizvode s mogućim podudaranjima. Jednokratna provjera. Privatna poveznica istječe nakon 30 dana.",
     "reportLoading": "Priprema potpunog izvješća…",
-    "reportError": "Izvješće nije dostupno ili je poveznica istekla. Pokušajte ponovno ili pišite na info@zerorecall.online."
+    "reportError": "Izvješće nije dostupno ili je poveznica istekla. Pokušajte ponovno ili pišite na info@zerorecall.online.",
+    "detailsSummary": "Što točno provjeravamo tijekom besplatnog skeniranja?",
+    "detailsStep1": "<strong>1. Javni Shopify katalog:</strong> Čitamo javno dostupne nazive, opise, marke, kategorije i fotografije proizvoda iz vaše trgovine (bez pristupa administraciji).",
+    "detailsStep2": "<strong>2. Usporedba teksta i slika sa sustavom Safety Gate:</strong> Tekst i slike pretvaramo u vektore pretraživanja i uspoređujemo ih s cijelom EU Safety Gate (bivši RAPEX) bazom podataka.",
+    "detailsStep3": "<strong>3. Sažetak e-poštom i CSV izvoz:</strong> Po završetku primate e-poruku s mogućim podudaranjima, brojevima predmeta, službenim EU poveznicama i CSV datotekom."
   },
   "quiet": {
     "eyebrow": "VIŠE MIRA",

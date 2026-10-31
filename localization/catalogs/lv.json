@@ -270,7 +270,11 @@
       "reportDownload": "Lejupielādēt visus rezultātus (CSV)",
       "reportBody": "Ietver visus produktus ar iespējamām atbilstībām. Vienreizēja pārbaude. Privātā saite derīga 30 dienas.",
       "reportLoading": "Tiek sagatavots pilns pārskats…",
-      "reportError": "Pārskats nav pieejams vai saites derīgums beidzies. Mēģiniet vēlreiz vai rakstiet info@zerorecall.online."
+      "reportError": "Pārskats nav pieejams vai saites derīgums beidzies. Mēģiniet vēlreiz vai rakstiet info@zerorecall.online.",
+      "detailsSummary": "Ko tieši mēs pārbaudām bezmaksas skenēšanas laikā?",
+      "detailsStep1": "<strong>1. Publiskais Shopify katalogs:</strong> Mēs nolasām publiski pieejamos nosaukumus, aprakstus, zīmolus, kategorijas un produktu fotoattēlus no jūsu veikala (bez administratora piekļuves).",
+      "detailsStep2": "<strong>2. Teksta un attēlu salīdzināšana ar Safety Gate:</strong> Pārveidojam tekstu un attēlus meklēšanas vektoros un salīdzinām tos ar visu ES Safety Gate (agrāk RAPEX) datubāzi.",
+      "detailsStep3": "<strong>3. E-pasta kopsavilkums un CSV eksports:</strong> Pēc pabeigšanas saņemsiet e-pastu ar iespējamajām atbilstībām, lietu numuriem, oficiālajām ES saitēm un CSV failu."
     },
     "quiet": {
       "eyebrow": "VAIRĀK MIERA",

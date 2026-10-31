@@ -270,7 +270,11 @@
       "reportDownload": "Laadi kõik leiud alla (CSV)",
       "reportBody": "Sisaldab kõiki võimalike vastetega tooteid. Ühekordne kontroll. Privaatne link aegub 30 päeva pärast.",
       "reportLoading": "Täieliku aruande ettevalmistamine…",
-      "reportError": "Aruanne pole saadaval või link on aegunud. Proovi uuesti või kirjuta info@zerorecall.online."
+      "reportError": "Aruanne pole saadaval või link on aegunud. Proovi uuesti või kirjuta info@zerorecall.online.",
+      "detailsSummary": "Mida me tasuta skannimise käigus täpselt kontrollime?",
+      "detailsStep1": "<strong>1. Avalik Shopify kataloog:</strong> Loeme teie poe avalikult kättesaadavaid pealkirju, kirjeldusi, kaubamärke, kategooriaid ja tootefotosid (ilma administraatori ligipääsuta).",
+      "detailsStep2": "<strong>2. Teksti ja piltide võrdlus Safety Gate’iga:</strong> Muudame tekstid ja pildid otsinguvektoriteks ning võrdleme neid kogu ELi Safety Gate’i (endine RAPEX) andmebaasiga.",
+      "detailsStep3": "<strong>3. E-posti kokkuvõte ja CSV eksport:</strong> Pärast valmimist saate e-kirja võimalike vastetega, juhtuminumbrite, ametlike ELi linkide ja CSV allalaadimisega."
     },
     "quiet": {
       "eyebrow": "ROHKEM MEELERAHU",

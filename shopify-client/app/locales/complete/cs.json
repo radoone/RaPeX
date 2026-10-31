@@ -1,0 +1,1406 @@
+{
+  "actions": {
+    "auditReport": "Zpráva o auditu",
+    "clear": "Vymazat",
+    "dashboard": "Přehled",
+    "downloadAuditReport": "Stáhnout zprávu o auditu",
+    "checkAll": "Zkontrolovat všechny produkty",
+    "checkAllProducts": "Zkontrolovat všech {{count}} produktů",
+    "checking": "Probíhá kontrola...",
+    "checkNewSafetyGateAlerts": "Zkontrolovat nová upozornění Safety Gate",
+    "checkOneProduct": "Zkontrolovat jeden produkt",
+    "checkSelectedProduct": "Zkontrolovat vybraný produkt",
+    "checkUnchecked": "Zkontrolovat {{count}} nezkontrolovaných produktů",
+    "manualCheck": "Zkontrolovat produkt",
+    "next": "Další",
+    "openFirstMatch": "Otevřít první shodu",
+    "previous": "Předchozí",
+    "protectRemainingProducts": "Zkontrolovat zbývajících {{count}} produktů",
+    "reactivate": "Znovu aktivovat",
+    "recordDecision": "Zaznamenat rozhodnutí",
+    "refreshCoverage": "Obnovit pokrytí katalogu",
+    "resolve": "Vyřešit",
+    "retry": "Zkusit znovu",
+    "reviewActiveProducts": "Zkontrolovat aktivní produkty",
+    "reviewAlerts": "Zkontrolovat upozornění",
+    "reviewDecision": "Porovnat produkty",
+    "reviewMultipleMatches": "Zkontrolovat {{count}} shod",
+    "reviewOneMatch": "Zkontrolovat 1 shodu",
+    "reviewProductsNeedingAction": "Zkontrolovat {{count}} produktů vyžadujících akci",
+    "reviewProductsNeedingAction_few": "Zkontrolovat {{count}} produktů vyžadujících akci",
+    "reviewProductsNeedingAction_many": "Zkontrolovat {{count}} produktů vyžadujících akci",
+    "reviewProductsNeedingAction_one": "Zkontrolovat {{count}} produkt vyžadující akci",
+    "reviewProductsNeedingAction_other": "Zkontrolovat {{count}} produktů vyžadujících akci",
+    "reviewProductsNeedingAction_plural": "Zkontrolovat {{count}} produktů vyžadujících akci",
+    "search": "Hledat",
+    "settings": "Nastavení",
+    "tryAgain": "Zkusit znovu",
+    "view": "Zobrazit",
+    "viewAlerts": "Zobrazit upozornění",
+    "viewDetails": "Zobrazit podrobnosti",
+    "viewEvidence": "Zobrazit historii rozhodnutí"
+  },
+  "alerts": {
+    "admin": {
+      "actionNeeded": "Je potřeba akce",
+      "actionNeededDescription": "Zkontrolujte shody, zamítněte falešné poplachy nebo vyřešte potvrzená rizika, aby fronta upozornění zůstala funkční.",
+      "actionNeededTitle": "{{count}} aktivní upozornění stále vyžaduje rozhodnutí",
+      "actionNeededTitle_few": "{{count}} aktivní upozornění stále vyžaduje rozhodnutí",
+      "actionNeededTitle_many": "{{count}} aktivních upozornění stále vyžaduje rozhodnutí",
+      "actionNeededTitle_one": "{{count}} aktivní upozornění stále vyžaduje rozhodnutí",
+      "actionNeededTitle_other": "{{count}} aktivních upozornění stále vyžaduje rozhodnutí",
+      "actionNeededTitle_plural": "{{count}} aktivních upozornění stále vyžaduje rozhodnutí",
+      "criticalBannerDescription": "{{count}} aktivní shoda je v Safety Gate označena jako vysoké nebo vážné riziko. Vyřešte tyto shody nejdříve.",
+      "criticalBannerDescription_few": "{{count}} aktivní shody jsou v Safety Gate označeny jako vysoké nebo vážné riziko. Vyřešte tyto shody nejdříve.",
+      "criticalBannerDescription_many": "{{count}} aktivních shod je v Safety Gate označeno jako vysoké nebo vážné riziko. Vyřešte tyto shody nejdříve.",
+      "criticalBannerDescription_one": "{{count}} aktivní shoda je v Safety Gate označena jako vysoké nebo vážné riziko. Vyřešte tyto shody nejdříve.",
+      "criticalBannerDescription_other": "{{count}} aktivních shod je v Safety Gate označeno jako vysoké nebo vážné riziko. Vyřešte tyto shody nejdříve.",
+      "criticalBannerDescription_plural": "{{count}} aktivních shod je v Safety Gate označeno jako vysoké nebo vážné riziko. Vyřešte tyto shody nejdříve.",
+      "criticalBannerTitle": "{{count}} shoda s vysokým rizikem vyžaduje kontrolu",
+      "criticalBannerTitle_few": "{{count}} shody s vysokým rizikem vyžadují kontrolu",
+      "criticalBannerTitle_many": "{{count}} shod s vysokým rizikem vyžaduje kontrolu",
+      "criticalBannerTitle_one": "{{count}} shoda s vysokým rizikem vyžaduje kontrolu",
+      "criticalBannerTitle_other": "{{count}} shod s vysokým rizikem vyžaduje kontrolu",
+      "criticalBannerTitle_plural": "{{count}} shod s vysokým rizikem vyžaduje kontrolu",
+      "queue": "Fronta rozhodnutí o produktu",
+      "queueDescription": "Potvrďte pravděpodobné shody, zamítněte falešné poplachy nebo zaznamenejte provedenou akci.",
+      "warningBannerDescription": "Tuto frontu používejte pouze pro skutečná rozhodnutí: rychle vyřešte potvrzená rizika a zamítněte falešné poplachy.",
+      "warningBannerTitle": "{{count}} aktivní upozornění stále vyžaduje kontrolu",
+      "warningBannerTitle_few": "{{count}} aktivní upozornění stále vyžaduje kontrolu",
+      "warningBannerTitle_many": "{{count}} aktivních upozornění stále vyžaduje kontrolu",
+      "warningBannerTitle_one": "{{count}} aktivní upozornění stále vyžaduje kontrolu",
+      "warningBannerTitle_other": "{{count}} aktivních upozornění stále vyžaduje kontrolu",
+      "warningBannerTitle_plural": "{{count}} aktivních upozornění stále vyžaduje kontrolu"
+    },
+    "breadcrumbs": {
+      "current": "Fronta kontroly",
+      "dashboard": "Přehled"
+    },
+    "checklist": {
+      "items": {
+        "0": "Upřednostněte aktivní upozornění",
+        "1": "Zdokumentujte kroky nápravy",
+        "2": "Ověřte před zamítnutím"
+      },
+      "title": "Kontrolní seznam reakce"
+    },
+    "meta": {
+      "active": "{{count}} ke kontrole",
+      "total": "{{count}} celkem"
+    },
+    "metrics": {
+      "activeHeading": "Aktivní upozornění",
+      "archived": "Archivováno",
+      "dismissedDescription": "Uchovávejte poznámky pro audit",
+      "dismissedDescriptionZero": "Zatím žádná zamítnutá upozornění",
+      "dismissedHeading": "Zamítnuto",
+      "resolutionHeading": "Míra řešení",
+      "resolved": "{{count}} vyřešeno",
+      "resolvedAndDismissed": "{{resolved}} vyřešeno • {{dismissed}} zamítnuto",
+      "totalRecorded": "{{count}} celkem zaznamenáno"
+    },
+    "pagination": {
+      "next": "Další",
+      "previous": "Předchozí"
+    },
+    "subtitle": "Zkontrolujte produkty vyžadující rozhodnutí.",
+    "table": {
+      "accessibilityLabel": "Tabulka bezpečnostních upozornění",
+      "empty": "Žádná upozornění neodpovídají vašim filtrům",
+      "emptyAllClearBody": "Momentálně nejsou žádná otevřená obchodní rozhodnutí. Denní monitorování stále probíhá a uzavřená rozhodnutí zůstávají v záznamech auditu.",
+      "emptyAllClearTitle": "Všechny aktivní recenze produktů jsou vyřízeny",
+      "emptyFilteredBody": "Upravte filtry nebo vyhledejte jiný produkt. Vaše aktivní fronta může být stále prázdná.",
+      "emptyFilteredTitle": "Žádné položky k recenzi neodpovídají těmto filtrům",
+      "headers": {
+        "actions": "Akce",
+        "detected": "Zjištěno",
+        "product": "Produkt",
+        "risk": "Riziko",
+        "status": "Stav"
+      },
+      "order": "Objednávka",
+      "orderOptions": {
+        "asc": "Nejstarší první",
+        "desc": "Nejnovější první"
+      },
+      "reviewProduct": "Rozhodnutí o recenzi pro {{title}}",
+      "searchLabel": "Hledat upozornění",
+      "searchPlaceholder": "Hledat podle názvu produktu...",
+      "selectAll": "Vybrat všechny viditelné nálezy",
+      "selectedCount": "Vybráno: {{count}}",
+      "selectProduct": "Vybrat nález pro {{title}}",
+      "similarityTooltip": "Skóre podobnosti: {{score}}%",
+      "sort": "Seřadit",
+      "sortBy": "Seřadit podle",
+      "sortOptions": {
+        "created": "Datum zjištění",
+        "name": "Název produktu",
+        "risk": "Úroveň rizika"
+      },
+      "tabs": {
+        "active": "Vyžaduje recenzi",
+        "all": "Vše",
+        "dismissed": "Zamítnuto",
+        "resolved": "Vyřešeno"
+      },
+      "thumbnailLabel": "Miniatura {{title}}",
+      "viewProduct": "Zobrazit zaznamenaný nález pro {{title}}"
+    },
+    "title": "Fronta recenzí",
+    "toasts": {
+      "updated": "Upozornění aktualizováno"
+    }
+  },
+  "analysis": {
+    "alertImagesUsed": "Porovnané obrázky upozornění: {{count}}",
+    "alertNumber": "Upozornění {{number}}",
+    "audit": {
+      "existingNotes": "Poznámky k auditu",
+      "noteLabel": "Poznámka k auditu",
+      "notePlaceholder": "Přidejte, co jste zkontrolovali, důkazy od dodavatele nebo proč bylo toto zamítnuto."
+    },
+    "candidateAlerts": "Kandidátská upozornění: {{count}}",
+    "decisionContextDesc": "Zaznamenání rozhodnutí dokumentuje, že tato shoda bezpečnosti byla zkontrolována a uchovává vaši auditní stopu. Automaticky nemění váš produkt Shopify ani jej neodstraňuje z vašeho obchodu.",
+    "decisionContextTitle": "Zaznamenávání rozhodnutí o shodě",
+    "decisionRecorded": "Rozhodnutí zaznamenáno",
+    "editInShopify": "Upravit produkt v Shopify",
+    "enlargedSafetyAlert": "Zvětšený obrázek bezpečnostního upozornění",
+    "fields": {
+      "accessibilityLabel": "Tabulka podrobností shody upozornění",
+      "alertDate": "Datum upozornění",
+      "brand": "Značka",
+      "category": "Kategorie",
+      "field": "Pole",
+      "model": "Model",
+      "notifyingCountry": "Oznamující země",
+      "origin": "Původ",
+      "productDescription": "Popis produktu",
+      "productName": "Název produktu",
+      "value": "Hodnota"
+    },
+    "focus": {
+      "criticalLead": "Tento produkt má shodu s vysokou spolehlivostí. Rozhodnutí zaznamenejte až po recenzi.",
+      "criticalStepCompare": "Porovnejte fotografii vašeho produktu s první shodou Safety Gate níže.",
+      "criticalStepDecide": "Vyberte výsledek v nabídce Zaznamenat rozhodnutí na základě vaší recenze.",
+      "criticalStepDocument": "Přidejte interní poznámky pro sledovatelnost a následnou kontrolu dodavatele.",
+      "criticalTitle": "Akce je vyžadována ihned",
+      "recordedOutcome": "Zaznamenaný výsledek: {{outcome}}",
+      "reviewedLead": "Toto upozornění není aktivní. Udržujte záznamy přehledné pro audity.",
+      "reviewedStepAudit": "Ověřte vybrané řešení a poznámky.",
+      "reviewedStepReactivate": "Reaktivujte pouze v případě, že se objeví nové důkazy o produktu.",
+      "reviewedTitle": "Recenze již dokončena",
+      "safeLead": "Aktuální výsledek je bezpečný. Pokračujte v monitorování aktualizací produktu.",
+      "safeStepClose": "Zavřete tento detail a pokračujte s dalšími aktivními upozorněními.",
+      "safeStepMonitor": "Ponechte tento produkt v automatickém monitorování.",
+      "safeStepRecheck": "Spusťte novou kontrolu, pokud se změní obrázky, balení nebo dodavatel.",
+      "safeTitle": "Není potřeba žádná naléhavá akce"
+    },
+    "hazardType": "Typ nebezpečí",
+    "checkedAt": "Zkontrolováno: {{date}}",
+    "imageDominated": "Tato shoda byla hodnocena s prioritou obrázků, takže vizuální podobnost balení měla větší váhu než textová neshoda.",
+    "imageMatch": "Shoda obrázku",
+    "imageMatchShort": "{{count}}% obrázek",
+    "legalProvision": "Právní ustanovení",
+    "matchesHint": "Začněte s kartou nejlepší shody níže a nejprve potvrďte vizuální balení, poté detaily modelu a značky.",
+    "merchantRecommendation": {
+      "active": "Porovnejte obrázky produktu a Safety Gate, potvrďte značku nebo model a poté zaznamenejte akci, kterou váš obchod podnikne.",
+      "reviewed": "Tento nález je uzavřen. Před reaktivací ověřte zaznamenaný výsledek a důkazy.",
+      "safe": "Není vyžadována žádná akce obchodu. Znovu zkontrolujte, pokud se změní produkt, balení, obrázky nebo dodavatel."
+    },
+    "modalAccessibilityLabel": "Podrobnosti shody Safety Gate pro {{title}}",
+    "modalHeading": "Zkontrolovat shodu Safety Gate",
+    "noIssuesFound": "Nebyly nalezeny žádné bezpečnostní problémy",
+    "openProductImage": "Otevřít obrázek pro {{title}}",
+    "overallMatch": "Celková shoda",
+    "overallMatchShort": "{{count}}% celkově",
+    "potentialRisk": "Potenciální bezpečnostní riziko",
+    "primaryRiskFocus": "Primární zaměření rizika: {{category}} na úrovni {{level}}. Před rozhodnutím to nejprve potvrďte.",
+    "productImagesUsed": "Obrázky produktu: {{used}} / {{provided}}",
+    "reviewLayout": {
+      "actionNeeded": "Je potřeba akce",
+      "compareHeading": "Porovnat produkty",
+      "compareHint": "Před rozhodnutím zkontrolujte fotografie, značku, model a kategorii.",
+      "decisionHeading": "Zaznamenejte své rozhodnutí",
+      "decisionPrompt": "Vyberte výsledek kontroly. Můžete přidat poznámku o tom, co jste zkontrolovali.",
+      "fullEvidence": "Úplné důkazy Safety Gate ({{count}})",
+      "groupHelp": {
+        "action": "Uzavřete zjištění poté, co jste produkt stáhli z prodeje nebo jej aktualizovali v Shopify.",
+        "different": "Uzavřete nebo zamítněte zjištění, protože váš produkt je jiný model, značka nebo šarže.",
+        "information": "Ponechte zjištění otevřené, zatímco budete od svého dodavatele žádat dokumenty o šarži, modelu nebo bezpečnosti.",
+        "other": "Zaznamenejte jiný výsledek s povinnou vysvětlující poznámkou pro vaši auditní stopu."
+      },
+      "chooseOutcome": "Vyberte výsledek",
+      "identifiers": {
+        "barcode": "Čárový kód (GTIN/EAN)",
+        "batch": "Šarže / Lot",
+        "brand": "Značka",
+        "field": "Identifikátor",
+        "match": "Shoda",
+        "mismatch": "Nesrovnalost",
+        "model": "Model",
+        "notSpecified": "nespecifikováno",
+        "result": "Porovnání",
+        "safetyGate": "Upozornění Safety Gate",
+        "yourProduct": "Váš produkt Shopify"
+      },
+      "identifiersHeading": "Porovnání identifikátorů vedle sebe",
+      "languageDiffNote": "Jazyk rozhraní aplikace ({{appLang}}) a jazyk e-mailových oznámení ({{emailLang}}) jsou nastaveny nezávisle.",
+      "noImage": "Obrázek není k dispozici",
+      "noteLabel": "Co jste zkontrolovali? (volitelné)",
+      "noteRequiredLabel": "Co jste zkontrolovali? (povinné)",
+      "otherNoteRequired": "Přidejte poznámku k vysvětlení jiného výsledku.",
+      "outcomeLabel": "Výsledek kontroly",
+      "possibleMatch": "Možná shoda se Safety Gate",
+      "readyToRecord": "Připraveno k záznamu",
+      "reviewPointsHeading": "Body ke kontrole",
+      "unnamedRecord": "Záznam Safety Gate"
+    },
+    "riskDescription": "Popis rizika",
+    "riskLevel": "Úroveň rizika",
+    "riskSeverity": "Závažnost rizika",
+    "safetyGateMatches": "Shody se Safety Gate",
+    "scoreHelper": "Celková shoda je konečné skóre kontroly. Shoda obrázků odráží pouze podobnost balení.",
+    "sections": {
+      "whatHappened": "Co se stalo?",
+      "whatHappenedReviewed": "Tato shoda již byla zkontrolována a zaznamenána.",
+      "whatHappenedRisk": "Tento produkt Shopify vypadá jako produkt již nahlášený v Safety Gate.",
+      "whatHappenedSafe": "Poslední kontrola nenašla pravděpodobnou shodu se Safety Gate.",
+      "whatToDo": "Co mám dělat?",
+      "whyMatched": "Proč se shodovalo"
+    },
+    "seriousRisk": "Vážné riziko {{category}}",
+    "summary": {
+      "confidence": "Důvěra",
+      "confidenceUnknown": "Důvěra neznámá",
+      "decisionRecorded": "Rozhodnutí zaznamenáno",
+      "decisionRequired": "Je vyžadováno rozhodnutí",
+      "highConfidence": "Vysoká důvěra",
+      "likelyMatch": "Pravděpodobná shoda",
+      "likelySafetyGateMatch": "Pravděpodobná shoda se Safety Gate",
+      "matchType": "Typ shody",
+      "nextStep": "Další krok",
+      "noLikelyMatch": "Žádná pravděpodobná shoda",
+      "overallMatch": "Celkové skóre",
+      "reviewRecommended": "Doporučena kontrola"
+    },
+    "supplierFollowUp": {
+      "copy": "Kopírovat následnou kontrolu dodavatele",
+      "template": "Dobrý den, kontrolujeme produkt {{product}}, protože se může shodovat s upozorněním Safety Gate {{alert}} (riziko: {{risk}}). Potvrďte prosím, zda se jedná o stejný model/šarži, poskytněte dokumentaci o bezpečnosti produktu a vysvětlete případné rozdíly. Důvod shody: {{reason}}"
+    },
+    "technicalDetails": {
+      "description": "Skóre a počty načtení jsou zde uchovány pro hlubší kontrolu. Začněte s fotografiemi produktu, značkou, modelem a doporučenou akcí výše.",
+      "hide": "Skrýt podrobnosti",
+      "show": "Zobrazit podrobnosti",
+      "title": "Technické podrobnosti shody"
+    },
+    "textOnly": "Pouze textová kontrola",
+    "viewOnSafetyGate": "Zobrazit na Safety Gate",
+    "whyThisMatched": "Proč se to shodovalo",
+    "withImage": "Zkontrolováno s obrázky",
+    "yourProduct": "Váš produkt Shopify"
+  },
+  "auditReport": {
+    "decision": "Rozhodnutí",
+    "description": "Před exportem CSV pro váš tým, dodavatele nebo audit zkontrolujte kompletní záznam.",
+    "detected": "Zjištěno",
+    "documented": "Zdokumentovaná rozhodnutí",
+    "download": "Stáhnout CSV",
+    "empty": "Zatím nebyly zaznamenány žádné nálezy týkající se bezpečnosti produktů.",
+    "eyebrow": "Záznam připravený k exportu",
+    "generated": "Vygenerováno {{date}}",
+    "heading": "Nálezy a rozhodnutí",
+    "needsReview": "Potřebuje kontrolu",
+    "notRecorded": "Nezaznamenáno",
+    "open": "Otevřít auditní zprávu",
+    "product": "Produkt",
+    "risk": "Závažnost rizika",
+    "status": "Stav",
+    "summaryLabel": "Souhrn auditní zprávy",
+    "tableLabel": "Zpráva o bezpečnostním auditu",
+    "title": "Zpráva o bezpečnostním auditu",
+    "total": "Zaznamenané nálezy",
+    "viewHistory": "Zobrazit auditní stopu"
+  },
+  "billing": {
+    "freeScanAvailableDescription": "Máte k dispozici 1 bezplatné skenování katalogu. Spusťte svůj první audit a zkontrolujte produkty ve vašem obchodě proti databázi EU Safety Gate pro nebezpečné nepotravinářské produkty.",
+    "freeScanAvailableHeading": "Aktivní bezplatné počáteční skenování katalogu",
+    "managePlanButton": "Spravovat předplatné",
+    "planActiveDescription": "Monitorování je pro tento obchod Shopify povoleno. Zkontrolujte poslední spuštění a všechny produkty, které vyžadují pozornost.",
+    "planEyebrow": "Plán a pokrytí",
+    "planFreeAvailableDescription": "K dispozici je jedno bezplatné počáteční skenování katalogu Safety Gate.",
+    "planFreeUsedDescription": "Vaše bezplatné počáteční skenování bylo dokončeno. Vyberte si plán pro zahájení průběžného monitorování a pokračujte v exportu záznamů auditu.",
+    "planTitle": "Předplatné a monitorování bezpečnosti",
+    "pricingUnavailable": "Ceny Shopify nejsou pro tuto aplikaci nakonfigurovány.",
+    "statusActivePro": "ZeroRecall Pro (aktivní)",
+    "statusDevelopmentBypass": "Vývojová verze (fakturace přeskočena)",
+    "statusFreeAvailable": "Bezplatné počáteční skenování",
+    "statusFreeUsed": "Bezplatné skenování použito",
+    "statusLabel": "Aktuální plán",
+    "statusUnverified": "Předplatné nelze ověřit",
+    "upgradePlanButton": "Upgradovat na Pro",
+    "upgradeRequiredDescription": "Vaše bezplatné počáteční skenování je dokončeno. Vyberte si plán Shopify pro monitorování nových upozornění Safety Gate a kontrolu změněných produktů.",
+    "upgradeRequiredHeading": "Pokračovat v monitorování Safety Gate",
+    "verificationError": "Nové skenování je pozastaveno, dokud nebude možné zkontrolovat fakturaci Shopify. Vaše stávající nálezy a rozhodnutí zůstávají k dispozici."
+  },
+  "billingRedirect": {
+    "opening": "Otevírání cenových plánů Shopify...",
+    "openPricingPlans": "Otevřít cenové plány"
+  },
+  "common": {
+    "all": "Vše",
+    "cancel": "Zrušit",
+    "close": "Zavřít",
+    "confirm": "Potvrdit",
+    "language": "Jazyk",
+    "loading": "Načítání...",
+    "unknown": "Neznámé"
+  },
+  "dashboard": {
+    "activeAlertsBanner": {
+      "content": "Vyřešte {{count}} aktivní upozornění, aby dotčené produkty zůstaly dostupné ve vašem obchodě.",
+      "content_few": "Vyřešte {{count}} aktivní upozornění, aby dotčené produkty zůstaly dostupné ve vašem obchodě.",
+      "content_many": "Vyřešte {{count}} aktivních upozornění, aby dotčené produkty zůstaly dostupné ve vašem obchodě.",
+      "content_one": "Vyřešte {{count}} aktivní upozornění, aby dotčené produkty zůstaly dostupné ve vašem obchodě.",
+      "content_other": "Vyřešte {{count}} aktivních upozornění, aby dotčené produkty zůstaly dostupné ve vašem obchodě.",
+      "content_plural": "Vyřešte {{count}} aktivních upozornění, aby dotčené produkty zůstaly dostupné ve vašem obchodě.",
+      "manualCheckAction": "Ruční kontrola",
+      "reviewAction": "Zkontrolovat první upozornění",
+      "title": "Aktivní bezpečnostní upozornění vyžadují pozornost"
+    },
+    "admin": {
+      "actionNeeded": "Je potřeba akce",
+      "actionNeededDescription": "Nejprve zkontrolujte označené produkty, abyste se mohli rozhodnout, zda je ponecháte v prodeji, zamítnete shodu nebo vyřešíte upozornění.",
+      "actionNeededTitle": "{{count}} aktivní upozornění vyžaduje kontrolu",
+      "actionNeededTitle_few": "{{count}} aktivní upozornění vyžadují kontrolu",
+      "actionNeededTitle_many": "{{count}} aktivních upozornění vyžaduje kontrolu",
+      "actionNeededTitle_one": "{{count}} aktivní upozornění vyžaduje kontrolu",
+      "actionNeededTitle_other": "{{count}} aktivních upozornění vyžaduje kontrolu",
+      "actionNeededTitle_plural": "{{count}} aktivních upozornění vyžaduje kontrolu",
+      "activeAlertsDescription": "Produkty, které stále potřebují rozhodnutí obchodníka, než bude fronta prázdná.",
+      "auditHistoryKept": "Historie auditu zachována",
+      "auditReady": "Zpráva připravena",
+      "auditRecordsDescription": "Vyřešená a zamítnutá rozhodnutí s důvody a interními poznámkami.",
+      "auditRecordsTitle": "Záznamy auditu",
+      "auditReport": "Zpráva o auditu",
+      "automaticChecks": "Automatické kontroly",
+      "bulkCheckAllSummary": "Tím se spustí úplná kontrola všech {{count}} produktů.",
+      "bulkCheckDescription": "Nejprve naskenujte nezkontrolované produkty, nebo zahrňte celý katalog, když chcete novou kontrolu.",
+      "bulkCheckSummary": "Souhrn hromadné kontroly",
+      "bulkCheckSummaryDescription": "Udržujte tento souhrn kompaktní, aby obchodníci mohli potvrdit výsledky bez otevření druhé obrazovky.",
+      "bulkCheckTitle": "Hromadná kontrola katalogu",
+      "bulkCheckUncheckedSummary": "Tím se zkontroluje {{count}} zbývajících produktů a přeskočí se {{skip}} již zkontrolovaných položek.",
+      "catalogCoverageDescription": "Podíl katalogu již zkontrolovaného proti Safety Gate.",
+      "catalogCoverageTitle": "Pokrytí katalogu",
+      "coverage": "Pokrytí",
+      "coveragePercent": "Katalog s uloženými kontrolami",
+      "criticalBannerDescription": "{{count}} aktivní shoda je označena jako vysoké nebo vážné riziko. Upřednostněte tyto produkty před pokračováním nových prodejů.",
+      "criticalBannerDescription_few": "{{count}} aktivní shody jsou označeny jako vysoké nebo vážné riziko. Upřednostněte tyto produkty před pokračováním nových prodejů.",
+      "criticalBannerDescription_many": "{{count}} aktivních shod je označeno jako vysoké nebo vážné riziko. Upřednostněte tyto produkty před pokračováním nových prodejů.",
+      "criticalBannerDescription_one": "{{count}} aktivní shoda je označena jako vysoké nebo vážné riziko. Upřednostněte tyto produkty před pokračováním nových prodejů.",
+      "criticalBannerDescription_other": "{{count}} aktivních shod je označeno jako vysoké nebo vážné riziko. Upřednostněte tyto produkty před pokračováním nových prodejů.",
+      "criticalBannerDescription_plural": "{{count}} aktivních shod je označeno jako vysoké nebo vážné riziko. Upřednostněte tyto produkty před pokračováním nových prodejů.",
+      "criticalBannerTitle": "{{count}} aktivní upozornění zahrnuje shody s vysokým rizikem",
+      "criticalBannerTitle_few": "{{count}} aktivní upozornění zahrnují shody s vysokým rizikem",
+      "criticalBannerTitle_many": "{{count}} aktivních upozornění zahrnuje shody s vysokým rizikem",
+      "criticalBannerTitle_one": "{{count}} aktivní upozornění zahrnuje shody s vysokým rizikem",
+      "criticalBannerTitle_other": "{{count}} aktivních upozornění zahrnuje shody s vysokým rizikem",
+      "criticalBannerTitle_plural": "{{count}} aktivních upozornění zahrnuje shody s vysokým rizikem",
+      "daily": "Denně",
+      "dailyAtTime": "Denně v 03:47 Evropa/Bratislava",
+      "dailyAtTimePlanned": "Naplánováno (denně v 03:47)",
+      "decisionsClosed": "Rozhodnutí uzavřena",
+      "demoAlert": {
+        "action": "Vyřešte, zamítněte nebo kontaktujte dodavatele",
+        "badge": "Příklad pracovního postupu",
+        "description": "Aplikace zobrazuje produkt Shopify, záznam Safety Gate, důvod shody a akci k zaznamenání.",
+        "evidence": "Uchovávejte poznámky a exportujte zprávu o auditu",
+        "reason": "Porovnejte značku, model, kategorii a fotografie produktu",
+        "sample": "Co obchodníci vidí, když se objeví shoda",
+        "title": "Nalezena pravděpodobná shoda Safety Gate"
+      },
+      "emptyProofCoverage": "{{count}} produktů má zaznamenaný výsledek kontroly.",
+      "emptyProofEvidence": "{{count}} uzavřených rozhodnutí je uchováno pro historii auditu.",
+      "emptyProofMonitoring": "Denní monitorování Safety Gate stále běží.",
+      "exportProof": "Exportovat důkaz",
+      "fallbackAlertDescription": "Shoduje se s upozorněním Safety Gate.",
+      "finishCoverage": "Dokončit pokrytí katalogu",
+      "highRiskMatchesDescription": "Vážné nebo vysoce rizikové shody Safety Gate k první kontrole.",
+      "highRiskMatchesTitle": "Vysoce rizikové shody",
+      "checkChangedProducts": "Zkontrolovat změněné produkty",
+      "checksCompletedDescription": "Automatické a manuální kontroly, které snižují manuální práci s kontrolou katalogu.",
+      "checksCompletedTitle": "Dokončené kontroly",
+      "lastMonitoringRunDescription": "Nejnovější automatická, manuální nebo hromadná kontrola Safety Gate.",
+      "lastMonitoringRunTitle": "Poslední spuštění monitoringu",
+      "lastSafetyGateUpdateChecked": "Poslední zkontrolovaná aktualizace Safety Gate",
+      "latestRun": "Poslední spuštění",
+      "monitoringRunDateUnknown": "Čas není k dispozici",
+      "monitoringRunHistoryEmpty": "Zatím nebyly zaznamenány žádné naplánované spuštění monitoringu.",
+      "monitoringRunHistoryTitle": "Nedávná spuštění monitoringu",
+      "monitoringRunProgress": "{{products}} produktů zkontrolováno · {{alerts}} nových upozornění",
+      "monitoringRunStatus": {
+        "completed": "Dokončeno",
+        "enqueue_failed": "Nelze spustit",
+        "failed": "Selhalo",
+        "processing": "Probíhá",
+        "queued": "Ve frontě",
+        "retrying": "Opakování",
+        "skipped_unentitled": "Plán neaktivní",
+        "unknown": "Stav není k dispozici"
+      },
+      "monitoringRunsTitle": "Kontroly monitoringu",
+      "monitoringStatusAllClear": "Monitoring katalogu běží",
+      "monitoringStatusDescription": "ZeroRecall kontroluje váš katalog proti novým aktualizacím EU Safety Gate, zvýrazňuje produkty vyžadující kontrolu a uchovává důkazy pro auditní zprávy.",
+      "monitoringStatusEyebrow": "Stav monitoringu",
+      "monitoringStatusNeedsReview": "{{count}} produkt vyžaduje rozhodnutí obchodníka",
+      "monitoringStatusNeedsReview_few": "{{count}} produkty vyžadují rozhodnutí obchodníka",
+      "monitoringStatusNeedsReview_many": "{{count}} produktů vyžaduje rozhodnutí obchodníka",
+      "monitoringStatusNeedsReview_one": "{{count}} produkt vyžaduje rozhodnutí obchodníka",
+      "monitoringStatusNeedsReview_other": "{{count}} produktů vyžaduje rozhodnutí obchodníka",
+      "monitoringStatusNeedsReview_plural": "{{count}} produktů vyžaduje rozhodnutí obchodníka",
+      "needsReviewTitle": "Produkty vyžadující kontrolu",
+      "nextAutomaticCheck": "Další automatická kontrola",
+      "noActiveAlertsDescription": "Vaše nejnovější kontroly aktuálně nevyžadují žádnou akci. Pokračujte ve skenování nově přidaných produktů, abyste udrželi pokrytí.",
+      "noActiveAlertsTitle": "Žádná aktivní bezpečnostní upozornění",
+      "noAlertsDescription": "Momentálně nejsou žádné otevřené recenze produktů. To je stále užitečné: denní monitoring pokračuje na pozadí a vaše důkazy zůstávají připraveny k exportu.",
+      "noAlertsTitle": "Žádné produkty nevyžadují kontrolu",
+      "priorityQueue": "Fronta rozhodnutí",
+      "productsCoveredShort": "se zaznamenaným výsledkem kontroly",
+      "productsMonitored": "Zkontrolované aktuální verze produktů",
+      "proofGridLabel": "Aktivita monitoringu",
+      "protectionDescription": "Počty popisují výsledky zaznamenané v aplikaci; nejsou certifikací bezpečnosti produktu.",
+      "protectionEyebrow": "Váš záznam monitoringu",
+      "protectionTitle": "Zkontrolujte nedávné kontroly a rozhodnutí obchodníka.",
+      "recentAlertsDescription": "Zkontrolujte pravděpodobné shody se Safety Gate, zaznamenejte rozhodnutí a uchovejte důkazy pro audity.",
+      "recentAlertsTitle": "Produkty vyžadující rozhodnutí obchodníka",
+      "recommendedAction": "Doporučená akce: zkontrolujte shodu a zaznamenejte rozhodnutí.",
+      "resolvedRateDescription": "Kolik zaznamenané aktivity upozornění již bylo uzavřeno.",
+      "resolvedRateTitle": "Míra vyřešení",
+      "results": {
+        "alertCreated": "Upozornění vytvořeno",
+        "completed": "Dokončeno",
+        "error": "Chyba",
+        "checked": "Zkontrolováno",
+        "skipped": "Přeskočeno"
+      },
+      "reviewOneProduct": "Zkontrolovat jeden produkt",
+      "riskInAlert": "Riziko popsané v upozornění Safety Gate",
+      "runBulkCheck": "Spustit hromadnou kontrolu",
+      "stats": {
+        "alertsCreated": "Vytvořená upozornění",
+        "alreadyChecked": "Již zkontrolováno",
+        "errors": "Chyby",
+        "checked": "Zkontrolováno",
+        "skipped": "Přeskočeno",
+        "stillUnchecked": "Stále nezkontrolováno",
+        "totalProducts": "Celkem produktů"
+      },
+      "status": {
+        "cachedEvidence": "Uložené důkazy jsou znovu použity",
+        "coverageIncomplete": {
+          "description": "Žádné shody se Safety Gate nevyžadují kontrolu u {{checked}} monitorovaných produktů. Dokončete pokrytí všech {{total}} aktuálních produktů před potvrzením celého katalogu.",
+          "eyebrow": "Pokrytí neúplné",
+          "title": "{{count}} produkt stále potřebuje pokrytí",
+          "title_few": "{{count}} produkty stále potřebují pokrytí",
+          "title_many": "{{count}} produktů stále potřebuje pokrytí",
+          "title_one": "{{count}} produkt stále potřebuje pokrytí",
+          "title_other": "{{count}} produktů stále potřebuje pokrytí",
+          "title_plural": "{{count}} produktů stále potřebuje pokrytí"
+        },
+        "deltaMonitoring": "Kontrolují se pouze nová upozornění Safety Gate",
+        "factsLabel": "Aktuální fakta o monitoringu",
+        "matchesNeedingReview": "Shody vyžadující kontrolu",
+        "monitoringNotConfirmed": "Monitoring zatím nepotvrzen",
+        "monitoringProblem": {
+          "action": "Obnovit pokrytí katalogu",
+          "description": "Vaše aktuální produkty mají důkazy o pokrytí, ale aplikace nemůže potvrdit, kdy byl monitoring Safety Gate naposledy dokončen. Obnovte pokrytí katalogu, abyste obnovili spolehlivý stav.",
+          "eyebrow": "Monitoring vyžaduje pozornost",
+          "title": "Pokrytí katalogu nemá zaznamenané spuštění monitoringu"
+        },
+        "noActionNeeded": {
+          "action": "Zobrazit pokrytí katalogu",
+          "description": "Žádné produkty ve vašem monitorovaném katalogu aktuálně neodpovídají upozorněním EU Safety Gate. Monitoring pokračuje na pozadí a práci vyžadují pouze nová upozornění nebo změněné produkty.",
+          "emptyCatalogDescription": "Přidejte produkty do svého katalogu Shopify a ZeroRecall bude připraven je pokrýt.",
+          "emptyCatalogTitle": "Zatím žádné produkty k monitorování",
+          "eyebrow": "Aktuální stav Safety Gate",
+          "title": "Není potřeba žádná akce"
+        },
+        "none": "Žádné",
+        "reviewNeeded": {
+          "criticalDescription": "Zkontrolujte tyto možné shody před pokračováním v prodeji. Porovnejte produkt a důkazy Safety Gate, poté zaznamenejte své rozhodnutí.",
+          "criticalEyebrow": "Naléhavá kontrola",
+          "criticalTitle": "{{count}} možná shoda s upozorněním na vážné riziko vyžaduje kontrolu",
+          "criticalTitle_few": "{{count}} možné shody s upozorněním na vážné riziko vyžadují kontrolu",
+          "criticalTitle_many": "{{count}} možných shod s upozorněním na vážné riziko vyžaduje kontrolu",
+          "criticalTitle_one": "{{count}} možná shoda s upozorněním na vážné riziko vyžaduje kontrolu",
+          "criticalTitle_other": "{{count}} možných shod s upozorněním na vážné riziko vyžaduje kontrolu",
+          "criticalTitle_plural": "{{count}} možných shod s upozorněním na vážné riziko vyžaduje kontrolu",
+          "description": "Potenciální shody Safety Gate vyžadují rozhodnutí obchodníka. Nejprve zkontrolujte shody; výsledky kontroly ostatních produktů zůstávají k dispozici v katalogu.",
+          "eyebrow": "Vyžaduje kontrolu",
+          "title": "{{count}} možná shoda vyžaduje kontrolu",
+          "title_few": "{{count}} možné shody vyžadují kontrolu",
+          "title_many": "{{count}} možných shod vyžaduje kontrolu",
+          "title_one": "{{count}} možná shoda vyžaduje kontrolu",
+          "title_other": "{{count}} možných shod vyžaduje kontrolu",
+          "title_plural": "{{count}} možných shod vyžaduje kontrolu"
+        },
+        "scheduledPlanned": "Naplánované spuštění"
+      },
+      "storeStatus": "Stav obchodu",
+      "valueMetrics": {
+        "decisionsRecorded": "Zaznamenaná rozhodnutí",
+        "evidenceRetained": "Rozhodnutí s důkazy",
+        "checksRun": "Spuštěné kontroly",
+        "openDecisions": "Otevřená rozhodnutí",
+        "productsCovered": "Zkontrolované produkty"
+      },
+      "valueProofDescription": "Ukažte týmu, že předplatné není jednorázové skenování: pokrytí katalogu, kontroly, rozhodnutí a přístup Shopify pouze pro čtení zůstávají aktivní.",
+      "valueProofDescriptionComplete": "Tyto počty ukazují zaznamenanou aktivitu kontrol pro aktuální katalog.",
+      "valueProofDescriptionIncomplete": "Spusťte kontroly pro zbývající produkty, abyste přidali výsledky do záznamu aktuálního katalogu.",
+      "valueProofEyebrow": "Akce pokrytí",
+      "valueProofTitle": "Co ZeroRecall stále dělá",
+      "valueProofTitleComplete": "Každý aktuální produkt má zaznamenanou kontrolu",
+      "valueProofTitleIncomplete": "{{count}} produktů má zaznamenanou kontrolu",
+      "warningBannerDescription": "Zkontrolujte tyto shody, zamítněte falešné poplachy nebo vyřešte potvrzené problémy, aby fronta zůstala použitelná.",
+      "warningBannerTitle": "{{count}} aktivní upozornění vyžaduje rozhodnutí obchodníka",
+      "warningBannerTitle_few": "{{count}} aktivní upozornění vyžadují rozhodnutí obchodníka",
+      "warningBannerTitle_many": "{{count}} aktivních upozornění vyžaduje rozhodnutí obchodníka",
+      "warningBannerTitle_one": "{{count}} aktivní upozornění vyžaduje rozhodnutí obchodníka",
+      "warningBannerTitle_other": "{{count}} aktivních upozornění vyžaduje rozhodnutí obchodníka",
+      "warningBannerTitle_plural": "{{count}} aktivních upozornění vyžaduje rozhodnutí obchodníka",
+      "withReadOnlyShopifyAccess": "Přístup Shopify pouze pro čtení"
+    },
+    "bulkCheck": {
+      "action": "Zkontrolovat všechny produkty",
+      "alerts": "Upozornění {{count}}",
+      "alreadyChecked": "Již zkontrolováno",
+      "completed": "Dokončeno za {{seconds}} sekund",
+      "description": "Prohledejte každý produkt ve vašem obchodě proti databázi Safety Gate, abyste odhalili skrytá rizika.",
+      "errors": "Chyby {{count}}",
+      "checked": "Zkontrolováno {{count}}",
+      "includeAlreadyChecked": "Zahrnout již zkontrolované produkty",
+      "notYetChecked": "Ještě nezkontrolováno",
+      "processed": "Zpracováno {{count}}",
+      "started": "Spuštěno {{date}}",
+      "title": "Hromadná bezpečnostní kontrola",
+      "totalProducts": "Celkem produktů",
+      "willCheckAll": "Zkontroluje všech {{count}} produktů",
+      "willCheckUnchecked": "Zkontroluje {{count}} nezkontrolovaných produktů (přeskočí {{skip}} již zkontrolovaných)"
+    },
+    "bulkResults": {
+      "success": "Hromadná kontrola dokončena: {{processed}} zpracováno, {{checked}} zkontrolováno, {{alertsCreated}} upozornění vytvořeno."
+    },
+    "howItWorks": {
+      "alertGeneration": {
+        "description": "Shody generují upozornění, která můžete zamítnout nebo vyřešit, abyste sledovali dodržování předpisů.",
+        "title": "Generování upozornění"
+      },
+      "autoMonitoring": {
+        "description": "Produkty jsou kontrolovány proti databázi EU vždy, když jsou vytvořeny nebo aktualizovány.",
+        "title": "Automatické monitorování"
+      },
+      "title": "Jak to funguje"
+    },
+    "liveScan": {
+      "completed": "Hotovo",
+      "description": "Importuji váš katalog ze Shopify a skenuji produkty proti více než 35 000 záznamům v oficiální databázi EU Safety Gate (RAPEX). Výsledky se brzy objeví níže.",
+      "eyebrow": "Automatický bezpečnostní audit",
+      "failedDescription": "Tento audit se nepodařilo dokončit. Váš katalog nebyl označen jako plně zkontrolovaný. Spusťte skenování znovu nebo kontaktujte podporu, pokud problém přetrvává.",
+      "failedHeading": "Audit katalogu potřebuje další pokus",
+      "heading": "Probíhá bezplatný audit bezpečnosti katalogu...",
+      "inProgress": "Probíhá...",
+      "pending": "Čeká se",
+      "progress": "Importováno {{imported}} z {{fetched}} produktů; porovnáno {{scanned}} produktů s {{alerts}} upozorněními Safety Gate dosud.",
+      "stepAudit": "3. Připravte auditní stopu GPSR a stav shody",
+      "stepImport": "1. Importujte produkty ze Shopify",
+      "stepScan": "2. Porovnejte s databází Safety Gate (více než 35 000 záznamů)"
+    },
+    "metricsCard": {
+      "activeAlertsHeading": "Aktivní upozornění",
+      "productsCheckedHeading": "Zkontrolované produkty",
+      "resolutionHeading": "Míra řešení",
+      "resolved": "{{count}} vyřešeno",
+      "resolvedAndDismissed": "{{resolved}} vyřešeno • {{dismissed}} zamítnuto",
+      "scans": "Skenování Safety Gate",
+      "totalRecorded": "{{count}} celkem zaznamenáno"
+    },
+    "monitorCard": {
+      "description": "Sledujte upozornění, spouštějte kontroly katalogu a udržujte spokojenost regulátorů.",
+      "reviewAction": "Zkontrolovat upozornění",
+      "title": "Monitorujte bezpečnost produktů na první pohled"
+    },
+    "quickActions": {
+      "browsePortal": "Procházet portál Safety Gate",
+      "description": "Pravidelné kontroly a dokumentace pomáhají prokázat náležitou péči regulátorům.",
+      "manualCheck": "Spustit ruční kontrolu",
+      "title": "Rychlé akce"
+    },
+    "recentAlerts": {
+      "active": "{{count}} aktivních",
+      "allResolved": "Vše vyřešeno",
+      "description": "Prozkoumejte nejnovější shody ze Safety Gate před plněním objednávek.",
+      "emptyState": {
+        "content": "Skvělá zpráva – žádné produkty nejsou aktuálně označeny. Pokračujte v monitorování, abyste udrželi shodu.",
+        "heading": "Zatím žádná bezpečnostní upozornění"
+      },
+      "matchCount": "Nalezena {{count}} shoda",
+      "matchCount_few": "Nalezeny {{count}} shody",
+      "matchCount_many": "Nalezeno {{count}} shod",
+      "matchCount_one": "Nalezena {{count}} shoda",
+      "matchCount_other": "Nalezeno {{count}} shod",
+      "matchCount_plural": "Nalezeno {{count}} shod",
+      "title": "Nedávná bezpečnostní upozornění"
+    },
+    "safetyBreakdown": {
+      "actionDesc": "Nalezené shody se zprávami EU Safety Gate, které vyžadují kontrolu a řešení.",
+      "actionLabel": "Vyžaduje se akce",
+      "description": "Přehled ověření vašeho katalogu produktů proti evropským bezpečnostním seznamům a směrnici GPSR.",
+      "eyebrow": "Stav ochrany katalogu",
+      "protectedDesc": "Produkty, u kterých poslední zaznamenaná kontrola nenašla žádnou pravděpodobnou shodu.",
+      "protectedLabel": "Zkontrolované produkty bez otevřených nálezů",
+      "protectRemainingAction": "Zkontrolovat zbývající ({{count}})",
+      "reviewAlertsAction": "Zkontrolovat upozornění",
+      "scanAllAction": "Spustit úplný audit katalogu",
+      "title": "Stav bezpečnosti produktu",
+      "unprotectedAllCovered": "Každý aktuální produkt má zaznamenaný výsledek kontroly.",
+      "unprotectedDesc": "Produkty bez zaznamenané kontroly Safety Gate.",
+      "unprotectedLabel": "Zatím nezkontrolováno"
+    },
+    "setup": {
+      "description": "Připravte svůj obchod na soulad s bezpečnostními předpisy EU pro produkty.",
+      "progress": "{{completed}} z {{total}} kroků dokončeno",
+      "steps": {
+        "step1": {
+          "description": "Klikněte na „Zkontrolovat všechny produkty“ a prohledejte celý svůj katalog v databázi EU Safety Gate.",
+          "label": "Spusťte první hromadnou kontrolu produktů"
+        },
+        "step2": {
+          "description": "Zkontrolujte stránku upozornění a prohlédněte si všechny produkty, které odpovídají varováním Safety Gate.",
+          "label": "Zkontrolujte všechna bezpečnostní upozornění"
+        },
+        "step3": {
+          "description": "Povolte automatické kontroly v Nastavení pro automatické monitorování nových produktů.",
+          "label": "Nakonfigurujte automatické monitorování"
+        }
+      },
+      "title": "Průvodce nastavením"
+    },
+    "stats": {
+      "actionNeeded": "Je potřeba akce",
+      "activeAlerts": "Aktivní upozornění",
+      "alertsLogged": "Zaznamenaná upozornění",
+      "allClear": "Vše v pořádku",
+      "autoMonitoring": "Automatické monitorování",
+      "descriptions": {
+        "activeAlerts": "Zkontrolujte tyto produkty ještě dnes, abyste zůstali v souladu.",
+        "activeAlertsZero": "Všechny bezpečnostní problémy jsou vyřešeny.",
+        "alertsLogged": "Zahrnuje vyřešená a zamítnutá upozornění pro auditní záznam.",
+        "alertsLoggedZero": "Žádná historická upozornění. Pokračujte v monitorování nových produktů.",
+        "productsChecked": "Automatické události Shopify nadále monitorují aktualizace.",
+        "productsCheckedZero": "Spusťte hromadnou kontrolu pro skenování vašeho aktuálního katalogu."
+      },
+      "newSetup": "Nové nastavení",
+      "open": "{{count}} otevřených",
+      "productsChecked": "Zkontrolované produkty",
+      "resolved": "{{count}} vyřešeno"
+    },
+    "title": "ZeroRecall"
+  },
+  "dates": {
+    "daysAgo": "Před {{count}} dny",
+    "today": "Dnes",
+    "weeksAgo": "Před {{count}} týdny",
+    "yesterday": "Včera"
+  },
+  "errors": {
+    "apiError": "Externí bezpečnostní služba je dočasně nedostupná. Zkuste to prosím znovu později.",
+    "pageLoadFailed": "Načtení stránky se nezdařilo",
+    "unknown": "Něco se pokazilo"
+  },
+  "evidence": {
+    "alertNumber": "Upozornění Safety Gate {{number}}",
+    "description": "Zkontrolujte zaznamenaná rozhodnutí o bezpečnosti produktu, poznámky, kontext rizika a důkazy o následných opatřeních dodavatele.",
+    "empty": "Zatím nebyla zaznamenána žádná rozhodnutí o bezpečnosti produktu.",
+    "eyebrow": "Auditní záznam",
+    "filteredRecords": "{{visible}} z {{total}} záznamů",
+    "filters": {
+      "collapseForProduct": "Skrýt úplné důkazy pro {{title}}",
+      "expandForProduct": "Zobrazit úplné důkazy pro {{title}}",
+      "noResults": "Žádné záznamy auditu neodpovídají těmto filtrům.",
+      "searchLabel": "Hledat v auditním záznamu",
+      "searchPlaceholder": "Hledat produkt, číslo upozornění nebo důkazy",
+      "showLess": "Skrýt důkazy",
+      "showMore": "Zobrazit důkazy",
+      "statusLabel": "Stav rozhodnutí"
+    },
+    "fullEvidence": "Úplné důkazy",
+    "heading": "Historie rozhodnutí a důkazů",
+    "noNotes": "Žádná poznámka nezaznamenána",
+    "records": "{{count}} záznamů",
+    "table": {
+      "accessibilityLabel": "Tabulka důkazů o bezpečnosti produktu",
+      "decision": "Rozhodnutí",
+      "details": "Podrobnosti",
+      "notes": "Poznámky / důkazy",
+      "product": "Produkt",
+      "status": "Stav",
+      "summary": "Souhrn důkazů",
+      "updated": "Aktualizováno"
+    },
+    "title": "Auditní záznam"
+  },
+  "experience": {
+    "delayed": "Monitorování vyžaduje pozornost – poslední dokončený běh je starší než 48 hodin",
+    "pausedHelp": "Automatické kontroly jsou pozastaveny. Vyberte si plán pro kontrolu nových upozornění Safety Gate a změn produktů, když je Shopify zavřený.",
+    "previewHelp": "Otevření tohoto vývojového náhledu neaktivuje monitorování na pozadí. Plánované kontroly vyžadují ověřený aktivní plán Shopify.",
+    "reviewSteps": "1. Porovnejte fotografie a identifikátory → 2. Zvolte výsledek kontroly → 3. Zaznamenejte své rozhodnutí",
+    "valueBody": "Denní kontroly nových upozornění Safety Gate, kontroly při změně produktů, e-mailová oznámení po povolení a uložená rozhodnutí o kontrole.",
+    "valueTitle": "Co přidává průběžné monitorování"
+  },
+  "manualCheck": {
+    "admin": {
+      "catalog": "Katalog",
+      "catalogDescription": "Produkty jsou seřazeny podle nejnovějších aktualizací Shopify, aby obchodníci mohli nejprve znovu zkontrolovat nedávné změny.",
+      "checkFailed": "Kontrola se nezdařila",
+      "manualReview": "Kontrola na vyžádání",
+      "manualReviewDescription": "Vyberte libovolný produkt z vašeho katalogu a spusťte cílenou kontrolu Safety Gate, když potřebujete okamžitou odpověď.",
+      "productFlagged": "Produkt označen"
+    },
+    "badges": {
+      "flagged": "{{count}} označeno",
+      "checks": "{{count}} kontrol",
+      "needsReview": "{{count}} vyžaduje kontrolu"
+    },
+    "banners": {
+      "alertDescription": "U tohoto produktu byl zjištěn potenciální bezpečnostní problém.",
+      "alertHeading": "Vytvořeno bezpečnostní upozornění",
+      "failedHeading": "Kontrola se nezdařila",
+      "textOnlyDescription": "Tento výsledek použil pouze textová pole. Pokud produkt spoléhá na vizuální rozdíly, zkontrolujte shodu pečlivěji.",
+      "textOnlyHeading": "Porovnání obrázků nebylo k dispozici"
+    },
+    "breadcrumbs": {
+      "current": "Pokrytí katalogu",
+      "dashboard": "Přehled"
+    },
+    "bulk": {
+      "description": "Zkontrolujte uložené kontroly a spusťte nové porovnání Safety Gate pro produkty ve vašem aktuálním katalogu.",
+      "checkAllProducts": "Zkontrolovat zbývající produkty",
+      "checkingAll": "Kontroluji katalog...",
+      "title": "Zkontrolovat váš katalog"
+    },
+    "catalogue": {
+      "accessibilityLabel": "Tabulka katalogu produktů",
+      "actions": {
+        "checkAgain": "Zkontrolovat znovu",
+        "checkAgainForProduct": "Zkontrolovat {{title}} znovu",
+        "checkSafety": "Zkontrolovat bezpečnost",
+        "checkSafetyForProduct": "Zkontrolovat bezpečnost pro {{title}}",
+        "viewForProduct": "Zobrazit zaznamenaný nález pro {{title}}"
+      },
+      "columns": {
+        "action": "Akce",
+        "checks": "Kontroly",
+        "product": "Produkt",
+        "status": "Stav"
+      },
+      "emptyBody": "Nejsou k dispozici žádné produkty ke kontrole.",
+      "emptyHeading": "Nenalezeny žádné produkty",
+      "firstCheck": "Spustit první kontrolu",
+      "heading": "Katalog produktů ({{count}})",
+      "lastChecked": "Naposledy zkontrolováno {{date}}",
+      "noType": "Žádný typ",
+      "searchLabel": "Najít produkt",
+      "searchPlaceholder": "Hledat produkty podle názvu, SKU, dodavatele nebo typu",
+      "status": {
+        "notChecked": "Nezkontrolováno",
+        "reviewed": "Zkontrolováno",
+        "safe": "Nenalezena žádná shoda",
+        "unsafe": "Vyžaduje recenzi"
+      },
+      "totalChecks": "{{count}} celkem",
+      "unknownVendor": "Neznámý dodavatel"
+    },
+    "coverage": {
+      "completeDescription": "Každý aktuální produkt Shopify má zaznamenanou kontrolu Safety Gate. Nové nebo změněné produkty stále potřebují novou kontrolu.",
+      "completeTitle": "Každý aktuální produkt má uložený výsledek kontroly",
+      "eyebrow": "Stav kontroly katalogu",
+      "incompleteDescription": "Zkontrolujte zbývající produkty, abyste uložili výsledek Safety Gate pro aktuální katalog.",
+      "incompleteTitle": "{{count}} produktů ještě nemá uloženou kontrolu",
+      "lastProductNeedsReview": "Nejnovější kontrola produktu vytvořila nebo aktualizovala položku k posouzení.",
+      "lastProductSafe": "Nejnovější kontrola produktu nenašla žádnou pravděpodobnou shodu se Safety Gate.",
+      "lastRun": "Poslední kontrola",
+      "lastRunResultWithCounts": "Zkontrolováno {{checked}}, přeskočeno {{skipped}} nezměněných, vytvořeno {{alerts}} položek k posouzení, {{errors}} chyb.",
+      "noneRemaining": "Každý aktuální produkt má uložený výsledek kontroly.",
+      "noRunYet": "Zatím nebyla spuštěna žádná kontrola katalogu ani produktu.",
+      "percent": "{{percent}}% s aktuální kontrolou",
+      "productsCovered": "Zkontrolované produkty",
+      "productsCoveredDescription": "Produkty s uloženým výsledkem pro jejich aktuální verzi Shopify.",
+      "remaining": "Zatím nezkontrolováno",
+      "remainingDescription": "Spusťte kontrolu, abyste uložili výsledek Safety Gate pro tyto produkty."
+    },
+    "filters": {
+      "all": "Vše ({{count}})",
+      "needsReview": "Možná shoda ({{count}})",
+      "safe": "Nenalezena žádná shoda ({{count}})",
+      "unprotected": "Nezkontrolováno nebo změněno ({{count}})"
+    },
+    "modal": {
+      "unknown": "Neznámé",
+      "unknownProduct": "Neznámý produkt"
+    },
+    "overview": {
+      "coverage": "{{coverage}}% pokrytí",
+      "manualCompleted": "Ruční kontroly dokončeny",
+      "manualCompletedDescription": "Zkontrolováno {{checked}} z {{total}} produktů",
+      "noOpenReviews": "Žádná otevřená rozhodnutí o produktech.",
+      "noRisks": "Zatím nebyly zjištěny žádné rizika.",
+      "prioritise": "Upřednostněte tyto produkty k akci.",
+      "productsDescription": "Nejnovější produkty z vašeho obchodu.",
+      "productsFlagged": "Označeno produktů",
+      "productsInScope": "Produkty v rozsahu",
+      "productsNeedingReview": "Produkty vyžadující kontrolu",
+      "title": "Přehled kontrol"
+    },
+    "quickActions": {
+      "title": "Rychlé akce"
+    },
+    "subtitle": "Chraňte zbytek svého katalogu, obnovte monitorování nebo zkontrolujte jeden vybraný produkt.",
+    "title": "Pokrytí katalogu",
+    "toasts": {
+      "completed": "Bezpečnostní kontrola dokončena",
+      "flagged": "Nalezen potenciální bezpečnostní problém"
+    }
+  },
+  "nav": {
+    "catalogCoverage": "Pokrytí katalogu",
+    "dashboard": "Přehled",
+    "evidence": "Auditní záznam",
+    "manualCheck": "Pokrytí katalogu",
+    "safetyAlerts": "Fronta recenzí",
+    "settings": "Nastavení"
+  },
+  "news": {
+    "items": {
+      "databaseUpdate": {
+        "date": "Pros 2025",
+        "description": "Databáze Safety Gate je průběžně aktualizována novými upozorněními na produkty. Spouštějte pravidelné kontroly, abyste zůstali v souladu.",
+        "title": "Databáze EU Safety Gate aktualizována"
+      },
+      "gpsr": {
+        "date": "GPSR 2024",
+        "description": "Zjistěte více o požadavcích GPSR a jak zajistit, aby vaše produkty splňovaly bezpečnostní normy EU.",
+        "title": "Nařízení o obecné bezpečnosti výrobků"
+      }
+    },
+    "title": "Novinky"
+  },
+  "onboarding": {
+    "back": "Zpět",
+    "finishButton": "Dokončit nastavení a přejít na řídicí panel",
+    "nextStep": "Další krok",
+    "stepIndicator": "Krok {{current}} z {{total}}",
+    "steps": {
+      "automation": {
+        "description": "Nakonfigurujte prioritní kontrolu a automatická bezpečnostní pravidla pro váš obchod.",
+        "label": "Automatizace bezpečnosti",
+        "quarantine": {
+          "desc": "Automaticky označit produkty pro prioritní kontrolu, pokud se shodují s upozorněními Safety Gate s vážným rizikem (práh >= 95 %).",
+          "label": "Povolit prioritní kontrolu",
+          "title": "Prioritizovat vážná rizika"
+        },
+        "title": "Krok 3: Automatické monitorování a upozornění",
+        "webhooks": {
+          "desc": "Produkty jsou automaticky kontrolovány proti databázi EU při každém vytvoření nebo aktualizaci.",
+          "title": "Skenování webhooků v reálném čase"
+        }
+      },
+      "scan": {
+        "alerts": "Vytvořena upozornění na rizika: {{count}}",
+        "complete": "Katalog je nyní monitorován",
+        "description": "Importujte své aktuální produkty Shopify do monitorování Safety Gate a poté porovnejte katalog s nedávnými upozorněními Safety Gate.",
+        "imported": "Produkty importované pro monitorování: {{count}}",
+        "label": "Import katalogu",
+        "monitored": "Produkty porovnané s upozorněními Safety Gate: {{count}}",
+        "scanned": "Naskenováno produktů: {{count}}",
+        "scanning": "Importuji katalog a porovnávám produkty s upozorněními Safety Gate...",
+        "startButton": "Importovat a monitorovat aktuální katalog",
+        "title": "Krok 2: Importovat a monitorovat aktuální katalog",
+        "toScan": "Produkty k importu pro monitorování: {{count}}"
+      },
+      "sensitivity": {
+        "balanced": "70 % (Doporučeno – Vyvážené)",
+        "broad": "40 % (Široké – Více varování)",
+        "calibration": {
+          "balancedDesc": "Standardní citlivost. Optimalizovaná rovnováha mezi přesností a objemem upozornění. Skenuje názvy, popisy a porovnává klíčové značky a struktury modelů.",
+          "balancedTitle": "Režim vyvážené detekce",
+          "broadDesc": "Vysoká citlivost. Zachytí volně související shody. Doporučeno, pokud prodáváte vysoce rizikové kategorie produktů (hračky, elektronika) a chcete kompletní pokrytí, ale očekávejte některé falešné poplachy.",
+          "broadTitle": "Režim široké detekce",
+          "strictDesc": "Vysoká přesnost. Filtruje drobné podobnosti. Upozornění se spustí pouze u velmi jasných shod názvů značek/modelů. Nízká míra falešných upozornění.",
+          "strictTitle": "Režim přísné detekce"
+        },
+        "description": "Zvolte, jak přesně se má produkt shodovat se záznamem Safety Gate, než bude vyžadovat kontrolu.",
+        "label": "Přísnost shody",
+        "strict": "90 % (Přísné – méně varování)",
+        "thresholdLabel": "Prahová hodnota shody: {{value}}%",
+        "title": "Krok 1: Nastavte přísnost shody"
+      }
+    },
+    "subtitle": "Najděte možné shody s nebezpečnými produkty, zkontrolujte je v Shopify a uchovávejte důkazy o auditu pro každé rozhodnutí.",
+    "title": "Monitorujte svůj katalog proti EU Safety Gate",
+    "value": {
+      "audit": {
+        "description": "Vyřešená a zamítnutá rozhodnutí uchovávají poznámky pro exporty a následnou komunikaci s dodavateli.",
+        "title": "Důkazy připravené k auditu"
+      },
+      "monitor": {
+        "description": "Nová upozornění Safety Gate jsou kontrolována proti vašemu katalogu Shopify.",
+        "title": "Denní monitorování EU Safety Gate"
+      },
+      "review": {
+        "description": "Porovnejte shodu, rozhodněte se, co dělat, a udržujte frontu akceschopnou.",
+        "title": "Pracovní postup rozhodování obchodníka"
+      }
+    }
+  },
+  "pagination": {
+    "pageOf": "Stránka {{current}} z {{total}} ({{count}} upozornění)"
+  },
+  "portal": {
+    "description": "Přístup k oficiální databázi European Safety Gate pro vyhledávání nebezpečných produktů a zobrazení podrobných bezpečnostních upozornění.",
+    "home": "Domovská stránka Safety Gate",
+    "homeDescription": "Přístup k oficiálnímu portálu Evropské komise",
+    "searchDatabase": "Prohledat databázi",
+    "searchDescription": "Prohledejte EU Safety Gate pro nebezpečné produkty",
+    "title": "Portál Safety Gate"
+  },
+  "resolveActions": {
+    "actionTaken": "Provedená akce",
+    "contactedSupplier": "Kontaktován dodavatel (čeká se na odpověď)",
+    "contactPending": "Čeká se na odpověď dodavatele",
+    "falsePositive": "Falešně pozitivní",
+    "menuLabel": "Akce řešení",
+    "modifiedProduct": "Produkt upraven",
+    "noActionNeeded": "Není potřeba žádná akce",
+    "notMyProduct": "Není můj produkt",
+    "other": "Jiné",
+    "removedFromSale": "Staženo z prodeje",
+    "verifiedSafe": "Historický výsledek: produkt ověřen jako bezpečný"
+  },
+  "settings": {
+    "monitoring": {
+      "automatic": {
+        "description": "Produkty jsou automaticky kontrolovány při vytvoření nebo aktualizaci prostřednictvím webhooků.",
+        "enabled": "Povoleno",
+        "title": "Automatická kontrola"
+      },
+      "manual": {
+        "description": "Spusťte bezpečnostní kontroly na vyžádání pro jakýkoli produkt ve vašem katalogu.",
+        "goToManualCheck": "Přejít na ruční kontrolu",
+        "title": "Ruční kontroly"
+      },
+      "title": "Monitorování"
+    },
+    "navigation": {
+      "dashboard": "Přehled",
+      "manualCheck": "Ruční kontrola",
+      "title": "Navigace",
+      "viewAlerts": "Zobrazit upozornění"
+    },
+    "subtitle": "Ovládejte, jak ZeroRecall sleduje váš katalog Shopify.",
+    "threshold": {
+      "currentDefault": "Aktuální výchozí nastavení prostředí",
+      "description": "Zvolte, kolik možných shod Safety Gate chce váš tým zkontrolovat. Vyvážené monitorování se doporučuje pro většinu katalogů Shopify.",
+      "howItWorks": "Jak to funguje",
+      "label": "Pokročilá prahová hodnota shody (%)",
+      "resetToDefault": "Obnovit výchozí",
+      "save": "Uložit",
+      "title": "Režim monitorování"
+    },
+    "title": "Nastavení monitorování"
+  },
+  "settingsAdmin": {
+    "advancedMatchingSettings": "Pokročilá nastavení shody",
+    "automation": {
+      "autoDraftDescription": "Automaticky označit produkty pro prioritní kontrolu, pokud se shodují s upozorněními Safety Gate s vážným rizikem (práh >= 95 %).",
+      "autoDraftTitle": "Upřednostněte vážná rizika",
+      "description": "Konfigurujte prioritní kontrolu pro vysoce rizikové shody.",
+      "eyebrow": "Operace v reálném čase",
+      "title": "Automatizace bezpečnosti"
+    },
+    "automationStatus": {
+      "active": {
+        "badge": "Plán aktivní",
+        "description": "Počáteční audit katalogu byl dokončen a tento obchod má aktivní plán monitorování.",
+        "title": "Audit katalogu dokončen"
+      },
+      "completedNoPlan": {
+        "badge": "Audit dokončen",
+        "description": "Počáteční audit katalogu je dokončen. Probíhající automatické monitorování vyžaduje aktivní plán.",
+        "title": "Počáteční audit katalogu dokončen"
+      },
+      "failed": {
+        "badge": "Vyžaduje pozornost",
+        "description": "Poslední import nebo audit nebyl dokončen. Před spoléháním se na stav monitorování zkuste znovu pokrýt katalog.",
+        "title": "Počáteční audit katalogu vyžaduje pozornost"
+      },
+      "notStarted": {
+        "badge": "Neověřeno",
+        "description": "Počáteční import nebyl dokončen, takže pokrytí katalogu ještě není potvrzeno.",
+        "title": "Audit katalogu nepotvrzen"
+      },
+      "openCatalog": "Otevřít pokrytí katalogu",
+      "scanning": {
+        "badge": "Probíhá",
+        "description": "Produkty se importují a kontrolují. Pokrytí katalogu bude potvrzeno po dokončení auditu.",
+        "title": "Probíhá počáteční audit katalogu"
+      }
+    },
+    "automationStatusDescription": "Denní aktualizace EU Safety Gate, změny produktů Shopify a záznamy auditu jsou zpracovávány automaticky. Tato nastavení použijte pouze k doladění objemu kontrol a oznámení.",
+    "automationStatusEyebrow": "Automatické monitorování",
+    "automationStatusTitle": "Monitorování Safety Gate funguje pro tento obchod",
+    "configuration": "Konfigurace",
+    "configurationDescription": "Udržujte stránku zaměřenou na jedno rozhodnutí obchodníka: jak přísný má být kontrolor při porovnávání produktů s upozorněními Safety Gate.",
+    "currentThreshold": "Aktuální práh",
+    "currentThresholdDescription": "Nižší hodnoty zachytí více možných shod. Vyšší hodnoty snižují falešné poplachy.",
+    "environmentDefault": "Výchozí nastavení prostředí",
+    "environmentDefaultDescription": "Používá se, když obchod ještě nemá uloženou vlastní prahovou hodnotu.",
+    "exclusions": {
+      "description": "Vylučte konkrétní dodavatele nebo kategorie produktů z kontrol Safety Gate, abyste snížili počet falešných poplachů.",
+      "eyebrow": "Pravidla filtrování",
+      "title": "Pravidla vyloučení",
+      "typesDescription": "Zadejte kategorii nebo typ produktu a stiskněte Enter nebo čárku pro přidání.",
+      "typesPlaceholder": "Dárková karta, Služba, ...",
+      "typesTitle": "Vyloučené typy produktů",
+      "vendorsDescription": "Zadejte název dodavatele a stiskněte Enter nebo čárku pro přidání.",
+      "vendorsPlaceholder": "Dodavatel A, Dodavatel B, ...",
+      "vendorsTitle": "Vyloučení dodavatelé"
+    },
+    "fallback": "Záložní řešení",
+    "guidance": "Pokyny",
+    "guidanceItems": {
+      "balancedDescription": "Doporučeno pro většinu katalogů (65–70 %). Zachytí pravděpodobná rizika a zároveň udržuje nízký počet falešných upozornění.",
+      "balancedTitle": "Vyvážené výchozí nastavení",
+      "broadDescription": "Použijte přibližně 50 %, pokud preferujete zachycení více možných shod a nevadí vám revidovat více upozornění.",
+      "broadTitle": "Široké monitorování",
+      "strictDescription": "Použijte 80 %+ v případě, že je váš katalog stabilní a chcete méně manuálních kontrol.",
+      "strictTitle": "Přísné porovnávání"
+    },
+    "included": {
+      "description": "Aplikace nepřetržitě monitoruje váš katalog proti upozorněním Safety Gate, uchovává důkazy o souladu a upozorňuje vás, když produkty vyžadují kontrolu.",
+      "evidenceDescription": "Vyřešená a zamítnutá rozhodnutí uchovávají poznámky, důvody, kontext rizika a časová razítka.",
+      "evidenceTitle": "Exportovatelný důkaz",
+      "eyebrow": "Průběžné monitorování",
+      "monitoringDescription": "Nové záznamy Safety Gate jsou porovnávány s monitorovanými produkty Shopify bez manuálního skenování.",
+      "monitoringTitle": "Průběžné monitorování EU",
+      "teamDescription": "Prioritní kontrola, dokumentace dodavatele a filtry pomáhají vašemu týmu rychleji řešit skutečná rozhodnutí.",
+      "teamTitle": "Pracovní postup kontroly",
+      "title": "Co váš obchod pokrývá"
+    },
+    "matchingStrictness": "Přísnost shody",
+    "mode": {
+      "balanced": "Vyvážené",
+      "broad": "Více shod",
+      "strict": "Méně shod"
+    },
+    "monitoringModeEyebrow": "Režim monitorování",
+    "notifications": {
+      "emailHelp": "Původně převzato z Shopify. Můžete použít jinou adresu.",
+      "emailLabel": "E-mail pro oznámení",
+      "enabledDescription": "Zvolte, zda chcete dostávat naléhavá zjištění, týdenní souhrn, nebo obojí.",
+      "enabledTitle": "E-mailová bezpečnostní upozornění",
+      "immediateDescription": "Pošlete mi e-mail, jakmile produkt potřebuje kontrolu.",
+      "immediateTitle": "Nová zjištění",
+      "invalidEmail": "Před povolením e-mailových oznámení zadejte platnou e-mailovou adresu.",
+      "languageLabel": "Jazyk e-mailu",
+      "noRecipientDescription": "E-mailová oznámení jsou povolena, ale není zadána žádná adresa. Žádné zprávy nebudou doručeny, dokud nebude zadán e-mail.",
+      "noRecipientHeading": "Není nakonfigurován žádný příjemce e-mailu",
+      "useShopifyEmail": "Použít kontaktní e-mail obchodu ({{email}})",
+      "weeklyDescription": "Pondělní souhrn monitorování: potvrzuje, kdy nedošlo k žádným novým zjištěním, nebo shrnuje otevřené případy vyžadující kontrolu.",
+      "weeklyTitle": "Týdenní souhrn monitorování"
+    },
+    "onDemand": "Na vyžádání",
+    "plans": {
+      "advancedDescription": "Přidejte prioritní kontrolu, sledování dodavatelů a vícejazyčné pracovní postupy EU.",
+      "advancedTitle": "Pokročilé: automatizace a vícejazyčné pracovní postupy",
+      "description": "Funkce a možnosti zahrnuté ve vašem plánu monitorování obchodu.",
+      "eyebrow": "Hodnota předplatného",
+      "manualDescription": "Spouštějte kontroly po jednom produktu a zobrazte nejnovější stav produktu.",
+      "manualTitle": "Zdarma: manuální kontroly",
+      "monitorDescription": "Monitorujte nová upozornění Safety Gate proti katalogu, exportujte zprávy o auditu ve formátu CSV a uchovávejte záznam o rozhodnutích.",
+      "monitorTitle": "Placené: denní monitorování a zprávy",
+      "title": "Možnosti plánu"
+    },
+    "recommendedSetup": "Doporučené nastavení",
+    "saveAll": "Uložit všechna nastavení",
+    "status": {
+      "auditTrail": "Auditní záznam",
+      "autoQuarantine": "Prioritní kontrola",
+      "dailySafetyGateUpdates": "Denní aktualizace Safety Gate",
+      "emailDigest": "E-mailový souhrn",
+      "off": "Vypnuto",
+      "on": "Zapnuto",
+      "running": "Spuštěno",
+      "shopifyProductUpdates": "Nové/aktualizované produkty Shopify"
+    },
+    "storeSetting": "Nastavení obchodu",
+    "strictnessHint": "40–60 % je širší skenování. 70–85 % je přísnější a obvykle produkuje méně falešných pozitiv.",
+    "valueDescription": "Průběžné monitorování porovnává způsobilé produkty v katalogu s nově publikovanými záznamy Safety Gate.",
+    "valueEyebrow": "Monitorování katalogu",
+    "valueItems": {
+      "auditDescription": "Vyřešená a zamítnutá rozhodnutí uchovávají poznámky, důvody a historii kontrol pro exportovatelné zprávy.",
+      "auditTitle": "Důkazy připravené k auditu",
+      "dailyDescription": "Nová upozornění Safety Gate jsou kontrolována proti monitorovaným produktům, aniž by obchodník spouštěl manuální skenování.",
+      "dailyTitle": "Denní monitorování katalogu",
+      "workflowDescription": "Obchodníci kontrolují pouze produkty vyžadující rozhodnutí, poté je vyřeší, zamítnou nebo se obrátí na dodavatele.",
+      "workflowTitle": "Pracovní postup kontroly nativní pro Shopify"
+    },
+    "valueTitle": "Co zůstává pokryto",
+    "workspace": "Pracovní prostor"
+  },
+  "status": {
+    "actionRequired": "Vyžaduje akci",
+    "allClear": "Vše v pořádku",
+    "archived": "Archivováno",
+    "dismissed": "Zamítnuto",
+    "flagged": "označeno",
+    "monitored": "Monitorováno",
+    "needsReview": "Vyžaduje recenzi",
+    "notChecked": "Nezkontrolováno",
+    "protected": "Zkontrolováno",
+    "resolved": "Vyřešeno",
+    "runCheck": "Spustit kontrolu",
+    "safe": "Nenalezena žádná shoda",
+    "scanning": "Probíhá skenování",
+    "unprotected": "Nezkontrolováno",
+    "unsafe": "Vyžaduje recenzi",
+    "updated": "Aktualizováno"
+  },
+  "uxEnhancements": {
+    "activityTimeline": {
+      "actions": {
+        "dismiss": "Rozhodnutí zaznamenáno: zamítnuto",
+        "check": "Produkt zkontrolován",
+        "quarantine": "Produkt označen k revizi",
+        "resolve": "Rozhodnutí zaznamenáno: vyřešeno"
+      },
+      "description": "Zaznamenané bezpečnostní kontroly, rozhodnutí o produktech a důkazy uchovávané pro zprávy o auditu.",
+      "details": {
+        "autoDrafted": "Produkt označen pro prioritní kontrolu.",
+        "bulkScanned": "Hromadné skenování katalogu dokončeno.",
+        "checkSafe": "Při této kontrole nebyla nalezena žádná shoda.",
+        "checkUnsafe": "Produkt vyžaduje kontrolu. Záznam rozhodnutí vytvořen.",
+        "noReason": "Důvod nebyl specifikován.",
+        "reason": "Důvod: {{reason}}"
+      },
+      "eyebrow": "Auditní záznam",
+      "noActivity": "Zatím žádné události auditu. Spusťte monitorování a začněte shromažďovat důkazy.",
+      "title": "Historie rozhodnutí a důkazů",
+      "types": {
+        "automatic": "Systémová událost",
+        "bulk": "Hromadná událost",
+        "manual": "Událost obchodníka"
+      }
+    },
+    "alerts": {
+      "floating": {
+        "dismissSelected": "Zavřít vybrané",
+        "resolveSelected": "Vyřešit vybrané",
+        "selectedCount": "{{count}} vybrané upozornění",
+        "selectedCount_few": "{{count}} vybraná upozornění",
+        "selectedCount_many": "{{count}} vybraných upozornění",
+        "selectedCount_one": "{{count}} vybrané upozornění",
+        "selectedCount_other": "{{count}} vybraných upozornění",
+        "selectedCount_plural": "{{count}} vybraných upozornění"
+      },
+      "quickFilters": {
+        "allAlerts": "Všechny záznamy",
+        "allAlertsDesc": "Zobrazit všechna bezpečnostní upozornění v katalogu.",
+        "highRisk": "Pouze vysoké riziko",
+        "highRiskDesc": "Závažné úrovně rizika vyžadující akci.",
+        "needsReview": "Vyžaduje kontrolu",
+        "needsReviewDesc": "Čekající bezpečnostní upozornění.",
+        "resolved": "Vyřešeno / Zavřeno",
+        "resolvedDesc": "Minulá upozornění uchovaná pro audit.",
+        "title": "Rychlé filtry"
+      }
+    },
+    "complianceRing": {
+      "scoreLabel": "Vymazat",
+      "subtitle": "Podíl zkontrolovaných produktů bez otevřených položek ke kontrole",
+      "title": "Stav monitorovaného katalogu"
+    }
+  },
+  "workspace": {
+    "all": "Vše",
+    "appLanguage": "Jazyk aplikace",
+    "apply": "Použít filtry",
+    "applyFilters": "Použít filtry",
+    "balancedHelp": "Vyvážené porovnávání je doporučeným výchozím bodem. Změňte jej pouze v případě, že chcete zkontrolovat více nebo méně možných shod.",
+    "broadHelp": "Zahrnuje více možných shod a může vyžadovat více ruční kontroly.",
+    "cannotCompare": "Nelze porovnat",
+    "catalogGlobalAction": "Zkontrolovat {{count}} produktů v katalogu",
+    "catalogScopeHelp": "Pokrytí zahrnuje všechny produkty katalogu Shopify, včetně aktivních, konceptů a archivovaných položek. Filtry mění pouze tento seznam, nikoli pokrytí nebo rozsah monitorování.",
+    "clearFilters": "Vymazat filtry",
+    "compare": "Porovnat produkty",
+    "compareProduct": "Porovnat produkty: {{title}}",
+    "coverageFiltersHelp": "Pokrytí a otevřené nálezy jsou oddělené: změněný produkt může mít také nález čekající na kontrolu.",
+    "coverageIncomplete": "{{count}} produktů potřebuje aktuální kontrolu",
+    "coverageScope": "Zobrazuje se {{visible}} z {{total}} produktů katalogu.",
+    "csv": {
+      "action": "Akce rozhodnutí",
+      "actor": "Zaznamenal(a)",
+      "caseNumber": "Případ Safety Gate",
+      "decisionAt": "Rozhodnutí učiněno",
+      "detectedAt": "Zjištěno",
+      "generatedAt": "Vygenerováno",
+      "guidance": "Pokyny ke kontrole",
+      "notes": "Poznámky ke kontrole",
+      "product": "Produkt",
+      "productId": "ID produktu Shopify",
+      "recordType": "Typ záznamu",
+      "resolution": "Řešení",
+      "risk": "Úroveň rizika",
+      "shop": "Obchod",
+      "source": "Oficiální zdroj",
+      "sourceRisk": "Riziko v oficiálním upozornění",
+      "status": "Stav"
+    },
+    "csvGuidance": "Možná shoda. Před rozhodnutím porovnejte identifikátory produktu a oficiální záznam.",
+    "currentFindingStatus": "Aktuální stav nálezu",
+    "dateFilterTimezone": "Data používají časové pásmo monitorování: {{timeZone}}. Použijte filtry pro aktualizaci výsledků a export.",
+    "decisionAt": "Rozhodnutí zaznamenáno",
+    "decisionExportHelp": "Toto zobrazení a jeho export CSV používají data rozhodnutí. Zahrnují události kontroly pro starší nálezy, včetně znovu otevřených případů. Názvy produktů a fakta z oficiálních zdrojů si zachovávají svůj původní text.",
+    "decisionFrom": "Datum rozhodnutí od",
+    "decisionLegacy": "Historický výsledek: produkt ověřen jako bezpečný",
+    "decisionTo": "Datum rozhodnutí do",
+    "detectedAt": "Nález zjištěn",
+    "differentIdentifiers": "Různé identifikátory: {{fields}}. Před rozhodnutím je zkontrolujte.",
+    "documentedFindings": "Nálezy aktuálně vyřešené nebo zavřené",
+    "download": "Stáhnout CSV",
+    "emptyHelp": "Nejsou zaznamenány žádné otevřené nálezy. To nepotvrzuje, že jsou vaše produkty bezpečné. Zkontrolujte pokrytí katalogu a poslední spuštění monitorování.",
+    "eventCount": "{{count}} událostí rozhodnutí",
+    "excluded": "{{count}} z {{total}} produktů katalogu odpovídá těmto pravidlům pro ruční kontroly. Automatické monitorování tyto výjimky nepoužívá. Stávající nálezy zůstávají k dispozici.",
+    "excludeHelp": "Tato pravidla platí pro ruční kontroly. Před uložením zkontrolujte dotčené produkty.",
+    "exportHelp": "CSV obsahuje všechny nálezy ve vybraném období a stavu, včetně oficiálních referencí, poznámek ke kontrole a zaznamenaných událostí rozhodnutí. Je to záznam kontrol, nikoli bezpečnostní certifikát.",
+    "exportReady": "CSV připraveno. Pokud se stahování nespustilo, použijte tento odkaz:",
+    "findingCount": "Nálezy v tomto rozsahu: {{count}}.",
+    "findingFrom": "Nález zjištěn od",
+    "findings": "Nálezy a důkazy",
+    "findingTo": "Nález zjištěn do",
+    "from": "Od data",
+    "goReview": "Zkontrolovat otevřené nálezy",
+    "groupAction": "Provedená akce",
+    "groupDifferent": "Jiný produkt",
+    "groupInformation": "Potřebujete více informací",
+    "history": "Historie rozhodnutí",
+    "historyLimit": "Zobrazuje se až {{count}} nedávných nálezů. Exportujte celý záznam pro všechny nálezy.",
+    "changed": "Změněno od poslední kontroly",
+    "chooseOutcomeHelp": "Vyberte výsledek, abyste mohli zaznamenat své rozhodnutí.",
+    "chooseOutcomeLink": "Vybrat výsledek",
+    "lastSuccess": "Poslední úspěšné spuštění monitorování",
+    "matchingIdentifiers": "Shodné identifikátory: {{fields}}.",
+    "matchNeedsVerification": "Možná shoda. Před rozhodnutím porovnejte fotografie a identifikátory s oficiálním záznamem.",
+    "matchNotConfirmed": "Shoda nepotvrzena po přezkoumání důkazů",
+    "missingIdentifiers": "Některé identifikátory chybí. Porovnejte dostupné fotografie a požádejte svého dodavatele o model, čárový kód a šarži.",
+    "monitoring": {
+      "enabled": "Povoleno – denní kontroly",
+      "failed": "Poslední automatická kontrola selhala",
+      "paused": "Pozastaveno – žádný aktuální plán monitorování",
+      "preview": "Náhled vývoje – fakturace vynechána",
+      "processing": "Kontrola ve frontě nebo probíhá",
+      "unknown": "Aktivita monitorování nepotvrzena",
+      "unverified": "Pozastaveno – předplatné nelze ověřit"
+    },
+    "monitoringLabel": "Automatické monitorování",
+    "monitoringUnknownHelp": "Není k dispozici žádné úspěšné spuštění monitorování, které by potvrdilo nedávnou aktivitu. Obnovte pro opětovnou kontrolu.",
+    "neverRun": "Nezaznamenáno žádné dokončené spuštění monitorování",
+    "noCurrentResult": "Je potřeba aktuální výsledek",
+    "noDecisions": "Zatím nebyly zaznamenány žádné rozhodnutí. Otevřete nález, porovnejte produkty a zaznamenejte, co jste zkontrolovali.",
+    "noFilteredDecisions": "Žádné události rozhodnutí neodpovídají těmto filtrům. Vymažte filtry pro zobrazení celé historie.",
+    "noFilteredFindings": "Žádné nálezy neodpovídají těmto filtrům. Vymažte filtry pro zobrazení celého seznamu.",
+    "noMatch": "Nenalezena žádná shoda",
+    "noMatchAtCheck": "Při této kontrole nebyla nalezena žádná shoda.",
+    "notes": "Poznámky ke kontrole",
+    "notificationLanguage": "Jazyk e-mailu",
+    "notRecorded": "Žádný aktuální výsledek kontroly",
+    "oldest": "Otevřeno {{count}} dní",
+    "onboarding": "Importovat katalog → zkontrolovat záznamy Safety Gate → zkontrolovat výsledky",
+    "outcome": "Výsledek",
+    "outcomeHelp": {
+      "contacted_supplier": "Nález zůstává otevřený, dokud čekáte na dodavatele.",
+      "false_positive": "Použijte, když důkazy ukazují, že se upozornění nevztahuje. Nález bude zamítnut.",
+      "match_not_confirmed": "Použijte, když důkazy, které jste zkontrolovali, nepotvrzují shodu. Nález bude vyřešen.",
+      "modified_product": "Nejprve aktualizujte produkt v Shopify. Zaznamenání tohoto výsledku nemění produkt; nález bude vyřešen.",
+      "not_my_product": "Použijte, když se upozornění týká jiného produktu. Nález bude zamítnut.",
+      "other": "Popište výsledek v požadované poznámce. Nález bude vyřešen.",
+      "removed_from_sale": "Nejprve odstraňte produkt z prodeje v Shopify. Zaznamenání tohoto výsledku nemění produkt; nález bude vyřešen.",
+      "verified_safe": "Toto je historický výsledek."
+    },
+    "outcomeLabels": {
+      "contactedSupplier": "Čeká se na dodavatele",
+      "falsePositive": "Falešně pozitivní",
+      "modifiedProduct": "Upravený produkt",
+      "notMyProduct": "Není můj produkt",
+      "other": "Jiné",
+      "removedFromSale": "Staženo z prodeje",
+      "verifiedSafe": "Historické: ověřeno jako bezpečné"
+    },
+    "possibleMatch": "Možná shoda",
+    "possibleMatchAtCheck": "Tato kontrola našla možnou shodu se Safety Gate.",
+    "print": "Tisk / uložit PDF",
+    "priority": "Priorita kontroly",
+    "priorityHelp": "Nejprve rozhodnutí, poté závažnost oficiálního upozornění a nejstarší nálezy. Následují položky čekající na dodavatele.",
+    "productStatus": "Stav Shopify",
+    "productStatusActive": "Aktivní",
+    "productStatusAll": "Všechny stavy Shopify",
+    "productStatusArchived": "Archivováno",
+    "productStatusDraft": "Koncept",
+    "productStatusUnknown": "Neznámé",
+    "recommended": "Doporučené nastavení",
+    "referenceMissing": "Oficiální číslo případu není k dispozici",
+    "remaining": "Nezkontrolováno nebo změněno",
+    "reopened": "Znovu otevřeno k revizi",
+    "reportEmpty": "Žádné nálezy neodpovídají těmto filtrům.",
+    "reportTitle": "Zpráva o kontrolách a rozhodnutích",
+    "resultHelp": "Zaznamenání výsledku dokumentuje vaši kontrolu v auditní stopě a nemění produkt Shopify.",
+    "reviewNext": "Zkontrolovat další shodu: {{title}}",
+    "reviewPrompt": "Porovnejte důkazy, zvolte výsledek a zaznamenejte své poznámky.",
+    "riskLabels": {
+      "electric": "Elektrický šok",
+      "fire": "Požár",
+      "health": "Zdravotní riziko",
+      "high": "Vysoké riziko",
+      "chemical": "Chemické",
+      "choking": "Udušení",
+      "injuries": "Zranění",
+      "low": "Nízké riziko",
+      "medium": "Střední riziko",
+      "serious": "Vážné riziko",
+      "unknown": "Riziko v upozornění Safety Gate"
+    },
+    "runScope": "Kontroly produktů: {{products}} · Zvážené záznamy Safety Gate: {{records}} · Nové nálezy: {{findings}}",
+    "saved": "Nastavení uloženo.",
+    "saveChanges": "Uložit změny",
+    "scope": "Nálezy od {{from}} do {{to}}",
+    "scoreDetails": "Podrobnosti o podobnosti",
+    "scoreHelp": "Jedná se o skóre podobnosti používané k prioritizaci kontroly, nikoli o pravděpodobnost, že je váš produkt nebezpečný.",
+    "settingsAdvanced": "Pokročilé porovnávání a vyloučení",
+    "shop": "Obchod",
+    "showMore": "Zobrazit více produktů",
+    "scheduleHelp": "Nová upozornění Safety Gate jsou kontrolována, zatímco je plán monitorování aktivní. Čas další dokončené kontroly závisí na frontě.",
+    "sourceMissing": "Odkaz na oficiální záznam není k dispozici pro tento uložený nález.",
+    "sourceRisk": "Riziko v oficiálním upozornění (původní záznam EU)",
+    "status": "Stav nálezu",
+    "strictHelp": "Zobrazuje méně možných shod a může přehlédnout méně zřejmé podobnosti.",
+    "to": "Do data",
+    "unconfirmedIdentifiers": "Dostupné identifikátory katalogu tuto shodu nepotvrzují. Porovnejte balení a požádejte svého dodavatele o chybějící model, čárový kód a šarži.",
+    "unchecked": "Zatím nezkontrolováno",
+    "unsaved": "Máte neuložené změny.",
+    "verifyScope": "Výsledky katalogu se vztahují na zkontrolovanou verzi produktu. Změněné produkty vyžadují novou kontrolu.",
+    "viewRemainingProducts": "Zobrazit {{count}} produktů vyžadujících kontrolu",
+    "viewShopify": "Otevřít produkt Shopify",
+    "waiting": "Čeká se na dodavatele",
+    "when": "Zaznamenáno v",
+    "who": "Zaznamenal(a)",
+    "whyMatch": "Proč se to může shodovat"
+  }
+}

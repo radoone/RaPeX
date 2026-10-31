@@ -1,0 +1,1406 @@
+{
+  "actions": {
+    "auditReport": "Rapport d'audit",
+    "clear": "Effacer",
+    "dashboard": "Tableau de bord",
+    "downloadAuditReport": "Télécharger le rapport d'audit",
+    "checkAll": "Vérifier tous les produits",
+    "checkAllProducts": "Vérifier les {{count}} produits",
+    "checking": "Vérification en cours...",
+    "checkNewSafetyGateAlerts": "Vérifier les nouvelles alertes Safety Gate",
+    "checkOneProduct": "Vérifier un produit",
+    "checkSelectedProduct": "Vérifier le produit sélectionné",
+    "checkUnchecked": "Vérifier les {{count}} produits non vérifiés",
+    "manualCheck": "Vérifier le produit",
+    "next": "Suivant",
+    "openFirstMatch": "Ouvrir la première correspondance",
+    "previous": "Précédent",
+    "protectRemainingProducts": "Vérifier les {{count}} produits restants",
+    "reactivate": "Réactiver",
+    "recordDecision": "Enregistrer la décision",
+    "refreshCoverage": "Actualiser la couverture du catalogue",
+    "resolve": "Résoudre",
+    "retry": "Réessayer",
+    "reviewActiveProducts": "Examiner les produits actifs",
+    "reviewAlerts": "Examiner les alertes",
+    "reviewDecision": "Comparer les produits",
+    "reviewMultipleMatches": "Examiner les {{count}} correspondances",
+    "reviewOneMatch": "Examiner 1 correspondance",
+    "reviewProductsNeedingAction": "Examiner {{count}} produit nécessitant une action",
+    "reviewProductsNeedingAction_few": "Examiner {{count}} produits nécessitant une action",
+    "reviewProductsNeedingAction_many": "Examiner {{count}} produits nécessitant une action",
+    "reviewProductsNeedingAction_one": "Examiner {{count}} produit nécessitant une action",
+    "reviewProductsNeedingAction_other": "Examiner {{count}} produits nécessitant une action",
+    "reviewProductsNeedingAction_plural": "Examiner {{count}} produits nécessitant une action",
+    "search": "Rechercher",
+    "settings": "Paramètres",
+    "tryAgain": "Réessayer",
+    "view": "Afficher",
+    "viewAlerts": "Afficher les alertes",
+    "viewDetails": "Afficher les détails",
+    "viewEvidence": "Afficher l'historique des décisions"
+  },
+  "alerts": {
+    "admin": {
+      "actionNeeded": "Action requise",
+      "actionNeededDescription": "Examinez les correspondances, rejetez les faux positifs ou résolvez les risques confirmés afin que la file d'attente des alertes reste exploitable.",
+      "actionNeededTitle": "{{count}} alerte active nécessite encore une décision",
+      "actionNeededTitle_few": "{{count}} alertes actives nécessitent encore une décision",
+      "actionNeededTitle_many": "{{count}} alertes actives nécessitent encore une décision",
+      "actionNeededTitle_one": "{{count}} alerte active nécessite encore une décision",
+      "actionNeededTitle_other": "{{count}} alertes actives nécessitent encore une décision",
+      "actionNeededTitle_plural": "{{count}} alertes actives nécessitent encore une décision",
+      "criticalBannerDescription": "{{count}} correspondance active est marquée comme risque élevé ou grave dans Safety Gate. Résolvez ces correspondances en premier.",
+      "criticalBannerDescription_few": "{{count}} correspondances actives sont marquées comme risque élevé ou grave dans Safety Gate. Résolvez ces correspondances en premier.",
+      "criticalBannerDescription_many": "{{count}} correspondances actives sont marquées comme risque élevé ou grave dans Safety Gate. Résolvez ces correspondances en premier.",
+      "criticalBannerDescription_one": "{{count}} correspondance active est marquée comme risque élevé ou grave dans Safety Gate. Résolvez ces correspondances en premier.",
+      "criticalBannerDescription_other": "{{count}} correspondances actives sont marquées comme risque élevé ou grave dans Safety Gate. Résolvez ces correspondances en premier.",
+      "criticalBannerDescription_plural": "{{count}} correspondances actives sont marquées comme risque élevé ou grave dans Safety Gate. Résolvez ces correspondances en premier.",
+      "criticalBannerTitle": "{{count}} correspondance à haut risque nécessite un examen",
+      "criticalBannerTitle_few": "{{count}} correspondances à haut risque nécessitent un examen",
+      "criticalBannerTitle_many": "{{count}} correspondances à haut risque nécessitent un examen",
+      "criticalBannerTitle_one": "{{count}} correspondance à haut risque nécessite un examen",
+      "criticalBannerTitle_other": "{{count}} correspondances à haut risque nécessitent un examen",
+      "criticalBannerTitle_plural": "{{count}} correspondances à haut risque nécessitent un examen",
+      "queue": "File d'attente des décisions de produit",
+      "queueDescription": "Confirmez les correspondances probables, rejetez les faux positifs ou enregistrez l'action entreprise.",
+      "warningBannerDescription": "Utilisez cette file d'attente uniquement pour les décisions réelles : résolvez rapidement les risques confirmés et rejetez les faux positifs.",
+      "warningBannerTitle": "{{count}} alerte active nécessite encore un examen",
+      "warningBannerTitle_few": "{{count}} alertes actives nécessitent encore un examen",
+      "warningBannerTitle_many": "{{count}} alertes actives nécessitent encore un examen",
+      "warningBannerTitle_one": "{{count}} alerte active nécessite encore un examen",
+      "warningBannerTitle_other": "{{count}} alertes actives nécessitent encore un examen",
+      "warningBannerTitle_plural": "{{count}} alertes actives nécessitent encore un examen"
+    },
+    "breadcrumbs": {
+      "current": "File d'attente d'examen",
+      "dashboard": "Tableau de bord"
+    },
+    "checklist": {
+      "items": {
+        "0": "Prioriser les alertes actives",
+        "1": "Documenter les étapes de remédiation",
+        "2": "Vérifier avant de rejeter"
+      },
+      "title": "Liste de contrôle des réponses"
+    },
+    "meta": {
+      "active": "{{count}} à examiner",
+      "total": "{{count}} au total"
+    },
+    "metrics": {
+      "activeHeading": "Alertes actives",
+      "archived": "Archivé",
+      "dismissedDescription": "Conserver les notes pour l'audit",
+      "dismissedDescriptionZero": "Aucune alerte rejetée pour l'instant",
+      "dismissedHeading": "Rejeté",
+      "resolutionHeading": "Taux de résolution",
+      "resolved": "{{count}} résolu",
+      "resolvedAndDismissed": "{{resolved}} résolu • {{dismissed}} rejeté",
+      "totalRecorded": "{{count}} enregistré au total"
+    },
+    "pagination": {
+      "next": "Suivant",
+      "previous": "Précédent"
+    },
+    "subtitle": "Examiner les produits nécessitant une décision.",
+    "table": {
+      "accessibilityLabel": "Tableau des alertes de sécurité",
+      "empty": "Aucune alerte ne correspond à vos filtres",
+      "emptyAllClearBody": "Il n’y a aucune décision de marchand en attente pour le moment. La surveillance quotidienne est toujours active et les décisions clôturées restent dans le journal d’audit.",
+      "emptyAllClearTitle": "Toutes les évaluations de produits actives ont été traitées",
+      "emptyFilteredBody": "Ajustez les filtres ou recherchez un autre produit. Votre file d’attente active peut toujours être vide.",
+      "emptyFilteredTitle": "Aucun article à examiner ne correspond à ces filtres",
+      "headers": {
+        "actions": "Actions",
+        "detected": "Détecté",
+        "product": "Produit",
+        "risk": "Risque",
+        "status": "Statut"
+      },
+      "order": "Commande",
+      "orderOptions": {
+        "asc": "Du plus ancien au plus récent",
+        "desc": "Du plus récent au plus ancien"
+      },
+      "reviewProduct": "Décision d’évaluation pour {{title}}",
+      "searchLabel": "Rechercher des alertes",
+      "searchPlaceholder": "Rechercher par nom de produit...",
+      "selectAll": "Sélectionner toutes les constatations visibles",
+      "selectedCount": "{{count}} sélectionné(s)",
+      "selectProduct": "Sélectionner la constatation pour {{title}}",
+      "similarityTooltip": "Score de similarité: {{score}}%",
+      "sort": "Trier",
+      "sortBy": "Trier par",
+      "sortOptions": {
+        "created": "Date de détection",
+        "name": "Nom du produit",
+        "risk": "Niveau de risque"
+      },
+      "tabs": {
+        "active": "À examiner",
+        "all": "Tout",
+        "dismissed": "Rejeté",
+        "resolved": "Résolu"
+      },
+      "thumbnailLabel": "Miniature de {{title}}",
+      "viewProduct": "Afficher la constatation enregistrée pour {{title}}"
+    },
+    "title": "File d’attente d’évaluation",
+    "toasts": {
+      "updated": "Alerte mise à jour"
+    }
+  },
+  "analysis": {
+    "alertImagesUsed": "Images d’alerte comparées: {{count}}",
+    "alertNumber": "Alerte {{number}}",
+    "audit": {
+      "existingNotes": "Notes d’audit",
+      "noteLabel": "Note d’audit",
+      "notePlaceholder": "Ajoutez ce que vous avez vérifié, les preuves du fournisseur ou la raison du rejet."
+    },
+    "candidateAlerts": "Alertes candidates: {{count}}",
+    "decisionContextDesc": "L’enregistrement d’une décision documente que cette correspondance de sécurité a été examinée et préserve votre piste d’audit. Cela ne modifie pas automatiquement votre produit Shopify ni ne le dépublie de votre boutique.",
+    "decisionContextTitle": "Enregistrement des décisions de conformité",
+    "decisionRecorded": "Décision enregistrée",
+    "editInShopify": "Modifier le produit dans Shopify",
+    "enlargedSafetyAlert": "Image d’alerte de sécurité agrandie",
+    "fields": {
+      "accessibilityLabel": "Tableau des détails de correspondance d’alerte",
+      "alertDate": "Date de l’alerte",
+      "brand": "Marque",
+      "category": "Catégorie",
+      "field": "Champ",
+      "model": "Modèle",
+      "notifyingCountry": "Pays notifiant",
+      "origin": "Origine",
+      "productDescription": "Description du produit",
+      "productName": "Nom du produit",
+      "value": "Valeur"
+    },
+    "focus": {
+      "criticalLead": "Ce produit présente une correspondance très fiable. Enregistrez une décision seulement après examen.",
+      "criticalStepCompare": "Comparez la photo de votre produit avec la première correspondance Safety Gate ci-dessous.",
+      "criticalStepDecide": "Choisissez un résultat dans le menu « Enregistrer la décision » en fonction de votre examen.",
+      "criticalStepDocument": "Ajoutez des notes internes pour la traçabilité et le suivi du fournisseur.",
+      "criticalTitle": "Action requise maintenant",
+      "recordedOutcome": "Résultat enregistré: {{outcome}}",
+      "reviewedLead": "Cette alerte n’est pas active. Gardez les dossiers clairs pour les audits.",
+      "reviewedStepAudit": "Vérifiez la résolution et les notes sélectionnées.",
+      "reviewedStepReactivate": "Réactivez uniquement si de nouvelles preuves de produit apparaissent.",
+      "reviewedTitle": "Examen déjà terminé",
+      "safeLead": "Le résultat actuel est sûr. Continuez à surveiller les mises à jour du produit.",
+      "safeStepClose": "Fermez ce détail et continuez avec les autres alertes actives.",
+      "safeStepMonitor": "Maintenez ce produit en surveillance automatique.",
+      "safeStepRecheck": "Effectuez une nouvelle vérification si les images, l’emballage ou le fournisseur changent.",
+      "safeTitle": "Aucune action urgente n’est nécessaire"
+    },
+    "hazardType": "Type de danger",
+    "checkedAt": "Vérifié: {{date}}",
+    "imageDominated": "Cette correspondance a été évaluée avec une pondération axée sur l’image, de sorte que la similarité visuelle de l’emballage a eu plus de poids que la non-correspondance du texte.",
+    "imageMatch": "Correspondance d’image",
+    "imageMatchShort": "{{count}}% image",
+    "legalProvision": "Disposition légale",
+    "matchesHint": "Commencez par la carte de correspondance supérieure ci-dessous et confirmez d’abord l’emballage visuel, puis les détails du modèle et de la marque.",
+    "merchantRecommendation": {
+      "active": "Comparez les images du produit et de Safety Gate, confirmez la marque ou le modèle, puis enregistrez l’action que votre boutique entreprendra.",
+      "reviewed": "Cette constatation est clôturée. Vérifiez le résultat enregistré et les preuves avant de la réactiver.",
+      "safe": "Aucune action de la boutique n’est requise pour le moment. Vérifiez à nouveau si le produit, l’emballage, les images ou le fournisseur changent."
+    },
+    "modalAccessibilityLabel": "Détails de la correspondance Safety Gate pour {{title}}",
+    "modalHeading": "Examiner la correspondance Safety Gate",
+    "noIssuesFound": "Aucun problème de sécurité trouvé",
+    "openProductImage": "Ouvrir l’image du produit pour {{title}}",
+    "overallMatch": "Correspondance globale",
+    "overallMatchShort": "{{count}}% global",
+    "potentialRisk": "Risque de sécurité potentiel",
+    "primaryRiskFocus": "Principal risque identifié : {{category}} de niveau {{level}}. Confirmez ceci en premier lieu avant de prendre une décision.",
+    "productImagesUsed": "Images du produit : {{used}} / {{provided}}",
+    "reviewLayout": {
+      "actionNeeded": "Action requise",
+      "compareHeading": "Comparer les produits",
+      "compareHint": "Vérifiez les photos, la marque, le modèle et la catégorie avant de prendre une décision.",
+      "decisionHeading": "Enregistrer votre décision",
+      "decisionPrompt": "Choisissez le résultat de l'examen. Vous pouvez ajouter une note sur ce que vous avez vérifié.",
+      "fullEvidence": "Preuves complètes de Safety Gate ({{count}})",
+      "groupHelp": {
+        "action": "Clôturez la constatation après avoir retiré le produit de la vente ou l'avoir mis à jour dans Shopify.",
+        "different": "Clôturez ou rejetez la constatation car votre produit est un modèle, une marque ou un lot différent.",
+        "information": "Gardez la constatation ouverte pendant que vous demandez à votre fournisseur des documents sur le lot, le modèle ou la sécurité.",
+        "other": "Enregistrez un autre résultat avec une note explicative requise pour votre piste d'audit."
+      },
+      "chooseOutcome": "Choisir un résultat",
+      "identifiers": {
+        "barcode": "Code-barres (GTIN/EAN)",
+        "batch": "Lot",
+        "brand": "Marque",
+        "field": "Identifiant",
+        "match": "Correspondance",
+        "mismatch": "Discrépance",
+        "model": "Modèle",
+        "notSpecified": "non spécifié",
+        "result": "Comparaison",
+        "safetyGate": "Alerte Safety Gate",
+        "yourProduct": "Votre produit Shopify"
+      },
+      "identifiersHeading": "Comparaison côte à côte des identifiants",
+      "languageDiffNote": "La langue de l'interface de l'application ({{appLang}}) et la langue des notifications par e-mail ({{emailLang}}) sont définies indépendamment.",
+      "noImage": "Aucune image disponible",
+      "noteLabel": "Qu'avez-vous vérifié ? (facultatif)",
+      "noteRequiredLabel": "Qu'avez-vous vérifié ? (obligatoire)",
+      "otherNoteRequired": "Ajoutez une note pour expliquer l'autre résultat.",
+      "outcomeLabel": "Résultat de l'examen",
+      "possibleMatch": "Correspondance potentielle Safety Gate",
+      "readyToRecord": "Prêt à enregistrer",
+      "reviewPointsHeading": "Points à examiner",
+      "unnamedRecord": "Enregistrement Safety Gate"
+    },
+    "riskDescription": "Description du risque",
+    "riskLevel": "Niveau de risque",
+    "riskSeverity": "Gravité du risque",
+    "safetyGateMatches": "Correspondances Safety Gate",
+    "scoreHelper": "La correspondance globale est le score d'examen final. La correspondance d'image ne reflète que la similarité de l'emballage.",
+    "sections": {
+      "whatHappened": "Que s'est-il passé ?",
+      "whatHappenedReviewed": "Cette correspondance a déjà été examinée et enregistrée.",
+      "whatHappenedRisk": "Ce produit Shopify ressemble à un produit déjà signalé dans Safety Gate.",
+      "whatHappenedSafe": "La dernière vérification n'a pas trouvé de correspondance probable avec Safety Gate.",
+      "whatToDo": "Que dois-je faire ?",
+      "whyMatched": "Pourquoi cela correspond"
+    },
+    "seriousRisk": "Risque {{category}} grave",
+    "summary": {
+      "confidence": "Confiance",
+      "confidenceUnknown": "Confiance inconnue",
+      "decisionRecorded": "Décision enregistrée",
+      "decisionRequired": "Décision requise",
+      "highConfidence": "Confiance élevée",
+      "likelyMatch": "Correspondance probable",
+      "likelySafetyGateMatch": "Correspondance probable avec Safety Gate",
+      "matchType": "Type de correspondance",
+      "nextStep": "Étape suivante",
+      "noLikelyMatch": "Aucune correspondance probable",
+      "overallMatch": "Score global",
+      "reviewRecommended": "Examen recommandé"
+    },
+    "supplierFollowUp": {
+      "copy": "Copier le suivi fournisseur",
+      "template": "Bonjour, nous examinons {{product}} car il pourrait correspondre à l'alerte Safety Gate {{alert}} (risque : {{risk}}). Veuillez confirmer s'il s'agit du même modèle/lot, fournir la documentation de sécurité du produit et expliquer toute différence. Raison de la correspondance : {{reason}}"
+    },
+    "technicalDetails": {
+      "description": "Les scores et les nombres de récupération sont conservés ici pour un examen plus approfondi. Commencez par les photos du produit, la marque, le modèle et l'action recommandée ci-dessus.",
+      "hide": "Masquer les détails",
+      "show": "Afficher les détails",
+      "title": "Détails techniques de la correspondance"
+    },
+    "textOnly": "Vérification textuelle uniquement",
+    "viewOnSafetyGate": "Voir sur Safety Gate",
+    "whyThisMatched": "Pourquoi cela correspond",
+    "withImage": "Vérifié avec des images",
+    "yourProduct": "Votre produit Shopify"
+  },
+  "auditReport": {
+    "decision": "Décision",
+    "description": "Examinez l'enregistrement complet avant d'exporter un CSV pour votre équipe, votre fournisseur ou votre audit.",
+    "detected": "Détecté",
+    "documented": "Décisions documentées",
+    "download": "Télécharger le CSV",
+    "empty": "Aucune constatation de sécurité des produits n'a encore été enregistrée.",
+    "eyebrow": "Enregistrement prêt à l'exportation",
+    "generated": "Généré le {{date}}",
+    "heading": "Constatations et décisions",
+    "needsReview": "À examiner",
+    "notRecorded": "Non enregistré",
+    "open": "Ouvrir le rapport d'audit",
+    "product": "Produit",
+    "risk": "Gravité du risque",
+    "status": "Statut",
+    "summaryLabel": "Résumé du rapport d'audit",
+    "tableLabel": "Rapport d'audit de sécurité",
+    "title": "Rapport d'audit de sécurité",
+    "total": "Constatations enregistrées",
+    "viewHistory": "Voir la piste d'audit"
+  },
+  "billing": {
+    "freeScanAvailableDescription": "Vous disposez d'une analyse de catalogue gratuite. Effectuez votre premier audit pour vérifier les produits de votre boutique par rapport à la base de données Safety Gate de l'UE pour les produits non alimentaires dangereux.",
+    "freeScanAvailableHeading": "Analyse initiale gratuite du catalogue active",
+    "managePlanButton": "Gérer l'abonnement",
+    "planActiveDescription": "La surveillance est activée pour cette boutique Shopify. Examinez la dernière exécution et tous les produits qui nécessitent une attention particulière.",
+    "planEyebrow": "Plan et couverture",
+    "planFreeAvailableDescription": "Un premier scan gratuit du catalogue Safety Gate est disponible.",
+    "planFreeUsedDescription": "Votre premier scan gratuit est terminé. Choisissez un plan pour démarrer la surveillance continue et continuer à exporter la piste d'audit.",
+    "planTitle": "Abonnement et surveillance de la sécurité",
+    "pricingUnavailable": "La tarification Shopify n'est pas configurée pour cette application.",
+    "statusActivePro": "ZeroRecall Pro (Actif)",
+    "statusDevelopmentBypass": "Aperçu du développement (facturation ignorée)",
+    "statusFreeAvailable": "Scan initial gratuit",
+    "statusFreeUsed": "Scan gratuit utilisé",
+    "statusLabel": "Plan actuel",
+    "statusUnverified": "L'abonnement n'a pas pu être vérifié",
+    "upgradePlanButton": "Mettre à niveau vers Pro",
+    "upgradeRequiredDescription": "Votre scan initial gratuit est terminé. Choisissez un plan Shopify pour surveiller les nouvelles alertes Safety Gate et vérifier les produits modifiés.",
+    "upgradeRequiredHeading": "Continuer la surveillance Safety Gate",
+    "verificationError": "Les nouveaux scans sont suspendus jusqu'à ce que la facturation Shopify puisse être vérifiée. Vos constatations et décisions existantes restent disponibles."
+  },
+  "billingRedirect": {
+    "opening": "Ouverture des plans tarifaires Shopify...",
+    "openPricingPlans": "Ouvrir les plans tarifaires"
+  },
+  "common": {
+    "all": "Tout",
+    "cancel": "Annuler",
+    "close": "Fermer",
+    "confirm": "Confirmer",
+    "language": "Langue",
+    "loading": "Chargement...",
+    "unknown": "Inconnu"
+  },
+  "dashboard": {
+    "activeAlertsBanner": {
+      "content": "Résolvez {{count}} alerte active pour maintenir les produits concernés disponibles dans votre boutique.",
+      "content_few": "Résolvez {{count}} alertes actives pour maintenir les produits concernés disponibles dans votre boutique.",
+      "content_many": "Résolvez {{count}} alertes actives pour maintenir les produits concernés disponibles dans votre boutique.",
+      "content_one": "Résolvez {{count}} alerte active pour maintenir les produits concernés disponibles dans votre boutique.",
+      "content_other": "Résolvez {{count}} alertes actives pour maintenir les produits concernés disponibles dans votre boutique.",
+      "content_plural": "Résolvez {{count}} alertes actives pour maintenir les produits concernés disponibles dans votre boutique.",
+      "manualCheckAction": "Vérification manuelle",
+      "reviewAction": "Examiner la première alerte",
+      "title": "Les alertes de sécurité actives nécessitent une attention"
+    },
+    "admin": {
+      "actionNeeded": "Action requise",
+      "actionNeededDescription": "Examinez d'abord les produits signalés afin de pouvoir décider de les maintenir en vente, d'ignorer la correspondance ou de résoudre l'alerte.",
+      "actionNeededTitle": "{{count}} alerte active nécessite un examen",
+      "actionNeededTitle_few": "{{count}} alertes actives nécessitent un examen",
+      "actionNeededTitle_many": "{{count}} alertes actives nécessitent un examen",
+      "actionNeededTitle_one": "{{count}} alerte active nécessite un examen",
+      "actionNeededTitle_other": "{{count}} alertes actives nécessitent un examen",
+      "actionNeededTitle_plural": "{{count}} alertes actives nécessitent un examen",
+      "activeAlertsDescription": "Produits qui nécessitent encore une décision du marchand avant que la file d'attente ne soit vide.",
+      "auditHistoryKept": "Historique d'audit conservé",
+      "auditReady": "Rapport prêt",
+      "auditRecordsDescription": "Décisions résolues et ignorées avec raisons et notes internes.",
+      "auditRecordsTitle": "Registres d'audit",
+      "auditReport": "Rapport d'audit",
+      "automaticChecks": "Vérifications automatiques",
+      "bulkCheckAllSummary": "Ceci exécutera un passage complet pour tous les {{count}} produits.",
+      "bulkCheckDescription": "Scannez d'abord les produits non vérifiés, ou incluez l'ensemble du catalogue lorsque vous souhaitez un nouveau passage.",
+      "bulkCheckSummary": "Résumé de la vérification en masse",
+      "bulkCheckSummaryDescription": "Gardez ce résumé compact afin que les marchands puissent confirmer les résultats sans ouvrir un deuxième écran.",
+      "bulkCheckTitle": "Vérification en masse du catalogue",
+      "bulkCheckUncheckedSummary": "Ceci vérifiera {{count}} produits restants et ignorera {{skip}} articles déjà examinés.",
+      "catalogCoverageDescription": "Part du catalogue déjà vérifiée par rapport à Safety Gate.",
+      "catalogCoverageTitle": "Couverture du catalogue",
+      "coverage": "Couverture",
+      "coveragePercent": "Catalogue avec vérifications enregistrées",
+      "criticalBannerDescription": "{{count}} correspondance active est marquée comme risque élevé ou grave. Priorisez ces produits avant que de nouvelles ventes ne se poursuivent.",
+      "criticalBannerDescription_few": "{{count}} correspondances actives sont marquées comme risque élevé ou grave. Priorisez ces produits avant que de nouvelles ventes ne se poursuivent.",
+      "criticalBannerDescription_many": "{{count}} correspondances actives sont marquées comme risque élevé ou grave. Priorisez ces produits avant que de nouvelles ventes ne se poursuivent.",
+      "criticalBannerDescription_one": "{{count}} correspondance active est marquée comme risque élevé ou grave. Priorisez ces produits avant que de nouvelles ventes ne se poursuivent.",
+      "criticalBannerDescription_other": "{{count}} correspondances actives sont marquées comme risque élevé ou grave. Priorisez ces produits avant que de nouvelles ventes ne se poursuivent.",
+      "criticalBannerDescription_plural": "{{count}} correspondances actives sont marquées comme risque élevé ou grave. Priorisez ces produits avant que de nouvelles ventes ne se poursuivent.",
+      "criticalBannerTitle": "{{count}} alerte active inclut des correspondances à haut risque",
+      "criticalBannerTitle_few": "{{count}} alertes actives incluent des correspondances à haut risque",
+      "criticalBannerTitle_many": "{{count}} alertes actives incluent des correspondances à haut risque",
+      "criticalBannerTitle_one": "{{count}} alerte active inclut des correspondances à haut risque",
+      "criticalBannerTitle_other": "{{count}} alertes actives incluent des correspondances à haut risque",
+      "criticalBannerTitle_plural": "{{count}} alertes actives incluent des correspondances à haut risque",
+      "daily": "Quotidien",
+      "dailyAtTime": "Quotidien à 03:47 Europe/Bratislava",
+      "dailyAtTimePlanned": "Planifié (quotidien à 03:47)",
+      "decisionsClosed": "Décisions clôturées",
+      "demoAlert": {
+        "action": "Résoudre, ignorer ou faire un suivi avec le fournisseur",
+        "badge": "Exemple de flux de travail",
+        "description": "L'application affiche le produit Shopify, l'enregistrement Safety Gate, la raison de la correspondance et l'action à enregistrer.",
+        "evidence": "Conserver les notes et exporter un rapport d'audit",
+        "reason": "Comparer la marque, le modèle, la catégorie et les photos du produit",
+        "sample": "Ce que les marchands voient lorsqu'une correspondance apparaît",
+        "title": "Correspondance Safety Gate probable trouvée"
+      },
+      "emptyProofCoverage": "{{count}} produits ont un résultat de vérification enregistré.",
+      "emptyProofEvidence": "{{count}} décisions clôturées sont conservées pour l'historique d'audit.",
+      "emptyProofMonitoring": "La surveillance quotidienne de Safety Gate est toujours en cours.",
+      "exportProof": "Exporter la preuve",
+      "fallbackAlertDescription": "Correspondance avec une alerte Safety Gate.",
+      "finishCoverage": "Terminer la couverture du catalogue",
+      "highRiskMatchesDescription": "Correspondances Safety Gate à risque grave ou élevé à examiner en premier.",
+      "highRiskMatchesTitle": "Correspondances à haut risque",
+      "checkChangedProducts": "Vérifier les produits modifiés",
+      "checksCompletedDescription": "Vérifications automatiques et manuelles qui réduisent le travail manuel de révision du catalogue.",
+      "checksCompletedTitle": "Vérifications terminées",
+      "lastMonitoringRunDescription": "Vérification Safety Gate automatique, manuelle ou en masse la plus récente.",
+      "lastMonitoringRunTitle": "Dernière exécution de la surveillance",
+      "lastSafetyGateUpdateChecked": "Dernière mise à jour Safety Gate vérifiée",
+      "latestRun": "Dernière exécution",
+      "monitoringRunDateUnknown": "Heure indisponible",
+      "monitoringRunHistoryEmpty": "Aucune exécution de surveillance planifiée n'a été enregistrée pour le moment.",
+      "monitoringRunHistoryTitle": "Exécutions de surveillance récentes",
+      "monitoringRunProgress": "{{products}} produits vérifiés · {{alerts}} nouvelles alertes",
+      "monitoringRunStatus": {
+        "completed": "Terminé",
+        "enqueue_failed": "Impossible de démarrer",
+        "failed": "Échec",
+        "processing": "En cours",
+        "queued": "En file d'attente",
+        "retrying": "Nouvelle tentative",
+        "skipped_unentitled": "Plan inactif",
+        "unknown": "Statut indisponible"
+      },
+      "monitoringRunsTitle": "Vérifications de surveillance",
+      "monitoringStatusAllClear": "La surveillance du catalogue est en cours",
+      "monitoringStatusDescription": "ZeroRecall vérifie votre catalogue par rapport aux nouvelles mises à jour de Safety Gate de l'UE, met en évidence les produits nécessitant un examen et conserve les preuves pour les rapports d'audit.",
+      "monitoringStatusEyebrow": "Statut de la surveillance",
+      "monitoringStatusNeedsReview": "{{count}} produit nécessite une décision du marchand",
+      "monitoringStatusNeedsReview_few": "{{count}} produits nécessitent des décisions du marchand",
+      "monitoringStatusNeedsReview_many": "{{count}} produits nécessitent des décisions du marchand",
+      "monitoringStatusNeedsReview_one": "{{count}} produit nécessite une décision du marchand",
+      "monitoringStatusNeedsReview_other": "{{count}} produits nécessitent des décisions du marchand",
+      "monitoringStatusNeedsReview_plural": "{{count}} produits nécessitent des décisions du marchand",
+      "needsReviewTitle": "Produits nécessitant un examen",
+      "nextAutomaticCheck": "Prochaine vérification automatique",
+      "noActiveAlertsDescription": "Vos dernières vérifications ne nécessitent actuellement aucune action. Continuez à scanner les produits nouvellement ajoutés pour maintenir la couverture.",
+      "noActiveAlertsTitle": "Aucune alerte de sécurité active",
+      "noAlertsDescription": "Il n'y a pas d'examens de produits ouverts pour le moment. C'est toujours utile : la surveillance quotidienne continue en arrière-plan et vos preuves restent prêtes à être exportées.",
+      "noAlertsTitle": "Aucun produit ne nécessite d'examen",
+      "priorityQueue": "File d'attente de décision",
+      "productsCoveredShort": "avec un résultat de vérification enregistré",
+      "productsMonitored": "Versions actuelles des produits vérifiées",
+      "proofGridLabel": "Activité de surveillance",
+      "protectionDescription": "Les décomptes décrivent les résultats enregistrés dans l'application ; ils ne constituent pas une certification de sécurité des produits.",
+      "protectionEyebrow": "Votre dossier de surveillance",
+      "protectionTitle": "Examiner les vérifications récentes et les décisions du marchand.",
+      "recentAlertsDescription": "Examinez les correspondances probables de Safety Gate, enregistrez une décision et conservez les preuves pour les audits.",
+      "recentAlertsTitle": "Produits nécessitant une décision du marchand",
+      "recommendedAction": "Action recommandée : examinez la correspondance et enregistrez une décision.",
+      "resolvedRateDescription": "Proportion d'activité d'alerte enregistrée qui a déjà été clôturée.",
+      "resolvedRateTitle": "Taux de résolution",
+      "results": {
+        "alertCreated": "Alerte créée",
+        "completed": "Terminé",
+        "error": "Erreur",
+        "checked": "Vérifié",
+        "skipped": "Ignoré"
+      },
+      "reviewOneProduct": "Vérifier un produit",
+      "riskInAlert": "Risque décrit dans l'alerte Safety Gate",
+      "runBulkCheck": "Exécuter la vérification en masse",
+      "stats": {
+        "alertsCreated": "Alertes créées",
+        "alreadyChecked": "Déjà vérifié",
+        "errors": "Erreurs",
+        "checked": "Vérifié",
+        "skipped": "Ignoré",
+        "stillUnchecked": "Toujours non vérifié",
+        "totalProducts": "Total des produits"
+      },
+      "status": {
+        "cachedEvidence": "Les preuves mises en cache sont réutilisées",
+        "coverageIncomplete": {
+          "description": "Aucune correspondance Safety Gate ne nécessite d'examen dans les {{checked}} produits surveillés. Terminez la couverture de tous les {{total}} produits actuels avant de confirmer l'ensemble du catalogue.",
+          "eyebrow": "Couverture incomplète",
+          "title": "{{count}} produit a encore besoin de couverture",
+          "title_few": "{{count}} produits ont encore besoin de couverture",
+          "title_many": "{{count}} produits ont encore besoin de couverture",
+          "title_one": "{{count}} produit a encore besoin de couverture",
+          "title_other": "{{count}} produits ont encore besoin de couverture",
+          "title_plural": "{{count}} produits ont encore besoin de couverture"
+        },
+        "deltaMonitoring": "Seules les nouvelles alertes Safety Gate sont vérifiées",
+        "factsLabel": "Faits de surveillance actuels",
+        "matchesNeedingReview": "Correspondances nécessitant un examen",
+        "monitoringNotConfirmed": "Surveillance non encore confirmée",
+        "monitoringProblem": {
+          "action": "Actualiser la couverture du catalogue",
+          "description": "Vos produits actuels ont des preuves de couverture, mais l'application ne peut pas confirmer la dernière fois que la surveillance Safety Gate a été terminée. Actualisez la couverture du catalogue pour restaurer un statut fiable.",
+          "eyebrow": "La surveillance nécessite une attention",
+          "title": "La couverture du catalogue n'a pas d'exécution de surveillance enregistrée"
+        },
+        "noActionNeeded": {
+          "action": "Afficher la couverture du catalogue",
+          "description": "Aucun produit de votre catalogue surveillé ne correspond actuellement aux alertes Safety Gate de l'UE. La surveillance continue en arrière-plan et seules les nouvelles alertes ou les produits modifiés nécessitent un travail.",
+          "emptyCatalogDescription": "Ajoutez des produits à votre catalogue Shopify et ZeroRecall sera prêt à les couvrir.",
+          "emptyCatalogTitle": "Aucun produit à surveiller pour le moment",
+          "eyebrow": "Statut Safety Gate actuel",
+          "title": "Aucune action nécessaire"
+        },
+        "none": "Aucun",
+        "reviewNeeded": {
+          "criticalDescription": "Examinez ces correspondances possibles avant de poursuivre les ventes. Comparez le produit et les preuves Safety Gate, puis enregistrez votre décision.",
+          "criticalEyebrow": "Examen urgent",
+          "criticalTitle": "{{count}} correspondance possible avec une alerte à risque grave nécessite un examen",
+          "criticalTitle_few": "{{count}} correspondances possibles avec une alerte à risque grave nécessitent un examen",
+          "criticalTitle_many": "{{count}} correspondances possibles avec une alerte de risque grave nécessitent un examen",
+          "criticalTitle_one": "{{count}} correspondance possible avec une alerte de risque grave nécessite un examen",
+          "criticalTitle_other": "{{count}} correspondances possibles avec une alerte de risque grave nécessitent un examen",
+          "criticalTitle_plural": "{{count}} correspondances possibles avec une alerte de risque grave nécessitent un examen",
+          "description": "Les correspondances potentielles de Safety Gate nécessitent une décision du marchand. Examinez d'abord les correspondances; les résultats de vérification pour les autres produits restent disponibles dans le catalogue.",
+          "eyebrow": "Examen nécessaire",
+          "title": "{{count}} correspondance possible nécessite un examen",
+          "title_few": "{{count}} correspondances possibles nécessitent un examen",
+          "title_many": "{{count}} correspondances possibles nécessitent un examen",
+          "title_one": "{{count}} correspondance possible nécessite un examen",
+          "title_other": "{{count}} correspondances possibles nécessitent un examen",
+          "title_plural": "{{count}} correspondances possibles nécessitent un examen"
+        },
+        "scheduledPlanned": "Exécution planifiée"
+      },
+      "storeStatus": "Statut de la boutique",
+      "valueMetrics": {
+        "decisionsRecorded": "Décisions enregistrées",
+        "evidenceRetained": "Décisions avec preuves",
+        "checksRun": "Vérifications effectuées",
+        "openDecisions": "Décisions en attente",
+        "productsCovered": "Produits vérifiés"
+      },
+      "valueProofDescription": "Montrez à l'équipe que l'abonnement n'est pas une analyse unique : la couverture du catalogue, les vérifications, les décisions et l'accès en lecture seule à Shopify restent actifs.",
+      "valueProofDescriptionComplete": "Ces chiffres montrent l'activité de vérification enregistrée pour le catalogue actuel.",
+      "valueProofDescriptionIncomplete": "Exécutez des vérifications pour les produits restants afin d'ajouter les résultats à l'enregistrement du catalogue actuel.",
+      "valueProofEyebrow": "Action de couverture",
+      "valueProofTitle": "Ce que ZeroRecall continue de faire",
+      "valueProofTitleComplete": "Chaque produit actuel a une vérification enregistrée",
+      "valueProofTitleIncomplete": "{{count}} produits ont une vérification enregistrée",
+      "warningBannerDescription": "Examinez ces correspondances, rejetez les faux positifs ou résolvez les problèmes confirmés afin que la file d'attente reste gérable.",
+      "warningBannerTitle": "{{count}} alerte active nécessite une décision du marchand",
+      "warningBannerTitle_few": "{{count}} alertes actives nécessitent des décisions du marchand",
+      "warningBannerTitle_many": "{{count}} alertes actives nécessitent des décisions du marchand",
+      "warningBannerTitle_one": "{{count}} alerte active nécessite une décision du marchand",
+      "warningBannerTitle_other": "{{count}} alertes actives nécessitent des décisions du marchand",
+      "warningBannerTitle_plural": "{{count}} alertes actives nécessitent des décisions du marchand",
+      "withReadOnlyShopifyAccess": "Accès en lecture seule à Shopify"
+    },
+    "bulkCheck": {
+      "action": "Vérifier tous les produits",
+      "alerts": "Alertes {{count}}",
+      "alreadyChecked": "Déjà vérifié",
+      "completed": "Terminé en {{seconds}} secondes",
+      "description": "Scannez chaque produit de votre boutique par rapport à la base de données Safety Gate pour détecter les risques cachés.",
+      "errors": "Erreurs {{count}}",
+      "checked": "Vérifié {{count}}",
+      "includeAlreadyChecked": "Inclure les produits déjà vérifiés",
+      "notYetChecked": "Pas encore vérifié",
+      "processed": "Traité {{count}}",
+      "started": "Commencé le {{date}}",
+      "title": "Vérification de sécurité en masse",
+      "totalProducts": "Total des produits",
+      "willCheckAll": "Vérifiera tous les {{count}} produits",
+      "willCheckUnchecked": "Vérifiera {{count}} produits non vérifiés (ignorera {{skip}} déjà vérifiés)"
+    },
+    "bulkResults": {
+      "success": "Vérification en masse terminée : {{processed}} traités, {{checked}} vérifiés, {{alertsCreated}} alertes créées."
+    },
+    "howItWorks": {
+      "alertGeneration": {
+        "description": "Les correspondances génèrent des alertes que vous pouvez ignorer ou résoudre pour suivre la conformité.",
+        "title": "Génération d'alertes"
+      },
+      "autoMonitoring": {
+        "description": "Les produits sont vérifiés par rapport à la base de données de l'UE chaque fois qu'ils sont créés ou mis à jour.",
+        "title": "Surveillance automatique"
+      },
+      "title": "Comment ça marche"
+    },
+    "liveScan": {
+      "completed": "Terminé",
+      "description": "Importation de votre catalogue depuis Shopify et analyse des produits par rapport à plus de 35 000 enregistrements dans la base de données officielle EU Safety Gate (RAPEX). Les résultats apparaîtront ci-dessous sous peu.",
+      "eyebrow": "Audit de sécurité automatisé",
+      "failedDescription": "Nous n'avons pas pu terminer cet audit. Votre catalogue n'a pas été marqué comme entièrement vérifié. Relancez l'analyse ou contactez le support si le problème persiste.",
+      "failedHeading": "L'audit du catalogue nécessite une nouvelle tentative",
+      "heading": "Audit de sécurité du catalogue gratuit en cours...",
+      "inProgress": "En cours...",
+      "pending": "En attente",
+      "progress": "Importé {{imported}} produits sur {{fetched}} ; {{scanned}} produits comparés avec {{alerts}} alertes Safety Gate jusqu'à présent.",
+      "stepAudit": "3. Préparer la piste d'audit GPSR et l'état de conformité",
+      "stepImport": "1. Importer les produits de Shopify",
+      "stepScan": "2. Comparer avec la base de données Safety Gate (plus de 35 000 enregistrements)"
+    },
+    "metricsCard": {
+      "activeAlertsHeading": "Alertes actives",
+      "productsCheckedHeading": "Produits vérifiés",
+      "resolutionHeading": "Taux de résolution",
+      "resolved": "{{count}} résolu",
+      "resolvedAndDismissed": "{{resolved}} résolu • {{dismissed}} rejeté",
+      "scans": "Analyses Safety Gate",
+      "totalRecorded": "{{count}} enregistré au total"
+    },
+    "monitorCard": {
+      "description": "Suivez les alertes, exécutez les vérifications du catalogue et satisfaites les régulateurs.",
+      "reviewAction": "Examiner les alertes",
+      "title": "Surveillez la sécurité des produits en un coup d'œil"
+    },
+    "quickActions": {
+      "browsePortal": "Parcourir le portail Safety Gate",
+      "description": "Des vérifications et une documentation régulières aident à démontrer la diligence raisonnable aux régulateurs.",
+      "manualCheck": "Exécuter une vérification manuelle",
+      "title": "Actions rapides"
+    },
+    "recentAlerts": {
+      "active": "{{count}} actifs",
+      "allResolved": "Tous résolus",
+      "description": "Enquêtez sur les dernières correspondances de Safety Gate avant d'exécuter les commandes.",
+      "emptyState": {
+        "content": "Excellente nouvelle : aucun produit n'est actuellement signalé. Continuez à surveiller pour maintenir la conformité.",
+        "heading": "Aucune alerte de sécurité pour l'instant"
+      },
+      "matchCount": "{{count}} correspondance trouvée",
+      "matchCount_few": "{{count}} correspondances trouvées",
+      "matchCount_many": "{{count}} correspondances trouvées",
+      "matchCount_one": "{{count}} correspondance trouvée",
+      "matchCount_other": "{{count}} correspondances trouvées",
+      "matchCount_plural": "{{count}} correspondances trouvées",
+      "title": "Alertes de sécurité récentes"
+    },
+    "safetyBreakdown": {
+      "actionDesc": "Correspondances trouvées avec les rapports EU Safety Gate qui nécessitent un examen et une résolution.",
+      "actionLabel": "Action requise",
+      "description": "Aperçu de la vérification de votre catalogue de produits par rapport aux listes de sécurité européennes et à la directive GPSR.",
+      "eyebrow": "État de la protection du catalogue",
+      "protectedDesc": "Produits pour lesquels la dernière vérification enregistrée n'a trouvé aucune correspondance probable.",
+      "protectedLabel": "Produits vérifiés sans problèmes ouverts",
+      "protectRemainingAction": "Vérifier les produits restants ({{count}})",
+      "reviewAlertsAction": "Examiner les alertes",
+      "scanAllAction": "Lancer un audit complet du catalogue",
+      "title": "État de la sécurité des produits",
+      "unprotectedAllCovered": "Chaque produit actuel a un résultat de vérification enregistré.",
+      "unprotectedDesc": "Produits sans vérification Safety Gate enregistrée.",
+      "unprotectedLabel": "Pas encore vérifié"
+    },
+    "setup": {
+      "description": "Préparez votre boutique à la conformité en matière de sécurité des produits de l'UE.",
+      "progress": "{{completed}} étapes sur {{total}} terminées",
+      "steps": {
+        "step1": {
+          "description": "Cliquez sur « Vérifier tous les produits » pour analyser l'ensemble de votre catalogue par rapport à la base de données EU Safety Gate.",
+          "label": "Effectuez votre première vérification de produits en masse"
+        },
+        "step2": {
+          "description": "Consultez la page des alertes pour examiner les produits qui correspondent aux avertissements Safety Gate.",
+          "label": "Examinez toutes les alertes de sécurité"
+        },
+        "step3": {
+          "description": "Activez les vérifications automatiques dans les paramètres pour surveiller automatiquement les nouveaux produits.",
+          "label": "Configurer la surveillance automatique"
+        }
+      },
+      "title": "Guide de configuration"
+    },
+    "stats": {
+      "actionNeeded": "Action requise",
+      "activeAlerts": "Alertes actives",
+      "alertsLogged": "Alertes enregistrées",
+      "allClear": "Tout est clair",
+      "autoMonitoring": "Surveillance automatique",
+      "descriptions": {
+        "activeAlerts": "Examinez ces produits aujourd'hui pour rester conforme.",
+        "activeAlertsZero": "Tous les problèmes de sécurité sont résolus.",
+        "alertsLogged": "Comprend les alertes résolues et ignorées pour la piste d'audit.",
+        "alertsLoggedZero": "Aucune alerte historique. Continuez à surveiller les nouveaux produits.",
+        "productsChecked": "Les événements Shopify automatiques continuent de surveiller les mises à jour.",
+        "productsCheckedZero": "Effectuez une vérification en masse pour analyser votre catalogue actuel."
+      },
+      "newSetup": "Nouvelle configuration",
+      "open": "{{count}} ouverts",
+      "productsChecked": "Produits vérifiés",
+      "resolved": "{{count}} résolu"
+    },
+    "title": "ZeroRecall"
+  },
+  "dates": {
+    "daysAgo": "Il y a {{count}} jours",
+    "today": "Aujourd'hui",
+    "weeksAgo": "Il y a {{count}} semaines",
+    "yesterday": "Hier"
+  },
+  "errors": {
+    "apiError": "Le service de sécurité externe est temporairement indisponible. Veuillez réessayer plus tard.",
+    "pageLoadFailed": "Échec du chargement de la page",
+    "unknown": "Une erreur est survenue"
+  },
+  "evidence": {
+    "alertNumber": "Alerte Safety Gate {{number}}",
+    "description": "Examinez les décisions enregistrées en matière de sécurité des produits, les notes, le contexte de risque et les preuves de suivi du fournisseur.",
+    "empty": "Aucune décision en matière de sécurité des produits n'a encore été enregistrée.",
+    "eyebrow": "Piste d'audit",
+    "filteredRecords": "{{visible}} sur {{total}} enregistrements",
+    "filters": {
+      "collapseForProduct": "Masquer toutes les preuves pour {{title}}",
+      "expandForProduct": "Afficher toutes les preuves pour {{title}}",
+      "noResults": "Aucun enregistrement d'audit ne correspond à ces filtres.",
+      "searchLabel": "Rechercher dans la piste d'audit",
+      "searchPlaceholder": "Rechercher un produit, un numéro d'alerte ou une preuve",
+      "showLess": "Masquer les preuves",
+      "showMore": "Afficher les preuves",
+      "statusLabel": "Statut de la décision"
+    },
+    "fullEvidence": "Preuves complètes",
+    "heading": "Historique des décisions et des preuves",
+    "noNotes": "Aucune note enregistrée",
+    "records": "{{count}} enregistrements",
+    "table": {
+      "accessibilityLabel": "Tableau des preuves de sécurité des produits",
+      "decision": "Décision",
+      "details": "Détails",
+      "notes": "Notes / preuves",
+      "product": "Produit",
+      "status": "Statut",
+      "summary": "Résumé des preuves",
+      "updated": "Mis à jour"
+    },
+    "title": "Piste d'audit"
+  },
+  "experience": {
+    "delayed": "La surveillance nécessite une attention particulière — la dernière exécution complète date de plus de 48 heures",
+    "pausedHelp": "Les vérifications automatiques sont en pause. Choisissez un forfait pour vérifier les nouvelles alertes Safety Gate et les modifications de produits lorsque Shopify est fermé.",
+    "previewHelp": "L'ouverture de cet aperçu de développement n'active pas la surveillance en arrière-plan. Les vérifications planifiées nécessitent un forfait Shopify actif vérifié.",
+    "reviewSteps": "1. Comparez les photos et les identifiants → 2. Choisissez le résultat de l'examen → 3. Enregistrez votre décision",
+    "valueBody": "Vérifications quotidiennes des nouvelles alertes Safety Gate, vérifications lorsque les produits changent, notifications par e-mail lorsqu'elles sont activées, et décisions d'examen enregistrées.",
+    "valueTitle": "Ce qu'apporte la surveillance continue"
+  },
+  "manualCheck": {
+    "admin": {
+      "catalog": "Catalogue",
+      "catalogDescription": "Les produits sont triés par les dernières mises à jour Shopify afin que les marchands puissent revérifier les modifications récentes en premier.",
+      "checkFailed": "Vérification échouée",
+      "manualReview": "Examen à la demande",
+      "manualReviewDescription": "Choisissez n'importe quel produit de votre catalogue et effectuez une vérification Safety Gate ciblée lorsque vous avez besoin d'une réponse immédiate.",
+      "productFlagged": "Produit signalé"
+    },
+    "badges": {
+      "flagged": "{{count}} signalés",
+      "checks": "{{count}} vérifications",
+      "needsReview": "{{count}} à examiner"
+    },
+    "banners": {
+      "alertDescription": "Un problème de sécurité potentiel a été trouvé pour ce produit.",
+      "alertHeading": "Alerte de sécurité créée",
+      "failedHeading": "Vérification échouée",
+      "textOnlyDescription": "Ce résultat n'a utilisé que des champs de texte. Si le produit repose sur des différences visuelles, examinez la correspondance plus attentivement.",
+      "textOnlyHeading": "La comparaison d'images n'était pas disponible"
+    },
+    "breadcrumbs": {
+      "current": "Couverture du catalogue",
+      "dashboard": "Tableau de bord"
+    },
+    "bulk": {
+      "description": "Examinez les vérifications enregistrées et effectuez une nouvelle comparaison Safety Gate pour les produits de votre catalogue actuel.",
+      "checkAllProducts": "Vérifier les produits restants",
+      "checkingAll": "Vérification du catalogue...",
+      "title": "Vérifiez votre catalogue"
+    },
+    "catalogue": {
+      "accessibilityLabel": "Table du catalogue de produits",
+      "actions": {
+        "checkAgain": "Vérifier à nouveau",
+        "checkAgainForProduct": "Vérifier à nouveau {{title}}",
+        "checkSafety": "Vérifier la sécurité",
+        "checkSafetyForProduct": "Vérifier la sécurité de {{title}}",
+        "viewForProduct": "Afficher la constatation enregistrée pour {{title}}"
+      },
+      "columns": {
+        "action": "Action",
+        "checks": "Vérifications",
+        "product": "Produit",
+        "status": "Statut"
+      },
+      "emptyBody": "Aucun produit n'est disponible pour vérification.",
+      "emptyHeading": "Aucun produit trouvé",
+      "firstCheck": "Effectuer votre première vérification",
+      "heading": "Catalogue de produits ({{count}})",
+      "lastChecked": "Dernière vérification le {{date}}",
+      "noType": "Aucun type",
+      "searchLabel": "Trouver un produit",
+      "searchPlaceholder": "Rechercher des produits par titre, SKU, fournisseur ou type",
+      "status": {
+        "notChecked": "Non vérifié",
+        "reviewed": "Examiné",
+        "safe": "Aucune correspondance trouvée",
+        "unsafe": "À examiner"
+      },
+      "totalChecks": "{{count}} au total",
+      "unknownVendor": "Fournisseur inconnu"
+    },
+    "coverage": {
+      "completeDescription": "Chaque produit Shopify actuel a une vérification Safety Gate enregistrée. Les produits nouveaux ou modifiés nécessitent toujours une nouvelle vérification.",
+      "completeTitle": "Chaque produit actuel a un résultat de vérification enregistré",
+      "eyebrow": "État de la vérification du catalogue",
+      "incompleteDescription": "Vérifiez les produits restants pour enregistrer un résultat Safety Gate pour le catalogue actuel.",
+      "incompleteTitle": "{{count}} produits n'ont pas encore de vérification enregistrée",
+      "lastProductNeedsReview": "La dernière vérification de produit a créé ou mis à jour un élément d'examen.",
+      "lastProductSafe": "La dernière vérification de produit n'a trouvé aucune correspondance probable avec Safety Gate.",
+      "lastRun": "Dernière vérification",
+      "lastRunResultWithCounts": "Vérifiés {{checked}}, ignorés {{skipped}} inchangés, {{alerts}} éléments d'examen créés, {{errors}} erreurs.",
+      "noneRemaining": "Chaque produit actuel a un résultat de vérification enregistré.",
+      "noRunYet": "Aucune vérification de catalogue ou de produit n'a encore été effectuée.",
+      "percent": "{{percent}}% avec une vérification actuelle",
+      "productsCovered": "Produits vérifiés",
+      "productsCoveredDescription": "Produits avec un résultat enregistré pour leur version Shopify actuelle.",
+      "remaining": "Pas encore vérifié",
+      "remainingDescription": "Effectuez une vérification pour enregistrer un résultat Safety Gate pour ces produits."
+    },
+    "filters": {
+      "all": "Tous ({{count}})",
+      "needsReview": "Correspondance possible ({{count}})",
+      "safe": "Aucune correspondance trouvée ({{count}})",
+      "unprotected": "Non vérifié ou modifié ({{count}})"
+    },
+    "modal": {
+      "unknown": "Inconnu",
+      "unknownProduct": "Produit inconnu"
+    },
+    "overview": {
+      "coverage": "{{coverage}}% de couverture",
+      "manualCompleted": "Vérifications manuelles terminées",
+      "manualCompletedDescription": "{{checked}} produits vérifiés sur {{total}}",
+      "noOpenReviews": "Aucune décision de produit en attente.",
+      "noRisks": "Aucun risque détecté pour l'instant.",
+      "prioritise": "Priorisez ces produits pour action.",
+      "productsDescription": "Derniers produits de votre boutique.",
+      "productsFlagged": "Produits signalés",
+      "productsInScope": "Produits concernés",
+      "productsNeedingReview": "Produits nécessitant un examen",
+      "title": "Aperçu des vérifications"
+    },
+    "quickActions": {
+      "title": "Actions rapides"
+    },
+    "subtitle": "Protégez le reste de votre catalogue, actualisez la surveillance ou vérifiez un produit sélectionné.",
+    "title": "Couverture du catalogue",
+    "toasts": {
+      "completed": "Vérification de sécurité terminée",
+      "flagged": "Problème de sécurité potentiel détecté"
+    }
+  },
+  "nav": {
+    "catalogCoverage": "Couverture du catalogue",
+    "dashboard": "Tableau de bord",
+    "evidence": "Piste d'audit",
+    "manualCheck": "Couverture du catalogue",
+    "safetyAlerts": "File d’attente d’évaluation",
+    "settings": "Paramètres"
+  },
+  "news": {
+    "items": {
+      "databaseUpdate": {
+        "date": "Déc. 2025",
+        "description": "La base de données Safety Gate est continuellement mise à jour avec de nouvelles alertes produit. Effectuez des vérifications régulières pour rester conforme.",
+        "title": "Base de données EU Safety Gate mise à jour"
+      },
+      "gpsr": {
+        "date": "GPSR 2024",
+        "description": "Découvrez les exigences du GPSR et comment vous assurer que vos produits répondent aux normes de sécurité de l'UE.",
+        "title": "Règlement général sur la sécurité des produits"
+      }
+    },
+    "title": "Actualités"
+  },
+  "onboarding": {
+    "back": "Retour",
+    "finishButton": "Terminer la configuration et aller au tableau de bord",
+    "nextStep": "Étape suivante",
+    "stepIndicator": "Étape {{current}} sur {{total}}",
+    "steps": {
+      "automation": {
+        "description": "Configurez l'examen prioritaire et les règles de sécurité automatiques pour votre boutique.",
+        "label": "Automatisation de la sécurité",
+        "quarantine": {
+          "desc": "Marquez automatiquement les produits pour un examen prioritaire lorsqu'ils correspondent à des alertes Safety Gate présentant un risque grave (seuil >= 95 %).",
+          "label": "Activer l'examen prioritaire",
+          "title": "Prioriser les risques graves"
+        },
+        "title": "Étape 3 : Surveillance automatique et alertes",
+        "webhooks": {
+          "desc": "Les produits sont automatiquement vérifiés par rapport à la base de données de l'UE lors de leur création ou de leur mise à jour.",
+          "title": "Analyse de webhook en temps réel"
+        }
+      },
+      "scan": {
+        "alerts": "Alertes de risque créées : {{count}}",
+        "complete": "Le catalogue est maintenant surveillé",
+        "description": "Importez vos produits Shopify actuels dans la surveillance Safety Gate, puis comparez le catalogue avec les alertes Safety Gate récentes.",
+        "imported": "Produits importés pour la surveillance : {{count}}",
+        "label": "Importation du catalogue",
+        "monitored": "Produits comparés aux alertes Safety Gate : {{count}}",
+        "scanned": "Produits analysés : {{count}}",
+        "scanning": "Importation du catalogue et comparaison des produits avec les alertes Safety Gate...",
+        "startButton": "Importer et surveiller le catalogue actuel",
+        "title": "Étape 2 : Importer et surveiller le catalogue actuel",
+        "toScan": "Produits à importer pour la surveillance : {{count}}"
+      },
+      "sensitivity": {
+        "balanced": "70 % (Recommandé - Équilibré)",
+        "broad": "40 % (Large - Plus d'avertissements)",
+        "calibration": {
+          "balancedDesc": "Sensibilité standard. Équilibre optimisé entre précision et volume d'alertes. Analyse les titres, les descriptions et correspond aux marques clés et aux structures de modèles.",
+          "balancedTitle": "Mode de détection équilibré",
+          "broadDesc": "Haute sensibilité. Détecte les correspondances faiblement liées. Recommandé si vous vendez des catégories de produits à haut risque (jouets, électronique) et souhaitez une couverture complète, mais attendez-vous à quelques faux positifs.",
+          "broadTitle": "Mode de détection large",
+          "strictDesc": "Haute précision. Filtre les similitudes mineures. Les alertes ne se déclencheront que pour des correspondances très claires de noms de marque/modèle. Faible taux de fausses alertes.",
+          "strictTitle": "Mode de détection strict"
+        },
+        "description": "Choisissez à quel point un produit doit correspondre à un enregistrement Safety Gate avant d'être examiné.",
+        "label": "Rigueur de la correspondance",
+        "strict": "90 % (Strict – Moins d'avertissements)",
+        "thresholdLabel": "Seuil de correspondance : {{value}} %",
+        "title": "Étape 1 : Définir la rigueur de la correspondance"
+      }
+    },
+    "subtitle": "Trouvez les correspondances possibles de produits dangereux, examinez-les dans Shopify et conservez les preuves d'audit pour chaque décision.",
+    "title": "Surveillez votre catalogue par rapport à Safety Gate de l'UE",
+    "value": {
+      "audit": {
+        "description": "Les décisions résolues et ignorées conservent des notes pour les exportations et le suivi des fournisseurs.",
+        "title": "Preuves prêtes pour l'audit"
+      },
+      "monitor": {
+        "description": "Les nouvelles alertes Safety Gate sont vérifiées par rapport à votre catalogue Shopify.",
+        "title": "Surveillance quotidienne de Safety Gate de l'UE"
+      },
+      "review": {
+        "description": "Comparez la correspondance, décidez quoi faire et maintenez la file d'attente exploitable.",
+        "title": "Flux de travail de décision du marchand"
+      }
+    }
+  },
+  "pagination": {
+    "pageOf": "Page {{current}} sur {{total}} ({{count}} alertes)"
+  },
+  "portal": {
+    "description": "Accédez à la base de données officielle européenne Safety Gate pour rechercher des produits dangereux et consulter des alertes de sécurité détaillées.",
+    "home": "Accueil Safety Gate",
+    "homeDescription": "Accéder au portail officiel de la Commission européenne",
+    "searchDatabase": "Rechercher dans la base de données",
+    "searchDescription": "Rechercher des produits dangereux dans Safety Gate de l'UE",
+    "title": "Portail Safety Gate"
+  },
+  "resolveActions": {
+    "actionTaken": "Action entreprise",
+    "contactedSupplier": "Fournisseur contacté (en attente de réponse)",
+    "contactPending": "En attente de la réponse du fournisseur",
+    "falsePositive": "Faux positif",
+    "menuLabel": "Actions de résolution",
+    "modifiedProduct": "Produit modifié",
+    "noActionNeeded": "Aucune action nécessaire",
+    "notMyProduct": "Pas mon produit",
+    "other": "Autre",
+    "removedFromSale": "Retiré de la vente",
+    "verifiedSafe": "Résultat historique : produit vérifié sûr"
+  },
+  "settings": {
+    "monitoring": {
+      "automatic": {
+        "description": "Les produits sont automatiquement vérifiés lors de leur création ou mise à jour via des webhooks.",
+        "enabled": "Activé",
+        "title": "Vérification automatique"
+      },
+      "manual": {
+        "description": "Effectuez des vérifications de sécurité à la demande pour tout produit de votre catalogue.",
+        "goToManualCheck": "Accéder à la vérification manuelle",
+        "title": "Vérifications manuelles"
+      },
+      "title": "Surveillance"
+    },
+    "navigation": {
+      "dashboard": "Tableau de bord",
+      "manualCheck": "Vérification manuelle",
+      "title": "Navigation",
+      "viewAlerts": "Afficher les alertes"
+    },
+    "subtitle": "Contrôlez la façon dont ZeroRecall surveille votre catalogue Shopify.",
+    "threshold": {
+      "currentDefault": "Valeur par défaut de l'environnement actuel",
+      "description": "Choisissez le nombre de correspondances possibles avec Safety Gate que votre équipe souhaite examiner. La surveillance équilibrée est recommandée pour la plupart des catalogues Shopify.",
+      "howItWorks": "Comment ça marche",
+      "label": "Seuil de correspondance avancé (%)",
+      "resetToDefault": "Réinitialiser par défaut",
+      "save": "Enregistrer",
+      "title": "Mode de surveillance"
+    },
+    "title": "Paramètres de surveillance"
+  },
+  "settingsAdmin": {
+    "advancedMatchingSettings": "Paramètres de correspondance avancés",
+    "automation": {
+      "autoDraftDescription": "Marquez automatiquement les produits pour un examen prioritaire lorsqu'ils correspondent à des alertes Safety Gate présentant un risque grave (seuil >= 95 %).",
+      "autoDraftTitle": "Prioriser les risques graves",
+      "description": "Configurez l'examen prioritaire pour les correspondances à haut risque.",
+      "eyebrow": "Opérations en temps réel",
+      "title": "Automatisation de la sécurité"
+    },
+    "automationStatus": {
+      "active": {
+        "badge": "Plan actif",
+        "description": "L'audit initial du catalogue est terminé et cette boutique a un plan de surveillance actif.",
+        "title": "Audit du catalogue terminé"
+      },
+      "completedNoPlan": {
+        "badge": "Audit terminé",
+        "description": "L'audit initial du catalogue est terminé. La surveillance automatique continue nécessite un plan actif.",
+        "title": "Audit initial du catalogue terminé"
+      },
+      "failed": {
+        "badge": "Nécessite une attention",
+        "description": "La dernière importation ou le dernier audit n'a pas été terminé. Réessayez la couverture du catalogue avant de vous fier au statut de la surveillance.",
+        "title": "L'audit initial du catalogue nécessite une attention"
+      },
+      "notStarted": {
+        "badge": "Non vérifié",
+        "description": "L'importation initiale n'est pas terminée, la couverture du catalogue n'est donc pas encore confirmée.",
+        "title": "Audit du catalogue non confirmé"
+      },
+      "openCatalog": "Ouvrir la couverture du catalogue",
+      "scanning": {
+        "badge": "En cours",
+        "description": "Les produits sont importés et vérifiés. La couverture du catalogue sera confirmée une fois l'audit terminé.",
+        "title": "Audit initial du catalogue en cours"
+      }
+    },
+    "automationStatusDescription": "Les mises à jour quotidiennes de Safety Gate de l'UE, les modifications de produits Shopify et les enregistrements d'audit sont gérés automatiquement. Utilisez ces paramètres uniquement pour ajuster le volume d'examen et les notifications.",
+    "automationStatusEyebrow": "Surveillance automatique",
+    "automationStatusTitle": "La surveillance Safety Gate fonctionne pour cette boutique",
+    "configuration": "Configuration",
+    "configurationDescription": "Gardez la page centrée sur une décision du marchand : la rigueur avec laquelle le vérificateur doit comparer les produits aux alertes Safety Gate.",
+    "currentThreshold": "Seuil actuel",
+    "currentThresholdDescription": "Des valeurs plus basses détectent plus de correspondances possibles. Des valeurs plus élevées réduisent les faux positifs.",
+    "environmentDefault": "Valeur par défaut de l'environnement",
+    "environmentDefaultDescription": "Utilisé lorsque la boutique n'a pas encore de seuil personnalisé enregistré.",
+    "exclusions": {
+      "description": "Excluez des fournisseurs ou des catégories de produits spécifiques des vérifications Safety Gate pour réduire les faux positifs.",
+      "eyebrow": "Règles de filtrage",
+      "title": "Règles d'exclusion",
+      "typesDescription": "Saisissez une catégorie ou un type de produit et appuyez sur Entrée ou sur une virgule pour l'ajouter.",
+      "typesPlaceholder": "Carte-cadeau, Service, ...",
+      "typesTitle": "Types de produits exclus",
+      "vendorsDescription": "Saisissez un nom de fournisseur et appuyez sur Entrée ou sur une virgule pour l'ajouter.",
+      "vendorsPlaceholder": "Fournisseur A, Fournisseur B, ...",
+      "vendorsTitle": "Fournisseurs exclus"
+    },
+    "fallback": "Solution de secours",
+    "guidance": "Conseils",
+    "guidanceItems": {
+      "balancedDescription": "Recommandé pour la plupart des catalogues (65-70 %). Détecte les risques probables tout en maintenant un faible taux de fausses alertes.",
+      "balancedTitle": "Équilibré par défaut",
+      "broadDescription": "Utilisez environ 50 % si vous préférez détecter plus de correspondances possibles et si vous êtes à l'aise avec l'examen d'un plus grand nombre d'alertes.",
+      "broadTitle": "Surveillance étendue",
+      "strictDescription": "Utilisez 80 %+ lorsque votre catalogue est stable et que vous souhaitez moins d'examens manuels.",
+      "strictTitle": "Correspondance stricte"
+    },
+    "included": {
+      "description": "L'application surveille en permanence votre catalogue par rapport aux alertes Safety Gate, conserve les preuves de conformité et vous avertit lorsque des produits nécessitent un examen.",
+      "evidenceDescription": "Les décisions résolues et rejetées conservent les notes, les raisons, le contexte de risque et les horodatages.",
+      "evidenceTitle": "Preuve exportable",
+      "eyebrow": "Surveillance continue",
+      "monitoringDescription": "Les nouveaux enregistrements Safety Gate sont comparés aux produits Shopify surveillés sans analyse manuelle.",
+      "monitoringTitle": "Surveillance continue de l'UE",
+      "teamDescription": "L'examen prioritaire, la documentation des fournisseurs et les filtres aident votre équipe à prendre des décisions réelles plus rapidement.",
+      "teamTitle": "Flux de travail d'examen",
+      "title": "Ce que votre boutique couvre"
+    },
+    "matchingStrictness": "Rigueur de la correspondance",
+    "mode": {
+      "balanced": "Équilibré",
+      "broad": "Plus de correspondances",
+      "strict": "Moins de correspondances"
+    },
+    "monitoringModeEyebrow": "Mode de surveillance",
+    "notifications": {
+      "emailHelp": "Initialement tiré de Shopify. Vous pouvez utiliser une adresse différente.",
+      "emailLabel": "E-mail de notification",
+      "enabledDescription": "Choisissez si vous recevez des résultats urgents, un résumé hebdomadaire ou les deux.",
+      "enabledTitle": "Alertes de sécurité par e-mail",
+      "immediateDescription": "Envoyez-moi un e-mail dès qu'un produit nécessite un examen.",
+      "immediateTitle": "Nouveaux résultats",
+      "invalidEmail": "Saisissez une adresse e-mail valide avant d'activer les notifications par e-mail.",
+      "languageLabel": "Langue de l'e-mail",
+      "noRecipientDescription": "Les notifications par e-mail sont activées, mais aucune adresse n'est spécifiée. Aucun message ne sera livré tant qu'une adresse e-mail n'aura pas été saisie.",
+      "noRecipientHeading": "Aucun destinataire d'e-mail configuré",
+      "useShopifyEmail": "Utiliser l'e-mail de contact de la boutique ({{email}})",
+      "weeklyDescription": "Résumé de la surveillance du lundi : confirme l'absence de nouveaux résultats ou résume les cas ouverts nécessitant un examen.",
+      "weeklyTitle": "Résumé hebdomadaire de la surveillance"
+    },
+    "onDemand": "Sur demande",
+    "plans": {
+      "advancedDescription": "Ajoutez un examen prioritaire, un suivi des fournisseurs et des flux de travail multilingues pour l'UE.",
+      "advancedTitle": "Avancé : automatisation et flux de travail multilingues",
+      "description": "Fonctionnalités et capacités incluses dans votre plan de surveillance de la boutique.",
+      "eyebrow": "Valeur de l'abonnement",
+      "manualDescription": "Exécutez des vérifications un produit à la fois et consultez le dernier statut du produit.",
+      "manualTitle": "Gratuit : vérifications manuelles",
+      "monitorDescription": "Surveillez les nouvelles alertes Safety Gate par rapport au catalogue, exportez des rapports d'audit CSV et conservez un historique des décisions.",
+      "monitorTitle": "Payant : surveillance et rapports quotidiens",
+      "title": "Capacités du plan"
+    },
+    "recommendedSetup": "Configuration recommandée",
+    "saveAll": "Enregistrer tous les paramètres",
+    "status": {
+      "auditTrail": "Piste d'audit",
+      "autoQuarantine": "Examen prioritaire",
+      "dailySafetyGateUpdates": "Mises à jour quotidiennes de Safety Gate",
+      "emailDigest": "Résumé par e-mail",
+      "off": "Désactivé",
+      "on": "Activé",
+      "running": "En cours",
+      "shopifyProductUpdates": "Nouveaux produits/produits mis à jour Shopify"
+    },
+    "storeSetting": "Paramètre de la boutique",
+    "strictnessHint": "40-60 % correspond à une analyse plus large. 70-85 % est plus strict et produit généralement moins de faux positifs.",
+    "valueDescription": "La surveillance continue compare les produits du catalogue éligibles aux enregistrements Safety Gate nouvellement publiés.",
+    "valueEyebrow": "Surveillance du catalogue",
+    "valueItems": {
+      "auditDescription": "Les décisions résolues et rejetées conservent les notes, les raisons et l'historique des examens pour les rapports exportables.",
+      "auditTitle": "Preuves prêtes pour l'audit",
+      "dailyDescription": "Les nouvelles alertes Safety Gate sont vérifiées par rapport aux produits surveillés sans que le marchand ne lance une analyse manuelle.",
+      "dailyTitle": "Surveillance quotidienne du catalogue",
+      "workflowDescription": "Les marchands n'examinent que les produits nécessitant une décision, puis résolvent, rejettent ou font un suivi avec les fournisseurs.",
+      "workflowTitle": "Flux de travail d'examen natif de Shopify"
+    },
+    "valueTitle": "Ce qui reste couvert",
+    "workspace": "Espace de travail"
+  },
+  "status": {
+    "actionRequired": "Action requise",
+    "allClear": "Tout est clair",
+    "archived": "Archivé",
+    "dismissed": "Rejeté",
+    "flagged": "signalé",
+    "monitored": "Surveillé",
+    "needsReview": "À examiner",
+    "notChecked": "Non vérifié",
+    "protected": "Vérifié",
+    "resolved": "Résolu",
+    "runCheck": "Exécuter la vérification",
+    "safe": "Aucune correspondance trouvée",
+    "scanning": "Analyse en cours",
+    "unprotected": "Non vérifié",
+    "unsafe": "À examiner",
+    "updated": "Mis à jour"
+  },
+  "uxEnhancements": {
+    "activityTimeline": {
+      "actions": {
+        "dismiss": "Décision enregistrée : rejetée",
+        "check": "Produit vérifié",
+        "quarantine": "Produit marqué pour examen",
+        "resolve": "Décision enregistrée : résolue"
+      },
+      "description": "Vérifications de sécurité enregistrées, décisions de produits et preuves conservées pour les rapports d'audit.",
+      "details": {
+        "autoDrafted": "Produit marqué pour examen prioritaire.",
+        "bulkScanned": "Analyse du catalogue en masse terminée.",
+        "checkSafe": "Aucune correspondance n'a été trouvée lors de cette vérification.",
+        "checkUnsafe": "Le produit nécessite un examen. Enregistrement de décision créé.",
+        "noReason": "Aucune raison spécifiée.",
+        "reason": "Raison : {{reason}}"
+      },
+      "eyebrow": "Piste d'audit",
+      "noActivity": "Aucun événement d'audit pour le moment. Exécutez la surveillance pour commencer à recueillir des preuves.",
+      "title": "Historique des décisions et des preuves",
+      "types": {
+        "automatic": "Événement système",
+        "bulk": "Événement en masse",
+        "manual": "Événement marchand"
+      }
+    },
+    "alerts": {
+      "floating": {
+        "dismissSelected": "Rejeter la sélection",
+        "resolveSelected": "Résoudre la sélection",
+        "selectedCount": "{{count}} alerte sélectionnée",
+        "selectedCount_few": "{{count}} alertes sélectionnées",
+        "selectedCount_many": "{{count}} alertes sélectionnées",
+        "selectedCount_one": "{{count}} alerte sélectionnée",
+        "selectedCount_other": "{{count}} alertes sélectionnées",
+        "selectedCount_plural": "{{count}} alertes sélectionnées"
+      },
+      "quickFilters": {
+        "allAlerts": "Tous les enregistrements",
+        "allAlertsDesc": "Afficher tous les avertissements de sécurité du catalogue.",
+        "highRisk": "Risque élevé seulement",
+        "highRiskDesc": "Niveaux de risque graves nécessitant une action.",
+        "needsReview": "À examiner",
+        "needsReviewDesc": "Alertes de sécurité en attente.",
+        "resolved": "Résolu / Rejeté",
+        "resolvedDesc": "Anciennes alertes conservées pour l'audit.",
+        "title": "Filtres rapides"
+      }
+    },
+    "complianceRing": {
+      "scoreLabel": "Effacer",
+      "subtitle": "Part des produits vérifiés sans éléments d'examen ouverts",
+      "title": "État du catalogue surveillé"
+    }
+  },
+  "workspace": {
+    "all": "Tout",
+    "appLanguage": "Langue de l'application",
+    "apply": "Appliquer les filtres",
+    "applyFilters": "Appliquer les filtres",
+    "balancedHelp": "La correspondance équilibrée est le point de départ recommandé. Ne la modifiez que si vous souhaitez examiner plus ou moins de correspondances possibles.",
+    "broadHelp": "Inclut plus de correspondances possibles et peut nécessiter plus d'examen manuel.",
+    "cannotCompare": "Impossible de comparer",
+    "catalogGlobalAction": "Vérifier {{count}} produits dans le catalogue",
+    "catalogScopeHelp": "La couverture inclut tous les produits du catalogue Shopify, y compris les articles actifs, brouillons et archivés. Les filtres ne modifient que cette liste, pas la couverture ou la portée de la surveillance.",
+    "clearFilters": "Effacer les filtres",
+    "compare": "Comparer les produits",
+    "compareProduct": "Comparer les produits : {{title}}",
+    "coverageFiltersHelp": "La couverture et les résultats ouverts sont distincts : un produit modifié peut également avoir un résultat en attente d'examen.",
+    "coverageIncomplete": "{{count}} produits nécessitent une vérification actuelle",
+    "coverageScope": "Affichage de {{visible}} sur {{total}} produits du catalogue.",
+    "csv": {
+      "action": "Action de décision",
+      "actor": "Enregistré par",
+      "caseNumber": "Cas Safety Gate",
+      "decisionAt": "Décision prise le",
+      "detectedAt": "Détecté le",
+      "generatedAt": "Généré le",
+      "guidance": "Conseils d'examen",
+      "notes": "Notes d'examen",
+      "product": "Produit",
+      "productId": "ID produit Shopify",
+      "recordType": "Type d'enregistrement",
+      "resolution": "Résolution",
+      "risk": "Niveau de risque",
+      "shop": "Boutique",
+      "source": "Source officielle",
+      "sourceRisk": "Risque dans l'alerte officielle",
+      "status": "Statut"
+    },
+    "csvGuidance": "Correspondance possible. Comparez les identifiants du produit et l'enregistrement officiel avant de décider.",
+    "currentFindingStatus": "Statut actuel du résultat",
+    "dateFilterTimezone": "Les dates utilisent le fuseau horaire de surveillance : {{timeZone}}. Appliquez les filtres pour mettre à jour les résultats et l'exportation.",
+    "decisionAt": "Décision enregistrée",
+    "decisionExportHelp": "Cette vue et son exportation CSV utilisent les dates de décision. Elles incluent les événements d'examen pour les résultats plus anciens, y compris les cas rouverts. Les noms de produits et les faits de source officielle conservent leur texte original.",
+    "decisionFrom": "Date de décision du",
+    "decisionLegacy": "Résultat historique : produit vérifié sûr",
+    "decisionTo": "Date de décision au",
+    "detectedAt": "Résultat détecté",
+    "differentIdentifiers": "Identifiants différents : {{fields}}. Vérifiez-les avant de décider.",
+    "documentedFindings": "Résultats actuellement résolus ou rejetés",
+    "download": "Télécharger le CSV",
+    "emptyHelp": "Aucun résultat ouvert n'est enregistré. Cela ne certifie pas que vos produits sont sûrs. Vérifiez la couverture du catalogue et la dernière exécution de la surveillance.",
+    "eventCount": "{{count}} événements de décision",
+    "excluded": "{{count}} des {{total}} produits du catalogue correspondent à ces règles pour les vérifications manuelles. La surveillance automatique n'utilise pas ces exclusions. Les résultats existants restent disponibles.",
+    "excludeHelp": "Ces règles s'appliquent aux vérifications manuelles. Vérifiez les produits concernés avant d'enregistrer.",
+    "exportHelp": "Le CSV contient tous les résultats de la période et du statut sélectionnés, y compris les références officielles, les notes d'examen et les événements de décision enregistrés. Il s'agit d'un enregistrement des vérifications, pas d'un certificat de sécurité.",
+    "exportReady": "CSV préparé. Si le téléchargement n'a pas démarré, utilisez ce lien :",
+    "findingCount": "Résultats dans cette portée : {{count}}.",
+    "findingFrom": "Résultat détecté du",
+    "findings": "Résultats et preuves",
+    "findingTo": "Résultat détecté au",
+    "from": "Date de début",
+    "goReview": "Examiner les résultats ouverts",
+    "groupAction": "Action entreprise",
+    "groupDifferent": "Produit différent",
+    "groupInformation": "Besoin de plus d'informations",
+    "history": "Historique des décisions",
+    "historyLimit": "Affichage de {{count}} résultats récents. Exportez l'enregistrement complet pour tous les résultats.",
+    "changed": "Modifié depuis la dernière vérification",
+    "chooseOutcomeHelp": "Choisissez un résultat pour pouvoir enregistrer votre décision.",
+    "chooseOutcomeLink": "Choisir le résultat",
+    "lastSuccess": "Dernière exécution de surveillance réussie",
+    "matchingIdentifiers": "Identifiants correspondants : {{fields}}.",
+    "matchNeedsVerification": "Correspondance possible. Comparez les photos et les identifiants avec l'enregistrement officiel avant de décider.",
+    "matchNotConfirmed": "Correspondance non confirmée après examen des preuves",
+    "missingIdentifiers": "Certains identifiants sont manquants. Comparez les photos disponibles et demandez à votre fournisseur le modèle, le code-barres et le lot.",
+    "monitoring": {
+      "enabled": "Activé — vérifications quotidiennes",
+      "failed": "La dernière vérification automatique a échoué",
+      "paused": "En pause – aucun plan de surveillance actuel",
+      "preview": "Aperçu du développement – facturation ignorée",
+      "processing": "Vérification en file d'attente ou en cours",
+      "unknown": "Activité de surveillance non confirmée",
+      "unverified": "En pause – l'abonnement n'a pas pu être vérifié"
+    },
+    "monitoringLabel": "Surveillance automatique",
+    "monitoringUnknownHelp": "Aucune exécution de surveillance réussie n'est disponible pour confirmer l'activité récente. Actualisez pour vérifier à nouveau.",
+    "neverRun": "Aucune exécution de surveillance terminée enregistrée",
+    "noCurrentResult": "Un résultat actuel est nécessaire",
+    "noDecisions": "Aucune décision n'a été enregistrée pour le moment. Ouvrez une constatation, comparez les produits et enregistrez ce que vous avez examiné.",
+    "noFilteredDecisions": "Aucun événement de décision ne correspond à ces filtres. Effacez les filtres pour voir l'historique complet.",
+    "noFilteredFindings": "Aucune constatation ne correspond à ces filtres. Effacez les filtres pour voir la liste complète.",
+    "noMatch": "Aucune correspondance trouvée",
+    "noMatchAtCheck": "Aucune correspondance n'a été trouvée lors de cette vérification.",
+    "notes": "Notes d'examen",
+    "notificationLanguage": "Langue de l'e-mail",
+    "notRecorded": "Aucun résultat d'examen actuel",
+    "oldest": "Ouvert depuis {{count}} jours",
+    "onboarding": "Importer le catalogue → vérifier les enregistrements Safety Gate → examiner les résultats",
+    "outcome": "Résultat",
+    "outcomeHelp": {
+      "contacted_supplier": "La constatation reste ouverte pendant que vous attendez votre fournisseur.",
+      "false_positive": "À utiliser lorsque les preuves montrent que l'alerte ne s'applique pas. La constatation sera rejetée.",
+      "match_not_confirmed": "À utiliser lorsque les preuves que vous avez examinées ne confirment pas une correspondance. La constatation sera résolue.",
+      "modified_product": "Mettez d'abord à jour le produit dans Shopify. L'enregistrement de ce résultat ne modifie pas le produit; la constatation sera résolue.",
+      "not_my_product": "À utiliser lorsque l'alerte concerne un produit différent. La constatation sera rejetée.",
+      "other": "Décrivez le résultat dans la note requise. La constatation sera résolue.",
+      "removed_from_sale": "Retirez d'abord le produit de la vente dans Shopify. L'enregistrement de ce résultat ne modifie pas le produit; la constatation sera résolue.",
+      "verified_safe": "Ceci est un résultat historique."
+    },
+    "outcomeLabels": {
+      "contactedSupplier": "En attente du fournisseur",
+      "falsePositive": "Faux positif",
+      "modifiedProduct": "Produit modifié",
+      "notMyProduct": "Pas mon produit",
+      "other": "Autre",
+      "removedFromSale": "Retiré de la vente",
+      "verifiedSafe": "Historique : vérifié sûr"
+    },
+    "possibleMatch": "Correspondance possible",
+    "possibleMatchAtCheck": "Cette vérification a trouvé une correspondance possible avec Safety Gate.",
+    "print": "Imprimer / enregistrer en PDF",
+    "priority": "Priorité d'examen",
+    "priorityHelp": "Les décisions d'abord, puis la gravité de l'alerte officielle et les constatations les plus anciennes. Les articles en attente des fournisseurs suivent.",
+    "productStatus": "Statut Shopify",
+    "productStatusActive": "Actif",
+    "productStatusAll": "Tous les statuts Shopify",
+    "productStatusArchived": "Archivé",
+    "productStatusDraft": "Brouillon",
+    "productStatusUnknown": "Inconnu",
+    "recommended": "Paramètre recommandé",
+    "referenceMissing": "Numéro de dossier officiel non disponible",
+    "remaining": "Non vérifié ou modifié",
+    "reopened": "Rouvert pour examen",
+    "reportEmpty": "Aucune constatation ne correspond à ces filtres.",
+    "reportTitle": "Rapport de vérifications et de décisions",
+    "resultHelp": "L'enregistrement d'un résultat documente votre examen dans la piste d'audit et ne modifie pas le produit Shopify.",
+    "reviewNext": "Examiner la prochaine correspondance : {{title}}",
+    "reviewPrompt": "Comparez les preuves, choisissez le résultat et enregistrez vos notes.",
+    "riskLabels": {
+      "electric": "Choc électrique",
+      "fire": "Incendie",
+      "health": "Risque pour la santé",
+      "high": "Risque élevé",
+      "chemical": "Chimique",
+      "choking": "Étouffement",
+      "injuries": "Blessures",
+      "low": "Faible risque",
+      "medium": "Risque moyen",
+      "serious": "Risque grave",
+      "unknown": "Risque dans l'alerte Safety Gate"
+    },
+    "runScope": "Vérifications de produits : {{products}} · Enregistrements Safety Gate considérés : {{records}} · Nouvelles constatations : {{findings}}",
+    "saved": "Paramètres enregistrés.",
+    "saveChanges": "Enregistrer les modifications",
+    "scope": "Constatations du {{from}} au {{to}}",
+    "scoreDetails": "Détails de la similarité",
+    "scoreHelp": "Ce sont des scores de similarité utilisés pour prioriser l'examen, et non une probabilité que votre produit soit dangereux.",
+    "settingsAdvanced": "Correspondance avancée et exclusions",
+    "shop": "Boutique",
+    "showMore": "Afficher plus de produits",
+    "scheduleHelp": "De nouvelles alertes Safety Gate sont vérifiées tant que le plan de surveillance est actif. L'heure de la prochaine vérification terminée dépend de la file d'attente.",
+    "sourceMissing": "Le lien vers l'enregistrement officiel n'est pas disponible pour cette constatation enregistrée.",
+    "sourceRisk": "Risque dans l'alerte officielle (enregistrement original de l'UE)",
+    "status": "Statut de la constatation",
+    "strictHelp": "Affiche moins de correspondances possibles et peut manquer des similarités moins évidentes.",
+    "to": "À ce jour",
+    "unconfirmedIdentifiers": "Les identifiants de catalogue disponibles ne confirment pas cette correspondance. Comparez l'emballage et demandez à votre fournisseur le modèle, le code-barres et le lot manquants.",
+    "unchecked": "Pas encore vérifié",
+    "unsaved": "Vous avez des modifications non enregistrées.",
+    "verifyScope": "Les résultats du catalogue s'appliquent à la version du produit qui a été vérifiée. Les produits modifiés nécessitent une nouvelle vérification.",
+    "viewRemainingProducts": "Voir {{count}} produits nécessitant une vérification",
+    "viewShopify": "Ouvrir le produit Shopify",
+    "waiting": "En attente du fournisseur",
+    "when": "Enregistré le",
+    "who": "Enregistré par",
+    "whyMatch": "Pourquoi cela peut correspondre"
+  }
+}

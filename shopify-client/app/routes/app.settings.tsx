@@ -260,7 +260,7 @@ export default function Settings() {
     useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const initial = {
     threshold: String(settings.similarityThreshold ?? 70),
     priority: settings.autoDraftHighRisk ?? false,
@@ -341,9 +341,11 @@ export default function Settings() {
           />
           <input type="hidden" name="excludeVendors" value={values.vendors} />
           <input type="hidden" name="excludeTypes" value={values.types} />
-          <div className="settings-save-bar">
+          <div
+            className={`settings-save-bar ${dirty ? "settings-save-bar--dirty" : ""}`}
+          >
             <span role="status">
-              {dirty ? t("workspace.unsaved") : t("settings.title")}
+              {dirty ? t("workspace.unsaved") : t("settings.subtitle")}
             </span>
             <s-button
               type="submit"
@@ -401,6 +403,19 @@ export default function Settings() {
                   </s-option>
                 ))}
               </s-select>
+              {i18n.language.split(/[-_]/)[0] !== values.language && (
+                <p className="admin-helper" role="status">
+                  {t("analysis.reviewLayout.languageDiffNote", {
+                    appLang:
+                      EU_LANGUAGES.find(
+                        (l) => l.code === i18n.language.split(/[-_]/)[0],
+                      )?.label || i18n.language,
+                    emailLang:
+                      EU_LANGUAGES.find((l) => l.code === values.language)
+                        ?.label || values.language,
+                  })}
+                </p>
+              )}
             </AdminCard>
             <div className="admin-stack">
               <AdminCard className="admin-card">

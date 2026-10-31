@@ -264,12 +264,16 @@
     "unavailableTitle": "The free scan is currently unavailable",
     "unavailableBody": "We cannot start a scan right now. See an example result or contact us.",
     "contactLink": "Contact us",
-    "domainHelp": "In Shopify Admin, open Settings → Domains and copy the address ending in .myshopify.com. Use that address instead of your custom domain.",
+    "domainHelp": "You can enter your store name (e.g. your-store) or the address ending in .myshopify.com. In Shopify Admin, find it under Settings → Domains.",
     "reportTitle": "Complete scan report",
     "reportDownload": "Download all findings (CSV)",
     "reportBody": "Includes all products with possible matches. This is a one-off scan. The private link expires after 30 days.",
     "reportLoading": "Preparing the complete report…",
-    "reportError": "The report is unavailable or the link has expired. Try again or contact info@zerorecall.online."
+    "reportError": "The report is unavailable or the link has expired. Try again or contact info@zerorecall.online.",
+    "detailsSummary": "What exactly do we check during the free scan?",
+    "detailsStep1": "<strong>1. Public Shopify catalog:</strong> We read publicly available titles, descriptions, brands, categories and product photos from your store’s public storefront (without admin access).",
+    "detailsStep2": "<strong>2. Text and image comparison with Safety Gate:</strong> We turn text and images into search vectors and compare them against the entire EU Safety Gate (formerly RAPEX) database, including items listed under a different retail name.",
+    "detailsStep3": "<strong>3. Email summary and CSV export:</strong> When finished, you receive an email summary of possible matches with case numbers, links to official EU records and a downloadable CSV for your review."
   },
   "quiet": {
     "eyebrow": "MORE PEACE OF MIND",

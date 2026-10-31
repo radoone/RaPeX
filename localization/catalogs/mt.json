@@ -270,7 +270,11 @@
       "reportDownload": "Niżżel ir-riżultati kollha (CSV)",
       "reportBody": "Jinkludi l-prodotti kollha b’taqbil possibbli. Kontroll ta’ darba. Il-link privata tiskadi wara 30 jum.",
       "reportLoading": "Qed jitħejja r-rapport sħiħ…",
-      "reportError": "Ir-rapport mhux disponibbli jew il-link skadiet. Erġa’ pprova jew ikteb lil info@zerorecall.online."
+      "reportError": "Ir-rapport mhux disponibbli jew il-link skadiet. Erġa’ pprova jew ikteb lil info@zerorecall.online.",
+      "detailsSummary": "X’niċċekkjaw eżattament waqt l-iskann b’xejn?",
+      "detailsStep1": "<strong>1. Katalgu pubbliku ta’ Shopify:</strong> Naqraw it-titli, id-deskrizzjonijiet, id-ditti, il-kategoriji u r-ritratti tal-prodotti pubbliċi tal-ħanut tiegħek (mingħajr aċċess ta’ amministratur).",
+      "detailsStep2": "<strong>2. Tqabbil ta’ test u immaġnijiet ma’ Safety Gate:</strong> Nibdlu t-test u l-immaġnijiet f’vetturi ta’ tfittxija u nqabbluhom mad-database kollha tal-UE Safety Gate (qabel RAPEX).",
+      "detailsStep3": "<strong>3. Sommarju bl-email u esportazzjoni CSV:</strong> Meta jitlesta, tirċievi email bit-tqabbil possibbli, in-numri tal-każijiet, links uffiċjali tal-UE u CSV."
     },
     "quiet": {
       "eyebrow": "AKTAR SERĦAN IL-MOĦĦ",

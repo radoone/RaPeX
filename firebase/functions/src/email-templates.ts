@@ -85,12 +85,13 @@ function note(title: string, text: string, warning = false): string {
 
 function shell(options: {
   language: string; title: string; preheader: string; status: string; warning?: boolean;
-  body: string; action: string; url: string; after?: string; settingsUrl?: string; footerText?: string;
+  body: string; action: string; url: string; earlyAction?: boolean; after?: string; settingsUrl?: string; footerText?: string;
 }): string {
   const language = normalizeEmailLanguage(options.language);
   const actionUrl = httpsUrl(options.url);
   if (!actionUrl) throw new Error("Email action must use an absolute HTTPS URL");
   const settings = httpsUrl(options.settingsUrl);
+  const actionButton = `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:24px"><tr><td bgcolor="${GREEN}" align="center" style="border-radius:8px;mso-padding-alt:18px 24px"><a class="button" href="${escapeEmailHtml(actionUrl)}" style="display:block;padding:18px 24px;font-family:${FONT};font-size:16px;line-height:1.4;font-weight:700;color:#ffffff;text-decoration:none;border-radius:8px">${escapeEmailHtml(options.action)}</a></td></tr></table>`;
   return `<!doctype html>
 <html lang="${normalizeEmailLanguage(language)}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>${escapeEmailHtml(options.title)}</title>
 <style>body,table,td,a{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}table{mso-table-lspace:0pt;mso-table-rspace:0pt}img{border:0;outline:none;text-decoration:none}a:focus{outline:2px solid #315e4b;outline-offset:3px}@media only screen and (max-width:600px){.outer{padding:24px 18px!important}.headline{font-size:32px!important}.stack{display:block!important;width:100%!important;box-sizing:border-box!important}.photo{max-width:180px!important;width:100%!important}.photo-cell{padding:0 0 18px!important}.button{display:block!important}}</style></head>
@@ -102,8 +103,9 @@ function shell(options: {
 <p style="margin:0 0 38px"><a href="${escapeEmailHtml(marketingUrl(language))}" style="font-family:${FONT};font-size:23px;letter-spacing:-1px;font-weight:700;color:#1c2822;text-decoration:none">ZeroRecall</a></p>
 <p style="margin:0 0 24px"><span style="display:inline-block;border-radius:24px;padding:10px 16px;background:${options.warning ? "#fff0df" : "#e8efe7"};color:${options.warning ? "#93421f" : GREEN};font-size:13px;font-weight:700;line-height:1.4">${escapeEmailHtml(options.status)}</span></p>
 <h1 class="headline" style="margin:0 0 26px;font-size:44px;letter-spacing:-1.5px;line-height:1.12;font-weight:700;color:#15251d">${escapeEmailHtml(options.title)}</h1>
+${options.earlyAction ? actionButton : ""}
 ${options.body}
-<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:24px"><tr><td bgcolor="${GREEN}" align="center" style="border-radius:8px;mso-padding-alt:18px 24px"><a class="button" href="${escapeEmailHtml(actionUrl)}" style="display:block;padding:18px 24px;font-family:${FONT};font-size:16px;line-height:1.4;font-weight:700;color:#ffffff;text-decoration:none;border-radius:8px">${escapeEmailHtml(options.action)}</a></td></tr></table>
+${actionButton}
 ${options.after || ""}
 <p style="margin:24px 0 0;font-size:12px;line-height:1.6;color:#68726b">${emailText(language, "if_the_button_does_not_work_open_this_link")}<br><a href="${escapeEmailHtml(actionUrl)}" style="color:${GREEN};overflow-wrap:anywhere;word-break:break-all">${escapeEmailHtml(actionUrl)}</a></p>
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:28px;border-top:1px solid #d9ddd4"><tr><td style="padding-top:20px;font-size:12px;line-height:1.8;color:#68726b">
@@ -126,18 +128,19 @@ export function renderAlertEmail(language: string, details: AlertEmailDetails, s
   const similarity = details.overallSimilarity !== null && Number.isFinite(details.overallSimilarity)
     ? `${Math.round(details.overallSimilarity)} %` : (emailText(language, "not_available"));
   const risk = riskLabel(details.riskLevel, language);
+  const riskHeading = `${emailText(language, "safety_gate_record")} — ${emailText(language, "risk_level")}`;
   const rows: Array<[string, string]> = [
     [emailText(language, "store"), shop],
     [emailText(language, "your_product"), details.productTitle],
     [emailText(language, "safety_gate_product"), details.safetyGateProduct],
-    [emailText(language, "risk_level"), risk],
+    [riskHeading, risk],
     [emailText(language, "similarity"), similarity],
   ];
   if (details.alertReference) rows.push([emailText(language, "alert_reference"), details.alertReference]);
   if (details.model) rows.push([emailText(language, "model_in_the_alert"), details.model]);
   if (details.riskType) rows.push([emailText(language, "risk_type"), details.riskType]);
   const image = httpsUrl(details.safetyGateImage);
-  const detailTable = facts(rows, /^(Serious|High)(?: risk)?$/i.test(details.riskLevel.trim()) ? (emailText(language, "risk_level")) : undefined);
+  const detailTable = facts(rows, /^(Serious|High)(?: risk)?$/i.test(details.riskLevel.trim()) ? riskHeading : undefined);
   const body = image
     ? `<table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td class="stack photo-cell" width="43%" valign="top" style="padding:8px 20px 0 0"><img class="photo" src="${escapeEmailHtml(image)}" alt="${escapeEmailHtml(emailText(language, "product_from_the_safety_gate_record"))}" width="240" style="display:block;width:100%;max-width:240px;height:auto;border-radius:10px"><p style="margin:8px 0;font-size:11px;line-height:1.4;color:#68726b">${emailText(language, "photo_from_the_safety_gate_record")}</p></td><td class="stack" valign="top">${detailTable}</td></tr></table>`
     : detailTable;
@@ -146,9 +149,9 @@ export function renderAlertEmail(language: string, details: AlertEmailDetails, s
   const caution = emailText(language, "a_possible_match_does_not_confirm_that_your_product_is_dangero");
   return {
     subject: `ZeroRecall: ${emailText(language, "product_needs_review")} – ${details.productTitle}`,
-    htmlContent: shell({ language, title, status, warning: true, preheader: `${details.productTitle} · ${status}`, body, action: emailText(language, "review_possible_match"), url, settingsUrl,
+    htmlContent: shell({ language, title, status, earlyAction: true, warning: true, preheader: `${details.productTitle} · ${status}`, body, action: emailText(language, "review_possible_match"), url, settingsUrl,
       after: `<div style="margin-top:24px;padding-top:22px;border-top:1px solid #d9ddd4"><h2 style="margin:0 0 8px;font-size:20px">${next}</h2>${paragraph(instruction)}</div>` + note(emailText(language, "verify_the_details_before_deciding"), caution, true) }),
-    textContent: `${title}\n\n${rows.map(([label, value]) => `${label}: ${value}`).join("\n")}\n\n${next}\n${instruction}\n\n${caution}\n\n${url}${plainFooter(language, settingsUrl)}`,
+    textContent: `${title}\n\n${url}\n\n${rows.map(([label, value]) => `${label}: ${value}`).join("\n")}\n\n${next}\n${instruction}\n\n${caution}\n\n${url}${plainFooter(language, settingsUrl)}`,
   };
 }
 
@@ -159,7 +162,11 @@ function formatDate(date: Date, language: string): string {
 export function renderWeeklyEmail(language: string, shop: string, start: Date, end: Date, metrics: WeeklyEmailMetrics, url: string, settingsUrl: string): EmailContent {
   language = normalizeEmailLanguage(language);
   const title = metrics.monitoringComplete ? (emailText(language, "your_week_in_review")) : (emailText(language, "monitoring_was_incomplete"));
-  const status = !metrics.monitoringComplete ? (emailText(language, "attention_needed")) : metrics.newFindings ? (emailText(language, "new_findings")) : (emailText(language, "no_new_findings"));
+  const hasOpenFindings = metrics.openFindings > 0;
+  const reviewUrl = new URL(url);
+  if (hasOpenFindings && !/\/alerts\/?$/.test(reviewUrl.pathname)) reviewUrl.pathname = reviewUrl.pathname.replace(/\/$/, "") + "/alerts";
+  const actionUrl = reviewUrl.toString();
+  const status = !metrics.monitoringComplete || hasOpenFindings ? (emailText(language, "attention_needed")) : metrics.newFindings ? (emailText(language, "new_findings")) : (emailText(language, "no_new_findings"));
   const summary = !metrics.monitoringComplete
     ? (emailText(language, "a_completed_monitoring_run_could_not_be_confirmed_for_this_per"))
     : metrics.newFindings ? (emailText(language, "value_new_findings_were_created_during_this_period_check_the_a", { value0: metrics.newFindings }))
@@ -181,13 +188,17 @@ export function renderWeeklyEmail(language: string, shop: string, start: Date, e
     const image = httpsUrl(finding.safetyGateImage);
     const link = httpsUrl(finding.url);
     const state = stateLabels[finding.reviewState] || stateLabels.unknown;
-    return `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-bottom:1px solid #d9ddd4"><tr>${image ? `<td width="120" valign="top" class="stack photo-cell" style="padding:22px 18px 22px 0"><img src="${escapeEmailHtml(image)}" alt="${escapeEmailHtml(emailText(language, "product_from_the_safety_gate_record"))}" width="120" style="display:block;width:120px;max-width:100%;height:auto;border-radius:8px"><p style="font-size:11px;line-height:1.4;color:#68726b;margin:7px 0 0">${emailText(language, "photo_from_the_safety_gate_record")}</p></td>` : ""}<td valign="top" class="stack" style="padding:22px 0;overflow-wrap:anywhere;word-break:break-word"><p style="margin:0 0 8px;font-size:12px;color:#68726b">${finding.isNew ? (emailText(language, "new_this_period")) : (emailText(language, "older_open_finding"))} · ${escapeEmailHtml(state)}</p><h3 style="font-size:18px;line-height:1.4;margin:0 0 8px">${escapeEmailHtml(finding.productTitle)}</h3><p style="font-size:14px;line-height:1.6;margin:0 0 8px">Safety Gate: ${escapeEmailHtml(finding.safetyGateProduct)}<br>${emailText(language, "risk")}: ${escapeEmailHtml(riskLabel(finding.riskLevel, language))}${finding.overallSimilarity !== null && Number.isFinite(finding.overallSimilarity) ? ` · ${emailText(language, "similarity")}: ${Math.round(finding.overallSimilarity)} %` : ""}</p><p style="font-size:14px;line-height:1.6;margin:0 0 12px">${escapeEmailHtml(reviewGuidance)}</p>${link ? `<a href="${escapeEmailHtml(link)}" style="font-size:14px;font-weight:700;color:${GREEN}">${emailText(language, "open_match_details")}</a>` : ""}</td></tr></table>`;
+    const needsDecision = finding.reviewState !== "resolved" && finding.reviewState !== "dismissed";
+    return `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-bottom:1px solid #d9ddd4"><tr>${image ? `<td width="120" valign="top" class="stack photo-cell" style="padding:22px 18px 22px 0"><img src="${escapeEmailHtml(image)}" alt="${escapeEmailHtml(emailText(language, "product_from_the_safety_gate_record"))}" width="120" style="display:block;width:120px;max-width:100%;height:auto;border-radius:8px"><p style="font-size:11px;line-height:1.4;color:#68726b;margin:7px 0 0">${emailText(language, "photo_from_the_safety_gate_record")}</p></td>` : ""}<td valign="top" class="stack" style="padding:22px 0;overflow-wrap:anywhere;word-break:break-word"><p style="margin:0 0 8px;font-size:12px;color:#68726b">${finding.isNew ? (emailText(language, "new_this_period")) : (emailText(language, "older_open_finding"))} · ${escapeEmailHtml(state)}</p><h3 style="font-size:18px;line-height:1.4;margin:0 0 8px">${escapeEmailHtml(finding.productTitle)}</h3><p style="font-size:14px;line-height:1.6;margin:0 0 8px">Safety Gate: ${escapeEmailHtml(finding.safetyGateProduct)}<br>${emailText(language, "risk")}: ${escapeEmailHtml(riskLabel(finding.riskLevel, language))}${finding.overallSimilarity !== null && Number.isFinite(finding.overallSimilarity) ? ` · ${emailText(language, "similarity")}: ${Math.round(finding.overallSimilarity)} %` : ""}</p>${needsDecision ? `<p style="font-size:14px;line-height:1.6;margin:0 0 12px">${escapeEmailHtml(reviewGuidance)}</p>` : ""}${link ? `<a href="${escapeEmailHtml(link)}" style="font-size:14px;font-weight:700;color:${GREEN}">${emailText(language, "open_match_details")}</a>` : ""}</td></tr></table>`;
   }).join("")}${paragraph(emailText(language, "this_email_shows_up_to_five_findings_prioritising_new_ones_fin"))}` : "";
-  const findingText = findings.map(finding => `${finding.productTitle}\nSafety Gate: ${finding.safetyGateProduct}\n${emailText(language, "risk")}: ${riskLabel(finding.riskLevel, language)}\n${stateLabels[finding.reviewState] || stateLabels.unknown}\n${reviewGuidance}\n${httpsUrl(finding.url) || ""}`).join("\n\n");
+  const findingText = findings.map(finding => {
+    const needsDecision = finding.reviewState !== "resolved" && finding.reviewState !== "dismissed";
+    return `${finding.productTitle}\nSafety Gate: ${finding.safetyGateProduct}\n${emailText(language, "risk")}: ${riskLabel(finding.riskLevel, language)}\n${stateLabels[finding.reviewState] || stateLabels.unknown}${needsDecision ? `\n${reviewGuidance}` : ""}\n${httpsUrl(finding.url) || ""}`;
+  }).join("\n\n");
   return {
     subject: `ZeroRecall: ${metrics.monitoringComplete ? (emailText(language, "weekly_monitoring_summary")) : title} – ${shop}`,
-    htmlContent: shell({ language, title, status, warning: !metrics.monitoringComplete || metrics.newFindings > 0, preheader: `${shop} · ${status}`, body: paragraph(`${shop} · ${period}`) + paragraph(summary) + facts(rows) + findingList, action: emailText(language, "open_dashboard"), url, settingsUrl, after: note(emailText(language, "how_to_read_this_summary"), caveat) }),
-    textContent: `${title}\n${shop}\n${summary}\n${period}\n${rows.map(([label, value]) => `${label}: ${value}`).join("\n")}${findingText ? `\n\n${emailText(language, "selected_findings_up_to_5")}\n${findingText}` : ""}\n\n${caveat}\n\n${url}${plainFooter(language, settingsUrl)}`,
+    htmlContent: shell({ language, title, status, earlyAction: true, warning: !metrics.monitoringComplete || metrics.newFindings > 0 || hasOpenFindings, preheader: `${shop} · ${status}`, body: paragraph(`${shop} · ${period}`) + (hasOpenFindings ? note(emailText(language, "open_findings"), String(metrics.openFindings), true) : "") + paragraph(summary) + facts(rows) + findingList, action: emailText(language, hasOpenFindings ? "open_match_details" : "open_dashboard"), url: actionUrl, settingsUrl, after: note(emailText(language, "how_to_read_this_summary"), caveat) }),
+    textContent: `${title}\n${shop}\n${summary}\n${hasOpenFindings ? `${emailText(language, "open_findings")}: ${metrics.openFindings}\n` : ""}${actionUrl}\n${period}\n${rows.map(([label, value]) => `${label}: ${value}`).join("\n")}${findingText ? `\n\n${emailText(language, "selected_findings_up_to_5")}\n${findingText}` : ""}\n\n${caveat}\n\n${actionUrl}${plainFooter(language, settingsUrl)}`,
   };
 }
 
@@ -219,24 +230,32 @@ export function renderScanReportEmail(language: string, domain: string, lead: { 
     const fields = warning?.alertDetails?.fields || {};
     const field = (...keys: string[]) => keys.map(key => fields[key]).find(value => typeof value === "string" && value.trim()) as string | undefined;
     const reference = field("caseNumber", "alert_number") || (/^(?:A\d{1,2}|INFO|SR|OR)\//i.test(warning?.alertId || "") ? warning?.alertId : undefined);
+    const rawPic = Array.isArray(fields.pictures) ? fields.pictures[0] : undefined;
+    const image = httpsUrl(typeof rawPic === "string" ? rawPic : (rawPic && typeof rawPic === "object" && "url" in rawPic ? String((rawPic as { url?: unknown }).url || "") : field("product_image")));
     return {
       title: match.productTitle || emailText(language, "product"), url: productUrl, reference,
       sourceUrl: officialRecordUrl(field("url", "rapex_url")),
       model: field("type_numberOfModel", "product_model"),
-      reason: typeof warning?.reason === "string" ? warning.reason.slice(0, 1200) : "",
+      image,
     };
   });
   const reportLink = httpsUrl(reportUrl);
   const reportAction = reportLink ? `<p style="margin:24px 0"><a href="${escapeEmailHtml(reportLink)}" style="color:${GREEN};font-weight:700">${emailText(language, "products_to_review")} — CSV</a></p>` : "";
   const truncated = lead.flaggedProductsCount > 5 ? emailText(language, "this_email_shows_up_to_five_products") : "";
-  const matchesHtml = matches.length ? `<h2 style="margin:28px 0 8px;font-size:21px">${emailText(language, "products_to_review")}</h2>${matches.map(match => `<div style="padding:14px 0;border-bottom:1px solid #d9ddd4"><p style="margin:0;font-size:16px;font-weight:700;line-height:1.5">${match.url ? `<a href="${escapeEmailHtml(match.url)}" style="color:${GREEN}">${escapeEmailHtml(match.title)}</a>` : escapeEmailHtml(match.title)}</p>${match.reference ? `<p style="margin:6px 0 0;font-size:13px;line-height:1.5;color:#68726b">${emailText(language, "alert_reference")}: ${escapeEmailHtml(match.reference)}</p>` : ""}${match.model ? paragraph(`${emailText(language, "model_in_the_alert")}: ${match.model}`) : ""}${match.reason ? paragraph(`${emailText(language, "why_this_matched")}: ${match.reason}`) : ""}${match.sourceUrl ? `<p style="margin:8px 0 0;font-size:14px;line-height:1.5"><a href="${escapeEmailHtml(match.sourceUrl)}" style="color:${GREEN}">${emailText(language, "safety_gate_record")}</a></p>` : ""}</div>`).join("")}${truncated ? paragraph(truncated) : ""}` : "";
+  const fallbackGuidance = emailText(language, "compare_the_model_brand_and_batch_with_the_official_record_sav");
+  const matchesHtml = matches.length ? `<h2 style="margin:28px 0 8px;font-size:21px">${emailText(language, "products_to_review")}</h2>${matches.map(match => {
+    const detailsCol = `<p style="margin:0;font-size:16px;font-weight:700;line-height:1.5">${match.url ? `<a href="${escapeEmailHtml(match.url)}" style="color:${GREEN}">${escapeEmailHtml(match.title)}</a>` : escapeEmailHtml(match.title)}</p>${match.reference ? `<p style="margin:6px 0 0;font-size:13px;line-height:1.5;color:#68726b">${emailText(language, "alert_reference")}: ${escapeEmailHtml(match.reference)}</p>` : ""}${match.model ? paragraph(`${emailText(language, "model_in_the_alert")}: ${match.model}`) : ""}${paragraph(fallbackGuidance)}${match.sourceUrl ? `<p style="margin:8px 0 0;font-size:14px;line-height:1.5"><a href="${escapeEmailHtml(match.sourceUrl)}" style="color:${GREEN}">${emailText(language, "safety_gate_record")}</a></p>` : ""}`;
+    return match.image
+      ? `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-bottom:1px solid #d9ddd4"><tr><td width="110" valign="top" class="stack photo-cell" style="padding:16px 16px 16px 0"><img src="${escapeEmailHtml(match.image)}" alt="${escapeEmailHtml(emailText(language, "product_from_the_safety_gate_record"))}" width="110" style="display:block;width:110px;max-width:100%;height:auto;border-radius:8px"><p style="font-size:11px;line-height:1.4;color:#68726b;margin:6px 0 0">${emailText(language, "photo_from_the_safety_gate_record")}</p></td><td valign="top" class="stack" style="padding:16px 0">${detailsCol}</td></tr></table>`
+      : `<div style="padding:16px 0;border-bottom:1px solid #d9ddd4">${detailsCol}</div>`;
+  }).join("")}${truncated ? paragraph(truncated) : ""}` : "";
   const next = emailText(language, "this_scan_is_a_one_off_ongoing_monitoring_and_decision_history");
   const official = `<p style="margin:22px 0 0;font-size:14px;line-height:1.5"><a href="${SAFETY_GATE}" style="color:${GREEN}">${emailText(language, "open_the_official_safety_gate_portal")}</a></p>`;
   const home = marketingUrl(language, homeUrl, "pricing");
   return {
     subject: `ZeroRecall: ${emailText(language, "catalog_scan_result")} – ${domain}`,
     htmlContent: shell({ language, title, status, warning: lead.flaggedProductsCount > 0, preheader: `${domain} · ${lead.totalProductsScanned} ${emailText(language, "products_checked_2")} · ${status}`, body: paragraph(intro) + facts(rows) + matchesHtml + reportAction + note(emailText(language, "how_to_interpret_the_result"), caveat, lead.flaggedProductsCount > 0) + official, action: emailText(language, "explore_ongoing_monitoring"), url: home, after: note(emailText(language, "what_comes_next"), next) }),
-    textContent: `${title}\n\n${intro}\n\n${rows.map(([label, value]) => `${label}: ${value}`).join("\n")}\n\n${matches.map(match => `${match.title}${match.url ? `\n${match.url}` : ""}${match.reference ? `\n${emailText(language, "alert_reference")}: ${match.reference}` : ""}${match.model ? `\n${emailText(language, "model_in_the_alert")}: ${match.model}` : ""}${match.reason ? `\n${emailText(language, "why_this_matched")}: ${match.reason}` : ""}${match.sourceUrl ? `\n${emailText(language, "safety_gate_record")}: ${match.sourceUrl}` : ""}`).join("\n\n")}${truncated ? `\n\n${truncated}` : ""}\n\n${caveat}\n\n${SAFETY_GATE}\n\n${reportLink ? `${emailText(language, "products_to_review")} — CSV\n${reportLink}\n\n` : ""}${next}\n${home}${plainFooter(language)}`,
+    textContent: `${title}\n\n${intro}\n\n${rows.map(([label, value]) => `${label}: ${value}`).join("\n")}\n\n${matches.map(match => `${match.title}${match.url ? `\n${match.url}` : ""}${match.reference ? `\n${emailText(language, "alert_reference")}: ${match.reference}` : ""}${match.model ? `\n${emailText(language, "model_in_the_alert")}: ${match.model}` : ""}${`\n${fallbackGuidance}`}${match.sourceUrl ? `\n${emailText(language, "safety_gate_record")}: ${match.sourceUrl}` : ""}`).join("\n\n")}${truncated ? `\n\n${truncated}` : ""}\n\n${caveat}\n\n${SAFETY_GATE}\n\n${reportLink ? `${emailText(language, "products_to_review")} — CSV\n${reportLink}\n\n` : ""}${next}\n${home}${plainFooter(language)}`,
   };
 }
 

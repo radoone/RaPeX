@@ -1,0 +1,1406 @@
+{
+  "actions": {
+    "auditReport": "Auditjelentés",
+    "clear": "Törlés",
+    "dashboard": "Irányítópult",
+    "downloadAuditReport": "Auditjelentés letöltése",
+    "checkAll": "Összes termék ellenőrzése",
+    "checkAllProducts": "Összes ({{count}}) termék ellenőrzése",
+    "checking": "Ellenőrzés...",
+    "checkNewSafetyGateAlerts": "Új Safety Gate riasztások ellenőrzése",
+    "checkOneProduct": "Egy termék ellenőrzése",
+    "checkSelectedProduct": "Kiválasztott termék ellenőrzése",
+    "checkUnchecked": "{{count}} nem ellenőrzött termék ellenőrzése",
+    "manualCheck": "Termék ellenőrzése",
+    "next": "Következő",
+    "openFirstMatch": "Első egyezés megnyitása",
+    "previous": "Előző",
+    "protectRemainingProducts": "{{count}} hátralévő termék ellenőrzése",
+    "reactivate": "Újraaktiválás",
+    "recordDecision": "Döntés rögzítése",
+    "refreshCoverage": "Katalógus lefedettség frissítése",
+    "resolve": "Megoldás",
+    "retry": "Újrapróbálkozás",
+    "reviewActiveProducts": "Aktív termékek áttekintése",
+    "reviewAlerts": "Riasztások áttekintése",
+    "reviewDecision": "Termékek összehasonlítása",
+    "reviewMultipleMatches": "{{count}} egyezés áttekintése",
+    "reviewOneMatch": "1 egyezés áttekintése",
+    "reviewProductsNeedingAction": "{{count}} intézkedést igénylő termék áttekintése",
+    "reviewProductsNeedingAction_few": "{{count}} intézkedést igénylő termék áttekintése",
+    "reviewProductsNeedingAction_many": "{{count}} intézkedést igénylő termék áttekintése",
+    "reviewProductsNeedingAction_one": "{{count}} intézkedést igénylő termék áttekintése",
+    "reviewProductsNeedingAction_other": "{{count}} intézkedést igénylő termék áttekintése",
+    "reviewProductsNeedingAction_plural": "{{count}} intézkedést igénylő termék áttekintése",
+    "search": "Keresés",
+    "settings": "Beállítások",
+    "tryAgain": "Próbálja újra",
+    "view": "Megtekintés",
+    "viewAlerts": "Riasztások megtekintése",
+    "viewDetails": "Részletek megtekintése",
+    "viewEvidence": "Döntési előzmények megtekintése"
+  },
+  "alerts": {
+    "admin": {
+      "actionNeeded": "Intézkedés szükséges",
+      "actionNeededDescription": "Tekintse át az egyezéseket, utasítsa el a téves pozitív eredményeket, vagy oldja meg a megerősített kockázatokat, hogy a riasztási sor kezelhető maradjon.",
+      "actionNeededTitle": "{{count}} aktív riasztás még döntésre vár",
+      "actionNeededTitle_few": "{{count}} aktív riasztás még döntésre vár",
+      "actionNeededTitle_many": "{{count}} aktív riasztás még döntésre vár",
+      "actionNeededTitle_one": "{{count}} aktív riasztás még döntésre vár",
+      "actionNeededTitle_other": "{{count}} aktív riasztás még döntésre vár",
+      "actionNeededTitle_plural": "{{count}} aktív riasztás még döntésre vár",
+      "criticalBannerDescription": "{{count}} aktív egyezés magas vagy súlyos kockázatúnak van jelölve a Safety Gate-ben. Először ezeket az egyezéseket oldja meg.",
+      "criticalBannerDescription_few": "{{count}} aktív egyezés magas vagy súlyos kockázatúnak van jelölve a Safety Gate-ben. Először ezeket az egyezéseket oldja meg.",
+      "criticalBannerDescription_many": "{{count}} aktív egyezés magas vagy súlyos kockázatúnak van jelölve a Safety Gate-ben. Először ezeket az egyezéseket oldja meg.",
+      "criticalBannerDescription_one": "{{count}} aktív egyezés magas vagy súlyos kockázatúnak van jelölve a Safety Gate-ben. Először ezeket az egyezéseket oldja meg.",
+      "criticalBannerDescription_other": "{{count}} aktív egyezés magas vagy súlyos kockázatúnak van jelölve a Safety Gate-ben. Először ezeket az egyezéseket oldja meg.",
+      "criticalBannerDescription_plural": "{{count}} aktív egyezés magas vagy súlyos kockázatúnak van jelölve a Safety Gate-ben. Először ezeket az egyezéseket oldja meg.",
+      "criticalBannerTitle": "{{count}} magas kockázatú egyezés áttekintésre vár",
+      "criticalBannerTitle_few": "{{count}} magas kockázatú egyezés áttekintésre vár",
+      "criticalBannerTitle_many": "{{count}} magas kockázatú egyezés áttekintésre vár",
+      "criticalBannerTitle_one": "{{count}} magas kockázatú egyezés áttekintésre vár",
+      "criticalBannerTitle_other": "{{count}} magas kockázatú egyezés áttekintésre vár",
+      "criticalBannerTitle_plural": "{{count}} magas kockázatú egyezés áttekintésre vár",
+      "queue": "Termékdöntési sor",
+      "queueDescription": "Erősítse meg a valószínű egyezéseket, utasítsa el a téves pozitív eredményeket, vagy rögzítse a megtett intézkedéseket.",
+      "warningBannerDescription": "Ezt a sort csak valós döntésekhez használja: gyorsan oldja meg a megerősített kockázatokat és utasítsa el a téves pozitív eredményeket.",
+      "warningBannerTitle": "{{count}} aktív riasztás még áttekintésre vár",
+      "warningBannerTitle_few": "{{count}} aktív riasztás még áttekintésre vár",
+      "warningBannerTitle_many": "{{count}} aktív riasztás még áttekintésre vár",
+      "warningBannerTitle_one": "{{count}} aktív riasztás még áttekintésre vár",
+      "warningBannerTitle_other": "{{count}} aktív riasztás még áttekintésre vár",
+      "warningBannerTitle_plural": "{{count}} aktív riasztás még áttekintésre vár"
+    },
+    "breadcrumbs": {
+      "current": "Áttekintési sor",
+      "dashboard": "Irányítópult"
+    },
+    "checklist": {
+      "items": {
+        "0": "Aktív riasztások priorizálása",
+        "1": "A helyreállítási lépések dokumentálása",
+        "2": "Ellenőrizze elutasítás előtt"
+      },
+      "title": "Válasz ellenőrzőlista"
+    },
+    "meta": {
+      "active": "{{count}} áttekintendő",
+      "total": "Összesen: {{count}}"
+    },
+    "metrics": {
+      "activeHeading": "Aktív riasztások",
+      "archived": "Archivált",
+      "dismissedDescription": "Jegyezze fel az auditáláshoz",
+      "dismissedDescriptionZero": "Még nincsenek elutasított riasztások",
+      "dismissedHeading": "Elutasított",
+      "resolutionHeading": "Megoldási arány",
+      "resolved": "{{count}} megoldva",
+      "resolvedAndDismissed": "{{resolved}} megoldva • {{dismissed}} elutasítva",
+      "totalRecorded": "Összesen rögzítve: {{count}}"
+    },
+    "pagination": {
+      "next": "Következő",
+      "previous": "Előző"
+    },
+    "subtitle": "Tekintse át azokat a termékeket, amelyek döntést igényelnek.",
+    "table": {
+      "accessibilityLabel": "Biztonsági riasztások táblázata",
+      "empty": "Nincsenek a szűrőknek megfelelő riasztások",
+      "emptyAllClearBody": "Jelenleg nincsenek nyitott kereskedői döntések. A napi felügyelet továbbra is fut, és a lezárt döntések az ellenőrzési nyomvonalban maradnak.",
+      "emptyAllClearTitle": "Minden aktív termékfelülvizsgálat kezelve van",
+      "emptyFilteredBody": "Módosítsa a szűrőket, vagy keressen másik terméket. Az aktív várólista még mindig üres lehet.",
+      "emptyFilteredTitle": "Egyetlen felülvizsgálati elem sem felel meg ezeknek a szűrőknek",
+      "headers": {
+        "actions": "Műveletek",
+        "detected": "Észlelve",
+        "product": "Termék",
+        "risk": "Kockázat",
+        "status": "Állapot"
+      },
+      "order": "Rendezés",
+      "orderOptions": {
+        "asc": "Legrégebbi elöl",
+        "desc": "Legújabb elöl"
+      },
+      "reviewProduct": "Döntés felülvizsgálata a következőhöz: {{title}}",
+      "searchLabel": "Riasztások keresése",
+      "searchPlaceholder": "Keresés terméknév alapján...",
+      "selectAll": "Összes látható találat kiválasztása",
+      "selectedCount": "{{count}} kiválasztva",
+      "selectProduct": "Találat kiválasztása a következőhöz: {{title}}",
+      "similarityTooltip": "Hasonlósági pontszám: {{score}}%",
+      "sort": "Rendezés",
+      "sortBy": "Rendezés szempontja",
+      "sortOptions": {
+        "created": "Észlelés dátuma",
+        "name": "Termék neve",
+        "risk": "Kockázati szint"
+      },
+      "tabs": {
+        "active": "Felülvizsgálatra szorul",
+        "all": "Összes",
+        "dismissed": "Elutasított",
+        "resolved": "Megoldva"
+      },
+      "thumbnailLabel": "{{title}} miniatűr",
+      "viewProduct": "Rögzített találat megtekintése a következőhöz: {{title}}"
+    },
+    "title": "Felülvizsgálati sor",
+    "toasts": {
+      "updated": "Riasztás frissítve"
+    }
+  },
+  "analysis": {
+    "alertImagesUsed": "Összehasonlított riasztási képek: {{count}}",
+    "alertNumber": "Riasztás {{number}}",
+    "audit": {
+      "existingNotes": "Ellenőrzési jegyzetek",
+      "noteLabel": "Ellenőrzési jegyzet",
+      "notePlaceholder": "Adja hozzá, mit ellenőrzött, a beszállítói bizonyítékokat, vagy miért lett elutasítva."
+    },
+    "candidateAlerts": "Jelölt riasztások: {{count}}",
+    "decisionContextDesc": "A döntés rögzítése dokumentálja, hogy ezt a biztonsági egyezést felülvizsgálták, és megőrzi az ellenőrzési nyomvonalat. Nem módosítja automatikusan a Shopify termékét, és nem teszi közzé az áruházában.",
+    "decisionContextTitle": "Megfelelőségi döntések rögzítése",
+    "decisionRecorded": "Döntés rögzítve",
+    "editInShopify": "Termék szerkesztése a Shopify-ban",
+    "enlargedSafetyAlert": "Nagyított biztonsági riasztási kép",
+    "fields": {
+      "accessibilityLabel": "Riasztás egyezési részleteinek táblázata",
+      "alertDate": "Riasztás dátuma",
+      "brand": "Márka",
+      "category": "Kategória",
+      "field": "Mező",
+      "model": "Modell",
+      "notifyingCountry": "Értesítő ország",
+      "origin": "Származás",
+      "productDescription": "Termékleírás",
+      "productName": "Termék neve",
+      "value": "Érték"
+    },
+    "focus": {
+      "criticalLead": "Ez a termék nagy megbízhatóságú egyezéssel rendelkezik. Csak felülvizsgálat után rögzítsen döntést.",
+      "criticalStepCompare": "Hasonlítsa össze a termékfotóját az alábbi első Safety Gate egyezéssel.",
+      "criticalStepDecide": "Válasszon egy eredményt a „Döntés rögzítése” menüben a felülvizsgálata alapján.",
+      "criticalStepDocument": "Adjon hozzá belső jegyzeteket a nyomon követhetőség és a beszállítói nyomon követés érdekében.",
+      "criticalTitle": "Azonnali intézkedés szükséges",
+      "recordedOutcome": "Rögzített eredmény: {{outcome}}",
+      "reviewedLead": "Ez a riasztás nem aktív. Tartsa tisztán a nyilvántartásokat az ellenőrzésekhez.",
+      "reviewedStepAudit": "Ellenőrizze a kiválasztott felbontást és a jegyzeteket.",
+      "reviewedStepReactivate": "Csak akkor aktiválja újra, ha új termékbizonyíték jelenik meg.",
+      "reviewedTitle": "Felülvizsgálat már befejeződött",
+      "safeLead": "A jelenlegi eredmény biztonságos. Folytassa a termékfrissítések figyelését.",
+      "safeStepClose": "Zárja be ezt a részletet, és folytassa a többi aktív riasztással.",
+      "safeStepMonitor": "Tartsa ezt a terméket automatikus felügyelet alatt.",
+      "safeStepRecheck": "Futtasson új ellenőrzést, ha a képek, a csomagolás vagy a beszállító megváltozik.",
+      "safeTitle": "Nincs sürgős intézkedésre szükség"
+    },
+    "hazardType": "Veszély típusa",
+    "checkedAt": "Ellenőrizve: {{date}}",
+    "imageDominated": "Ez az egyezés kép-első súlyozással lett pontozva, így a vizuális csomagolás hasonlósága nagyobb súlyt kapott, mint a szöveges eltérés.",
+    "imageMatch": "Kép egyezés",
+    "imageMatchShort": "{{count}}% kép",
+    "legalProvision": "Jogi rendelkezés",
+    "matchesHint": "Kezdje az alábbi legfelső egyezési kártyával, és először erősítse meg a vizuális csomagolást, majd a modell- és márkaneveket.",
+    "merchantRecommendation": {
+      "active": "Hasonlítsa össze a termék- és a Safety Gate képeket, erősítse meg a márkát vagy a modellt, majd rögzítse, milyen intézkedést tesz az üzlete.",
+      "reviewed": "Ez a találat lezárva. Ellenőrizze a rögzített eredményt és a bizonyítékokat, mielőtt újraaktiválná.",
+      "safe": "Jelenleg nincs szükség bolti intézkedésre. Ellenőrizze újra, ha a termék, a csomagolás, a képek vagy a beszállító megváltozik."
+    },
+    "modalAccessibilityLabel": "Safety Gate egyezési részletek a következőhöz: {{title}}",
+    "modalHeading": "Safety Gate egyezés felülvizsgálata",
+    "noIssuesFound": "Nincs biztonsági probléma",
+    "openProductImage": "Kép megnyitása a következőhöz: {{title}}",
+    "overallMatch": "Összesített egyezés",
+    "overallMatchShort": "{{count}}% összesített",
+    "potentialRisk": "Potenciális biztonsági kockázat",
+    "primaryRiskFocus": "Elsődleges kockázati fókusz: {{category}} {{level}} szinten. A döntés előtt először ezt erősítse meg.",
+    "productImagesUsed": "Termékképek: {{used}} / {{provided}}",
+    "reviewLayout": {
+      "actionNeeded": "Intézkedés szükséges",
+      "compareHeading": "Hasonlítsa össze a termékeket",
+      "compareHint": "A döntés előtt ellenőrizze a fényképeket, a márkát, a modellt és a kategóriát.",
+      "decisionHeading": "Rögzítse a döntését",
+      "decisionPrompt": "Válassza ki az áttekintés eredményét. Hozzáadhat egy megjegyzést arról, hogy mit ellenőrzött.",
+      "fullEvidence": "Teljes Safety Gate bizonyíték ({{count}})",
+      "groupHelp": {
+        "action": "Zárja le a megállapítást, miután eltávolította a terméket az értékesítésből, vagy frissítette a Shopify-ban.",
+        "different": "Zárja le vagy utasítsa el a megállapítást, mert a terméke más modell, márka vagy tétel.",
+        "information": "Tartsa nyitva a megállapítást, amíg beszállítójától tételszámot, modellt vagy biztonsági dokumentumokat kér.",
+        "other": "Rögzítsen egy másik eredményt egy kötelező magyarázó megjegyzéssel az auditálási nyomvonalhoz."
+      },
+      "chooseOutcome": "Válasszon eredményt",
+      "identifiers": {
+        "barcode": "Vonalkód (GTIN/EAN)",
+        "batch": "Tétel / Lot",
+        "brand": "Márka",
+        "field": "Azonosító",
+        "match": "Egyezés",
+        "mismatch": "Eltérés",
+        "model": "Modell",
+        "notSpecified": "nincs megadva",
+        "result": "Összehasonlítás",
+        "safetyGate": "Safety Gate riasztás",
+        "yourProduct": "Az Ön Shopify terméke"
+      },
+      "identifiersHeading": "Oldal-oldal melletti azonosító összehasonlítás",
+      "languageDiffNote": "Az alkalmazás felületének nyelve ({{appLang}}) és az e-mail értesítések nyelve ({{emailLang}}) egymástól függetlenül van beállítva.",
+      "noImage": "Nincs kép elérhető",
+      "noteLabel": "Mit ellenőrzött? (opcionális)",
+      "noteRequiredLabel": "Mit ellenőrzött? (kötelező)",
+      "otherNoteRequired": "Adjon hozzá egy megjegyzést a másik eredmény magyarázatához.",
+      "outcomeLabel": "Áttekintés eredménye",
+      "possibleMatch": "Lehetséges Safety Gate egyezés",
+      "readyToRecord": "Készen áll a rögzítésre",
+      "reviewPointsHeading": "Áttekintendő pontok",
+      "unnamedRecord": "Safety Gate rekord"
+    },
+    "riskDescription": "Kockázat leírása",
+    "riskLevel": "Kockázati szint",
+    "riskSeverity": "Kockázat súlyossága",
+    "safetyGateMatches": "Safety Gate egyezések",
+    "scoreHelper": "Az általános egyezés a végső felülvizsgálati pontszám. A kép egyezés csak a csomagolás hasonlóságát tükrözi.",
+    "sections": {
+      "whatHappened": "Mi történt?",
+      "whatHappenedReviewed": "Ezt az egyezést már felülvizsgálták és rögzítették.",
+      "whatHappenedRisk": "Ez a Shopify termék hasonlít egy olyan termékre, amelyet már jelentettek a Safety Gate-ben.",
+      "whatHappenedSafe": "A legutóbbi ellenőrzés nem talált valószínű Safety Gate egyezést.",
+      "whatToDo": "Mit tegyek?",
+      "whyMatched": "Miért egyezett?"
+    },
+    "seriousRisk": "Súlyos {{category}} kockázat",
+    "summary": {
+      "confidence": "Bizalom",
+      "confidenceUnknown": "Ismeretlen bizalom",
+      "decisionRecorded": "Döntés rögzítve",
+      "decisionRequired": "Döntés szükséges",
+      "highConfidence": "Magas bizalom",
+      "likelyMatch": "Valószínű egyezés",
+      "likelySafetyGateMatch": "Valószínű Safety Gate egyezés",
+      "matchType": "Egyezés típusa",
+      "nextStep": "Következő lépés",
+      "noLikelyMatch": "Nincs valószínű egyezés",
+      "overallMatch": "Összesített pontszám",
+      "reviewRecommended": "Felülvizsgálat javasolt"
+    },
+    "supplierFollowUp": {
+      "copy": "Beszállítói nyomon követés másolása",
+      "template": "Szia, felülvizsgáljuk a {{product}} terméket, mert egyezhet a Safety Gate {{alert}} riasztással (kockázat: {{risk}}). Kérjük, erősítse meg, hogy ez ugyanaz a modell/tétel, adjon meg termékbiztonsági dokumentációt, és magyarázza el az esetleges különbségeket. Egyezés oka: {{reason}}"
+    },
+    "technicalDetails": {
+      "description": "A pontszámok és a lekérdezési számok itt vannak tárolva a mélyebb felülvizsgálat érdekében. Kezdje a termékfotókkal, a márkával, a modellel és a fent javasolt művelettel.",
+      "hide": "Részletek elrejtése",
+      "show": "Részletek megjelenítése",
+      "title": "Technikai egyezési részletek"
+    },
+    "textOnly": "Csak szöveges ellenőrzés",
+    "viewOnSafetyGate": "Megtekintés a Safety Gate-en",
+    "whyThisMatched": "Miért egyezett ez?",
+    "withImage": "Képekkel ellenőrizve",
+    "yourProduct": "Az Ön Shopify terméke"
+  },
+  "auditReport": {
+    "decision": "Döntés",
+    "description": "Tekintse át a teljes nyilvántartást, mielőtt CSV-t exportálna csapatának, beszállítójának vagy auditáláshoz.",
+    "detected": "Észlelve",
+    "documented": "Dokumentált döntések",
+    "download": "CSV letöltése",
+    "empty": "Még nem rögzítettek termékbiztonsági megállapításokat.",
+    "eyebrow": "Exportálásra kész nyilvántartás",
+    "generated": "Generálva: {{date}}",
+    "heading": "Megállapítások és döntések",
+    "needsReview": "Felülvizsgálatra szorul",
+    "notRecorded": "Nincs rögzítve",
+    "open": "Nyissa meg az auditjelentést",
+    "product": "Termék",
+    "risk": "Kockázat súlyossága",
+    "status": "Állapot",
+    "summaryLabel": "Auditjelentés összefoglalója",
+    "tableLabel": "Biztonsági auditjelentés",
+    "title": "Biztonsági auditjelentés",
+    "total": "Rögzített megállapítások",
+    "viewHistory": "Auditálási nyomvonal megtekintése"
+  },
+  "billing": {
+    "freeScanAvailableDescription": "Rendelkezésére áll 1 ingyenes katalógus szkennelés. Futtassa le első auditját, hogy ellenőrizze üzlete termékeit az EU Safety Gate adatbázisában a veszélyes nem élelmiszeripari termékekre vonatkozóan.",
+    "freeScanAvailableHeading": "Ingyenes kezdeti katalógus szkennelés aktív",
+    "managePlanButton": "Előfizetés kezelése",
+    "planActiveDescription": "A felügyelet engedélyezve van ehhez a Shopify üzlethez. Tekintse át a legutóbbi futtatást és azokat a termékeket, amelyek figyelmet igényelnek.",
+    "planEyebrow": "Terv és lefedettség",
+    "planFreeAvailableDescription": "Egy ingyenes kezdeti Safety Gate katalógus-ellenőrzés áll rendelkezésre.",
+    "planFreeUsedDescription": "Az ingyenes kezdeti ellenőrzés befejeződött. Válasszon egy csomagot a folyamatos felügyelet megkezdéséhez és az auditnapló exportálásának folytatásához.",
+    "planTitle": "Előfizetés és biztonsági felügyelet",
+    "pricingUnavailable": "A Shopify árazása nincs konfigurálva ehhez az alkalmazáshoz.",
+    "statusActivePro": "ZeroRecall Pro (Aktív)",
+    "statusDevelopmentBypass": "Fejlesztői előnézet (számlázás megkerülve)",
+    "statusFreeAvailable": "Ingyenes kezdeti ellenőrzés",
+    "statusFreeUsed": "Ingyenes ellenőrzés felhasználva",
+    "statusLabel": "Jelenlegi csomag",
+    "statusUnverified": "Az előfizetés nem ellenőrizhető",
+    "upgradePlanButton": "Frissítés Pro-ra",
+    "upgradeRequiredDescription": "Az ingyenes kezdeti ellenőrzés befejeződött. Válasszon egy Shopify csomagot az új Safety Gate riasztások figyeléséhez és a megváltozott termékek ellenőrzéséhez.",
+    "upgradeRequiredHeading": "Folytassa a Safety Gate felügyeletét",
+    "verificationError": "Az új ellenőrzések szünetelnek, amíg a Shopify számlázása ellenőrizhető. A meglévő megállapítások és döntések továbbra is elérhetők."
+  },
+  "billingRedirect": {
+    "opening": "Shopify árazási tervek megnyitása...",
+    "openPricingPlans": "Árazási tervek megnyitása"
+  },
+  "common": {
+    "all": "Összes",
+    "cancel": "Mégse",
+    "close": "Bezárás",
+    "confirm": "Megerősítés",
+    "language": "Nyelv",
+    "loading": "Betöltés...",
+    "unknown": "Ismeretlen"
+  },
+  "dashboard": {
+    "activeAlertsBanner": {
+      "content": "Oldja meg a(z) {{count}} aktív riasztást, hogy az érintett termékek elérhetők maradjanak az üzletében.",
+      "content_few": "Oldja meg a(z) {{count}} aktív riasztást, hogy az érintett termékek elérhetők maradjanak az üzletében.",
+      "content_many": "Oldja meg a(z) {{count}} aktív riasztást, hogy az érintett termékek elérhetők maradjanak az üzletében.",
+      "content_one": "Oldja meg a(z) {{count}} aktív riasztást, hogy az érintett termékek elérhetők maradjanak az üzletében.",
+      "content_other": "Oldja meg a(z) {{count}} aktív riasztást, hogy az érintett termékek elérhetők maradjanak az üzletében.",
+      "content_plural": "Oldja meg a(z) {{count}} aktív riasztást, hogy az érintett termékek elérhetők maradjanak az üzletében.",
+      "manualCheckAction": "Kézi ellenőrzés",
+      "reviewAction": "Első riasztás áttekintése",
+      "title": "Az aktív biztonsági riasztások figyelmet igényelnek"
+    },
+    "admin": {
+      "actionNeeded": "Intézkedés szükséges",
+      "actionNeededDescription": "Először tekintse át a megjelölt termékeket, hogy eldönthesse, megtartja-e őket eladásra, elveti-e az egyezést, vagy megoldja-e a riasztást.",
+      "actionNeededTitle": "{{count}} aktív riasztás áttekintést igényel",
+      "actionNeededTitle_few": "{{count}} aktív riasztás áttekintést igényel",
+      "actionNeededTitle_many": "{{count}} aktív riasztás áttekintést igényel",
+      "actionNeededTitle_one": "{{count}} aktív riasztás áttekintést igényel",
+      "actionNeededTitle_other": "{{count}} aktív riasztás áttekintést igényel",
+      "actionNeededTitle_plural": "{{count}} aktív riasztás áttekintést igényel",
+      "activeAlertsDescription": "Olyan termékek, amelyek még kereskedői döntést igényelnek, mielőtt a sor tiszta lenne.",
+      "auditHistoryKept": "Auditnapló megőrizve",
+      "auditReady": "Jelentés kész",
+      "auditRecordsDescription": "Megoldott és elvetett döntések indoklással és belső megjegyzésekkel.",
+      "auditRecordsTitle": "Auditnaplók",
+      "auditReport": "Auditjelentés",
+      "automaticChecks": "Automatikus ellenőrzések",
+      "bulkCheckAllSummary": "Ez egy teljes ellenőrzést futtat az összes {{count}} termékre.",
+      "bulkCheckDescription": "Először ellenőrizze a nem ellenőrzött termékeket, vagy vegye fel a teljes katalógust, ha friss ellenőrzést szeretne.",
+      "bulkCheckSummary": "Tömeges katalógus ellenőrzés összefoglalója",
+      "bulkCheckSummaryDescription": "Tartsa ezt az összefoglalót tömörnek, hogy a kereskedők megerősíthessék az eredményeket anélkül, hogy egy második képernyőt nyitnának meg.",
+      "bulkCheckTitle": "Tömeges katalógus ellenőrzés",
+      "bulkCheckUncheckedSummary": "Ez ellenőrzi a(z) {{count}} fennmaradó terméket, és kihagyja a(z) {{skip}} már áttekintett elemet.",
+      "catalogCoverageDescription": "A Safety Gate ellen már ellenőrzött katalógus aránya.",
+      "catalogCoverageTitle": "Katalógus lefedettség",
+      "coverage": "Lefedettség",
+      "coveragePercent": "Katalógus mentett ellenőrzésekkel",
+      "criticalBannerDescription": "{{count}} aktív egyezés magas vagy súlyos kockázatúnak van jelölve. Priorizálja ezeket a termékeket, mielőtt az új értékesítések folytatódnának.",
+      "criticalBannerDescription_few": "{{count}} aktív egyezés magas vagy súlyos kockázatúnak van jelölve. Priorizálja ezeket a termékeket, mielőtt az új értékesítések folytatódnának.",
+      "criticalBannerDescription_many": "{{count}} aktív egyezés magas vagy súlyos kockázatúnak van jelölve. Priorizálja ezeket a termékeket, mielőtt az új értékesítések folytatódnának.",
+      "criticalBannerDescription_one": "{{count}} aktív egyezés magas vagy súlyos kockázatúnak van jelölve. Priorizálja ezeket a termékeket, mielőtt az új értékesítések folytatódnának.",
+      "criticalBannerDescription_other": "{{count}} aktív egyezés magas vagy súlyos kockázatúnak van jelölve. Priorizálja ezeket a termékeket, mielőtt az új értékesítések folytatódnának.",
+      "criticalBannerDescription_plural": "{{count}} aktív egyezés magas vagy súlyos kockázatúnak van jelölve. Priorizálja ezeket a termékeket, mielőtt az új értékesítések folytatódnának.",
+      "criticalBannerTitle": "{{count}} aktív riasztás magas kockázatú egyezéseket tartalmaz",
+      "criticalBannerTitle_few": "{{count}} aktív riasztás magas kockázatú egyezéseket tartalmaz",
+      "criticalBannerTitle_many": "{{count}} aktív riasztás magas kockázatú egyezéseket tartalmaz",
+      "criticalBannerTitle_one": "{{count}} aktív riasztás magas kockázatú egyezéseket tartalmaz",
+      "criticalBannerTitle_other": "{{count}} aktív riasztás magas kockázatú egyezéseket tartalmaz",
+      "criticalBannerTitle_plural": "{{count}} aktív riasztás magas kockázatú egyezéseket tartalmaz",
+      "daily": "Naponta",
+      "dailyAtTime": "Naponta 03:47-kor (Europe/Bratislava)",
+      "dailyAtTimePlanned": "Ütemezett (naponta 03:47-kor)",
+      "decisionsClosed": "Döntések lezárva",
+      "demoAlert": {
+        "action": "Megoldás, elvetés vagy kapcsolatfelvétel a beszállítóval",
+        "badge": "Példa munkafolyamat",
+        "description": "Az alkalmazás megmutatja a Shopify terméket, a Safety Gate rekordot, az egyezés okát és a rögzítendő műveletet.",
+        "evidence": "Jegyzetek vezetése és auditjelentés exportálása",
+        "reason": "Hasonlítsa össze a márkát, a modellt, a kategóriát és a termékfotókat",
+        "sample": "Amit a kereskedők látnak, amikor egy egyezés megjelenik",
+        "title": "Valószínű Safety Gate egyezés található"
+      },
+      "emptyProofCoverage": "{{count}} termék rendelkezik rögzített ellenőrzési eredménnyel.",
+      "emptyProofEvidence": "{{count}} lezárt döntés megőrzésre került az auditnaplóhoz.",
+      "emptyProofMonitoring": "A napi Safety Gate felügyelet továbbra is fut.",
+      "exportProof": "Bizonyíték exportálása",
+      "fallbackAlertDescription": "Egy Safety Gate riasztással egyezik.",
+      "finishCoverage": "Katalógus lefedettség befejezése",
+      "highRiskMatchesDescription": "Súlyos vagy magas kockázatú Safety Gate egyezések, amelyeket először át kell tekinteni.",
+      "highRiskMatchesTitle": "Magas kockázatú egyezések",
+      "checkChangedProducts": "Ellenőrizze a megváltozott termékeket",
+      "checksCompletedDescription": "Automatikus és manuális ellenőrzések, amelyek csökkentik a kézi katalógus-áttekintési munkát.",
+      "checksCompletedTitle": "Elvégzett ellenőrzések",
+      "lastMonitoringRunDescription": "Legutóbbi automatikus, manuális vagy tömeges Safety Gate ellenőrzés.",
+      "lastMonitoringRunTitle": "Utolsó ellenőrzési futtatás",
+      "lastSafetyGateUpdateChecked": "Utolsó ellenőrzött Safety Gate frissítés",
+      "latestRun": "Legutóbbi futtatás",
+      "monitoringRunDateUnknown": "Idő nem elérhető",
+      "monitoringRunHistoryEmpty": "Még nem rögzítettek ütemezett ellenőrzési futtatásokat.",
+      "monitoringRunHistoryTitle": "Legutóbbi ellenőrzési futtatások",
+      "monitoringRunProgress": "{{products}} termék ellenőrizve · {{alerts}} új riasztás",
+      "monitoringRunStatus": {
+        "completed": "Befejezve",
+        "enqueue_failed": "Nem sikerült elindítani",
+        "failed": "Sikertelen",
+        "processing": "Folyamatban",
+        "queued": "Sorban áll",
+        "retrying": "Újrapróbálkozás",
+        "skipped_unentitled": "Csomag inaktív",
+        "unknown": "Státusz nem elérhető"
+      },
+      "monitoringRunsTitle": "Ellenőrzési ellenőrzések",
+      "monitoringStatusAllClear": "A katalógus ellenőrzése fut",
+      "monitoringStatusDescription": "A ZeroRecall összeveti katalógusát az új EU Safety Gate frissítésekkel, kiemeli az áttekintésre szoruló termékeket, és bizonyítékokat tárol az auditjelentésekhez.",
+      "monitoringStatusEyebrow": "Ellenőrzési állapot",
+      "monitoringStatusNeedsReview": "{{count}} termékhez kereskedői döntés szükséges",
+      "monitoringStatusNeedsReview_few": "{{count}} termékhez kereskedői döntések szükségesek",
+      "monitoringStatusNeedsReview_many": "{{count}} termékhez kereskedői döntések szükségesek",
+      "monitoringStatusNeedsReview_one": "{{count}} termékhez kereskedői döntés szükséges",
+      "monitoringStatusNeedsReview_other": "{{count}} termékhez kereskedői döntések szükségesek",
+      "monitoringStatusNeedsReview_plural": "{{count}} termékhez kereskedői döntések szükségesek",
+      "needsReviewTitle": "Áttekintésre szoruló termékek",
+      "nextAutomaticCheck": "Következő automatikus ellenőrzés",
+      "noActiveAlertsDescription": "Legutóbbi ellenőrzései jelenleg nem igényelnek beavatkozást. Folytassa az újonnan hozzáadott termékek szkennelését a lefedettség fenntartásához.",
+      "noActiveAlertsTitle": "Nincsenek aktív biztonsági riasztások",
+      "noAlertsDescription": "Jelenleg nincsenek nyitott termékáttekintések. Ez még mindig hasznos: a napi ellenőrzés a háttérben folytatódik, és a bizonyítékok készen állnak az exportálásra.",
+      "noAlertsTitle": "Nincs áttekintésre szoruló termék",
+      "priorityQueue": "Döntési sor",
+      "productsCoveredShort": "rögzített ellenőrzési eredménnyel",
+      "productsMonitored": "Ellenőrzött aktuális termékverziók",
+      "proofGridLabel": "Ellenőrzési tevékenység",
+      "protectionDescription": "A számok az alkalmazásban rögzített eredményeket írják le; nem termékbiztonsági tanúsítványok.",
+      "protectionEyebrow": "Az Ön ellenőrzési nyilvántartása",
+      "protectionTitle": "Tekintse át a legutóbbi ellenőrzéseket és kereskedői döntéseket.",
+      "recentAlertsDescription": "Tekintse át a valószínű Safety Gate egyezéseket, rögzítsen egy döntést, és őrizze meg a bizonyítékokat az auditokhoz.",
+      "recentAlertsTitle": "Kereskedői döntést igénylő termékek",
+      "recommendedAction": "Javasolt művelet: tekintse át az egyezést, és rögzítsen egy döntést.",
+      "resolvedRateDescription": "A naplózott riasztási tevékenység mekkora része került már lezárásra.",
+      "resolvedRateTitle": "Megoldott arány",
+      "results": {
+        "alertCreated": "Riasztás létrehozva",
+        "completed": "Befejezve",
+        "error": "Hiba",
+        "checked": "Ellenőrizve",
+        "skipped": "Kihagyva"
+      },
+      "reviewOneProduct": "Egy termék ellenőrzése",
+      "riskInAlert": "A Safety Gate riasztásban leírt kockázat",
+      "runBulkCheck": "Tömeges ellenőrzés futtatása",
+      "stats": {
+        "alertsCreated": "Létrehozott riasztások",
+        "alreadyChecked": "Már ellenőrizve",
+        "errors": "Hibák",
+        "checked": "Ellenőrizve",
+        "skipped": "Kihagyva",
+        "stillUnchecked": "Még ellenőrizetlen",
+        "totalProducts": "Összes termék"
+      },
+      "status": {
+        "cachedEvidence": "A gyorsítótárazott bizonyítékok újra felhasználásra kerülnek",
+        "coverageIncomplete": {
+          "description": "Nincs Safety Gate egyezés, ami áttekintésre szorulna a(z) {{checked}} ellenőrzött termékben. Fejezze be az összes {{total}} aktuális termék lefedettségét, mielőtt megerősíti a teljes katalógust.",
+          "eyebrow": "Lefedettség hiányos",
+          "title": "{{count}} termék még lefedettséget igényel",
+          "title_few": "{{count}} termék még lefedettséget igényel",
+          "title_many": "{{count}} termék még lefedettséget igényel",
+          "title_one": "{{count}} termék még lefedettséget igényel",
+          "title_other": "{{count}} termék még lefedettséget igényel",
+          "title_plural": "{{count}} termék még lefedettséget igényel"
+        },
+        "deltaMonitoring": "Csak az új Safety Gate riasztások kerülnek ellenőrzésre",
+        "factsLabel": "Aktuális ellenőrzési tények",
+        "matchesNeedingReview": "Áttekintésre szoruló egyezések",
+        "monitoringNotConfirmed": "Az ellenőrzés még nincs megerősítve",
+        "monitoringProblem": {
+          "action": "Katalógus lefedettség frissítése",
+          "description": "Aktuális termékei rendelkeznek lefedettségi bizonyítékokkal, de az alkalmazás nem tudja megerősíteni, hogy mikor fejeződött be utoljára a Safety Gate ellenőrzés. Frissítse a katalógus lefedettségét a megbízható állapot visszaállításához.",
+          "eyebrow": "Az ellenőrzés figyelmet igényel",
+          "title": "A katalógus lefedettségéhez nincs rögzített ellenőrzési futtatás"
+        },
+        "noActionNeeded": {
+          "action": "Katalógus lefedettség megtekintése",
+          "description": "Az ellenőrzött katalógusában jelenleg egyetlen termék sem egyezik az EU Safety Gate riasztásaival. Az ellenőrzés a háttérben folytatódik, és csak az új riasztások vagy megváltozott termékek igényelnek munkát.",
+          "emptyCatalogDescription": "Adjon hozzá termékeket a Shopify katalógusához, és a ZeroRecall készen áll majd a lefedésükre.",
+          "emptyCatalogTitle": "Még nincsenek ellenőrizendő termékek",
+          "eyebrow": "Aktuális Safety Gate állapot",
+          "title": "Nincs szükség beavatkozásra"
+        },
+        "none": "Nincs",
+        "reviewNeeded": {
+          "criticalDescription": "Tekintse át ezeket a lehetséges egyezéseket, mielőtt folytatja az értékesítést. Hasonlítsa össze a terméket és a Safety Gate bizonyítékait, majd rögzítse döntését.",
+          "criticalEyebrow": "Sürgős áttekintés",
+          "criticalTitle": "{{count}} lehetséges egyezés súlyos kockázatú riasztással áttekintésre szorul",
+          "criticalTitle_few": "{{count}} lehetséges egyezés súlyos kockázatú riasztással áttekintésre szorul",
+          "criticalTitle_many": "Felülvizsgálatra szorul {{count}} lehetséges egyezés komoly kockázatú riasztással",
+          "criticalTitle_one": "Felülvizsgálatra szorul {{count}} lehetséges egyezés komoly kockázatú riasztással",
+          "criticalTitle_other": "Felülvizsgálatra szorul {{count}} lehetséges egyezés komoly kockázatú riasztással",
+          "criticalTitle_plural": "Felülvizsgálatra szorul {{count}} lehetséges egyezés komoly kockázatú riasztással",
+          "description": "A lehetséges Safety Gate egyezések kereskedői döntést igényelnek. Először tekintse át az egyezéseket; a többi termék ellenőrzési eredményei továbbra is elérhetők a katalógusban.",
+          "eyebrow": "Felülvizsgálat szükséges",
+          "title": "{{count}} lehetséges egyezés felülvizsgálatra szorul",
+          "title_few": "{{count}} lehetséges egyezés felülvizsgálatra szorul",
+          "title_many": "{{count}} lehetséges egyezés felülvizsgálatra szorul",
+          "title_one": "{{count}} lehetséges egyezés felülvizsgálatra szorul",
+          "title_other": "{{count}} lehetséges egyezés felülvizsgálatra szorul",
+          "title_plural": "{{count}} lehetséges egyezés felülvizsgálatra szorul"
+        },
+        "scheduledPlanned": "Ütemezett futtatás"
+      },
+      "storeStatus": "Üzlet állapota",
+      "valueMetrics": {
+        "decisionsRecorded": "Rögzített döntések",
+        "evidenceRetained": "Döntések bizonyítékokkal",
+        "checksRun": "Futtatott ellenőrzések",
+        "openDecisions": "Nyitott döntések",
+        "productsCovered": "Ellenőrzött termékek"
+      },
+      "valueProofDescription": "Mutassa meg a csapatnak, hogy az előfizetés nem egyszeri ellenőrzés: a katalógus lefedettsége, az ellenőrzések, a döntések és a csak olvasható Shopify hozzáférés aktív marad.",
+      "valueProofDescriptionComplete": "Ezek a számok az aktuális katalógus rögzített ellenőrzési tevékenységét mutatják.",
+      "valueProofDescriptionIncomplete": "Futtasson ellenőrzéseket a fennmaradó termékekre, hogy hozzáadja az eredményeket az aktuális katalógusrekordhoz.",
+      "valueProofEyebrow": "Lefedettségi művelet",
+      "valueProofTitle": "Amit a ZeroRecall továbbra is csinál",
+      "valueProofTitleComplete": "Minden aktuális termék rendelkezik rögzített ellenőrzéssel",
+      "valueProofTitleIncomplete": "{{count}} termék rendelkezik rögzített ellenőrzéssel",
+      "warningBannerDescription": "Tekintse át ezeket az egyezéseket, utasítsa el a téves pozitív eredményeket, vagy oldja meg a megerősített problémákat, hogy a sorban lévő feladatok kezelhetők maradjanak.",
+      "warningBannerTitle": "{{count}} aktív riasztás kereskedői döntést igényel",
+      "warningBannerTitle_few": "{{count}} aktív riasztás kereskedői döntést igényel",
+      "warningBannerTitle_many": "{{count}} aktív riasztás kereskedői döntést igényel",
+      "warningBannerTitle_one": "{{count}} aktív riasztás kereskedői döntést igényel",
+      "warningBannerTitle_other": "{{count}} aktív riasztás kereskedői döntést igényel",
+      "warningBannerTitle_plural": "{{count}} aktív riasztás kereskedői döntést igényel",
+      "withReadOnlyShopifyAccess": "Csak olvasható Shopify hozzáférés"
+    },
+    "bulkCheck": {
+      "action": "Összes termék ellenőrzése",
+      "alerts": "Riasztások {{count}}",
+      "alreadyChecked": "Már ellenőrizve",
+      "completed": "Befejezve {{seconds}} másodperc alatt",
+      "description": "Vizsgálja át az összes terméket az üzletében a Safety Gate adatbázis ellen, hogy felfedje a rejtett kockázatokat.",
+      "errors": "Hibák {{count}}",
+      "checked": "Ellenőrizve {{count}}",
+      "includeAlreadyChecked": "Már ellenőrzött termékek is",
+      "notYetChecked": "Még nem ellenőrizve",
+      "processed": "Feldolgozva {{count}}",
+      "started": "Elindítva {{date}}",
+      "title": "Tömeges biztonsági ellenőrzés",
+      "totalProducts": "Összes termék",
+      "willCheckAll": "Ellenőrizni fogja mind a {{count}} terméket",
+      "willCheckUnchecked": "Ellenőrizni fogja a {{count}} nem ellenőrzött terméket (kihagyja a {{skip}} már ellenőrzöttet)"
+    },
+    "bulkResults": {
+      "success": "Tömeges ellenőrzés befejezve: {{processed}} feldolgozva, {{checked}} ellenőrizve, {{alertsCreated}} riasztás létrehozva."
+    },
+    "howItWorks": {
+      "alertGeneration": {
+        "description": "Az egyezések riasztásokat generálnak, amelyeket elutasíthat vagy megoldhat a megfelelőség nyomon követéséhez.",
+        "title": "Riasztás generálás"
+      },
+      "autoMonitoring": {
+        "description": "A termékeket az EU adatbázis ellenőrzése alá vonják, amikor létrehozzák vagy frissítik őket.",
+        "title": "Automatikus felügyelet"
+      },
+      "title": "Hogyan működik"
+    },
+    "liveScan": {
+      "completed": "Kész",
+      "description": "Katalógus importálása a Shopify-ból és a termékek ellenőrzése az EU hivatalos Safety Gate (RAPEX) adatbázisában található több mint 35 000 rekord ellen. Az eredmények hamarosan megjelennek alább.",
+      "eyebrow": "Automatizált biztonsági audit",
+      "failedDescription": "Nem tudtuk befejezni ezt az auditot. A katalógusa nem lett teljesen ellenőrzöttként megjelölve. Indítsa újra a vizsgálatot, vagy lépjen kapcsolatba az ügyfélszolgálattal, ha a probléma továbbra is fennáll.",
+      "failedHeading": "A katalógus auditot újra kell próbálni",
+      "heading": "Ingyenes katalógus biztonsági audit folyamatban...",
+      "inProgress": "Folyamatban...",
+      "pending": "Függőben",
+      "progress": "Importálva {{imported}} termék a {{fetched}} termékből; összehasonlítva {{scanned}} termékkel, eddig {{alerts}} Safety Gate riasztással.",
+      "stepAudit": "3. GPSR audit nyomvonal és megfelelőségi állapot előkészítése",
+      "stepImport": "1. Termékek importálása a Shopify-ból",
+      "stepScan": "2. Összehasonlítás a Safety Gate adatbázissal (több mint 35 000 rekord)"
+    },
+    "metricsCard": {
+      "activeAlertsHeading": "Aktív riasztások",
+      "productsCheckedHeading": "Ellenőrzött termékek",
+      "resolutionHeading": "Megoldási arány",
+      "resolved": "{{count}} megoldva",
+      "resolvedAndDismissed": "{{resolved}} megoldva • {{dismissed}} elutasítva",
+      "scans": "Safety Gate vizsgálatok",
+      "totalRecorded": "Összesen rögzítve: {{count}}"
+    },
+    "monitorCard": {
+      "description": "Riasztások nyomon követése, katalógus ellenőrzések futtatása és a szabályozó hatóságok elégedettségének fenntartása.",
+      "reviewAction": "Riasztások áttekintése",
+      "title": "Termékbiztonság felügyelete egy pillantással"
+    },
+    "quickActions": {
+      "browsePortal": "Böngészés a Safety Gate portálon",
+      "description": "A rendszeres ellenőrzések és dokumentáció segítenek a kellő gondosság igazolásában a szabályozó hatóságok felé.",
+      "manualCheck": "Kézi ellenőrzés futtatása",
+      "title": "Gyors műveletek"
+    },
+    "recentAlerts": {
+      "active": "{{count}} aktív",
+      "allResolved": "Minden megoldva",
+      "description": "Vizsgálja meg a Safety Gate legújabb egyezéseit a megrendelések teljesítése előtt.",
+      "emptyState": {
+        "content": "Nagyszerű hír – jelenleg egyetlen termék sem jelölt. Folytassa a felügyeletet a megfelelőség fenntartásához.",
+        "heading": "Még nincsenek biztonsági riasztások"
+      },
+      "matchCount": "{{count}} egyezés található",
+      "matchCount_few": "{{count}} egyezés található",
+      "matchCount_many": "{{count}} egyezés található",
+      "matchCount_one": "{{count}} egyezés található",
+      "matchCount_other": "{{count}} egyezés található",
+      "matchCount_plural": "{{count}} egyezés található",
+      "title": "Legutóbbi biztonsági riasztások"
+    },
+    "safetyBreakdown": {
+      "actionDesc": "Az EU Safety Gate jelentésekkel talált egyezések, amelyek felülvizsgálatot és megoldást igényelnek.",
+      "actionLabel": "Művelet szükséges",
+      "description": "Termékkatalógusának áttekintése az európai biztonsági listák és a GPSR irányelv alapján.",
+      "eyebrow": "Katalógusvédelem állapota",
+      "protectedDesc": "Azok a termékek, amelyek legutóbbi ellenőrzése során nem találtak valószínű egyezést.",
+      "protectedLabel": "Ellenőrzött termékek nyitott megállapítások nélkül",
+      "protectRemainingAction": "Hátralévő ellenőrzése ({{count}})",
+      "reviewAlertsAction": "Riasztások áttekintése",
+      "scanAllAction": "Teljes katalógus ellenőrzés futtatása",
+      "title": "Termékbiztonsági állapot",
+      "unprotectedAllCovered": "Minden aktuális termékhez rögzített ellenőrzési eredmény tartozik.",
+      "unprotectedDesc": "Olyan termékek, amelyekhez nincs rögzített Safety Gate ellenőrzés.",
+      "unprotectedLabel": "Még nem ellenőrizve"
+    },
+    "setup": {
+      "description": "Készítse fel üzletét az EU termékbiztonsági megfelelőségére.",
+      "progress": "{{completed}}/{{total}} lépés kész",
+      "steps": {
+        "step1": {
+          "description": "Kattintson az „Összes termék ellenőrzése” gombra a teljes katalógus átvizsgálásához az EU Safety Gate adatbázisában.",
+          "label": "Futtassa az első tömeges termékellenőrzést"
+        },
+        "step2": {
+          "description": "Ellenőrizze a riasztások oldalt, hogy áttekintse azokat a termékeket, amelyek egyeznek a Safety Gate figyelmeztetéseivel.",
+          "label": "Tekintse át a biztonsági riasztásokat"
+        },
+        "step3": {
+          "description": "Engedélyezze az automatikus ellenőrzéseket a Beállításokban az új termékek automatikus felügyeletéhez.",
+          "label": "Automatikus felügyelet konfigurálása"
+        }
+      },
+      "title": "Beállítási útmutató"
+    },
+    "stats": {
+      "actionNeeded": "Intézkedés szükséges",
+      "activeAlerts": "Aktív riasztások",
+      "alertsLogged": "Rögzített riasztások",
+      "allClear": "Minden rendben",
+      "autoMonitoring": "Automatikus felügyelet",
+      "descriptions": {
+        "activeAlerts": "Tekintse át ezeket a termékeket még ma a megfelelőség fenntartásához.",
+        "activeAlertsZero": "Minden biztonsági probléma megoldva.",
+        "alertsLogged": "Tartalmazza a megoldott és elutasított riasztásokat az auditálási nyomvonalhoz.",
+        "alertsLoggedZero": "Nincsenek korábbi riasztások. Folytassa az új termékek felügyeletét.",
+        "productsChecked": "Az automatikus Shopify események továbbra is figyelik a frissítéseket.",
+        "productsCheckedZero": "Futtasson egy tömeges ellenőrzést az aktuális katalógus átvizsgálásához."
+      },
+      "newSetup": "Új beállítás",
+      "open": "{{count}} nyitott",
+      "productsChecked": "Ellenőrzött termékek",
+      "resolved": "{{count}} megoldva"
+    },
+    "title": "ZeroRecall"
+  },
+  "dates": {
+    "daysAgo": "{{count}} napja",
+    "today": "Ma",
+    "weeksAgo": "{{count}} hete",
+    "yesterday": "Tegnap"
+  },
+  "errors": {
+    "apiError": "A külső biztonsági szolgáltatás átmenetileg nem elérhető. Kérjük, próbálja újra később.",
+    "pageLoadFailed": "Az oldal betöltése sikertelen",
+    "unknown": "Valami hiba történt"
+  },
+  "evidence": {
+    "alertNumber": "Safety Gate riasztás: {{number}}",
+    "description": "Tekintse át a rögzített termékbiztonsági döntéseket, jegyzeteket, kockázati kontextust és a beszállítói nyomon követési bizonyítékokat.",
+    "empty": "Még nem rögzítettek termékbiztonsági döntéseket.",
+    "eyebrow": "Auditálási nyomvonal",
+    "filteredRecords": "{{visible}}/{{total}} rekord",
+    "filters": {
+      "collapseForProduct": "Teljes bizonyíték elrejtése a(z) {{title}} termékhez",
+      "expandForProduct": "Teljes bizonyíték megjelenítése a(z) {{title}} termékhez",
+      "noResults": "Nincsenek auditálási rekordok, amelyek megfelelnek ezeknek a szűrőknek.",
+      "searchLabel": "Auditálási nyomvonal keresése",
+      "searchPlaceholder": "Termék, riasztási szám vagy bizonyíték keresése",
+      "showLess": "Bizonyíték elrejtése",
+      "showMore": "Bizonyíték megjelenítése",
+      "statusLabel": "Döntés állapota"
+    },
+    "fullEvidence": "Teljes bizonyíték",
+    "heading": "Döntési és bizonyítéktörténet",
+    "noNotes": "Nincs rögzített jegyzet",
+    "records": "{{count}} rekord",
+    "table": {
+      "accessibilityLabel": "Termékbiztonsági bizonyíték táblázat",
+      "decision": "Döntés",
+      "details": "Részletek",
+      "notes": "Jegyzetek / bizonyítékok",
+      "product": "Termék",
+      "status": "Állapot",
+      "summary": "Bizonyíték összefoglalása",
+      "updated": "Frissítve"
+    },
+    "title": "Auditálási nyomvonal"
+  },
+  "experience": {
+    "delayed": "A felügyelet figyelmet igényel – az utolsó befejezett futtatás több mint 48 órás",
+    "pausedHelp": "Az automatikus ellenőrzések szünetelnek. Válasszon egy csomagot az új Safety Gate riasztások és termékmódosítások ellenőrzéséhez, amíg a Shopify zárva van.",
+    "previewHelp": "Ennek a fejlesztői előnézetnek a megnyitása nem aktiválja a háttérfelügyeletet. Az ütemezett ellenőrzésekhez ellenőrzött aktív Shopify csomag szükséges.",
+    "reviewSteps": "1. Hasonlítsa össze a fényképeket és az azonosítókat → 2. Válassza ki az áttekintés eredményét → 3. Rögzítse döntését",
+    "valueBody": "Napi ellenőrzések új Safety Gate riasztásokra, ellenőrzések termékmódosítások esetén, e-mail értesítések engedélyezés esetén, és mentett áttekintési döntések.",
+    "valueTitle": "Mit ad a folyamatos felügyelet"
+  },
+  "manualCheck": {
+    "admin": {
+      "catalog": "Katalógus",
+      "catalogDescription": "A termékek a legújabb Shopify frissítések szerint vannak rendezve, így a kereskedők először a legutóbbi változásokat ellenőrizhetik újra.",
+      "checkFailed": "Ellenőrzés sikertelen",
+      "manualReview": "Igény szerinti áttekintés",
+      "manualReviewDescription": "Válasszon ki bármely terméket a katalógusából, és futtasson célzott Safety Gate ellenőrzést, amikor azonnali válaszra van szüksége.",
+      "productFlagged": "Termék megjelölve"
+    },
+    "badges": {
+      "flagged": "{{count}} megjelölve",
+      "checks": "{{count}} ellenőrzés",
+      "needsReview": "{{count}} áttekintésre szorul"
+    },
+    "banners": {
+      "alertDescription": "Potenciális biztonsági probléma található ennél a terméknél.",
+      "alertHeading": "Biztonsági riasztás létrehozva",
+      "failedHeading": "Ellenőrzés sikertelen",
+      "textOnlyDescription": "Ez az eredmény csak szöveges mezőket használt. Ha a termék vizuális különbségekre támaszkodik, alaposabban vizsgálja meg az egyezést.",
+      "textOnlyHeading": "Képi összehasonlítás nem volt elérhető"
+    },
+    "breadcrumbs": {
+      "current": "Katalógus lefedettség",
+      "dashboard": "Irányítópult"
+    },
+    "bulk": {
+      "description": "Tekintse át a mentett ellenőrzéseket, és futtasson friss Safety Gate összehasonlítást az aktuális katalógusában lévő termékekhez.",
+      "checkAllProducts": "Hátralévő termékek ellenőrzése",
+      "checkingAll": "Katalógus ellenőrzése...",
+      "title": "Katalógus ellenőrzése"
+    },
+    "catalogue": {
+      "accessibilityLabel": "Termékkatalógus táblázat",
+      "actions": {
+        "checkAgain": "Ellenőrizze újra",
+        "checkAgainForProduct": "Ellenőrizze újra a(z) {{title}} terméket",
+        "checkSafety": "Biztonság ellenőrzése",
+        "checkSafetyForProduct": "Biztonság ellenőrzése a(z) {{title}} termékhez",
+        "viewForProduct": "Rögzített találat megtekintése a következőhöz: {{title}}"
+      },
+      "columns": {
+        "action": "Művelet",
+        "checks": "Ellenőrzések",
+        "product": "Termék",
+        "status": "Állapot"
+      },
+      "emptyBody": "Nincsenek ellenőrizhető termékek.",
+      "emptyHeading": "Nincsenek termékek",
+      "firstCheck": "Futtassa az első ellenőrzést",
+      "heading": "Termékkatalógus ({{count}})",
+      "lastChecked": "Utoljára ellenőrizve: {{date}}",
+      "noType": "Nincs típus",
+      "searchLabel": "Termék keresése",
+      "searchPlaceholder": "Termékek keresése cím, SKU, gyártó vagy típus alapján",
+      "status": {
+        "notChecked": "Nincs ellenőrizve",
+        "reviewed": "Áttekintve",
+        "safe": "Nincs egyezés",
+        "unsafe": "Felülvizsgálatra szorul"
+      },
+      "totalChecks": "Összesen: {{count}}",
+      "unknownVendor": "Ismeretlen gyártó"
+    },
+    "coverage": {
+      "completeDescription": "Minden jelenlegi Shopify termékhez rögzített Safety Gate ellenőrzés tartozik. Az új vagy módosított termékekhez továbbra is friss ellenőrzés szükséges.",
+      "completeTitle": "Minden jelenlegi termékhez van mentett ellenőrzési eredmény",
+      "eyebrow": "Katalógus ellenőrzési állapota",
+      "incompleteDescription": "Ellenőrizze a fennmaradó termékeket, hogy mentse a Safety Gate eredményét az aktuális katalógushoz.",
+      "incompleteTitle": "{{count}} termékhez még nincs mentett ellenőrzés",
+      "lastProductNeedsReview": "A legutóbbi termékellenőrzés létrehozott vagy frissített egy felülvizsgálati tételt.",
+      "lastProductSafe": "A legutóbbi termékellenőrzés nem talált valószínű Safety Gate egyezést.",
+      "lastRun": "Utolsó ellenőrzés",
+      "lastRunResultWithCounts": "Ellenőrizve: {{checked}}, kihagyva: {{skipped}} változatlan, létrehozva: {{alerts}} felülvizsgálati tétel, {{errors}} hiba.",
+      "noneRemaining": "Minden jelenlegi termékhez van mentett ellenőrzési eredmény.",
+      "noRunYet": "Még nem futott katalógus- vagy termékellenőrzés.",
+      "percent": "{{percent}}% aktuális ellenőrzéssel",
+      "productsCovered": "Ellenőrzött termékek",
+      "productsCoveredDescription": "Azok a termékek, amelyekhez van mentett eredmény a jelenlegi Shopify verziójukhoz.",
+      "remaining": "Még nem ellenőrizve",
+      "remainingDescription": "Futtasson egy ellenőrzést, hogy mentse a Safety Gate eredményét ezekhez a termékekhez."
+    },
+    "filters": {
+      "all": "Összes ({{count}})",
+      "needsReview": "Lehetséges egyezés ({{count}})",
+      "safe": "Nincs egyezés ({{count}})",
+      "unprotected": "Nincs ellenőrizve vagy módosítva ({{count}})"
+    },
+    "modal": {
+      "unknown": "Ismeretlen",
+      "unknownProduct": "Ismeretlen termék"
+    },
+    "overview": {
+      "coverage": "{{coverage}}% lefedettség",
+      "manualCompleted": "Kézi ellenőrzések befejezve",
+      "manualCompletedDescription": "{{checked}} termék ellenőrizve a(z) {{total}} termékből",
+      "noOpenReviews": "Nincsenek nyitott termékdöntések.",
+      "noRisks": "Még nem észleltek kockázatot.",
+      "prioritise": "Priorizálja ezeket a termékeket a művelethez.",
+      "productsDescription": "A legújabb termékek az üzletéből.",
+      "productsFlagged": "Megjelölt termékek",
+      "productsInScope": "Hatályba tartozó termékek",
+      "productsNeedingReview": "Áttekintésre szoruló termékek",
+      "title": "Ellenőrzések áttekintése"
+    },
+    "quickActions": {
+      "title": "Gyorsműveletek"
+    },
+    "subtitle": "Védje katalógusa többi részét, frissítse a felügyeletet, vagy ellenőrizzen egy kiválasztott terméket.",
+    "title": "Katalógus lefedettség",
+    "toasts": {
+      "completed": "Biztonsági ellenőrzés befejezve",
+      "flagged": "Potenciális biztonsági probléma észlelve"
+    }
+  },
+  "nav": {
+    "catalogCoverage": "Katalógus lefedettség",
+    "dashboard": "Irányítópult",
+    "evidence": "Auditálási nyomvonal",
+    "manualCheck": "Katalógus lefedettség",
+    "safetyAlerts": "Felülvizsgálati sor",
+    "settings": "Beállítások"
+  },
+  "news": {
+    "items": {
+      "databaseUpdate": {
+        "date": "2025. dec.",
+        "description": "A Safety Gate adatbázis folyamatosan frissül új termékriasztásokkal. Futtasson rendszeres ellenőrzéseket a megfelelőség fenntartásához.",
+        "title": "EU Safety Gate adatbázis frissítve"
+      },
+      "gpsr": {
+        "date": "GPSR 2024",
+        "description": "Ismerje meg a GPSR követelményeit, és hogyan biztosíthatja, hogy termékei megfeleljenek az EU biztonsági szabványainak.",
+        "title": "Általános termékbiztonsági rendelet"
+      }
+    },
+    "title": "Hírek"
+  },
+  "onboarding": {
+    "back": "Vissza",
+    "finishButton": "Beállítás befejezése és irányítópultra lépés",
+    "nextStep": "Következő lépés",
+    "stepIndicator": "{{current}} / {{total}} lépés",
+    "steps": {
+      "automation": {
+        "description": "Konfigurálja a prioritásos felülvizsgálatot és az automatikus biztonsági szabályokat az üzletéhez.",
+        "label": "Biztonsági automatizálás",
+        "quarantine": {
+          "desc": "Automatikusan jelölje meg a termékeket prioritásos felülvizsgálatra, ha azok súlyos kockázatú Safety Gate riasztásokkal egyeznek (küszöbérték >= 95%).",
+          "label": "Prioritásos felülvizsgálat engedélyezése",
+          "title": "Súlyos kockázatok priorizálása"
+        },
+        "title": "3. lépés: Automatikus felügyelet és riasztások",
+        "webhooks": {
+          "desc": "A termékeket automatikusan ellenőrzik az EU adatbázisában, amikor létrehozzák vagy frissítik őket.",
+          "title": "Valós idejű Webhook szkennelés"
+        }
+      },
+      "scan": {
+        "alerts": "Létrehozott kockázati riasztások: {{count}}",
+        "complete": "A katalógus mostantól felügyelve van",
+        "description": "Importálja jelenlegi Shopify termékeit a Safety Gate felügyeletébe, majd hasonlítsa össze a katalógust a legújabb Safety Gate riasztásokkal.",
+        "imported": "Felügyeletre importált termékek: {{count}}",
+        "label": "Katalógus importálása",
+        "monitored": "A Safety Gate riasztásokkal összehasonlított termékek: {{count}}",
+        "scanned": "Szkennelt termékek: {{count}}",
+        "scanning": "Katalógus importálása és termékek összehasonlítása a Safety Gate riasztásokkal...",
+        "startButton": "Jelenlegi katalógus importálása és felügyelete",
+        "title": "2. lépés: Jelenlegi katalógus importálása és felügyelete",
+        "toScan": "Importálandó termékek felügyeletre: {{count}}"
+      },
+      "sensitivity": {
+        "balanced": "70% (Ajánlott - Kiegyensúlyozott)",
+        "broad": "40% (Széles - Több figyelmeztetés)",
+        "calibration": {
+          "balancedDesc": "Standard érzékenység. Optimalizált egyensúly a pontosság és a riasztások mennyisége között. Átvizsgálja a címeket, leírásokat, és egyezteti a kulcsfontosságú márkákat és modellstruktúrákat.",
+          "balancedTitle": "Kiegyensúlyozott észlelési mód",
+          "broadDesc": "Magas érzékenység. Észleli a lazán kapcsolódó egyezéseket. Ajánlott, ha magas kockázatú termékkategóriákat (játékok, elektronika) értékesít, és teljes lefedettséget szeretne, de számítson néhány téves riasztásra.",
+          "broadTitle": "Széleskörű észlelési mód",
+          "strictDesc": "Nagy pontosság. Kis szűrések kiszűrése. A riasztások csak nagyon egyértelmű márka/modellnév egyezések esetén aktiválódnak. Alacsony a téves riasztások aránya.",
+          "strictTitle": "Szigorú észlelési mód"
+        },
+        "description": "Válassza ki, hogy egy terméknek mennyire kell egyeznie egy Safety Gate bejegyzéssel, mielőtt felülvizsgálatra kerülne.",
+        "label": "Egyezés szigorúsága",
+        "strict": "90% (Szigorú – Kevesebb figyelmeztetés)",
+        "thresholdLabel": "Egyezési küszöb: {{value}}%",
+        "title": "1. lépés: Az egyezés szigorúságának beállítása"
+      }
+    },
+    "subtitle": "Keresse meg a potenciálisan veszélyes termékek egyezéseit, tekintse át őket a Shopify-ban, és őrizzen meg minden döntésről szóló ellenőrzési bizonyítékot.",
+    "title": "Katalógusának ellenőrzése az EU Safety Gate ellen",
+    "value": {
+      "audit": {
+        "description": "A megoldott és elutasított döntések jegyzeteket tartalmaznak az exportáláshoz és a beszállítói nyomon követéshez.",
+        "title": "Ellenőrzésre kész bizonyítékok"
+      },
+      "monitor": {
+        "description": "Az új Safety Gate riasztásokat összevetjük a Shopify katalógusával.",
+        "title": "Napi EU Safety Gate ellenőrzés"
+      },
+      "review": {
+        "description": "Hasonlítsa össze az egyezést, döntse el, mit tegyen, és tartsa a sort működőképesen.",
+        "title": "Kereskedői döntési munkafolyamat"
+      }
+    }
+  },
+  "pagination": {
+    "pageOf": "{{current}} / {{total}} oldal ({{count}} riasztás)"
+  },
+  "portal": {
+    "description": "Hozzáférés a hivatalos európai Safety Gate adatbázishoz a veszélyes termékek kereséséhez és a részletes biztonsági riasztások megtekintéséhez.",
+    "home": "Safety Gate kezdőlap",
+    "homeDescription": "Hozzáférés a hivatalos Európai Bizottság portáljához",
+    "searchDatabase": "Adatbázis keresése",
+    "searchDescription": "Keresés az EU Safety Gate-ben veszélyes termékek után",
+    "title": "Safety Gate portál"
+  },
+  "resolveActions": {
+    "actionTaken": "Megtett intézkedés",
+    "contactedSupplier": "Kapcsolatba lépett a beszállítóval (válaszra vár)",
+    "contactPending": "Várja a beszállító válaszát",
+    "falsePositive": "Téves riasztás",
+    "menuLabel": "Feloldási műveletek",
+    "modifiedProduct": "Termék módosítva",
+    "noActionNeeded": "Nincs szükség beavatkozásra",
+    "notMyProduct": "Nem az én termékem",
+    "other": "Egyéb",
+    "removedFromSale": "Eladásból kivonva",
+    "verifiedSafe": "Korábbi eredmény: a termék biztonságosnak ellenőrizve"
+  },
+  "settings": {
+    "monitoring": {
+      "automatic": {
+        "description": "A termékek automatikusan ellenőrzésre kerülnek, amikor webhookokon keresztül létrehozzák vagy frissítik őket.",
+        "enabled": "Engedélyezve",
+        "title": "Automatikus ellenőrzés"
+      },
+      "manual": {
+        "description": "Igény szerinti biztonsági ellenőrzések futtatása a katalógusában lévő bármely termékhez.",
+        "goToManualCheck": "Ugrás a kézi ellenőrzésre",
+        "title": "Kézi ellenőrzések"
+      },
+      "title": "Felügyelet"
+    },
+    "navigation": {
+      "dashboard": "Irányítópult",
+      "manualCheck": "Kézi ellenőrzés",
+      "title": "Navigáció",
+      "viewAlerts": "Riasztások megtekintése"
+    },
+    "subtitle": "Szabályozza, hogyan figyeli a ZeroRecall a Shopify katalógusát.",
+    "threshold": {
+      "currentDefault": "Jelenlegi környezeti alapértelmezés",
+      "description": "Válassza ki, hány lehetséges Safety Gate egyezést szeretne áttekinteni a csapata. A kiegyensúlyozott felügyelet ajánlott a legtöbb Shopify katalógushoz.",
+      "howItWorks": "Hogyan működik",
+      "label": "Haladó egyezési küszöb (%)",
+      "resetToDefault": "Visszaállítás alapértelmezettre",
+      "save": "Mentés",
+      "title": "Felügyeleti mód"
+    },
+    "title": "Felügyeleti beállítások"
+  },
+  "settingsAdmin": {
+    "advancedMatchingSettings": "Haladó egyezési beállítások",
+    "automation": {
+      "autoDraftDescription": "Automatikusan jelölje meg a termékeket prioritásos felülvizsgálatra, ha azok súlyos kockázatú Safety Gate riasztásokkal egyeznek (küszöbérték >= 95%).",
+      "autoDraftTitle": "Súlyos kockázatok előtérbe helyezése",
+      "description": "Konfigurálja a magas kockázatú egyezések prioritásos felülvizsgálatát.",
+      "eyebrow": "Valós idejű műveletek",
+      "title": "Biztonsági automatizálás"
+    },
+    "automationStatus": {
+      "active": {
+        "badge": "Terv aktív",
+        "description": "Az első katalógus ellenőrzés befejeződött, és ez az üzlet aktív felügyeleti tervvel rendelkezik.",
+        "title": "Katalógus ellenőrzés befejeződött"
+      },
+      "completedNoPlan": {
+        "badge": "Ellenőrzés kész",
+        "description": "Az első katalógus ellenőrzés befejeződött. A folyamatos automatikus felügyelethez aktív terv szükséges.",
+        "title": "Kezdeti katalógus ellenőrzés befejeződött"
+      },
+      "failed": {
+        "badge": "Figyelmet igényel",
+        "description": "Az utolsó importálás vagy ellenőrzés nem fejeződött be. Próbálja újra a katalógus lefedettségét, mielőtt a felügyeleti állapotra támaszkodna.",
+        "title": "A kezdeti katalógus ellenőrzés figyelmet igényel"
+      },
+      "notStarted": {
+        "badge": "Nincs ellenőrizve",
+        "description": "Az első importálás nem fejeződött be, így a katalógus lefedettsége még nem erősített meg.",
+        "title": "Katalógus ellenőrzés nincs megerősítve"
+      },
+      "openCatalog": "Katalógus lefedettség megnyitása",
+      "scanning": {
+        "badge": "Folyamatban",
+        "description": "A termékek importálása és ellenőrzése folyamatban van. A katalógus lefedettsége az ellenőrzés befejezése után kerül megerősítésre.",
+        "title": "Kezdeti katalógus ellenőrzés folyamatban"
+      }
+    },
+    "automationStatusDescription": "A napi EU Safety Gate frissítések, a Shopify termékváltozások és az ellenőrzési nyilvántartások automatikusan kezelésre kerülnek. Ezeket a beállításokat csak a felülvizsgálati mennyiség és az értesítések finomhangolására használja.",
+    "automationStatusEyebrow": "Automatikus felügyelet",
+    "automationStatusTitle": "A Safety Gate felügyelet működik ebben az üzletben",
+    "configuration": "Konfiguráció",
+    "configurationDescription": "Tartsa az oldalt egy kereskedői döntésre összpontosítva: mennyire szigorúnak kell lennie az ellenőrzőnek a termékek és a Safety Gate riasztások összehasonlításakor.",
+    "currentThreshold": "Jelenlegi küszöb",
+    "currentThresholdDescription": "Az alacsonyabb értékek több lehetséges egyezést találnak. A magasabb értékek csökkentik a téves riasztásokat.",
+    "environmentDefault": "Környezeti alapértelmezés",
+    "environmentDefaultDescription": "Akkor használatos, ha az üzlet még nem mentett egyéni küszöböt.",
+    "exclusions": {
+      "description": "Zárja ki a specifikus gyártókat vagy termékkategóriákat a Safety Gate ellenőrzésekből a téves riasztások csökkentése érdekében.",
+      "eyebrow": "Szűrési szabályok",
+      "title": "Kizárási szabályok",
+      "typesDescription": "Írjon be egy termékkategóriát vagy típust, majd nyomja meg az Entert vagy a vesszőt a hozzáadáshoz.",
+      "typesPlaceholder": "Ajándékkártya, szolgáltatás, ...",
+      "typesTitle": "Kizárt terméktípusok",
+      "vendorsDescription": "Írjon be egy szállítónevet, majd nyomja meg az Entert vagy a vesszőt a hozzáadáshoz.",
+      "vendorsPlaceholder": "A szállító, B szállító, ...",
+      "vendorsTitle": "Kizárt szállítók"
+    },
+    "fallback": "Tartalék",
+    "guidance": "Útmutatás",
+    "guidanceItems": {
+      "balancedDescription": "A legtöbb katalógushoz ajánlott (65-70%). Elkapja a valószínű kockázatokat, miközben alacsonyan tartja a téves riasztásokat.",
+      "balancedTitle": "Kiegyensúlyozott alapértelmezett",
+      "broadDescription": "Használja körülbelül 50%-ban, ha több lehetséges egyezést szeretne elkapni, és kényelmesen áttekint több riasztást.",
+      "broadTitle": "Széleskörű felügyelet",
+      "strictDescription": "Használja 80%+-ban, ha a katalógusa stabil, és kevesebb manuális áttekintést szeretne.",
+      "strictTitle": "Szigorú egyeztetés"
+    },
+    "included": {
+      "description": "Az alkalmazás folyamatosan figyeli a katalógusát a Safety Gate riasztásokkal szemben, megőrzi a megfelelőségi bizonyítékokat, és figyelmezteti Önt, ha termékeket kell áttekinteni.",
+      "evidenceDescription": "A megoldott és elutasított döntések megőrzik a jegyzeteket, okokat, kockázati kontextust és időbélyegeket.",
+      "evidenceTitle": "Exportálható bizonyíték",
+      "eyebrow": "Folyamatos felügyelet",
+      "monitoringDescription": "Az új Safety Gate rekordokat összehasonlítják a felügyelt Shopify termékekkel manuális vizsgálat nélkül.",
+      "monitoringTitle": "Folyamatos EU felügyelet",
+      "teamDescription": "A prioritásos áttekintés, a beszállítói dokumentáció és a szűrők segítenek csapatának gyorsabban kezelni a valós döntéseket.",
+      "teamTitle": "Áttekintési munkafolyamat",
+      "title": "Amit az üzlete fedezve tart"
+    },
+    "matchingStrictness": "Egyezési szigorúság",
+    "mode": {
+      "balanced": "Kiegyensúlyozott",
+      "broad": "Több egyezés",
+      "strict": "Kevesebb egyezés"
+    },
+    "monitoringModeEyebrow": "Felügyeleti mód",
+    "notifications": {
+      "emailHelp": "Eredetileg a Shopify-tól származik. Használhat más címet is.",
+      "emailLabel": "Értesítési e-mail",
+      "enabledDescription": "Válassza ki, hogy sürgős megállapításokat, heti összefoglalót vagy mindkettőt szeretne-e kapni.",
+      "enabledTitle": "E-mail biztonsági riasztások",
+      "immediateDescription": "Küldjön e-mailt, amint egy terméket át kell tekinteni.",
+      "immediateTitle": "Új megállapítások",
+      "invalidEmail": "Érvényes e-mail címet adjon meg, mielőtt engedélyezi az e-mail értesítéseket.",
+      "languageLabel": "E-mail nyelve",
+      "noRecipientDescription": "Az e-mail értesítések engedélyezve vannak, de nincs megadva cím. Addig nem érkeznek üzenetek, amíg nem ad meg egy e-mail címet.",
+      "noRecipientHeading": "Nincs konfigurálva e-mail címzett",
+      "useShopifyEmail": "Használja az üzlet kapcsolattartási e-mail címét ({{email}})",
+      "weeklyDescription": "Hétfői felügyeleti összefoglaló: megerősíti, ha nem történt új megállapítás, vagy összefoglalja az áttekintésre szoruló nyitott ügyeket.",
+      "weeklyTitle": "Heti felügyeleti összefoglaló"
+    },
+    "onDemand": "Igény szerint",
+    "plans": {
+      "advancedDescription": "Adjon hozzá prioritásos áttekintést, beszállítói nyomon követést és EU nyelvi munkafolyamatokat.",
+      "advancedTitle": "Haladó: automatizálás és többnyelvű munkafolyamatok",
+      "description": "Az üzletfelügyeleti tervében szereplő funkciók és képességek.",
+      "eyebrow": "Előfizetési érték",
+      "manualDescription": "Futtasson ellenőrzéseket egyenként, és tekintse meg a legújabb termékállapotot.",
+      "manualTitle": "Ingyenes: manuális ellenőrzések",
+      "monitorDescription": "Figyelje az új Safety Gate riasztásokat a katalógussal szemben, exportáljon CSV auditjelentéseket, és tartson nyilván döntési nyomvonalat.",
+      "monitorTitle": "Fizetős: napi felügyelet és jelentések",
+      "title": "Terv képességei"
+    },
+    "recommendedSetup": "Ajánlott beállítás",
+    "saveAll": "Összes beállítás mentése",
+    "status": {
+      "auditTrail": "Auditálási nyomvonal",
+      "autoQuarantine": "Prioritásos áttekintés",
+      "dailySafetyGateUpdates": "Napi Safety Gate frissítések",
+      "emailDigest": "E-mail összefoglaló",
+      "off": "Ki",
+      "on": "Be",
+      "running": "Fut",
+      "shopifyProductUpdates": "Új/frissített Shopify termékek"
+    },
+    "storeSetting": "Üzlet beállítása",
+    "strictnessHint": "A 40-60% szélesebb körű szkennelést jelent. A 70-85% szigorúbb, és általában kevesebb téves pozitív eredményt produkál.",
+    "valueDescription": "A folyamatos felügyelet összehasonlítja a jogosult katalógustermékeket az újonnan közzétett Safety Gate rekordokkal.",
+    "valueEyebrow": "Katalógus felügyelet",
+    "valueItems": {
+      "auditDescription": "A megoldott és elutasított döntések megőrzik a jegyzeteket, okokat és áttekintési előzményeket az exportálható jelentésekhez.",
+      "auditTitle": "Ellenőrzésre kész bizonyítékok",
+      "dailyDescription": "Az új Safety Gate riasztásokat ellenőrzik a felügyelt termékekkel szemben anélkül, hogy a kereskedő manuális vizsgálatot indítana.",
+      "dailyTitle": "Napi katalógus felügyelet",
+      "workflowDescription": "A kereskedők csak azokat a termékeket tekintik át, amelyek döntést igényelnek, majd megoldják, elutasítják vagy felveszik a kapcsolatot a beszállítókkal.",
+      "workflowTitle": "Shopify-natív áttekintési munkafolyamat"
+    },
+    "valueTitle": "Mi marad fedezve",
+    "workspace": "Munkaterület"
+  },
+  "status": {
+    "actionRequired": "Művelet szükséges",
+    "allClear": "Minden rendben",
+    "archived": "Archivált",
+    "dismissed": "Elutasított",
+    "flagged": "megjelölve",
+    "monitored": "Felügyelt",
+    "needsReview": "Felülvizsgálatra szorul",
+    "notChecked": "Nincs ellenőrizve",
+    "protected": "Ellenőrizve",
+    "resolved": "Megoldva",
+    "runCheck": "Ellenőrzés futtatása",
+    "safe": "Nincs egyezés",
+    "scanning": "Szkennelés folyamatban",
+    "unprotected": "Nincs ellenőrizve",
+    "unsafe": "Felülvizsgálatra szorul",
+    "updated": "Frissítve"
+  },
+  "uxEnhancements": {
+    "activityTimeline": {
+      "actions": {
+        "dismiss": "Döntés rögzítve: elutasítva",
+        "check": "Termék ellenőrizve",
+        "quarantine": "Termék áttekintésre jelölve",
+        "resolve": "Döntés rögzítve: megoldva"
+      },
+      "description": "Rögzített biztonsági ellenőrzések, termékdöntések és bizonyítékok az auditjelentésekhez.",
+      "details": {
+        "autoDrafted": "Termék prioritásos áttekintésre jelölve.",
+        "bulkScanned": "Tömeges katalógus szkennelés befejeződött.",
+        "checkSafe": "Nem található egyezés ebben az ellenőrzésben.",
+        "checkUnsafe": "A termék áttekintésre szorul. Döntési rekord létrehozva.",
+        "noReason": "Nincs megadva ok.",
+        "reason": "Ok: {{reason}}"
+      },
+      "eyebrow": "Auditálási nyomvonal",
+      "noActivity": "Még nincsenek naplózási események. Futtassa a felügyeletet a bizonyítékok gyűjtésének megkezdéséhez.",
+      "title": "Döntési és bizonyítéktörténet",
+      "types": {
+        "automatic": "Rendszeresemény",
+        "bulk": "Tömeges esemény",
+        "manual": "Kereskedői esemény"
+      }
+    },
+    "alerts": {
+      "floating": {
+        "dismissSelected": "Kijelöltek elvetése",
+        "resolveSelected": "Kijelöltek feloldása",
+        "selectedCount": "{{count}} kiválasztott riasztás",
+        "selectedCount_few": "{{count}} kiválasztott riasztás",
+        "selectedCount_many": "{{count}} kiválasztott riasztás",
+        "selectedCount_one": "{{count}} kiválasztott riasztás",
+        "selectedCount_other": "{{count}} kiválasztott riasztás",
+        "selectedCount_plural": "{{count}} kiválasztott riasztás"
+      },
+      "quickFilters": {
+        "allAlerts": "Minden rekord",
+        "allAlertsDesc": "Az összes biztonsági figyelmeztetés megjelenítése a katalógusban.",
+        "highRisk": "Csak magas kockázat",
+        "highRiskDesc": "Súlyos kockázati szintek, amelyek intézkedést igényelnek.",
+        "needsReview": "Felülvizsgálatra szorul",
+        "needsReviewDesc": "Függőben lévő biztonsági riasztások.",
+        "resolved": "Feloldva/Elvetve",
+        "resolvedDesc": "Múltbeli riasztások, amelyek auditálásra megmaradtak.",
+        "title": "Gyorsszűrők"
+      }
+    },
+    "complianceRing": {
+      "scoreLabel": "Törlés",
+      "subtitle": "Az ellenőrzött termékek aránya nyitott felülvizsgálati tételek nélkül",
+      "title": "Felügyelt katalógus állapota"
+    }
+  },
+  "workspace": {
+    "all": "Összes",
+    "appLanguage": "Alkalmazás nyelve",
+    "apply": "Szűrők alkalmazása",
+    "applyFilters": "Szűrők alkalmazása",
+    "balancedHelp": "Az egyensúlyozott egyeztetés az ajánlott kiindulópont. Csak akkor módosítsa, ha több vagy kevesebb lehetséges egyezést szeretne áttekinteni.",
+    "broadHelp": "Több lehetséges egyezést tartalmaz, és több manuális felülvizsgálatot igényelhet.",
+    "cannotCompare": "Nem lehet összehasonlítani",
+    "catalogGlobalAction": "{{count}} termék ellenőrzése a katalógusban",
+    "catalogScopeHelp": "A lefedettség magában foglalja az összes Shopify katalógusterméket, beleértve az aktív, piszkozat és archivált elemeket. A szűrők csak ezt a listát módosítják, nem a lefedettséget vagy a felügyeleti hatókört.",
+    "clearFilters": "Szűrők törlése",
+    "compare": "Termékek összehasonlítása",
+    "compareProduct": "Termékek összehasonlítása: {{title}}",
+    "coverageFiltersHelp": "A lefedettség és a nyitott megállapítások különállóak: egy megváltozott terméknek is lehet felülvizsgálatra váró megállapítása.",
+    "coverageIncomplete": "{{count}} terméknek aktuális ellenőrzésre van szüksége",
+    "coverageScope": "{{visible}} termék megjelenítése a {{total}} katalógustermékből.",
+    "csv": {
+      "action": "Döntési művelet",
+      "actor": "Rögzítette",
+      "caseNumber": "Safety Gate ügy",
+      "decisionAt": "Döntés ideje",
+      "detectedAt": "Észlelés ideje",
+      "generatedAt": "Létrehozás ideje",
+      "guidance": "Felülvizsgálati útmutató",
+      "notes": "Felülvizsgálati megjegyzések",
+      "product": "Termék",
+      "productId": "Shopify termékazonosító",
+      "recordType": "Rekord típusa",
+      "resolution": "Felbontás",
+      "risk": "Kockázati szint",
+      "shop": "Üzlet",
+      "source": "Hivatalos forrás",
+      "sourceRisk": "Kockázat a hivatalos riasztásban",
+      "status": "Állapot"
+    },
+    "csvGuidance": "Lehetséges egyezés. Döntés előtt hasonlítsa össze a termékazonosítókat és a hivatalos rekordot.",
+    "currentFindingStatus": "Jelenlegi megállapítás állapota",
+    "dateFilterTimezone": "A dátumok a felügyeleti időzónát használják: {{timeZone}}. Alkalmazza a szűrőket az eredmények frissítéséhez és exportálásához.",
+    "decisionAt": "Döntés rögzítve",
+    "decisionExportHelp": "Ez a nézet és a CSV exportálása döntési dátumokat használ. Tartalmazza a régebbi megállapítások felülvizsgálati eseményeit, beleértve az újra megnyitott eseteket is. A terméknevek és a hivatalos forrás tényei megőrzik eredeti szövegüket.",
+    "decisionFrom": "Döntés dátuma ettől",
+    "decisionLegacy": "Korábbi eredmény: a termék biztonságosnak ellenőrizve",
+    "decisionTo": "Döntés dátuma eddig",
+    "detectedAt": "Megállapítás észlelve",
+    "differentIdentifiers": "Eltérő azonosítók: {{fields}}. Döntés előtt ellenőrizze őket.",
+    "documentedFindings": "Jelenleg feloldott vagy elvetett megállapítások",
+    "download": "CSV letöltése",
+    "emptyHelp": "Nincsenek nyitott megállapítások rögzítve. Ez nem tanúsítja, hogy termékei biztonságosak. Ellenőrizze a katalógus lefedettségét és a legutóbbi felügyeleti futtatást.",
+    "eventCount": "{{count}} döntési esemény",
+    "excluded": "{{count}} a {{total}} katalógustermékből megfelel ezeknek a szabályoknak a manuális ellenőrzésekhez. Az automatikus felügyelet nem használja ezeket a kizárásokat. A meglévő megállapítások továbbra is elérhetők.",
+    "excludeHelp": "Ezek a szabályok a manuális ellenőrzésekre vonatkoznak. Mentés előtt ellenőrizze az érintett termékeket.",
+    "exportHelp": "A CSV tartalmazza az összes megállapítást a kiválasztott időszakban és állapotban, beleértve a hivatalos hivatkozásokat, a felülvizsgálati megjegyzéseket és a rögzített döntési eseményeket. Ez az ellenőrzések nyilvántartása, nem biztonsági tanúsítvány.",
+    "exportReady": "CSV elkészült. Ha a letöltés nem indult el, használja ezt a linket:",
+    "findingCount": "Megállapítások ebben a hatókörben: {{count}}.",
+    "findingFrom": "Megállapítás észlelve ettől",
+    "findings": "Megállapítások és bizonyítékok",
+    "findingTo": "Megállapítás észlelve eddig",
+    "from": "Dátumtól",
+    "goReview": "Nyitott megállapítások áttekintése",
+    "groupAction": "Megtett intézkedés",
+    "groupDifferent": "Eltérő termék",
+    "groupInformation": "További információra van szükség",
+    "history": "Döntési előzmények",
+    "historyLimit": "Legfeljebb {{count}} legutóbbi megállapítás megjelenítése. Exportálja a teljes rekordot az összes megállapításhoz.",
+    "changed": "Megváltozott az utolsó ellenőrzés óta",
+    "chooseOutcomeHelp": "Válasszon egy eredményt a döntés rögzítésének engedélyezéséhez.",
+    "chooseOutcomeLink": "Eredmény kiválasztása",
+    "lastSuccess": "Utolsó sikeres felügyeleti futtatás",
+    "matchingIdentifiers": "Egyező azonosítók: {{fields}}.",
+    "matchNeedsVerification": "Lehetséges egyezés. Döntés előtt hasonlítsa össze a fényképeket és az azonosítókat a hivatalos rekorddal.",
+    "matchNotConfirmed": "Az egyezés nem erősítette meg a bizonyítékok áttekintése után",
+    "missingIdentifiers": "Néhány azonosító hiányzik. Hasonlítsa össze az elérhető fényképeket, és kérje el a beszállítójától a modellt, a vonalkódot és a tételt.",
+    "monitoring": {
+      "enabled": "Engedélyezve – napi ellenőrzések",
+      "failed": "Az utolsó automatikus ellenőrzés sikertelen volt",
+      "paused": "Szünetel – nincs aktuális felügyeleti terv",
+      "preview": "Fejlesztői előnézet – a számlázás ki van hagyva",
+      "processing": "Ellenőrzés sorban vagy folyamatban",
+      "unknown": "A felügyeleti tevékenység nincs megerősítve",
+      "unverified": "Szünetel – az előfizetés nem ellenőrizhető"
+    },
+    "monitoringLabel": "Automatikus felügyelet",
+    "monitoringUnknownHelp": "Nincs sikeres felügyeleti futtatás a legutóbbi tevékenység megerősítéséhez. Frissítse az ellenőrzéshez.",
+    "neverRun": "Nincs rögzített befejezett felügyeleti futtatás",
+    "noCurrentResult": "Aktuális eredményre van szükség",
+    "noDecisions": "Még nem rögzítettek döntéseket. Nyisson meg egy megállapítást, hasonlítsa össze a termékeket, és rögzítse, amit áttekintett.",
+    "noFilteredDecisions": "Egyetlen döntési esemény sem felel meg ezeknek a szűrőknek. Törölje a szűrőket a teljes előzmények megtekintéséhez.",
+    "noFilteredFindings": "Egyetlen megállapítás sem felel meg ezeknek a szűrőknek. Törölje a szűrőket a teljes lista megtekintéséhez.",
+    "noMatch": "Nincs egyezés",
+    "noMatchAtCheck": "Nem található egyezés ebben az ellenőrzésben.",
+    "notes": "Felülvizsgálati megjegyzések",
+    "notificationLanguage": "E-mail nyelve",
+    "notRecorded": "Nincs aktuális felülvizsgálati eredmény",
+    "oldest": "Nyitva {{count}} napja",
+    "onboarding": "Katalógus importálása → Safety Gate rekordok ellenőrzése → eredmények áttekintése",
+    "outcome": "Eredmény",
+    "outcomeHelp": {
+      "contacted_supplier": "A megállapítás nyitva marad, amíg vár a beszállítójára.",
+      "false_positive": "Akkor használja, ha a bizonyítékok azt mutatják, hogy a riasztás nem alkalmazható. A megállapítás elutasításra kerül.",
+      "match_not_confirmed": "Akkor használja, ha az áttekintett bizonyítékok nem erősítik meg az egyezést. A megállapítás feloldásra kerül.",
+      "modified_product": "Először frissítse a terméket a Shopify-ban. Ennek az eredménynek a rögzítése nem változtatja meg a terméket; a megállapítás feloldásra kerül.",
+      "not_my_product": "Akkor használja, ha a riasztás egy másik termékre vonatkozik. A megállapítás elutasításra kerül.",
+      "other": "Írja le az eredményt a kötelező megjegyzésben. A megállapítás feloldásra kerül.",
+      "removed_from_sale": "Először távolítsa el a terméket az értékesítésből a Shopify-ban. Ennek az eredménynek a rögzítése nem változtatja meg a terméket; a megállapítás feloldásra kerül.",
+      "verified_safe": "Ez egy korábbi eredmény."
+    },
+    "outcomeLabels": {
+      "contactedSupplier": "Várakozás a beszállítóra",
+      "falsePositive": "Téves riasztás",
+      "modifiedProduct": "Módosított termék",
+      "notMyProduct": "Nem az én termékem",
+      "other": "Egyéb",
+      "removedFromSale": "Eladásból kivonva",
+      "verifiedSafe": "Korábbi: biztonságosnak ellenőrizve"
+    },
+    "possibleMatch": "Lehetséges egyezés",
+    "possibleMatchAtCheck": "Ez az ellenőrzés lehetséges Safety Gate egyezést talált.",
+    "print": "Nyomtatás / PDF mentése",
+    "priority": "Felülvizsgálati prioritás",
+    "priorityHelp": "Először a döntések, majd a hivatalos riasztás súlyossága és a legrégebbi megállapítások. Ezután a beszállítókra váró tételek következnek.",
+    "productStatus": "Shopify állapot",
+    "productStatusActive": "Aktív",
+    "productStatusAll": "Összes Shopify állapot",
+    "productStatusArchived": "Archivált",
+    "productStatusDraft": "Piszkozat",
+    "productStatusUnknown": "Ismeretlen",
+    "recommended": "Ajánlott beállítás",
+    "referenceMissing": "Hivatalos ügyszám nem elérhető",
+    "remaining": "Ellenőrizetlen vagy megváltozott",
+    "reopened": "Újra megnyitva felülvizsgálatra",
+    "reportEmpty": "Nincs megállapítás, amely megfelelne ezeknek a szűrőknek.",
+    "reportTitle": "Ellenőrzések és döntések jelentése",
+    "resultHelp": "Az eredmény rögzítése dokumentálja az áttekintést az auditnaplóban, és nem módosítja a Shopify terméket.",
+    "reviewNext": "Következő egyezés áttekintése: {{title}}",
+    "reviewPrompt": "Hasonlítsa össze a bizonyítékokat, válassza ki az eredményt, és rögzítse a jegyzeteit.",
+    "riskLabels": {
+      "electric": "Áramütés",
+      "fire": "Tűz",
+      "health": "Egészségügyi kockázat",
+      "high": "Magas kockázat",
+      "chemical": "Vegyi anyag",
+      "choking": "Fulladás",
+      "injuries": "Sérülések",
+      "low": "Alacsony kockázat",
+      "medium": "Közepes kockázat",
+      "serious": "Súlyos kockázat",
+      "unknown": "Kockázat a Safety Gate riasztásban"
+    },
+    "runScope": "Termékellenőrzések: {{products}} · Figyelembe vett Safety Gate rekordok: {{records}} · Új megállapítások: {{findings}}",
+    "saved": "Beállítások mentve.",
+    "saveChanges": "Változtatások mentése",
+    "scope": "Megállapítások ettől: {{from}} eddig: {{to}}",
+    "scoreDetails": "Hasonlósági részletek",
+    "scoreHelp": "Ezek hasonlósági pontszámok, amelyeket a felülvizsgálat prioritásának meghatározására használnak, nem pedig annak valószínűsége, hogy a terméke veszélyes.",
+    "settingsAdvanced": "Speciális egyezés és kizárások",
+    "shop": "Üzlet",
+    "showMore": "További termékek megjelenítése",
+    "scheduleHelp": "Az új Safety Gate riasztások ellenőrzése a felügyeleti terv aktív állapotában történik. A következő befejezett ellenőrzés ideje a sorban állástól függ.",
+    "sourceMissing": "Hivatalos rekord link nem elérhető ehhez a mentett megállapításhoz.",
+    "sourceRisk": "Kockázat a hivatalos riasztásban (eredeti EU rekord)",
+    "status": "Megállapítás állapota",
+    "strictHelp": "Kevesebb lehetséges egyezést mutat, és kihagyhatja a kevésbé nyilvánvaló hasonlóságokat.",
+    "to": "Dátumig",
+    "unconfirmedIdentifiers": "Az elérhető katalógusazonosítók nem erősítik meg ezt az egyezést. Hasonlítsa össze a csomagolást, és kérje beszállítójától a hiányzó modellt, vonalkódot és tételt.",
+    "unchecked": "Még nem ellenőrizve",
+    "unsaved": "Nem mentett változtatásai vannak.",
+    "verifyScope": "A katalógus eredményei az ellenőrzött termékverzióra vonatkoznak. A megváltozott termékek új ellenőrzést igényelnek.",
+    "viewRemainingProducts": "{{count}} ellenőrzésre szoruló termék megtekintése",
+    "viewShopify": "Shopify termék megnyitása",
+    "waiting": "Várakozás a beszállítóra",
+    "when": "Rögzítve ekkor",
+    "who": "Rögzítette",
+    "whyMatch": "Miért egyezhet ez"
+  }
+}

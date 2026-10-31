@@ -17,7 +17,11 @@ import {
   reviewRecords,
   reviewFilters,
 } from "../services/review-records.server";
-import { decisionKey, isWaitingForSupplier } from "../services/review-evidence";
+import {
+  decisionKey,
+  formatActorId,
+  isWaitingForSupplier,
+} from "../services/review-evidence";
 import { localizeRisk } from "../components/AlertBadge";
 
 export const headers = (headersArgs: any) => {
@@ -26,7 +30,7 @@ export const headers = (headersArgs: any) => {
 
 export const loader = async ({ request, url }: LoaderFunctionArgs) => {
   const { session } = await authenticate.admin(request);
-  return json(await reviewRecords(session.shop, reviewFilters(url), 100));
+  return json(await reviewRecords(session.shop, { ...reviewFilters(url), dateBasis: "findings" }, 100));
 };
 
 export default function AuditReportPage() {
@@ -45,7 +49,7 @@ export default function AuditReportPage() {
   );
   const { active, documented } = summary;
   const filterQuery = new URLSearchParams(
-    Object.entries(filters).filter(([, value]) => value),
+    Object.entries({ ...filters, lang: i18n.resolvedLanguage || i18n.language }).filter(([, value]) => typeof value === "string" && value).map(([key, value]) => [key, String(value)]),
   ).toString();
 
   async function downloadReport() {
@@ -141,11 +145,11 @@ export default function AuditReportPage() {
           )}
           <Form method="get" className="report-filters">
             <label>
-              {t("workspace.from")}
+              {t("workspace.findingFrom")}
               <input type="date" name="from" defaultValue={filters.from} />
             </label>
             <label>
-              {t("workspace.to")}
+              {t("workspace.findingTo")}
               <input type="date" name="to" defaultValue={filters.to} />
             </label>
             <label>
@@ -263,11 +267,13 @@ export default function AuditReportPage() {
                         {record.sourceRisk && <p><strong>{t("workspace.sourceRisk")}: </strong>{record.sourceRisk}</p>}
                       </s-table-cell>
                       <s-table-cell>
-                        <p>{t(decisionKey(record.resolutionType))}</p>
+                        <p>{t(!record.resolutionType && record.decisions.length ? "workspace.reopened" : decisionKey(record.resolutionType))}</p>
                         {record.notes && <p>{record.notes}</p>}
                         {record.resolutionType && record.decisions[0] && (
                           <p>
-                            {t("workspace.who")}: {record.decisions[0].actorId}
+                            {t("workspace.who")}:{" "}
+                            {formatActorId(record.decisions[0].actorId) ||
+                              t("common.unknown")}
                           </p>
                         )}
                       </s-table-cell>

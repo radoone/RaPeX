@@ -270,7 +270,11 @@
       "reportDownload": "Stáhnout všechny nálezy (CSV)",
       "reportBody": "Obsahuje všechny produkty s možnými shodami. Jde o jednorázovou kontrolu. Soukromý odkaz platí 30 dní.",
       "reportLoading": "Připravujeme úplný report…",
-      "reportError": "Report není dostupný nebo odkaz vypršel. Zkus to znovu nebo napiš na info@zerorecall.online."
+      "reportError": "Report není dostupný nebo odkaz vypršel. Zkus to znovu nebo napiš na info@zerorecall.online.",
+      "detailsSummary": "Co přesně kontrolujeme při bezplatném skenu?",
+      "detailsStep1": "<strong>1. Veřejný katalog Shopify:</strong> Načteme veřejně dostupné názvy, popisy, značky, kategorie a fotografie produktů z veřejného výstupu vašeho obchodu (bez přístupu do administrace).",
+      "detailsStep2": "<strong>2. Porovnání textů a fotografií se Safety Gate:</strong> Texty i obrázky převedeme na vyhledávací vektory a porovnáme je s celou databází upozornění EU Safety Gate (dříve RAPEX) včetně produktů s jiným obchodním názvem.",
+      "detailsStep3": "<strong>3. E-mailový přehled a CSV export:</strong> Po dokončení obdržíte e-mailem souhrn možných shod s čísly případů, odkazy na oficiální záznamy EU a možností stáhnout CSV pro vlastní kontrolu."
     },
     "quiet": {
       "eyebrow": "VÍCE KLIDU",

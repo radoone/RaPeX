@@ -1,0 +1,240 @@
+{
+  "createdOn": "2026-10-31T18:00:49.543Z",
+  "model": "gemini-2.5-flash",
+  "sourceSha256": "5fa0ca1eb2c2c69a25933c479f407326ca4aa0d0dea5d1b8e29d314562a8014c",
+  "sourceKeys": 1118,
+  "scope": "Complete Shopify merchant UI, excluding stored product facts, identifiers and original Safety Gate records",
+  "nativeSpeakerReview": "Not performed for every language",
+  "locales": {
+    "bg": {
+      "keys": 1118,
+      "promptTokens": 27540,
+      "outputTokens": 22412,
+      "batches": 12,
+      "extraPluralKeys": []
+    },
+    "cs": {
+      "keys": 1118,
+      "promptTokens": 29924,
+      "outputTokens": 21809,
+      "batches": 12,
+      "extraPluralKeys": []
+    },
+    "da": {
+      "keys": 1118,
+      "promptTokens": 29518,
+      "outputTokens": 20548,
+      "batches": 12,
+      "extraPluralKeys": []
+    },
+    "de": {
+      "keys": 1118,
+      "promptTokens": 31682,
+      "outputTokens": 19934,
+      "batches": 12,
+      "extraPluralKeys": []
+    },
+    "el": {
+      "keys": 1118,
+      "promptTokens": 30084,
+      "outputTokens": 27104,
+      "batches": 12,
+      "extraPluralKeys": []
+    },
+    "es": {
+      "keys": 1118,
+      "promptTokens": 29924,
+      "outputTokens": 18591,
+      "batches": 12,
+      "extraPluralKeys": []
+    },
+    "fi": {
+      "keys": 1118,
+      "promptTokens": 29298,
+      "outputTokens": 23038,
+      "batches": 12,
+      "extraPluralKeys": []
+    },
+    "fr": {
+      "keys": 1118,
+      "promptTokens": 31872,
+      "outputTokens": 19556,
+      "batches": 12,
+      "extraPluralKeys": []
+    },
+    "ga": {
+      "keys": 1134,
+      "promptTokens": 30684,
+      "outputTokens": 26776,
+      "batches": 13,
+      "extraPluralKeys": [
+        "actions.reviewProductsNeedingAction_two",
+        "alerts.admin.actionNeededTitle_two",
+        "alerts.admin.criticalBannerDescription_two",
+        "alerts.admin.criticalBannerTitle_two",
+        "alerts.admin.warningBannerTitle_two",
+        "dashboard.activeAlertsBanner.content_two",
+        "dashboard.admin.actionNeededTitle_two",
+        "dashboard.admin.criticalBannerDescription_two",
+        "dashboard.admin.criticalBannerTitle_two",
+        "dashboard.admin.monitoringStatusNeedsReview_two",
+        "dashboard.admin.status.coverageIncomplete.title_two",
+        "dashboard.admin.status.reviewNeeded.criticalTitle_two",
+        "dashboard.admin.status.reviewNeeded.title_two",
+        "dashboard.admin.warningBannerTitle_two",
+        "dashboard.recentAlerts.matchCount_two",
+        "uxEnhancements.alerts.floating.selectedCount_two"
+      ]
+    },
+    "hr": {
+      "keys": 1118,
+      "promptTokens": 29477,
+      "outputTokens": 21729,
+      "batches": 12,
+      "extraPluralKeys": []
+    },
+    "hu": {
+      "keys": 1118,
+      "promptTokens": 31075,
+      "outputTokens": 23680,
+      "batches": 12,
+      "extraPluralKeys": []
+    },
+    "it": {
+      "keys": 1118,
+      "promptTokens": 34025,
+      "outputTokens": 19937,
+      "batches": 12,
+      "extraPluralKeys": []
+    },
+    "lt": {
+      "keys": 1118,
+      "promptTokens": 34025,
+      "outputTokens": 24512,
+      "batches": 12,
+      "extraPluralKeys": []
+    },
+    "lv": {
+      "keys": 1134,
+      "promptTokens": 34866,
+      "outputTokens": 25846,
+      "batches": 13,
+      "extraPluralKeys": [
+        "actions.reviewProductsNeedingAction_zero",
+        "alerts.admin.actionNeededTitle_zero",
+        "alerts.admin.criticalBannerDescription_zero",
+        "alerts.admin.criticalBannerTitle_zero",
+        "alerts.admin.warningBannerTitle_zero",
+        "dashboard.activeAlertsBanner.content_zero",
+        "dashboard.admin.actionNeededTitle_zero",
+        "dashboard.admin.criticalBannerDescription_zero",
+        "dashboard.admin.criticalBannerTitle_zero",
+        "dashboard.admin.monitoringStatusNeedsReview_zero",
+        "dashboard.admin.status.coverageIncomplete.title_zero",
+        "dashboard.admin.status.reviewNeeded.criticalTitle_zero",
+        "dashboard.admin.status.reviewNeeded.title_zero",
+        "dashboard.admin.warningBannerTitle_zero",
+        "dashboard.recentAlerts.matchCount_zero",
+        "uxEnhancements.alerts.floating.selectedCount_zero"
+      ]
+    },
+    "mt": {
+      "keys": 1134,
+      "promptTokens": 34866,
+      "outputTokens": 26961,
+      "batches": 13,
+      "extraPluralKeys": [
+        "actions.reviewProductsNeedingAction_two",
+        "alerts.admin.actionNeededTitle_two",
+        "alerts.admin.criticalBannerDescription_two",
+        "alerts.admin.criticalBannerTitle_two",
+        "alerts.admin.warningBannerTitle_two",
+        "dashboard.activeAlertsBanner.content_two",
+        "dashboard.admin.actionNeededTitle_two",
+        "dashboard.admin.criticalBannerDescription_two",
+        "dashboard.admin.criticalBannerTitle_two",
+        "dashboard.admin.monitoringStatusNeedsReview_two",
+        "dashboard.admin.status.coverageIncomplete.title_two",
+        "dashboard.admin.status.reviewNeeded.criticalTitle_two",
+        "dashboard.admin.status.reviewNeeded.title_two",
+        "dashboard.admin.warningBannerTitle_two",
+        "dashboard.recentAlerts.matchCount_two",
+        "uxEnhancements.alerts.floating.selectedCount_two"
+      ]
+    },
+    "nl": {
+      "keys": 1118,
+      "promptTokens": 34025,
+      "outputTokens": 20668,
+      "batches": 12,
+      "extraPluralKeys": []
+    },
+    "pl": {
+      "keys": 1118,
+      "promptTokens": 34025,
+      "outputTokens": 20298,
+      "batches": 12,
+      "extraPluralKeys": []
+    },
+    "pt": {
+      "keys": 1118,
+      "promptTokens": 34049,
+      "outputTokens": 17963,
+      "batches": 12,
+      "extraPluralKeys": []
+    },
+    "sk": {
+      "keys": 14,
+      "promptTokens": 503,
+      "outputTokens": 230,
+      "batches": 1,
+      "extraPluralKeys": []
+    },
+    "ro": {
+      "keys": 1118,
+      "promptTokens": 34025,
+      "outputTokens": 20552,
+      "batches": 12,
+      "extraPluralKeys": []
+    },
+    "sl": {
+      "keys": 1134,
+      "promptTokens": 34866,
+      "outputTokens": 22841,
+      "batches": 13,
+      "extraPluralKeys": [
+        "actions.reviewProductsNeedingAction_two",
+        "alerts.admin.actionNeededTitle_two",
+        "alerts.admin.criticalBannerDescription_two",
+        "alerts.admin.criticalBannerTitle_two",
+        "alerts.admin.warningBannerTitle_two",
+        "dashboard.activeAlertsBanner.content_two",
+        "dashboard.admin.actionNeededTitle_two",
+        "dashboard.admin.criticalBannerDescription_two",
+        "dashboard.admin.criticalBannerTitle_two",
+        "dashboard.admin.monitoringStatusNeedsReview_two",
+        "dashboard.admin.status.coverageIncomplete.title_two",
+        "dashboard.admin.status.reviewNeeded.criticalTitle_two",
+        "dashboard.admin.status.reviewNeeded.title_two",
+        "dashboard.admin.warningBannerTitle_two",
+        "dashboard.recentAlerts.matchCount_two",
+        "uxEnhancements.alerts.floating.selectedCount_two"
+      ]
+    },
+    "sv": {
+      "keys": 1118,
+      "promptTokens": 34025,
+      "outputTokens": 20173,
+      "batches": 12,
+      "extraPluralKeys": []
+    },
+    "et": {
+      "keys": 1118,
+      "promptTokens": 30680,
+      "outputTokens": 22170,
+      "batches": 12,
+      "extraPluralKeys": []
+    }
+  },
+  "sourceOrdering": "Unicode code point"
+}

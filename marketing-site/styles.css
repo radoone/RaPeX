@@ -1207,7 +1207,7 @@ a {
 
 /* Long translated words must not force grid tracks beyond the viewport. */
 .hero-copy, .hero-visual, .about-story > *, .principle-card { min-width: 0; }
-.hero-title, .about-title, .section-title, .privacy-page h1 { overflow-wrap: anywhere; hyphens: auto; }
+.hero-title, .about-title, .section-title, .privacy-page h1 { overflow-wrap: anywhere; hyphens: none; }
 .btn { max-width: 100%; white-space: normal; text-align: center; }
 
 /* Two clear entry points: a one-off check and the installed Shopify app. */
@@ -1258,11 +1258,11 @@ a {
   .nav-brand { grid-column: 1; grid-row: 1; }
   .nav-actions { display: contents; }
   .nav-actions .lang-switch { grid-column: 2; grid-row: 1; justify-self: end; }
-  .nav-actions > .btn { display: inline-flex; grid-column: 1; grid-row: 2; justify-self: start; max-width: 100%; line-height: 1.3; }
+  .nav-actions > .btn { display: inline-flex; grid-column: 1; grid-row: 2; justify-self: start; max-width: 100%; line-height: 1.3; background: transparent; color: var(--primary); border: 1px solid var(--primary); padding: 7px 12px; font-size: 13px; box-shadow: none; }
   .menu-toggle { grid-column: 2; grid-row: 2; justify-self: end; align-items: center; }
   .nav-links { grid-column: 1 / -1; grid-row: 3; }
   .hero-actions { grid-template-columns: 1fr; gap: 12px; }
-  .hero-title { font-size: clamp(32px, 8vw, 44px); overflow-wrap: anywhere; }
+  .hero-title { font-size: clamp(32px, 8vw, 44px); overflow-wrap: normal; }
   .hero-visual { margin-top: 8px; }
   .cta-action { flex-direction: column; }
   .cta-action .btn { width: 100%; }
@@ -1272,11 +1272,23 @@ a {
 .scan-form { min-width: 0; grid-template-columns: minmax(0, 1fr); }
 .scan-form > * { min-width: 0; }
 .scan-form .text-link { overflow-wrap: anywhere; }
-.scan-turnstile { justify-self: start; min-height: 140px; }
+.scan-turnstile { justify-self: stretch; min-height: 68px; width: 100%; }
+.scan-details { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border); max-width: 520px; }
+.scan-details__steps { margin: 8px 0 0; padding-left: 20px; color: var(--text-muted); font-size: 14px; line-height: 1.65; display: grid; gap: 8px; }
 .footer-right { flex-wrap: wrap; }
-.hero-summary li { overflow-wrap: anywhere; hyphens: auto; }
+.hero-summary li { overflow-wrap: normal; hyphens: none; }
 @media (max-width: 600px) {
-  .hero-title:lang(de), .hero-title:lang(nl), .hero-title:lang(fi), .hero-title:lang(hu) { hyphens: auto; }
+  .hero-title:lang(de), .hero-title:lang(nl), .hero-title:lang(fi), .hero-title:lang(hu),
+  .about-title:lang(de), .about-title:lang(nl), .about-title:lang(fi), .about-title:lang(hu),
+  .section-title:lang(de), .section-title:lang(nl), .section-title:lang(fi), .section-title:lang(hu) { hyphens: auto; overflow-wrap: anywhere; }
 }
 .scan-feedback { scroll-margin-top: 20px; }
 .compliance-content > .section-title { margin-bottom: 20px; }
+
+.scan-description-mobile { display: none; }
+@media (max-width: 640px) {
+  .scan-description-desktop { display: none; }
+  .scan-description-mobile { display: block; }
+  .scan-section { gap: 20px; }
+  .scan-section__copy .section-title { font-size: 28px; }
+}

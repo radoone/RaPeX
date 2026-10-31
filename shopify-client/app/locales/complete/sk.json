@@ -1,0 +1,52 @@
+{
+  "actions": {
+    "auditReport": "Správa auditu"
+  },
+  "analysis": {
+    "alertNumber": "Upozornenie {{number}}",
+    "fields": {
+      "model": "Model"
+    },
+    "merchantRecommendation": {
+      "active": "Porovnajte produkt a obrázky Safety Gate, potvrďte značku alebo model a potom zaznamenajte akciu, ktorú váš obchod vykoná.",
+      "reviewed": "Toto zistenie je uzavreté. Pred opätovnou aktiváciou overte zaznamenaný výsledok a dôkazy.",
+      "safe": "Momentálne nie je potrebná žiadna akcia obchodu. Znova skontrolujte, ak sa zmení produkt, balenie, obrázky alebo dodávateľ."
+    },
+    "reviewLayout": {
+      "identifiers": {
+        "model": "Model"
+      }
+    }
+  },
+  "dashboard": {
+    "admin": {
+      "auditReport": "Správa auditu"
+    },
+    "howItWorks": {
+      "autoMonitoring": {
+        "title": "Automatické monitorovanie"
+      }
+    },
+    "stats": {
+      "autoMonitoring": "Automatické monitorovanie"
+    }
+  },
+  "evidence": {
+    "alertNumber": "Upozornenie Safety Gate {{number}}"
+  },
+  "news": {
+    "items": {
+      "databaseUpdate": {
+        "date": "Dec 2025"
+      },
+      "gpsr": {
+        "date": "GPSR 2024"
+      }
+    }
+  },
+  "settingsAdmin": {
+    "included": {
+      "teamTitle": "Tok práce kontroly"
+    }
+  }
+}

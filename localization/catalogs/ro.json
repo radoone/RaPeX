@@ -270,7 +270,11 @@
       "reportDownload": "Descarcă toate rezultatele (CSV)",
       "reportBody": "Include toate produsele cu posibile potriviri. Verificare unică. Linkul privat expiră după 30 de zile.",
       "reportLoading": "Se pregătește raportul complet…",
-      "reportError": "Raport indisponibil sau link expirat. Încearcă din nou sau scrie la info@zerorecall.online."
+      "reportError": "Raport indisponibil sau link expirat. Încearcă din nou sau scrie la info@zerorecall.online.",
+      "detailsSummary": "Ce verificăm exact în timpul scanării gratuite?",
+      "detailsStep1": "<strong>1. Catalogul public Shopify:</strong> Citim titlurile, descrierile, mărcile, categoriile și fotografiile produselor disponibile public în magazin (fără acces la administrare).",
+      "detailsStep2": "<strong>2. Comparare text și imagine cu Safety Gate:</strong> Transformăm textele și imaginile în vectori de căutare și le comparăm cu întreaga bază de date UE Safety Gate (fostul RAPEX).",
+      "detailsStep3": "<strong>3. Rezumat prin e-mail și export CSV:</strong> La final primiți pe e-mail posibilele potriviri cu numere de caz, linkuri oficiale UE și opțiune de descărcare CSV."
     },
     "quiet": {
       "eyebrow": "MAI MULTĂ LINIȘTE SUFLETEASCĂ",

@@ -12,11 +12,13 @@ export function useHydrated() {
 export function LocalDateTime({
   value,
   locale,
+  timeZone,
   format,
   render,
 }: {
   value: Date | string | number;
   locale?: string;
+  timeZone?: string;
   format?: (date: Date) => string;
   render?: (formatted: string) => ReactNode;
 }) {
@@ -27,7 +29,7 @@ export function LocalDateTime({
   const text = hydrated
     ? format
       ? format(date)
-      : date.toLocaleString(locale?.split(/[-_]/)[0] === "en" ? "en-GB" : locale)
+      : date.toLocaleString(locale?.split(/[-_]/)[0] === "en" ? "en-GB" : locale, { timeZone })
     : iso.replace("T", " ").replace(/\.\d{3}Z$/, " UTC");
-  return <time dateTime={iso} title={hydrated ? date.toLocaleString(locale) : iso}>{render ? render(text) : text}</time>;
+  return <time dateTime={iso} title={hydrated ? date.toLocaleString(locale, { timeZone }) : iso}>{render ? render(text) : text}</time>;
 }

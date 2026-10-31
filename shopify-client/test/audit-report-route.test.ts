@@ -1,9 +1,10 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { loader } from "../app/routes/app.audit-report[.]csv";
 
-const { findMany, authenticateAdmin } = vi.hoisted(() => ({
+const { findMany, authenticateAdmin, decisionEvents } = vi.hoisted(() => ({
   findMany: vi.fn(),
   authenticateAdmin: vi.fn(),
+  decisionEvents: [] as any[],
 }));
 vi.mock("../app/merchant-db.server", () => ({ default: { safetyAlert: { findMany } } }));
 vi.mock("../app/firestore.server", () => {
@@ -11,12 +12,30 @@ vi.mock("../app/firestore.server", () => {
   ref.collection = vi.fn(() => ref);
   ref.doc = vi.fn(() => ref);
   ref.orderBy = vi.fn(() => ref);
-  ref.get = vi.fn(async () => ({ docs: [] }));
+  ref.get = vi.fn(async () => ({ docs: decisionEvents.map((event, id) => ({ id: String(id), data: () => event })) }));
   return { firestore: ref };
 });
 vi.mock("../app/shopify.server", () => ({ authenticate: { admin: authenticateAdmin } }));
 
 describe("authenticated audit export", () => {
+  beforeEach(() => { decisionEvents.length = 0; });
+  it("exports only selected immutable decisions on an older reopened finding", async () => {
+    authenticateAdmin.mockResolvedValue({ session: { shop: "example.myshopify.com" } });
+    findMany.mockResolvedValue([{ id: "old", productTitle: "Older toy", productId: "1", status: "active", createdAt: "2026-10-20T08:00:00Z", checkResult: "{}" }]);
+    decisionEvents.push(
+      { action: "reactivate", reviewState: "needs_review", createdAt: "2026-10-31T10:00:00Z", notes: "Selected note" },
+      { action: "resolve", reviewState: "resolved", createdAt: "2026-10-30T10:00:00Z", notes: "Outside date range" },
+    );
+    const url = new URL("https://example.com/app/audit-report.csv?dateBasis=decisions&from=2026-10-31&to=2026-10-31");
+    const response = await loader({ request: new Request(url), url } as never);
+    const csv = await response.text();
+    expect(csv.split("\r\n")).toHaveLength(2);
+    expect(csv).toContain('"decision","reactivate"');
+    expect(csv).toContain("Selected note");
+    expect(csv).toContain("2026-10-20");
+    expect(csv).not.toContain("Outside date range");
+    expect(csv).not.toContain('"finding"');
+  });
   it("returns a complete CSV scoped to the authenticated shop with inert product text", async () => {
     authenticateAdmin.mockResolvedValue({ session: { shop: "example.myshopify.com" } });
     findMany.mockResolvedValue([{

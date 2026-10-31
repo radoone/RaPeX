@@ -1,0 +1,1406 @@
+{
+  "actions": {
+    "auditReport": "Izvješće o reviziji",
+    "clear": "Očisti",
+    "dashboard": "Nadzorna ploča",
+    "downloadAuditReport": "Preuzmi izvješće o reviziji",
+    "checkAll": "Provjeri sve proizvode",
+    "checkAllProducts": "Provjeri svih {{count}} proizvoda",
+    "checking": "Provjeravam...",
+    "checkNewSafetyGateAlerts": "Provjeri nova upozorenja Safety Gate",
+    "checkOneProduct": "Provjeri jedan proizvod",
+    "checkSelectedProduct": "Provjeri odabrani proizvod",
+    "checkUnchecked": "Provjeri {{count}} neprovjerenih proizvoda",
+    "manualCheck": "Provjeri proizvod",
+    "next": "Dalje",
+    "openFirstMatch": "Otvori prvo podudaranje",
+    "previous": "Prethodno",
+    "protectRemainingProducts": "Provjeri preostalih {{count}} proizvoda",
+    "reactivate": "Ponovno aktiviraj",
+    "recordDecision": "Zabilježi odluku",
+    "refreshCoverage": "Osvježi pokrivenost kataloga",
+    "resolve": "Riješi",
+    "retry": "Pokušaj ponovno",
+    "reviewActiveProducts": "Pregledaj aktivne proizvode",
+    "reviewAlerts": "Pregledaj upozorenja",
+    "reviewDecision": "Usporedi proizvode",
+    "reviewMultipleMatches": "Pregledaj {{count}} podudaranja",
+    "reviewOneMatch": "Pregledaj 1 podudaranje",
+    "reviewProductsNeedingAction": "Pregledaj {{count}} proizvod koji zahtijeva radnju",
+    "reviewProductsNeedingAction_few": "Pregledaj {{count}} proizvoda koji zahtijevaju radnju",
+    "reviewProductsNeedingAction_many": "Pregledaj {{count}} proizvoda koji zahtijevaju radnju",
+    "reviewProductsNeedingAction_one": "Pregledaj {{count}} proizvod koji zahtijeva radnju",
+    "reviewProductsNeedingAction_other": "Pregledaj {{count}} proizvoda koji zahtijevaju radnju",
+    "reviewProductsNeedingAction_plural": "Pregledaj {{count}} proizvoda koji zahtijevaju radnju",
+    "search": "Pretraži",
+    "settings": "Postavke",
+    "tryAgain": "Pokušaj ponovno",
+    "view": "Prikaži",
+    "viewAlerts": "Prikaži upozorenja",
+    "viewDetails": "Prikaži detalje",
+    "viewEvidence": "Prikaži povijest odluka"
+  },
+  "alerts": {
+    "admin": {
+      "actionNeeded": "Potrebna radnja",
+      "actionNeededDescription": "Pregledajte podudaranja, odbacite lažne pozitivne rezultate ili riješite potvrđene rizike kako bi red čekanja upozorenja ostao aktivan.",
+      "actionNeededTitle": "{{count}} aktivno upozorenje još uvijek čeka odluku",
+      "actionNeededTitle_few": "{{count}} aktivna upozorenja još uvijek čekaju odluku",
+      "actionNeededTitle_many": "{{count}} aktivnih upozorenja još uvijek čeka odluku",
+      "actionNeededTitle_one": "{{count}} aktivno upozorenje još uvijek čeka odluku",
+      "actionNeededTitle_other": "{{count}} aktivnih upozorenja još uvijek čeka odluku",
+      "actionNeededTitle_plural": "{{count}} aktivnih upozorenja još uvijek čeka odluku",
+      "criticalBannerDescription": "{{count}} aktivno podudaranje označeno je kao visok ili ozbiljan rizik u Safety Gateu. Prvo riješite ta podudaranja.",
+      "criticalBannerDescription_few": "{{count}} aktivna podudaranja označena su kao visok ili ozbiljan rizik u Safety Gateu. Prvo riješite ta podudaranja.",
+      "criticalBannerDescription_many": "{{count}} aktivnih podudaranja označeno je kao visok ili ozbiljan rizik u Safety Gateu. Prvo riješite ta podudaranja.",
+      "criticalBannerDescription_one": "{{count}} aktivno podudaranje označeno je kao visok ili ozbiljan rizik u Safety Gateu. Prvo riješite ta podudaranja.",
+      "criticalBannerDescription_other": "{{count}} aktivnih podudaranja označeno je kao visok ili ozbiljan rizik u Safety Gateu. Prvo riješite ta podudaranja.",
+      "criticalBannerDescription_plural": "{{count}} aktivnih podudaranja označeno je kao visok ili ozbiljan rizik u Safety Gateu. Prvo riješite ta podudaranja.",
+      "criticalBannerTitle": "{{count}} podudaranje visokog rizika treba pregledati",
+      "criticalBannerTitle_few": "{{count}} podudaranja visokog rizika treba pregledati",
+      "criticalBannerTitle_many": "{{count}} podudaranja visokog rizika treba pregledati",
+      "criticalBannerTitle_one": "{{count}} podudaranje visokog rizika treba pregledati",
+      "criticalBannerTitle_other": "{{count}} podudaranja visokog rizika treba pregledati",
+      "criticalBannerTitle_plural": "{{count}} podudaranja visokog rizika treba pregledati",
+      "queue": "Red čekanja za odluke o proizvodu",
+      "queueDescription": "Potvrdite vjerojatna podudaranja, odbacite lažne pozitivne rezultate ili zabilježite poduzetu radnju.",
+      "warningBannerDescription": "Koristite ovaj red čekanja samo za stvarne odluke: brzo riješite potvrđene rizike i odbacite lažne pozitivne rezultate.",
+      "warningBannerTitle": "{{count}} aktivno upozorenje još uvijek treba pregledati",
+      "warningBannerTitle_few": "{{count}} aktivna upozorenja još uvijek trebaju pregledati",
+      "warningBannerTitle_many": "{{count}} aktivnih upozorenja još uvijek treba pregledati",
+      "warningBannerTitle_one": "{{count}} aktivno upozorenje još uvijek treba pregledati",
+      "warningBannerTitle_other": "{{count}} aktivnih upozorenja još uvijek treba pregledati",
+      "warningBannerTitle_plural": "{{count}} aktivnih upozorenja još uvijek treba pregledati"
+    },
+    "breadcrumbs": {
+      "current": "Red čekanja za pregled",
+      "dashboard": "Nadzorna ploča"
+    },
+    "checklist": {
+      "items": {
+        "0": "Prioritetizirajte aktivna upozorenja",
+        "1": "Dokumentirajte korake sanacije",
+        "2": "Provjerite prije odbacivanja"
+      },
+      "title": "Kontrolni popis za odgovor"
+    },
+    "meta": {
+      "active": "{{count}} za pregled",
+      "total": "{{count}} ukupno"
+    },
+    "metrics": {
+      "activeHeading": "Aktivna upozorenja",
+      "archived": "Arhivirano",
+      "dismissedDescription": "Zabilježite bilješke za reviziju",
+      "dismissedDescriptionZero": "Još nema odbačenih upozorenja",
+      "dismissedHeading": "Odbačeno",
+      "resolutionHeading": "Stopa rješavanja",
+      "resolved": "{{count}} riješeno",
+      "resolvedAndDismissed": "{{resolved}} riješeno • {{dismissed}} odbačeno",
+      "totalRecorded": "{{count}} ukupno zabilježeno"
+    },
+    "pagination": {
+      "next": "Dalje",
+      "previous": "Prethodno"
+    },
+    "subtitle": "Pregledajte proizvode koji zahtijevaju odluku.",
+    "table": {
+      "accessibilityLabel": "Tablica sigurnosnih upozorenja",
+      "empty": "Nema upozorenja koja odgovaraju vašim filtrima",
+      "emptyAllClearBody": "Trenutačno nema otvorenih odluka trgovca. Svakodnevno praćenje i dalje je aktivno, a zatvorene odluke ostaju u revizijskom tragu.",
+      "emptyAllClearTitle": "Sve aktivne recenzije proizvoda su obrađene",
+      "emptyFilteredBody": "Prilagodite filtre ili pretražite drugi proizvod. Vaš aktivni red čekanja i dalje može biti prazan.",
+      "emptyFilteredTitle": "Nijedna stavka za pregled ne odgovara ovim filtrima",
+      "headers": {
+        "actions": "Radnje",
+        "detected": "Otkriveno",
+        "product": "Proizvod",
+        "risk": "Rizik",
+        "status": "Status"
+      },
+      "order": "Redoslijed",
+      "orderOptions": {
+        "asc": "Najstarije prvo",
+        "desc": "Najnovije prvo"
+      },
+      "reviewProduct": "Odluka o pregledu za {{title}}",
+      "searchLabel": "Pretraži upozorenja",
+      "searchPlaceholder": "Pretraži po nazivu proizvoda...",
+      "selectAll": "Odaberi sve vidljive nalaze",
+      "selectedCount": "{{count}} odabrano",
+      "selectProduct": "Odaberi nalaz za {{title}}",
+      "similarityTooltip": "Ocjena sličnosti: {{score}}%",
+      "sort": "Sortiraj",
+      "sortBy": "Sortiraj po",
+      "sortOptions": {
+        "created": "Datum otkrivanja",
+        "name": "Naziv proizvoda",
+        "risk": "Razina rizika"
+      },
+      "tabs": {
+        "active": "Potrebna recenzija",
+        "all": "Sve",
+        "dismissed": "Odbačeno",
+        "resolved": "Riješeno"
+      },
+      "thumbnailLabel": "Sličica {{title}}",
+      "viewProduct": "Prikaži zabilježeni nalaz za {{title}}"
+    },
+    "title": "Red čekanja za pregled",
+    "toasts": {
+      "updated": "Upozorenje ažurirano"
+    }
+  },
+  "analysis": {
+    "alertImagesUsed": "Uspoređene slike upozorenja: {{count}}",
+    "alertNumber": "Upozorenje {{number}}",
+    "audit": {
+      "existingNotes": "Bilješke revizije",
+      "noteLabel": "Bilješka revizije",
+      "notePlaceholder": "Dodajte što ste provjerili, dokaze dobavljača ili zašto je ovo odbačeno."
+    },
+    "candidateAlerts": "Potencijalna upozorenja: {{count}}",
+    "decisionContextDesc": "Zabilježba odluke dokumentira da je ovo sigurnosno podudaranje pregledano i čuva vaš revizijski trag. Ne mijenja automatski vaš Shopify proizvod niti ga ne objavljuje iz vaše trgovine.",
+    "decisionContextTitle": "Zabilježba odluka o usklađenosti",
+    "decisionRecorded": "Odluka zabilježena",
+    "editInShopify": "Uredi proizvod u Shopifyju",
+    "enlargedSafetyAlert": "Povećana slika sigurnosnog upozorenja",
+    "fields": {
+      "accessibilityLabel": "Tablica detalja podudaranja upozorenja",
+      "alertDate": "Datum upozorenja",
+      "brand": "Marka",
+      "category": "Kategorija",
+      "field": "Polje",
+      "model": "Model",
+      "notifyingCountry": "Zemlja obavijesti",
+      "origin": "Podrijetlo",
+      "productDescription": "Opis proizvoda",
+      "productName": "Naziv proizvoda",
+      "value": "Vrijednost"
+    },
+    "focus": {
+      "criticalLead": "Ovaj proizvod ima podudaranje visoke pouzdanosti. Zabilježite odluku tek nakon pregleda.",
+      "criticalStepCompare": "Usporedite fotografiju svog proizvoda s prvim podudaranjem Safety Gatea u nastavku.",
+      "criticalStepDecide": "Odaberite ishod u izborniku Zabilježi odluku na temelju vašeg pregleda.",
+      "criticalStepDocument": "Dodajte interne bilješke za sljedivost i praćenje dobavljača.",
+      "criticalTitle": "Potrebna je hitna radnja",
+      "recordedOutcome": "Zabilježeni ishod: {{outcome}}",
+      "reviewedLead": "Ovo upozorenje nije aktivno. Čuvajte jasne zapise za revizije.",
+      "reviewedStepAudit": "Provjerite odabranu rezoluciju i bilješke.",
+      "reviewedStepReactivate": "Ponovno aktivirajte samo ako se pojave novi dokazi o proizvodu.",
+      "reviewedTitle": "Pregled je već dovršen",
+      "safeLead": "Trenutni rezultat je siguran. Nastavite pratiti ažuriranja proizvoda.",
+      "safeStepClose": "Zatvorite ovaj detalj i nastavite s drugim aktivnim upozorenjima.",
+      "safeStepMonitor": "Zadržite ovaj proizvod u automatskom praćenju.",
+      "safeStepRecheck": "Pokrenite novu provjeru ako se promijene slike, pakiranje ili dobavljač.",
+      "safeTitle": "Nije potrebna hitna radnja"
+    },
+    "hazardType": "Vrsta opasnosti",
+    "checkedAt": "Provjereno: {{date}}",
+    "imageDominated": "Ovo podudaranje je ocijenjeno s prioritetom slike, tako da je vizualna sličnost pakiranja imala veću težinu od nepodudarnosti teksta.",
+    "imageMatch": "Podudaranje slike",
+    "imageMatchShort": "{{count}}% slika",
+    "legalProvision": "Pravna odredba",
+    "matchesHint": "Započnite s gornjom karticom podudaranja u nastavku i prvo potvrdite vizualno pakiranje, zatim detalje modela i marke.",
+    "merchantRecommendation": {
+      "active": "Usporedite slike proizvoda i Safety Gatea, potvrdite marku ili model, a zatim zabilježite radnju koju će vaša trgovina poduzeti.",
+      "reviewed": "Ovaj nalaz je zatvoren. Prije ponovne aktivacije provjerite zabilježeni ishod i dokaze.",
+      "safe": "Trenutačno nije potrebna radnja trgovine. Ponovno provjerite ako se promijene proizvod, pakiranje, slike ili dobavljač."
+    },
+    "modalAccessibilityLabel": "Detalji podudaranja Safety Gatea za {{title}}",
+    "modalHeading": "Pregledaj podudaranje Safety Gatea",
+    "noIssuesFound": "Nisu pronađeni sigurnosni problemi",
+    "openProductImage": "Otvori sliku za {{title}}",
+    "overallMatch": "Ukupno podudaranje",
+    "overallMatchShort": "{{count}}% ukupno",
+    "potentialRisk": "Potencijalni sigurnosni rizik",
+    "primaryRiskFocus": "Primarni fokus rizika: {{category}} na razini {{level}}. Prvo to potvrdite prije donošenja odluke.",
+    "productImagesUsed": "Slike proizvoda: {{used}} / {{provided}}",
+    "reviewLayout": {
+      "actionNeeded": "Potrebna radnja",
+      "compareHeading": "Usporedite proizvode",
+      "compareHint": "Prije donošenja odluke provjerite fotografije, marku, model i kategoriju.",
+      "decisionHeading": "Zabilježite svoju odluku",
+      "decisionPrompt": "Odaberite ishod pregleda. Možete dodati bilješku o tome što ste provjerili.",
+      "fullEvidence": "Potpuni dokazi Safety Gate ({{count}})",
+      "groupHelp": {
+        "action": "Zatvorite nalaz nakon što ste uklonili proizvod iz prodaje ili ga ažurirali u Shopifyju.",
+        "different": "Zatvorite ili odbacite nalaz jer je vaš proizvod drugačiji model, marka ili serija.",
+        "information": "Držite nalaz otvorenim dok od dobavljača tražite dokumente o seriji, modelu ili sigurnosti.",
+        "other": "Zabilježite drugi ishod s obveznom objašnjavajućom bilješkom za vašu revizijsku stazu."
+      },
+      "chooseOutcome": "Odaberite ishod",
+      "identifiers": {
+        "barcode": "Barkod (GTIN/EAN)",
+        "batch": "Serija / Lot",
+        "brand": "Marka",
+        "field": "Identifikator",
+        "match": "Podudarnost",
+        "mismatch": "Nepodudarnost",
+        "model": "Model",
+        "notSpecified": "nije navedeno",
+        "result": "Usporedba",
+        "safetyGate": "Upozorenje Safety Gate",
+        "yourProduct": "Vaš Shopify proizvod"
+      },
+      "identifiersHeading": "Usporedba identifikatora jedan pored drugog",
+      "languageDiffNote": "Jezik sučelja aplikacije ({{appLang}}) i jezik obavijesti e-poštom ({{emailLang}}) postavljaju se neovisno.",
+      "noImage": "Nema dostupne slike",
+      "noteLabel": "Što ste provjerili? (opcionalno)",
+      "noteRequiredLabel": "Što ste provjerili? (obavezno)",
+      "otherNoteRequired": "Dodajte bilješku kako biste objasnili drugi ishod.",
+      "outcomeLabel": "Ishod pregleda",
+      "possibleMatch": "Moguća podudarnost Safety Gate",
+      "readyToRecord": "Spremno za snimanje",
+      "reviewPointsHeading": "Točke za pregled",
+      "unnamedRecord": "Zapis Safety Gate"
+    },
+    "riskDescription": "Opis rizika",
+    "riskLevel": "Razina rizika",
+    "riskSeverity": "Ozbiljnost rizika",
+    "safetyGateMatches": "Podudarnosti Safety Gate",
+    "scoreHelper": "Ukupna podudarnost je konačna ocjena pregleda. Podudarnost slike odražava samo sličnost pakiranja.",
+    "sections": {
+      "whatHappened": "Što se dogodilo?",
+      "whatHappenedReviewed": "Ova podudarnost je već pregledana i zabilježena.",
+      "whatHappenedRisk": "Ovaj Shopify proizvod izgleda kao proizvod koji je već prijavljen u Safety Gate.",
+      "whatHappenedSafe": "Najnovija provjera nije pronašla vjerojatnu podudarnost Safety Gate.",
+      "whatToDo": "Što trebam učiniti?",
+      "whyMatched": "Zašto se podudaralo"
+    },
+    "seriousRisk": "Ozbiljan rizik {{category}}",
+    "summary": {
+      "confidence": "Pouzdano",
+      "confidenceUnknown": "Pouzdano nepoznato",
+      "decisionRecorded": "Odluka zabilježena",
+      "decisionRequired": "Odluka potrebna",
+      "highConfidence": "Visoka pouzdanost",
+      "likelyMatch": "Vjerojatna podudarnost",
+      "likelySafetyGateMatch": "Vjerojatna podudarnost Safety Gate",
+      "matchType": "Vrsta podudarnosti",
+      "nextStep": "Sljedeći korak",
+      "noLikelyMatch": "Nema vjerojatne podudarnosti",
+      "overallMatch": "Ukupna ocjena",
+      "reviewRecommended": "Preporučuje se pregled"
+    },
+    "supplierFollowUp": {
+      "copy": "Kopiraj praćenje dobavljača",
+      "template": "Pozdrav, pregledavamo {{product}} jer se možda podudara s upozorenjem Safety Gate {{alert}} (rizik: {{risk}}). Molimo potvrdite je li ovo isti model/serija, dostavite dokumentaciju o sigurnosti proizvoda i objasnite sve razlike. Razlog podudarnosti: {{reason}}"
+    },
+    "technicalDetails": {
+      "description": "Ovdje se čuvaju ocjene i brojevi preuzimanja za dublji pregled. Započnite s fotografijama proizvoda, markom, modelom i preporučenom radnjom iznad.",
+      "hide": "Sakrij detalje",
+      "show": "Prikaži detalje",
+      "title": "Tehnički detalji podudarnosti"
+    },
+    "textOnly": "Samo tekstualna provjera",
+    "viewOnSafetyGate": "Prikaži na Safety Gate",
+    "whyThisMatched": "Zašto se ovo podudaralo",
+    "withImage": "Provjereno sa slikama",
+    "yourProduct": "Vaš Shopify proizvod"
+  },
+  "auditReport": {
+    "decision": "Odluka",
+    "description": "Pregledajte cijeli zapis prije izvoza CSV-a za svoj tim, dobavljača ili reviziju.",
+    "detected": "Otkriveno",
+    "documented": "Dokumentirane odluke",
+    "download": "Preuzmi CSV",
+    "empty": "Još nisu zabilježeni nalazi o sigurnosti proizvoda.",
+    "eyebrow": "Zapis spreman za izvoz",
+    "generated": "Generirano {{date}}",
+    "heading": "Nalazi i odluke",
+    "needsReview": "Potrebna provjera",
+    "notRecorded": "Nije zabilježeno",
+    "open": "Otvori izvješće o reviziji",
+    "product": "Proizvod",
+    "risk": "Ozbiljnost rizika",
+    "status": "Status",
+    "summaryLabel": "Sažetak izvješća o reviziji",
+    "tableLabel": "Izvješće o sigurnosnoj reviziji",
+    "title": "Izvješće o sigurnosnoj reviziji",
+    "total": "Zabilježeni nalazi",
+    "viewHistory": "Prikaži revizijski trag"
+  },
+  "billing": {
+    "freeScanAvailableDescription": "Imate 1 besplatno skeniranje kataloga. Pokrenite svoju prvu reviziju kako biste provjerili proizvode svoje trgovine u odnosu na bazu podataka EU Safety Gate za opasne neprehrambene proizvode.",
+    "freeScanAvailableHeading": "Aktivno besplatno početno skeniranje kataloga",
+    "managePlanButton": "Upravljanje pretplatom",
+    "planActiveDescription": "Praćenje je omogućeno za ovu Shopify trgovinu. Pregledajte najnovije pokretanje i sve proizvode koji zahtijevaju pažnju.",
+    "planEyebrow": "Plan i pokrivenost",
+    "planFreeAvailableDescription": "Dostupno je jedno besplatno početno skeniranje kataloga Safety Gate.",
+    "planFreeUsedDescription": "Vaše besplatno početno skeniranje je završeno. Odaberite plan za početak kontinuiranog nadzora i nastavite izvoziti trag revizije.",
+    "planTitle": "Pretplata i nadzor sigurnosti",
+    "pricingUnavailable": "Cijene za Shopify nisu konfigurirane za ovu aplikaciju.",
+    "statusActivePro": "ZeroRecall Pro (aktivno)",
+    "statusDevelopmentBypass": "Pregled razvoja (naplata zaobiđena)",
+    "statusFreeAvailable": "Besplatno početno skeniranje",
+    "statusFreeUsed": "Besplatno skeniranje iskorišteno",
+    "statusLabel": "Trenutni plan",
+    "statusUnverified": "Pretplata se ne može provjeriti",
+    "upgradePlanButton": "Nadogradite na Pro",
+    "upgradeRequiredDescription": "Vaše besplatno početno skeniranje je završeno. Odaberite Shopify plan za praćenje novih Safety Gate upozorenja i provjeru promijenjenih proizvoda.",
+    "upgradeRequiredHeading": "Nastavite nadzor Safety Gatea",
+    "verificationError": "Nova skeniranja su pauzirana dok se ne provjeri naplata putem Shopifyja. Vaši postojeći nalazi i odluke ostaju dostupni."
+  },
+  "billingRedirect": {
+    "opening": "Otvaranje Shopify planova cijena...",
+    "openPricingPlans": "Otvori planove cijena"
+  },
+  "common": {
+    "all": "Sve",
+    "cancel": "Odustani",
+    "close": "Zatvori",
+    "confirm": "Potvrdi",
+    "language": "Jezik",
+    "loading": "Učitavanje...",
+    "unknown": "Nepoznato"
+  },
+  "dashboard": {
+    "activeAlertsBanner": {
+      "content": "Riješite {{count}} aktivno upozorenje kako bi zahvaćeni proizvodi ostali dostupni u vašoj trgovini.",
+      "content_few": "Riješite {{count}} aktivna upozorenja kako bi zahvaćeni proizvodi ostali dostupni u vašoj trgovini.",
+      "content_many": "Riješite {{count}} aktivnih upozorenja kako bi zahvaćeni proizvodi ostali dostupni u vašoj trgovini.",
+      "content_one": "Riješite {{count}} aktivno upozorenje kako bi zahvaćeni proizvodi ostali dostupni u vašoj trgovini.",
+      "content_other": "Riješite {{count}} aktivnih upozorenja kako bi zahvaćeni proizvodi ostali dostupni u vašoj trgovini.",
+      "content_plural": "Riješite {{count}} aktivnih upozorenja kako bi zahvaćeni proizvodi ostali dostupni u vašoj trgovini.",
+      "manualCheckAction": "Ručna provjera",
+      "reviewAction": "Pregledaj prvo upozorenje",
+      "title": "Aktivna sigurnosna upozorenja zahtijevaju pažnju"
+    },
+    "admin": {
+      "actionNeeded": "Potrebna radnja",
+      "actionNeededDescription": "Prvo pregledajte označene proizvode kako biste mogli odlučiti hoćete li ih zadržati u prodaji, odbaciti podudarnost ili riješiti upozorenje.",
+      "actionNeededTitle": "{{count}} aktivno upozorenje zahtijeva pregled",
+      "actionNeededTitle_few": "{{count}} aktivna upozorenja zahtijevaju pregled",
+      "actionNeededTitle_many": "{{count}} aktivnih upozorenja zahtijeva pregled",
+      "actionNeededTitle_one": "{{count}} aktivno upozorenje zahtijeva pregled",
+      "actionNeededTitle_other": "{{count}} aktivnih upozorenja zahtijeva pregled",
+      "actionNeededTitle_plural": "{{count}} aktivnih upozorenja zahtijeva pregled",
+      "activeAlertsDescription": "Proizvodi koji još uvijek trebaju odluku trgovca prije nego što se red očisti.",
+      "auditHistoryKept": "Povijest revizije zadržana",
+      "auditReady": "Izvješće spremno",
+      "auditRecordsDescription": "Riješene i odbačene odluke s razlozima i internim bilješkama.",
+      "auditRecordsTitle": "Zapisi revizije",
+      "auditReport": "Izvješće o reviziji",
+      "automaticChecks": "Automatske provjere",
+      "bulkCheckAllSummary": "Ovo će pokrenuti potpunu provjeru za svih {{count}} proizvoda.",
+      "bulkCheckDescription": "Prvo skenirajte neprovjerene proizvode ili uključite cijeli katalog kada želite svježu provjeru.",
+      "bulkCheckSummary": "Sažetak skupne provjere",
+      "bulkCheckSummaryDescription": "Neka ovaj sažetak bude kompaktan kako bi trgovci mogli potvrditi ishode bez otvaranja drugog zaslona.",
+      "bulkCheckTitle": "Skupna provjera kataloga",
+      "bulkCheckUncheckedSummary": "Ovo će provjeriti {{count}} preostalih proizvoda i preskočiti {{skip}} već pregledanih stavki.",
+      "catalogCoverageDescription": "Udio kataloga već provjerenog u odnosu na Safety Gate.",
+      "catalogCoverageTitle": "Pokrivenost kataloga",
+      "coverage": "Pokrivenost",
+      "coveragePercent": "Katalog sa spremljenim provjerama",
+      "criticalBannerDescription": "{{count}} aktivna podudarnost označena je kao visok ili ozbiljan rizik. Prioritetno riješite ove proizvode prije nastavka nove prodaje.",
+      "criticalBannerDescription_few": "{{count}} aktivne podudarnosti označene su kao visok ili ozbiljan rizik. Prioritetno riješite ove proizvode prije nastavka nove prodaje.",
+      "criticalBannerDescription_many": "{{count}} aktivnih podudarnosti označeno je kao visok ili ozbiljan rizik. Prioritetno riješite ove proizvode prije nastavka nove prodaje.",
+      "criticalBannerDescription_one": "{{count}} aktivna podudarnost označena je kao visok ili ozbiljan rizik. Prioritetno riješite ove proizvode prije nastavka nove prodaje.",
+      "criticalBannerDescription_other": "{{count}} aktivnih podudarnosti označeno je kao visok ili ozbiljan rizik. Prioritetno riješite ove proizvode prije nastavka nove prodaje.",
+      "criticalBannerDescription_plural": "{{count}} aktivnih podudarnosti označeno je kao visok ili ozbiljan rizik. Prioritetno riješite ove proizvode prije nastavka nove prodaje.",
+      "criticalBannerTitle": "{{count}} aktivno upozorenje uključuje podudarnosti visokog rizika",
+      "criticalBannerTitle_few": "{{count}} aktivna upozorenja uključuju podudarnosti visokog rizika",
+      "criticalBannerTitle_many": "{{count}} aktivnih upozorenja uključuje podudarnosti visokog rizika",
+      "criticalBannerTitle_one": "{{count}} aktivno upozorenje uključuje podudarnosti visokog rizika",
+      "criticalBannerTitle_other": "{{count}} aktivnih upozorenja uključuje podudarnosti visokog rizika",
+      "criticalBannerTitle_plural": "{{count}} aktivnih upozorenja uključuje podudarnosti visokog rizika",
+      "daily": "Dnevno",
+      "dailyAtTime": "Dnevno u 03:47 Europe/Bratislava",
+      "dailyAtTimePlanned": "Zakazano (dnevno u 03:47)",
+      "decisionsClosed": "Odluke zatvorene",
+      "demoAlert": {
+        "action": "Riješite, odbacite ili pratite s dobavljačem",
+        "badge": "Primjer tijeka rada",
+        "description": "Aplikacija prikazuje Shopify proizvod, zapis Safety Gatea, zašto se podudarao i radnju za bilježenje.",
+        "evidence": "Vodite bilješke i izvezite izvješće o reviziji",
+        "reason": "Usporedite marku, model, kategoriju i fotografije proizvoda",
+        "sample": "Što trgovci vide kada se pojavi podudarnost",
+        "title": "Pronađena vjerojatna podudarnost Safety Gatea"
+      },
+      "emptyProofCoverage": "{{count}} proizvoda ima zabilježen rezultat provjere.",
+      "emptyProofEvidence": "{{count}} zatvorenih odluka zadržano je za povijest revizije.",
+      "emptyProofMonitoring": "Dnevno praćenje Safety Gatea još uvijek je u tijeku.",
+      "exportProof": "Izvezi dokaz",
+      "fallbackAlertDescription": "Podudarno s upozorenjem Safety Gatea.",
+      "finishCoverage": "Dovrši pokrivenost kataloga",
+      "highRiskMatchesDescription": "Ozbiljne podudarnosti ili podudarnosti visokog rizika Safety Gatea za prvi pregled.",
+      "highRiskMatchesTitle": "Podudarnosti visokog rizika",
+      "checkChangedProducts": "Provjeri promijenjene proizvode",
+      "checksCompletedDescription": "Automatske i ručne provjere koje smanjuju ručni rad pregleda kataloga.",
+      "checksCompletedTitle": "Provjere dovršene",
+      "lastMonitoringRunDescription": "Najnovija automatska, ručna ili skupna provjera Safety Gatea.",
+      "lastMonitoringRunTitle": "Zadnje pokretanje nadzora",
+      "lastSafetyGateUpdateChecked": "Zadnje provjereno ažuriranje Safety Gatea",
+      "latestRun": "Zadnje pokretanje",
+      "monitoringRunDateUnknown": "Vrijeme nedostupno",
+      "monitoringRunHistoryEmpty": "Još nema zabilježenih zakazanih pokretanja nadzora.",
+      "monitoringRunHistoryTitle": "Nedavna pokretanja nadzora",
+      "monitoringRunProgress": "{{products}} proizvoda provjereno · {{alerts}} novih upozorenja",
+      "monitoringRunStatus": {
+        "completed": "Dovršeno",
+        "enqueue_failed": "Nije moguće pokrenuti",
+        "failed": "Neuspješno",
+        "processing": "U tijeku",
+        "queued": "U redu čekanja",
+        "retrying": "Pokušaj ponovno",
+        "skipped_unentitled": "Plan neaktivan",
+        "unknown": "Status nedostupan"
+      },
+      "monitoringRunsTitle": "Provjere nadzora",
+      "monitoringStatusAllClear": "Nadzor kataloga je u tijeku",
+      "monitoringStatusDescription": "ZeroRecall provjerava vaš katalog u odnosu na nova ažuriranja EU Safety Gatea, ističe proizvode koji zahtijevaju pregled i čuva dokaze za izvješća o reviziji.",
+      "monitoringStatusEyebrow": "Status nadzora",
+      "monitoringStatusNeedsReview": "{{count}} proizvod zahtijeva odluku trgovca",
+      "monitoringStatusNeedsReview_few": "{{count}} proizvoda zahtijeva odluke trgovca",
+      "monitoringStatusNeedsReview_many": "{{count}} proizvoda zahtijeva odluke trgovca",
+      "monitoringStatusNeedsReview_one": "{{count}} proizvod zahtijeva odluku trgovca",
+      "monitoringStatusNeedsReview_other": "{{count}} proizvoda zahtijeva odluke trgovca",
+      "monitoringStatusNeedsReview_plural": "{{count}} proizvoda zahtijeva odluke trgovca",
+      "needsReviewTitle": "Proizvodi koji zahtijevaju pregled",
+      "nextAutomaticCheck": "Sljedeća automatska provjera",
+      "noActiveAlertsDescription": "Vaše najnovije provjere trenutno ne zahtijevaju radnju. Nastavite skenirati novododane proizvode kako biste održali pokrivenost.",
+      "noActiveAlertsTitle": "Nema aktivnih sigurnosnih upozorenja",
+      "noAlertsDescription": "Trenutno nema otvorenih pregleda proizvoda. To je i dalje korisno: svakodnevni nadzor nastavlja se u pozadini, a vaši dokazi ostaju spremni za izvoz.",
+      "noAlertsTitle": "Nijedan proizvod ne zahtijeva pregled",
+      "priorityQueue": "Red čekanja za odluke",
+      "productsCoveredShort": "sa zabilježenim rezultatom provjere",
+      "productsMonitored": "Provjerene trenutne verzije proizvoda",
+      "proofGridLabel": "Aktivnost nadzora",
+      "protectionDescription": "Brojke opisuju rezultate zabilježene u aplikaciji; one nisu certifikat sigurnosti proizvoda.",
+      "protectionEyebrow": "Vaš zapis nadzora",
+      "protectionTitle": "Pregledajte nedavne provjere i odluke trgovaca.",
+      "recentAlertsDescription": "Pregledajte vjerojatna podudaranja Safety Gatea, zabilježite odluku i čuvajte dokaze za revizije.",
+      "recentAlertsTitle": "Proizvodi koji zahtijevaju odluku trgovca",
+      "recommendedAction": "Preporučena radnja: pregledajte podudaranje i zabilježite odluku.",
+      "resolvedRateDescription": "Koliko je zabilježenih aktivnosti upozorenja već zatvoreno.",
+      "resolvedRateTitle": "Stopa riješenosti",
+      "results": {
+        "alertCreated": "Upozorenje stvoreno",
+        "completed": "Dovršeno",
+        "error": "Pogreška",
+        "checked": "Provjereno",
+        "skipped": "Preskočeno"
+      },
+      "reviewOneProduct": "Provjeri jedan proizvod",
+      "riskInAlert": "Rizik opisan u upozorenju Safety Gatea",
+      "runBulkCheck": "Pokreni skupnu provjeru",
+      "stats": {
+        "alertsCreated": "Stvorena upozorenja",
+        "alreadyChecked": "Već provjereno",
+        "errors": "Pogreške",
+        "checked": "Provjereno",
+        "skipped": "Preskočeno",
+        "stillUnchecked": "Još neprovjereno",
+        "totalProducts": "Ukupno proizvoda"
+      },
+      "status": {
+        "cachedEvidence": "Predmemorirani dokazi se ponovno koriste",
+        "coverageIncomplete": {
+          "description": "Nema podudaranja Safety Gatea koja zahtijevaju pregled u {{checked}} nadziranih proizvoda. Dovršite pokrivenost za svih {{total}} trenutnih proizvoda prije potvrde cijelog kataloga.",
+          "eyebrow": "Pokrivenost nepotpuna",
+          "title": "{{count}} proizvod još uvijek treba pokrivenost",
+          "title_few": "{{count}} proizvoda još uvijek treba pokrivenost",
+          "title_many": "{{count}} proizvoda još uvijek treba pokrivenost",
+          "title_one": "{{count}} proizvod još uvijek treba pokrivenost",
+          "title_other": "{{count}} proizvoda još uvijek treba pokrivenost",
+          "title_plural": "{{count}} proizvoda još uvijek treba pokrivenost"
+        },
+        "deltaMonitoring": "Provjeravaju se samo nova upozorenja Safety Gatea",
+        "factsLabel": "Trenutne činjenice nadzora",
+        "matchesNeedingReview": "Podudaranja koja zahtijevaju pregled",
+        "monitoringNotConfirmed": "Nadzor još nije potvrđen",
+        "monitoringProblem": {
+          "action": "Osvježi pokrivenost kataloga",
+          "description": "Vaši trenutni proizvodi imaju dokaze o pokrivenosti, ali aplikacija ne može potvrditi kada je nadzor Safety Gatea zadnji put dovršen. Osvježite pokrivenost kataloga kako biste vratili pouzdan status.",
+          "eyebrow": "Nadzor zahtijeva pažnju",
+          "title": "Pokrivenost kataloga nema zabilježeno pokretanje nadzora"
+        },
+        "noActionNeeded": {
+          "action": "Prikaži pokrivenost kataloga",
+          "description": "Nijedan proizvod u vašem nadziranom katalogu trenutno se ne podudara s upozorenjima EU Safety Gatea. Nadzor se nastavlja u pozadini i samo nova upozorenja ili promijenjeni proizvodi zahtijevaju rad.",
+          "emptyCatalogDescription": "Dodajte proizvode u svoj Shopify katalog i ZeroRecall će biti spreman da ih pokrije.",
+          "emptyCatalogTitle": "Još nema proizvoda za nadzor",
+          "eyebrow": "Trenutni status Safety Gatea",
+          "title": "Nije potrebna radnja"
+        },
+        "none": "Nijedno",
+        "reviewNeeded": {
+          "criticalDescription": "Pregledajte ova moguća podudaranja prije nastavka prodaje. Usporedite proizvod i dokaze Safety Gatea, a zatim zabilježite svoju odluku.",
+          "criticalEyebrow": "Hitni pregled",
+          "criticalTitle": "{{count}} moguće podudaranje s upozorenjem ozbiljnog rizika zahtijeva pregled",
+          "criticalTitle_few": "{{count}} moguća podudaranja s upozorenjem ozbiljnog rizika zahtijevaju pregled",
+          "criticalTitle_many": "{{count}} mogućih podudaranja s upozorenjem o ozbiljnom riziku zahtijeva pregled",
+          "criticalTitle_one": "{{count}} moguće podudaranje s upozorenjem o ozbiljnom riziku zahtijeva pregled",
+          "criticalTitle_other": "{{count}} mogućih podudaranja s upozorenjem o ozbiljnom riziku zahtijeva pregled",
+          "criticalTitle_plural": "{{count}} mogućih podudaranja s upozorenjem o ozbiljnom riziku zahtijeva pregled",
+          "description": "Potencijalna podudaranja sa Safety Gateom zahtijevaju odluku trgovca. Prvo pregledajte podudaranja; rezultati provjere za ostale proizvode ostaju dostupni u katalogu.",
+          "eyebrow": "Potreban pregled",
+          "title": "{{count}} moguće podudaranje zahtijeva pregled",
+          "title_few": "{{count}} moguća podudaranja zahtijevaju pregled",
+          "title_many": "{{count}} mogućih podudaranja zahtijeva pregled",
+          "title_one": "{{count}} moguće podudaranje zahtijeva pregled",
+          "title_other": "{{count}} mogućih podudaranja zahtijeva pregled",
+          "title_plural": "{{count}} mogućih podudaranja zahtijeva pregled"
+        },
+        "scheduledPlanned": "Zakazano pokretanje"
+      },
+      "storeStatus": "Status trgovine",
+      "valueMetrics": {
+        "decisionsRecorded": "Zabilježene odluke",
+        "evidenceRetained": "Odluke s dokazima",
+        "checksRun": "Pokrenute provjere",
+        "openDecisions": "Otvorene odluke",
+        "productsCovered": "Provjereni proizvodi"
+      },
+      "valueProofDescription": "Pokažite timu da pretplata nije jednokratno skeniranje: pokrivenost kataloga, provjere, odluke i pristup Shopifyju samo za čitanje ostaju aktivni.",
+      "valueProofDescriptionComplete": "Ovi brojevi prikazuju zabilježenu aktivnost provjere za trenutni katalog.",
+      "valueProofDescriptionIncomplete": "Pokrenite provjere za preostale proizvode kako biste dodali rezultate u trenutni zapis kataloga.",
+      "valueProofEyebrow": "Radnja pokrivenosti",
+      "valueProofTitle": "Što ZeroRecall nastavlja raditi",
+      "valueProofTitleComplete": "Svaki trenutni proizvod ima zabilježenu provjeru",
+      "valueProofTitleIncomplete": "{{count}} proizvoda ima zabilježenu provjeru",
+      "warningBannerDescription": "Pregledajte ova podudaranja, odbacite lažno pozitivne rezultate ili riješite potvrđene probleme kako bi red čekanja ostao djelotvoran.",
+      "warningBannerTitle": "{{count}} aktivno upozorenje zahtijeva odluku trgovca",
+      "warningBannerTitle_few": "{{count}} aktivna upozorenja zahtijevaju odluke trgovca",
+      "warningBannerTitle_many": "{{count}} aktivnih upozorenja zahtijeva odluke trgovca",
+      "warningBannerTitle_one": "{{count}} aktivno upozorenje zahtijeva odluku trgovca",
+      "warningBannerTitle_other": "{{count}} aktivnih upozorenja zahtijeva odluke trgovca",
+      "warningBannerTitle_plural": "{{count}} aktivnih upozorenja zahtijeva odluke trgovca",
+      "withReadOnlyShopifyAccess": "Pristup Shopifyju samo za čitanje"
+    },
+    "bulkCheck": {
+      "action": "Provjeri sve proizvode",
+      "alerts": "Upozorenja {{count}}",
+      "alreadyChecked": "Već provjereno",
+      "completed": "Dovršeno za {{seconds}} sekundi",
+      "description": "Skenirajte svaki proizvod u svojoj trgovini u odnosu na bazu podataka Safety Gate kako biste uhvatili skrivene rizike.",
+      "errors": "Pogreške {{count}}",
+      "checked": "Provjereno {{count}}",
+      "includeAlreadyChecked": "Uključi već provjerene proizvode",
+      "notYetChecked": "Još nije provjereno",
+      "processed": "Obrađeno {{count}}",
+      "started": "Započeto {{date}}",
+      "title": "Skupna sigurnosna provjera",
+      "totalProducts": "Ukupno proizvoda",
+      "willCheckAll": "Provjerit će svih {{count}} proizvoda",
+      "willCheckUnchecked": "Provjerit će {{count}} neprovjerenih proizvoda (preskoči {{skip}} već provjerenih)"
+    },
+    "bulkResults": {
+      "success": "Skupna provjera dovršena: obrađeno {{processed}}, provjereno {{checked}}, stvoreno {{alertsCreated}} upozorenja."
+    },
+    "howItWorks": {
+      "alertGeneration": {
+        "description": "Podudaranja generiraju upozorenja koja možete odbaciti ili riješiti kako biste pratili usklađenost.",
+        "title": "Generiranje upozorenja"
+      },
+      "autoMonitoring": {
+        "description": "Proizvodi se provjeravaju u bazi podataka EU-a kad god se kreiraju ili ažuriraju.",
+        "title": "Automatsko praćenje"
+      },
+      "title": "Kako funkcionira"
+    },
+    "liveScan": {
+      "completed": "Gotovo",
+      "description": "Uvoz vašeg kataloga iz Shopifyja i skeniranje proizvoda u odnosu na više od 35.000 zapisa u službenoj bazi podataka EU Safety Gate (RAPEX). Rezultati će se uskoro pojaviti u nastavku.",
+      "eyebrow": "Automatska sigurnosna revizija",
+      "failedDescription": "Nismo mogli dovršiti ovu reviziju. Vaš katalog nije označen kao potpuno provjeren. Ponovno pokrenite skeniranje ili kontaktirajte podršku ako se problem nastavi.",
+      "failedHeading": "Revizija kataloga treba još jedan pokušaj",
+      "heading": "Besplatna sigurnosna revizija kataloga u tijeku...",
+      "inProgress": "U tijeku...",
+      "pending": "Na čekanju",
+      "progress": "Uvezeno {{imported}} od {{fetched}} proizvoda; uspoređeno {{scanned}} proizvoda s {{alerts}} upozorenja Safety Gatea do sada.",
+      "stepAudit": "3. Pripremite GPSR revizijski trag i status usklađenosti",
+      "stepImport": "1. Uvezite proizvode iz Shopifyja",
+      "stepScan": "2. Usporedite s bazom podataka Safety Gate (35.000+ zapisa)"
+    },
+    "metricsCard": {
+      "activeAlertsHeading": "Aktivna upozorenja",
+      "productsCheckedHeading": "Provjereni proizvodi",
+      "resolutionHeading": "Stopa rješavanja",
+      "resolved": "{{count}} riješeno",
+      "resolvedAndDismissed": "{{resolved}} riješeno • {{dismissed}} odbačeno",
+      "scans": "Skeniranja Safety Gatea",
+      "totalRecorded": "{{count}} ukupno zabilježeno"
+    },
+    "monitorCard": {
+      "description": "Pratite upozorenja, pokrenite provjere kataloga i održavajte zadovoljstvo regulatora.",
+      "reviewAction": "Pregledaj upozorenja",
+      "title": "Pregled sigurnosti proizvoda na prvi pogled"
+    },
+    "quickActions": {
+      "browsePortal": "Pregledajte portal Safety Gate",
+      "description": "Redovite provjere i dokumentacija pomažu u dokazivanju dužne pažnje regulatorima.",
+      "manualCheck": "Pokrenite ručnu provjeru",
+      "title": "Brze radnje"
+    },
+    "recentAlerts": {
+      "active": "{{count}} aktivnih",
+      "allResolved": "Sve riješeno",
+      "description": "Istražite najnovija podudaranja iz Safety Gatea prije ispunjavanja narudžbi.",
+      "emptyState": {
+        "content": "Odlična vijest—trenutno nema označenih proizvoda. Nastavite pratiti kako biste održali usklađenost.",
+        "heading": "Još nema sigurnosnih upozorenja"
+      },
+      "matchCount": "{{count}} pronađeno podudaranje",
+      "matchCount_few": "{{count}} pronađena podudaranja",
+      "matchCount_many": "{{count}} pronađenih podudaranja",
+      "matchCount_one": "{{count}} pronađeno podudaranje",
+      "matchCount_other": "{{count}} pronađenih podudaranja",
+      "matchCount_plural": "{{count}} pronađenih podudaranja",
+      "title": "Nedavna sigurnosna upozorenja"
+    },
+    "safetyBreakdown": {
+      "actionDesc": "Pronađena podudaranja s izvješćima EU Safety Gatea koja zahtijevaju pregled i rješavanje.",
+      "actionLabel": "Potrebna radnja",
+      "description": "Pregled provjere vašeg kataloga proizvoda u odnosu na europske sigurnosne popise i GPSR direktivu.",
+      "eyebrow": "Status zaštite kataloga",
+      "protectedDesc": "Proizvodi čija najnovija zabilježena provjera nije pronašla vjerojatno podudaranje.",
+      "protectedLabel": "Provjereni proizvodi bez otvorenih nalaza",
+      "protectRemainingAction": "Provjeri preostalo ({{count}})",
+      "reviewAlertsAction": "Pregledaj upozorenja",
+      "scanAllAction": "Pokreni potpunu reviziju kataloga",
+      "title": "Status sigurnosti proizvoda",
+      "unprotectedAllCovered": "Svaki trenutni proizvod ima zabilježen rezultat provjere.",
+      "unprotectedDesc": "Proizvodi bez zabilježene provjere Safety Gatea.",
+      "unprotectedLabel": "Još nije provjereno"
+    },
+    "setup": {
+      "description": "Pripremite svoju trgovinu za usklađenost sa sigurnošću proizvoda u EU-u.",
+      "progress": "{{completed}} od {{total}} koraka dovršeno",
+      "steps": {
+        "step1": {
+          "description": "Kliknite „Provjeri sve proizvode” kako biste skenirali cijeli katalog u odnosu na bazu podataka EU Safety Gate.",
+          "label": "Pokrenite prvu skupnu provjeru proizvoda"
+        },
+        "step2": {
+          "description": "Provjerite stranicu upozorenja kako biste pregledali sve proizvode koji se podudaraju s upozorenjima Safety Gatea.",
+          "label": "Pregledajte sva sigurnosna upozorenja"
+        },
+        "step3": {
+          "description": "Omogućite automatske provjere u Postavkama za automatsko praćenje novih proizvoda.",
+          "label": "Konfiguriraj automatsko praćenje"
+        }
+      },
+      "title": "Vodič za postavljanje"
+    },
+    "stats": {
+      "actionNeeded": "Potrebna radnja",
+      "activeAlerts": "Aktivna upozorenja",
+      "alertsLogged": "Zabilježena upozorenja",
+      "allClear": "Sve jasno",
+      "autoMonitoring": "Automatsko praćenje",
+      "descriptions": {
+        "activeAlerts": "Pregledajte ove proizvode danas kako biste ostali usklađeni.",
+        "activeAlertsZero": "Svi sigurnosni problemi su riješeni.",
+        "alertsLogged": "Uključuje riješena i odbačena upozorenja za revizijski trag.",
+        "alertsLoggedZero": "Nema povijesnih upozorenja. Nastavite pratiti nove proizvode.",
+        "productsChecked": "Automatski Shopify događaji nastavljaju pratiti ažuriranja.",
+        "productsCheckedZero": "Pokrenite skupnu provjeru za skeniranje vašeg trenutnog kataloga."
+      },
+      "newSetup": "Novo postavljanje",
+      "open": "{{count}} otvoreno",
+      "productsChecked": "Provjereni proizvodi",
+      "resolved": "{{count}} riješeno"
+    },
+    "title": "ZeroRecall"
+  },
+  "dates": {
+    "daysAgo": "Prije {{count}} dana",
+    "today": "Danas",
+    "weeksAgo": "Prije {{count}} tjedana",
+    "yesterday": "Jučer"
+  },
+  "errors": {
+    "apiError": "Vanjska sigurnosna usluga privremeno nije dostupna. Pokušajte ponovno kasnije.",
+    "pageLoadFailed": "Učitavanje stranice nije uspjelo",
+    "unknown": "Nešto je pošlo po zlu"
+  },
+  "evidence": {
+    "alertNumber": "Upozorenje Safety Gate {{number}}",
+    "description": "Pregledajte zabilježene odluke o sigurnosti proizvoda, bilješke, kontekst rizika i dokaze o praćenju dobavljača.",
+    "empty": "Još nisu zabilježene odluke o sigurnosti proizvoda.",
+    "eyebrow": "Revizijski trag",
+    "filteredRecords": "{{visible}} od {{total}} zapisa",
+    "filters": {
+      "collapseForProduct": "Sakrij potpune dokaze za {{title}}",
+      "expandForProduct": "Prikaži potpune dokaze za {{title}}",
+      "noResults": "Nema zapisa revizije koji odgovaraju ovim filtrima.",
+      "searchLabel": "Pretraži revizijski trag",
+      "searchPlaceholder": "Pretraži proizvod, broj upozorenja ili dokaze",
+      "showLess": "Sakrij dokaze",
+      "showMore": "Prikaži dokaze",
+      "statusLabel": "Status odluke"
+    },
+    "fullEvidence": "Potpuni dokazi",
+    "heading": "Povijest odluka i dokaza",
+    "noNotes": "Nema zabilježene bilješke",
+    "records": "{{count}} zapisa",
+    "table": {
+      "accessibilityLabel": "Tablica dokaza o sigurnosti proizvoda",
+      "decision": "Odluka",
+      "details": "Detalji",
+      "notes": "Bilješke / dokazi",
+      "product": "Proizvod",
+      "status": "Status",
+      "summary": "Sažetak dokaza",
+      "updated": "Ažurirano"
+    },
+    "title": "Revizijski trag"
+  },
+  "experience": {
+    "delayed": "Praćenje zahtijeva pažnju — posljednje dovršeno pokretanje starije je od 48 sati",
+    "pausedHelp": "Automatske provjere su pauzirane. Odaberite plan za provjeru novih upozorenja Safety Gatea i promjena proizvoda dok je Shopify zatvoren.",
+    "previewHelp": "Otvaranje ovog razvojnog pregleda ne aktivira pozadinsko praćenje. Zakazane provjere zahtijevaju provjereni aktivni Shopify plan.",
+    "reviewSteps": "1. Usporedite fotografije i identifikatore → 2. Odaberite ishod pregleda → 3. Zabilježite svoju odluku",
+    "valueBody": "Dnevne provjere novih upozorenja Safety Gatea, provjere kada se proizvodi mijenjaju, obavijesti e-poštom kada su omogućene i spremljene odluke o pregledu.",
+    "valueTitle": "Što dodaje stalno praćenje"
+  },
+  "manualCheck": {
+    "admin": {
+      "catalog": "Katalog",
+      "catalogDescription": "Proizvodi su sortirani prema najnovijim Shopify ažuriranjima kako bi trgovci mogli prvo ponovno provjeriti nedavne promjene.",
+      "checkFailed": "Provjera nije uspjela",
+      "manualReview": "Pregled na zahtjev",
+      "manualReviewDescription": "Odaberite bilo koji proizvod iz svog kataloga i pokrenite ciljanu provjeru Safety Gatea kada vam je potreban hitan odgovor.",
+      "productFlagged": "Proizvod označen"
+    },
+    "badges": {
+      "flagged": "{{count}} označeno",
+      "checks": "{{count}} provjera",
+      "needsReview": "{{count}} treba pregled"
+    },
+    "banners": {
+      "alertDescription": "Pronađen je potencijalni sigurnosni problem za ovaj proizvod.",
+      "alertHeading": "Stvoreno sigurnosno upozorenje",
+      "failedHeading": "Provjera nije uspjela",
+      "textOnlyDescription": "Ovaj rezultat koristio je samo tekstualna polja. Ako se proizvod oslanja na vizualne razlike, pažljivije pregledajte podudarnost.",
+      "textOnlyHeading": "Usporedba slika nije bila dostupna"
+    },
+    "breadcrumbs": {
+      "current": "Pokrivenost kataloga",
+      "dashboard": "Nadzorna ploča"
+    },
+    "bulk": {
+      "description": "Pregledajte spremljene provjere i pokrenite novu usporedbu Safety Gatea za proizvode u vašem trenutnom katalogu.",
+      "checkAllProducts": "Provjeri preostale proizvode",
+      "checkingAll": "Provjeravam katalog...",
+      "title": "Provjerite svoj katalog"
+    },
+    "catalogue": {
+      "accessibilityLabel": "Tablica kataloga proizvoda",
+      "actions": {
+        "checkAgain": "Ponovno provjeri",
+        "checkAgainForProduct": "Ponovno provjeri {{title}}",
+        "checkSafety": "Provjeri sigurnost",
+        "checkSafetyForProduct": "Provjeri sigurnost za {{title}}",
+        "viewForProduct": "Prikaži zabilježeni nalaz za {{title}}"
+      },
+      "columns": {
+        "action": "Radnja",
+        "checks": "Provjere",
+        "product": "Proizvod",
+        "status": "Status"
+      },
+      "emptyBody": "Nema dostupnih proizvoda za provjeru.",
+      "emptyHeading": "Nema pronađenih proizvoda",
+      "firstCheck": "Pokreni prvu provjeru",
+      "heading": "Katalog proizvoda ({{count}})",
+      "lastChecked": "Zadnja provjera {{date}}",
+      "noType": "Nema vrste",
+      "searchLabel": "Pronađi proizvod",
+      "searchPlaceholder": "Pretraži proizvode po naslovu, SKU-u, dobavljaču ili vrsti",
+      "status": {
+        "notChecked": "Nije provjereno",
+        "reviewed": "Pregledano",
+        "safe": "Nema podudaranja",
+        "unsafe": "Potrebna recenzija"
+      },
+      "totalChecks": "{{count}} ukupno",
+      "unknownVendor": "Nepoznat dobavljač"
+    },
+    "coverage": {
+      "completeDescription": "Svaki trenutni Shopify proizvod ima zabilježenu provjeru Safety Gate. Novi ili promijenjeni proizvodi i dalje trebaju novu provjeru.",
+      "completeTitle": "Svaki trenutni proizvod ima spremljen rezultat provjere",
+      "eyebrow": "Status provjere kataloga",
+      "incompleteDescription": "Provjerite preostale proizvode kako biste spremili rezultat Safety Gate za trenutni katalog.",
+      "incompleteTitle": "{{count}} proizvoda još nema spremljenu provjeru",
+      "lastProductNeedsReview": "Zadnja provjera proizvoda stvorila je ili ažurirala stavku za pregled.",
+      "lastProductSafe": "Zadnja provjera proizvoda nije pronašla vjerojatno podudaranje sa Safety Gate.",
+      "lastRun": "Zadnja provjera",
+      "lastRunResultWithCounts": "Provjereno {{checked}}, preskočeno {{skipped}} nepromijenjenih, stvoreno {{alerts}} stavki za pregled, {{errors}} pogrešaka.",
+      "noneRemaining": "Svaki trenutni proizvod ima spremljen rezultat provjere.",
+      "noRunYet": "Još nije pokrenuta provjera kataloga ili proizvoda.",
+      "percent": "{{percent}}% s trenutnom provjerom",
+      "productsCovered": "Provjereni proizvodi",
+      "productsCoveredDescription": "Proizvodi sa spremljenim rezultatom za njihovu trenutnu Shopify verziju.",
+      "remaining": "Još nije provjereno",
+      "remainingDescription": "Pokrenite provjeru kako biste spremili rezultat Safety Gate za ove proizvode."
+    },
+    "filters": {
+      "all": "Svi ({{count}})",
+      "needsReview": "Moguće podudaranje ({{count}})",
+      "safe": "Nema podudaranja ({{count}})",
+      "unprotected": "Neprovjereno ili promijenjeno ({{count}})"
+    },
+    "modal": {
+      "unknown": "Nepoznato",
+      "unknownProduct": "Nepoznat proizvod"
+    },
+    "overview": {
+      "coverage": "{{coverage}}% pokrivenosti",
+      "manualCompleted": "Ručne provjere dovršene",
+      "manualCompletedDescription": "{{checked}} od {{total}} proizvoda provjereno",
+      "noOpenReviews": "Nema otvorenih odluka o proizvodu.",
+      "noRisks": "Još nisu otkriveni rizici.",
+      "prioritise": "Prioritetno obradite ove proizvode.",
+      "productsDescription": "Najnoviji proizvodi iz vaše trgovine.",
+      "productsFlagged": "Označeni proizvodi",
+      "productsInScope": "Proizvodi u opsegu",
+      "productsNeedingReview": "Proizvodi koji zahtijevaju pregled",
+      "title": "Pregled provjera"
+    },
+    "quickActions": {
+      "title": "Brze radnje"
+    },
+    "subtitle": "Zaštitite ostatak svog kataloga, osvježite nadzor ili provjerite jedan odabrani proizvod.",
+    "title": "Pokrivenost kataloga",
+    "toasts": {
+      "completed": "Sigurnosna provjera dovršena",
+      "flagged": "Pronađen potencijalni sigurnosni problem"
+    }
+  },
+  "nav": {
+    "catalogCoverage": "Pokrivenost kataloga",
+    "dashboard": "Nadzorna ploča",
+    "evidence": "Revizijski trag",
+    "manualCheck": "Pokrivenost kataloga",
+    "safetyAlerts": "Red čekanja za pregled",
+    "settings": "Postavke"
+  },
+  "news": {
+    "items": {
+      "databaseUpdate": {
+        "date": "Prosinac 2025.",
+        "description": "Baza podataka Safety Gate kontinuirano se ažurira novim upozorenjima o proizvodima. Redovito provjeravajte kako biste ostali usklađeni.",
+        "title": "Ažurirana baza podataka EU Safety Gate"
+      },
+      "gpsr": {
+        "date": "GPSR 2024",
+        "description": "Saznajte više o zahtjevima GPSR-a i kako osigurati da vaši proizvodi zadovoljavaju EU sigurnosne standarde.",
+        "title": "Opća uredba o sigurnosti proizvoda"
+      }
+    },
+    "title": "Vijesti"
+  },
+  "onboarding": {
+    "back": "Natrag",
+    "finishButton": "Završi postavljanje i idi na nadzornu ploču",
+    "nextStep": "Sljedeći korak",
+    "stepIndicator": "Korak {{current}} od {{total}}",
+    "steps": {
+      "automation": {
+        "description": "Konfigurirajte prioritetni pregled i automatska sigurnosna pravila za svoju trgovinu.",
+        "label": "Sigurnosna automatizacija",
+        "quarantine": {
+          "desc": "Automatski označite proizvode za prioritetni pregled kada se podudaraju s upozorenjima Safety Gate s ozbiljnim rizikom (prag >= 95%).",
+          "label": "Omogući prioritetni pregled",
+          "title": "Prioritetiziraj ozbiljne rizike"
+        },
+        "title": "Korak 3: Automatsko praćenje i upozorenja",
+        "webhooks": {
+          "desc": "Proizvodi se automatski provjeravaju u EU bazi podataka kad god se stvore ili ažuriraju.",
+          "title": "Skeniranje web-kuka u stvarnom vremenu"
+        }
+      },
+      "scan": {
+        "alerts": "Stvorena sigurnosna upozorenja: {{count}}",
+        "complete": "Katalog je sada nadziran",
+        "description": "Uvezite svoje trenutne Shopify proizvode u nadzor Safety Gate, a zatim usporedite katalog s nedavnim upozorenjima Safety Gate.",
+        "imported": "Proizvodi uvezeni za nadzor: {{count}}",
+        "label": "Uvoz kataloga",
+        "monitored": "Proizvodi uspoređeni s upozorenjima Safety Gate: {{count}}",
+        "scanned": "Skenirani proizvodi: {{count}}",
+        "scanning": "Uvoz kataloga i usporedba proizvoda s upozorenjima Safety Gate...",
+        "startButton": "Uvezi i nadziri trenutni katalog",
+        "title": "Korak 2: Uvezi i nadziri trenutni katalog",
+        "toScan": "Proizvodi za uvoz za nadzor: {{count}}"
+      },
+      "sensitivity": {
+        "balanced": "70% (Preporučeno - Uravnoteženo)",
+        "broad": "40% (Široko - Više upozorenja)",
+        "calibration": {
+          "balancedDesc": "Standardna osjetljivost. Optimizirana ravnoteža između preciznosti i broja upozorenja. Skenira naslove, opise i podudara ključne robne marke i strukture modela.",
+          "balancedTitle": "Uravnoteženi način otkrivanja",
+          "broadDesc": "Visoka osjetljivost. Hvata labavo povezane podudarnosti. Preporučuje se ako prodajete visokorizične kategorije proizvoda (igračke, elektronika) i želite potpunu pokrivenost, ali očekujte neke lažne pozitivne rezultate.",
+          "broadTitle": "Široki način otkrivanja",
+          "strictDesc": "Visoka preciznost. Filtrira manje sličnosti. Upozorenja će se pokrenuti samo za vrlo jasna podudaranja naziva robne marke/modela. Niska stopa lažnih upozorenja.",
+          "strictTitle": "Strogi način otkrivanja"
+        },
+        "description": "Odaberite koliko se blisko proizvod treba podudarati sa zapisom Safety Gate prije nego što ga je potrebno pregledati.",
+        "label": "Strogost podudaranja",
+        "strict": "90% (Strogo – Manje upozorenja)",
+        "thresholdLabel": "Prag podudaranja: {{value}}%",
+        "title": "Korak 1: Postavite strogost podudaranja"
+      }
+    },
+    "subtitle": "Pronađite moguća podudaranja opasnih proizvoda, pregledajte ih u Shopifyju i čuvajte dokaze revizije za svaku odluku.",
+    "title": "Pratite svoj katalog u odnosu na EU Safety Gate",
+    "value": {
+      "audit": {
+        "description": "Riješene i odbačene odluke čuvaju bilješke za izvoz i praćenje dobavljača.",
+        "title": "Dokazi spremni za reviziju"
+      },
+      "monitor": {
+        "description": "Nova upozorenja Safety Gate provjeravaju se u odnosu na vaš Shopify katalog.",
+        "title": "Dnevno praćenje EU Safety Gate"
+      },
+      "review": {
+        "description": "Usporedite podudaranje, odlučite što ćete učiniti i održavajte red čekanja aktivnim.",
+        "title": "Tijek rada odluka trgovca"
+      }
+    }
+  },
+  "pagination": {
+    "pageOf": "Stranica {{current}} od {{total}} ({{count}} upozorenja)"
+  },
+  "portal": {
+    "description": "Pristupite službenoj europskoj bazi podataka Safety Gate za pretraživanje opasnih proizvoda i pregled detaljnih sigurnosnih upozorenja.",
+    "home": "Početna stranica Safety Gate",
+    "homeDescription": "Pristupite službenom portalu Europske komisije",
+    "searchDatabase": "Pretraži bazu podataka",
+    "searchDescription": "Pretražite EU Safety Gate za opasne proizvode",
+    "title": "Portal Safety Gate"
+  },
+  "resolveActions": {
+    "actionTaken": "Poduzeta radnja",
+    "contactedSupplier": "Kontaktiran dobavljač (čeka se odgovor)",
+    "contactPending": "Čeka se odgovor dobavljača",
+    "falsePositive": "Lažno pozitivno",
+    "menuLabel": "Radnje rješavanja",
+    "modifiedProduct": "Proizvod izmijenjen",
+    "noActionNeeded": "Nije potrebna radnja",
+    "notMyProduct": "Nije moj proizvod",
+    "other": "Ostalo",
+    "removedFromSale": "Uklonjeno iz prodaje",
+    "verifiedSafe": "Povijesni ishod: proizvod provjeren kao siguran"
+  },
+  "settings": {
+    "monitoring": {
+      "automatic": {
+        "description": "Proizvodi se automatski provjeravaju kada se kreiraju ili ažuriraju putem web-kuka.",
+        "enabled": "Omogućeno",
+        "title": "Automatska provjera"
+      },
+      "manual": {
+        "description": "Pokrenite sigurnosne provjere na zahtjev za bilo koji proizvod u vašem katalogu.",
+        "goToManualCheck": "Idi na ručnu provjeru",
+        "title": "Ručne provjere"
+      },
+      "title": "Praćenje"
+    },
+    "navigation": {
+      "dashboard": "Nadzorna ploča",
+      "manualCheck": "Ručna provjera",
+      "title": "Navigacija",
+      "viewAlerts": "Prikaži upozorenja"
+    },
+    "subtitle": "Kontrolirajte kako ZeroRecall prati vaš Shopify katalog.",
+    "threshold": {
+      "currentDefault": "Trenutna zadana vrijednost okruženja",
+      "description": "Odaberite koliko mogućih podudaranja Safety Gate vaš tim želi pregledati. Uravnoteženo praćenje preporučuje se za većinu Shopify kataloga.",
+      "howItWorks": "Kako ovo funkcionira",
+      "label": "Napredni prag podudaranja (%)",
+      "resetToDefault": "Vrati na zadano",
+      "save": "Spremi",
+      "title": "Način praćenja"
+    },
+    "title": "Postavke praćenja"
+  },
+  "settingsAdmin": {
+    "advancedMatchingSettings": "Napredne postavke podudaranja",
+    "automation": {
+      "autoDraftDescription": "Automatski označite proizvode za prioritetni pregled kada se podudaraju s upozorenjima Safety Gate s ozbiljnim rizikom (prag >= 95%).",
+      "autoDraftTitle": "Prioritetizirajte ozbiljne rizike",
+      "description": "Konfigurirajte prioritetni pregled za visokorizična podudaranja.",
+      "eyebrow": "Operacije u stvarnom vremenu",
+      "title": "Sigurnosna automatizacija"
+    },
+    "automationStatus": {
+      "active": {
+        "badge": "Plan aktivan",
+        "description": "Početna revizija kataloga je dovršena i ova trgovina ima aktivan plan praćenja.",
+        "title": "Revizija kataloga dovršena"
+      },
+      "completedNoPlan": {
+        "badge": "Revizija dovršena",
+        "description": "Početna revizija kataloga je dovršena. Kontinuirano automatsko praćenje zahtijeva aktivan plan.",
+        "title": "Početna revizija kataloga dovršena"
+      },
+      "failed": {
+        "badge": "Potrebna pažnja",
+        "description": "Posljednji uvoz ili revizija nisu dovršeni. Ponovite pokrivenost kataloga prije nego što se oslonite na status praćenja.",
+        "title": "Početna revizija kataloga zahtijeva pažnju"
+      },
+      "notStarted": {
+        "badge": "Nije provjereno",
+        "description": "Početni uvoz nije dovršen, tako da pokrivenost kataloga još nije potvrđena.",
+        "title": "Revizija kataloga nije potvrđena"
+      },
+      "openCatalog": "Otvori pokrivenost kataloga",
+      "scanning": {
+        "badge": "U tijeku",
+        "description": "Proizvodi se uvoze i provjeravaju. Pokrivenost kataloga bit će potvrđena nakon završetka revizije.",
+        "title": "Početna revizija kataloga u tijeku"
+      }
+    },
+    "automationStatusDescription": "Dnevna ažuriranja EU Safety Gate, promjene Shopify proizvoda i zapisi revizije obrađuju se automatski. Koristite ove postavke samo za podešavanje količine pregleda i obavijesti.",
+    "automationStatusEyebrow": "Automatsko praćenje",
+    "automationStatusTitle": "Praćenje Safety Gate radi za ovu trgovinu",
+    "configuration": "Konfiguracija",
+    "configurationDescription": "Neka stranica bude usredotočena na jednu odluku trgovca: koliko stroga treba biti provjera pri usporedbi proizvoda s upozorenjima Safety Gate.",
+    "currentThreshold": "Trenutni prag",
+    "currentThresholdDescription": "Niže vrijednosti hvataju više mogućih podudaranja. Više vrijednosti smanjuju lažne pozitivne rezultate.",
+    "environmentDefault": "Zadano okruženje",
+    "environmentDefaultDescription": "Koristi se kada trgovina još nema spremljen prilagođeni prag.",
+    "exclusions": {
+      "description": "Isključite određene dobavljače ili kategorije proizvoda iz provjera Safety Gate kako biste smanjili lažne pozitivne rezultate.",
+      "eyebrow": "Pravila filtriranja",
+      "title": "Pravila isključenja",
+      "typesDescription": "Upišite kategoriju ili vrstu proizvoda i pritisnite Enter ili zarez za dodavanje.",
+      "typesPlaceholder": "Poklon kartica, Usluga, ...",
+      "typesTitle": "Isključene vrste proizvoda",
+      "vendorsDescription": "Upišite naziv dobavljača i pritisnite Enter ili zarez za dodavanje.",
+      "vendorsPlaceholder": "Dobavljač A, Dobavljač B, ...",
+      "vendorsTitle": "Isključeni dobavljači"
+    },
+    "fallback": "Zamjensko rješenje",
+    "guidance": "Smjernice",
+    "guidanceItems": {
+      "balancedDescription": "Preporučeno za većinu kataloga (65-70%). Hvata vjerojatne rizike uz zadržavanje niskog broja lažnih upozorenja.",
+      "balancedTitle": "Uravnotežena zadana postavka",
+      "broadDescription": "Koristite oko 50% kada preferirate hvatanje više mogućih podudarnosti i ugodno vam je pregledavati više upozorenja.",
+      "broadTitle": "Široko praćenje",
+      "strictDescription": "Koristite 80%+ kada je vaš katalog stabilan i želite manje ručnih pregleda.",
+      "strictTitle": "Strogo podudaranje"
+    },
+    "included": {
+      "description": "Aplikacija kontinuirano prati vaš katalog u odnosu na upozorenja Safety Gate, čuva dokaze o usklađenosti i upozorava vas kada proizvodi trebaju pregled.",
+      "evidenceDescription": "Riješene i odbačene odluke zadržavaju bilješke, razloge, kontekst rizika i vremenske oznake.",
+      "evidenceTitle": "Dokaz za izvoz",
+      "eyebrow": "Tekuće praćenje",
+      "monitoringDescription": "Novi zapisi Safety Gate uspoređuju se s nadziranim Shopify proizvodima bez ručnog skeniranja.",
+      "monitoringTitle": "Tekuće praćenje EU-a",
+      "teamDescription": "Prioritetni pregled, dokumentacija dobavljača i filtri pomažu vašem timu da brže donosi stvarne odluke.",
+      "teamTitle": "Tijek rada pregleda",
+      "title": "Što vaša trgovina pokriva"
+    },
+    "matchingStrictness": "Strogost podudaranja",
+    "mode": {
+      "balanced": "Uravnoteženo",
+      "broad": "Više podudarnosti",
+      "strict": "Manje podudarnosti"
+    },
+    "monitoringModeEyebrow": "Način praćenja",
+    "notifications": {
+      "emailHelp": "Izvorno preuzeto sa Shopifyja. Možete koristiti drugu adresu.",
+      "emailLabel": "E-pošta za obavijesti",
+      "enabledDescription": "Odaberite hoćete li primati hitne nalaze, tjedni sažetak ili oboje.",
+      "enabledTitle": "E-pošta za sigurnosna upozorenja",
+      "immediateDescription": "Pošaljite mi e-poštu čim proizvod treba pregled.",
+      "immediateTitle": "Novi nalazi",
+      "invalidEmail": "Unesite valjanu adresu e-pošte prije omogućavanja obavijesti e-poštom.",
+      "languageLabel": "Jezik e-pošte",
+      "noRecipientDescription": "Obavijesti e-poštom su omogućene, ali nije navedena adresa. Poruke neće biti isporučene dok se ne unese e-pošta.",
+      "noRecipientHeading": "Nije konfiguriran primatelj e-pošte",
+      "useShopifyEmail": "Koristite e-poštu za kontakt trgovine ({{email}})",
+      "weeklyDescription": "Sažetak praćenja ponedjeljkom: potvrđuje kada nije bilo novih nalaza ili sažima otvorene slučajeve koji trebaju pregled.",
+      "weeklyTitle": "Tjedni sažetak praćenja"
+    },
+    "onDemand": "Na zahtjev",
+    "plans": {
+      "advancedDescription": "Dodajte prioritetni pregled, praćenje dobavljača i tijekove rada na jezicima EU-a.",
+      "advancedTitle": "Napredno: automatizacija i višejezični tijekovi rada",
+      "description": "Značajke i mogućnosti uključene u vaš plan praćenja trgovine.",
+      "eyebrow": "Vrijednost pretplate",
+      "manualDescription": "Pokrenite provjere jedan po jedan proizvod i pogledajte najnoviji status proizvoda.",
+      "manualTitle": "Besplatno: ručne provjere",
+      "monitorDescription": "Pratite nova upozorenja Safety Gate u odnosu na katalog, izvezite CSV izvješća o reviziji i vodite trag odluka.",
+      "monitorTitle": "Plaćeno: dnevno praćenje i izvješća",
+      "title": "Mogućnosti plana"
+    },
+    "recommendedSetup": "Preporučena postavka",
+    "saveAll": "Spremi sve postavke",
+    "status": {
+      "auditTrail": "Revizijski trag",
+      "autoQuarantine": "Prioritetni pregled",
+      "dailySafetyGateUpdates": "Dnevna ažuriranja Safety Gate",
+      "emailDigest": "Sažetak e-pošte",
+      "off": "Isključeno",
+      "on": "Uključeno",
+      "running": "Pokrenuto",
+      "shopifyProductUpdates": "Novi/ažurirani Shopify proizvodi"
+    },
+    "storeSetting": "Postavka trgovine",
+    "strictnessHint": "40-60% je šire skeniranje. 70-85% je strože i obično proizvodi manje lažnih pozitivnih rezultata.",
+    "valueDescription": "Tekuće praćenje uspoređuje prihvatljive proizvode iz kataloga s novoobjavljenim zapisima Safety Gate.",
+    "valueEyebrow": "Praćenje kataloga",
+    "valueItems": {
+      "auditDescription": "Riješene i odbačene odluke zadržavaju bilješke, razloge i povijest pregleda za izvješća koja se mogu izvesti.",
+      "auditTitle": "Dokazi spremni za reviziju",
+      "dailyDescription": "Nova upozorenja Safety Gate provjeravaju se u odnosu na nadzirane proizvode bez da trgovac pokrene ručno skeniranje.",
+      "dailyTitle": "Dnevno praćenje kataloga",
+      "workflowDescription": "Trgovci pregledavaju samo proizvode koji trebaju odluku, a zatim ih rješavaju, odbacuju ili prate s dobavljačima.",
+      "workflowTitle": "Tijek rada pregleda izvornog Shopifyja"
+    },
+    "valueTitle": "Što ostaje pokriveno",
+    "workspace": "Radni prostor"
+  },
+  "status": {
+    "actionRequired": "Potrebna radnja",
+    "allClear": "Sve jasno",
+    "archived": "Arhivirano",
+    "dismissed": "Odbačeno",
+    "flagged": "označeno",
+    "monitored": "Nadzirano",
+    "needsReview": "Potrebna recenzija",
+    "notChecked": "Nije provjereno",
+    "protected": "Provjereno",
+    "resolved": "Riješeno",
+    "runCheck": "Pokreni provjeru",
+    "safe": "Nema podudaranja",
+    "scanning": "Skeniranje u tijeku",
+    "unprotected": "Nije provjereno",
+    "unsafe": "Potrebna recenzija",
+    "updated": "Ažurirano"
+  },
+  "uxEnhancements": {
+    "activityTimeline": {
+      "actions": {
+        "dismiss": "Odluka zabilježena: odbačeno",
+        "check": "Proizvod provjeren",
+        "quarantine": "Proizvod označen za pregled",
+        "resolve": "Odluka zabilježena: riješeno"
+      },
+      "description": "Zabilježene sigurnosne provjere, odluke o proizvodu i dokazi čuvaju se za izvješća o reviziji.",
+      "details": {
+        "autoDrafted": "Proizvod označen za prioritetni pregled.",
+        "bulkScanned": "Skupno skeniranje kataloga dovršeno.",
+        "checkSafe": "U ovoj provjeri nije pronađeno podudaranje.",
+        "checkUnsafe": "Proizvod treba pregled. Zapis odluke kreiran.",
+        "noReason": "Nije naveden razlog.",
+        "reason": "Razlog: {{reason}}"
+      },
+      "eyebrow": "Revizijski trag",
+      "noActivity": "Još nema događaja revizije. Pokrenite nadzor kako biste počeli prikupljati dokaze.",
+      "title": "Povijest odluka i dokaza",
+      "types": {
+        "automatic": "Sistemski događaj",
+        "bulk": "Skupni događaj",
+        "manual": "Događaj trgovca"
+      }
+    },
+    "alerts": {
+      "floating": {
+        "dismissSelected": "Odbaci odabrano",
+        "resolveSelected": "Riješi odabrano",
+        "selectedCount": "{{count}} odabrano upozorenje",
+        "selectedCount_few": "{{count}} odabrana upozorenja",
+        "selectedCount_many": "{{count}} odabranih upozorenja",
+        "selectedCount_one": "{{count}} odabrano upozorenje",
+        "selectedCount_other": "{{count}} odabranih upozorenja",
+        "selectedCount_plural": "{{count}} odabranih upozorenja"
+      },
+      "quickFilters": {
+        "allAlerts": "Svi zapisi",
+        "allAlertsDesc": "Prikaži sva sigurnosna upozorenja u katalogu.",
+        "highRisk": "Samo visoki rizik",
+        "highRiskDesc": "Ozbiljne razine rizika koje zahtijevaju djelovanje.",
+        "needsReview": "Potrebna je provjera",
+        "needsReviewDesc": "Sigurnosna upozorenja na čekanju.",
+        "resolved": "Riješeno / Odbačeno",
+        "resolvedDesc": "Prošla upozorenja zadržana za reviziju.",
+        "title": "Brzi filtri"
+      }
+    },
+    "complianceRing": {
+      "scoreLabel": "Očisti",
+      "subtitle": "Udio provjerenih proizvoda bez otvorenih stavki za pregled",
+      "title": "Stanje nadziranog kataloga"
+    }
+  },
+  "workspace": {
+    "all": "Sve",
+    "appLanguage": "Jezik aplikacije",
+    "apply": "Primijeni filtre",
+    "applyFilters": "Primijeni filtre",
+    "balancedHelp": "Uravnoteženo podudaranje preporučena je početna točka. Promijenite je samo ako želite pregledati više ili manje mogućih podudaranja.",
+    "broadHelp": "Uključuje više mogućih podudaranja i može zahtijevati više ručnog pregleda.",
+    "cannotCompare": "Nije moguće usporediti",
+    "catalogGlobalAction": "Provjerite {{count}} proizvoda u cijelom katalogu",
+    "catalogScopeHelp": "Pokrivenost uključuje sve proizvode Shopify kataloga, uključujući aktivne, nacrte i arhivirane stavke. Filtri mijenjaju samo ovaj popis, a ne pokrivenost ili opseg nadzora.",
+    "clearFilters": "Očisti filtre",
+    "compare": "Usporedi proizvode",
+    "compareProduct": "Usporedi proizvode: {{title}}",
+    "coverageFiltersHelp": "Pokrivenost i otvoreni nalazi su odvojeni: promijenjeni proizvod također može imati nalaz koji čeka pregled.",
+    "coverageIncomplete": "{{count}} proizvoda treba trenutnu provjeru",
+    "coverageScope": "Prikazuje se {{visible}} od {{total}} proizvoda u katalogu.",
+    "csv": {
+      "action": "Radnja odluke",
+      "actor": "Zabilježio/la",
+      "caseNumber": "Slučaj Safety Gate",
+      "decisionAt": "Odluka donesena",
+      "detectedAt": "Otkriveno",
+      "generatedAt": "Generirano",
+      "guidance": "Smjernice za pregled",
+      "notes": "Bilješke o pregledu",
+      "product": "Proizvod",
+      "productId": "ID proizvoda Shopify",
+      "recordType": "Vrsta zapisa",
+      "resolution": "Rješenje",
+      "risk": "Razina rizika",
+      "shop": "Trgovina",
+      "source": "Službeni izvor",
+      "sourceRisk": "Rizik u službenom upozorenju",
+      "status": "Status"
+    },
+    "csvGuidance": "Moguće podudaranje. Prije donošenja odluke usporedite identifikatore proizvoda i službeni zapis.",
+    "currentFindingStatus": "Trenutni status nalaza",
+    "dateFilterTimezone": "Datumi koriste vremensku zonu nadzora: {{timeZone}}. Primijenite filtre za ažuriranje rezultata i izvoz.",
+    "decisionAt": "Odluka zabilježena",
+    "decisionExportHelp": "Ovaj prikaz i njegov CSV izvoz koriste datume odluka. Uključuju događaje pregleda za starije nalaze, uključujući ponovno otvorene slučajeve. Nazivi proizvoda i činjenice službenog izvora zadržavaju svoj izvorni tekst.",
+    "decisionFrom": "Datum odluke od",
+    "decisionLegacy": "Povijesni ishod: proizvod provjeren kao siguran",
+    "decisionTo": "Datum odluke do",
+    "detectedAt": "Nalaz otkriven",
+    "differentIdentifiers": "Različiti identifikatori: {{fields}}. Provjerite ih prije donošenja odluke.",
+    "documentedFindings": "Trenutno riješeni ili odbačeni nalazi",
+    "download": "Preuzmi CSV",
+    "emptyHelp": "Nema zabilježenih otvorenih nalaza. To ne potvrđuje da su vaši proizvodi sigurni. Provjerite pokrivenost kataloga i najnovije pokretanje nadzora.",
+    "eventCount": "{{count}} događaja odluke",
+    "excluded": "{{count}} od {{total}} proizvoda u katalogu odgovara ovim pravilima za ručne provjere. Automatski nadzor ne koristi ova isključenja. Postojeći nalazi ostaju dostupni.",
+    "excludeHelp": "Ova se pravila primjenjuju na ručne provjere. Provjerite zahvaćene proizvode prije spremanja.",
+    "exportHelp": "CSV sadrži sve nalaze u odabranom razdoblju i statusu, uključujući službene reference, bilješke o pregledu i zabilježene događaje odluka. To je zapis provjera, a ne sigurnosni certifikat.",
+    "exportReady": "CSV pripremljen. Ako preuzimanje nije započelo, koristite ovu poveznicu:",
+    "findingCount": "Nalazi u ovom opsegu: {{count}}.",
+    "findingFrom": "Nalaz otkriven od",
+    "findings": "Nalazi i dokazi",
+    "findingTo": "Nalaz otkriven do",
+    "from": "Od datuma",
+    "goReview": "Pregledaj otvorene nalaze",
+    "groupAction": "Poduzeta radnja",
+    "groupDifferent": "Drugi proizvod",
+    "groupInformation": "Potrebno više informacija",
+    "history": "Povijest odluka",
+    "historyLimit": "Prikazuje se do {{count}} nedavnih nalaza. Izvezite cijeli zapis za sve nalaze.",
+    "changed": "Promijenjeno od zadnje provjere",
+    "chooseOutcomeHelp": "Odaberite ishod kako biste omogućili bilježenje svoje odluke.",
+    "chooseOutcomeLink": "Odaberi ishod",
+    "lastSuccess": "Zadnje uspješno pokretanje nadzora",
+    "matchingIdentifiers": "Podudarni identifikatori: {{fields}}.",
+    "matchNeedsVerification": "Moguće podudaranje. Prije donošenja odluke usporedite fotografije i identifikatore sa službenim zapisom.",
+    "matchNotConfirmed": "Podudaranje nije potvrđeno nakon pregleda dokaza",
+    "missingIdentifiers": "Neki identifikatori nedostaju. Usporedite dostupne fotografije i zatražite od dobavljača model, barkod i seriju.",
+    "monitoring": {
+      "enabled": "Omogućeno — dnevne provjere",
+      "failed": "Zadnja automatska provjera nije uspjela",
+      "paused": "Pauzirano — nema trenutačnog plana praćenja",
+      "preview": "Pregled razvoja — naplata zaobiđena",
+      "processing": "Provjera u redu čekanja ili u tijeku",
+      "unknown": "Aktivnost praćenja nije potvrđena",
+      "unverified": "Pauzirano — pretplata se ne može potvrditi"
+    },
+    "monitoringLabel": "Automatsko praćenje",
+    "monitoringUnknownHelp": "Nema uspješnog pokretanja praćenja za potvrdu nedavne aktivnosti. Osvježite za ponovnu provjeru.",
+    "neverRun": "Nije zabilježeno dovršeno pokretanje praćenja",
+    "noCurrentResult": "Potreban je trenutačni rezultat",
+    "noDecisions": "Odluke još nisu zabilježene. Otvorite nalaz, usporedite proizvode i zabilježite što ste pregledali.",
+    "noFilteredDecisions": "Nijedan događaj odluke ne odgovara ovim filtrima. Očistite filtre da biste vidjeli cijelu povijest.",
+    "noFilteredFindings": "Nijedan nalaz ne odgovara ovim filtrima. Očistite filtre da biste vidjeli cijeli popis.",
+    "noMatch": "Nema podudaranja",
+    "noMatchAtCheck": "U ovoj provjeri nije pronađeno podudaranje.",
+    "notes": "Bilješke o pregledu",
+    "notificationLanguage": "Jezik e-pošte",
+    "notRecorded": "Nema trenutačnog ishoda pregleda",
+    "oldest": "Otvoreno {{count}} dana",
+    "onboarding": "Uvezi katalog → provjeri zapise Safety Gate → pregledaj rezultate",
+    "outcome": "Ishod",
+    "outcomeHelp": {
+      "contacted_supplier": "Nalaz ostaje otvoren dok čekate dobavljača.",
+      "false_positive": "Koristite kada dokazi pokazuju da se upozorenje ne primjenjuje. Nalaz će biti odbačen.",
+      "match_not_confirmed": "Koristite kada dokazi koje ste pregledali ne potvrđuju podudarnost. Nalaz će biti riješen.",
+      "modified_product": "Prvo ažurirajte proizvod u Shopifyju. Zabilježba ovog ishoda ne mijenja proizvod; nalaz će biti riješen.",
+      "not_my_product": "Koristite kada se upozorenje odnosi na drugi proizvod. Nalaz će biti odbačen.",
+      "other": "Opišite ishod u obaveznoj bilješci. Nalaz će biti riješen.",
+      "removed_from_sale": "Prvo uklonite proizvod iz prodaje u Shopifyju. Zabilježba ovog ishoda ne mijenja proizvod; nalaz će biti riješen.",
+      "verified_safe": "Ovo je povijesni ishod."
+    },
+    "outcomeLabels": {
+      "contactedSupplier": "Čeka se dobavljač",
+      "falsePositive": "Lažno pozitivno",
+      "modifiedProduct": "Izmijenjen proizvod",
+      "notMyProduct": "Nije moj proizvod",
+      "other": "Ostalo",
+      "removedFromSale": "Uklonjeno iz prodaje",
+      "verifiedSafe": "Povijesno: provjereno sigurno"
+    },
+    "possibleMatch": "Moguće podudaranje",
+    "possibleMatchAtCheck": "Ova provjera pronašla je moguće podudaranje sa Safety Gate.",
+    "print": "Ispis / spremanje PDF-a",
+    "priority": "Prioritet pregleda",
+    "priorityHelp": "Prvo odluke, zatim službena ozbiljnost upozorenja i najstariji nalazi. Slijede stavke koje čekaju dobavljače.",
+    "productStatus": "Status u Shopifyju",
+    "productStatusActive": "Aktivno",
+    "productStatusAll": "Svi statusi u Shopifyju",
+    "productStatusArchived": "Arhivirano",
+    "productStatusDraft": "Nacrt",
+    "productStatusUnknown": "Nepoznato",
+    "recommended": "Preporučena postavka",
+    "referenceMissing": "Službeni broj predmeta nedostupan",
+    "remaining": "Neprovjereno ili promijenjeno",
+    "reopened": "Ponovno otvoreno za pregled",
+    "reportEmpty": "Nijedan nalaz ne odgovara ovim filtrima.",
+    "reportTitle": "Izvješće o provjerama i odlukama",
+    "resultHelp": "Zabilježba ishoda dokumentira vaš pregled u revizijskom tragu i ne mijenja proizvod u Shopifyju.",
+    "reviewNext": "Pregledaj sljedeće podudaranje: {{title}}",
+    "reviewPrompt": "Usporedite dokaze, odaberite ishod i zabilježite svoje bilješke.",
+    "riskLabels": {
+      "electric": "Električni udar",
+      "fire": "Požar",
+      "health": "Zdravstveni rizik",
+      "high": "Visok rizik",
+      "chemical": "Kemijski",
+      "choking": "Gušenje",
+      "injuries": "Ozljede",
+      "low": "Nizak rizik",
+      "medium": "Srednji rizik",
+      "serious": "Ozbiljan rizik",
+      "unknown": "Rizik u upozorenju Safety Gate"
+    },
+    "runScope": "Provjere proizvoda: {{products}} · Razmotreni zapisi Safety Gate: {{records}} · Novi nalazi: {{findings}}",
+    "saved": "Postavke spremljene.",
+    "saveChanges": "Spremi promjene",
+    "scope": "Nalazi od {{from}} do {{to}}",
+    "scoreDetails": "Detalji sličnosti",
+    "scoreHelp": "Ovo su ocjene sličnosti koje se koriste za prioritizaciju pregleda, a ne vjerojatnost da je vaš proizvod opasan.",
+    "settingsAdvanced": "Napredno podudaranje i izuzimanja",
+    "shop": "Trgovina",
+    "showMore": "Prikaži više proizvoda",
+    "scheduleHelp": "Nova upozorenja Safety Gate provjeravaju se dok je plan praćenja aktivan. Vrijeme sljedeće dovršene provjere ovisi o redu čekanja.",
+    "sourceMissing": "Službena poveznica zapisa nije dostupna za ovaj spremljeni nalaz.",
+    "sourceRisk": "Rizik u službenom upozorenju (izvorni EU zapis)",
+    "status": "Status nalaza",
+    "strictHelp": "Prikazuje manje mogućih podudaranja i može propustiti manje očite sličnosti.",
+    "to": "Do datuma",
+    "unconfirmedIdentifiers": "Dostupni identifikatori kataloga ne potvrđuju ovo podudaranje. Usporedite pakiranje i zatražite od dobavljača nedostajući model, barkod i seriju.",
+    "unchecked": "Još nije provjereno",
+    "unsaved": "Imate nespremljene promjene.",
+    "verifyScope": "Rezultati kataloga primjenjuju se na verziju proizvoda koja je provjerena. Promijenjeni proizvodi trebaju novu provjeru.",
+    "viewRemainingProducts": "Prikaži {{count}} proizvoda koji trebaju provjeru",
+    "viewShopify": "Otvori proizvod u Shopifyju",
+    "waiting": "Čeka se dobavljač",
+    "when": "Zabilježeno u",
+    "who": "Zabilježio/la",
+    "whyMatch": "Zašto se ovo može podudarati"
+  }
+}
