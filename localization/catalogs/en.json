@@ -272,9 +272,9 @@
       "reportLoading": "Preparing the complete report…",
       "reportError": "The report is unavailable or the link has expired. Try again or contact info@zerorecall.online.",
       "detailsSummary": "What exactly do we check during the free scan?",
-      "detailsStep1": "<strong>1. Public Shopify catalog:</strong> We read publicly available titles, descriptions, brands, categories and product photos from your store’s public storefront (without admin access).",
-      "detailsStep2": "<strong>2. Text and image comparison with Safety Gate:</strong> We turn text and images into search vectors and compare them against the entire EU Safety Gate (formerly RAPEX) database, including items listed under a different retail name.",
-      "detailsStep3": "<strong>3. Email summary and CSV export:</strong> When finished, you receive an email summary of possible matches with case numbers, links to official EU records and a downloadable CSV for your review."
+      "detailsStep1": "<strong>Public Shopify catalog:</strong> We read publicly available titles, descriptions, brands, categories and product photos from your store’s public storefront (without admin access).",
+      "detailsStep2": "<strong>Text and image comparison with Safety Gate:</strong> We turn text and images into search vectors and compare them against the entire EU Safety Gate (formerly RAPEX) database, including items listed under a different retail name.",
+      "detailsStep3": "<strong>Email summary and CSV export:</strong> When finished, you receive an email summary of possible matches with case numbers, links to official EU records and a downloadable CSV for your review."
     },
     "quiet": {
       "eyebrow": "MORE PEACE OF MIND",

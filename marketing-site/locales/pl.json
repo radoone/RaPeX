@@ -271,9 +271,9 @@
     "reportLoading": "Przygotowujemy pełny raport…",
     "reportError": "Raport niedostępny lub link wygasł. Spróbuj ponownie albo napisz na info@zerorecall.online.",
     "detailsSummary": "Co dokładnie sprawdzamy podczas bezpłatnego skanu?",
-    "detailsStep1": "<strong>1. Publiczny katalog Shopify:</strong> Pobieramy publicznie dostępne tytuły, opisy, marki, kategorie i zdjęcia produktów ze sklepu (bez dostępu do panelu administratora).",
-    "detailsStep2": "<strong>2. Porównanie tekstu i zdjęć z Safety Gate:</strong> Zamieniamy tekst i obrazy na wektory wyszukiwania i porównujemy je z całą bazą UE Safety Gate (dawniej RAPEX), także pod inną nazwą handlową.",
-    "detailsStep3": "<strong>3. Podsumowanie e-mail i eksport CSV:</strong> Po zakończeniu otrzymasz e-mailem zestawienie możliwych dopasowań z numerami spraw, linkami do rekordów UE oraz plikiem CSV."
+    "detailsStep1": "<strong>Publiczny katalog Shopify:</strong> Pobieramy publicznie dostępne tytuły, opisy, marki, kategorie i zdjęcia produktów ze sklepu (bez dostępu do panelu administratora).",
+    "detailsStep2": "<strong>Porównanie tekstu i zdjęć z Safety Gate:</strong> Zamieniamy tekst i obrazy na wektory wyszukiwania i porównujemy je z całą bazą UE Safety Gate (dawniej RAPEX), także pod inną nazwą handlową.",
+    "detailsStep3": "<strong>Podsumowanie e-mail i eksport CSV:</strong> Po zakończeniu otrzymasz e-mailem zestawienie możliwych dopasowań z numerami spraw, linkami do rekordów UE oraz plikiem CSV."
   },
   "quiet": {
     "eyebrow": "WIĘKSZY SPOKÓJ DUCHA",

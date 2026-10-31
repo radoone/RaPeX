@@ -271,9 +271,9 @@
     "reportLoading": "Forbereder den fulde rapport…",
     "reportError": "Rapporten er utilgængelig, eller linket er udløbet. Prøv igen, eller kontakt info@zerorecall.online.",
     "detailsSummary": "Hvad kontrollerer vi præcist under den gratis scanning?",
-    "detailsStep1": "<strong>1. Offentligt Shopify-katalog:</strong> Vi læser offentligt tilgængelige titler, beskrivelser, mærker, kategorier og produktfotos fra din butik (uden admin-adgang).",
-    "detailsStep2": "<strong>2. Tekst- og billedsammenligning med Safety Gate:</strong> Vi omdanner tekst og billeder til søgevektorer og sammenligner dem med hele EU’s Safety Gate-database (tidligere RAPEX).",
-    "detailsStep3": "<strong>3. E-mailoversigt og CSV-eksport:</strong> Når scanningen er færdig, modtager du en e-mail med mulige match, sagsnumre, officielle EU-links og CSV-download."
+    "detailsStep1": "<strong>Offentligt Shopify-katalog:</strong> Vi læser offentligt tilgængelige titler, beskrivelser, mærker, kategorier og produktfotos fra din butik (uden admin-adgang).",
+    "detailsStep2": "<strong>Tekst- og billedsammenligning med Safety Gate:</strong> Vi omdanner tekst og billeder til søgevektorer og sammenligner dem med hele EU’s Safety Gate-database (tidligere RAPEX).",
+    "detailsStep3": "<strong>E-mailoversigt og CSV-eksport:</strong> Når scanningen er færdig, modtager du en e-mail med mulige match, sagsnumre, officielle EU-links og CSV-download."
   },
   "quiet": {
     "eyebrow": "MERE RO I SINDET",

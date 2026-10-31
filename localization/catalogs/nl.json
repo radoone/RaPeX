@@ -272,9 +272,9 @@
       "reportLoading": "Volledig rapport voorbereiden…",
       "reportError": "Rapport niet beschikbaar of link verlopen. Probeer opnieuw of mail info@zerorecall.online.",
       "detailsSummary": "Wat controleren we precies tijdens de gratis scan?",
-      "detailsStep1": "<strong>1. Openbare Shopify-catalogus:</strong> We lezen openbaar beschikbare titels, beschrijvingen, merken, categorieën en productfoto’s uit je winkel (zonder admintoegang).",
-      "detailsStep2": "<strong>2. Tekst- en beeldvergelijking met Safety Gate:</strong> We zetten tekst en afbeeldingen om in zoekvectoren en vergelijken ze met de volledige EU Safety Gate-database (voorheen RAPEX).",
-      "detailsStep3": "<strong>3. E-mailoverzicht en CSV-export:</strong> Na afloop ontvang je per e-mail een overzicht van mogelijke overeenkomsten met zaaknummers, officiële EU-links en een CSV-download."
+      "detailsStep1": "<strong>Openbare Shopify-catalogus:</strong> We lezen openbaar beschikbare titels, beschrijvingen, merken, categorieën en productfoto’s uit je winkel (zonder admintoegang).",
+      "detailsStep2": "<strong>Tekst- en beeldvergelijking met Safety Gate:</strong> We zetten tekst en afbeeldingen om in zoekvectoren en vergelijken ze met de volledige EU Safety Gate-database (voorheen RAPEX).",
+      "detailsStep3": "<strong>E-mailoverzicht en CSV-export:</strong> Na afloop ontvang je per e-mail een overzicht van mogelijke overeenkomsten met zaaknummers, officiële EU-links en een CSV-download."
     },
     "quiet": {
       "eyebrow": "MEER GEMOEDSRUST",

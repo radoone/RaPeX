@@ -272,9 +272,9 @@
       "reportLoading": "Pripravujeme úplný report…",
       "reportError": "Report nie je dostupný alebo platnosť odkazu vypršala. Skús to znova alebo napíš na info@zerorecall.online.",
       "detailsSummary": "Čo presne kontrolujeme pri bezplatnom skene?",
-      "detailsStep1": "<strong>1. Verejný katalóg Shopify:</strong> Načítame verejne dostupné názvy, popisy, značky, kategórie a fotografie produktov z verejného výstupu vášho obchodu (bez prístupu do administrácie).",
-      "detailsStep2": "<strong>2. Porovnanie textov a fotografií so Safety Gate:</strong> Texty aj obrázky premeníme na vyhľadávacie vektory a porovnáme ich s celou databázou upozornení EÚ Safety Gate (bývalý RAPEX) vrátane produktov s iným obchodným názvom.",
-      "detailsStep3": "<strong>3. E-mailový prehľad a CSV export:</strong> Po dokončení dostanete e-mailom súhrn možných zhôd s číslami prípadov, odkazmi na oficiálne záznamy EÚ a možnosťou stiahnuť CSV pre vlastnú kontrolu."
+      "detailsStep1": "<strong>Verejný katalóg Shopify:</strong> Načítame verejne dostupné názvy, popisy, značky, kategórie a fotografie produktov z verejného výstupu vášho obchodu (bez prístupu do administrácie).",
+      "detailsStep2": "<strong>Porovnanie textov a fotografií so Safety Gate:</strong> Texty aj obrázky premeníme na vyhľadávacie vektory a porovnáme ich s celou databázou upozornení EÚ Safety Gate (bývalý RAPEX) vrátane produktov s iným obchodným názvom.",
+      "detailsStep3": "<strong>E-mailový prehľad a CSV export:</strong> Po dokončení dostanete e-mailom súhrn možných zhôd s číslami prípadov, odkazmi na oficiálne záznamy EÚ a možnosťou stiahnuť CSV pre vlastnú kontrolu."
     },
     "quiet": {
       "eyebrow": "VIAC POKOJA PRE VÁŠ OBCHOD",

@@ -272,9 +272,9 @@
       "reportLoading": "Förbereder hela rapporten…",
       "reportError": "Rapporten är inte tillgänglig eller länken har gått ut. Försök igen eller kontakta info@zerorecall.online.",
       "detailsSummary": "Vad kontrollerar vi exakt under den kostnadsfria skanningen?",
-      "detailsStep1": "<strong>1. Offentlig Shopify-katalog:</strong> Vi läser offentligt tillgängliga titlar, beskrivningar, varumärken, kategorier och produktbilder från din butik (utan adminåtkomst).",
-      "detailsStep2": "<strong>2. Text- och bildjämförelse med Safety Gate:</strong> Vi omvandlar text och bilder till sökvektorer och jämför dem med hela EU:s Safety Gate-databas (tidigare RAPEX).",
-      "detailsStep3": "<strong>3. E-postsammanfattning och CSV-export:</strong> När skanningen är klar får du ett mejl med möjliga träffar, ärendenummer, officiella EU-länkar och CSV-nedladdning."
+      "detailsStep1": "<strong>Offentlig Shopify-katalog:</strong> Vi läser offentligt tillgängliga titlar, beskrivningar, varumärken, kategorier och produktbilder från din butik (utan adminåtkomst).",
+      "detailsStep2": "<strong>Text- och bildjämförelse med Safety Gate:</strong> Vi omvandlar text och bilder till sökvektorer och jämför dem med hela EU:s Safety Gate-databas (tidigare RAPEX).",
+      "detailsStep3": "<strong>E-postsammanfattning och CSV-export:</strong> När skanningen är klar får du ett mejl med möjliga träffar, ärendenummer, officiella EU-länkar och CSV-nedladdning."
     },
     "quiet": {
       "eyebrow": "MER LUGN OCH RO",

@@ -271,9 +271,9 @@
     "reportLoading": "Ruošiama visa ataskaita…",
     "reportError": "Ataskaita nepasiekiama arba nuorodos galiojimas baigėsi. Bandykite dar kartą arba rašykite info@zerorecall.online.",
     "detailsSummary": "Ką tiksliai tikriname nemokamo nuskaitymo metu?",
-    "detailsStep1": "<strong>1. Viešasis „Shopify“ katalogas:</strong> Nuskaitome viešai prieinamus jūsų parduotuvės pavadinimus, aprašymus, prekių ženklus, kategorijas ir produktų nuotraukas (be administratoriaus prieigos).",
-    "detailsStep2": "<strong>2. Teksto ir vaizdų palyginimas su „Safety Gate“:</strong> Tekstą ir vaizdus paverčiame paieškos vektoriais ir palyginame su visa ES „Safety Gate“ (buvusia RAPEX) duomenų baze.",
-    "detailsStep3": "<strong>3. El. pašto suvestinė ir CSV eksportas:</strong> Baigę gausite el. laišką su galimais atitikmenimis, bylų numeriais, oficialiomis ES nuorodomis ir CSV atsisiuntimu."
+    "detailsStep1": "<strong>Viešasis „Shopify“ katalogas:</strong> Nuskaitome viešai prieinamus jūsų parduotuvės pavadinimus, aprašymus, prekių ženklus, kategorijas ir produktų nuotraukas (be administratoriaus prieigos).",
+    "detailsStep2": "<strong>Teksto ir vaizdų palyginimas su „Safety Gate“:</strong> Tekstą ir vaizdus paverčiame paieškos vektoriais ir palyginame su visa ES „Safety Gate“ (buvusia RAPEX) duomenų baze.",
+    "detailsStep3": "<strong>El. pašto suvestinė ir CSV eksportas:</strong> Baigę gausite el. laišką su galimais atitikmenimis, bylų numeriais, oficialiomis ES nuorodomis ir CSV atsisiuntimu."
   },
   "quiet": {
     "eyebrow": "DAUGIAU RAMYBĖS",

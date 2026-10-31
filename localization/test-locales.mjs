@@ -47,3 +47,15 @@ test('all public-page translation keys exist and language alternates cover all E
     for (const { code } of languages) assert.ok(html.includes(`hreflang="${code}"`), `${page}:${code}`);
   }
 });
+
+test('scan steps render only trusted emphasis and rely on list numbering in every language', async () => {
+  const html = await readFile(new URL('../marketing-site/index.html', import.meta.url), 'utf8');
+  for (const { code } of languages) {
+    const catalog = await read(`./catalogs/${code}.json`);
+    for (let step = 1; step <= 3; step++) {
+      const value = catalog.web.scan[`detailsStep${step}`];
+      assert.match(value, /^<strong>(?!\d+\.)[^<>]+<\/strong>[^<>]+$/, `${code}: step ${step}`);
+      assert.match(html, new RegExp(`data-i18n="scan\\.detailsStep${step}" data-i18n-html="true"`));
+    }
+  }
+});

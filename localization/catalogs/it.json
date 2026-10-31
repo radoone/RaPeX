@@ -272,9 +272,9 @@
       "reportLoading": "Preparazione del rapporto completo…",
       "reportError": "Rapporto non disponibile o link scaduto. Riprova o scrivi a info@zerorecall.online.",
       "detailsSummary": "Cosa controlliamo esattamente nella scansione gratuita?",
-      "detailsStep1": "<strong>1. Catalogo pubblico Shopify:</strong> Leggiamo titoli, descrizioni, marchi, categorie e foto dei prodotti pubblicamente disponibili nel negozio (senza accesso admin).",
-      "detailsStep2": "<strong>2. Confronto di testo e immagini con Safety Gate:</strong> Convertiamo testi e immagini in vettori di ricerca e li confrontiamo con l’intero database UE Safety Gate (ex RAPEX).",
-      "detailsStep3": "<strong>3. Riepilogo via e-mail ed esportazione CSV:</strong> Al termine ricevi via e-mail le possibili corrispondenze con numeri di caso, link ufficiali UE ed esportazione CSV."
+      "detailsStep1": "<strong>Catalogo pubblico Shopify:</strong> Leggiamo titoli, descrizioni, marchi, categorie e foto dei prodotti pubblicamente disponibili nel negozio (senza accesso admin).",
+      "detailsStep2": "<strong>Confronto di testo e immagini con Safety Gate:</strong> Convertiamo testi e immagini in vettori di ricerca e li confrontiamo con l’intero database UE Safety Gate (ex RAPEX).",
+      "detailsStep3": "<strong>Riepilogo via e-mail ed esportazione CSV:</strong> Al termine ricevi via e-mail le possibili corrispondenze con numeri di caso, link ufficiali UE ed esportazione CSV."
     },
     "quiet": {
       "eyebrow": "MAGGIORE TRANQUILLITÀ",

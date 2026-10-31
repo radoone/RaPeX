@@ -272,9 +272,9 @@
       "reportLoading": "Préparation du rapport complet…",
       "reportError": "Rapport indisponible ou lien expiré. Réessayez ou contactez info@zerorecall.online.",
       "detailsSummary": "Que vérifions-nous exactement lors de l’analyse gratuite ?",
-      "detailsStep1": "<strong>1. Catalogue public Shopify :</strong> Nous lisons les titres, descriptions, marques, catégories et photos accessibles publiquement sur votre boutique (sans accès administrateur).",
-      "detailsStep2": "<strong>2. Comparaison texte et image avec Safety Gate :</strong> Les textes et images sont convertis en vecteurs de recherche et comparés à toute la base UE Safety Gate (ex-RAPEX), même sous un autre nom commercial.",
-      "detailsStep3": "<strong>3. Résumé par e-mail et export CSV :</strong> Une fois terminé, vous recevez par e-mail un résumé des correspondances possibles avec références, liens officiels UE et export CSV."
+      "detailsStep1": "<strong>Catalogue public Shopify :</strong> Nous lisons les titres, descriptions, marques, catégories et photos accessibles publiquement sur votre boutique (sans accès administrateur).",
+      "detailsStep2": "<strong>Comparaison texte et image avec Safety Gate :</strong> Les textes et images sont convertis en vecteurs de recherche et comparés à toute la base UE Safety Gate (ex-RAPEX), même sous un autre nom commercial.",
+      "detailsStep3": "<strong>Résumé par e-mail et export CSV :</strong> Une fois terminé, vous recevez par e-mail un résumé des correspondances possibles avec références, liens officiels UE et export CSV."
     },
     "quiet": {
       "eyebrow": "PLUS DE TRANQUILLITÉ D'ESPRIT",

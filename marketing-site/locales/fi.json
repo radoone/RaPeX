@@ -271,9 +271,9 @@
     "reportLoading": "Valmistellaan täydellistä raporttia…",
     "reportError": "Raportti ei ole saatavilla tai linkki on vanhentunut. Yritä uudelleen tai ota yhteyttä info@zerorecall.online.",
     "detailsSummary": "Mitä tarkalleen tarkistamme ilmaisen tarkistuksen aikana?",
-    "detailsStep1": "<strong>1. Julkinen Shopify-luettelo:</strong> Luemme kauppasi julkisesti saatavilla olevat otsikot, kuvaukset, tuotemerkit, kategoriat ja tuotekuvat (ilman ylläpitäjän oikeuksia).",
-    "detailsStep2": "<strong>2. Teksti- ja kuvavertailu Safety Gate -tietokantaan:</strong> Muunnamme tekstit ja kuvat hakuvektoreiksi ja vertaamme niitä koko EU:n Safety Gate (aiemmin RAPEX) -tietokantaan.",
-    "detailsStep3": "<strong>3. Sähköpostiyhteenveto ja CSV-vienti:</strong> Valmistuttuaan saat sähköpostitse yhteenvedon mahdollisista osumista, tapausnumerot, viralliset EU-linkit ja CSV-latauksen."
+    "detailsStep1": "<strong>Julkinen Shopify-luettelo:</strong> Luemme kauppasi julkisesti saatavilla olevat otsikot, kuvaukset, tuotemerkit, kategoriat ja tuotekuvat (ilman ylläpitäjän oikeuksia).",
+    "detailsStep2": "<strong>Teksti- ja kuvavertailu Safety Gate -tietokantaan:</strong> Muunnamme tekstit ja kuvat hakuvektoreiksi ja vertaamme niitä koko EU:n Safety Gate (aiemmin RAPEX) -tietokantaan.",
+    "detailsStep3": "<strong>Sähköpostiyhteenveto ja CSV-vienti:</strong> Valmistuttuaan saat sähköpostitse yhteenvedon mahdollisista osumista, tapausnumerot, viralliset EU-linkit ja CSV-latauksen."
   },
   "quiet": {
     "eyebrow": "LISÄÄ MIELENRAUHAA",
