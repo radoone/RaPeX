@@ -1238,7 +1238,7 @@ a {
 .pricing-actions .text-link { text-align: center; }
 .founder-section { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 60px; border-top: 1px solid var(--border); }
 .founder-identity .section-title { margin-top: 14px; }
-.founder-role { color: var(--text-muted); margin: 12px 0 20px; }
+.founder-identity .text-link { display: inline-block; margin-top: 16px; }
 .founder-story h3 { font-size: 21px; margin-bottom: 16px; }
 .founder-story p { color: var(--text-muted); }
 .founder-story .founder-independence { font-size: 14px; border-top: 1px solid var(--border); margin: 22px 0 0; padding-top: 18px; }
