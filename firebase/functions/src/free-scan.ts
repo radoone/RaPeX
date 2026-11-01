@@ -1,3 +1,4 @@
+import { resolveShopDomain } from "./shop-domain-resolver.js";
 import { createHash, randomBytes, timingSafeEqual } from "node:crypto";
 import { URL, URLSearchParams } from "node:url";
 import * as logger from "firebase-functions/logger";
@@ -212,10 +213,10 @@ export async function handleFreeScanRequest(request: HttpRequest, response: Http
     return;
   }
 
-  const domain = normalizedDomain(request.body?.domain);
+  const inputDomain = request.body?.domain;
   const email = normalizedEmail(request.body?.email);
   const locale = normalizeEmailLanguage(request.body?.locale);
-  if (!domain || !email) {
+  if (typeof inputDomain !== "string" || !email) {
     response.status(400).json({ error: "Enter a valid myshopify.com domain and email address." });
     return;
   }
@@ -229,6 +230,12 @@ export async function handleFreeScanRequest(request: HttpRequest, response: Http
   }
   if (!challengePassed) {
     response.status(403).json({ error: "Human verification failed. Please try again." });
+    return;
+  }
+
+  const domain = normalizedDomain(inputDomain) || await resolveShopDomain(inputDomain);
+  if (!domain) {
+    response.status(422).json({ error: "shop_domain_not_found" });
     return;
   }
 

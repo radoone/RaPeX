@@ -346,7 +346,7 @@ function initFormHandler() {
     }
     const emailInput = document.getElementById("scan-email");
     const email = emailInput.value.trim();
-    if (!/^[a-z0-9][a-z0-9-]{1,60}\.myshopify\.com$/.test(domain)) {
+    if (!domain || domain.length > 2048) {
       showFeedback("error", "scan.requestErrorTitle", "scan.invalidDomain");
       return;
     }
@@ -368,7 +368,9 @@ function initFormHandler() {
         body: JSON.stringify({ domain, email, locale: i18next.resolvedLanguage || "en", turnstileToken }),
       });
       if (!response.ok) {
-        if (response.status === 429) {
+        if (response.status === 422) {
+          showFeedback("error", "scan.requestErrorTitle", "scan.invalidDomain");
+        } else if (response.status === 429) {
           showFeedback("error", "scan.requestErrorTitle", "scan.rateLimitBody");
         } else {
           showFeedback("error", "scan.requestErrorTitle", "scan.requestErrorBody");
