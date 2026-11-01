@@ -260,7 +260,7 @@
     "failedBody": "We could not check the catalog. Check the domain and try later.",
     "requestErrorTitle": "Request not sent",
     "requestErrorBody": "The service is unavailable. No scan has started; try later.",
-    "rateLimitBody": "A request was recently sent for this store or connection. Try later.",
+    "rateLimitBody": "A request was recently sent for this store, email address or connection. Try later.",
     "unavailableTitle": "The free scan is currently unavailable",
     "unavailableBody": "We cannot start a scan right now. See an example result or contact us.",
     "contactLink": "Contact us",

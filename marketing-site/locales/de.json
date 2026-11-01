@@ -260,7 +260,7 @@
     "failedBody": "Wir konnten den Katalog nicht überprüfen. Überprüfen Sie die Domain und versuchen Sie es später erneut.",
     "requestErrorTitle": "Anfrage nicht gesendet",
     "requestErrorBody": "Der Dienst ist nicht verfügbar. Es wurde kein Scan gestartet; versuchen Sie es später erneut.",
-    "rateLimitBody": "Für diesen Shop oder diese Verbindung wurde kürzlich eine Anfrage gesendet. Versuchen Sie es später erneut.",
+    "rateLimitBody": "Für diesen Shop, diese E-Mail-Adresse oder diese Verbindung wurde kürzlich eine Anfrage gesendet. Versuchen Sie es später erneut.",
     "unavailableTitle": "Der kostenlose Scan ist derzeit nicht verfügbar",
     "unavailableBody": "Wir können derzeit keinen Scan starten. Sehen Sie sich ein Beispielergebnis an oder kontaktieren Sie uns.",
     "contactLink": "Kontaktieren Sie uns",

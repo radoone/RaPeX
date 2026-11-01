@@ -261,7 +261,7 @@
       "failedBody": "Vi kunde inte kontrollera katalogen. Kontrollera domänen och försök senare.",
       "requestErrorTitle": "Förfrågan skickades inte",
       "requestErrorBody": "Tjänsten är inte tillgänglig. Ingen skanning har startat; försök senare.",
-      "rateLimitBody": "En förfrågan skickades nyligen för denna butik eller anslutning. Försök senare.",
+      "rateLimitBody": "En förfrågan skickades nyligen för denna butik, e-postadress eller anslutning. Försök senare.",
       "unavailableTitle": "Gratisskanningen är för närvarande inte tillgänglig",
       "unavailableBody": "Vi kan inte starta en skanning just nu. Se ett exempelresultat eller kontakta oss.",
       "contactLink": "Kontakta oss",

@@ -260,7 +260,7 @@
     "failedBody": "Nous n'avons pas pu vérifier le catalogue. Vérifiez le domaine et réessayez plus tard.",
     "requestErrorTitle": "Demande non envoyée",
     "requestErrorBody": "Le service est indisponible. Aucun scan n'a été démarré ; réessayez plus tard.",
-    "rateLimitBody": "Une demande a été récemment envoyée pour cette boutique ou cette connexion. Réessayez plus tard.",
+    "rateLimitBody": "Une demande a été récemment envoyée pour cette boutique, cette adresse e-mail ou cette connexion. Réessayez plus tard.",
     "unavailableTitle": "Le scan gratuit est actuellement indisponible",
     "unavailableBody": "Nous ne pouvons pas démarrer un scan pour le moment. Voir un exemple de résultat ou nous contacter.",
     "contactLink": "Nous contacter",

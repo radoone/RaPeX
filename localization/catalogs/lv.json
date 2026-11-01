@@ -261,7 +261,7 @@
       "failedBody": "Mēs nevarējām pārbaudīt katalogu. Pārbaudiet domēnu un mēģiniet vēlāk.",
       "requestErrorTitle": "Pieprasījums nav nosūtīts",
       "requestErrorBody": "Pakalpojums nav pieejams. Skenēšana nav sākta; mēģiniet vēlāk.",
-      "rateLimitBody": "Nesen tika nosūtīts pieprasījums šim veikalam vai savienojumam. Mēģiniet vēlāk.",
+      "rateLimitBody": "Nesen tika nosūtīts pieprasījums šim veikalam, e-pasta adresei vai savienojumam. Mēģiniet vēlāk.",
       "unavailableTitle": "Bezmaksas skenēšana pašlaik nav pieejama",
       "unavailableBody": "Mēs pašlaik nevaram sākt skenēšanu. Skatiet rezultāta piemēru vai sazinieties ar mums.",
       "contactLink": "Sazinieties ar mums",

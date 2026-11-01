@@ -261,7 +261,7 @@
       "failedBody": "Non è stato possibile controllare il catalogo. Controlla il dominio e riprova più tardi.",
       "requestErrorTitle": "Richiesta non inviata",
       "requestErrorBody": "Il servizio non è disponibile. Nessuna scansione è iniziata; riprova più tardi.",
-      "rateLimitBody": "Una richiesta è stata inviata di recente per questo negozio o connessione. Riprova più tardi.",
+      "rateLimitBody": "Una richiesta è stata inviata di recente per questo negozio, indirizzo email o connessione. Riprova più tardi.",
       "unavailableTitle": "La scansione gratuita non è attualmente disponibile",
       "unavailableBody": "Non possiamo avviare una scansione in questo momento. Vedi un esempio di risultato o contattaci.",
       "contactLink": "Contattaci",

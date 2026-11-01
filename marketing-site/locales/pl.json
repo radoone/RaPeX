@@ -260,7 +260,7 @@
     "failedBody": "Nie mogliśmy sprawdzić katalogu. Sprawdź domenę i spróbuj później.",
     "requestErrorTitle": "Żądanie nie zostało wysłane",
     "requestErrorBody": "Usługa jest niedostępna. Skanowanie nie zostało rozpoczęte; spróbuj później.",
-    "rateLimitBody": "Żądanie zostało niedawno wysłane dla tego sklepu lub połączenia. Spróbuj później.",
+    "rateLimitBody": "Żądanie zostało niedawno wysłane dla tego sklepu, adresu e-mail lub połączenia. Spróbuj później.",
     "unavailableTitle": "Darmowe skanowanie jest obecnie niedostępne",
     "unavailableBody": "Nie możemy teraz rozpocząć skanowania. Zobacz przykładowy wynik lub skontaktuj się z nami.",
     "contactLink": "Skontaktuj się z nami",

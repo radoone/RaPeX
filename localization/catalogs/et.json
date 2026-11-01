@@ -261,7 +261,7 @@
       "failedBody": "Kataloogi ei saanud kontrollida. Kontrollige domeeni ja proovige hiljem uuesti.",
       "requestErrorTitle": "Taotlust ei saadetud",
       "requestErrorBody": "Teenus pole saadaval. Skaneerimist pole alustatud; proovige hiljem uuesti.",
-      "rateLimitBody": "Selle poe või ühenduse jaoks saadeti hiljuti taotlus. Proovige hiljem uuesti.",
+      "rateLimitBody": "Selle poe, e-posti aadressi või ühenduse jaoks saadeti hiljuti taotlus. Proovige hiljem uuesti.",
       "unavailableTitle": "Tasuta skaneerimine pole praegu saadaval",
       "unavailableBody": "Me ei saa praegu skaneerimist alustada. Vaadake näidistulemust või võtke meiega ühendust.",
       "contactLink": "Võta meiega ühendust",

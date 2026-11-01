@@ -261,7 +261,7 @@
       "failedBody": "Não foi possível verificar o catálogo. Verifique o domínio e tente mais tarde.",
       "requestErrorTitle": "Pedido não enviado",
       "requestErrorBody": "O serviço não está disponível. Nenhuma análise foi iniciada; tente mais tarde.",
-      "rateLimitBody": "Um pedido foi enviado recentemente para esta loja ou conexão. Tente mais tarde.",
+      "rateLimitBody": "Um pedido foi enviado recentemente para esta loja, endereço de e-mail ou conexão. Tente mais tarde.",
       "unavailableTitle": "A análise gratuita está atualmente indisponível",
       "unavailableBody": "Não podemos iniciar uma análise agora. Veja um exemplo de resultado ou contacte-nos.",
       "contactLink": "Contacte-nos",

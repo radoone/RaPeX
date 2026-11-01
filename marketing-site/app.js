@@ -177,7 +177,7 @@ function initFormHandler() {
         callback: (token) => {
           turnstileToken = token;
           if (!requestSubmitted) submitBtn.disabled = false;
-          if (feedback.dataset.state === "error") feedback.hidden = true;
+          if (feedback.dataset.state === "error" && body.dataset.i18n === "scan.challengeUnavailable") feedback.hidden = true;
         },
         "expired-callback": () => { turnstileToken = ""; submitBtn.disabled = true; },
         "error-callback": () => {

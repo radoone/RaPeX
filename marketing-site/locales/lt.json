@@ -260,7 +260,7 @@
     "failedBody": "Nepavyko patikrinti katalogo. Patikrinkite domeną ir bandykite vėliau.",
     "requestErrorTitle": "Užklausa neišsiųsta",
     "requestErrorBody": "Paslauga nepasiekiama. Skenavimas nepradėtas; bandykite vėliau.",
-    "rateLimitBody": "Užklausa šiai parduotuvei ar prisijungimui neseniai buvo išsiųsta. Bandykite vėliau.",
+    "rateLimitBody": "Užklausa šiai parduotuvei, el. pašto adresui ar prisijungimui neseniai buvo išsiųsta. Bandykite vėliau.",
     "unavailableTitle": "Nemokamas skenavimas šiuo metu nepasiekiamas",
     "unavailableBody": "Šiuo metu negalime pradėti skenavimo. Peržiūrėkite pavyzdinį rezultatą arba susisiekite su mumis.",
     "contactLink": "Susisiekite su mumis",

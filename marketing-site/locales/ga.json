@@ -260,7 +260,7 @@
     "failedBody": "Níorbh fhéidir linn an chatalóg a sheiceáil. Seiceáil an fearann agus bain triail as níos déanaí.",
     "requestErrorTitle": "Níor seoladh an t-iarratas",
     "requestErrorBody": "Níl an tseirbhís ar fáil. Níl aon scanadh tosaithe; bain triail as níos déanaí.",
-    "rateLimitBody": "Seoladh iarratas le déanaí don stór nó don nasc seo. Bain triail as níos déanaí.",
+    "rateLimitBody": "Seoladh iarratas le déanaí don stór, seoladh ríomhphoist nó don nasc seo. Bain triail as níos déanaí.",
     "unavailableTitle": "Níl an scanadh saor in aisce ar fáil faoi láthair",
     "unavailableBody": "Ní féidir linn scanadh a thosú faoi láthair. Féach ar shampla de thoradh nó déan teagmháil linn.",
     "contactLink": "Déan teagmháil linn",

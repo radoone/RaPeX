@@ -261,7 +261,7 @@
       "failedBody": "Ma stajniex niċċekkjaw il-katalgu. Iċċekkja d-dominju u pprova aktar tard.",
       "requestErrorTitle": "Talba ma ntbagħtitx",
       "requestErrorBody": "Is-servizz mhux disponibbli. Ebda skannjar ma beda; ipprova aktar tard.",
-      "rateLimitBody": "Talba ntbagħtet reċentement għal dan il-ħanut jew konnessjoni. Ipprova aktar tard.",
+      "rateLimitBody": "Talba ntbagħtet reċentement għal dan il-ħanut, indirizz tal-email jew konnessjoni. Ipprova aktar tard.",
       "unavailableTitle": "L-iskannjar b'xejn bħalissa mhux disponibbli",
       "unavailableBody": "Ma nistgħux nibdew skannjar bħalissa. Ara riżultat eżempju jew ikkuntattjana.",
       "contactLink": "Ikkuntattjana",

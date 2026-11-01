@@ -261,7 +261,7 @@
       "failedBody": "Nem tudtuk ellenőrizni a katalógust. Ellenőrizze a domaint, és próbálja meg később.",
       "requestErrorTitle": "A kérés nem lett elküldve",
       "requestErrorBody": "A szolgáltatás nem elérhető. Nem indult ellenőrzés; próbálja meg később.",
-      "rateLimitBody": "Nemrégiben kérés érkezett ehhez az áruházhoz vagy kapcsolathoz. Próbálja meg később.",
+      "rateLimitBody": "Nemrégiben kérés érkezett ehhez az áruházhoz, e-mail-címhez vagy kapcsolathoz. Próbálja meg később.",
       "unavailableTitle": "Az ingyenes ellenőrzés jelenleg nem elérhető",
       "unavailableBody": "Jelenleg nem tudunk ellenőrzést indítani. Tekintsen meg egy példa eredményt, vagy lépjen kapcsolatba velünk.",
       "contactLink": "Lépjen kapcsolatba velünk",

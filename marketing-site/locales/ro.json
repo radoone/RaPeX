@@ -260,7 +260,7 @@
     "failedBody": "Nu am putut verifica catalogul. Verificați domeniul și încercați mai târziu.",
     "requestErrorTitle": "Cererea nu a fost trimisă",
     "requestErrorBody": "Serviciul nu este disponibil. Nicio scanare nu a început; încercați mai târziu.",
-    "rateLimitBody": "O cerere a fost trimisă recent pentru acest magazin sau conexiune. Încercați mai târziu.",
+    "rateLimitBody": "O cerere a fost trimisă recent pentru acest magazin, adresă de e-mail sau conexiune. Încercați mai târziu.",
     "unavailableTitle": "Scanarea gratuită nu este disponibilă în prezent",
     "unavailableBody": "Nu putem începe o scanare chiar acum. Vedeți un exemplu de rezultat sau contactați-ne.",
     "contactLink": "Contactați-ne",

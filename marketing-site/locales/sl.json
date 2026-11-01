@@ -260,7 +260,7 @@
     "failedBody": "Kataloga ni bilo mogoče preveriti. Preverite domeno in poskusite pozneje.",
     "requestErrorTitle": "Zahteva ni poslana",
     "requestErrorBody": "Storitev ni na voljo. Skeniranje se ni začelo; poskusite pozneje.",
-    "rateLimitBody": "Za to trgovino ali povezavo je bila nedavno poslana zahteva. Poskusite pozneje.",
+    "rateLimitBody": "Za to trgovino, e-poštni naslov ali povezavo je bila nedavno poslana zahteva. Poskusite pozneje.",
     "unavailableTitle": "Brezplačno skeniranje trenutno ni na voljo",
     "unavailableBody": "Trenutno ne moremo začeti skeniranja. Oglejte si primer rezultata ali nas kontaktirajte.",
     "contactLink": "Kontaktirajte nas",

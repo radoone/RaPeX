@@ -261,7 +261,7 @@
       "failedBody": "We konden de catalogus niet controleren. Controleer het domein en probeer het later opnieuw.",
       "requestErrorTitle": "Verzoek niet verzonden",
       "requestErrorBody": "De service is niet beschikbaar. Er is geen scan gestart; probeer het later opnieuw.",
-      "rateLimitBody": "Er is onlangs een verzoek verzonden voor deze winkel of verbinding. Probeer het later opnieuw.",
+      "rateLimitBody": "Er is onlangs een verzoek verzonden voor deze winkel, dit e-mailadres of deze verbinding. Probeer het later opnieuw.",
       "unavailableTitle": "De gratis scan is momenteel niet beschikbaar",
       "unavailableBody": "We kunnen nu geen scan starten. Bekijk een voorbeeldresultaat of neem contact met ons op.",
       "contactLink": "Neem contact met ons op",

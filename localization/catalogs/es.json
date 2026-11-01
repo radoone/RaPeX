@@ -261,7 +261,7 @@
       "failedBody": "No pudimos comprobar el catálogo. Compruebe el dominio e inténtelo más tarde.",
       "requestErrorTitle": "Solicitud no enviada",
       "requestErrorBody": "El servicio no está disponible. No se ha iniciado ningún escaneo; inténtelo más tarde.",
-      "rateLimitBody": "Se envió una solicitud recientemente para esta tienda o conexión. Inténtelo más tarde.",
+      "rateLimitBody": "Se envió una solicitud recientemente para esta tienda, dirección de correo o conexión. Inténtelo más tarde.",
       "unavailableTitle": "El escaneo gratuito no está disponible actualmente",
       "unavailableBody": "No podemos iniciar un escaneo en este momento. Vea un ejemplo de resultado o contáctenos.",
       "contactLink": "Contáctenos",

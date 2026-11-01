@@ -261,7 +261,7 @@
       "failedBody": "Vi kunne ikke tjekke kataloget. Tjek domænet, og prøv igen senere.",
       "requestErrorTitle": "Anmodning ikke sendt",
       "requestErrorBody": "Tjenesten er utilgængelig. Ingen scanning er startet; prøv igen senere.",
-      "rateLimitBody": "En anmodning blev for nylig sendt for denne butik eller forbindelse. Prøv igen senere.",
+      "rateLimitBody": "En anmodning blev for nylig sendt for denne butik, e-mailadresse eller forbindelse. Prøv igen senere.",
       "unavailableTitle": "Den gratis scanning er i øjeblikket utilgængelig",
       "unavailableBody": "Vi kan ikke starte en scanning lige nu. Se et eksempelresultat eller kontakt os.",
       "contactLink": "Kontakt os",

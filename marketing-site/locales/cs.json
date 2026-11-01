@@ -260,7 +260,7 @@
     "failedBody": "Nepodařilo se nám zkontrolovat katalog. Zkontrolujte doménu a zkuste to později.",
     "requestErrorTitle": "Požadavek nebyl odeslán",
     "requestErrorBody": "Služba není k dispozici. Skenování nebylo spuštěno; zkuste to později.",
-    "rateLimitBody": "Požadavek byl nedávno odeslán pro tento obchod nebo připojení. Zkuste to později.",
+    "rateLimitBody": "Požadavek byl nedávno odeslán pro tento obchod, e-mailovou adresu nebo připojení. Zkuste to později.",
     "unavailableTitle": "Bezplatné skenování je momentálně nedostupné",
     "unavailableBody": "Momentálně nemůžeme spustit skenování. Podívejte se na příklad výsledku nebo nás kontaktujte.",
     "contactLink": "Kontaktujte nás",

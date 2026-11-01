@@ -261,7 +261,7 @@
       "failedBody": "Nismo mogli provjeriti katalog. Provjerite domenu i pokušajte kasnije.",
       "requestErrorTitle": "Zahtjev nije poslan",
       "requestErrorBody": "Usluga nije dostupna. Skeniranje nije započelo; pokušajte kasnije.",
-      "rateLimitBody": "Za ovu trgovinu ili vezu nedavno je poslan zahtjev. Pokušajte kasnije.",
+      "rateLimitBody": "Za ovu trgovinu, adresu e-pošte ili vezu nedavno je poslan zahtjev. Pokušajte kasnije.",
       "unavailableTitle": "Besplatno skeniranje trenutno nije dostupno",
       "unavailableBody": "Trenutno ne možemo započeti skeniranje. Pogledajte primjer rezultata ili nas kontaktirajte.",
       "contactLink": "Kontaktirajte nas",

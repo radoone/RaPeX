@@ -260,7 +260,7 @@
     "failedBody": "Katalóg sa nepodarilo preveriť. Skontrolujte doménu a skúste neskôr.",
     "requestErrorTitle": "Požiadavka nebola odoslaná",
     "requestErrorBody": "Služba je nedostupná. Sken sa nespustil; skúste neskôr.",
-    "rateLimitBody": "Pre tento obchod alebo pripojenie už bola nedávno odoslaná žiadosť. Skúste neskôr.",
+    "rateLimitBody": "Pre tento obchod, e-mailovú adresu alebo pripojenie už bola nedávno odoslaná žiadosť. Skúste neskôr.",
     "unavailableTitle": "Bezplatný sken je momentálne nedostupný",
     "unavailableBody": "Sken teraz nie je možné spustiť. Pozrite si ukážku výsledku alebo nám napíšte.",
     "contactLink": "Kontaktovať nás",

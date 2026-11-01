@@ -260,7 +260,7 @@
     "failedBody": "Emme voineet tarkistaa luetteloa. Tarkista verkkotunnus ja yritä myöhemmin.",
     "requestErrorTitle": "Pyyntöä ei lähetetty",
     "requestErrorBody": "Palvelu ei ole käytettävissä. Skannausta ei ole aloitettu; yritä myöhemmin.",
-    "rateLimitBody": "Pyyntö lähetettiin äskettäin tälle kaupalle tai yhteydelle. Yritä myöhemmin.",
+    "rateLimitBody": "Pyyntö lähetettiin äskettäin tälle kaupalle, sähköpostiosoitteelle tai yhteydelle. Yritä myöhemmin.",
     "unavailableTitle": "Ilmainen skannaus ei ole tällä hetkellä käytettävissä",
     "unavailableBody": "Emme voi aloittaa skannausta juuri nyt. Katso esimerkkilöytö tai ota meihin yhteyttä.",
     "contactLink": "Ota meihin yhteyttä",
