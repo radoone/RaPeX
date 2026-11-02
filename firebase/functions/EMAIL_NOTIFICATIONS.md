@@ -28,7 +28,7 @@ MARKETING_SITE_URL=https://zerorecall.online
 
 `BREVO_SENDER_EMAIL` must be a sender address verified in Brevo, on a domain with Brevo's SPF and DKIM records published. Do not put the API key or webhook bearer secret in this environment file; configure both as Firebase secrets instead. The app handle is used to create authenticated Shopify Admin links in messages.
 
-In Brevo, create one transactional webhook for `delivered`, `hardBounce`, `softBounce`, `invalid`, `blocked`, and `error`. Point it to the deployed `brevoEmailWebhook` URL and configure bearer authorization using the same value as `BREVO_WEBHOOK_SECRET`.
+In Brevo, create one transactional webhook for `delivered`, `hardBounce`, `softBounce`, `invalid`, `blocked`, `spam`, and `unsubscribed`. Point it to the deployed `brevoEmailWebhook` URL and configure bearer authorization using the same value as `BREVO_WEBHOOK_SECRET`.
 
 Do not place Brevo credentials in a checked-in `.env` file. Use Brevo sandbox mode or a dedicated test recipient before enabling production delivery.
 
@@ -79,3 +79,5 @@ Merchant notification failures now throw to the retrying Firestore event or week
 New free-scan reports link to `#report=…` on the public site. The fragment is removed after capture; the browser POSTs it to `/api/free-scan` to read at most 200 product receipts per page. Only completed, unexpired requests with the separate report secret are readable. The status GET stays counts-only. All matched products and their stored warnings reach CSV, with safe same-shop/official links and spreadsheet formula neutralization. The report shares the request's 30-day expiry; it does not extend retention. Requests created before this release are not automatically mailed again or granted a report token.
 
 See `docs/production-readiness.md` at the repository root for rollout boundaries and external Shopify launch gates.
+
+On 2 November 2026, production testing found that the transactional webhook had not been registered in Brevo. Webhook `2654949` now targets the deployed `brevoEmailWebhook` with bearer authentication using the existing Secret Manager binding. New test-alert delivery events have passed through this webhook into merchant notification history. Earlier accepted messages are not retroactively marked delivered; provider acceptance remains distinct from callback-confirmed delivery.

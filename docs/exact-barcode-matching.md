@@ -1,6 +1,6 @@
 # Exact variant barcode matching
 
-Implemented in local source; deployment and production migration are separate operations.
+Deployed on 2 November 2026, with production source and merchant identifier migrations completed. See [production QA evidence](production-qa-2026-11-02.md) for the exercised paths and remaining limits.
 
 ## Behavior
 
@@ -12,7 +12,7 @@ Merchant products store normalized variant evidence, `gtins` and `barcodeVersion
 
 Manual checks and the public scanner union indexed exact Safety Gate results with the existing vector shortlist. Monitoring unions exact merchant-product hits with vector results within the current shop. Array queries use at most 30 codes and paginate all results. Exact candidates bypass distance thresholds; they do not expand Gemini work. A validated exact warning is produced deterministically. Other shortlisted candidates still receive the normal matcher analysis, and failures remain incomplete checks. Missing barcodes retain the existing similarity path. The public scanner still uses batch embeddings and KNN prefiltering, and can only compare barcodes actually present in the public catalog.
 
-Warnings carry `matchBasis: "gtin"` and `identifierMatches`, including the original merchant code, matching source code, canonical GTIN and affected variant identity. Similarity warnings carry `matchBasis: "similarity"`; absent legacy metadata retains the old display. Exact warnings retain `overallSimilarity: 100` only for API compatibility and prioritization; this is not an AI measurement, safety probability or image score. They omit image/text scores and weights, survive merchant similarity thresholds, and show a translated exact-match label instead of a percentage. The modal includes variant evidence; audit CSV appends this evidence. Merchant email suppresses the compatibility percentage. Match-cache reliability version 4 includes barcode changes on both sides.
+Warnings carry `matchBasis: "gtin"` and `identifierMatches`, including the original merchant code, matching source code, canonical GTIN and affected variant identity. Similarity warnings carry `matchBasis: "similarity"`; absent legacy metadata retains the old display. Exact warnings retain `overallSimilarity: 100` only for API compatibility and prioritization; this is not an AI measurement, safety probability or image score. They omit image/text scores and weights, survive merchant similarity thresholds, and show a translated exact-match label instead of a percentage. The modal includes variant evidence; audit CSV appends this evidence. Merchant email suppresses the compatibility percentage. Match-cache reliability version 5 includes barcode changes on both sides and invalidates results produced before overlapping text/image retrieval preserved the strongest visual evidence.
 
 ## Release and existing data
 
