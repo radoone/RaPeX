@@ -8,6 +8,7 @@ import { db, functionsAi } from "./firebase-admin.js";
 import { AI_CONFIG, FIRESTORE_COLLECTIONS } from "./safety-gate-config.js";
 import {
   AnalysisPromptInputSchema,
+  AnalysisMatchesSchema,
   ProductInputSchema,
   type AnalysisPromptInput,
   type ProductInput,
@@ -35,7 +36,7 @@ import type { EncodedImage, NormalizedAlert, SafetyCheckAnalysis } from "./safet
 
 const productMatchAnalysisPrompt = functionsAi.prompt<
   typeof AnalysisPromptInputSchema,
-  typeof SafetyCheckResultSchema
+  typeof AnalysisMatchesSchema
 >("productMatchAnalysis");
 
 type CachedMatchDocument = {

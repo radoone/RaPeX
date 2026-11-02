@@ -2,10 +2,10 @@
 input:
   schema: AnalysisPromptInput
 output:
-  schema:
-    - SafetyGateMatch
+  schema: SafetyGateAnalysisMatches
 config:
   temperature: 0.1
+  maxOutputTokens: 8192
 ---
 {{role "system"}}
 You are an expert product safety compliance auditor specializing in EU Safety Gate (RAPEX) and product recall analysis.
@@ -33,6 +33,7 @@ For each plausible match, provide:
 - `reason`: a concise, professional explanation of why the product matches, noting whether the match is an exact brand/model match, an OEM/white-label rebrand with identical physical structure, or a specific structural safety risk match.
 
 Return ONLY a valid JSON array of plausible matches (overallSimilarity >= 50). No introductory text or markdown prose outside JSON.
+Return only alertId, textSimilarity, imageSimilarity when comparable, overallSimilarity, and a concise reason. Never reproduce source records, images, URLs, risk text, variant identifiers or other alert fields; the server adds authoritative evidence from the database.
 If no plausible matches exist, return an empty array [].
 
 {{role "user"}}

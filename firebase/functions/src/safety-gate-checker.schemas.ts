@@ -99,6 +99,18 @@ export const MatchSchema = functionsAi.defineSchema(
 
 export type MatchResult = z.infer<typeof MatchSchema>;
 
+// The model judges similarity; authoritative source/variant evidence is server-owned.
+export const AnalysisMatchesSchema = functionsAi.defineSchema(
+  "SafetyGateAnalysisMatches",
+  z.array(z.object({
+    alertId: z.string().min(1).max(150),
+    overallSimilarity: z.number().min(0).max(100),
+    textSimilarity: z.number().min(0).max(100),
+    imageSimilarity: z.number().min(0).max(100).optional(),
+    reason: z.string().min(1).max(1500),
+  })).max(12),
+);
+
 export const SafetyCheckResultSchema = functionsAi.defineSchema(
   "SafetyCheckResult",
   z.object({
