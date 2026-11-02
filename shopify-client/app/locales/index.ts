@@ -1,4 +1,5 @@
 import { ownerTestAccessCopy } from "./owner-test-access";
+import { galleryCopy } from "./gallery";
 import { experienceCopy } from "./experience";
 import { barcodeMatchCopy } from "./barcode-match";
 import bg from "./bg";
@@ -121,6 +122,7 @@ export const localizedResources = Object.fromEntries(
         ...resource.translation,
         barcodeMatch: barcodeMatchCopy[code],
         ownerTestAccess: ownerTestAccessCopy[code],
+        gallery: galleryCopy[code as keyof typeof galleryCopy],
         experience: experienceCopy[code as keyof typeof experienceCopy],
       }),
     },

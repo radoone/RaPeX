@@ -1,5 +1,6 @@
 import { firestore } from "../firestore.server";
 import { officialSource } from "./review-evidence";
+import { warningImages } from "./product-images";
 /** Fill missing public references from the actual imported record, without changing stored decisions or matcher facts. */
 export async function withOfficialReferences<
   T extends { checkResult?: string | null },
@@ -50,6 +51,7 @@ export async function withOfficialReferences<
     for (const warning of result.warnings) {
       const original = sourceById.get(warning.alertId);
       if (!original) continue;
+      warning.referenceImageUrls = warningImages({ alertDetails: { fields: original } });
       const fields = { ...(warning.alertDetails?.fields || {}) };
       const savedSource = officialSource(fields);
       const source = officialSource(original);

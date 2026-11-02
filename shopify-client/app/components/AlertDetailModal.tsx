@@ -1,5 +1,8 @@
 import { useMemo, useState, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
+import { useFetcher } from "react-router";
+import { imageUrls, warningImages } from "../services/product-images";
+import { ReviewImageGallery, type OpenGallery } from "./ReviewImageGallery";
 import { useTranslation } from "react-i18next";
 import { AlertBadge } from "./AlertBadge";
 import { StatusBadge } from "./StatusBadge";
@@ -48,7 +51,28 @@ export function AlertDetailModal({
 }: AlertDetailModalProps) {
   const { t } = useTranslation();
   const [isHydrated, setIsHydrated] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [lightbox, setLightbox] = useState<{ images: string[]; index: number; title: string } | null>(null);
+  const selectedImage = lightbox?.images[lightbox.index] || null;
+  const photoFetcher = useFetcher<{ productId?: string; images?: string[]; error?: boolean }>();
+  const photoLoad = photoFetcher.load;
+  const requestedPhotos = useRef<string | null>(null);
+  const productId = String(alert?.productId || "").replace("gid://shopify/Product/", "");
+  const loadPhotos = useCallback(() => {
+    if (!productId || requestedPhotos.current === productId) return;
+    requestedPhotos.current = productId;
+    void photoLoad(`/api/product-images?productId=${encodeURIComponent(productId)}`);
+  }, [photoLoad, productId]);
+  useEffect(() => {
+    if (!isHydrated) return;
+    const modal = document.getElementById(modalId);
+    modal?.addEventListener("show", loadPhotos);
+    if (openOnMount) loadPhotos();
+    return () => modal?.removeEventListener("show", loadPhotos);
+  }, [isHydrated, loadPhotos, modalId, openOnMount]);
+  const openGallery: OpenGallery = (images, index, title) => setLightbox({ images, index, title });
+  const moveLightbox = (step: number) => setLightbox(current => current && ({
+    ...current, index: (current.index + step + current.images.length) % current.images.length,
+  }));
   const [auditNote, setAuditNote] = useState("");
   const [outcomeGroup, setOutcomeGroup] = useState("");
   const [selectedOutcome, setSelectedOutcome] = useState<ResolutionType | "">(
@@ -71,7 +95,7 @@ export function AlertDetailModal({
 
   // Close lightbox
   const closeLightbox = useCallback(() => {
-    setSelectedImage(null);
+    setLightbox(null);
   }, []);
 
   useEffect(() => {
@@ -123,12 +147,9 @@ export function AlertDetailModal({
     : [];
   const primaryWarning = warnings[0];
   const fields = primaryWarning?.alertDetails?.fields || {};
-  const pictures = primaryWarning ? getWarningImages(primaryWarning) : [];
-  const firstPicture = pictures[0];
-  const safetyImage =
-    typeof firstPicture === "string"
-      ? firstPicture
-      : firstPicture?.url || firstPicture?.src;
+  const pictures = primaryWarning ? warningImages(primaryWarning) : [];
+  const merchantPictures = photoFetcher.data?.productId === productId && !photoFetcher.data.error
+    ? imageUrls(photoFetcher.data.images) : imageUrls(alert.productImages, alert.productImage);
   const safetyBrand = fields.brand || fields.product_brand;
   const safetyTitle =
     fields.name ||
@@ -217,25 +238,6 @@ export function AlertDetailModal({
       status: compareProductIdentifiers(merchantBatch, safetyBatch),
     },
   ];
-
-  function getWarningImages(warning: any): any[] {
-    const warningFields = warning.alertDetails?.fields || {};
-    const images = Array.isArray(warningFields.pictures)
-      ? [...warningFields.pictures]
-      : [];
-    if (images.length === 0) {
-      if (warningFields.product_image) images.push(warningFields.product_image);
-      if (typeof warningFields.product_other_images === "string") {
-        images.push(
-          ...warningFields.product_other_images
-            .split(",")
-            .map((item: string) => item.trim())
-            .filter(Boolean),
-        );
-      }
-    }
-    return images;
-  }
 
   // A completed check without a finding has no source record or review decision.
   if (isSafe && warnings.length === 0 && !alert.id) {
@@ -340,23 +342,12 @@ export function AlertDetailModal({
                 <span className="review-modal__card-label">
                   {t("analysis.yourProduct")}
                 </span>
-                <button
-                  type="button"
-                  className="review-modal__image-button"
-                  onClick={() =>
-                    alert.productImage && setSelectedImage(alert.productImage)
-                  }
-                  disabled={!alert.productImage}
-                  aria-label={t("analysis.openProductImage", {
-                    title: alert.productTitle,
-                  })}
-                >
-                  {alert.productImage ? (
-                    <img src={alert.productImage} alt={alert.productTitle} />
-                  ) : (
-                    <span>{t("analysis.reviewLayout.noImage")}</span>
-                  )}
-                </button>
+                <ReviewImageGallery images={merchantPictures} title={alert.productTitle} onOpen={openGallery} />
+                {photoFetcher.state !== "idle" && <p role="status">{t("common.loading")}</p>}
+                {photoFetcher.data?.productId === productId && photoFetcher.data.error && <div role="status">
+                  <p>{t("gallery.loadError")}</p>
+                  <s-button onClick={() => { requestedPhotos.current = null; loadPhotos(); }}>{t("actions.retry")}</s-button>
+                </div>}
                 <div className="review-modal__card-details">
                   <strong>{alert.productTitle}</strong>
                   {(alert.productVendor || alert.productType) && (
@@ -376,19 +367,7 @@ export function AlertDetailModal({
               </div>
               <div className="review-modal__product-card review-modal__product-card--safety">
                 <span className="review-modal__card-label">Safety Gate</span>
-                <button
-                  type="button"
-                  className="review-modal__image-button"
-                  onClick={() => safetyImage && setSelectedImage(safetyImage)}
-                  disabled={!safetyImage}
-                  aria-label={t("analysis.enlargedSafetyAlert")}
-                >
-                  {safetyImage ? (
-                    <img src={safetyImage} alt={safetyTitle} />
-                  ) : (
-                    <span>{t("analysis.reviewLayout.noImage")}</span>
-                  )}
-                </button>
+                <ReviewImageGallery images={pictures} title={safetyTitle} onOpen={openGallery} />
                 <div className="review-modal__card-details">
                   <strong>{safetyTitle}</strong>
                   {(safetyBrand || safetyModel) && (
@@ -762,8 +741,7 @@ export function AlertDetailModal({
                     key={`warning-${index}`}
                     warning={warning}
                     index={index}
-                    onImageClick={setSelectedImage}
-                    getWarningImages={getWarningImages}
+                    onOpenGallery={openGallery}
                     merchantProduct={alert}
                   />
                 ))}
@@ -814,6 +792,10 @@ export function AlertDetailModal({
             ref={lightboxDialogRef}
             className="image-lightbox-dialog"
             onClose={closeLightbox}
+            onKeyDown={(event) => {
+              if (event.key === "ArrowLeft") { event.preventDefault(); moveLightbox(-1); }
+              if (event.key === "ArrowRight") { event.preventDefault(); moveLightbox(1); }
+            }}
             onClick={(event) => {
               if (event.target === event.currentTarget) {
                 closeLightbox();
@@ -835,9 +817,14 @@ export function AlertDetailModal({
                 </button>
                 <img
                   src={selectedImage}
-                  alt={t("analysis.enlargedSafetyAlert")}
+                  alt={lightbox?.title || ""}
                   className="image-lightbox-image"
                 />
+                {lightbox && lightbox.images.length > 1 && <div className="image-lightbox-navigation">
+                  <button type="button" onClick={() => moveLightbox(-1)}>{t("actions.previous")}</button>
+                  <span aria-live="polite">{lightbox.index + 1} / {lightbox.images.length}</span>
+                  <button type="button" onClick={() => moveLightbox(1)}>{t("actions.next")}</button>
+                </div>}
               </div>
             )}
           </dialog>,
@@ -853,14 +840,12 @@ export function AlertDetailModal({
 function WarningCard({
   warning,
   index: _index,
-  onImageClick,
-  getWarningImages,
+  onOpenGallery,
   merchantProduct,
 }: {
   warning: any;
   index: number;
-  onImageClick: (src: string) => void;
-  getWarningImages: (warning: any) => any[];
+  onOpenGallery: OpenGallery;
   merchantProduct: any;
 }) {
   const { t } = useTranslation();
@@ -874,7 +859,7 @@ function WarningCard({
     typeof warning.overallSimilarity === "number"
       ? warning.overallSimilarity
       : 0;
-  const pictures = getWarningImages(warning);
+  const pictures = warningImages(warning);
 
   // Get correct field names from Safety Gate database (official ec.europa.eu fields with fallbacks)
   const { caseNumber, url: safetyGateUrl } = officialSource(fields);
@@ -967,63 +952,9 @@ function WarningCard({
         )}
 
         {/* Start comparison with the visual evidence and identifying details. */}
-        <s-grid gap="large" gridTemplateColumns="auto 1fr">
-          {/* Images Column */}
-          {pictures.length > 0 && (
-            <div className="alert-reference-images">
-              {(() => {
-                const primarySrc =
-                  typeof pictures[0] === "string"
-                    ? pictures[0]
-                    : pictures[0]?.url || pictures[0]?.src;
-                if (!primarySrc) return null;
-                return (
-                  <div
-                    onClick={() => onImageClick(primarySrc)}
-                    className="alert-image-clickable"
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") onImageClick(primarySrc);
-                    }}
-                  >
-                    <img
-                      src={primarySrc}
-                      alt="Safety Gate Reference 1"
-                      className="alert-reference-image-primary"
-                    />
-                  </div>
-                );
-              })()}
-              {pictures.length > 1 && (
-                <div className="alert-reference-thumbnails">
-                  {pictures.slice(1, 5).map((pic: any, idx: number) => {
-                    const src =
-                      typeof pic === "string" ? pic : pic?.url || pic?.src;
-                    if (!src) return null;
-                    return (
-                      <div
-                        key={`${src}-${idx}`}
-                        onClick={() => onImageClick(src)}
-                        className="alert-image-clickable"
-                        role="button"
-                        tabIndex={0}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") onImageClick(src);
-                        }}
-                      >
-                        <img
-                          src={src}
-                          alt={`Thumbnail ${idx + 2}`}
-                          className="alert-reference-image-thumb"
-                        />
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          )}
+        <div className="review-warning-grid">
+          {pictures.length > 0 && <ReviewImageGallery images={pictures}
+            title={productName || "Safety Gate"} onOpen={onOpenGallery} />}
 
           <div className="match-detail-list">
             {productName && (
@@ -1082,7 +1013,7 @@ function WarningCard({
               </div>
             )}
           </div>
-        </s-grid>
+        </div>
 
         {
           <s-box

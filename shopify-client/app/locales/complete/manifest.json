@@ -1,8 +1,8 @@
 {
   "createdOn": "2026-11-01T10:02:43.104Z",
   "model": "gemini-2.5-flash",
-  "sourceSha256": "4f49f2caf1bb71e80442c0feb0e38302a13c832ea5224234da509fb5ab3bbe65",
-  "sourceKeys": 1146,
+  "sourceSha256": "a7a0d51b12e4e5d4e24e556ee3640e369d5f159717e9e682038b7a341341e8ac",
+  "sourceKeys": 1147,
   "scope": "Complete Shopify merchant UI, excluding stored product facts, identifiers and original Safety Gate records; response guide translations updated with Gemini 2.5 Flash; response guide and monitoring evidence translations updated with Gemini 2.5 Flash",
   "nativeSpeakerReview": "Not performed for every language",
   "locales": {
@@ -247,6 +247,39 @@
       "date": "2026-11-02",
       "scope": "Owner-authorized test access label, 24 EU languages",
       "method": "Static authored translations"
+    },
+    {
+      "date": "2026-11-02",
+      "keys": [
+        "gallery.loadError"
+      ],
+      "languages": [
+        "en",
+        "sk",
+        "bg",
+        "cs",
+        "da",
+        "de",
+        "el",
+        "es",
+        "et",
+        "fi",
+        "fr",
+        "ga",
+        "hr",
+        "hu",
+        "it",
+        "lt",
+        "lv",
+        "mt",
+        "nl",
+        "pl",
+        "pt",
+        "ro",
+        "sl",
+        "sv"
+      ],
+      "source": "Manually authored in app/locales/gallery.ts; no model translation job was run for this addition."
     }
   ]
 }
