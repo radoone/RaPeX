@@ -1,6 +1,7 @@
 import { defineFirestoreRetriever } from "@genkit-ai/firebase";
 import { vertexAI } from "@genkit-ai/google-genai";
-import { getFirestore, Timestamp } from "firebase-admin/firestore";
+import { FieldPath, getFirestore, Timestamp } from "firebase-admin/firestore";
+import { productGtins } from "./product-barcodes.js";
 import type { DocumentData, RetrieverAction } from "genkit/retriever";
 import { functionsAi } from "./firebase-admin.js";
 import { FIRESTORE_COLLECTIONS, MATCHING_THRESHOLDS } from "./safety-gate-config.js";
@@ -321,13 +322,14 @@ async function hydrateAlertsIfMissing(candidates: NormalizedAlert[]): Promise<No
 }
 
 export async function retrieveAlertsWithRag(product: ProductInput): Promise<NormalizedAlert[]> {
+  const exactCandidates = await retrieveAlertsByGtins(product);
   const cachedCandidates = await retrieveAlertsFromCachedVectors(product);
   if (cachedCandidates.length > 0) {
-    return cachedCandidates;
+    return hydrateAlertsIfMissing([...new Map([...exactCandidates, ...cachedCandidates].map((alert) => [alert.id, alert])).values()]);
   }
 
-  const candidates: NormalizedAlert[] = [];
-  const seen = new Set<string>();
+  const candidates: NormalizedAlert[] = [...exactCandidates];
+  const seen = new Set<string>(candidates.map((alert) => alert.id));
   const activeTextRetriever = ensureTextRetriever();
   const activeImageRetriever = ensureImageRetriever();
 
@@ -388,6 +390,27 @@ for (const document of result || []) {
 
   const hydrated = await hydrateAlertsIfMissing(candidates);
   return hydrated;
+}
+
+/** Exact identifier recall is independent of vector distance and nearest-neighbour limits. */
+export async function retrieveAlertsByGtins(product: Pick<ProductInput, "barcodes">): Promise<NormalizedAlert[]> {
+  const codes = productGtins(product.barcodes);
+  const alerts = new Map<string, NormalizedAlert>();
+  for (let offset = 0; offset < codes.length; offset += 30) {
+    const query = getFirestore().collection(FIRESTORE_COLLECTIONS.alerts)
+      .where("gtins", "array-contains-any", codes.slice(offset, offset + 30))
+      .orderBy(FieldPath.documentId()).limit(200);
+    let page = await query.get();
+    while (!page.empty) {
+      for (const doc of page.docs) {
+        const alert = normalizeRetrieverDocument({ content: [], metadata: { ...doc.data(), id: doc.id } } as DocumentData);
+        if (alert) alerts.set(alert.id, alert);
+      }
+      if (page.size < 200) break;
+      page = await query.startAfter(page.docs[page.docs.length - 1]).get();
+    }
+  }
+  return [...alerts.values()];
 }
 
 export async function retrieveAlertsForVector(

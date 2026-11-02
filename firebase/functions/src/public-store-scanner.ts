@@ -7,7 +7,7 @@ import { publicHttpsAgent, validatePublicImageUrl } from "./public-image.js";
 import { checkProductAgainstAlerts } from "./safety-gate-checker.js";
 import type { ProductInput, SafetyCheckResult } from "./safety-gate-checker.schemas.js";
 import { buildEmbeddingText, embedTexts } from "./safety-gate-embeddings.js";
-import { retrieveAlertsForVector } from "./safety-gate-checker-retrieval.js";
+import { retrieveAlertsByGtins, retrieveAlertsForVector } from "./safety-gate-checker-retrieval.js";
 import type { NormalizedAlert } from "./safety-gate-checker.types.js";
 
 type RequestShape = {
@@ -313,6 +313,10 @@ function shopifyRawToProductInput(raw: any, shop: string): ProductInput {
     brand,
     shop,
     productId: String(raw.id || raw.handle || ""),
+    barcodes: (Array.isArray(raw.variants) ? raw.variants : []).flatMap((variant: any) =>
+      typeof variant.barcode === "string" && variant.barcode.trim()
+        ? [{ barcode: variant.barcode.trim(), variantId: String(variant.id), variantTitle: String(variant.title || "") }]
+        : []),
   };
 }
 
@@ -576,7 +580,8 @@ export async function scanPublicCatalogProducts(domain: string, rawProducts: any
         const vector = allVectors[globalIdx];
         if (!vector || vector.length === 0) throw new Error("Scan incomplete: product embedding is missing");
 
-        const candidateAlerts = await retrieveAlertsForVector(vector, 6);
+        const [exact, similar] = await Promise.all([retrieveAlertsByGtins(pInput), retrieveAlertsForVector(vector, 6)]);
+        const candidateAlerts = [...new Map([...exact, ...similar].map((alert) => [alert.id, alert])).values()];
         if (candidateAlerts.length > 0) {
           candidatePairs.push({
             productInput: pInput,
@@ -614,7 +619,7 @@ export async function scanPublicCatalogProducts(domain: string, rawProducts: any
           );
 
           const filteredWarnings = checkResult.warnings.filter(
-            (w) => (w.overallSimilarity || 0) >= similarityThreshold
+            (w) => w.matchBasis === "gtin" || (w.overallSimilarity || 0) >= similarityThreshold
           );
 
           if (filteredWarnings.length > 0) {

@@ -1402,5 +1402,9 @@
     "when": "Înregistrat la",
     "who": "Înregistrat de",
     "whyMatch": "De ce ar putea corespunde"
+  },
+  "barcodeMatch": {
+    "label": "Potrivire exactă a codului de bare",
+    "help": "Codul de bare validat al unei variante corespunde înregistrării Safety Gate. Verificați modelul și lotul afectat înainte de a decide."
   }
 }

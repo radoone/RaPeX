@@ -7,6 +7,8 @@ export type ScanPreviewMatch = {
   productId?: string; productTitle?: string; productUrl?: string;
   result?: { warnings?: Array<{
     alertId?: string; overallSimilarity?: number; reason?: string;
+    matchBasis?: "gtin" | "similarity";
+    identifierMatches?: import("./product-barcodes.js").BarcodeMatch[];
     alertDetails?: { fields?: Record<string, unknown> };
   }> };
 };
@@ -28,7 +30,8 @@ export function compactScanMatch(match: ScanPreviewMatch, maxWarnings = Infinity
       }));
       return {
         alertId: text(warning.alertId, 500), reason: text(warning.reason, 1200), alertDetails: { fields },
-        ...(typeof warning.overallSimilarity === "number" && Number.isFinite(warning.overallSimilarity) ? { overallSimilarity: warning.overallSimilarity } : {}),
+        ...(warning.matchBasis === "gtin" ? { matchBasis: "gtin" as const, identifierMatches: warning.identifierMatches || [] } : {}),
+        ...(warning.matchBasis !== "gtin" && typeof warning.overallSimilarity === "number" && Number.isFinite(warning.overallSimilarity) ? { overallSimilarity: warning.overallSimilarity } : {}),
       };
     }) },
   });

@@ -13,6 +13,7 @@ import {
   type SafetyGateWeeklyReportRef,
 } from "./safety-gate-weekly-parser.js";
 import type { LoaderState } from "./safety-gate-types.js";
+import { extractGtins } from "./gtin.js";
 
 const WEEKLY_REPORTS_LIST_URL =
   "https://ec.europa.eu/safety-gate-alerts/api/download/weeklyReport/list/xml/en";
@@ -257,6 +258,7 @@ export async function ingestWeeklyNotification(
       updated_at: FieldValue.serverTimestamp(),
     },
     fields,
+    gtins: extractGtins(notification.barcode),
   };
 
   if (vectorText) {

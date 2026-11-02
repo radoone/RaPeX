@@ -1402,5 +1402,9 @@
     "when": "Zabilježeno u",
     "who": "Zabilježio/la",
     "whyMatch": "Zašto se ovo može podudarati"
+  },
+  "barcodeMatch": {
+    "label": "Točno podudaranje crtičnog koda",
+    "help": "Potvrđeni crtični kod varijante podudara se sa zapisom Safety Gate. Provjerite model i zahvaćenu seriju prije odluke."
   }
 }

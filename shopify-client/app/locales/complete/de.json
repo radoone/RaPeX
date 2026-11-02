@@ -1402,5 +1402,9 @@
     "when": "Aufgezeichnet am",
     "who": "Aufgezeichnet von",
     "whyMatch": "Warum dies übereinstimmen könnte"
+  },
+  "barcodeMatch": {
+    "label": "Exakte Barcode-Übereinstimmung",
+    "help": "Der validierte Barcode einer Variante stimmt mit dem Safety Gate-Eintrag überein. Prüfen Sie vor Ihrer Entscheidung das Modell und die betroffene Charge."
   }
 }

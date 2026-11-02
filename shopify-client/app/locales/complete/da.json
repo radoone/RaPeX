@@ -1402,5 +1402,9 @@
     "when": "Registreret den",
     "who": "Registreret af",
     "whyMatch": "Hvorfor dette kan matche"
+  },
+  "barcodeMatch": {
+    "label": "Præcist stregkodematch",
+    "help": "En variants validerede stregkode matcher Safety Gate-posten. Kontrollér modellen og det berørte parti, før du beslutter dig."
   }
 }

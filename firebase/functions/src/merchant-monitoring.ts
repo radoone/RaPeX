@@ -5,6 +5,7 @@ import * as logger from "firebase-functions/logger";
 import { isAuthorizedApiKey } from "./api-auth.js";
 import { db } from "./firebase-admin.js";
 import { mapBounded } from "./matching-work.js";
+import { alertGtins, normalizeProductBarcodes, productGtins } from "./product-barcodes.js";
 import { AI_CONFIG, FIRESTORE_COLLECTIONS, MATCHING_THRESHOLDS } from "./safety-gate-config.js";
 import { recallWithinThreshold } from "./vector-recall.js";
 import { selectMonitoringImages, prioritizeMonitoringImages, type MonitoringImage, type StoredMonitoringImage } from "./monitoring-images.js";
@@ -266,6 +267,7 @@ function toProductInput(document: Record<string, unknown>): ProductInput {
     imageUrls,
     brand: coerceString(document.brand),
     model: coerceString(document.model),
+    barcodes: normalizeProductBarcodes(document.barcodes),
     shop: coerceString(document.shop),
     productId: coerceString(document.productId),
     sourceUpdatedAt: coerceString(document.sourceUpdatedAt),
@@ -412,6 +414,21 @@ async function findCandidateProductsForAlert(
     .doc(encodeURIComponent(shop))
     .collection(FIRESTORE_COLLECTIONS.subProducts);
 
+  const gtins = alertGtins(alertCandidate.alert.fields);
+  for (let offset = 0; offset < gtins.length; offset += 30) {
+    const query = collection.where("gtins", "array-contains-any", gtins.slice(offset, offset + 30))
+      .orderBy(FieldPath.documentId()).limit(200);
+    let page = await query.get();
+    while (!page.empty) {
+      for (const doc of page.docs) {
+        const data = doc.data() as Record<string, unknown>;
+        if (!data.deletedAt) candidates.set(doc.id, { id: doc.id, data });
+      }
+      if (page.size < 200) break;
+      page = await query.startAfter(page.docs[page.docs.length - 1]).get();
+    }
+  }
+
   if (!alertCandidate.textVector?.length) throw new Error("Safety Gate text vector is unavailable");
   const searches = [
     { field: "vector_text", vector: alertCandidate.textVector, initialLimit: MONITOR_TEXT_CANDIDATE_LIMIT, maxDistance: MATCHING_THRESHOLDS.textDistance, imageUrl: undefined as string | undefined },
@@ -557,6 +574,9 @@ export async function upsertMerchantProduct(
     category: input.product.category,
     description: input.product.description,
     createdAt: FieldValue.serverTimestamp(),
+    barcodes: normalizeProductBarcodes(input.product.barcodes),
+    gtins: productGtins(input.product.barcodes),
+    barcodeVersion: 1,
     updatedAt: FieldValue.serverTimestamp(),
     ...(input.productHandle ? { productHandle: input.productHandle } : {}),
     ...(primaryImage ? { imageUrl: primaryImage } : {}),
@@ -670,6 +690,9 @@ export async function upsertMerchantProductsBatch(
       category: item.input.product.category,
       description: item.input.product.description,
       createdAt: existing.exists ? existing.get("createdAt") || FieldValue.serverTimestamp() : FieldValue.serverTimestamp(),
+      barcodes: normalizeProductBarcodes(item.input.product.barcodes),
+      gtins: productGtins(item.input.product.barcodes),
+      barcodeVersion: 1,
       updatedAt: FieldValue.serverTimestamp(),
       ...(item.input.productHandle ? { productHandle: item.input.productHandle } : {}),
       ...(item.image ? { imageUrl: item.image } : {}),
@@ -851,7 +874,7 @@ export async function runMerchantDeltaMonitoringForShop(params: {
       );
       const threshold = Number((merchantState as unknown as Record<string, unknown>).similarityThreshold || 0);
       if (threshold > 0) {
-        result.warnings = result.warnings.filter((warning) => warning.overallSimilarity >= threshold);
+        result.warnings = result.warnings.filter((warning) => warning.matchBasis === "gtin" || warning.overallSimilarity >= threshold);
         result.isSafe = result.warnings.length === 0;
       }
       productsScanned += 1;
@@ -1317,6 +1340,7 @@ export async function handleShopifyProductChangeTask(
           shop, productId: payload.productId, deletedAt: now,
           deletedSourceUpdatedAt: incoming, updatedAt: now,
           vector_text: FieldValue.delete(), vector_image: FieldValue.delete(),
+          gtins: [], barcodes: [],
         }, { merge: true });
         alerts.docs.forEach((document) => transaction.set(document.ref, {
           productDeleted: true, productDeletedAt: now, updatedAt: now,
@@ -1343,6 +1367,15 @@ export async function handleShopifyProductChangeTask(
       await setJob({ status: "superseded", updatedAt: FieldValue.serverTimestamp() });
       return;
     }
+    if (payload.product.barcodesComplete === false) {
+      const { loadShopifyProductBarcodes } = await import("./merchant-catalog-audit.js");
+      const identifiers = await loadShopifyProductBarcodes(shop, payload.productId);
+      if (Date.parse(identifiers.sourceUpdatedAt) !== Date.parse(payload.sourceUpdatedAt)) {
+        await setJob({ status: "superseded", updatedAt: FieldValue.serverTimestamp() });
+        return;
+      }
+      payload.product = { ...payload.product, barcodes: identifiers.barcodes, barcodesComplete: true };
+    }
     await upsertMerchantProduct({
       shop,
       productId: payload.productId,
@@ -1362,7 +1395,7 @@ export async function handleShopifyProductChangeTask(
       const result = await checkProductSafety(payload.product);
       const threshold = payload.similarityThreshold ?? 0;
       const filteredWarnings = threshold > 0
-        ? result.warnings.filter((warning) => warning.overallSimilarity >= threshold)
+        ? result.warnings.filter((warning) => warning.matchBasis === "gtin" || warning.overallSimilarity >= threshold)
         : result.warnings;
       const filteredResult = {
         ...result,

@@ -48,5 +48,9 @@
     "included": {
       "teamTitle": "Tok práce kontroly"
     }
+  },
+  "barcodeMatch": {
+    "label": "Presná zhoda čiarového kódu",
+    "help": "Overený čiarový kód variantu sa zhoduje so záznamom Safety Gate. Pred rozhodnutím overte model a dotknutú šaržu."
   }
 }

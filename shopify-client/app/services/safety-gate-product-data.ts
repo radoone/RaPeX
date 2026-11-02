@@ -8,6 +8,8 @@ export interface ProductData {
   imageUrls?: string[];
   brand?: string;
   model?: string;
+  barcodes?: Array<{ barcode: string; variantId?: string; variantTitle?: string }>;
+  barcodesComplete?: boolean;
 }
 
 function pickImageUrl(candidate: any): string | undefined {
@@ -31,6 +33,9 @@ function collectImageUrls(product: any, selectedVariant?: ProductVariant): strin
       : []),
     ...(Array.isArray(product?.variants?.edges)
       ? product.variants.edges.map((edge: any) => pickImageUrl(edge?.node?.image))
+      : []),
+    ...(Array.isArray(product?.variants?.nodes)
+      ? product.variants.nodes.map((variant: any) => pickImageUrl(variant?.image))
       : []),
   ];
 
@@ -74,6 +79,13 @@ export function shopifyProductToProductData(product: any, selectedVariant?: Prod
   const brand = product.vendor ||
     tags.find((tag) => tag.toLowerCase().includes("brand:"))?.replace(/brand:\s*/i, "");
   const imageUrls = collectImageUrls(product, selectedVariant);
+  const variants = Array.isArray(product?.variants) ? product.variants
+    : product?.variants?.nodes || product?.variants?.edges?.map((edge: any) => edge.node) || [];
+  const barcodeVariants = selectedVariant ? [selectedVariant] : variants;
+  const barcodes = barcodeVariants.flatMap((variant: any) =>
+    typeof variant?.barcode === "string" && variant.barcode.trim()
+      ? [{ barcode: variant.barcode.trim(), variantId: String(variant.id), variantTitle: String(variant.title || "") }]
+      : []);
 
   return {
     name: product.title || "Untitled product",
@@ -82,6 +94,9 @@ export function shopifyProductToProductData(product: any, selectedVariant?: Prod
     imageUrl: imageUrls[0],
     imageUrls,
     brand,
+    barcodes,
+    // REST webhook payloads may truncate variants. The durable worker hydrates them.
+    barcodesComplete: !Array.isArray(product?.variants) && !product?.variants?.pageInfo?.hasNextPage,
     model: selectedVariant?.title !== product.title ? selectedVariant?.title : undefined,
   };
 }

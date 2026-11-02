@@ -1402,5 +1402,9 @@
     "when": "Įrašyta",
     "who": "Įrašė",
     "whyMatch": "Kodėl tai gali atitikti"
+  },
+  "barcodeMatch": {
+    "label": "Tikslus brūkšninio kodo atitikmuo",
+    "help": "Patikrintas varianto brūkšninis kodas atitinka Safety Gate įrašą. Prieš nuspręsdami patikrinkite modelį ir paveiktą partiją."
   }
 }

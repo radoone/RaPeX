@@ -33,9 +33,10 @@ export function reportCsvRows(page) {
           safeUrl(match.productUrl, page.domain),
           fields.caseNumber || fields.alert_number,
           fields.type_numberOfModel || fields.product_model,
-          warning.overallSimilarity,
+          warning.matchBasis === "gtin" ? "" : warning.overallSimilarity,
           warning.reason,
           safeUrl(fields.url || fields.rapex_url, page.domain, true),
+          (warning.identifierMatches || []).map(item => [item.gtin, item.variantId, item.variantTitle].filter(Boolean).join(" · ")).join("; "),
         ]
           .map(csvCell)
           .join(","),
@@ -46,7 +47,7 @@ export function reportCsvRows(page) {
 }
 export async function downloadReportPages(reportToken, fetchPage) {
   const lines = [
-    "Store,Products checked,Products with possible matches,Product ID,Product,Product URL,Safety Gate reference,Model,Similarity,Reason,Official source",
+    "Store,Products checked,Products with possible matches,Product ID,Product,Product URL,Safety Gate reference,Model,Similarity,Reason,Official source,GTIN",
   ];
   let cursor;
   const seen = new Set();
@@ -62,7 +63,7 @@ export async function downloadReportPages(reportToken, fetchPage) {
     lines.push(...reportCsvRows(page));
     if (!cursor && page.possibleMatches === 0)
       lines.push(
-        [page.domain, page.checkedProducts, 0, "", "", "", "", "", "", "", ""]
+        [page.domain, page.checkedProducts, 0, "", "", "", "", "", "", "", "", ""]
           .map(csvCell)
           .join(","),
       );

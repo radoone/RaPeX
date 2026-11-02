@@ -10,6 +10,8 @@ export interface SafetyCheckResult {
   isSafe: boolean;
   warnings: Array<{
     alertId: string;
+    matchBasis?: "gtin" | "similarity";
+    identifierMatches?: Array<{ gtin: string; barcode: string; alertBarcode: string; variantId?: string; variantTitle?: string }>;
     overallSimilarity: number;
     imageSimilarity?: number;
     textSimilarity?: number;
@@ -88,6 +90,7 @@ function applySimilarityThreshold<T extends SafetyCheckResult>(result: T, thresh
   }
 
   const filteredWarnings = result.warnings.filter((warning) => {
+    if (warning.matchBasis === "gtin") return true;
     const similarity = Number.isFinite(warning.overallSimilarity) ? warning.overallSimilarity : 0;
     return similarity >= safeThreshold;
   });
@@ -309,6 +312,10 @@ export async function queueShopifyProductChange(input: {
   product: ProductData;
   similarityThreshold: number;
 }): Promise<void> {
+  if (input.product.barcodesComplete === false) {
+    const { mirrorOfflineSessionForCatalogAudit } = await import("./catalog-audit-session.server");
+    await mirrorOfflineSessionForCatalogAudit(input.shop);
+  }
   const response = await fetch(`${FIREBASE_FUNCTIONS_BASE_URL}/startShopifyProductChangeAPI`, {
     method: "POST",
     headers: {

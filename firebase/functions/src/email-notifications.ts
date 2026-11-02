@@ -75,7 +75,7 @@ function parseAlertDetails(data: Record<string, unknown>): AlertEmailDetails {
   const fields = alertDetails.fields && typeof alertDetails.fields === "object"
     ? alertDetails.fields as Record<string, unknown>
     : {};
-  const similarity = typeof warning.overallSimilarity === "number" ? warning.overallSimilarity : NaN;
+  const similarity = warning.matchBasis !== "gtin" && typeof warning.overallSimilarity === "number" ? warning.overallSimilarity : NaN;
 
   return {
     productTitle: String(data.productTitle || "Shopify product"),

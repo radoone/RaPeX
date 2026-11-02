@@ -399,6 +399,7 @@ export function buildSafetyCheckResult(
 
       return {
         alertId: alert.id,
+        matchBasis: "similarity",
         overallSimilarity,
         imageSimilarity,
         textSimilarity,

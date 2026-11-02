@@ -1402,5 +1402,9 @@
     "when": "Zaznamenáno v",
     "who": "Zaznamenal(a)",
     "whyMatch": "Proč se to může shodovat"
+  },
+  "barcodeMatch": {
+    "label": "Přesná shoda čárového kódu",
+    "help": "Ověřený čárový kód varianty se shoduje se záznamem Safety Gate. Před rozhodnutím ověřte model a dotčenou šarži."
   }
 }

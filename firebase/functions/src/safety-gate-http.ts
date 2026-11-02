@@ -3,6 +3,7 @@ import { isAuthorizedApiKey } from "./api-auth.js";
 import { PRODUCT_SAFETY_API_USAGE } from "./safety-gate-config.js";
 import { checkProductSafety } from "./safety-gate-checker.js";
 import type { ProductCheckInput } from "./safety-gate-types.js";
+import { normalizeProductBarcodes } from "./product-barcodes.js";
 
 const MAX_NAME_CHARS = 300;
 const MAX_CATEGORY_CHARS = 120;
@@ -57,6 +58,7 @@ function readProductData(request: RequestShape): Partial<ProductCheckInput> | nu
       imageUrls: coerceStringArray(request.body.imageUrls),
       brand: coerceString(request.body.brand, MAX_BRAND_MODEL_CHARS),
       model: coerceString(request.body.model, MAX_BRAND_MODEL_CHARS),
+      barcodes: normalizeProductBarcodes(request.body.barcodes),
       shop: coerceString(request.body.shop, 255),
       productId: coerceString(request.body.productId, 128),
       sourceUpdatedAt: coerceString(request.body.sourceUpdatedAt, 64),

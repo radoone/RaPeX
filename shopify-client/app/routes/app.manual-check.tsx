@@ -16,7 +16,8 @@ import { shopifyProductToProductData } from "../services/safety-gate-product-dat
 import db from "../merchant-db.server";
 import { withOfficialReferences } from "../services/review-evidence.server";
 import { firestore } from "../firestore.server";
-import { runProductSafetyCheck } from "../services/product-safety-admin.server";
+import { runProductSafetyCheck, runProductSafetyCheckForAdminProduct } from "../services/product-safety-admin.server";
+import { completeProductBarcodeVariants } from "../services/shopify-product-barcodes.server";
 import { runMerchantDeltaMonitoring } from "../services/safety-gate-checker.server";
 import { AlertDetailModal, SummaryCard } from "../components";
 import {
@@ -84,7 +85,7 @@ async function fetchCatalogProductsForManualCheck(
               descriptionHtml
               featuredImage { url altText }
               images(first: 4) { nodes { url altText } }
-              variants(first: 5) { edges { node { id title image { url altText } } } }
+              variants(first: 5) { pageInfo { hasNextPage endCursor } edges { node { id title barcode image { url altText } } } }
               updatedAt
               createdAt
             }
@@ -142,6 +143,7 @@ async function planCatalogChecksForManualCheck(params: {
     );
     const unchanged = Boolean(
       cached?.exists &&
+      cachedData?.barcodeVersion === 1 &&
       hasCachedVectors &&
       cachedSourceUpdatedAt &&
       incomingSourceUpdatedAt &&
@@ -377,19 +379,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     });
 
   if (action === "checkProduct") {
-    const productData = JSON.parse(formData.get("productData") as string);
     const productId = formData.get("productId") as string;
-    const productTitle = formData.get("productTitle") as string;
 
     try {
-      const runResult = await runProductSafetyCheck({
+      const runResult = await runProductSafetyCheckForAdminProduct({
+        admin,
         shop: session.shop,
         productId,
-        productTitle,
-        productHandle: (formData.get("productHandle") as string) || undefined,
-        productData,
-        sourceUpdatedAt:
-          (formData.get("productUpdatedAt") as string) || undefined,
       });
       return json({
         success: true,
@@ -423,7 +419,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             productId: product.id.replace("gid://shopify/Product/", ""),
             productTitle: product.title,
             productHandle: product.handle,
-            productData: shopifyProductToProductData(product),
+            productData: shopifyProductToProductData(await completeProductBarcodeVariants(admin, product)),
             sourceUpdatedAt: product.updatedAt,
           });
           changedChecked += 1;

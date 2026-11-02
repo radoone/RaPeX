@@ -1402,5 +1402,9 @@
     "when": "Registado em",
     "who": "Registado por",
     "whyMatch": "Por que motivo isto pode corresponder"
+  },
+  "barcodeMatch": {
+    "label": "Correspondência exata do código de barras",
+    "help": "O código de barras validado de uma variante corresponde ao registo Safety Gate. Verifique o modelo e o lote afetado antes de decidir."
   }
 }

@@ -1418,5 +1418,9 @@
     "when": "Irreġistrat fi",
     "who": "Irreġistrat minn",
     "whyMatch": "Għaliex dan jista' jaqbel"
+  },
+  "barcodeMatch": {
+    "label": "Qbil eżatt tal-barcode",
+    "help": "Il-barcode ivvalidat ta’ varjant jaqbel mar-rekord ta’ Safety Gate. Ivverifika l-mudell u l-lott affettwat qabel tiddeċiedi."
   }
 }

@@ -11,6 +11,12 @@ export const ProductInputSchema = functionsAi.defineSchema(
     imageUrls: z.array(z.string().max(2048)).max(10).optional().describe("URLs to product images"),
     brand: z.string().max(300).optional().describe("Product brand"),
     model: z.string().max(300).optional().describe("Product model"),
+    barcodes: z.array(z.object({
+      barcode: z.string().max(100),
+      variantId: z.string().max(128).optional(),
+      variantTitle: z.string().max(500).optional(),
+    })).max(2048).optional(),
+    barcodesComplete: z.boolean().optional(),
     shop: z.string().max(255).optional().describe("Shopify shop domain for merchant product cache reuse"),
     productId: z.string().max(128).optional().describe("Shopify product ID for merchant product cache reuse"),
     sourceUpdatedAt: z.string().max(64).optional().describe("Shopify source updated timestamp for cache validation"),
@@ -68,6 +74,11 @@ export const MatchSchema = functionsAi.defineSchema(
   "SafetyGateMatch",
   z.object({
     alertId: z.string(),
+    matchBasis: z.enum(["gtin", "similarity"]).optional(),
+    identifierMatches: z.array(z.object({
+      gtin: z.string(), barcode: z.string(), alertBarcode: z.string(),
+      variantId: z.string().optional(), variantTitle: z.string().optional(),
+    })).optional(),
     overallSimilarity: z.number(),
     imageSimilarity: z.number().optional(),
     textSimilarity: z.number().optional(),

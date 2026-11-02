@@ -144,6 +144,7 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
       alertDetails = null,
       riskLevelFromResult = null,
       overallSimilarity = null;
+    let matchBasis = "similarity";
     try {
       const checkResult = JSON.parse(alert.checkResult);
       const warnings = Array.isArray(checkResult?.warnings)
@@ -151,7 +152,8 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
         : [];
       if (warnings.length > 0) {
         const first = warnings[0];
-        overallSimilarity = first.overallSimilarity || null;
+        matchBasis = first.matchBasis || "similarity";
+        overallSimilarity = matchBasis === "gtin" ? null : first.overallSimilarity || null;
         alertType =
           first.alertType ||
           first.alertDetails?.fields?.alert_type ||
@@ -182,6 +184,7 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
       riskDescription,
       alertDetails,
       overallSimilarity,
+      matchBasis,
       riskLevel: effectiveRiskLevel,
       productImage:
         productImages[alert.productId] ||

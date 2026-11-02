@@ -26,6 +26,7 @@ export interface ProductVariant {
   id: string;
   title: string;
   sku?: string;
+  barcode?: string;
   selectedOptions?: Array<{
     name: string;
     value: string;
@@ -58,6 +59,8 @@ export interface SafetyCheckResult {
   isSafe: boolean;
   warnings: Array<{
     alertId: string;
+    matchBasis?: "gtin" | "similarity";
+    identifierMatches?: Array<{ gtin: string; barcode: string; alertBarcode: string; variantId?: string; variantTitle?: string }>;
     overallSimilarity: number;
     imageSimilarity?: number;
     textSimilarity?: number;

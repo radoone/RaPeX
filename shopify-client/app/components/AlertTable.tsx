@@ -567,7 +567,8 @@ function AlertRow({
             <s-badge tone={riskTone}>
               {localizeRisk(alert.riskLevel, t)}
             </s-badge>
-            {alert.overallSimilarity && (
+            {alert.matchBasis === "gtin" && <s-badge tone="warning">{t("barcodeMatch.label")}</s-badge>}
+            {alert.matchBasis !== "gtin" && alert.overallSimilarity && (
               <s-tooltip
                 content={t("alerts.table.similarityTooltip", {
                   score: alert.overallSimilarity,

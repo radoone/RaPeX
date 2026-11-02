@@ -6,14 +6,24 @@ const SESSION_COLLECTION = "shopify_sessions";
 
 /** Copy the app's offline OAuth session to the private worker-readable collection. */
 export async function mirrorOfflineSessionForCatalogAudit(shop: string): Promise<void> {
+  const merchantRef = firestore.collection("merchants").doc(encodeURIComponent(shop));
+  const initialMerchant = await merchantRef.get();
+  const installation = (data: any) => String(data?.createdAt?.toMillis?.() ?? data?.createdAt ?? "legacy");
+  if (!initialMerchant.exists || initialMerchant.get("installationRetiredAt")) throw new Error("Merchant installation is missing or retired");
   const sessions = await sessionStorage.findSessionsByShop(shop);
   const offlineSession = sessions.find((session) => !session.isOnline && Boolean(session.accessToken));
   if (!offlineSession) throw new Error("Offline Shopify session is not available for catalog audit");
   const serialized = offlineSession.toObject();
-  await firestore.collection(SESSION_COLLECTION).doc(encodeURIComponent(offlineSession.id)).set({
-    ...serialized,
-    ...(serialized.accessToken ? { accessToken: encryptSessionAccessToken(serialized.accessToken) } : {}),
-    updatedAt: new Date(),
+  await firestore.runTransaction(async transaction => {
+    const current = await transaction.get(merchantRef);
+    if (!current.exists || current.get("installationRetiredAt") || installation(current.data()) !== installation(initialMerchant.data())) {
+      throw new Error("Merchant installation changed while preparing background access");
+    }
+    transaction.set(firestore.collection(SESSION_COLLECTION).doc(encodeURIComponent(offlineSession.id)), {
+      ...serialized,
+      ...(serialized.accessToken ? { accessToken: encryptSessionAccessToken(serialized.accessToken) } : {}),
+      updatedAt: new Date(),
+    });
   });
 }
 

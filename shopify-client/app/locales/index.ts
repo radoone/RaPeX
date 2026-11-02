@@ -1,4 +1,5 @@
 import { experienceCopy } from "./experience";
+import { barcodeMatchCopy } from "./barcode-match";
 import bg from "./bg";
 import cs from "./cs";
 import da from "./da";
@@ -117,6 +118,7 @@ export const localizedResources = Object.fromEntries(
     {
       translation: normalizePlurals({
         ...resource.translation,
+        barcodeMatch: barcodeMatchCopy[code],
         experience: experienceCopy[code as keyof typeof experienceCopy],
       }),
     },

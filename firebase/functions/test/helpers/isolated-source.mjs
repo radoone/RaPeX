@@ -1,11 +1,13 @@
 import * as matchingWork from '../../lib/matching-work.js';
+import * as gtin from '../../lib/gtin.js';
+import * as productBarcodes from '../../lib/product-barcodes.js';
 import ts from 'typescript';
 import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
 
 // Evaluate owning source with explicit I/O substitutes. No Firebase SDK, credentials or live calls.
 export function sourceFunction(module, name, deps = {}) {
-  deps = { ...matchingWork, ...deps };
+  deps = { ...matchingWork, ...gtin, ...productBarcodes, ...deps };
   const source = readFileSync(new URL(`../../src/${module}.ts`, import.meta.url), 'utf8');
   const tree = ts.createSourceFile('test.ts', source, ts.ScriptTarget.Latest, true);
   const node = tree.statements.find(n => ts.isFunctionDeclaration(n) && n.name?.text === name);
@@ -41,7 +43,7 @@ export function database() {
     doc: id => doc(`${path}/${id}`), where: (k, op, v) => collection(path, [...filters, [k, op, v]], cap), limit: n => collection(path, filters, n),
     get: async () => {
       const docs = [...rows.keys()].filter(k => k.startsWith(`${path}/`) && !k.slice(path.length + 1).includes('/'))
-        .map(snapshot).filter(d => filters.every(([k, op, v]) => op === 'in' ? v.includes(d.get(k)) : d.get(k) === v)).slice(0, cap);
+        .map(snapshot).filter(d => filters.every(([k, op, v]) => op === 'in' ? v.includes(d.get(k)) : op === 'array-contains-any' ? (d.get(k) || []).some(x => v.includes(x)) : d.get(k) === v)).slice(0, cap);
       return { docs, empty: !docs.length, size: docs.length };
     },
     add: async data => { const ref = doc(`${path}/auto-${++sequence}`); await ref.set(data); return ref; },

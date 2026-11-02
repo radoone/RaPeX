@@ -4,6 +4,9 @@ import { getFunctions } from "firebase-admin/functions";
 import * as logger from "firebase-functions/logger";
 import { requireOperationsKey } from "./api-auth.js";
 import { db } from "./firebase-admin.js";
+import { mapBounded } from "./matching-work.js";
+import { completeShopifyBarcodes } from "./shopify-variant-barcodes.js";
+import { normalizeProductBarcodes } from "./product-barcodes.js";
 import { FIRESTORE_COLLECTIONS } from "./safety-gate-config.js";
 import type { MerchantProductUpsertInput, ProductCheckInput } from "./safety-gate-types.js";
 import { merchantCatalogAuditTaskId } from "./monitoring-task-id.js";
@@ -69,6 +72,7 @@ function toProductInput(node: Record<string, any>, shop: string): MerchantProduc
     name: String(node.title || "Untitled product"),
     category,
     description: description || String(node.title || ""),
+    barcodes: normalizeProductBarcodes(node.barcodes),
     ...(imageUrls[0] ? { imageUrl: imageUrls[0] } : {}),
     ...(imageUrls.length ? { imageUrls } : {}),
     ...(node.vendor || brandTag ? { brand: String(node.vendor || brandTag?.replace(/^brand:\s*/i, "")) } : {}),
@@ -148,6 +152,7 @@ async function loadShopifyProductPage(shop: string, cursor: string | null): Prom
             id title handle vendor productType tags description descriptionHtml updatedAt
             featuredImage { url }
             images(first: 4) { nodes { url } }
+            variants(first: 1) { nodes { id title barcode } pageInfo { hasNextPage endCursor } }
           }
         }
       }`,
@@ -161,11 +166,50 @@ async function loadShopifyProductPage(shop: string, cursor: string | null): Prom
   }
   const connection = payload.data?.products;
   if (!connection) throw new Error("Shopify did not return a catalog page");
+  const request = (query: string, variables: Record<string, unknown>) => requestShopifyBarcodes(shop, accessToken, query, variables);
+  const products = await mapBounded(connection.nodes || [], 4, async (node: Record<string, any>) =>
+    toProductInput({ ...node, barcodes: await completeShopifyBarcodes(node, request) }, shop));
   return {
-    products: (connection.nodes || []).map((node: Record<string, any>) => toProductInput(node, shop)),
+    products,
     hasNextPage: Boolean(connection.pageInfo?.hasNextPage),
     endCursor: typeof connection.pageInfo?.endCursor === "string" ? connection.pageInfo.endCursor : null,
   };
+}
+
+async function requestShopifyBarcodes(shop: string, accessToken: string, query: string, variables: Record<string, unknown>): Promise<any> {
+  const version = process.env.SHOPIFY_ADMIN_API_VERSION || process.env.SHOPIFY_API_VERSION || "2026-07";
+  for (let attempt = 0; attempt < 6; attempt++) {
+    const response = await fetch(`https://${shop}/admin/api/${version}/graphql.json`, {
+      method: "POST", headers: { "Content-Type": "application/json", "X-Shopify-Access-Token": accessToken },
+      body: JSON.stringify({ query, variables }), signal: globalThis.AbortSignal.timeout(60_000),
+    });
+    if (!response.ok && response.status !== 429) throw new Error(`Shopify barcode request failed (${response.status})`);
+    const payload = response.status === 429 ? null : await response.json() as any;
+    const throttled = response.status === 429 || payload?.errors?.some((error: any) => error.extensions?.code === "THROTTLED");
+    if (!throttled) return payload;
+    if (attempt === 5) break;
+    const cost = payload?.extensions?.cost;
+    const available = Number(cost?.throttleStatus?.currentlyAvailable || 0);
+    const rate = Number(cost?.throttleStatus?.restoreRate || 50);
+    const requested = Number(cost?.requestedQueryCost || 250);
+    const delay = Math.min(30_000, Math.max(1_000, (requested - available) / Math.max(1, rate) * 1000) + 250 * (attempt + 1));
+    await new Promise(resolve => setTimeout(resolve, delay));
+  }
+  throw new Error("Shopify variant barcode requests remain throttled; retry the task");
+}
+
+/** Called by task workers, never inline in Shopify webhook delivery. */
+export async function loadShopifyProductBarcodes(shop: string, productId: string) {
+  const token = await loadOfflineAccessToken(shop);
+  const request = (query: string, variables: Record<string, unknown>) => requestShopifyBarcodes(shop, token, query, variables);
+  const payload = await request(`query ProductBarcodes($id: ID!) {
+    product(id: $id) { id updatedAt variants(first: 250) {
+      nodes { id title barcode } pageInfo { hasNextPage endCursor }
+    } }
+  }`, { id: productId.startsWith("gid://") ? productId : `gid://shopify/Product/${productId}` });
+  if (payload.errors?.length || !payload.data?.product?.variants) throw new Error("Could not load Shopify product barcodes");
+  if (typeof payload.data.product.updatedAt !== "string" || !Number.isFinite(Date.parse(payload.data.product.updatedAt))) throw new Error("Shopify product version is unavailable");
+  return { barcodes: await completeShopifyBarcodes(payload.data.product, request), sourceUpdatedAt: payload.data.product.updatedAt };
 }
 
 async function enqueue(payload: MerchantCatalogAuditTaskPayload): Promise<void> {

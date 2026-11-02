@@ -1402,5 +1402,9 @@
     "when": "Tallennettu",
     "who": "Tallentanut",
     "whyMatch": "Miksi tämä voi vastata"
+  },
+  "barcodeMatch": {
+    "label": "Viivakoodin täsmällinen vastaavuus",
+    "help": "Tuoteversion tarkistettu viivakoodi vastaa Safety Gate -tietuetta. Tarkista malli ja kyseinen erä ennen päätöstä."
   }
 }

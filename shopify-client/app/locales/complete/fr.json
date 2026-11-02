@@ -1402,5 +1402,9 @@
     "when": "Enregistré le",
     "who": "Enregistré par",
     "whyMatch": "Pourquoi cela peut correspondre"
+  },
+  "barcodeMatch": {
+    "label": "Correspondance exacte du code-barres",
+    "help": "Le code-barres validé d’une variante correspond à la fiche Safety Gate. Vérifiez le modèle et le lot concerné avant de décider."
   }
 }

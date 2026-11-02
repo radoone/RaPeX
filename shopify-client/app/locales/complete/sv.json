@@ -1402,5 +1402,9 @@
     "when": "Registrerad vid",
     "who": "Inspelad av",
     "whyMatch": "Varför detta kan matcha"
+  },
+  "barcodeMatch": {
+    "label": "Exakt streckkodsmatchning",
+    "help": "En variants validerade streckkod matchar Safety Gate-posten. Kontrollera modellen och det berörda partiet innan du fattar beslut."
   }
 }

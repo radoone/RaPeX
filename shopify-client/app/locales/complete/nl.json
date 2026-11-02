@@ -1402,5 +1402,9 @@
     "when": "Vastgelegd op",
     "who": "Opgenomen door",
     "whyMatch": "Waarom dit kan overeenkomen"
+  },
+  "barcodeMatch": {
+    "label": "Exacte barcode-overeenkomst",
+    "help": "De gevalideerde barcode van een variant komt overeen met het Safety Gate-record. Controleer het model en de betrokken partij voordat u beslist."
   }
 }

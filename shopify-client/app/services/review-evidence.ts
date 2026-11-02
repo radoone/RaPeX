@@ -41,7 +41,9 @@ export function parseEvidence(checkResult?: string | null) {
         fields.risk_level ||
         warning.riskLevel ||
         "",
-      overallSimilarity: warning.overallSimilarity ?? "",
+      matchBasis: warning.matchBasis || "similarity",
+      identifierMatches: warning.identifierMatches || [],
+      overallSimilarity: warning.matchBasis === "gtin" ? "" : warning.overallSimilarity ?? "",
       alertType:
         warning.alertType || fields.riskType || fields.alert_type || "",
       recommendation: parsed.recommendation || "",
@@ -53,6 +55,8 @@ export function parseEvidence(checkResult?: string | null) {
       reason: "",
       sourceRisk: "",
       riskLevel: "",
+      matchBasis: "similarity",
+      identifierMatches: [],
       overallSimilarity: "",
       alertType: "",
       recommendation: "",

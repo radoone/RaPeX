@@ -1402,5 +1402,9 @@
     "when": "Salvestatud",
     "who": "Salvestas",
     "whyMatch": "Miks see võib sobida"
+  },
+  "barcodeMatch": {
+    "label": "Vöötkoodi täpne vaste",
+    "help": "Variandi valideeritud vöötkood vastab Safety Gate’i kirjele. Enne otsustamist kontrollige mudelit ja mõjutatud partiid."
   }
 }

@@ -250,6 +250,7 @@ test('retiring an installation fences an in-flight worker before recursive delet
 test('global source retrieval keeps a bounded shortlist and propagates provider failures', async () => {
   let broken = false, calls = 0;
   const retrieve = fn('safety-gate-checker-retrieval', 'retrieveAlertsWithRag', {
+    retrieveAlertsByGtins: async () => [],
     retrieveAlertsFromCachedVectors: async () => [], ensureTextRetriever: () => ({}), ensureImageRetriever: () => null,
     buildEmbeddingText: () => 'Specific model', RAG_TEXT_LIMIT: 12, RAG_IMAGE_LIMIT: 6,
     getProductImageUrls: () => [], MATCHING_THRESHOLDS: { textDistance: .38 },

@@ -1418,5 +1418,9 @@
     "when": "Reģistrēts",
     "who": "Ierakstījis",
     "whyMatch": "Kāpēc tas varētu atbilst"
+  },
+  "barcodeMatch": {
+    "label": "Precīza svītrkoda atbilstība",
+    "help": "Varianta pārbaudītais svītrkods atbilst Safety Gate ierakstam. Pirms lēmuma pieņemšanas pārbaudiet modeli un skarto partiju."
   }
 }

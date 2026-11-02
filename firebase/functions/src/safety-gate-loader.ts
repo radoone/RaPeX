@@ -9,6 +9,7 @@ import {
   SAFETY_GATE_HEADERS,
 } from "./safety-gate-config.js";
 import { buildEmbeddingText, embedImage, embedText, getPictureUrls } from "./safety-gate-embeddings.js";
+import { extractGtins } from "./gtin.js";
 import type {
   LoaderState,
   OpenDataSoftResponse,
@@ -176,6 +177,7 @@ function buildAlertDocument(
       ingested_at: FieldValue.serverTimestamp(),
     },
     fields: record.fields,
+    gtins: [...new Set([...extractGtins(record.fields.barcode), ...extractGtins(record.fields.product_barcode)])],
   };
 
   if (vectorText?.length) {

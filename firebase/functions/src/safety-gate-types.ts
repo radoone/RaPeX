@@ -32,6 +32,7 @@ export interface RapexAlertDocument {
     ingested_at: FieldValue;
   };
   fields: RapexRecordFields;
+  gtins?: string[];
   vector_text?: FirestoreVectorValue;
 }
 
@@ -64,6 +65,8 @@ export interface ProductCheckInput {
   imageUrls?: string[];
   brand?: string;
   model?: string;
+  barcodes?: import("./product-barcodes.js").ProductBarcode[];
+  barcodesComplete?: boolean;
   shop?: string;
   productId?: string;
   sourceUpdatedAt?: string;
@@ -90,6 +93,8 @@ export interface MerchantProductDocument {
   imageUrls?: string[];
   brand?: string;
   model?: string;
+  barcodes?: import("./product-barcodes.js").ProductBarcode[];
+  gtins?: string[];
   sourceUpdatedAt?: string;
   createdAt: FieldValue;
   updatedAt: FieldValue;

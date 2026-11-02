@@ -1,5 +1,6 @@
 import { loadFirstSuccessful, mapBounded, memoizeBounded } from "./matching-work.js";
 import { createHash } from "node:crypto";
+import { findBarcodeMatches, normalizeProductBarcodes } from "./product-barcodes.js";
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import { googleAI } from "@genkit-ai/google-genai";
 import { type Part } from "genkit";
@@ -65,6 +66,7 @@ function buildProductFingerprint(product: ProductInput): string {
     imageUrls: product.imageUrls,
     brand: product.brand,
     model: product.model,
+    barcodes: normalizeProductBarcodes(product.barcodes),
     sourceUpdatedAt: product.sourceUpdatedAt,
   });
 }
@@ -77,11 +79,12 @@ function buildAlertSignature(alerts: NormalizedAlert[]): string {
       alertDate: alert.meta?.alert_date,
       recordTimestamp: alert.meta?.record_timestamp,
       images: hashValue(normalizePictures(alert.fields)),
+      barcodes: hashValue([alert.fields.barcode, alert.fields.product_barcode]),
     }))
     .sort((left, right) => `${left.id}:${left.recordTimestamp || left.alertDate}`.localeCompare(
       `${right.id}:${right.recordTimestamp || right.alertDate}`,
     ))
-    .map((alert) => `${alert.id}:${alert.recordTimestamp || alert.alertDate || ""}:${alert.images}`)
+    .map((alert) => `${alert.id}:${alert.recordTimestamp || alert.alertDate || ""}:${alert.images}:${alert.barcodes}`)
     .join("|");
 }
 
@@ -99,7 +102,7 @@ function buildMatchCacheKey(product: ProductInput, alerts: NormalizedAlert[]): {
   const productFingerprint = buildProductFingerprint(product);
   const alertSignature = buildAlertSignature(alerts);
   const docId = hashValue({
-    reliabilityVersion: 3,
+    reliabilityVersion: 4,
     shop,
     productId,
     productFingerprint,
@@ -314,6 +317,28 @@ export async function checkProductAgainstAlerts(
   candidateAlerts: NormalizedAlert[],
   loadMedia: (url: string) => Promise<EncodedImage | null> = memoizeBounded(prepareImageMedia),
 ): Promise<SafetyCheckResult> {
+  const exactAlerts = candidateAlerts.filter((alert) => findBarcodeMatches(product.barcodes, alert.fields).length > 0);
+  if (exactAlerts.length) {
+    const exactIds = new Set(exactAlerts.map((alert) => alert.id));
+    const others = candidateAlerts.filter((alert) => !exactIds.has(alert.id));
+    const base = others.length
+      ? await checkProductAgainstAlerts(product, others, loadMedia)
+      : createNoAlertsResult(getProductImageUrls(product).length);
+    const exactWarnings = exactAlerts.map((alert) => {
+      const identifierMatches = findBarcodeMatches(product.barcodes, alert.fields);
+      const reason = `Exact validated GTIN match: ${[...new Set(identifierMatches.map((item) => item.gtin))].join(", ")}. Review the affected variant, model and batch against the official alert; a matching barcode alone does not confirm recall applicability.`;
+      const warning = buildSafetyCheckResult([{ alertId: alert.id, overallSimilarity: 100, reason }], [alert], base.analysis).warnings[0];
+      // 100 is a compatibility review score, never an image/text measurement or probability.
+      const evidence = { ...warning };
+      delete evidence.imageSimilarity;
+      delete evidence.textSimilarity;
+      delete evidence.scoreBreakdown;
+      return { ...evidence, overallSimilarity: 100, matchBasis: "gtin" as const, identifierMatches, reason };
+    });
+    return { ...base, isSafe: false, warnings: [...exactWarnings, ...base.warnings],
+      recommendation: "A validated product barcode matches a Safety Gate alert. Review the affected variant, model and batch before deciding.",
+      analysis: { ...base.analysis, candidateAlertsConsidered: candidateAlerts.length } };
+  }
   if (candidateAlerts.length > 12) {
     const chunks: NormalizedAlert[][] = [];
     for (let offset = 0; offset < candidateAlerts.length; offset += 12) chunks.push(candidateAlerts.slice(offset, offset + 12));

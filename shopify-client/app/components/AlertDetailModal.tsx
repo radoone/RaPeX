@@ -181,6 +181,8 @@ export function AlertDetailModal({
   const merchantBrand = alert.brand || null;
   const merchantModel = alert.model || null;
   const merchantBarcode =
+    primaryWarning?.identifierMatches?.map((item: any) =>
+      `${item.barcode}${item.variantTitle || item.variantId ? ` (${item.variantTitle || item.variantId})` : ""}`).join("; ") ||
     alert.barcode || alert.productBarcode || alert.gtin || alert.ean || null;
   const merchantBatch = alert.batchNumber || alert.batch || null;
 
@@ -204,7 +206,8 @@ export function AlertDetailModal({
       label: t("analysis.reviewLayout.identifiers.barcode"),
       merchantVal: merchantBarcode,
       safetyVal: safetyBarcode,
-      status: compareProductIdentifiers(merchantBarcode, safetyBarcode),
+      status: primaryWarning?.matchBasis === "gtin" && primaryWarning?.identifierMatches?.length
+        ? "match" : compareProductIdentifiers(merchantBarcode, safetyBarcode),
     },
     {
       label: t("analysis.reviewLayout.identifiers.batch"),
@@ -283,6 +286,12 @@ export function AlertDetailModal({
                 {t("workspace.chooseOutcomeLink")}
               </button>
             </div>
+          )}
+          {primaryWarning?.matchBasis === "gtin" && (
+            <section className="review-modal__section">
+              <s-badge tone="warning">{t("barcodeMatch.label")}</s-badge>
+              <p>{t("barcodeMatch.help")}</p>
+            </section>
           )}
           <div className="review-modal__body-grid">
             <section
@@ -488,7 +497,7 @@ export function AlertDetailModal({
           </section>
 
           <div className="review-modal__final-row">
-            <details className="advanced-settings-disclosure">
+            {primaryWarning?.matchBasis !== "gtin" && <details className="advanced-settings-disclosure">
               <summary>{t("workspace.scoreDetails")}</summary>
               <p>{t("workspace.scoreHelp")}</p>
               <div className="review-modal__points">
@@ -510,7 +519,7 @@ export function AlertDetailModal({
                   </span>
                 </div>
               </div>
-            </details>
+            </details>}
 
             {isActive ? (
               <section

@@ -1418,5 +1418,9 @@
     "when": "Zabeleženo ob",
     "who": "Zabeležil/-a",
     "whyMatch": "Zakaj se to lahko ujema"
+  },
+  "barcodeMatch": {
+    "label": "Natančno ujemanje črtne kode",
+    "help": "Preverjena črtna koda različice se ujema z zapisom Safety Gate. Pred odločitvijo preverite model in zadevno serijo."
   }
 }

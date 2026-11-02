@@ -1,4 +1,5 @@
 import db from "../merchant-db.server";
+import { completeProductBarcodeVariants } from "./shopify-product-barcodes.server";
 import type { ProductData } from "./safety-gate-product-data";
 import {
   checkProductSafety,
@@ -119,6 +120,7 @@ function getAlertType(result: SafetyCheckResult | null): string | null {
 }
 
 function getOverallSimilarity(result: SafetyCheckResult | null): number | null {
+  if (result?.warnings?.[0]?.matchBasis === "gtin") return null;
   const value = result?.warnings?.[0]?.overallSimilarity;
   return typeof value === "number" && Number.isFinite(value) ? value : null;
 }
@@ -376,12 +378,14 @@ export async function runProductSafetyCheckForAdminProduct(input: {
               altText
             }
           }
-          variants(first: 5) {
+          variants(first: 250) {
+            pageInfo { hasNextPage endCursor }
             edges {
               node {
                 id
                 title
                 price
+                barcode
                 image {
                   url
                 }
@@ -398,7 +402,7 @@ export async function runProductSafetyCheckForAdminProduct(input: {
   const payload = await response.json();
   const product = payload.data?.product;
 
-  if (!product) {
+  if (payload.errors?.length || !product) {
     throw new Error("Product not found in Shopify Admin API");
   }
 
@@ -407,7 +411,7 @@ export async function runProductSafetyCheckForAdminProduct(input: {
     productId: product.id,
     productTitle: product.title,
     productHandle: product.handle || undefined,
-    productData: shopifyProductToProductData(product),
+    productData: shopifyProductToProductData(await completeProductBarcodeVariants(input.admin, product)),
     sourceUpdatedAt: product.updatedAt || undefined,
   });
 }

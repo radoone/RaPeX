@@ -11,6 +11,12 @@ test("weekly window preserves Bratislava wall-clock time across spring DST", () 
   assert.equal(window.start.toISOString(), "2026-03-23T07:00:00.000Z"); // Monday 08:00 CET
 });
 
+test("exact barcode warnings never become a 100 percent similarity claim in merchant email", () => {
+  const details = emailNotificationTestUtils.parseAlertDetails({ productTitle: "Toy", checkResult: JSON.stringify({ warnings: [{ matchBasis: "gtin", overallSimilarity: 100, reason: "Exact GTIN; review model and batch" }] }) });
+  assert.equal(details.overallSimilarity, null);
+  assert.match(details.reason, /Exact GTIN/);
+});
+
 test("weekly window preserves Bratislava wall-clock time across autumn DST", () => {
   const end = new Date("2026-10-26T07:00:00.000Z"); // Monday 08:00 CET
   const window = weeklyWindow(end);

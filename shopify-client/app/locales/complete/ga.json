@@ -1418,5 +1418,9 @@
     "when": "Taifeadta ag",
     "who": "Taifeadta ag",
     "whyMatch": "Cén fáth a bhféadfadh sé seo a mheaitseáil"
+  },
+  "barcodeMatch": {
+    "label": "Meaitseáil bheacht barrachóid",
+    "help": "Meaitseálann barrachód bailíochtaithe leagain leis an taifead Safety Gate. Seiceáil an tsamhail agus an bhaisc lena mbaineann sula ndéanann tú cinneadh."
   }
 }

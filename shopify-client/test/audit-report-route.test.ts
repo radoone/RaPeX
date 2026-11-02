@@ -58,6 +58,17 @@ describe("authenticated audit export", () => {
     await expect(loader({ request: new Request("https://example.com/app/audit-report.csv"), url: new URL("https://example.com/app/audit-report.csv") } as never)).rejects.toMatchObject({ status: 401 });
     expect(findMany).not.toHaveBeenCalled();
   });
+  it("exports exact GTIN and affected variant evidence with the finding", async () => {
+    authenticateAdmin.mockResolvedValue({ session: { shop: "example.myshopify.com" } });
+    findMany.mockResolvedValue([{ id: "barcode-finding", productTitle: "Toy", productId: "1", status: "active", createdAt: new Date("2026-11-02"),
+      checkResult: JSON.stringify({ warnings: [{ matchBasis: "gtin", overallSimilarity: 100, identifierMatches: [{ gtin: "00036000291452", variantId: "v251", variantTitle: "Blue" }] }] }),
+    }]);
+    const url = new URL("https://example.com/app/audit-report.csv");
+    const response = await loader({ request: new Request(url), url } as never);
+    const content = await response.text();
+    expect(content).toContain("Exact barcode match");
+    expect(content).toContain("00036000291452 · v251 · Blue");
+  });
   it("does not export unverified matcher claims from existing findings", async () => {
     authenticateAdmin.mockResolvedValue({ session: { shop: "example.myshopify.com" } });
     findMany.mockResolvedValue([{

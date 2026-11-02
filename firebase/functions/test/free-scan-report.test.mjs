@@ -44,3 +44,16 @@ test('authorized receipt API uses bounded pages and reveals nothing for a differ
   const second=await readFreeScanReport(token,first.body.nextCursor);assert.equal(second.body.matches.length,1);assert.equal(second.body.nextCursor,null);
  }finally{db.collection=original;}
 });
+
+test('recipient export preserves exact variant evidence without presenting the compatibility score as similarity', async () => {
+ const match = compactScanMatch({ productId: '1', productTitle: 'Toy', result: { warnings: [{
+  matchBasis: 'gtin', overallSimilarity: 100, reason: 'Verify model and batch',
+  identifierMatches: [{ gtin: '00036000291452', barcode: '036000291452', alertBarcode: '0036000291452', variantId: 'v251', variantTitle: '=dangerous formula' }],
+ }] } });
+ assert.equal(match.result.warnings[0].overallSimilarity, undefined);
+ assert.equal(match.result.warnings[0].matchBasis, 'gtin');
+ const report = await downloadReportPages('token', async () => ({ domain: 'example.myshopify.com', matches: [match], possibleMatches: 1, nextCursor: null }));
+ assert.match(report.csv, /00036000291452/);
+ assert.match(report.csv, /v251/);
+ assert.doesNotMatch(report.csv, /"100"/);
+});

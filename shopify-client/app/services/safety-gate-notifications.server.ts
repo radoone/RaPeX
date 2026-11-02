@@ -15,7 +15,7 @@ export async function handleAutoDraftAndNotifications(
       const similarity = w.overallSimilarity ?? 0;
       const risk = String(w.riskLevel || w.alertDetails?.fields?.alert_level || w.alertDetails?.fields?.risk_level || "").toLowerCase();
       const isHighRisk = risk.includes("serious") || risk.includes("high") || risk === "1" || risk === "2";
-      return similarity >= 95 && isHighRisk;
+      return (w.matchBasis === "gtin" || similarity >= 95) && isHighRisk;
     });
 
     if (criticalWarning) {
@@ -31,7 +31,9 @@ export async function handleAutoDraftAndNotifications(
             shop,
             type: "automatic",
             action: "quarantine",
-            details: `Marked high-risk product for priority review. Matched warning: "${alertName}" (${criticalWarning.overallSimilarity}% similarity).`
+            details: criticalWarning.matchBasis === "gtin"
+              ? `Marked high-risk product for priority review. Matched warning: "${alertName}" (validated GTIN match; verify model and batch).`
+              : `Marked high-risk product for priority review. Matched warning: "${alertName}" (${criticalWarning.overallSimilarity}% similarity).`
           }
         });
       }

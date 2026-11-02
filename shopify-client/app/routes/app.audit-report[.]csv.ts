@@ -24,7 +24,10 @@ export async function loader({ request, url }: LoaderFunctionArgs) {
     filters,
   );
   const headers = ["shop", "generatedAt", "recordType", "action", "product", "productId", "status", "resolution", "caseNumber", "source", "risk", "guidance", "sourceRisk", "detectedAt", "decisionAt", "actor", "notes"].map(key => t(`workspace.csv.${key}`));
+  headers.push(t("barcodeMatch.label"));
   const rows = records.flatMap((record) => {
+    const barcodeEvidence = (record.identifierMatches || []).map((item: any) =>
+      [item.gtin, item.variantId, item.variantTitle].filter(Boolean).join(" · ")).join("; ");
     const base = [
       session.shop,
       generatedAt,
@@ -47,6 +50,7 @@ export async function loader({ request, url }: LoaderFunctionArgs) {
         record.resolutionType ? record.decisions.find((event: any) => event.resolutionType === record.resolutionType)?.createdAt || record.resolvedAt || record.dismissedAt : null,
         record.resolutionType ? formatActorId(record.decisions.find((event: any) => event.resolutionType === record.resolutionType)?.actorId) : "",
         record.notes,
+        barcodeEvidence,
       ]]),
       ...record.decisions.map((event: any) => [
         session.shop,
@@ -66,6 +70,7 @@ export async function loader({ request, url }: LoaderFunctionArgs) {
         event.createdAt,
         formatActorId(event.actorId),
         event.notes,
+        barcodeEvidence,
       ]),
     ];
   });
