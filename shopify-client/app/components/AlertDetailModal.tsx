@@ -237,6 +237,38 @@ export function AlertDetailModal({
     return images;
   }
 
+  // A completed check without a finding has no source record or review decision.
+  if (isSafe && warnings.length === 0 && !alert.id) {
+    return (
+      <s-modal
+        id={modalId}
+        heading={t("workspace.noMatch")}
+        accessibilityLabel={t("analysis.modalAccessibilityLabel", {
+          title: alert.productTitle,
+        })}
+      >
+        <div className="review-modal">
+          <h2 className="review-modal__title">{alert.productTitle}</h2>
+          <p>{t("analysis.sections.whatHappenedSafe")}</p>
+          <s-link
+            href={`https://${alert.shop}/admin/products/${alert.productId}`}
+            target="_blank"
+          >
+            {t("analysis.editInShopify")}
+          </s-link>
+        </div>
+        <s-button
+          slot="primary-action"
+          variant="primary"
+          commandFor={modalId}
+          command="--hide"
+        >
+          {t("common.close")}
+        </s-button>
+      </s-modal>
+    );
+  }
+
   return (
     <>
       <s-modal
