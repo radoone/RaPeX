@@ -84,10 +84,10 @@ async function getCachedMerchantProductVectors(product: ProductInput): Promise<{
   };
 }
 
-async function retrieveAlertsFromCachedVectors(product: ProductInput): Promise<NormalizedAlert[]> {
+async function retrieveAlertsFromCachedVectors(product: ProductInput): Promise<NormalizedAlert[] | null> {
   const cachedVectors = await getCachedMerchantProductVectors(product);
   if (!cachedVectors?.textVector?.length && !cachedVectors?.imageVector?.length) {
-    return [];
+    return null;
   }
 
   const db = getFirestore();
@@ -344,7 +344,8 @@ async function hydrateAlertsIfMissing(candidates: NormalizedAlert[]): Promise<No
 export async function retrieveAlertsWithRag(product: ProductInput): Promise<NormalizedAlert[]> {
   const exactCandidates = await retrieveAlertsByGtins(product);
   const cachedCandidates = await retrieveAlertsFromCachedVectors(product);
-  if (cachedCandidates.length > 0) {
+  // An empty successful KNN result is final; only missing vectors need embedding.
+  if (cachedCandidates !== null) {
     return hydrateAlertsIfMissing([...new Map([...exactCandidates, ...cachedCandidates].map((alert) => [alert.id, alert])).values()]);
   }
 
