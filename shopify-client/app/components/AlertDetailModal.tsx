@@ -792,7 +792,16 @@ export function AlertDetailModal({
             ref={lightboxDialogRef}
             className="image-lightbox-dialog"
             onClose={closeLightbox}
+            onCancel={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              closeLightbox();
+            }}
             onKeyDown={(event) => {
+              // Polaris also handles Escape on the surrounding review modal.
+              // Keep photo navigation and dismissal within the topmost dialog.
+              if (["Escape", "ArrowLeft", "ArrowRight"].includes(event.key)) event.stopPropagation();
+              if (event.key === "Escape") { event.preventDefault(); closeLightbox(); }
               if (event.key === "ArrowLeft") { event.preventDefault(); moveLightbox(-1); }
               if (event.key === "ArrowRight") { event.preventDefault(); moveLightbox(1); }
             }}
