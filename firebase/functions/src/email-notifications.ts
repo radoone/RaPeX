@@ -1,3 +1,4 @@
+import { ownerTestAccessGranted } from "./owner-test-access.js";
 import { createHash, randomUUID, timingSafeEqual } from "node:crypto";
 import { URL } from "node:url";
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
@@ -428,6 +429,8 @@ export async function runWeeklyClearSummaries(end = new Date()): Promise<{ sent:
 }
 
 function hasCurrentMonitoringEntitlement(data: Record<string, unknown>): boolean {
+  if (data.installationRetiredAt) return false;
+  if (data.ownerTestAccess && ownerTestAccessGranted(data, String(data.shop || ""))) return true;
   if (data.subscriptionStatus !== "active" || data.monitoringEntitled !== true) return false;
   const validUntil = data.subscriptionValidUntil;
   const expiry = validUntil instanceof Timestamp ? validUntil.toMillis() : validUntil instanceof Date ? validUntil.getTime() : null;

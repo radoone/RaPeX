@@ -1453,5 +1453,6 @@
   "barcodeMatch": {
     "label": "Natančno ujemanje črtne kode",
     "help": "Preverjena črtna koda različice se ujema z zapisom Safety Gate. Pred odločitvijo preverite model in zadevno serijo."
-  }
+  },
+  "ownerTestAccess": "Testiranje z dovoljenjem lastnika — plačljiv paket ni potreben"
 }

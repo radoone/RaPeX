@@ -1,3 +1,4 @@
+import { ownerTestAccessCopy } from "./owner-test-access";
 import { experienceCopy } from "./experience";
 import { barcodeMatchCopy } from "./barcode-match";
 import bg from "./bg";
@@ -119,6 +120,7 @@ export const localizedResources = Object.fromEntries(
       translation: normalizePlurals({
         ...resource.translation,
         barcodeMatch: barcodeMatchCopy[code],
+        ownerTestAccess: ownerTestAccessCopy[code],
         experience: experienceCopy[code as keyof typeof experienceCopy],
       }),
     },

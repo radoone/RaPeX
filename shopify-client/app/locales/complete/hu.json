@@ -1437,5 +1437,6 @@
   "barcodeMatch": {
     "label": "Pontos vonalkódegyezés",
     "help": "Egy változat ellenőrzött vonalkódja egyezik a Safety Gate bejegyzésével. Döntés előtt ellenőrizze a modellt és az érintett gyártási tételt."
-  }
+  },
+  "ownerTestAccess": "A tulajdonos által engedélyezett tesztelés — nem szükséges díjcsomag"
 }

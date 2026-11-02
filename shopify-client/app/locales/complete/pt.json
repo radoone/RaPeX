@@ -1437,5 +1437,6 @@
   "barcodeMatch": {
     "label": "Correspondência exata do código de barras",
     "help": "O código de barras validado de uma variante corresponde ao registo Safety Gate. Verifique o modelo e o lote afetado antes de decidir."
-  }
+  },
+  "ownerTestAccess": "Teste autorizado pelo proprietário — não é necessário um plano"
 }

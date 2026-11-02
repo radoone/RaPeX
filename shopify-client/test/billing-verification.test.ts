@@ -1,8 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-const { upsert, findUnique } = vi.hoisted(() => ({
+const { upsert, findUnique, testAccess } = vi.hoisted(() => ({
   upsert: vi.fn(),
   findUnique: vi.fn(),
+  testAccess: vi.fn(),
 }));
+vi.mock("../app/services/owner-test-access.server", () => ({ hasOwnerTestAccess: testAccess }));
 vi.mock("../app/shopify.server", () => ({
   SHOPIFY_APP_GID: "gid://shopify/App/1",
   SHOPIFY_APP_HANDLE: "safety-gate-monitor-eu",
@@ -24,6 +26,7 @@ import {
 describe("production billing verification", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+    testAccess.mockReset().mockResolvedValue(false);
     upsert.mockReset().mockResolvedValue({});
     findUnique.mockReset().mockResolvedValue({ freeScanUsed: true });
   });
@@ -54,6 +57,13 @@ describe("production billing verification", () => {
     items: [{ handle: "monthly", price: { active: true } }],
     currentBillingCycle: { endTime: "2099-11-01T00:00:00Z" },
   };
+  it("honors an explicit owner grant without inventing a paid contract", async () => {
+    testAccess.mockResolvedValue(true);
+    const result = await getBillingStatus({}, "example.myshopify.com", admin);
+    expect(result).toMatchObject({ hasActivePayment: false, ownerTestAccess: true, canPerformScan: true, billingVerified: false });
+    expect(await requireActiveBilling({}, "example.myshopify.com", { admin })).toBeNull();
+    expect(upsert).not.toHaveBeenCalled();
+  });
   it("persists only a verified matching current contract", async () => {
     provider(contract);
     const result = await getBillingStatus({}, "example.myshopify.com", admin);

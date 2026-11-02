@@ -1437,5 +1437,6 @@
   "barcodeMatch": {
     "label": "Točno podudaranje crtičnog koda",
     "help": "Potvrđeni crtični kod varijante podudara se sa zapisom Safety Gate. Provjerite model i zahvaćenu seriju prije odluke."
-  }
+  },
+  "ownerTestAccess": "Testiranje uz odobrenje vlasnika — nije potreban plaćeni plan"
 }

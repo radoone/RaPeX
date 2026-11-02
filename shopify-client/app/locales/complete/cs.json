@@ -1437,5 +1437,6 @@
   "barcodeMatch": {
     "label": "Přesná shoda čárového kódu",
     "help": "Ověřený čárový kód varianty se shoduje se záznamem Safety Gate. Před rozhodnutím ověřte model a dotčenou šarži."
-  }
+  },
+  "ownerTestAccess": "Testování povolené vlastníkem — cenový plán není vyžadován"
 }

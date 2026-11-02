@@ -1,3 +1,4 @@
+import { ownerTestAccessGranted } from "./owner-test-access.js";
 import { FieldPath, FieldValue, Timestamp, type DocumentReference } from "firebase-admin/firestore";
 import { getFunctions } from "firebase-admin/functions";
 import { createHash, randomUUID } from "node:crypto";
@@ -116,6 +117,7 @@ function monitoringRunRef(shop: string, runId: string, collection = MONITORING_R
 }
 
 function currentEntitlement(data: Record<string, unknown>): boolean {
+  if (data.ownerTestAccess && ownerTestAccessGranted(data, String(data.shop || ""))) return true;
   if (data.installationRetiredAt || data.monitoringEntitled !== true || data.subscriptionStatus !== "active") return false;
   const validUntil = data.subscriptionValidUntil;
   return validUntil instanceof Timestamp && validUntil.toMillis() > Date.now();
@@ -1161,7 +1163,7 @@ export async function runDailyMerchantDeltaMonitoring(scheduleTime?: string): Pr
 }> {
   const merchantsSnapshot = await db
     .collection(FIRESTORE_COLLECTIONS.merchants)
-    .select("shop", "monitoringEntitled", "subscriptionStatus", "subscriptionValidUntil")
+    .select("shop", "monitoringEntitled", "subscriptionStatus", "subscriptionValidUntil", "ownerTestAccess", "createdAt", "installationRetiredAt")
     .get();
 
   const eligibleShops = merchantsSnapshot.docs.filter((doc) => {

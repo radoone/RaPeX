@@ -1437,5 +1437,6 @@
   "barcodeMatch": {
     "label": "Exakt streckkodsmatchning",
     "help": "En variants validerade streckkod matchar Safety Gate-posten. Kontrollera modellen och det berörda partiet innan du fattar beslut."
-  }
+  },
+  "ownerTestAccess": "Test godkänt av ägaren — ingen prisplan krävs"
 }

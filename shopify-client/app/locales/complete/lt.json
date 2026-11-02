@@ -1437,5 +1437,6 @@
   "barcodeMatch": {
     "label": "Tikslus brūkšninio kodo atitikmuo",
     "help": "Patikrintas varianto brūkšninis kodas atitinka Safety Gate įrašą. Prieš nuspręsdami patikrinkite modelį ir paveiktą partiją."
-  }
+  },
+  "ownerTestAccess": "Savininko patvirtintas testavimas — mokamas planas nereikalingas"
 }

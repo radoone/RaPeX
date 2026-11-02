@@ -427,7 +427,7 @@ export default function Settings() {
               <AdminCard className="admin-card admin-stack">
                 <h2 className="admin-card__title">{t("billing.planTitle")}</h2>
                 <p>
-                  {billingStatus.developmentBypass
+                  {billingStatus.ownerTestAccess ? t("ownerTestAccess") : billingStatus.developmentBypass
                     ? t("billing.statusDevelopmentBypass")
                     : !billingStatus.billingVerified
                       ? t("billing.verificationError")

@@ -1437,5 +1437,6 @@
   "barcodeMatch": {
     "label": "Corrispondenza esatta del codice a barre",
     "help": "Il codice a barre convalidato di una variante corrisponde alla scheda Safety Gate. Verifica il modello e il lotto interessato prima di decidere."
-  }
+  },
+  "ownerTestAccess": "Test autorizzato dal proprietario — nessun piano richiesto"
 }

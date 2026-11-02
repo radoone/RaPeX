@@ -1437,5 +1437,6 @@
   "barcodeMatch": {
     "label": "Exacte barcode-overeenkomst",
     "help": "De gevalideerde barcode van een variant komt overeen met het Safety Gate-record. Controleer het model en de betrokken partij voordat u beslist."
-  }
+  },
+  "ownerTestAccess": "Testen met toestemming van de eigenaar — geen abonnement vereist"
 }

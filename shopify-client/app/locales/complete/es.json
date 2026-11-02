@@ -1437,5 +1437,6 @@
   "barcodeMatch": {
     "label": "Coincidencia exacta del código de barras",
     "help": "El código de barras validado de una variante coincide con el registro de Safety Gate. Verifique el modelo y el lote afectado antes de decidir."
-  }
+  },
+  "ownerTestAccess": "Pruebas autorizadas por el propietario — no se requiere un plan"
 }

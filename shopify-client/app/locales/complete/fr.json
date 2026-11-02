@@ -1437,5 +1437,6 @@
   "barcodeMatch": {
     "label": "Correspondance exacte du code-barres",
     "help": "Le code-barres validé d’une variante correspond à la fiche Safety Gate. Vérifiez le modèle et le lot concerné avant de décider."
-  }
+  },
+  "ownerTestAccess": "Test autorisé par le propriétaire — aucun forfait requis"
 }

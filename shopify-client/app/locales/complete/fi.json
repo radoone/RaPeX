@@ -1437,5 +1437,6 @@
   "barcodeMatch": {
     "label": "Viivakoodin täsmällinen vastaavuus",
     "help": "Tuoteversion tarkistettu viivakoodi vastaa Safety Gate -tietuetta. Tarkista malli ja kyseinen erä ennen päätöstä."
-  }
+  },
+  "ownerTestAccess": "Omistajan hyväksymä testaus — maksullista tilausta ei tarvita"
 }

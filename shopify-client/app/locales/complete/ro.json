@@ -1437,5 +1437,6 @@
   "barcodeMatch": {
     "label": "Potrivire exactă a codului de bare",
     "help": "Codul de bare validat al unei variante corespunde înregistrării Safety Gate. Verificați modelul și lotul afectat înainte de a decide."
-  }
+  },
+  "ownerTestAccess": "Testare autorizată de proprietar — nu este necesar un plan tarifar"
 }

@@ -1453,5 +1453,6 @@
   "barcodeMatch": {
     "label": "Qbil eżatt tal-barcode",
     "help": "Il-barcode ivvalidat ta’ varjant jaqbel mar-rekord ta’ Safety Gate. Ivverifika l-mudell u l-lott affettwat qabel tiddeċiedi."
-  }
+  },
+  "ownerTestAccess": "Ittestjar awtorizzat mis-sid — mhu meħtieġ l-ebda pjan bi ħlas"
 }

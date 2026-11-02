@@ -1437,5 +1437,6 @@
   "barcodeMatch": {
     "label": "Dokładna zgodność kodu kreskowego",
     "help": "Zweryfikowany kod kreskowy wariantu odpowiada wpisowi Safety Gate. Przed podjęciem decyzji sprawdź model i partię objętą zgłoszeniem."
-  }
+  },
+  "ownerTestAccess": "Testy zatwierdzone przez właściciela — plan cenowy nie jest wymagany"
 }

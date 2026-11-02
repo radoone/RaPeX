@@ -1,0 +1,7 @@
+# Owner-authorized test access
+
+On 2 November 2026 the owner explicitly requested that pricing-plan enforcement be disabled for the installed test shop `rozlicnytovar.myshopify.com` until they ask to enable it again. This supersedes the earlier prohibition on temporary test grants for this specific shop only. No Shopify contract is fabricated, and no global production bypass is enabled.
+
+A private merchant-root `ownerTestAccess` grant is scoped to the exact shop and installation, supports explicit indefinite access (`expiresAt: null`) and can be revoked immediately. The server-only maintenance script `firebase/functions/scripts/owner-test-access.mjs --shop=rozlicnytovar.myshopify.com --enable` issues it; use `--disable` when the owner requests restoration. Both actions create an owner-access event. Firestore rules deny browser writes; there is no merchant-facing access-grant route. The UI labels this as owner-authorized testing, while `hasActivePayment` and billing verification remain false unless Shopify actually verifies a contract. Manual checks, product webhooks, scheduled monitoring and email gates recognize the same private grant. Regular Shopify authentication, tenant boundaries, and session checks remain required.
+
+Owner also authorized creating clearly named draft test products in that shop based on real public Safety Gate records, then exercising checks, findings, emails and decision history. These are controlled test fixtures, not genuine merchant inventory or independently measured matcher-quality data.

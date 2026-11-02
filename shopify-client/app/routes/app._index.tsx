@@ -445,7 +445,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       const freeScanAlreadyUsed =
         settings.freeScanUsed === true &&
         !currentBillingStatus.hasActivePayment &&
-        !currentBillingStatus.developmentBypass;
+        !currentBillingStatus.developmentBypass && !currentBillingStatus.ownerTestAccess;
       if (reservationIsLive || freeScanAlreadyUsed) return false;
       transaction.set(
         merchantRef,
@@ -754,7 +754,7 @@ export default function Index() {
       stats.totalProducts > 0 &&
       stats.checkedProducts === 0;
     const canRetryInitialScan =
-      Boolean(billingStatus?.developmentBypass) ||
+      Boolean(billingStatus?.developmentBypass || billingStatus?.ownerTestAccess) ||
       Boolean(
         billingStatus?.billingVerified &&
         (billingStatus.hasActivePayment ||
@@ -780,6 +780,7 @@ export default function Index() {
     billingStatus?.hasActivePayment,
     billingStatus?.billingVerified,
     billingStatus?.developmentBypass,
+    billingStatus?.ownerTestAccess,
     settings?.freeScanUsed,
     settings?.initialScanStatus,
     stats.totalProducts,
@@ -979,7 +980,7 @@ export default function Index() {
               </s-banner>
             )}
             {billingStatus &&
-              !billingStatus.developmentBypass &&
+              !billingStatus.developmentBypass && !billingStatus.ownerTestAccess &&
               !billingStatus.billingVerified && (
                 <s-banner
                   tone="warning"
@@ -997,7 +998,7 @@ export default function Index() {
                 </s-banner>
               )}
             {billingStatus &&
-              !billingStatus.developmentBypass &&
+              !billingStatus.developmentBypass && !billingStatus.ownerTestAccess &&
               billingStatus.billingVerified &&
               !billingStatus.hasActivePayment &&
               billingStatus.freeScanUsed && (

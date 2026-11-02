@@ -1,8 +1,8 @@
 {
   "createdOn": "2026-11-01T10:02:43.104Z",
   "model": "gemini-2.5-flash",
-  "sourceSha256": "dd3a31cf3c3d4f484accca74bc4cc711f3cb8d0d4b32f6d9d361627ee82dbef5",
-  "sourceKeys": 1145,
+  "sourceSha256": "4f49f2caf1bb71e80442c0feb0e38302a13c832ea5224234da509fb5ab3bbe65",
+  "sourceKeys": 1146,
   "scope": "Complete Shopify merchant UI, excluding stored product facts, identifiers and original Safety Gate records; response guide translations updated with Gemini 2.5 Flash; response guide and monitoring evidence translations updated with Gemini 2.5 Flash",
   "nativeSpeakerReview": "Not performed for every language",
   "locales": {
@@ -242,6 +242,11 @@
       "date": "2026-11-02",
       "scope": "Exact barcode match label and model/batch review guidance, all 24 EU languages",
       "method": "Static authored translations; no translation API calls"
+    },
+    {
+      "date": "2026-11-02",
+      "scope": "Owner-authorized test access label, 24 EU languages",
+      "method": "Static authored translations"
     }
   ]
 }

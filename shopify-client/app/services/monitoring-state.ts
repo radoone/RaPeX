@@ -1,5 +1,6 @@
 type Billing = {
   developmentBypass: boolean;
+  ownerTestAccess?: boolean;
   billingVerified: boolean;
   hasActivePayment: boolean;
   validUntil?: Date | string | null;
@@ -11,6 +12,7 @@ export function monitoringState(
   now = Date.now(),
   lastSuccess?: string | null,
 ) {
+  if (!billing.ownerTestAccess) {
   if (billing.developmentBypass) return "preview";
   if (!billing.billingVerified) return "unverified";
   if (
@@ -18,6 +20,7 @@ export function monitoringState(
     (billing.validUntil && new Date(billing.validUntil).getTime() <= now)
   )
     return "paused";
+  }
   if (
     status === "FAILURE" ||
     status === "failed" ||

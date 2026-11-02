@@ -1,3 +1,4 @@
+import { hasOwnerTestAccess } from "./owner-test-access.server";
 import { redirect } from "react-router";
 import {
   SHOPIFY_APP_GID,
@@ -34,6 +35,7 @@ type PartnerSubscriptionResult = {
 
 export type BillingStatus = {
   hasActivePayment: boolean;
+  ownerTestAccess?: boolean;
   freeScanUsed: boolean;
   freeScanCompletedAt: Date | null;
   canPerformScan: boolean;
@@ -217,6 +219,7 @@ async function saveEntitlement(
 export async function hasCurrentMonitoringEntitlement(
   shop: string,
 ): Promise<boolean> {
+  if (await hasOwnerTestAccess(shop)) return true;
   const settings = await db.safetySetting.findUnique({ where: { shop } });
   if (
     settings?.subscriptionStatus !== "active" ||
@@ -238,6 +241,10 @@ export async function getBillingStatus(
   const settings = await db.safetySetting.findUnique({ where: { shop } });
   const freeScanUsed = Boolean(settings?.freeScanUsed);
   const freeScanCompletedAt = settings?.freeScanCompletedAt || null;
+
+  if (await hasOwnerTestAccess(shop)) {
+    return { hasActivePayment: false, ownerTestAccess: true, freeScanUsed, freeScanCompletedAt, canPerformScan: true, pricingPlansUrl, billingVerified: false, developmentBypass: false, planHandle: null, cancelAtEndOfCycle: false, validUntil: null };
+  }
 
   if (SHOPIFY_BILLING_BYPASS) {
     return {
@@ -300,7 +307,7 @@ export async function requireActiveBilling(
   shop: string,
   options?: { allowFreeInitialScan?: boolean; admin?: AdminApi },
 ): Promise<Response | null> {
-  if (SHOPIFY_BILLING_BYPASS) return null;
+  if (SHOPIFY_BILLING_BYPASS || await hasOwnerTestAccess(shop)) return null;
 
   let entitlement: Awaited<ReturnType<typeof readEntitlement>>;
   try {

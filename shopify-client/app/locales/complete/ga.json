@@ -1453,5 +1453,6 @@
   "barcodeMatch": {
     "label": "Meaitseáil bheacht barrachóid",
     "help": "Meaitseálann barrachód bailíochtaithe leagain leis an taifead Safety Gate. Seiceáil an tsamhail agus an bhaisc lena mbaineann sula ndéanann tú cinneadh."
-  }
+  },
+  "ownerTestAccess": "Tástáil ceadaithe ag an úinéir — níl plean praghsála ag teastáil"
 }

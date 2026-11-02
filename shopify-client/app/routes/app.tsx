@@ -48,6 +48,7 @@ export default function App() {
           </s-banner>
         </div>
       )}
+      {billingStatus.ownerTestAccess && <s-banner tone="info" heading={t("ownerTestAccess")} />}
       <Outlet />
     </>
   );
