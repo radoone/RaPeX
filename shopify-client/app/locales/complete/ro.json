@@ -1403,6 +1403,37 @@
     "who": "Înregistrat de",
     "whyMatch": "De ce ar putea corespunde"
   },
+  "responseGuide": {
+    "title": "Ghid: răspundeți unei potriviri confirmate",
+    "intro": "Confirmați produsul, modelul și lotul afectat cu notificarea oficială și cu furnizorul dumneavoastră înainte de a înregistra o decizie.",
+    "verify": "Comparați identificatorii și loturile afectate cu notificarea oficială. Doar o imagine similară nu confirmă o potrivire.",
+    "contain": "Dacă produsul este afectat, luați în considerare întreruperea vânzării acestuia în timp ce urmați notificarea oficială și propriile proceduri.",
+    "contact": "Contactați furnizorul dumneavoastră și stabiliți dacă clienții sau autoritățile trebuie informate. Urmați instrucțiunile aplicabile.",
+    "record": "Înregistrați ce ați verificat, acțiunea întreprinsă și datele relevante în nota de decizie de mai jos. Actualizați decizia pe măsură ce apar informații noi.",
+    "source": "Deschideți notificarea oficială Safety Gate"
+  },
+  "monitorEvidence": {
+    "title": "Starea monitorizării la momentul raportării",
+    "explanation": "Aceste valori operaționale reprezintă o imagine de moment; filtrele de rezultate de mai jos nu le modifică.",
+    "initialStatus": "Audit inițial al catalogului",
+    "imported": "Produse importate în timpul auditului inițial",
+    "monitorStatus": "Cea mai recentă rulare de monitorizare",
+    "monitorEnded": "Cea mai recentă rulare de monitorizare s-a încheiat",
+    "sourceStatus": "Cel mai recent import Safety Gate",
+    "sourceEnded": "Cel mai recent import Safety Gate s-a încheiat",
+    "unknown": "Indisponibil",
+    "limit": "Importul unui produs nu reprezintă o verificare completă a siguranței. O rulare eșuată, incompletă sau indisponibilă nu trebuie interpretată ca lipsă de rezultate.",
+    "states": {
+      "completed": "Finalizat",
+      "scanning": "În curs",
+      "queued": "În așteptare",
+      "failed": "Eșuat",
+      "enqueue_failed": "Nu s-a putut porni",
+      "SUCCESS": "Finalizat",
+      "FAILURE": "Eșuat",
+      "IN_PROGRESS": "În curs"
+    }
+  },
   "barcodeMatch": {
     "label": "Potrivire exactă a codului de bare",
     "help": "Codul de bare validat al unei variante corespunde înregistrării Safety Gate. Verificați modelul și lotul afectat înainte de a decide."

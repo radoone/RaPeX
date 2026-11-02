@@ -1403,6 +1403,37 @@
     "who": "Aufgezeichnet von",
     "whyMatch": "Warum dies übereinstimmen könnte"
   },
+  "responseGuide": {
+    "title": "Anleitung: Auf eine bestätigte Übereinstimmung reagieren",
+    "intro": "Bestätigen Sie das Produkt, das Modell und die betroffene Charge mit der offiziellen Mitteilung und Ihrem Lieferanten, bevor Sie eine Entscheidung treffen.",
+    "verify": "Vergleichen Sie Identifikatoren und betroffene Chargen mit der offiziellen Mitteilung. Ein ähnliches Bild allein bestätigt keine Übereinstimmung.",
+    "contain": "Wenn das Produkt betroffen ist, erwägen Sie, den Verkauf zu pausieren, während Sie die offizielle Mitteilung und Ihre eigenen Verfahren befolgen.",
+    "contact": "Kontaktieren Sie Ihren Lieferanten und klären Sie, ob Kunden oder Behörden informiert werden müssen. Befolgen Sie die entsprechenden Anweisungen.",
+    "record": "Dokumentieren Sie im Entscheidungsvermerk unten, was Sie überprüft haben, welche Maßnahmen ergriffen wurden und die relevanten Daten. Aktualisieren Sie die Entscheidung, sobald neue Informationen vorliegen.",
+    "source": "Offizielle Safety Gate Mitteilung öffnen"
+  },
+  "monitorEvidence": {
+    "title": "Überwachungsstatus zum Zeitpunkt der Meldung",
+    "explanation": "Diese operativen Werte sind eine aktuelle Momentaufnahme; die untenstehenden Filter für die Ergebnisse ändern sie nicht.",
+    "initialStatus": "Erste Katalogprüfung",
+    "imported": "Produkte, die während der ersten Prüfung importiert wurden",
+    "monitorStatus": "Letzter Überwachungslauf",
+    "monitorEnded": "Letzter Überwachungslauf beendet",
+    "sourceStatus": "Letzter Safety Gate-Import",
+    "sourceEnded": "Letzter Safety Gate-Import beendet",
+    "unknown": "Nicht verfügbar",
+    "limit": "Der Import eines Produkts ist keine abgeschlossene Sicherheitsprüfung. Ein fehlgeschlagener, unvollständiger oder nicht verfügbarer Lauf darf nicht so interpretiert werden, dass keine Ergebnisse vorliegen.",
+    "states": {
+      "completed": "Abgeschlossen",
+      "scanning": "In Bearbeitung",
+      "queued": "In Warteschlange",
+      "failed": "Fehlgeschlagen",
+      "enqueue_failed": "Konnte nicht gestartet werden",
+      "SUCCESS": "Abgeschlossen",
+      "FAILURE": "Fehlgeschlagen",
+      "IN_PROGRESS": "In Bearbeitung"
+    }
+  },
   "barcodeMatch": {
     "label": "Exakte Barcode-Übereinstimmung",
     "help": "Der validierte Barcode einer Variante stimmt mit dem Safety Gate-Eintrag überein. Prüfen Sie vor Ihrer Entscheidung das Modell und die betroffene Charge."

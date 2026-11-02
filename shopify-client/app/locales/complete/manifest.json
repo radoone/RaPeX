@@ -1,9 +1,9 @@
 {
-  "createdOn": "2026-10-31T18:00:49.543Z",
+  "createdOn": "2026-11-01T10:02:43.104Z",
   "model": "gemini-2.5-flash",
-  "sourceSha256": "6172721b02c5889d494323192e2284e44611512baa46dd1598d98c8dfeb73b77",
-  "sourceKeys": 1120,
-  "scope": "Complete Shopify merchant UI, excluding stored product facts, identifiers and original Safety Gate records",
+  "sourceSha256": "dd3a31cf3c3d4f484accca74bc4cc711f3cb8d0d4b32f6d9d361627ee82dbef5",
+  "sourceKeys": 1145,
+  "scope": "Complete Shopify merchant UI, excluding stored product facts, identifiers and original Safety Gate records; response guide translations updated with Gemini 2.5 Flash; response guide and monitoring evidence translations updated with Gemini 2.5 Flash",
   "nativeSpeakerReview": "Not performed for every language",
   "locales": {
     "bg": {

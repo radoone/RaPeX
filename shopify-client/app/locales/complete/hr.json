@@ -1403,6 +1403,37 @@
     "who": "Zabilježio/la",
     "whyMatch": "Zašto se ovo može podudarati"
   },
+  "responseGuide": {
+    "title": "Vodič: odgovorite na potvrđeno podudaranje",
+    "intro": "Potvrdite proizvod, model i zahvaćenu seriju sa službenom obavijesti i svojim dobavljačem prije donošenja odluke.",
+    "verify": "Usporedite identifikatore i zahvaćene serije sa službenom obavijesti. Sama slična slika ne potvrđuje podudaranje.",
+    "contain": "Ako je proizvod zahvaćen, razmislite o privremenoj obustavi prodaje dok slijedite službenu obavijest i vlastite procedure.",
+    "contact": "Kontaktirajte svog dobavljača i utvrdite je li potrebno obavijestiti kupce ili nadležna tijela. Slijedite primjenjive upute.",
+    "record": "Zabilježite što ste provjerili, poduzete radnje i relevantne datume u bilješci o odluci u nastavku. Ažurirajte odluku kako pristižu nove informacije.",
+    "source": "Otvorite službenu Safety Gate obavijest"
+  },
+  "monitorEvidence": {
+    "title": "Status praćenja u trenutku izvješća",
+    "explanation": "Ove operativne vrijednosti su trenutačni snimak; filtri nalaza u nastavku ih ne mijenjaju.",
+    "initialStatus": "Početna revizija kataloga",
+    "imported": "Proizvodi uvezeni tijekom početne revizije",
+    "monitorStatus": "Zadnje pokretanje praćenja",
+    "monitorEnded": "Zadnje pokretanje praćenja završeno",
+    "sourceStatus": "Zadnji uvoz Safety Gate-a",
+    "sourceEnded": "Zadnji uvoz Safety Gate-a završen",
+    "unknown": "Nije dostupno",
+    "limit": "Uvoz proizvoda nije dovršena sigurnosna provjera. Neuspješno, nepotpuno ili nedostupno pokretanje ne smije se tumačiti kao da nema nalaza.",
+    "states": {
+      "completed": "Dovršeno",
+      "scanning": "U tijeku",
+      "queued": "U redu čekanja",
+      "failed": "Neuspjelo",
+      "enqueue_failed": "Nije moguće pokrenuti",
+      "SUCCESS": "Dovršeno",
+      "FAILURE": "Neuspjelo",
+      "IN_PROGRESS": "U tijeku"
+    }
+  },
   "barcodeMatch": {
     "label": "Točno podudaranje crtičnog koda",
     "help": "Potvrđeni crtični kod varijante podudara se sa zapisom Safety Gate. Provjerite model i zahvaćenu seriju prije odluke."

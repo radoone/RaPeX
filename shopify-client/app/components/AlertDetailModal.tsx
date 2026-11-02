@@ -539,6 +539,17 @@ export function AlertDetailModal({
                 <p className="review-modal__decision-prompt">
                   {t("workspace.reviewPrompt")}
                 </p>
+                <details className="advanced-settings-disclosure">
+                  <summary>{t("responseGuide.title")}</summary>
+                  <p>{t("responseGuide.intro")}</p>
+                  <ol>
+                    <li>{t("responseGuide.verify")}</li>
+                    <li>{t("responseGuide.contain")}</li>
+                    <li>{t("responseGuide.contact")}</li>
+                    <li>{t("responseGuide.record")}</li>
+                  </ol>
+                  {safetyUrl && <a href={safetyUrl} target="_blank" rel="noopener noreferrer">{t("responseGuide.source")}</a>}
+                </details>
                 <s-choice-list
                   label={t("workspace.chooseOutcomeLink")}
                   name={`${modalId}-outcome-group`}

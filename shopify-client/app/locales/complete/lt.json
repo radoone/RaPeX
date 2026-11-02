@@ -1403,6 +1403,37 @@
     "who": "Įrašė",
     "whyMatch": "Kodėl tai gali atitikti"
   },
+  "responseGuide": {
+    "title": "Gidas: atsakymas į patvirtintą atitikimą",
+    "intro": "Prieš priimdami sprendimą, patvirtinkite produktą, modelį ir paveiktą partiją su oficialiu pranešimu ir savo tiekėju.",
+    "verify": "Palyginkite identifikatorius ir paveiktas partijas su oficialiu pranešimu. Vien tik panašus vaizdas nepatvirtina atitikimo.",
+    "contain": "Jei produktas yra paveiktas, apsvarstykite galimybę sustabdyti jo pardavimą, kol vykdysite oficialų pranešimą ir savo procedūras.",
+    "contact": "Susisiekite su savo tiekėju ir nustatykite, ar reikia informuoti klientus ar institucijas. Vykdykite taikomas instrukcijas.",
+    "record": "Žemiau esančiame sprendimo aprašyme užfiksuokite, ką patikrinote, kokių veiksmų ėmėtės ir atitinkamas datas. Atnaujinkite sprendimą, kai gausite naujos informacijos.",
+    "source": "Atidaryti oficialų Safety Gate pranešimą"
+  },
+  "monitorEvidence": {
+    "title": "Stebėsenos būsena ataskaitos teikimo metu",
+    "explanation": "Šios operacinės vertės yra dabartinė momentinė nuotrauka; toliau pateikti radinių filtrai jų nekeičia.",
+    "initialStatus": "Pradinis katalogo auditas",
+    "imported": "Produktai importuoti pradinio audito metu",
+    "monitorStatus": "Naujausias stebėsenos vykdymas",
+    "monitorEnded": "Naujausias stebėsenos vykdymas baigtas",
+    "sourceStatus": "Naujausias „Safety Gate“ importavimas",
+    "sourceEnded": "Naujausias „Safety Gate“ importavimas baigtas",
+    "unknown": "Nepasiekiamas",
+    "limit": "Produkto importavimas nėra baigtas saugos patikrinimas. Nepavykęs, nebaigtas arba nepasiekiamas vykdymas neturi būti interpretuojamas kaip radinių nebuvimas.",
+    "states": {
+      "completed": "Baigta",
+      "scanning": "Vykdoma",
+      "queued": "Eilėje",
+      "failed": "Nepavyko",
+      "enqueue_failed": "Nepavyko paleisti",
+      "SUCCESS": "Baigta",
+      "FAILURE": "Nepavyko",
+      "IN_PROGRESS": "Vykdoma"
+    }
+  },
   "barcodeMatch": {
     "label": "Tikslus brūkšninio kodo atitikmuo",
     "help": "Patikrintas varianto brūkšninis kodas atitinka Safety Gate įrašą. Prieš nuspręsdami patikrinkite modelį ir paveiktą partiją."

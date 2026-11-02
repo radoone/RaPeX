@@ -1403,6 +1403,37 @@
     "who": "Rögzítette",
     "whyMatch": "Miért egyezhet ez"
   },
+  "responseGuide": {
+    "title": "Útmutató: válasz megerősített egyezésre",
+    "intro": "Mielőtt döntést rögzítene, erősítse meg a terméket, a modellt és az érintett tételt a hivatalos értesítéssel és a beszállítójával.",
+    "verify": "Hasonlítsa össze az azonosítókat és az érintett tételeket a hivatalos értesítéssel. Önmagában egy hasonló kép nem erősíti meg az egyezést.",
+    "contain": "Ha a termék érintett, fontolja meg az értékesítés szüneteltetését, miközben követi a hivatalos értesítést és saját eljárásait.",
+    "contact": "Lépjen kapcsolatba beszállítójával, és döntse el, hogy tájékoztatni kell-e az ügyfeleket vagy a hatóságokat. Kövesse az alkalmazandó utasításokat.",
+    "record": "Rögzítse az ellenőrzött adatokat, a megtett intézkedéseket és a releváns dátumokat az alábbi döntési jegyzetben. Frissítse a döntést, amint új információk érkeznek.",
+    "source": "Nyissa meg a hivatalos Safety Gate értesítést"
+  },
+  "monitorEvidence": {
+    "title": "Ellenőrzési állapot a jelentés időpontjában",
+    "explanation": "Ezek az operatív értékek aktuális pillanatfelvételek; az alábbi szűrők nem módosítják őket.",
+    "initialStatus": "Kezdeti katalógus ellenőrzés",
+    "imported": "Termékek importálva a kezdeti ellenőrzés során",
+    "monitorStatus": "Legutóbbi ellenőrzési futtatás",
+    "monitorEnded": "Legutóbbi ellenőrzési futtatás befejeződött",
+    "sourceStatus": "Legutóbbi Safety Gate importálás",
+    "sourceEnded": "Legutóbbi Safety Gate importálás befejeződött",
+    "unknown": "Nem elérhető",
+    "limit": "Egy termék importálása nem egyenlő egy befejezett biztonsági ellenőrzéssel. A sikertelen, hiányos vagy nem elérhető futtatás nem értelmezhető úgy, hogy nincsenek megállapítások.",
+    "states": {
+      "completed": "Befejezve",
+      "scanning": "Folyamatban",
+      "queued": "Sorban áll",
+      "failed": "Sikertelen",
+      "enqueue_failed": "Nem sikerült elindítani",
+      "SUCCESS": "Befejezve",
+      "FAILURE": "Sikertelen",
+      "IN_PROGRESS": "Folyamatban"
+    }
+  },
   "barcodeMatch": {
     "label": "Pontos vonalkódegyezés",
     "help": "Egy változat ellenőrzött vonalkódja egyezik a Safety Gate bejegyzésével. Döntés előtt ellenőrizze a modellt és az érintett gyártási tételt."

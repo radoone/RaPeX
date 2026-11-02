@@ -1403,6 +1403,37 @@
     "who": "Enregistré par",
     "whyMatch": "Pourquoi cela peut correspondre"
   },
+  "responseGuide": {
+    "title": "Guide : répondre à une correspondance confirmée",
+    "intro": "Confirmez le produit, le modèle et le lot concerné avec l'avis officiel et votre fournisseur avant d'enregistrer une décision.",
+    "verify": "Comparez les identifiants et les lots concernés avec l'avis officiel. Une image similaire seule ne confirme pas une correspondance.",
+    "contain": "Si le produit est concerné, envisagez de suspendre sa vente pendant que vous suivez l'avis officiel et vos propres procédures.",
+    "contact": "Contactez votre fournisseur et déterminez si les clients ou les autorités doivent être informés. Suivez les instructions applicables.",
+    "record": "Enregistrez ce que vous avez vérifié, l'action entreprise et les dates pertinentes dans la note de décision ci-dessous. Mettez à jour la décision à mesure que de nouvelles informations arrivent.",
+    "source": "Ouvrir l'avis officiel Safety Gate"
+  },
+  "monitorEvidence": {
+    "title": "État de la surveillance au moment du rapport",
+    "explanation": "Ces valeurs opérationnelles sont un instantané actuel ; les filtres de résultats ci-dessous ne les modifient pas.",
+    "initialStatus": "Audit initial du catalogue",
+    "imported": "Produits importés lors de l'audit initial",
+    "monitorStatus": "Dernière exécution de la surveillance",
+    "monitorEnded": "Dernière exécution de la surveillance terminée",
+    "sourceStatus": "Dernière importation Safety Gate",
+    "sourceEnded": "Dernière importation Safety Gate terminée",
+    "unknown": "Non disponible",
+    "limit": "L'importation d'un produit n'est pas un contrôle de sécurité terminé. Une exécution échouée, incomplète ou non disponible ne doit pas être interprétée comme l'absence de résultats.",
+    "states": {
+      "completed": "Terminé",
+      "scanning": "En cours",
+      "queued": "En attente",
+      "failed": "Échoué",
+      "enqueue_failed": "N'a pas pu démarrer",
+      "SUCCESS": "Terminé",
+      "FAILURE": "Échoué",
+      "IN_PROGRESS": "En cours"
+    }
+  },
   "barcodeMatch": {
     "label": "Correspondance exacte du code-barres",
     "help": "Le code-barres validé d’une variante correspond à la fiche Safety Gate. Vérifiez le modèle et le lot concerné avant de décider."

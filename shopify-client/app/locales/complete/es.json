@@ -1403,6 +1403,37 @@
     "who": "Registrado por",
     "whyMatch": "Por qué esto podría coincidir"
   },
+  "responseGuide": {
+    "title": "Guía: responder a una coincidencia confirmada",
+    "intro": "Confirma el producto, el modelo y el lote afectado con el aviso oficial y tu proveedor antes de registrar una decisión.",
+    "verify": "Compara los identificadores y los lotes afectados con el aviso oficial. Una imagen similar por sí sola no confirma una coincidencia.",
+    "contain": "Si el producto está afectado, considera pausar su venta mientras sigues el aviso oficial y tus propios procedimientos.",
+    "contact": "Contacta a tu proveedor y determina si los clientes o las autoridades deben ser informados. Sigue las instrucciones aplicables.",
+    "record": "Registra lo que verificaste, la acción tomada y las fechas relevantes en la nota de decisión a continuación. Actualiza la decisión a medida que llegue nueva información.",
+    "source": "Abrir el aviso oficial de Safety Gate"
+  },
+  "monitorEvidence": {
+    "title": "Estado de monitoreo al momento del informe",
+    "explanation": "Estos valores operativos son una instantánea actual; los filtros de búsqueda a continuación no los modifican.",
+    "initialStatus": "Auditoría inicial del catálogo",
+    "imported": "Productos importados durante la auditoría inicial",
+    "monitorStatus": "Última ejecución de monitoreo",
+    "monitorEnded": "Última ejecución de monitoreo finalizada",
+    "sourceStatus": "Última importación de Safety Gate",
+    "sourceEnded": "Última importación de Safety Gate finalizada",
+    "unknown": "No disponible",
+    "limit": "Importar un producto no es una verificación de seguridad completa. Una ejecución fallida, incompleta o no disponible no debe interpretarse como la ausencia de hallazgos.",
+    "states": {
+      "completed": "Completado",
+      "scanning": "En curso",
+      "queued": "En cola",
+      "failed": "Fallido",
+      "enqueue_failed": "No se pudo iniciar",
+      "SUCCESS": "Completado",
+      "FAILURE": "Fallido",
+      "IN_PROGRESS": "En curso"
+    }
+  },
   "barcodeMatch": {
     "label": "Coincidencia exacta del código de barras",
     "help": "El código de barras validado de una variante coincide con el registro de Safety Gate. Verifique el modelo y el lote afectado antes de decidir."

@@ -1403,6 +1403,37 @@
     "who": "Registrato da",
     "whyMatch": "Perché potrebbe corrispondere"
   },
+  "responseGuide": {
+    "title": "Guida: rispondi a una corrispondenza confermata",
+    "intro": "Conferma il prodotto, il modello e il lotto interessato con l'avviso ufficiale e il tuo fornitore prima di registrare una decisione.",
+    "verify": "Confronta gli identificatori e i lotti interessati con l'avviso ufficiale. Una sola immagine simile non conferma una corrispondenza.",
+    "contain": "Se il prodotto è interessato, valuta la possibilità di sospenderne la vendita mentre segui l'avviso ufficiale e le tue procedure.",
+    "contact": "Contatta il tuo fornitore e determina se i clienti o le autorità devono essere informati. Segui le istruzioni applicabili.",
+    "record": "Registra ciò che hai verificato, l'azione intrapresa e le date pertinenti nella nota di decisione qui sotto. Aggiorna la decisione man mano che arrivano nuove informazioni.",
+    "source": "Apri l'avviso ufficiale Safety Gate"
+  },
+  "monitorEvidence": {
+    "title": "Stato del monitoraggio al momento del rapporto",
+    "explanation": "Questi valori operativi sono un'istantanea attuale; i filtri dei risultati seguenti non li modificano.",
+    "initialStatus": "Verifica iniziale del catalogo",
+    "imported": "Prodotti importati durante la verifica iniziale",
+    "monitorStatus": "Ultima esecuzione del monitoraggio",
+    "monitorEnded": "Ultima esecuzione del monitoraggio terminata",
+    "sourceStatus": "Ultima importazione da Safety Gate",
+    "sourceEnded": "Ultima importazione da Safety Gate terminata",
+    "unknown": "Non disponibile",
+    "limit": "L'importazione di un prodotto non è un controllo di sicurezza completato. Un'esecuzione fallita, incompleta o non disponibile non deve essere interpretata come assenza di risultati.",
+    "states": {
+      "completed": "Completato",
+      "scanning": "In corso",
+      "queued": "In coda",
+      "failed": "Non riuscito",
+      "enqueue_failed": "Impossibile avviare",
+      "SUCCESS": "Completato",
+      "FAILURE": "Non riuscito",
+      "IN_PROGRESS": "In corso"
+    }
+  },
   "barcodeMatch": {
     "label": "Corrispondenza esatta del codice a barre",
     "help": "Il codice a barre convalidato di una variante corrisponde alla scheda Safety Gate. Verifica il modello e il lotto interessato prima di decidere."

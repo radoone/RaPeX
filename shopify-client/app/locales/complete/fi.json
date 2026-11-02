@@ -1403,6 +1403,37 @@
     "who": "Tallentanut",
     "whyMatch": "Miksi tämä voi vastata"
   },
+  "responseGuide": {
+    "title": "Ohje: vastaa vahvistettuun osumaan",
+    "intro": "Vahvista tuote, malli ja vaikuttava erä virallisesta ilmoituksesta ja toimittajaltasi ennen päätöksen kirjaamista.",
+    "verify": "Vertaa tunnisteita ja vaikuttavia eriä viralliseen ilmoitukseen. Pelkkä samankaltainen kuva ei vahvista osumaa.",
+    "contain": "Jos tuote on vaarallinen, harkitse sen myynnin keskeyttämistä samalla kun noudatat virallista ilmoitusta ja omia menettelytapojasi.",
+    "contact": "Ota yhteyttä toimittajaasi ja selvitä, onko asiakkaille tai viranomaisille tiedotettava. Noudata sovellettavia ohjeita.",
+    "record": "Kirjaa tarkistamasi asiat, tehdyt toimenpiteet ja asiaankuuluvat päivämäärät alla olevaan päätösmuistioon. Päivitä päätöstä uusien tietojen saapuessa.",
+    "source": "Avaa virallinen Safety Gate -ilmoitus"
+  },
+  "monitorEvidence": {
+    "title": "Seurantatila raportointihetkellä",
+    "explanation": "Nämä toiminnalliset arvot ovat tämänhetkinen tilannekuva; alla olevat löydössuodattimet eivät muuta niitä.",
+    "initialStatus": "Alustava luettelon tarkastus",
+    "imported": "Tuotteet tuotu alustavan tarkastuksen aikana",
+    "monitorStatus": "Viimeisin seuranta-ajo",
+    "monitorEnded": "Viimeisin seuranta-ajo päättyi",
+    "sourceStatus": "Viimeisin Safety Gate -tuonti",
+    "sourceEnded": "Viimeisin Safety Gate -tuonti päättyi",
+    "unknown": "Ei saatavilla",
+    "limit": "Tuotteen tuonti ei ole valmis turvallisuustarkastus. Epäonnistunutta, keskeneräistä tai saatavilla olematonta ajoa ei pidä tulkita niin, ettei löydöksiä ole.",
+    "states": {
+      "completed": "Valmis",
+      "scanning": "Käynnissä",
+      "queued": "Jonossa",
+      "failed": "Epäonnistui",
+      "enqueue_failed": "Ei voitu aloittaa",
+      "SUCCESS": "Valmis",
+      "FAILURE": "Epäonnistui",
+      "IN_PROGRESS": "Käynnissä"
+    }
+  },
   "barcodeMatch": {
     "label": "Viivakoodin täsmällinen vastaavuus",
     "help": "Tuoteversion tarkistettu viivakoodi vastaa Safety Gate -tietuetta. Tarkista malli ja kyseinen erä ennen päätöstä."

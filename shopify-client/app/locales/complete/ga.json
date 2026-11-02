@@ -1419,6 +1419,37 @@
     "who": "Taifeadta ag",
     "whyMatch": "Cén fáth a bhféadfadh sé seo a mheaitseáil"
   },
+  "responseGuide": {
+    "title": "Treoir: freagair do mheaitseáil deimhnithe",
+    "intro": "Deimhnigh an táirge, an tsamhail agus an baisc lena mbaineann leis an bhfógra oifigiúil agus le do sholáthraí sula ndéanann tú cinneadh a thaifeadadh.",
+    "verify": "Déan comparáid idir aitheantóirí agus baisceanna lena mbaineann agus an fógra oifigiúil. Ní dheimhníonn íomhá chosúil léi féin go bhfuil meaitseáil ann.",
+    "contain": "Má tá tionchar ag an táirge, smaoinigh ar a dhíol a chur ar sos fad a leanann tú an fógra oifigiúil agus do nósanna imeachta féin.",
+    "contact": "Déan teagmháil le do sholáthraí agus déan amach an gá custaiméirí nó údaráis a chur ar an eolas. Lean na treoracha is infheidhme.",
+    "record": "Taifead an méid a dheimhnigh tú, an gníomh a rinneadh agus dátaí ábhartha sa nóta cinnidh thíos. Nuashonraigh an cinneadh de réir mar a thagann faisnéis nua isteach.",
+    "source": "Oscail an fógra oifigiúil Safety Gate"
+  },
+  "monitorEvidence": {
+    "title": "Stádas monatóireachta ag am tuairiscithe",
+    "explanation": "Is léargas reatha iad na luachanna oibríochtúla seo; ní athraíonn na scagairí torthaí thíos iad.",
+    "initialStatus": "Iniúchadh tosaigh catalóige",
+    "imported": "Táirgí a iompórtáladh le linn an iniúchta tosaigh",
+    "monitorStatus": "An rith monatóireachta is déanaí",
+    "monitorEnded": "An rith monatóireachta is déanaí críochnaithe",
+    "sourceStatus": "An t-allmhairiú Safety Gate is déanaí",
+    "sourceEnded": "An t-allmhairiú Safety Gate is déanaí críochnaithe",
+    "unknown": "Neamh-infhaighte",
+    "limit": "Ní sheiceáil sábháilteachta críochnaithe é táirge a allmhairiú. Níor cheart rith theipthe, neamhiomlán nó neamh-infhaighte a léirmhíniú mar nach bhfuil aon torthaí ann.",
+    "states": {
+      "completed": "Críochnaithe",
+      "scanning": "Ar siúl",
+      "queued": "Sa scuaine",
+      "failed": "Theip",
+      "enqueue_failed": "Níorbh fhéidir tús a chur leis",
+      "SUCCESS": "Críochnaithe",
+      "FAILURE": "Theip",
+      "IN_PROGRESS": "Ar siúl"
+    }
+  },
   "barcodeMatch": {
     "label": "Meaitseáil bheacht barrachóid",
     "help": "Meaitseálann barrachód bailíochtaithe leagain leis an taifead Safety Gate. Seiceáil an tsamhail agus an bhaisc lena mbaineann sula ndéanann tú cinneadh."

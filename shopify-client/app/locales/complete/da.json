@@ -1403,6 +1403,37 @@
     "who": "Registreret af",
     "whyMatch": "Hvorfor dette kan matche"
   },
+  "responseGuide": {
+    "title": "Guide: svar på et bekræftet match",
+    "intro": "Bekræft produktet, modellen og det berørte parti med den officielle meddelelse og din leverandør, før du registrerer en beslutning.",
+    "verify": "Sammenlign identifikatorer og berørte partier med den officielle meddelelse. Et lignende billede alene bekræfter ikke et match.",
+    "contain": "Hvis produktet er berørt, kan du overveje at sætte salget på pause, mens du følger den officielle meddelelse og dine egne procedurer.",
+    "contact": "Kontakt din leverandør, og afgør, om kunder eller myndigheder skal informeres. Følg de gældende instruktioner.",
+    "record": "Registrer, hvad du har verificeret, den trufne handling og relevante datoer i beslutningsnotatet nedenfor. Opdater beslutningen, efterhånden som ny information fremkommer.",
+    "source": "Åbn den officielle Safety Gate-meddelelse"
+  },
+  "monitorEvidence": {
+    "title": "Overvågningsstatus på rapporteringstidspunktet",
+    "explanation": "Disse operationelle værdier er et øjebliksbillede; filterne nedenfor ændrer dem ikke.",
+    "initialStatus": "Indledende katalogrevision",
+    "imported": "Produkter importeret under indledende revision",
+    "monitorStatus": "Seneste overvågningskørsel",
+    "monitorEnded": "Seneste overvågningskørsel afsluttet",
+    "sourceStatus": "Seneste Safety Gate-import",
+    "sourceEnded": "Seneste Safety Gate-import afsluttet",
+    "unknown": "Utilgængelig",
+    "limit": "Import af et produkt er ikke en afsluttet sikkerhedskontrol. En mislykket, ufuldstændig eller utilgængelig kørsel må ikke tolkes som ingen fund.",
+    "states": {
+      "completed": "Fuldført",
+      "scanning": "I gang",
+      "queued": "I kø",
+      "failed": "Mislykkedes",
+      "enqueue_failed": "Kunne ikke starte",
+      "SUCCESS": "Fuldført",
+      "FAILURE": "Mislykkedes",
+      "IN_PROGRESS": "I gang"
+    }
+  },
   "barcodeMatch": {
     "label": "Præcist stregkodematch",
     "help": "En variants validerede stregkode matcher Safety Gate-posten. Kontrollér modellen og det berørte parti, før du beslutter dig."

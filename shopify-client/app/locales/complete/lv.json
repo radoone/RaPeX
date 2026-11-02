@@ -1419,6 +1419,37 @@
     "who": "Ierakstījis",
     "whyMatch": "Kāpēc tas varētu atbilst"
   },
+  "responseGuide": {
+    "title": "Ceļvedis: atbildēt uz apstiprinātu atbilstību",
+    "intro": "Pirms lēmuma reģistrēšanas apstipriniet produktu, modeli un ietekmēto partiju ar oficiālo paziņojumu un savu piegādātāju.",
+    "verify": "Salīdziniet identifikatorus un ietekmētās partijas ar oficiālo paziņojumu. Tikai līdzīgs attēls neapstiprina atbilstību.",
+    "contain": "Ja produkts ir ietekmēts, apsveriet tā pārdošanas apturēšanu, kamēr ievērojat oficiālo paziņojumu un savas procedūras.",
+    "contact": "Sazinieties ar savu piegādātāju un noskaidrojiet, vai klientiem vai iestādēm ir jāsniedz informācija. Ievērojiet piemērojamās instrukcijas.",
+    "record": "Zemāk esošajā lēmuma piezīmē ierakstiet, ko pārbaudījāt, veiktās darbības un attiecīgos datumus. Atjauniniet lēmumu, tiklīdz saņemat jaunu informāciju.",
+    "source": "Atvērt oficiālo Safety Gate paziņojumu"
+  },
+  "monitorEvidence": {
+    "title": "Uzraudzības statuss pārskata sagatavošanas brīdī",
+    "explanation": "Šīs darbības vērtības ir pašreizējais momentuzņēmums; tālāk redzamie konstatējumu filtri tās nemaina.",
+    "initialStatus": "Sākotnējā kataloga revīzija",
+    "imported": "Produkti, kas importēti sākotnējās revīzijas laikā",
+    "monitorStatus": "Jaunākā uzraudzības pārbaude",
+    "monitorEnded": "Jaunākā uzraudzības pārbaude beigusies",
+    "sourceStatus": "Jaunākais Safety Gate imports",
+    "sourceEnded": "Jaunākais Safety Gate imports beidzies",
+    "unknown": "Nav pieejams",
+    "limit": "Produkta importēšana nav pabeigta drošības pārbaude. Neveiksmīgu, nepabeigtu vai nepieejamu pārbaudi nedrīkst interpretēt kā konstatējumu neesamību.",
+    "states": {
+      "completed": "Pabeigts",
+      "scanning": "Notiek",
+      "queued": "Rindā",
+      "failed": "Neizdevās",
+      "enqueue_failed": "Nevarēja sākt",
+      "SUCCESS": "Pabeigts",
+      "FAILURE": "Neizdevās",
+      "IN_PROGRESS": "Notiek"
+    }
+  },
   "barcodeMatch": {
     "label": "Precīza svītrkoda atbilstība",
     "help": "Varianta pārbaudītais svītrkods atbilst Safety Gate ierakstam. Pirms lēmuma pieņemšanas pārbaudiet modeli un skarto partiju."

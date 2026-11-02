@@ -2,6 +2,28 @@ import { workspaceCopy } from "./workspace";
 const en = {
     translation: {
       workspace: workspaceCopy.en,
+      responseGuide: {
+        title: "Guide: respond to a confirmed match",
+        intro: "Confirm the product, model and affected batch with the official notice and your supplier before recording a decision.",
+        verify: "Compare identifiers and affected batches against the official notice. A similar image alone does not confirm a match.",
+        contain: "If the product is affected, consider pausing its sale while you follow the official notice and your own procedures.",
+        contact: "Contact your supplier and determine whether customers or authorities need to be informed. Follow the applicable instructions.",
+        record: "Record what you verified, the action taken and relevant dates in the decision note below. Update the decision as new information arrives.",
+        source: "Open the official Safety Gate notice",
+      },
+      monitorEvidence: {
+        title: "Monitoring status at report time",
+        explanation: "These operational values are a current snapshot; the finding filters below do not change them.",
+        initialStatus: "Initial catalog audit",
+        imported: "Products imported during initial audit",
+        monitorStatus: "Latest monitoring run",
+        monitorEnded: "Latest monitoring run ended",
+        sourceStatus: "Latest Safety Gate import",
+        sourceEnded: "Latest Safety Gate import ended",
+        unknown: "Unavailable",
+        limit: "Importing a product is not a completed safety check. A failed, incomplete or unavailable run must not be interpreted as no findings.",
+        states: { completed: "Completed", scanning: "In progress", queued: "Queued", failed: "Failed", enqueue_failed: "Could not start", SUCCESS: "Completed", FAILURE: "Failed", IN_PROGRESS: "In progress" },
+      },
       "billingRedirect": {
         "opening": "Opening Shopify pricing plans...",
         "openPricingPlans": "Open pricing plans"

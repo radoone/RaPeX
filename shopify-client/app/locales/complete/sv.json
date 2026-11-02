@@ -1403,6 +1403,37 @@
     "who": "Inspelad av",
     "whyMatch": "Varför detta kan matcha"
   },
+  "responseGuide": {
+    "title": "Guide: svara på en bekräftad matchning",
+    "intro": "Bekräfta produkten, modellen och det berörda partiet med det officiella meddelandet och din leverantör innan du fattar ett beslut.",
+    "verify": "Jämför identifierare och berörda partier med det officiella meddelandet. Enbart en liknande bild bekräftar inte en matchning.",
+    "contain": "Om produkten är berörd, överväg att pausa försäljningen medan du följer det officiella meddelandet och dina egna rutiner.",
+    "contact": "Kontakta din leverantör och avgör om kunder eller myndigheter behöver informeras. Följ tillämpliga instruktioner.",
+    "record": "Dokumentera vad du verifierade, vilken åtgärd som vidtogs och relevanta datum i beslutsanteckningen nedan. Uppdatera beslutet när ny information tillkommer.",
+    "source": "Öppna det officiella Safety Gate-meddelandet"
+  },
+  "monitorEvidence": {
+    "title": "Övervakningsstatus vid rapporttillfället",
+    "explanation": "Dessa operativa värden är en aktuell ögonblicksbild; filtren nedan ändrar dem inte.",
+    "initialStatus": "Initial kataloggranskning",
+    "imported": "Produkter importerade under initial granskning",
+    "monitorStatus": "Senaste övervakningskörning",
+    "monitorEnded": "Senaste övervakningskörning avslutad",
+    "sourceStatus": "Senaste Safety Gate-import",
+    "sourceEnded": "Senaste Safety Gate-import avslutad",
+    "unknown": "Otillgänglig",
+    "limit": "Att importera en produkt är inte en slutförd säkerhetskontroll. En misslyckad, ofullständig eller otillgänglig körning får inte tolkas som inga fynd.",
+    "states": {
+      "completed": "Slutförd",
+      "scanning": "Pågår",
+      "queued": "I kö",
+      "failed": "Misslyckades",
+      "enqueue_failed": "Kunde inte starta",
+      "SUCCESS": "Slutförd",
+      "FAILURE": "Misslyckades",
+      "IN_PROGRESS": "Pågår"
+    }
+  },
   "barcodeMatch": {
     "label": "Exakt streckkodsmatchning",
     "help": "En variants validerade streckkod matchar Safety Gate-posten. Kontrollera modellen och det berörda partiet innan du fattar beslut."

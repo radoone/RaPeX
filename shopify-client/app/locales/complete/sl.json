@@ -1419,6 +1419,37 @@
     "who": "Zabeležil/-a",
     "whyMatch": "Zakaj se to lahko ujema"
   },
+  "responseGuide": {
+    "title": "Vodnik: odziv na potrjeno ujemanje",
+    "intro": "Preden zabeležite odločitev, potrdite izdelek, model in prizadeto serijo z uradnim obvestilom in svojim dobaviteljem.",
+    "verify": "Primerjajte identifikatorje in prizadete serije z uradnim obvestilom. Samo podobna slika ne potrjuje ujemanja.",
+    "contain": "Če je izdelek prizadet, razmislite o začasni zaustavitvi prodaje, medtem ko sledite uradnemu obvestilu in lastnim postopkom.",
+    "contact": "Obrnite se na svojega dobavitelja in ugotovite, ali je treba obvestiti stranke ali organe. Sledite veljavnim navodilom.",
+    "record": "Zabeležite, kaj ste preverili, kakšno dejanje je bilo sprejeto in ustrezne datume v spodnji opombi o odločitvi. Posodobite odločitev, ko prejmete nove informacije.",
+    "source": "Odpri uradno obvestilo Safety Gate"
+  },
+  "monitorEvidence": {
+    "title": "Status spremljanja ob času poročanja",
+    "explanation": "Te operativne vrednosti so trenutni posnetek; spodnji filtri ugotovitev jih ne spreminjajo.",
+    "initialStatus": "Začetna revizija kataloga",
+    "imported": "Izdelki, uvoženi med začetno revizijo",
+    "monitorStatus": "Zadnji zagon spremljanja",
+    "monitorEnded": "Zadnji zagon spremljanja končan",
+    "sourceStatus": "Zadnji uvoz Safety Gate",
+    "sourceEnded": "Zadnji uvoz Safety Gate končan",
+    "unknown": "Ni na voljo",
+    "limit": "Uvoz izdelka ni dokončan varnostni pregled. Neuspešnega, nepopolnega ali nedosegljivega zagona ne smemo razlagati kot odsotnost ugotovitev.",
+    "states": {
+      "completed": "Dokončano",
+      "scanning": "V teku",
+      "queued": "V čakalni vrsti",
+      "failed": "Neuspešno",
+      "enqueue_failed": "Ni bilo mogoče zagnati",
+      "SUCCESS": "Dokončano",
+      "FAILURE": "Neuspešno",
+      "IN_PROGRESS": "V teku"
+    }
+  },
   "barcodeMatch": {
     "label": "Natančno ujemanje črtne kode",
     "help": "Preverjena črtna koda različice se ujema z zapisom Safety Gate. Pred odločitvijo preverite model in zadevno serijo."

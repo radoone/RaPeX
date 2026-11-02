@@ -2310,6 +2310,26 @@ s-modal s-box[background="bg-surface-critical"] s-grid {
   overscroll-behavior-x: contain;
 }
 
+.audit-monitoring-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 24px;
+  margin-block: 16px;
+}
+
+.audit-monitoring-facts > div { min-width: 0; }
+.audit-monitoring-facts dt { color: var(--text-subdued); }
+.audit-monitoring-facts dd {
+  margin: 4px 0 0;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 680px) {
+  .audit-monitoring-facts { grid-template-columns: 1fr; }
+}
+
 .audit-report-table-wrap s-table {
   min-width: 720px;
 }

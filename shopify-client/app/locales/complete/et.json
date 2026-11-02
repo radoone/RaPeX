@@ -1403,6 +1403,37 @@
     "who": "Salvestas",
     "whyMatch": "Miks see võib sobida"
   },
+  "responseGuide": {
+    "title": "Juhend: reageeri kinnitatud vastavusele",
+    "intro": "Enne otsuse salvestamist kinnita toode, mudel ja mõjutatud partii ametliku teate ja oma tarnijaga.",
+    "verify": "Võrdle identifikaatoreid ja mõjutatud partiisid ametliku teatega. Ainuüksi sarnane pilt ei kinnita vastavust.",
+    "contain": "Kui toode on mõjutatud, kaalu selle müügi peatamist, samal ajal kui järgid ametlikku teadet ja oma protseduure.",
+    "contact": "Võta ühendust oma tarnijaga ja tee kindlaks, kas kliente või ametivõime on vaja teavitada. Järgi kohaldatavaid juhiseid.",
+    "record": "Salvesta allolevasse otsuse märkusesse, mida sa kontrollisid, milliseid meetmeid võeti ja asjakohased kuupäevad. Uuenda otsust uue teabe saabumisel.",
+    "source": "Ava ametlik Safety Gate'i teade"
+  },
+  "monitorEvidence": {
+    "title": "Seire olek aruande koostamise ajal",
+    "explanation": "Need operatiivväärtused on hetktõmmis; allolevad leidude filtrid neid ei muuda.",
+    "initialStatus": "Esialgne kataloogi audit",
+    "imported": "Tooted imporditi esialgse auditi käigus",
+    "monitorStatus": "Viimane seirekäivitus",
+    "monitorEnded": "Viimane seirekäivitus lõppes",
+    "sourceStatus": "Viimane Safety Gate'i import",
+    "sourceEnded": "Viimane Safety Gate'i import lõppes",
+    "unknown": "Pole saadaval",
+    "limit": "Toote importimine ei ole lõpuleviidud ohutuskontroll. Ebaõnnestunud, mittetäielikku või kättesaamatut käivitust ei tohi tõlgendada leidude puudumisena.",
+    "states": {
+      "completed": "Lõpetatud",
+      "scanning": "Pooleli",
+      "queued": "Järjekorras",
+      "failed": "Ebaõnnestus",
+      "enqueue_failed": "Ei saanud alustada",
+      "SUCCESS": "Lõpetatud",
+      "FAILURE": "Ebaõnnestus",
+      "IN_PROGRESS": "Pooleli"
+    }
+  },
   "barcodeMatch": {
     "label": "Vöötkoodi täpne vaste",
     "help": "Variandi valideeritud vöötkood vastab Safety Gate’i kirjele. Enne otsustamist kontrollige mudelit ja mõjutatud partiid."

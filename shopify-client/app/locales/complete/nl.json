@@ -1403,6 +1403,37 @@
     "who": "Opgenomen door",
     "whyMatch": "Waarom dit kan overeenkomen"
   },
+  "responseGuide": {
+    "title": "Gids: reageren op een bevestigde match",
+    "intro": "Bevestig het product, model en de betreffende batch met de officiële kennisgeving en uw leverancier voordat u een beslissing vastlegt.",
+    "verify": "Vergelijk identificatiegegevens en getroffen batches met de officiële kennisgeving. Een vergelijkbare afbeelding alleen bevestigt geen match.",
+    "contain": "Als het product is getroffen, overweeg dan de verkoop ervan te pauzeren terwijl u de officiële kennisgeving en uw eigen procedures volgt.",
+    "contact": "Neem contact op met uw leverancier en bepaal of klanten of autoriteiten geïnformeerd moeten worden. Volg de toepasselijke instructies.",
+    "record": "Leg vast wat u heeft geverifieerd, de ondernomen actie en relevante datums in de beslissingsnotitie hieronder. Werk de beslissing bij naarmate er nieuwe informatie binnenkomt.",
+    "source": "Open de officiële Safety Gate-kennisgeving"
+  },
+  "monitorEvidence": {
+    "title": "Monitoringstatus op moment van rapportage",
+    "explanation": "Deze operationele waarden zijn een momentopname; de onderstaande zoekfilters wijzigen deze niet.",
+    "initialStatus": "Eerste cataloguscontrole",
+    "imported": "Producten geïmporteerd tijdens eerste controle",
+    "monitorStatus": "Laatste monitoringrun",
+    "monitorEnded": "Laatste monitoringrun beëindigd",
+    "sourceStatus": "Laatste Safety Gate-import",
+    "sourceEnded": "Laatste Safety Gate-import beëindigd",
+    "unknown": "Niet beschikbaar",
+    "limit": "Het importeren van een product is geen voltooide veiligheidscontrole. Een mislukte, onvolledige of niet-beschikbare run mag niet worden geïnterpreteerd als geen bevindingen.",
+    "states": {
+      "completed": "Voltooid",
+      "scanning": "Bezig",
+      "queued": "In wachtrij",
+      "failed": "Mislukt",
+      "enqueue_failed": "Kon niet starten",
+      "SUCCESS": "Voltooid",
+      "FAILURE": "Mislukt",
+      "IN_PROGRESS": "Bezig"
+    }
+  },
   "barcodeMatch": {
     "label": "Exacte barcode-overeenkomst",
     "help": "De gevalideerde barcode van een variant komt overeen met het Safety Gate-record. Controleer het model en de betrokken partij voordat u beslist."

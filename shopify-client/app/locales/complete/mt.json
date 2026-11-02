@@ -1419,6 +1419,37 @@
     "who": "Irreġistrat minn",
     "whyMatch": "Għaliex dan jista' jaqbel"
   },
+  "responseGuide": {
+    "title": "Gwida: irrispondi għal taqbila kkonfermata",
+    "intro": "Ikkonferma l-prodott, il-mudell u l-lott affettwat mal-avviż uffiċjali u l-fornitur tiegħek qabel ma tirreġistra deċiżjoni.",
+    "verify": "Qabbel l-identifikaturi u l-lottijiet affettwati mal-avviż uffiċjali. Immaġni simili waħedha ma tikkonfermax taqbila.",
+    "contain": "Jekk il-prodott huwa affettwat, ikkunsidra li twaqqaf il-bejgħ tiegħu waqt li ssegwi l-avviż uffiċjali u l-proċeduri tiegħek stess.",
+    "contact": "Ikkuntattja lill-fornitur tiegħek u ddetermina jekk il-klijenti jew l-awtoritajiet jeħtiġux li jiġu infurmati. Segwi l-istruzzjonijiet applikabbli.",
+    "record": "Irreġistra dak li vverifikajt, l-azzjoni meħuda u d-dati rilevanti fin-nota tad-deċiżjoni hawn taħt. Aġġorna d-deċiżjoni hekk kif tasal informazzjoni ġdida.",
+    "source": "Iftaħ l-avviż uffiċjali ta' Safety Gate"
+  },
+  "monitorEvidence": {
+    "title": "Status tal-monitoraġġ fil-ħin tar-rapport",
+    "explanation": "Dawn il-valuri operattivi huma snapshot attwali; il-filtri tas-sejbiet hawn taħt ma jbiddluxhom.",
+    "initialStatus": "Verifika inizjali tal-katalgu",
+    "imported": "Prodotti importati waqt il-verifika inizjali",
+    "monitorStatus": "L-aħħar eżekuzzjoni tal-monitoraġġ",
+    "monitorEnded": "L-aħħar eżekuzzjoni tal-monitoraġġ intemmet",
+    "sourceStatus": "L-aħħar importazzjoni ta' Safety Gate",
+    "sourceEnded": "L-aħħar importazzjoni ta' Safety Gate intemmet",
+    "unknown": "Mhux disponibbli",
+    "limit": "L-importazzjoni ta' prodott mhijiex verifika ta' sigurtà kompluta. Eżekuzzjoni falluta, mhux kompluta jew mhux disponibbli m'għandhiex tiġi interpretata bħala l-ebda sejbiet.",
+    "states": {
+      "completed": "Kompluta",
+      "scanning": "Fil-progress",
+      "queued": "Fil-kju",
+      "failed": "Falliet",
+      "enqueue_failed": "Ma setax jibda",
+      "SUCCESS": "Kompluta",
+      "FAILURE": "Falliet",
+      "IN_PROGRESS": "Fil-progress"
+    }
+  },
   "barcodeMatch": {
     "label": "Qbil eżatt tal-barcode",
     "help": "Il-barcode ivvalidat ta’ varjant jaqbel mar-rekord ta’ Safety Gate. Ivverifika l-mudell u l-lott affettwat qabel tiddeċiedi."

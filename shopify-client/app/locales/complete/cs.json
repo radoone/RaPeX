@@ -1403,6 +1403,37 @@
     "who": "Zaznamenal(a)",
     "whyMatch": "Proč se to může shodovat"
   },
+  "responseGuide": {
+    "title": "Průvodce: reakce na potvrzenou shodu",
+    "intro": "Před zaznamenáním rozhodnutí si ověřte produkt, model a dotčenou šarži s oficiálním oznámením a vaším dodavatelem.",
+    "verify": "Porovnejte identifikátory a dotčené šarže s oficiálním oznámením. Pouze podobný obrázek shodu nepotvrzuje.",
+    "contain": "Pokud je produkt dotčen, zvažte pozastavení jeho prodeje, zatímco se budete řídit oficiálním oznámením a vlastními postupy.",
+    "contact": "Kontaktujte svého dodavatele a zjistěte, zda je třeba informovat zákazníky nebo úřady. Postupujte podle příslušných pokynů.",
+    "record": "Zaznamenejte, co jste ověřili, provedenou akci a relevantní data do poznámky k rozhodnutí níže. Aktualizujte rozhodnutí, jakmile se objeví nové informace.",
+    "source": "Otevřete oficiální oznámení Safety Gate"
+  },
+  "monitorEvidence": {
+    "title": "Stav monitoringu v době hlášení",
+    "explanation": "Tyto provozní hodnoty jsou aktuálním snímkem; níže uvedené filtry nálezů je nemění.",
+    "initialStatus": "Počáteční audit katalogu",
+    "imported": "Produkty importované během počátečního auditu",
+    "monitorStatus": "Poslední spuštění monitoringu",
+    "monitorEnded": "Poslední spuštění monitoringu skončilo",
+    "sourceStatus": "Poslední import Safety Gate",
+    "sourceEnded": "Poslední import Safety Gate skončil",
+    "unknown": "Není k dispozici",
+    "limit": "Import produktu není dokončenou bezpečnostní kontrolou. Neúspěšné, neúplné nebo nedostupné spuštění nesmí být interpretováno jako absence nálezů.",
+    "states": {
+      "completed": "Dokončeno",
+      "scanning": "Probíhá",
+      "queued": "Ve frontě",
+      "failed": "Selhalo",
+      "enqueue_failed": "Nelze spustit",
+      "SUCCESS": "Dokončeno",
+      "FAILURE": "Selhalo",
+      "IN_PROGRESS": "Probíhá"
+    }
+  },
   "barcodeMatch": {
     "label": "Přesná shoda čárového kódu",
     "help": "Ověřený čárový kód varianty se shoduje se záznamem Safety Gate. Před rozhodnutím ověřte model a dotčenou šarži."

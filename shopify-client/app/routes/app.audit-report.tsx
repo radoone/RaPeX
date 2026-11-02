@@ -23,6 +23,7 @@ import {
   isWaitingForSupplier,
 } from "../services/review-evidence";
 import { localizeRisk } from "../components/AlertBadge";
+import { monitoringEvidence } from "../services/monitoring-evidence.server";
 
 export const headers = (headersArgs: any) => {
   return boundary.headers(headersArgs);
@@ -30,11 +31,15 @@ export const headers = (headersArgs: any) => {
 
 export const loader = async ({ request, url }: LoaderFunctionArgs) => {
   const { session } = await authenticate.admin(request);
-  return json(await reviewRecords(session.shop, { ...reviewFilters(url), dateBasis: "findings" }, 100));
+  const [records, monitoring] = await Promise.all([
+    reviewRecords(session.shop, { ...reviewFilters(url), dateBasis: "findings" }, 100),
+    monitoringEvidence(session.shop),
+  ]);
+  return json({ ...records, monitoring });
 };
 
 export default function AuditReportPage() {
-  const { records, generatedAt, total, shop, filters, summary, scope } =
+  const { records, generatedAt, total, shop, filters, summary, scope, monitoring } =
     useLoaderData<typeof loader>();
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -110,6 +115,19 @@ export default function AuditReportPage() {
             <s-text>{t("actions.retry")}</s-text>
           </s-banner>
         ) : null}
+        <AdminCard className="admin-card">
+          <h2 className="admin-card__title">{t("monitorEvidence.title")}</h2>
+          <p className="admin-card__description">{t("monitorEvidence.explanation")}</p>
+          <dl className="audit-monitoring-facts">
+            <div><dt>{t("monitorEvidence.initialStatus")}</dt><dd>{monitoring.initialStatus ? t(`monitorEvidence.states.${monitoring.initialStatus}`, { defaultValue: t("monitorEvidence.unknown") }) : t("monitorEvidence.unknown")}</dd></div>
+            <div><dt>{t("monitorEvidence.imported")}</dt><dd>{monitoring.importedProducts === null ? t("monitorEvidence.unknown") : new Intl.NumberFormat(i18n.resolvedLanguage || i18n.language).format(monitoring.importedProducts)}</dd></div>
+            <div><dt>{t("monitorEvidence.monitorStatus")}</dt><dd>{monitoring.monitorStatus ? t(`monitorEvidence.states.${monitoring.monitorStatus}`, { defaultValue: t("monitorEvidence.unknown") }) : t("monitorEvidence.unknown")}</dd></div>
+            <div><dt>{t("monitorEvidence.monitorEnded")}</dt><dd>{monitoring.monitorEndedAt ? <LocalDateTime value={monitoring.monitorEndedAt} locale={i18n.resolvedLanguage || i18n.language} /> : t("monitorEvidence.unknown")}</dd></div>
+            <div><dt>{t("monitorEvidence.sourceStatus")}</dt><dd>{monitoring.sourceStatus ? t(`monitorEvidence.states.${monitoring.sourceStatus}`, { defaultValue: t("monitorEvidence.unknown") }) : t("monitorEvidence.unknown")}</dd></div>
+            <div><dt>{t("monitorEvidence.sourceEnded")}</dt><dd>{monitoring.sourceEndedAt ? <LocalDateTime value={monitoring.sourceEndedAt} locale={i18n.resolvedLanguage || i18n.language} /> : t("monitorEvidence.unknown")}</dd></div>
+          </dl>
+          <p>{t("monitorEvidence.limit")}</p>
+        </AdminCard>
         <AdminCard className="admin-card">
           <div className="admin-card__header">
             <div>

@@ -49,6 +49,37 @@
       "teamTitle": "Tok práce kontroly"
     }
   },
+  "responseGuide": {
+    "title": "Sprievodca: Reakcia na potvrdenú zhodu",
+    "intro": "Pred zaznamenaním rozhodnutia si potvrďte produkt, model a dotknutú šaržu s oficiálnym oznámením a vaším dodávateľom.",
+    "verify": "Porovnajte identifikátory a dotknuté šarže s oficiálnym oznámením. Samotný podobný obrázok nepotvrdzuje zhodu.",
+    "contain": "Ak je produkt dotknutý, zvážte pozastavenie jeho predaja, kým sa budete riadiť oficiálnym oznámením a vašimi vlastnými postupmi.",
+    "contact": "Kontaktujte svojho dodávateľa a určite, či je potrebné informovať zákazníkov alebo úrady. Postupujte podľa príslušných pokynov.",
+    "record": "Zaznamenajte, čo ste overili, prijaté opatrenia a relevantné dátumy do poznámky k rozhodnutiu nižšie. Aktualizujte rozhodnutie, keď prídu nové informácie.",
+    "source": "Otvoriť oficiálne oznámenie Safety Gate"
+  },
+  "monitorEvidence": {
+    "title": "Stav monitorovania v čase vytvorenia reportu",
+    "explanation": "Tieto prevádzkové hodnoty predstavujú aktuálny stav; filtre nálezov nižšie ich nemenia.",
+    "initialStatus": "Počiatočný audit katalógu",
+    "imported": "Produkty importované počas počiatočného auditu",
+    "monitorStatus": "Posledné spustenie monitorovania",
+    "monitorEnded": "Posledné spustenie monitorovania skončilo",
+    "sourceStatus": "Posledný import Safety Gate",
+    "sourceEnded": "Posledný import Safety Gate skončil",
+    "unknown": "Nedostupné",
+    "limit": "Import produktu nie je dokončená bezpečnostná kontrola. Neúspešné, neúplné alebo nedostupné spustenie sa nesmie interpretovať ako žiadne nálezy.",
+    "states": {
+      "completed": "Dokončené",
+      "scanning": "Prebieha",
+      "queued": "Vo fronte",
+      "failed": "Zlyhalo",
+      "enqueue_failed": "Nepodarilo sa spustiť",
+      "SUCCESS": "Dokončené",
+      "FAILURE": "Zlyhalo",
+      "IN_PROGRESS": "Prebieha"
+    }
+  },
   "barcodeMatch": {
     "label": "Presná zhoda čiarového kódu",
     "help": "Overený čiarový kód variantu sa zhoduje so záznamom Safety Gate. Pred rozhodnutím overte model a dotknutú šaržu."

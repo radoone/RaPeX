@@ -1403,6 +1403,37 @@
     "who": "Zarejestrowane przez",
     "whyMatch": "Dlaczego to może pasować"
   },
+  "responseGuide": {
+    "title": "Przewodnik: reagowanie na potwierdzone dopasowanie",
+    "intro": "Przed podjęciem decyzji potwierdź produkt, model i dotkniętą partię z oficjalnym zawiadomieniem i swoim dostawcą.",
+    "verify": "Porównaj identyfikatory i dotknięte partie z oficjalnym zawiadomieniem. Samo podobne zdjęcie nie potwierdza dopasowania.",
+    "contain": "Jeśli produkt jest dotknięty, rozważ wstrzymanie jego sprzedaży, postępując zgodnie z oficjalnym zawiadomieniem i własnymi procedurami.",
+    "contact": "Skontaktuj się ze swoim dostawcą i ustal, czy klienci lub władze muszą zostać poinformowani. Postępuj zgodnie z obowiązującymi instrukcjami.",
+    "record": "Zapisz, co zweryfikowałeś, podjęte działania i odpowiednie daty w poniższej notatce decyzyjnej. Aktualizuj decyzję w miarę pojawiania się nowych informacji.",
+    "source": "Otwórz oficjalne zawiadomienie Safety Gate"
+  },
+  "monitorEvidence": {
+    "title": "Status monitorowania w momencie zgłoszenia",
+    "explanation": "Te wartości operacyjne stanowią bieżącą migawkę; poniższe filtry wyników ich nie zmieniają.",
+    "initialStatus": "Wstępny audyt katalogu",
+    "imported": "Produkty zaimportowane podczas wstępnego audytu",
+    "monitorStatus": "Ostatnie uruchomienie monitorowania",
+    "monitorEnded": "Ostatnie uruchomienie monitorowania zakończone",
+    "sourceStatus": "Ostatni import Safety Gate",
+    "sourceEnded": "Ostatni import Safety Gate zakończony",
+    "unknown": "Niedostępne",
+    "limit": "Importowanie produktu nie jest zakończoną kontrolą bezpieczeństwa. Nieudane, niekompletne lub niedostępne uruchomienie nie może być interpretowane jako brak wyników.",
+    "states": {
+      "completed": "Ukończono",
+      "scanning": "W toku",
+      "queued": "W kolejce",
+      "failed": "Niepowodzenie",
+      "enqueue_failed": "Nie można uruchomić",
+      "SUCCESS": "Ukończono",
+      "FAILURE": "Niepowodzenie",
+      "IN_PROGRESS": "W toku"
+    }
+  },
   "barcodeMatch": {
     "label": "Dokładna zgodność kodu kreskowego",
     "help": "Zweryfikowany kod kreskowy wariantu odpowiada wpisowi Safety Gate. Przed podjęciem decyzji sprawdź model i partię objętą zgłoszeniem."
