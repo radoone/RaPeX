@@ -717,6 +717,9 @@ export default function ManualCheckPage() {
         { method: "POST" },
       );
       setSelectedProduct(product);
+      setShowResult(false);
+      setCheckResult(null);
+      setCurrentAlertId(null);
       setHasProcessedResult(false);
     },
     [fetcher],
@@ -741,6 +744,7 @@ export default function ManualCheckPage() {
 
   useEffect(() => {
     if (
+      fetcher.state === "idle" &&
       fetcher.data &&
       "success" in fetcher.data &&
       fetcher.data.success &&
@@ -753,7 +757,7 @@ export default function ManualCheckPage() {
       setShowResult(true);
       setHasProcessedResult(true);
     }
-  }, [fetcher.data, showResult, hasProcessedResult]);
+  }, [fetcher.state, fetcher.data, showResult, hasProcessedResult]);
 
   useEffect(() => {
     if (
@@ -838,19 +842,6 @@ export default function ManualCheckPage() {
     },
     [resolveFetcher],
   );
-
-  // Auto-open modal when result is ready
-  useEffect(() => {
-    if (showResult && checkResult) {
-      // Open the modal using Polaris Web showOverlay() method
-      const modal = document.getElementById(
-        "manual-check-result-modal",
-      ) as HTMLElement & { showOverlay?: () => void };
-      if (modal?.showOverlay) {
-        modal.showOverlay();
-      }
-    }
-  }, [showResult, checkResult]);
 
   return (
     <s-page size="large" className="page-shell" suppressHydrationWarning>
@@ -1447,6 +1438,7 @@ export default function ManualCheckPage() {
           return (
             <AlertDetailModal
               modalId="manual-check-result-modal"
+              openOnMount={showResult}
               alert={newAlert}
               onResolve={currentAlertId ? handleResolve : undefined}
               onDismiss={currentAlertId ? handleDismiss : undefined}

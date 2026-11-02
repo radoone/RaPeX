@@ -212,7 +212,8 @@ export async function loadShopifyProductBarcodes(shop: string, productId: string
   if (payload.errors?.length || !payload.data?.product?.variants) throw new Error("Could not load Shopify product barcodes");
   if (typeof payload.data.product.updatedAt !== "string" || !Number.isFinite(Date.parse(payload.data.product.updatedAt))) throw new Error("Shopify product version is unavailable");
   const barcodes = await completeShopifyBarcodes(payload.data.product, request);
-  return { ...toProductInput({ ...payload.data.product, barcodes }, shop), barcodes, sourceUpdatedAt: payload.data.product.updatedAt as string };
+  const sourceUpdatedAt = new Date(payload.data.product.updatedAt).toISOString();
+  return { ...toProductInput({ ...payload.data.product, updatedAt: sourceUpdatedAt, barcodes }, shop), barcodes, sourceUpdatedAt };
 }
 
 async function enqueue(payload: MerchantCatalogAuditTaskPayload): Promise<void> {

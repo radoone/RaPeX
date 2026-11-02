@@ -77,7 +77,7 @@ test('variant hydration also returns authoritative title, images and description
   const result = await load(shop, '1');
   assert.equal(result.product.name, 'Updated title');
   assert.equal(result.product.description, 'Updated description');
-  assert.equal(result.sourceUpdatedAt, sourceUpdatedAt);
+  assert.equal(result.sourceUpdatedAt, new Date(sourceUpdatedAt).toISOString());
   assert.ok(query.includes('images(first: 4)'));
   assert.deepEqual(result.product.barcodes, [{ barcode: '4006381333931' }]);
 });
