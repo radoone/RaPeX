@@ -619,7 +619,7 @@ export async function scanPublicCatalogProducts(domain: string, rawProducts: any
           );
 
           const filteredWarnings = checkResult.warnings.filter(
-            (w) => w.matchBasis === "gtin" || (w.overallSimilarity || 0) >= similarityThreshold
+            (w) => w.matchBasis === "gtin" || w.identityAssessment === "uncertain" || (w.overallSimilarity || 0) >= similarityThreshold
           );
 
           if (filteredWarnings.length > 0) {

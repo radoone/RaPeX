@@ -8,7 +8,7 @@ import type {
   NormalizedAlert,
   SafetyCheckAnalysis,
 } from "./safety-gate-checker.types.js";
-import { compareExplicitModels, explicitProductModel } from "./product-model-identity.js";
+import { compareExplicitModels, explicitProductModel, sharesExplicitBrand } from "./product-model-identity.js";
 
 type AnalysisResponseShape = {
   output?: unknown;
@@ -383,7 +383,18 @@ export function buildSafetyCheckResult(
 ): SafetyCheckResult {
   // A visual comparison requires an image from both sides, not merely a source photograph.
   analysis = { ...analysis, scoringMode: analysis.scoringMode === "image-first" && analysis.productImagesUsed > 0 && analysis.alertImagesUsed > 0 ? "image-first" : "text-only" };
-  const warnings = matches
+  // A model may omit a related submodel. An explicit same-brand model prefix is
+  // still unresolved identity evidence, never proof that this product is clear.
+  const modelFamilyIds = new Set<string>();
+  const decisions = [...matches];
+  if (product) for (const alert of alerts) {
+    if (matches.some(match => match.alertId === alert.id || match.alertId === alert.meta?.recordid)) continue;
+    if (compareExplicitModels(product, alert) !== "variant" || !sharesExplicitBrand(product, alert)) continue;
+    modelFamilyIds.add(alert.id);
+    decisions.push({ alertId: alert.id, identityAssessment: "uncertain", overallSimilarity: 70, textSimilarity: 70,
+      reason: `The explicit brand and model family overlap (${explicitProductModel(product)} / ${alert.fields.type_numberOfModel || alert.fields.product_model_type || alert.fields.product_model}), but the exact submodel and affected production batch are not established. This is an identifier-family review priority, not a measured visual similarity or confirmation that the recalled batch applies.` });
+  }
+  const warnings = decisions
     .map((match): MatchResult | null => {
       const alert = findMatchedAlert(alerts, match.alertId);
       if (!alert) {
@@ -419,9 +430,9 @@ export function buildSafetyCheckResult(
         scoringMode,
       );
 
-      return {
+      const warning: MatchResult = {
         alertId: alert.id,
-        matchBasis: "similarity",
+        matchBasis: modelFamilyIds.has(alert.id) ? "model_family" : "similarity",
         identityAssessment,
         overallSimilarity,
         imageSimilarity,
@@ -435,6 +446,12 @@ export function buildSafetyCheckResult(
           enrichReason(match.reason, scoringMode, imageSimilarity, overallSimilarity),
         alertDetails,
       };
+      if (modelFamilyIds.has(alert.id)) {
+        delete warning.imageSimilarity;
+        delete warning.textSimilarity;
+        delete warning.scoreBreakdown;
+      }
+      return warning;
     })
     .filter((warning): warning is MatchResult => Boolean(warning))
     .filter((warning) => warning.overallSimilarity >= MIN_OVERALL_MATCH_SCORE);

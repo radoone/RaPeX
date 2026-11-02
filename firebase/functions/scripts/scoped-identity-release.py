@@ -7,6 +7,7 @@ import os
 import pathlib
 import shutil
 import sys
+import zipfile
 
 repo = pathlib.Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location('release', repo / 'scripts/scoped-hardening-release.py')
@@ -34,6 +35,19 @@ if command in ['prepare', 'refresh']:
         (dest / 'prompts').mkdir(exist_ok=True)
         shutil.copyfile(prompt, dest / 'prompts/productMatchAnalysis.prompt')
         manifest[name]['promptSha256'] = r.digest(prompt.read_bytes())
+        # Consumers have different deployed lifecycle/scanner versions. Patch only
+        # their threshold predicates, without importing unrelated current logic.
+        patches = {}
+        with zipfile.ZipFile(r.root / (name + '-before.zip')) as archive:
+            for module, variable, count in [('merchant-monitoring', 'warning', 2), ('public-store-scanner', 'w', 1)]:
+                relative = 'src/' + module + '.ts'
+                original = archive.read(relative).decode()
+                needle = variable + '.matchBasis === "gtin" ||'
+                assert original.count(needle) == count, 'Unexpected threshold source: ' + name
+                patched = original.replace(needle, needle + ' ' + variable + '.identityAssessment === "uncertain" ||')
+                (dest / relative).write_text(patched)
+                patches[relative] = {'beforeSha256': r.digest(original.encode()), 'afterSha256': r.digest(patched.encode()), 'replacements': count}
+        manifest[name]['thresholdPatches'] = patches
         # Reuse installed dependencies only when the complete production lock hash matches.
         for candidate in (artifacts / 'gtin-release-2026-11-02').glob('*backend/*/package-lock.json'):
             runtime = candidate.parent / 'node_modules'
@@ -45,6 +59,8 @@ elif command == 'deploy':
     manifest = json.loads((r.root / 'manifest.json').read_text())
     for name in r.names:
         assert manifest[name]['promptSha256'] == r.digest(prompt.read_bytes()) == r.digest((r.root / name / 'prompts/productMatchAnalysis.prompt').read_bytes()), 'Prompt drift'
+        for relative, patch in manifest[name]['thresholdPatches'].items():
+            assert patch['afterSha256'] == r.digest((r.root / name / relative).read_bytes()), 'Threshold patch drift'
     r.deploy()
 else:
     {'validate': r.validate, 'check': r.check}[command]()

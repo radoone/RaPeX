@@ -74,7 +74,7 @@ export const MatchSchema = functionsAi.defineSchema(
   "SafetyGateMatch",
   z.object({
     alertId: z.string(),
-    matchBasis: z.enum(["gtin", "similarity"]).optional(),
+    matchBasis: z.enum(["gtin", "similarity", "model_family"]).optional(),
     identityAssessment: z.enum(["identifier", "same_model", "distinctive_visual", "uncertain"]).optional(),
     identifierMatches: z.array(z.object({
       gtin: z.string(), barcode: z.string(), alertBarcode: z.string(),

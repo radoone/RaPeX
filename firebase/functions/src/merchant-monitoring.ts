@@ -876,7 +876,7 @@ export async function runMerchantDeltaMonitoringForShop(params: {
       );
       const threshold = Number((merchantState as unknown as Record<string, unknown>).similarityThreshold || 0);
       if (threshold > 0) {
-        result.warnings = result.warnings.filter((warning) => warning.matchBasis === "gtin" || warning.overallSimilarity >= threshold);
+        result.warnings = result.warnings.filter((warning) => warning.matchBasis === "gtin" || warning.identityAssessment === "uncertain" || warning.overallSimilarity >= threshold);
         result.isSafe = result.warnings.length === 0;
       }
       productsScanned += 1;
@@ -1442,7 +1442,7 @@ export async function handleShopifyProductChangeTask(
       const result = await checkProductSafety(payload.product);
       const threshold = payload.similarityThreshold ?? 0;
       const filteredWarnings = threshold > 0
-        ? result.warnings.filter((warning) => warning.matchBasis === "gtin" || warning.overallSimilarity >= threshold)
+        ? result.warnings.filter((warning) => warning.matchBasis === "gtin" || warning.identityAssessment === "uncertain" || warning.overallSimilarity >= threshold)
         : result.warnings;
       const filteredResult = {
         ...result,

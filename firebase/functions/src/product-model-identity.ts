@@ -16,7 +16,7 @@ export function explicitProductModel(product: ProductInput): string {
 
 export function compareExplicitModels(product: ProductInput, alert: NormalizedAlert): "equal" | "different" | "variant" | "unknown" {
   const left = models(explicitProductModel(product));
-  const fields = alert.fields;
+  const fields = alert.fields || {};
   const right = models(fields.type_numberOfModel || fields.product_model_type || fields.product_model);
   if (!left.length || !right.length) return "unknown";
   if (left.some(a => right.includes(a))) return "equal";
@@ -24,4 +24,13 @@ export function compareExplicitModels(product: ProductInput, alert: NormalizedAl
   // rather than declaring either exact identity or a confirmed different product.
   if (left.some(a => right.some(b => Math.min(a.length, b.length) >= 4 && (a.startsWith(b) || b.startsWith(a))))) return "variant";
   return "different";
+}
+
+export function sharesExplicitBrand(product: ProductInput, alert: NormalizedAlert): boolean {
+  const aliases = (value: unknown) => String(value || "").split(/[,;|]+/)
+    .filter(part => !/^(?:unknown|unbranded|not specified|none|n\/?a)$/i.test(part.trim()))
+    .map(part => part.normalize("NFKC").toUpperCase().replace(/[^\p{L}\p{N}]/gu, ""))
+    .filter(part => part.length >= 2);
+  const left = aliases(product.brand), right = aliases(alert.fields?.brand || alert.fields?.product_brand);
+  return left.some(brand => right.includes(brand));
 }

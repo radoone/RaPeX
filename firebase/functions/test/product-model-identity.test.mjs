@@ -33,6 +33,19 @@ test('a model prefix remains an uncertain warning rather than becoming safe or a
   assert.match(warning.reason, /Identity not confirmed/);
 });
 
+test('an omitted same-brand model family still requires review, without inventing visual or text measurements', () => {
+  const p = { ...product, model: 'LK-003' };
+  const warning = buildSafetyCheckResult([], [source('LK-003-A004')], visual, p).warnings[0];
+  assert.equal(warning.identityAssessment, 'uncertain');
+  assert.equal(warning.matchBasis, 'model_family');
+  assert.equal(warning.imageSimilarity, undefined);
+  assert.equal(warning.textSimilarity, undefined);
+  assert.equal(warning.scoreBreakdown, undefined);
+  assert.match(warning.reason, /not a measured visual similarity/);
+  const unrelated = { ...source('LK-003-A004'), fields: { ...source('LK-003-A004').fields, brand: 'Another maker' } };
+  assert.deepEqual(buildSafetyCheckResult([], [unrelated], visual, p).warnings, []);
+});
+
 test('a visual identity needs images of this specific alert, not just some other candidate', () => {
   const result = buildSafetyCheckResult([{ ...match, identityAssessment: 'distinctive_visual' }], [source('Unknown')], { ...visual, comparedImageAlertIds: ['other'] }, { ...product, description: '' });
   assert.equal(result.warnings[0].identityAssessment, 'uncertain');

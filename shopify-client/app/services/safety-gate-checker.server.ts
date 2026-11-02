@@ -10,7 +10,8 @@ export interface SafetyCheckResult {
   isSafe: boolean;
   warnings: Array<{
     alertId: string;
-    matchBasis?: "gtin" | "similarity";
+    matchBasis?: "gtin" | "similarity" | "model_family";
+    identityAssessment?: "identifier" | "same_model" | "distinctive_visual" | "uncertain";
     identifierMatches?: Array<{ gtin: string; barcode: string; alertBarcode: string; variantId?: string; variantTitle?: string }>;
     overallSimilarity: number;
     imageSimilarity?: number;
@@ -83,14 +84,14 @@ function requireApiKey(): string {
   return apiKey;
 }
 
-function applySimilarityThreshold<T extends SafetyCheckResult>(result: T, threshold: number): T {
+export function applySimilarityThreshold<T extends SafetyCheckResult>(result: T, threshold: number): T {
   const safeThreshold = Number.isFinite(threshold) && threshold > 0 ? threshold : 0;
   if (safeThreshold <= 0) {
     return result;
   }
 
   const filteredWarnings = result.warnings.filter((warning) => {
-    if (warning.matchBasis === "gtin") return true;
+    if (warning.matchBasis === "gtin" || warning.identityAssessment === "uncertain") return true;
     const similarity = Number.isFinite(warning.overallSimilarity) ? warning.overallSimilarity : 0;
     return similarity >= safeThreshold;
   });
