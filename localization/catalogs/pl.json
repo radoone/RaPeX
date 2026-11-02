@@ -162,7 +162,9 @@
       "q4": "Co zawiera darmowe skanowanie?",
       "a4": "Wszystkie dostępne produkty w publicznym katalogu Shopify sklepu i podsumowanie możliwych dopasowań e-mailem. Oferty prywatne są wyłączone; skanowanie nie jest certyfikatem bezpieczeństwa.",
       "q5": "Co jeśli nie zostaną znalezione możliwe dopasowania?",
-      "a5": "Raport pokaże liczbę sprawdzonych produktów i informację, że w tym sprawdzeniu nie znaleziono możliwych dopasowań. Nie jest to potwierdzenie bezpieczeństwa produktów. Nowe ostrzeżenia mogą pojawić się później."
+      "a5": "Raport pokaże liczbę sprawdzonych produktów i informację, że w tym sprawdzeniu nie znaleziono możliwych dopasowań. Nie jest to potwierdzenie bezpieczeństwa produktów. Nowe ostrzeżenia mogą pojawić się później.",
+      "q6": "Czy możliwe dopasowanie dowodzi, że mój produkt jest niebezpieczny?",
+      "a6": "Nie. AI lub identyfikator może połączyć Twoją ofertę z rekordem Safety Gate, ale nadal musisz zweryfikować dokładny produkt, model i partię objętą problemem. ZeroRecall wspiera Twój przegląd; nie certyfikuje bezpieczeństwa ani nie zastępuje Twoich zobowiązań prawnych."
     },
     "cta": {
       "title": "Rozpocznij od darmowego skanowania",
@@ -359,6 +361,42 @@
       "languageTitle": "Interfejs w 24 językach UE",
       "languageBody": "Wybierz swój język roboczy w aplikacji i język powiadomień dla e-maili. Oryginalne identyfikatory produktów i oficjalne fakty źródłowe pozostają nienaruszone.",
       "control": "Twój katalog pozostaje pod Twoją kontrolą. Zapisanie decyzji o przeglądzie nie powoduje automatycznego wycofania publikacji ani zmiany produktu Shopify."
+    },
+    "notice": {
+      "title": "Powiadomienie przychodzi do Ciebie",
+      "body": "Gdy pojawi się nowe znalezisko, ZeroRecall może wysłać e-mail z informacjami o produkcie, porównaniem Safety Gate i linkiem do jego przeglądu w Twojej aplikacji Shopify. Nie musisz trzymać aplikacji otwartej, aby otrzymać powiadomienie.",
+      "whatTitle": "Jasny następny krok, a nie tylko ostrzeżenie",
+      "whatBody": "Otwórz znalezisko, porównaj zdjęcia i identyfikatory, a następnie zweryfikuj model i partię przed podjęciem decyzji. Odbiorca powiadomień, język i preferencje są edytowalne w Ustawieniach.",
+      "weeklyTitle": "Brak nowych znalezisk? Nadal otrzymujesz aktualizację.",
+      "weeklyBody": "Po włączeniu cotygodniowych podsumowań, tydzień bez nowych znalezisk przynosi podsumowanie. Istniejące otwarte znaleziska mogą nadal wymagać Twojej uwagi; niekompletne uruchomienie monitoringu jest wyświetlane jako niekompletne.",
+      "previewTitle": "Przykładowy e-mail z alertem",
+      "previewNote": "Przykładowa treść i ilustracja, nie jest to prawdziwy alert ani wysłany e-mail. Przycisk podglądu otwiera poniższy przewodnik; prawdziwy e-mail prowadzi do uwierzytelnionej strony przeglądu Twojego sklepu.",
+      "imageCaption": "Ilustracyjne zdjęcie produktu, nie jest to oficjalne zdjęcie Safety Gate",
+      "subject": "Znaleźliśmy możliwe dopasowanie z alertem EU Safety Gate.",
+      "productLabel": "Twój produkt",
+      "alertLabel": "Produkt Safety Gate",
+      "action": "Przejrzyj możliwe dopasowanie",
+      "instruction": "Porównaj model, markę i partię z oficjalnym zapisem. Zapisz swoją decyzję i notatkę w aplikacji."
+    },
+    "start": {
+      "title": "Co dzieje się po instalacji",
+      "body": "Od pierwszej kontroli katalogu po bieżące monitorowanie, możesz zobaczyć, co jest uruchomione i które znaleziska wymagają decyzji.",
+      "step1Title": "Połącz swój sklep i wybierz plan",
+      "step1Body": "Zainstaluj przez Shopify, zatwierdź dostęp do odczytu produktów i wybierz plan, aby aktywować bieżące monitorowanie. Ustaw odbiorcę e-maila i język powiadomień.",
+      "step2Title": "Uruchom pierwszą kontrolę katalogu",
+      "step2Body": "ZeroRecall importuje Twoje produkty i sprawdza zindeksowaną historię Safety Gate w tle. Śledź postępy w aplikacji; większe katalogi zajmują więcej czasu. Sam import nie jest zakończoną kontrolą bezpieczeństwa.",
+      "step3Title": "Przejrzyj wynik",
+      "step3Body": "Możliwe dopasowania trafiają do Twojej kolejki przeglądu. Porównaj oficjalny zapis z Twoim produktem i zapisz decyzję lub pozostaw znalezisko otwarte, czekając na dostawcę.",
+      "step4Title": "Kontynuuj monitorowanie, gdy sytuacja się zmienia",
+      "step4Body": "Nowe alerty Safety Gate i aktualizacje produktów wywołują kontrole, gdy Twój plan jest aktywny. Nowo utworzone znaleziska mogą wywołać e-mail, a Twoje decyzje pozostają w historii przeglądów.",
+      "matchTitle": "Znaleziono możliwe dopasowanie",
+      "matchBody": "Jest to prośba o przejrzenie dowodów, a nie dowód, że Twój dokładny model lub partia jest niebezpieczna. Potwierdź te szczegóły przed podjęciem działań.",
+      "clearTitle": "Nie znaleziono możliwego dopasowania",
+      "clearBody": "Zakończona kontrola nie znalazła możliwego dopasowania w zindeksowanych rekordach, które sprawdziła. Nie jest to certyfikat bezpieczeństwa. Nowe alerty i zmiany produktów mogą później zmienić wynik.",
+      "audienceTitle": "Dla sklepów sprzedających produkty fizyczne w UE",
+      "audienceBody": "Szczególnie przydatne dla zabawek, produktów dla dzieci, elektroniki, kosmetyków, artykułów gospodarstwa domowego oraz produktów importowanych lub marek własnych. Porównanie zdjęć AI może pomóc, gdy listy dostawców mają niekompletne identyfikatory. Safety Gate obejmuje niebezpieczne produkty nieżywnościowe.",
+      "caseTitle": "Przykład: zmieniony tytuł, a następnie kontrola dostawcy",
+      "caseBody": "Ilustracyjny scenariusz: dostawca umieszcza rowerek biegowy pod inną nazwą i pomija model. Szczegóły wizualne prowadzą do możliwego dopasowania. Sprzedawca porównuje alert i prosi dostawcę o model i partię. Jeśli dowody wskazują na inny produkt, odrzuca znalezisko z notatką; jeśli potwierdza to produkt objęty problemem, podejmuje odpowiednie działania i je rejestruje. Jest to przykład przepływu pracy, a nie przypadek klienta ani wynik na żywo."
     }
   },
   "email": {

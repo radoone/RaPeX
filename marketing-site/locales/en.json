@@ -161,7 +161,9 @@
     "q4": "What is included in the free scan?",
     "a4": "All products available in your store’s public Shopify catalog and an emailed summary of possible matches. Private listings are excluded; the scan is not a safety certificate.",
     "q5": "What if no possible matches are found?",
-    "a5": "Your report will show the number of checked products and that no possible matches were found in this check. This does not certify product safety. New alerts can appear later."
+    "a5": "Your report will show the number of checked products and that no possible matches were found in this check. This does not certify product safety. New alerts can appear later.",
+    "q6": "Does a possible match prove that my product is dangerous?",
+    "a6": "No. AI or an identifier can connect your listing to a Safety Gate record, but you still need to verify the exact product, model and affected batch. ZeroRecall supports your review; it does not certify safety or replace your legal obligations."
   },
   "cta": {
     "title": "Start with a free check",
@@ -358,5 +360,41 @@
     "languageTitle": "An interface in 24 EU languages",
     "languageBody": "Choose your working language in the app and your notification language for email. Original product identifiers and official source facts stay intact.",
     "control": "Your catalog stays under your control. Recording a review decision does not automatically unpublish or change a Shopify product."
+  },
+  "notice": {
+    "title": "The alert comes to you",
+    "body": "When a new finding is created, ZeroRecall can email the product, Safety Gate comparison and a link to review it in your Shopify app. You do not have to keep the app open to receive the notification.",
+    "whatTitle": "A clear next step, not just a warning",
+    "whatBody": "Open the finding, compare the photos and identifiers, then verify the model and batch before deciding. Your notification recipient, language and preferences are editable in Settings.",
+    "weeklyTitle": "No new findings? You still get an update.",
+    "weeklyBody": "With weekly summaries enabled, a week without new findings brings a summary. Existing open findings can still need your attention; an incomplete monitoring run is shown as incomplete.",
+    "previewTitle": "Illustrative alert email",
+    "previewNote": "Example content and illustration, not a real alert or a sent email. The preview button opens the walkthrough below; a real email links to your shop's authenticated review page.",
+    "imageCaption": "Illustrative product image, not an official Safety Gate photograph",
+    "subject": "We found a possible match with an EU Safety Gate alert.",
+    "productLabel": "Your product",
+    "alertLabel": "Safety Gate product",
+    "action": "Review possible match",
+    "instruction": "Compare the model, brand and batch with the official record. Save your decision and a note in the app."
+  },
+  "start": {
+    "title": "What happens after you install",
+    "body": "From the first catalog check to ongoing monitoring, you can see what is running and which findings need a decision.",
+    "step1Title": "Connect your store and choose a plan",
+    "step1Body": "Install through Shopify, approve product-read access and choose a plan to activate ongoing monitoring. Set your email recipient and notification language.",
+    "step2Title": "Let the first catalog audit run",
+    "step2Body": "ZeroRecall imports your products and checks indexed Safety Gate history in the background. Follow progress in the app; larger catalogs take longer. An import alone is not a completed safety check.",
+    "step3Title": "Review the result",
+    "step3Body": "Possible matches enter your review queue. Compare the official record with your product and save a decision or keep the finding open while waiting for your supplier.",
+    "step4Title": "Keep monitoring as things change",
+    "step4Body": "New Safety Gate alerts and product updates trigger checks while your plan is active. Newly created findings can trigger an email, and your decisions remain in the review history.",
+    "matchTitle": "A possible match was found",
+    "matchBody": "This is a request to review the evidence, not proof that your exact model or batch is dangerous. Confirm those details before taking action.",
+    "clearTitle": "No possible match was found",
+    "clearBody": "The completed check found no possible match in the indexed records it checked. This is not a safety certificate. New alerts and product changes can change the result later.",
+    "audienceTitle": "For stores selling physical products in the EU",
+    "audienceBody": "Especially useful for toys, baby products, electronics, cosmetics, home goods and imported or white-label products. AI photo comparison can help when supplier listings have incomplete identifiers. Safety Gate covers dangerous non-food products.",
+    "caseTitle": "Example: a changed title, then a supplier check",
+    "caseBody": "Illustrative scenario: a supplier lists a balance bike under a different name and omits the model. Visual details lead to a possible match. The merchant compares the alert and requests the model and batch from the supplier. If the evidence shows a different product, they dismiss the finding with a note; if it confirms the affected product, they take the appropriate action and record it. This is a workflow example, not a customer case or a live result."
   }
 }

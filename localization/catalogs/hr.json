@@ -162,7 +162,9 @@
       "q4": "Što je uključeno u besplatno skeniranje?",
       "a4": "Svi dostupni proizvodi u javnom Shopify katalogu vaše trgovine i sažetak mogućih podudaranja e-poštom. Privatni oglasi nisu uključeni; skeniranje nije potvrda sigurnosti.",
       "q5": "Što ako se ne pronađu moguća podudaranja?",
-      "a5": "Izvješće prikazuje broj provjerenih proizvoda i da u ovoj provjeri nisu pronađena moguća podudaranja. Time se ne potvrđuje sigurnost proizvoda. Nova upozorenja mogu se pojaviti kasnije."
+      "a5": "Izvješće prikazuje broj provjerenih proizvoda i da u ovoj provjeri nisu pronađena moguća podudaranja. Time se ne potvrđuje sigurnost proizvoda. Nova upozorenja mogu se pojaviti kasnije.",
+      "q6": "Dokazuje li moguće podudaranje da je moj proizvod opasan?",
+      "a6": "Ne. AI ili identifikator mogu povezati vaš oglas sa zapisom Safety Gate-a, ali i dalje morate provjeriti točan proizvod, model i pogođenu seriju. ZeroRecall podržava vaš pregled; ne certificira sigurnost niti zamjenjuje vaše zakonske obveze."
     },
     "cta": {
       "title": "Započnite s besplatnim skeniranjem",
@@ -359,6 +361,42 @@
       "languageTitle": "Sučelje na 24 jezika EU-a",
       "languageBody": "Odaberite svoj radni jezik u aplikaciji i jezik obavijesti za e-poštu. Izvorni identifikatori proizvoda i službene činjenice ostaju netaknuti.",
       "control": "Vaš katalog ostaje pod vašom kontrolom. Zabilježba odluke o pregledu ne objavljuje automatski niti mijenja Shopify proizvod."
+    },
+    "notice": {
+      "title": "Upozorenje stiže vama",
+      "body": "Kada se pronađe novi nalaz, ZeroRecall može poslati e-poštom proizvod, usporedbu Safety Gate-a i poveznicu za pregled u vašoj Shopify aplikaciji. Ne morate držati aplikaciju otvorenom da biste primili obavijest.",
+      "whatTitle": "Jasan sljedeći korak, a ne samo upozorenje",
+      "whatBody": "Otvorite nalaz, usporedite fotografije i identifikatore, zatim provjerite model i seriju prije donošenja odluke. Primatelj obavijesti, jezik i postavke mogu se uređivati u Postavkama.",
+      "weeklyTitle": "Nema novih nalaza? I dalje dobivate ažuriranje.",
+      "weeklyBody": "S omogućenim tjednim sažecima, tjedan bez novih nalaza donosi sažetak. Postojeći otvoreni nalazi i dalje mogu zahtijevati vašu pažnju; nepotpuno praćenje prikazano je kao nepotpuno.",
+      "previewTitle": "Ilustrativni e-mail upozorenja",
+      "previewNote": "Primjer sadržaja i ilustracije, nije stvarno upozorenje ili poslana e-pošta. Gumb za pregled otvara upute u nastavku; stvarna e-pošta povezuje na autentificiranu stranicu za pregled vaše trgovine.",
+      "imageCaption": "Ilustrativna slika proizvoda, nije službena fotografija Safety Gate-a",
+      "subject": "Pronašli smo moguće podudaranje s upozorenjem EU Safety Gate.",
+      "productLabel": "Vaš proizvod",
+      "alertLabel": "Proizvod Safety Gate",
+      "action": "Pregledajte moguće podudaranje",
+      "instruction": "Usporedite model, marku i seriju sa službenim zapisom. Spremite svoju odluku i bilješku u aplikaciji."
+    },
+    "start": {
+      "title": "Što se događa nakon instalacije",
+      "body": "Od prve provjere kataloga do kontinuiranog praćenja, možete vidjeti što se pokreće i koji nalazi zahtijevaju odluku.",
+      "step1Title": "Povežite svoju trgovinu i odaberite plan",
+      "step1Body": "Instalirajte putem Shopify-a, odobrite pristup čitanju proizvoda i odaberite plan za aktiviranje kontinuiranog praćenja. Postavite primatelja e-pošte i jezik obavijesti.",
+      "step2Title": "Pokrenite prvu reviziju kataloga",
+      "step2Body": "ZeroRecall uvozi vaše proizvode i provjerava indeksiranu povijest Safety Gate-a u pozadini. Pratite napredak u aplikaciji; veći katalozi traju dulje. Sam uvoz nije dovršena sigurnosna provjera.",
+      "step3Title": "Pregledajte rezultat",
+      "step3Body": "Moguća podudaranja ulaze u vaš red čekanja za pregled. Usporedite službeni zapis s vašim proizvodom i spremite odluku ili ostavite nalaz otvorenim dok čekate svog dobavljača.",
+      "step4Title": "Nastavite pratiti kako se stvari mijenjaju",
+      "step4Body": "Nova upozorenja Safety Gate-a i ažuriranja proizvoda pokreću provjere dok je vaš plan aktivan. Novo stvoreni nalazi mogu pokrenuti e-poštu, a vaše odluke ostaju u povijesti pregleda.",
+      "matchTitle": "Pronađeno je moguće podudaranje",
+      "matchBody": "Ovo je zahtjev za pregled dokaza, a ne dokaz da je vaš točan model ili serija opasan. Potvrdite te detalje prije poduzimanja radnji.",
+      "clearTitle": "Nije pronađeno moguće podudaranje",
+      "clearBody": "Dovršena provjera nije pronašla moguće podudaranje u indeksiranim zapisima koje je provjerila. Ovo nije sigurnosni certifikat. Nova upozorenja i promjene proizvoda mogu kasnije promijeniti rezultat.",
+      "audienceTitle": "Za trgovine koje prodaju fizičke proizvode u EU",
+      "audienceBody": "Posebno korisno za igračke, proizvode za bebe, elektroniku, kozmetiku, kućanske potrepštine te uvezene ili proizvode pod privatnom robnom markom. Usporedba fotografija pomoću umjetne inteligencije može pomoći kada popisi dobavljača imaju nepotpune identifikatore. Safety Gate pokriva opasne neprehrambene proizvode.",
+      "caseTitle": "Primjer: promijenjen naslov, zatim provjera dobavljača",
+      "caseBody": "Ilustrativni scenarij: dobavljač navodi bicikl za ravnotežu pod drugim imenom i izostavlja model. Vizualni detalji dovode do mogućeg podudaranja. Trgovac uspoređuje upozorenje i traži model i seriju od dobavljača. Ako dokazi pokazuju drugačiji proizvod, odbacuju nalaz s bilješkom; ako potvrđuje pogođeni proizvod, poduzimaju odgovarajuće radnje i bilježe ih. Ovo je primjer tijeka rada, a ne slučaj kupca ili živi rezultat."
     }
   },
   "email": {

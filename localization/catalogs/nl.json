@@ -162,7 +162,9 @@
       "q4": "Wat is inbegrepen in de gratis scan?",
       "a4": "Alle beschikbare producten in de openbare Shopify-catalogus van uw winkel en een samenvatting van mogelijke overeenkomsten per e-mail. Privévermeldingen zijn uitgesloten; de scan is geen veiligheidscertificaat.",
       "q5": "Wat als er geen mogelijke overeenkomsten worden gevonden?",
-      "a5": "Het rapport toont het aantal gecontroleerde producten en dat bij deze controle geen mogelijke overeenkomsten zijn gevonden. Dit is geen bewijs van productveiligheid. Later kunnen nieuwe waarschuwingen verschijnen."
+      "a5": "Het rapport toont het aantal gecontroleerde producten en dat bij deze controle geen mogelijke overeenkomsten zijn gevonden. Dit is geen bewijs van productveiligheid. Later kunnen nieuwe waarschuwingen verschijnen.",
+      "q6": "Bewijst een mogelijke overeenkomst dat mijn product gevaarlijk is?",
+      "a6": "Nee. AI of een identificatiecode kan uw vermelding koppelen aan een Safety Gate-record, maar u moet nog steeds het exacte product, model en de betreffende batch verifiëren. ZeroRecall ondersteunt uw beoordeling; het certificeert geen veiligheid en vervangt uw wettelijke verplichtingen niet."
     },
     "cta": {
       "title": "Begin met een gratis scan",
@@ -359,6 +361,42 @@
       "languageTitle": "Een interface in 24 EU-talen",
       "languageBody": "Kies uw werktal in de app en uw meldingstaal voor e-mail. Originele productidentificatiegegevens en officiële bronfeiten blijven intact.",
       "control": "Uw catalogus blijft onder uw controle. Het vastleggen van een beoordelingsbeslissing publiceert of wijzigt een Shopify-product niet automatisch."
+    },
+    "notice": {
+      "title": "De melding komt naar u toe",
+      "body": "Wanneer een nieuwe bevinding wordt gecreëerd, kan ZeroRecall een e-mail sturen met het product, de Safety Gate-vergelijking en een link om deze te bekijken in uw Shopify-app. U hoeft de app niet open te houden om de melding te ontvangen.",
+      "whatTitle": "Een duidelijke volgende stap, niet zomaar een waarschuwing",
+      "whatBody": "Open de bevinding, vergelijk de foto's en identificatiegegevens, en verifieer vervolgens het model en de batch voordat u een beslissing neemt. Uw meldingsontvanger, taal en voorkeuren zijn bewerkbaar in Instellingen.",
+      "weeklyTitle": "Geen nieuwe bevindingen? U krijgt toch een update.",
+      "weeklyBody": "Met wekelijkse samenvattingen ingeschakeld, brengt een week zonder nieuwe bevindingen een samenvatting. Bestaande openstaande bevindingen kunnen nog steeds uw aandacht nodig hebben; een onvolledige monitoringrun wordt als onvolledig weergegeven.",
+      "previewTitle": "Illustratieve waarschuwings-e-mail",
+      "previewNote": "Voorbeeldinhoud en illustratie, geen echte waarschuwing of verzonden e-mail. De preview-knop opent de walkthrough hieronder; een echte e-mail linkt naar de geauthenticeerde beoordelingspagina van uw winkel.",
+      "imageCaption": "Illustratieve productafbeelding, geen officiële Safety Gate-foto",
+      "subject": "We hebben een mogelijke overeenkomst gevonden met een EU Safety Gate-waarschuwing.",
+      "productLabel": "Uw product",
+      "alertLabel": "Safety Gate-product",
+      "action": "Mogelijke overeenkomst beoordelen",
+      "instruction": "Vergelijk het model, merk en batch met het officiële record. Sla uw beslissing en een notitie op in de app."
+    },
+    "start": {
+      "title": "Wat er gebeurt nadat u installeert",
+      "body": "Van de eerste cataloguscontrole tot doorlopende monitoring, u kunt zien wat er loopt en welke bevindingen een beslissing vereisen.",
+      "step1Title": "Verbind uw winkel en kies een abonnement",
+      "step1Body": "Installeer via Shopify, keur productleesrechten goed en kies een abonnement om doorlopende monitoring te activeren. Stel uw e-mailontvanger en meldingstaal in.",
+      "step2Title": "Laat de eerste catalogusaudit uitvoeren",
+      "step2Body": "ZeroRecall importeert uw producten en controleert de geïndexeerde Safety Gate-geschiedenis op de achtergrond. Volg de voortgang in de app; grotere catalogi duren langer. Een import alleen is geen voltooide veiligheidscontrole.",
+      "step3Title": "Bekijk het resultaat",
+      "step3Body": "Mogelijke overeenkomsten komen in uw beoordelingswachtrij. Vergelijk het officiële dossier met uw product en sla een beslissing op of houd de bevinding open terwijl u wacht op uw leverancier.",
+      "step4Title": "Blijf monitoren als dingen veranderen",
+      "step4Body": "Nieuwe Safety Gate-waarschuwingen en productupdates activeren controles terwijl uw abonnement actief is. Nieuw gecreëerde bevindingen kunnen een e-mail activeren, en uw beslissingen blijven in de beoordelingsgeschiedenis.",
+      "matchTitle": "Er is een mogelijke overeenkomst gevonden",
+      "matchBody": "Dit is een verzoek om het bewijs te beoordelen, geen bewijs dat uw exacte model of batch gevaarlijk is. Bevestig die details voordat u actie onderneemt.",
+      "clearTitle": "Geen mogelijke overeenkomst gevonden",
+      "clearBody": "De voltooide controle heeft geen mogelijke overeenkomst gevonden in de geïndexeerde records die het heeft gecontroleerd. Dit is geen veiligheidscertificaat. Nieuwe waarschuwingen en productwijzigingen kunnen het resultaat later veranderen.",
+      "audienceTitle": "Voor winkels die fysieke producten verkopen in de EU",
+      "audienceBody": "Vooral nuttig voor speelgoed, babyproducten, elektronica, cosmetica, huishoudelijke artikelen en geïmporteerde of white-label producten. AI-fotovergelijking kan helpen wanneer leverancierslijsten onvolledige identificatiegegevens hebben. Safety Gate dekt gevaarlijke non-foodproducten.",
+      "caseTitle": "Voorbeeld: een gewijzigde titel, daarna een leverancierscontrole",
+      "caseBody": "Illustratief scenario: een leverancier vermeldt een loopfiets onder een andere naam en laat het model weg. Visuele details leiden tot een mogelijke overeenkomst. De handelaar vergelijkt de waarschuwing en vraagt het model en de batch op bij de leverancier. Als het bewijs een ander product aantoont, sluiten ze de bevinding af met een notitie; als het het betreffende product bevestigt, ondernemen ze de juiste actie en leggen ze dit vast. Dit is een workflowvoorbeeld, geen klantcase of een live resultaat."
     }
   },
   "email": {

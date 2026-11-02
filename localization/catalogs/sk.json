@@ -162,7 +162,9 @@
       "q4": "Čo obsahuje bezplatný sken?",
       "a4": "Všetky dostupné produkty vo verejnom Shopify katalógu vášho obchodu a súhrn možných zhôd e-mailom. Súkromné ponuky nekontrolujeme; sken nie je osvedčením bezpečnosti.",
       "q5": "Čo ak sa nenájdu žiadne možné zhody?",
-      "a5": "V reporte uvidíte počet preverených produktov a informáciu, že sa pri tejto kontrole nenašli možné zhody. Nejde o potvrdenie bezpečnosti výrobkov. Nové upozornenia môžu pribudnúť neskôr."
+      "a5": "V reporte uvidíte počet preverených produktov a informáciu, že sa pri tejto kontrole nenašli možné zhody. Nejde o potvrdenie bezpečnosti výrobkov. Nové upozornenia môžu pribudnúť neskôr.",
+      "q6": "Dokazuje možná zhoda, že je môj produkt nebezpečný?",
+      "a6": "Nie. AI alebo identifikátor môžu prepojiť vašu ponuku so záznamom Safety Gate, no stále treba overiť presný produkt, model a dotknutú šaržu. ZeroRecall pomáha pri posúdení; necertifikuje bezpečnosť a nenahrádza vaše zákonné povinnosti."
     },
     "cta": {
       "title": "Začnite bezplatnou kontrolou",
@@ -359,6 +361,42 @@
       "languageTitle": "Rozhranie v 24 jazykoch EÚ",
       "languageBody": "Vyberte si pracovný jazyk aplikácie a jazyk emailových upozornení. Pôvodné identifikátory produktov a fakty z oficiálnych zdrojov zostávajú zachované.",
       "control": "Katalóg zostáva pod vašou kontrolou. Zaznamenanie rozhodnutia automaticky nestiahne z predaja ani nezmení produkt v Shopify."
+    },
+    "notice": {
+      "title": "Upozornenie príde za vami",
+      "body": "Keď vznikne nový nález, ZeroRecall vám môže poslať email s produktom, porovnaním so Safety Gate a odkazom na posúdenie v Shopify aplikácii. Na prijatie upozornenia nemusíte mať aplikáciu otvorenú.",
+      "whatTitle": "Jasný ďalší krok, nielen varovanie",
+      "whatBody": "Otvorte nález, porovnajte fotografie a identifikátory a pred rozhodnutím overte model a šaržu. Príjemcu, jazyk a preferencie upozornení môžete upraviť v Nastaveniach.",
+      "weeklyTitle": "Žiadne nové nálezy? Aj tak dostanete správu.",
+      "weeklyBody": "Pri zapnutých týždenných súhrnoch dostanete prehľad aj za týždeň bez nových nálezov. Staršie otvorené nálezy môžu stále vyžadovať pozornosť; nedokončené sledovanie sa zobrazí ako nedokončené.",
+      "previewTitle": "Ilustračná ukážka emailového upozornenia",
+      "previewNote": "Ilustračné údaje a obrázok, nejde o skutočné upozornenie ani odoslaný email. Tlačidlo v ukážke otvorí príklad postupu nižšie; skutočný email odkazuje na posúdenie vo vašom obchode po prihlásení.",
+      "imageCaption": "Ilustračný obrázok produktu, nejde o oficiálnu fotografiu Safety Gate",
+      "subject": "Našli sme možnú zhodu s upozornením v databáze EÚ Safety Gate.",
+      "productLabel": "Váš produkt",
+      "alertLabel": "Produkt Safety Gate",
+      "action": "Preveriť možnú zhodu",
+      "instruction": "Porovnajte model, značku a šaržu s oficiálnym záznamom. Rozhodnutie a poznámku uložte v aplikácii."
+    },
+    "start": {
+      "title": "Čo sa deje po inštalácii",
+      "body": "Od úvodnej kontroly katalógu po priebežné sledovanie vidíte, čo práve beží a ktoré nálezy čakajú na rozhodnutie.",
+      "step1Title": "Pripojte obchod a vyberte si plán",
+      "step1Body": "Nainštalujte aplikáciu cez Shopify, povoľte čítanie produktov a vyberte si plán na aktiváciu priebežného sledovania. Nastavte príjemcu emailov a jazyk upozornení.",
+      "step2Title": "Nechajte prebehnúť úvodnú kontrolu katalógu",
+      "step2Body": "ZeroRecall na pozadí importuje produkty a preverí indexovanú históriu Safety Gate. Priebeh sledujete v aplikácii; väčšie katalógy potrebujú viac času. Samotný import ešte neznamená dokončenú kontrolu bezpečnosti.",
+      "step3Title": "Posúďte výsledok",
+      "step3Body": "Možné zhody sa zobrazia v zozname nálezov. Porovnajte oficiálny záznam so svojím produktom a uložte rozhodnutie alebo nechajte nález otvorený počas čakania na dodávateľa.",
+      "step4Title": "Sledujte aj ďalšie zmeny",
+      "step4Body": "Pri aktívnom pláne spúšťajú nové upozornenia Safety Gate a aktualizácie produktov ďalšie kontroly. Nové nálezy môžu vyvolať email a vaše rozhodnutia zostávajú v histórii posúdení.",
+      "matchTitle": "Našla sa možná zhoda",
+      "matchBody": "Je to podnet na posúdenie dôkazov, nie potvrdenie, že váš konkrétny model či šarža sú nebezpečné. Pred ďalším krokom tieto údaje overte.",
+      "clearTitle": "Nenašla sa možná zhoda",
+      "clearBody": "Dokončená kontrola nenašla možnú zhodu v indexovaných záznamoch, ktoré preverila. Nejde o certifikát bezpečnosti. Nové upozornenia a zmeny produktov môžu neskôr priniesť iný výsledok.",
+      "audienceTitle": "Pre obchody predávajúce fyzické produkty v EÚ",
+      "audienceBody": "Obzvlášť užitočné pre hračky, detský sortiment, elektroniku, kozmetiku, domáce potreby a dovážaný tovar či vlastné značky. AI porovnanie fotografií môže pomôcť pri neúplných identifikátoroch od dodávateľa. Safety Gate eviduje nebezpečné nepotravinové produkty.",
+      "caseTitle": "Príklad: zmenený názov a následné overenie u dodávateľa",
+      "caseBody": "Ilustračná situácia: dodávateľ ponúka odrážadlo pod iným názvom a neuvedie model. Vizuálne detaily vedú k možnej zhode. Obchodník porovná upozornenie a vyžiada si od dodávateľa model a šaržu. Ak dôkazy ukážu odlišný produkt, nález zamietne s poznámkou; ak potvrdia dotknutý produkt, vykoná primeraný krok a zaznamená ho. Ide o ukážku postupu, nie zákaznícku skúsenosť ani živý výsledok."
     }
   },
   "email": {

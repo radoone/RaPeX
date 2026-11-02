@@ -161,7 +161,9 @@
     "q4": "Vad ingår i gratisskanningen?",
     "a4": "Alla tillgängliga produkter i butikens offentliga Shopify-katalog och en sammanfattning av möjliga matchningar via e-post. Privata listningar ingår inte; skanningen är inget säkerhetscertifikat.",
     "q5": "Vad händer om inga möjliga matchningar hittas?",
-    "a5": "Rapporten visar antalet kontrollerade produkter och att inga möjliga matchningar hittades vid denna kontroll. Det är inget intyg om produktsäkerhet. Nya varningar kan tillkomma senare."
+    "a5": "Rapporten visar antalet kontrollerade produkter och att inga möjliga matchningar hittades vid denna kontroll. Det är inget intyg om produktsäkerhet. Nya varningar kan tillkomma senare.",
+    "q6": "Bevisar en möjlig matchning att min produkt är farlig?",
+    "a6": "Nej. AI eller en identifierare kan koppla din annons till en Safety Gate-post, men du måste fortfarande verifiera den exakta produkten, modellen och den berörda batchen. ZeroRecall stöder din granskning; det certifierar inte säkerhet eller ersätter dina juridiska skyldigheter."
   },
   "cta": {
     "title": "Börja med en gratisskanning",
@@ -358,5 +360,41 @@
     "languageTitle": "Ett gränssnitt på 24 EU-språk",
     "languageBody": "Välj ditt arbetsspråk i appen och ditt meddelandespråk för e-post. Ursprungliga produktidentifierare och officiella källfakta förblir intakta.",
     "control": "Din katalog förblir under din kontroll. Att registrera ett granskningsbeslut publicerar eller ändrar inte automatiskt en Shopify-produkt."
+  },
+  "notice": {
+    "title": "Varningen kommer till dig",
+    "body": "När ett nytt fynd skapas kan ZeroRecall skicka e-post om produkten, Safety Gate-jämförelsen och en länk för att granska den i din Shopify-app. Du behöver inte ha appen öppen för att få aviseringen.",
+    "whatTitle": "Ett tydligt nästa steg, inte bara en varning",
+    "whatBody": "Öppna fyndet, jämför foton och identifierare, verifiera sedan modell och batch innan du fattar ett beslut. Din mottagare för aviseringar, språk och inställningar kan redigeras i Inställningar.",
+    "weeklyTitle": "Inga nya fynd? Du får ändå en uppdatering.",
+    "weeklyBody": "Med veckosammanfattningar aktiverade, ger en vecka utan nya fynd en sammanfattning. Befintliga öppna fynd kan fortfarande behöva din uppmärksamhet; en ofullständig övervakningskörning visas som ofullständig.",
+    "previewTitle": "Illustrativt varningsmeddelande via e-post",
+    "previewNote": "Exempelinnehåll och illustration, inte en verklig varning eller ett skickat e-postmeddelande. Förhandsgranskningsknappen öppnar genomgången nedan; ett riktigt e-postmeddelande länkar till din butiks autentiserade granskningssida.",
+    "imageCaption": "Illustrativ produktbild, inte ett officiellt Safety Gate-fotografi",
+    "subject": "Vi hittade en möjlig matchning med en EU Safety Gate-varning.",
+    "productLabel": "Din produkt",
+    "alertLabel": "Safety Gate-produkt",
+    "action": "Granska möjlig matchning",
+    "instruction": "Jämför modell, varumärke och batch med den officiella posten. Spara ditt beslut och en anteckning i appen."
+  },
+  "start": {
+    "title": "Vad händer efter installationen",
+    "body": "Från den första katalogkontrollen till löpande övervakning kan du se vad som körs och vilka fynd som behöver ett beslut.",
+    "step1Title": "Anslut din butik och välj en plan",
+    "step1Body": "Installera via Shopify, godkänn läsbehörighet för produkter och välj en plan för att aktivera löpande övervakning. Ställ in din e-postmottagare och aviseringsspråk.",
+    "step2Title": "Låt den första kataloggranskningen köras",
+    "step2Body": "ZeroRecall importerar dina produkter och kontrollerar indexerad Safety Gate-historik i bakgrunden. Följ framstegen i appen; större kataloger tar längre tid. Enbart en import är inte en fullständig säkerhetskontroll.",
+    "step3Title": "Granska resultatet",
+    "step3Body": "Möjliga matchningar hamnar i din granskningskö. Jämför den officiella posten med din produkt och spara ett beslut eller håll fyndet öppet medan du väntar på din leverantör.",
+    "step4Title": "Fortsätt övervaka när saker förändras",
+    "step4Body": "Nya Safety Gate-varningar och produktuppdateringar utlöser kontroller medan din plan är aktiv. Nyskapade fynd kan utlösa ett e-postmeddelande, och dina beslut finns kvar i granskningshistoriken.",
+    "matchTitle": "En möjlig matchning hittades",
+    "matchBody": "Detta är en begäran om att granska bevisen, inte ett bevis på att din exakta modell eller batch är farlig. Bekräfta dessa detaljer innan du vidtar åtgärder.",
+    "clearTitle": "Ingen möjlig matchning hittades",
+    "clearBody": "Den slutförda kontrollen hittade ingen möjlig matchning i de indexerade poster den kontrollerade. Detta är inget säkerhetscertifikat. Nya varningar och produktändringar kan ändra resultatet senare.",
+    "audienceTitle": "För butiker som säljer fysiska produkter inom EU",
+    "audienceBody": "Särskilt användbart för leksaker, babyprodukter, elektronik, kosmetika, hushållsartiklar och importerade eller white-label-produkter. AI-fotjämförelse kan hjälpa när leverantörslistor har ofullständiga identifierare. Safety Gate täcker farliga icke-livsmedelsprodukter.",
+    "caseTitle": "Exempel: en ändrad titel, sedan en leverantörskontroll",
+    "caseBody": "Illustrativt scenario: en leverantör listar en balanscykel under ett annat namn och utelämnar modellen. Visuella detaljer leder till en möjlig matchning. Handlaren jämför varningen och begär modell och batch från leverantören. Om bevisen visar en annan produkt avfärdar de fyndet med en anteckning; om det bekräftar den berörda produkten vidtar de lämpliga åtgärder och registrerar det. Detta är ett arbetsflödesexempel, inte ett kundfall eller ett live-resultat."
   }
 }

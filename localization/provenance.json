@@ -611,6 +611,41 @@
       "model": "gemini-2.5-flash",
       "review": "EN/SK authored directly; 22 other languages machine translated, key completeness and placeholders checked. No native-speaker review of every language.",
       "sourceSha256": "1ead9bee9123c64eac634d09249401fe32067841223b764b9813ce8e7c2f32fe"
+    },
+    {
+      "date": "2026-11-03",
+      "scope": "Email illustration, four installation steps, result boundaries, audience and supplier-check example. Five email-preview labels copied from existing localized email text; production email copy unchanged.",
+      "sourceLocales": [
+        "en",
+        "sk"
+      ],
+      "translatedLocales": [
+        "bg",
+        "cs",
+        "da",
+        "de",
+        "el",
+        "es",
+        "et",
+        "fi",
+        "fr",
+        "ga",
+        "hr",
+        "hu",
+        "it",
+        "lt",
+        "lv",
+        "mt",
+        "nl",
+        "pl",
+        "pt",
+        "ro",
+        "sl",
+        "sv"
+      ],
+      "model": "gemini-2.5-flash",
+      "review": "EN/SK authored directly. Other additions machine translated; keys/placeholders and selected copy checked, no native-speaker review of every language.",
+      "sourceSha256": "54a56f3fb58590faea195dcf4f65f0e14b863820b5562d97a252dd3f8755ba74"
     }
   ]
 }

@@ -162,7 +162,9 @@
       "q4": "Qu'est-ce qui est inclus dans le scan gratuit ?",
       "a4": "Tous les produits disponibles dans le catalogue public Shopify de votre boutique et un résumé des correspondances possibles par e-mail. Les fiches privées sont exclues ; cette analyse ne constitue pas un certificat de sécurité.",
       "q5": "Et si aucune correspondance possible n’est trouvée ?",
-      "a5": "Le rapport indique le nombre de produits vérifiés et qu’aucune correspondance possible n’a été trouvée lors de cette vérification. Il ne certifie pas la sécurité des produits. De nouvelles alertes peuvent apparaître ensuite."
+      "a5": "Le rapport indique le nombre de produits vérifiés et qu’aucune correspondance possible n’a été trouvée lors de cette vérification. Il ne certifie pas la sécurité des produits. De nouvelles alertes peuvent apparaître ensuite.",
+      "q6": "Une correspondance possible prouve-t-elle que mon produit est dangereux ?",
+      "a6": "Non. L'IA ou un identifiant peut relier votre annonce à un enregistrement Safety Gate, mais vous devez toujours vérifier le produit exact, le modèle et le lot concerné. ZeroRecall prend en charge votre examen ; il ne certifie pas la sécurité et ne remplace pas vos obligations légales."
     },
     "cta": {
       "title": "Commencez par un scan gratuit",
@@ -359,6 +361,42 @@
       "languageTitle": "Une interface en 24 langues de l'UE",
       "languageBody": "Choisissez votre langue de travail dans l'application et votre langue de notification pour les e-mails. Les identifiants de produit originaux et les faits de source officielle restent intacts.",
       "control": "Votre catalogue reste sous votre contrôle. L'enregistrement d'une décision de révision ne dépublie ni ne modifie automatiquement un produit Shopify."
+    },
+    "notice": {
+      "title": "L'alerte vient à vous",
+      "body": "Lorsqu'une nouvelle constatation est créée, ZeroRecall peut vous envoyer par e-mail le produit, la comparaison Safety Gate et un lien pour l'examiner dans votre application Shopify. Vous n'avez pas besoin de garder l'application ouverte pour recevoir la notification.",
+      "whatTitle": "Une prochaine étape claire, pas seulement un avertissement",
+      "whatBody": "Ouvrez la constatation, comparez les photos et les identifiants, puis vérifiez le modèle et le lot avant de décider. Votre destinataire de notification, la langue et les préférences sont modifiables dans les paramètres.",
+      "weeklyTitle": "Pas de nouvelles constatations ? Vous recevez quand même une mise à jour.",
+      "weeklyBody": "Avec les résumés hebdomadaires activés, une semaine sans nouvelles constatations apporte un résumé. Les constatations ouvertes existantes peuvent toujours nécessiter votre attention ; une exécution de surveillance incomplète est affichée comme incomplète.",
+      "previewTitle": "Exemple d'e-mail d'alerte",
+      "previewNote": "Contenu et illustration à titre d'exemple, il ne s'agit pas d'une alerte réelle ni d'un e-mail envoyé. Le bouton d'aperçu ouvre la procédure ci-dessous ; un véritable e-mail renvoie à la page d'examen authentifiée de votre boutique.",
+      "imageCaption": "Image de produit illustrative, pas une photographie officielle Safety Gate",
+      "subject": "Nous avons trouvé une correspondance possible avec une alerte Safety Gate de l'UE.",
+      "productLabel": "Votre produit",
+      "alertLabel": "Produit Safety Gate",
+      "action": "Examiner la correspondance possible",
+      "instruction": "Comparez le modèle, la marque et le lot avec l'enregistrement officiel. Enregistrez votre décision et une note dans l'application."
+    },
+    "start": {
+      "title": "Ce qui se passe après l'installation",
+      "body": "De la première vérification du catalogue à la surveillance continue, vous pouvez voir ce qui est en cours d'exécution et quelles constatations nécessitent une décision.",
+      "step1Title": "Connectez votre boutique et choisissez un plan",
+      "step1Body": "Installez via Shopify, approuvez l'accès en lecture aux produits et choisissez un plan pour activer la surveillance continue. Définissez votre destinataire d'e-mail et la langue de notification.",
+      "step2Title": "Laissez le premier audit de catalogue s'exécuter",
+      "step2Body": "ZeroRecall importe vos produits et vérifie l'historique indexé de Safety Gate en arrière-plan. Suivez la progression dans l'application ; les catalogues plus volumineux prennent plus de temps. Une importation seule ne constitue pas un contrôle de sécurité terminé.",
+      "step3Title": "Examinez le résultat",
+      "step3Body": "Les correspondances possibles entrent dans votre file d'attente d'examen. Comparez l'enregistrement officiel avec votre produit et enregistrez une décision ou gardez la constatation ouverte en attendant votre fournisseur.",
+      "step4Title": "Continuez à surveiller à mesure que les choses changent",
+      "step4Body": "Les nouvelles alertes Safety Gate et les mises à jour de produits déclenchent des vérifications tant que votre plan est actif. Les constatations nouvellement créées peuvent déclencher un e-mail, et vos décisions restent dans l'historique des examens.",
+      "matchTitle": "Une correspondance possible a été trouvée",
+      "matchBody": "Ceci est une demande d'examen des preuves, pas une preuve que votre modèle ou lot exact est dangereux. Confirmez ces détails avant d'agir.",
+      "clearTitle": "Aucune correspondance possible n'a été trouvée",
+      "clearBody": "La vérification terminée n'a trouvé aucune correspondance possible dans les enregistrements indexés qu'elle a vérifiés. Ce n'est pas un certificat de sécurité. De nouvelles alertes et des modifications de produits peuvent modifier le résultat ultérieurement.",
+      "audienceTitle": "Pour les boutiques vendant des produits physiques dans l'UE",
+      "audienceBody": "Particulièrement utile pour les jouets, les produits pour bébés, l'électronique, les cosmétiques, les articles ménagers et les produits importés ou de marque blanche. La comparaison de photos par IA peut aider lorsque les listes de fournisseurs ont des identifiants incomplets. Safety Gate couvre les produits non alimentaires dangereux.",
+      "caseTitle": "Exemple : un titre modifié, puis une vérification du fournisseur",
+      "caseBody": "Scénario illustratif : un fournisseur répertorie un vélo d'équilibre sous un nom différent et omet le modèle. Les détails visuels mènent à une correspondance possible. Le commerçant compare l'alerte et demande le modèle et le lot au fournisseur. Si les preuves montrent un produit différent, il rejette la constatation avec une note ; si cela confirme le produit affecté, il prend les mesures appropriées et l'enregistre. Ceci est un exemple de flux de travail, pas un cas client ou un résultat en direct."
     }
   },
   "email": {

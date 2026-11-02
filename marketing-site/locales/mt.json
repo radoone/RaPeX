@@ -161,7 +161,9 @@
     "q4": "X'inhu inkluż fl-iskannjar b'xejn?",
     "a4": "Il-prodotti kollha disponibbli fil-katalgu pubbliku Shopify tal-ħanut tiegħek u sommarju ta’ tqabbil possibbli bl-email. Il-listi privati huma esklużi; l-iskennjar mhuwiex ċertifikat tas-sigurtà.",
     "q5": "X’jiġri jekk ma jinstab ebda tqabbil possibbli?",
-    "a5": "Ir-rapport juri n-numru ta’ prodotti ċċekkjati u li ma nstab ebda tqabbil possibbli f’din il-verifika. Dan ma jiċċertifikax is-sikurezza tal-prodotti. Jistgħu jidhru twissijiet ġodda aktar tard."
+    "a5": "Ir-rapport juri n-numru ta’ prodotti ċċekkjati u li ma nstab ebda tqabbil possibbli f’din il-verifika. Dan ma jiċċertifikax is-sikurezza tal-prodotti. Jistgħu jidhru twissijiet ġodda aktar tard.",
+    "q6": "Tqabbil possibbli jipprova li l-prodott tiegħi huwa perikoluż?",
+    "a6": "Le. L-AI jew identifikatur jistgħu jgħaqqdu l-lista tiegħek ma' rekord ta' Safety Gate, iżda xorta trid tivverifika l-prodott eżatt, il-mudell u l-lott affettwat. ZeroRecall jappoġġja r-reviżjoni tiegħek; ma jiċċertifikax is-sigurtà jew jissostitwixxi l-obbligi legali tiegħek."
   },
   "cta": {
     "title": "Ibda b'skannjar b'xejn",
@@ -358,5 +360,41 @@
     "languageTitle": "Interface f'24 lingwa tal-UE",
     "languageBody": "Agħżel il-lingwa tax-xogħol tiegħek fl-app u l-lingwa tan-notifika tiegħek għall-email. L-identifikaturi oriġinali tal-prodotti u l-fatti tas-sors uffiċjali jibqgħu intatti.",
     "control": "Il-katalgu tiegħek jibqa' taħt il-kontroll tiegħek. Ir-reġistrazzjoni ta' deċiżjoni ta' reviżjoni ma tippubblikax awtomatikament jew tibdel prodott ta' Shopify."
+  },
+  "notice": {
+    "title": "L-allert jasal għandek",
+    "body": "Meta tinħoloq sejba ġdida, ZeroRecall jista' jibgħat email bil-prodott, tqabbil ta' Safety Gate u link biex tirrevedih fl-app Shopify tiegħek. M'għandekx għalfejn iżżomm l-app miftuħa biex tirċievi n-notifika.",
+    "whatTitle": "Pass ċar li jmiss, mhux biss twissija",
+    "whatBody": "Iftaħ is-sejba, qabbel ir-ritratti u l-identifikaturi, imbagħad ivverifika l-mudell u l-lott qabel ma tiddeċiedi. Ir-riċevitur tan-notifika tiegħek, il-lingwa u l-preferenzi huma editjabbli fis-Settings.",
+    "weeklyTitle": "L-ebda sejbiet ġodda? Xorta tirċievi aġġornament.",
+    "weeklyBody": "B'sommarji ta' kull ġimgħa attivati, ġimgħa mingħajr sejbiet ġodda ġġib sommarju. Sejbiet miftuħa eżistenti xorta jistgħu jeħtieġu l-attenzjoni tiegħek; ġirja ta' monitoraġġ mhux kompluta tintwera bħala mhux kompluta.",
+    "previewTitle": "Email ta' allert illustrattiva",
+    "previewNote": "Kontenut u illustrazzjoni eżemplari, mhux allert reali jew email mibgħuta. Il-buttuna tal-preview tiftaħ il-walkthrough hawn taħt; email reali tgħaqqad mal-paġna ta' reviżjoni awtentikata tal-ħanut tiegħek.",
+    "imageCaption": "Immaġni tal-prodott illustrattiva, mhux ritratt uffiċjali ta' Safety Gate",
+    "subject": "Sibtna tqabbil possibbli ma' twissija ta' Safety Gate tal-UE.",
+    "productLabel": "Il-prodott tiegħek",
+    "alertLabel": "Prodott ta' Safety Gate",
+    "action": "Irrevedi tqabbil possibbli",
+    "instruction": "Qabbel il-mudell, il-marka u l-lott mar-rekord uffiċjali. Issejvja d-deċiżjoni tiegħek u nota fl-app."
+  },
+  "start": {
+    "title": "X'jiġri wara li tinstalla",
+    "body": "Mill-ewwel kontroll tal-katalgu sal-monitoraġġ kontinwu, tista' tara x'qed jaħdem u liema sejbiet jeħtieġu deċiżjoni.",
+    "step1Title": "Qabbad il-ħanut tiegħek u agħżel pjan",
+    "step1Body": "Installa permezz ta' Shopify, approva l-aċċess għall-qari tal-prodott u agħżel pjan biex tattiva l-monitoraġġ kontinwu. Issettja r-riċevitur tal-email tiegħek u l-lingwa tan-notifika.",
+    "step2Title": "Ħalli l-ewwel verifika tal-katalgu taħdem",
+    "step2Body": "ZeroRecall jimporta l-prodotti tiegħek u jiċċekkja l-istorja indiċjata ta' Safety Gate fl-isfond. Segwi l-progress fl-app; katalgi akbar jieħdu aktar żmien. Importazzjoni waħedha mhijiex kontroll tas-sigurtà komplut.",
+    "step3Title": "Irrevedi r-riżultat",
+    "step3Body": "Tqabbil possibbli jidħol fil-kju ta' reviżjoni tiegħek. Qabbel ir-rekord uffiċjali mal-prodott tiegħek u ssalva deċiżjoni jew żomm is-sejba miftuħa waqt li tistenna lill-fornitur tiegħek.",
+    "step4Title": "Żomm il-monitoraġġ hekk kif l-affarijiet jinbidlu",
+    "step4Body": "Allerti ġodda ta' Safety Gate u aġġornamenti tal-prodott jiskattaw kontrolli waqt li l-pjan tiegħek ikun attiv. Sejbiet maħluqa ġodda jistgħu jiskattaw email, u d-deċiżjonijiet tiegħek jibqgħu fl-istorja tar-reviżjoni.",
+    "matchTitle": "Instab tqabbil possibbli",
+    "matchBody": "Din hija talba biex tirrevedi l-evidenza, mhux prova li l-mudell jew il-lott eżatt tiegħek huwa perikoluż. Ikkonferma dawk id-dettalji qabel ma tieħu azzjoni.",
+    "clearTitle": "Ma nstab l-ebda tqabbil possibbli",
+    "clearBody": "Il-kontroll komplut ma sab l-ebda tqabbil possibbli fir-rekords indiċjati li ċċekkja. Dan mhuwiex ċertifikat ta' sigurtà. Allerti ġodda u bidliet fil-prodott jistgħu jibdlu r-riżultat aktar tard.",
+    "audienceTitle": "Għal ħwienet li jbigħu prodotti fiżiċi fl-UE",
+    "audienceBody": "Speċjalment utli għal ġugarelli, prodotti tat-trabi, elettronika, kożmetiċi, oġġetti tad-dar u prodotti importati jew white-label. It-tqabbil tar-ritratti bl-AI jista' jgħin meta l-listi tal-fornituri jkollhom identifikaturi mhux kompluti. Safety Gate ikopri prodotti perikolużi mhux tal-ikel.",
+    "caseTitle": "Eżempju: titolu mibdul, imbagħad kontroll tal-fornitur",
+    "caseBody": "Xenarju illustrattiv: fornitur jelenka rota tal-bilanċ taħt isem differenti u jħalli barra l-mudell. Dettalji viżwali jwasslu għal tqabbil possibbli. Il-merkant iqabbel l-allert u jitlob il-mudell u l-lott mingħand il-fornitur. Jekk l-evidenza turi prodott differenti, huma jwarrbu s-sejba b'nota; jekk tikkonferma l-prodott affettwat, huma jieħdu l-azzjoni xierqa u jirreġistrawha. Dan huwa eżempju ta' fluss tax-xogħol, mhux każ tal-klijent jew riżultat dirett."
   }
 }

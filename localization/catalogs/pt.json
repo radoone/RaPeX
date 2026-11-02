@@ -162,7 +162,9 @@
       "q4": "O que está incluído na análise gratuita?",
       "a4": "Todos os produtos disponíveis no catálogo público Shopify da sua loja e um resumo das possíveis correspondências por e-mail. As listagens privadas estão excluídas; a análise não é um certificado de segurança.",
       "q5": "E se não forem encontradas possíveis correspondências?",
-      "a5": "O relatório indica o número de produtos verificados e que não foram encontradas possíveis correspondências nesta verificação. Não certifica a segurança dos produtos. Podem surgir novos alertas mais tarde."
+      "a5": "O relatório indica o número de produtos verificados e que não foram encontradas possíveis correspondências nesta verificação. Não certifica a segurança dos produtos. Podem surgir novos alertas mais tarde.",
+      "q6": "Uma possível correspondência prova que o meu produto é perigoso?",
+      "a6": "Não. A IA ou um identificador pode ligar a sua listagem a um registo do Safety Gate, mas ainda precisa de verificar o produto exato, o modelo e o lote afetado. O ZeroRecall apoia a sua revisão; não certifica a segurança nem substitui as suas obrigações legais."
     },
     "cta": {
       "title": "Comece com uma análise gratuita",
@@ -359,6 +361,42 @@
       "languageTitle": "Uma interface em 24 idiomas da UE",
       "languageBody": "Escolha o seu idioma de trabalho na aplicação e o seu idioma de notificação para e-mail. Os identificadores de produto originais e os factos da fonte oficial permanecem intactos.",
       "control": "O seu catálogo permanece sob o seu controlo. O registo de uma decisão de revisão não anula automaticamente a publicação ou altera um produto Shopify."
+    },
+    "notice": {
+      "title": "O alerta chega até si",
+      "body": "Quando é criada uma nova ocorrência, o ZeroRecall pode enviar por e-mail o produto, a comparação com o Safety Gate e um link para o rever na sua aplicação Shopify. Não precisa de manter a aplicação aberta para receber a notificação.",
+      "whatTitle": "Um próximo passo claro, não apenas um aviso",
+      "whatBody": "Abra a ocorrência, compare as fotos e os identificadores, depois verifique o modelo e o lote antes de decidir. O destinatário da notificação, o idioma e as preferências são editáveis nas Definições.",
+      "weeklyTitle": "Sem novas ocorrências? Ainda recebe uma atualização.",
+      "weeklyBody": "Com os resumos semanais ativados, uma semana sem novas ocorrências traz um resumo. As ocorrências abertas existentes ainda podem precisar da sua atenção; uma execução de monitorização incompleta é mostrada como incompleta.",
+      "previewTitle": "Exemplo ilustrativo de e-mail de alerta",
+      "previewNote": "Conteúdo e ilustração de exemplo, não um alerta real ou um e-mail enviado. O botão de pré-visualização abre o passo a passo abaixo; um e-mail real liga à página de revisão autenticada da sua loja.",
+      "imageCaption": "Imagem ilustrativa do produto, não uma fotografia oficial do Safety Gate",
+      "subject": "Encontrámos uma possível correspondência com um alerta do Safety Gate da UE.",
+      "productLabel": "O seu produto",
+      "alertLabel": "Produto Safety Gate",
+      "action": "Rever possível correspondência",
+      "instruction": "Compare o modelo, marca e lote com o registo oficial. Guarde a sua decisão e uma nota na aplicação."
+    },
+    "start": {
+      "title": "O que acontece depois de instalar",
+      "body": "Desde a primeira verificação do catálogo até à monitorização contínua, pode ver o que está a ser executado e quais as ocorrências que precisam de uma decisão.",
+      "step1Title": "Ligue a sua loja e escolha um plano",
+      "step1Body": "Instale através do Shopify, aprove o acesso de leitura do produto e escolha um plano para ativar a monitorização contínua. Defina o seu destinatário de e-mail e o idioma de notificação.",
+      "step2Title": "Deixe a primeira auditoria do catálogo ser executada",
+      "step2Body": "O ZeroRecall importa os seus produtos e verifica o histórico indexado do Safety Gate em segundo plano. Acompanhe o progresso na aplicação; catálogos maiores demoram mais tempo. Uma importação por si só não é uma verificação de segurança concluída.",
+      "step3Title": "Reveja o resultado",
+      "step3Body": "Possíveis correspondências entram na sua fila de revisão. Compare o registo oficial com o seu produto e guarde uma decisão ou mantenha a ocorrência aberta enquanto espera pelo seu fornecedor.",
+      "step4Title": "Mantenha a monitorização à medida que as coisas mudam",
+      "step4Body": "Novos alertas do Safety Gate e atualizações de produtos acionam verificações enquanto o seu plano estiver ativo. As ocorrências recém-criadas podem acionar um e-mail, e as suas decisões permanecem no histórico de revisão.",
+      "matchTitle": "Foi encontrada uma possível correspondência",
+      "matchBody": "Este é um pedido para rever as provas, não uma prova de que o seu modelo exato ou lote é perigoso. Confirme esses detalhes antes de agir.",
+      "clearTitle": "Não foi encontrada nenhuma possível correspondência",
+      "clearBody": "A verificação concluída não encontrou nenhuma possível correspondência nos registos indexados que verificou. Este não é um certificado de segurança. Novos alertas e alterações de produtos podem alterar o resultado mais tarde.",
+      "audienceTitle": "Para lojas que vendem produtos físicos na UE",
+      "audienceBody": "Especialmente útil para brinquedos, produtos para bebés, eletrónica, cosméticos, artigos para o lar e produtos importados ou de marca branca. A comparação de fotos por IA pode ajudar quando as listagens de fornecedores têm identificadores incompletos. O Safety Gate abrange produtos perigosos não alimentares.",
+      "caseTitle": "Exemplo: um título alterado, depois uma verificação do fornecedor",
+      "caseBody": "Cenário ilustrativo: um fornecedor lista uma bicicleta de equilíbrio com um nome diferente e omite o modelo. Detalhes visuais levam a uma possível correspondência. O comerciante compara o alerta e solicita o modelo e o lote ao fornecedor. Se a evidência mostrar um produto diferente, eles descartam a ocorrência com uma nota; se confirmar o produto afetado, eles tomam a ação apropriada e registam-na. Este é um exemplo de fluxo de trabalho, não um caso de cliente ou um resultado em tempo real."
     }
   },
   "email": {

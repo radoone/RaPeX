@@ -161,7 +161,9 @@
     "q4": "Ce este inclus în scanarea gratuită?",
     "a4": "Toate produsele disponibile în catalogul public Shopify al magazinului și un rezumat al posibilelor potriviri prin e-mail. Listările private sunt excluse; scanarea nu este un certificat de siguranță.",
     "q5": "Ce se întâmplă dacă nu se găsesc posibile potriviri?",
-    "a5": "Raportul arată numărul de produse verificate și faptul că nu s-au găsit posibile potriviri în această verificare. Nu certifică siguranța produselor. Pot apărea alerte noi ulterior."
+    "a5": "Raportul arată numărul de produse verificate și faptul că nu s-au găsit posibile potriviri în această verificare. Nu certifică siguranța produselor. Pot apărea alerte noi ulterior.",
+    "q6": "O posibilă potrivire demonstrează că produsul meu este periculos?",
+    "a6": "Nu. AI sau un identificator pot conecta listarea ta la o înregistrare Safety Gate, dar trebuie să verifici în continuare produsul exact, modelul și lotul afectat. ZeroRecall îți sprijină revizuirea; nu certifică siguranța și nu înlocuiește obligațiile tale legale."
   },
   "cta": {
     "title": "Începeți cu o scanare gratuită",
@@ -358,5 +360,41 @@
     "languageTitle": "O interfață în 24 de limbi UE",
     "languageBody": "Alegeți limba de lucru în aplicație și limba de notificare pentru e-mail. Identificatorii originali ai produselor și faptele oficiale din sursă rămân intacte.",
     "control": "Catalogul dvs. rămâne sub controlul dvs. Înregistrarea unei decizii de revizuire nu anulează automat publicarea sau modificarea unui produs Shopify."
+  },
+  "notice": {
+    "title": "Alerta ajunge la tine",
+    "body": "Atunci când este creată o nouă constatare, ZeroRecall poate trimite prin e-mail produsul, comparația Safety Gate și un link pentru a o revizui în aplicația ta Shopify. Nu trebuie să ții aplicația deschisă pentru a primi notificarea.",
+    "whatTitle": "Un pas clar, nu doar un avertisment",
+    "whatBody": "Deschide constatarea, compară fotografiile și identificatorii, apoi verifică modelul și lotul înainte de a decide. Destinatarul notificării, limba și preferințele tale sunt editabile în Setări.",
+    "weeklyTitle": "Nu sunt constatări noi? Primești totuși o actualizare.",
+    "weeklyBody": "Cu rezumatele săptămânale activate, o săptămână fără constatări noi aduce un rezumat. Constatările deschise existente pot necesita în continuare atenția ta; o rulare incompletă de monitorizare este afișată ca incompletă.",
+    "previewTitle": "E-mail de alertă ilustrativ",
+    "previewNote": "Exemplu de conținut și ilustrație, nu o alertă reală sau un e-mail trimis. Butonul de previzualizare deschide ghidul de mai jos; un e-mail real face legătura către pagina de revizuire autentificată a magazinului tău.",
+    "imageCaption": "Imagine ilustrativă a produsului, nu o fotografie oficială Safety Gate",
+    "subject": "Am găsit o posibilă potrivire cu o alertă Safety Gate a UE.",
+    "productLabel": "Produsul dvs.",
+    "alertLabel": "Produs Safety Gate",
+    "action": "Revizuiți potrivirea posibilă",
+    "instruction": "Comparați modelul, marca și lotul cu înregistrarea oficială. Salvați decizia și o notă în aplicație."
+  },
+  "start": {
+    "title": "Ce se întâmplă după instalare",
+    "body": "De la prima verificare a catalogului până la monitorizarea continuă, poți vedea ce rulează și ce constatări necesită o decizie.",
+    "step1Title": "Conectează-ți magazinul și alege un plan",
+    "step1Body": "Instalează prin Shopify, aprobă accesul de citire a produselor și alege un plan pentru a activa monitorizarea continuă. Setează destinatarul e-mailului și limba de notificare.",
+    "step2Title": "Lasă prima auditare a catalogului să ruleze",
+    "step2Body": "ZeroRecall importă produsele tale și verifică istoricul indexat Safety Gate în fundal. Urmărește progresul în aplicație; cataloagele mai mari durează mai mult. Un import singur nu este o verificare de siguranță completă.",
+    "step3Title": "Revizuiește rezultatul",
+    "step3Body": "Potențialele potriviri intră în coada ta de revizuire. Compară înregistrarea oficială cu produsul tău și salvează o decizie sau menține constatarea deschisă în timp ce aștepți furnizorul tău.",
+    "step4Title": "Menține monitorizarea pe măsură ce lucrurile se schimbă",
+    "step4Body": "Noile alerte Safety Gate și actualizările de produse declanșează verificări în timp ce planul tău este activ. Constatările nou create pot declanșa un e-mail, iar deciziile tale rămân în istoricul revizuirilor.",
+    "matchTitle": "A fost găsită o posibilă potrivire",
+    "matchBody": "Aceasta este o solicitare de a revizui dovezile, nu o dovadă că modelul sau lotul tău exact este periculos. Confirmă aceste detalii înainte de a lua măsuri.",
+    "clearTitle": "Nu a fost găsită nicio posibilă potrivire",
+    "clearBody": "Verificarea completată nu a găsit nicio posibilă potrivire în înregistrările indexate pe care le-a verificat. Acesta nu este un certificat de siguranță. Noile alerte și modificările produselor pot schimba rezultatul ulterior.",
+    "audienceTitle": "Pentru magazinele care vând produse fizice în UE",
+    "audienceBody": "Deosebit de util pentru jucării, produse pentru bebeluși, electronice, cosmetice, articole de uz casnic și produse importate sau white-label. Comparația foto AI poate ajuta atunci când listările furnizorilor au identificatori incompleți. Safety Gate acoperă produse periculoase non-alimentare.",
+    "caseTitle": "Exemplu: un titlu schimbat, apoi o verificare a furnizorului",
+    "caseBody": "Scenariu ilustrativ: un furnizor listează o bicicletă de echilibru sub un nume diferit și omite modelul. Detaliile vizuale duc la o posibilă potrivire. Comerciantul compară alerta și solicită modelul și lotul de la furnizor. Dacă dovezile arată un produs diferit, ei resping constatarea cu o notă; dacă confirmă produsul afectat, iau măsura corespunzătoare și o înregistrează. Acesta este un exemplu de flux de lucru, nu un caz de client sau un rezultat live."
   }
 }

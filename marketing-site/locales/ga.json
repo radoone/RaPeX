@@ -161,7 +161,9 @@
     "q4": "Cad atá san áireamh sa scanadh saor in aisce?",
     "a4": "Gach táirge atá ar fáil i gcatalóg phoiblí Shopify do shiopa agus achoimre ar mheaitseálacha féideartha trí ríomhphost. Ní áirítear liostuithe príobháideacha; ní deimhniú sábháilteachta é an scanadh.",
     "q5": "Cad a tharlaíonn mura n-aimsítear meaitseálacha féideartha?",
-    "a5": "Taispeánfaidh an tuairisc líon na dtáirgí a seiceáladh agus nár aimsíodh meaitseálacha féideartha sa tseiceáil seo. Ní deimhniú sábháilteachta táirgí é seo. D’fhéadfadh foláirimh nua teacht níos déanaí."
+    "a5": "Taispeánfaidh an tuairisc líon na dtáirgí a seiceáladh agus nár aimsíodh meaitseálacha féideartha sa tseiceáil seo. Ní deimhniú sábháilteachta táirgí é seo. D’fhéadfadh foláirimh nua teacht níos déanaí.",
+    "q6": "An gcruthaíonn meaitseáil fhéideartha go bhfuil mo tháirge contúirteach?",
+    "a6": "Ní hea. Is féidir le AI nó aitheantóir do liostú a nascadh le taifead Safety Gate, ach ní mór duit fós an táirge cruinn, an tsamhail agus an bhaisc lena mbaineann a fhíorú. Tacaíonn ZeroRecall le d'athbhreithniú; ní dheimhníonn sé sábháilteacht ná ní thagann sé in ionad do chuid oibleagáidí dlíthiúla."
   },
   "cta": {
     "title": "Tosaigh le scanadh saor in aisce",
@@ -358,5 +360,41 @@
     "languageTitle": "Comhéadan i 24 teanga AE",
     "languageBody": "Roghnaigh do theanga oibre san aip agus do theanga fógraí le haghaidh ríomhphoist. Fanann aitheantóirí táirgí bunaidh agus fíricí foinse oifigiúla slán.",
     "control": "Fanann do chatalóg faoi do smacht. Ní dhéanann taifeadadh cinneadh athbhreithnithe táirge Shopify a dhífhoilsiú nó a athrú go huathoibríoch."
+  },
+  "notice": {
+    "title": "Tagann an foláireamh chugat",
+    "body": "Nuair a chruthaítear fionnachtain nua, is féidir le ZeroRecall ríomhphost a sheoladh chuig an táirge, comparáid Safety Gate agus nasc chun é a athbhreithniú i d'aip Shopify. Ní gá duit an aip a choinneáil oscailte chun an fógra a fháil.",
+    "whatTitle": "Céim shoiléir eile, ní hamháin rabhadh",
+    "whatBody": "Oscail an fionnachtain, déan comparáid idir na grianghraif agus na haitheantóirí, ansin fíoraigh an tsamhail agus an bhaisc sula ndéanann tú cinneadh. Is féidir do ghlacadóir fógra, do theanga agus do shocruithe a chur in eagar sna Socruithe.",
+    "weeklyTitle": "Gan aon fhionnachtana nua? Faigheann tú nuashonrú fós.",
+    "weeklyBody": "Le hachoimrí seachtainiúla cumasaithe, tugann seachtain gan fionnachtana nua achoimre. D'fhéadfadh go mbeadh d'aird fós ag teastáil ó fhionnachtana oscailte atá ann cheana féin; taispeántar rith monatóireachta neamhiomlán mar neamhiomlán.",
+    "previewTitle": "Ríomhphost foláirimh léiritheach",
+    "previewNote": "Sampla d'ábhar agus léiriú, ní foláireamh fíor ná ríomhphost seolta. Osclaíonn an cnaipe réamhamhairc an siúlóid thíos; nascann ríomhphost fíor le leathanach athbhreithnithe fíordheimhnithe do shiopa.",
+    "imageCaption": "Íomhá táirge léiritheach, ní grianghraf oifigiúil Safety Gate",
+    "subject": "Fuaireamar meaitseáil fhéideartha le foláireamh Safety Gate an AE.",
+    "productLabel": "Do tháirge",
+    "alertLabel": "Táirge Safety Gate",
+    "action": "Athbhreithnigh meaitseáil fhéideartha",
+    "instruction": "Déan comparáid idir an tsamhail, an branda agus an bhaisc leis an taifead oifigiúil. Sábháil do chinneadh agus nóta san aip."
+  },
+  "start": {
+    "title": "Cad a tharlaíonn tar éis duit a shuiteáil",
+    "body": "Ón gcéad seiceáil catalóige go dtí monatóireacht leanúnach, is féidir leat a fheiceáil cad atá ag rith agus cé na fionnachtana a dteastaíonn cinneadh uathu.",
+    "step1Title": "Ceangail do shiopa agus roghnaigh plean",
+    "step1Body": "Suiteáil trí Shopify, ceadaigh rochtain léite táirgí agus roghnaigh plean chun monatóireacht leanúnach a ghníomhachtú. Socraigh do ghlacadóir ríomhphoist agus do theanga fógra.",
+    "step2Title": "Lig don chéad iniúchadh catalóige rith",
+    "step2Body": "Iompórtálann ZeroRecall do tháirgí agus seiceálann sé stair Safety Gate innéacsaithe sa chúlra. Lean an dul chun cinn san aip; tógann catalóga níos mó níos faide. Ní seiceáil sábháilteachta críochnaithe é iompórtáil amháin.",
+    "step3Title": "Athbhreithnigh an toradh",
+    "step3Body": "Téann meaitseálacha féideartha isteach i do scuaine athbhreithnithe. Déan comparáid idir an taifead oifigiúil agus do tháirge agus sábháil cinneadh nó coinnigh an fionnachtain oscailte agus tú ag fanacht le do sholáthraí.",
+    "step4Title": "Coinnigh monatóireacht de réir mar a athraíonn rudaí",
+    "step4Body": "Spreagann foláirimh nua Safety Gate agus nuashonruithe táirgí seiceálacha fad is atá do phlean gníomhach. Is féidir le fionnachtana nua-chruthaithe ríomhphost a spreagadh, agus fanann do chinntí sa stair athbhreithnithe.",
+    "matchTitle": "Fuarthas meaitseáil fhéideartha",
+    "matchBody": "Is iarratas é seo chun an fhianaise a athbhreithniú, ní cruthúnas go bhfuil do mhúnla nó do bhaisc chruinn contúirteach. Deimhnigh na sonraí sin sula nglacfaidh tú gníomh.",
+    "clearTitle": "Níor aimsíodh aon mheaitseáil fhéideartha",
+    "clearBody": "Níor aimsigh an seiceáil críochnaithe aon mheaitseáil fhéideartha sna taifid innéacsaithe a seiceáladh. Ní deimhniú sábháilteachta é seo. Is féidir le foláirimh nua agus athruithe táirgí an toradh a athrú níos déanaí.",
+    "audienceTitle": "Do shiopaí a dhíolann táirgí fisiceacha san AE",
+    "audienceBody": "Úsáideach go háirithe le haghaidh bréagán, táirgí leanbh, leictreonaic, cosmaidí, earraí tí agus táirgí allmhairithe nó lipéad bán. Is féidir le comparáid grianghraf AI cabhrú nuair a bhíonn aitheantóirí neamhiomlána ag liostaí soláthraithe. Clúdaíonn Safety Gate táirgí neamhbhia contúirteacha.",
+    "caseTitle": "Sampla: teideal athraithe, ansin seiceáil soláthraí",
+    "caseBody": "Cás léiritheach: liostaíonn soláthraí rothar cothromaíochta faoi ainm difriúil agus fágann sé an tsamhail ar lár. Mar thoradh ar shonraí amhairc tá meaitseáil fhéideartha. Déanann an ceannaí comparáid idir an foláireamh agus iarrann sé an tsamhail agus an bhaisc ón soláthraí. Má léiríonn an fhianaise táirge difriúil, dífhostaíonn siad an fionnachtain le nóta; má dheimhníonn sé an táirge lena mbaineann, glacann siad an gníomh cuí agus taifeadann siad é. Is sampla sreafa oibre é seo, ní cás custaiméara ná toradh beo."
   }
 }

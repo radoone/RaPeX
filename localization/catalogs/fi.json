@@ -162,7 +162,9 @@
       "q4": "Mitä sisältyy ilmaiseen skannaukseen?",
       "a4": "Kaikki kaupan julkisessa Shopify-tuoteluettelossa saatavilla olevat tuotteet ja yhteenveto mahdollisista osumista sähköpostitse. Yksityiset listaukset eivät sisälly tarkistukseen; tarkistus ei ole turvallisuustodistus.",
       "q5": "Entä jos mahdollisia vastaavuuksia ei löydy?",
-      "a5": "Raportti näyttää tarkistettujen tuotteiden määrän ja sen, ettei tässä tarkistuksessa löytynyt mahdollisia vastaavuuksia. Se ei ole todistus tuoteturvallisuudesta. Uusia ilmoituksia voi tulla myöhemmin."
+      "a5": "Raportti näyttää tarkistettujen tuotteiden määrän ja sen, ettei tässä tarkistuksessa löytynyt mahdollisia vastaavuuksia. Se ei ole todistus tuoteturvallisuudesta. Uusia ilmoituksia voi tulla myöhemmin.",
+      "q6": "Todistaako mahdollinen osuma, että tuotteeni on vaarallinen?",
+      "a6": "Ei. Tekoäly tai tunniste voi yhdistää listauksesi Safety Gate -tietueeseen, mutta sinun on silti varmistettava tarkka tuote, malli ja kyseinen erä. ZeroRecall tukee tarkistustasi; se ei sertifioi turvallisuutta tai korvaa laillisia velvoitteitasi."
     },
     "cta": {
       "title": "Aloita ilmaisella skannauksella",
@@ -359,6 +361,42 @@
       "languageTitle": "Käyttöliittymä 24 EU-kielellä",
       "languageBody": "Valitse työkielesi sovelluksessa ja ilmoituskielesi sähköpostia varten. Alkuperäiset tuotetunnisteet ja viralliset lähdetiedot pysyvät ennallaan.",
       "control": "Luettelosi pysyy hallinnassasi. Tarkistuspäätöksen tallentaminen ei automaattisesti poista tai muuta Shopify-tuotetta."
+    },
+    "notice": {
+      "title": "Hälytys tulee sinulle",
+      "body": "Kun uusi havainto luodaan, ZeroRecall voi lähettää sähköpostitse tuotteen, Safety Gate -vertailun ja linkin tarkastellaksesi sitä Shopify-sovelluksessasi. Sinun ei tarvitse pitää sovellusta auki saadaksesi ilmoituksen.",
+      "whatTitle": "Selkeä seuraava askel, ei vain varoitus",
+      "whatBody": "Avaa havainto, vertaa kuvia ja tunnisteita ja varmista sitten malli ja erä ennen päätöksen tekemistä. Ilmoituksen vastaanottaja, kieli ja asetukset ovat muokattavissa Asetuksissa.",
+      "weeklyTitle": "Ei uusia havaintoja? Saat silti päivityksen.",
+      "weeklyBody": "Kun viikoittaiset yhteenvedot ovat käytössä, viikko ilman uusia havaintoja tuo yhteenvedon. Olemassa olevat avoimet havainnot saattavat edelleen vaatia huomiotasi; puutteellinen valvontakierros näytetään puutteellisena.",
+      "previewTitle": "Havainnollistava hälytyssähköposti",
+      "previewNote": "Esimerkkisisältö ja kuvitus, ei todellinen hälytys tai lähetetty sähköposti. Esikatselupainike avaa alla olevan läpikäynnin; todellinen sähköposti linkittää kauppasi todennettuun tarkistussivulle.",
+      "imageCaption": "Havainnollistava tuotekuva, ei virallinen Safety Gate -valokuva",
+      "subject": "Löysimme mahdollisen osuman EU:n Safety Gate -hälytyksen kanssa.",
+      "productLabel": "Tuotteesi",
+      "alertLabel": "Safety Gate -tuote",
+      "action": "Tarkista mahdollinen osuma",
+      "instruction": "Vertaa mallia, tuotemerkkiä ja erää viralliseen tietueeseen. Tallenna päätöksesi ja muistiinpano sovellukseen."
+    },
+    "start": {
+      "title": "Mitä tapahtuu asennuksen jälkeen",
+      "body": "Ensimmäisestä luettelotarkistuksesta jatkuvaan seurantaan näet, mikä on käynnissä ja mitkä havainnot vaativat päätöksen.",
+      "step1Title": "Yhdistä kauppasi ja valitse suunnitelma",
+      "step1Body": "Asenna Shopify-palvelun kautta, hyväksy tuotteen lukuoikeus ja valitse suunnitelma aktivoidaksesi jatkuvan seurannan. Aseta sähköpostin vastaanottaja ja ilmoituskieli.",
+      "step2Title": "Anna ensimmäisen luettelotarkastuksen suorittaa",
+      "step2Body": "ZeroRecall tuo tuotteesi ja tarkistaa indeksoidun Safety Gate -historian taustalla. Seuraa edistymistä sovelluksessa; suuremmat luettelot vievät kauemmin. Pelkkä tuonti ei ole valmis turvallisuustarkastus.",
+      "step3Title": "Tarkista tulos",
+      "step3Body": "Mahdolliset osumat siirtyvät tarkistusjonoon. Vertaa virallista tietoa tuotteeseesi ja tallenna päätös tai pidä havainto avoimena odottaessasi toimittajaasi.",
+      "step4Title": "Jatka seurantaa asioiden muuttuessa",
+      "step4Body": "Uudet Safety Gate -hälytykset ja tuotepäivitykset käynnistävät tarkistuksia suunnitelmasi ollessa aktiivinen. Äskettäin luodut havainnot voivat laukaista sähköpostin, ja päätöksesi säilyvät tarkistushistoriassa.",
+      "matchTitle": "Mahdollinen osuma löytyi",
+      "matchBody": "Tämä on pyyntö tarkistaa todisteet, ei todiste siitä, että tarkka mallisi tai eräsi on vaarallinen. Vahvista nämä tiedot ennen toimenpiteisiin ryhtymistä.",
+      "clearTitle": "Mahdollista osumaa ei löytynyt",
+      "clearBody": "Suoritettu tarkistus ei löytänyt mahdollista osumaa tarkistetuista indeksoiduista tiedoista. Tämä ei ole turvallisuustodistus. Uudet hälytykset ja tuotemuutokset voivat muuttaa tulosta myöhemmin.",
+      "audienceTitle": "Kaupoille, jotka myyvät fyysisiä tuotteita EU:ssa",
+      "audienceBody": "Erityisen hyödyllinen leluille, vauvatuotteille, elektroniikalle, kosmetiikalle, kodintavaroille sekä tuonti- tai omamerkkisille tuotteille. Tekoälyn kuvien vertailu voi auttaa, kun toimittajien luetteloissa on puutteellisia tunnisteita. Safety Gate kattaa vaaralliset muut kuin elintarvikkeet.",
+      "caseTitle": "Esimerkki: muutettu otsikko, sitten toimittajan tarkistus",
+      "caseBody": "Havainnollistava skenaario: toimittaja listaa potkupyörän eri nimellä ja jättää mallin pois. Visuaaliset yksityiskohdat johtavat mahdolliseen osumaan. Kauppias vertaa hälytystä ja pyytää mallia ja erää toimittajalta. Jos todisteet osoittavat eri tuotteen, he hylkäävät havainnon muistiinpanolla; jos se vahvistaa kyseisen tuotteen, he ryhtyvät asianmukaisiin toimiin ja kirjaavat sen. Tämä on työnkulun esimerkki, ei asiakastapaus tai reaaliaikainen tulos."
     }
   },
   "email": {

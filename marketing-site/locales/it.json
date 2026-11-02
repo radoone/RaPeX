@@ -161,7 +161,9 @@
     "q4": "Cosa è incluso nella scansione gratuita?",
     "a4": "Tutti i prodotti disponibili nel catalogo pubblico Shopify del negozio e un riepilogo delle possibili corrispondenze via e-mail. Le inserzioni private sono escluse; la scansione non è un certificato di sicurezza.",
     "q5": "E se non vengono trovate possibili corrispondenze?",
-    "a5": "Il report indica il numero di prodotti controllati e che non sono state trovate possibili corrispondenze in questo controllo. Non certifica la sicurezza dei prodotti. Nuovi avvisi possono comparire in seguito."
+    "a5": "Il report indica il numero di prodotti controllati e che non sono state trovate possibili corrispondenze in questo controllo. Non certifica la sicurezza dei prodotti. Nuovi avvisi possono comparire in seguito.",
+    "q6": "Una possibile corrispondenza dimostra che il mio prodotto è pericoloso?",
+    "a6": "No. L'IA o un identificatore possono collegare la tua inserzione a un record di Safety Gate, ma devi comunque verificare il prodotto esatto, il modello e il lotto interessato. ZeroRecall supporta la tua revisione; non certifica la sicurezza né sostituisce i tuoi obblighi legali."
   },
   "cta": {
     "title": "Inizia con una scansione gratuita",
@@ -358,5 +360,41 @@
     "languageTitle": "Un'interfaccia in 24 lingue dell'UE",
     "languageBody": "Scegli la tua lingua di lavoro nell'app e la lingua di notifica per l'email. Gli identificativi originali del prodotto e i fatti della fonte ufficiale rimangono intatti.",
     "control": "Il tuo catalogo rimane sotto il tuo controllo. La registrazione di una decisione di revisione non annulla automaticamente la pubblicazione o modifica un prodotto Shopify."
+  },
+  "notice": {
+    "title": "L'allerta ti raggiunge",
+    "body": "Quando viene creato un nuovo rilevamento, ZeroRecall può inviare via email il prodotto, il confronto con Safety Gate e un link per esaminarlo nella tua app Shopify. Non è necessario tenere l'app aperta per ricevere la notifica.",
+    "whatTitle": "Un chiaro passo successivo, non solo un avvertimento",
+    "whatBody": "Apri il rilevamento, confronta le foto e gli identificatori, quindi verifica il modello e il lotto prima di decidere. Il destinatario della notifica, la lingua e le preferenze sono modificabili in Impostazioni.",
+    "weeklyTitle": "Nessun nuovo rilevamento? Ricevi comunque un aggiornamento.",
+    "weeklyBody": "Con i riepiloghi settimanali abilitati, una settimana senza nuovi rilevamenti porta un riepilogo. I rilevamenti aperti esistenti potrebbero ancora richiedere la tua attenzione; un'esecuzione di monitoraggio incompleta viene mostrata come incompleta.",
+    "previewTitle": "Email di avviso illustrativa",
+    "previewNote": "Contenuto e illustrazione di esempio, non un avviso reale o un'email inviata. Il pulsante di anteprima apre la procedura guidata sottostante; un'email reale si collega alla pagina di revisione autenticata del tuo negozio.",
+    "imageCaption": "Immagine del prodotto illustrativa, non una fotografia ufficiale di Safety Gate",
+    "subject": "Abbiamo trovato una possibile corrispondenza con un avviso Safety Gate UE.",
+    "productLabel": "Il tuo prodotto",
+    "alertLabel": "Prodotto Safety Gate",
+    "action": "Rivedi possibile corrispondenza",
+    "instruction": "Confronta il modello, il marchio e il lotto con il record ufficiale. Salva la tua decisione e una nota nell'app."
+  },
+  "start": {
+    "title": "Cosa succede dopo l'installazione",
+    "body": "Dal primo controllo del catalogo al monitoraggio continuo, puoi vedere cosa è in esecuzione e quali rilevamenti richiedono una decisione.",
+    "step1Title": "Collega il tuo negozio e scegli un piano",
+    "step1Body": "Installa tramite Shopify, approva l'accesso in lettura ai prodotti e scegli un piano per attivare il monitoraggio continuo. Imposta il destinatario dell'email e la lingua delle notifiche.",
+    "step2Title": "Lascia che la prima verifica del catalogo venga eseguita",
+    "step2Body": "ZeroRecall importa i tuoi prodotti e controlla la cronologia indicizzata di Safety Gate in background. Segui i progressi nell'app; i cataloghi più grandi richiedono più tempo. Una sola importazione non è un controllo di sicurezza completato.",
+    "step3Title": "Esamina il risultato",
+    "step3Body": "Le possibili corrispondenze entrano nella tua coda di revisione. Confronta il record ufficiale con il tuo prodotto e salva una decisione o mantieni il rilevamento aperto in attesa del tuo fornitore.",
+    "step4Title": "Continua a monitorare mentre le cose cambiano",
+    "step4Body": "Nuovi avvisi di Safety Gate e aggiornamenti dei prodotti attivano controlli mentre il tuo piano è attivo. I rilevamenti appena creati possono attivare un'email e le tue decisioni rimangono nella cronologia delle revisioni.",
+    "matchTitle": "È stata trovata una possibile corrispondenza",
+    "matchBody": "Questa è una richiesta di revisione delle prove, non la prova che il tuo modello o lotto esatto sia pericoloso. Conferma questi dettagli prima di agire.",
+    "clearTitle": "Nessuna possibile corrispondenza è stata trovata",
+    "clearBody": "Il controllo completato non ha trovato alcuna possibile corrispondenza nei record indicizzati che ha verificato. Questo non è un certificato di sicurezza. Nuovi avvisi e modifiche ai prodotti possono cambiare il risultato in seguito.",
+    "audienceTitle": "Per i negozi che vendono prodotti fisici nell'UE",
+    "audienceBody": "Particolarmente utile per giocattoli, prodotti per bambini, elettronica, cosmetici, articoli per la casa e prodotti importati o a marchio del distributore. Il confronto fotografico tramite IA può aiutare quando gli elenchi dei fornitori hanno identificatori incompleti. Safety Gate copre i prodotti non alimentari pericolosi.",
+    "caseTitle": "Esempio: un titolo modificato, poi un controllo del fornitore",
+    "caseBody": "Scenario illustrativo: un fornitore elenca una bici senza pedali con un nome diverso e omette il modello. I dettagli visivi portano a una possibile corrispondenza. Il commerciante confronta l'avviso e richiede il modello e il lotto al fornitore. Se le prove mostrano un prodotto diverso, archiviano il rilevamento con una nota; se conferma il prodotto interessato, intraprendono l'azione appropriata e la registrano. Questo è un esempio di flusso di lavoro, non un caso cliente o un risultato in tempo reale."
   }
 }

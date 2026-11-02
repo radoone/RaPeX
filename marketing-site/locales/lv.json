@@ -161,7 +161,9 @@
     "q4": "Kas ir iekļauts bezmaksas skenēšanā?",
     "a4": "Visi veikala publiskajā Shopify katalogā pieejamie produkti un iespējamo atbilstību kopsavilkums e-pastā. Privātie piedāvājumi netiek iekļauti; pārbaude nav drošības sertifikāts.",
     "q5": "Kas notiek, ja iespējamās atbilstības netiek atrastas?",
-    "a5": "Pārskatā būs norādīts pārbaudīto produktu skaits un tas, ka šajā pārbaudē iespējamās atbilstības netika atrastas. Tas neapliecina produktu drošumu. Vēlāk var parādīties jauni brīdinājumi."
+    "a5": "Pārskatā būs norādīts pārbaudīto produktu skaits un tas, ka šajā pārbaudē iespējamās atbilstības netika atrastas. Tas neapliecina produktu drošumu. Vēlāk var parādīties jauni brīdinājumi.",
+    "q6": "Vai iespējama atbilstība pierāda, ka mans produkts ir bīstams?",
+    "a6": "Nē. AI vai identifikators var savienot jūsu sarakstu ar Safety Gate ierakstu, taču jums joprojām ir jāpārbauda precīzs produkts, modelis un skartā partija. ZeroRecall atbalsta jūsu pārskatīšanu; tas nesertificē drošību un neaizstāj jūsu juridiskās saistības."
   },
   "cta": {
     "title": "Sāciet ar bezmaksas skenēšanu",
@@ -358,5 +360,41 @@
     "languageTitle": "Saskarne 24 ES valodās",
     "languageBody": "Izvēlieties savu darba valodu lietotnē un paziņojumu valodu e-pastam. Oriģinālie produktu identifikatori un oficiālie avota fakti paliek neskarti.",
     "control": "Jūsu katalogs paliek jūsu kontrolē. Pārskatīšanas lēmuma ierakstīšana automātiski neatpublicē vai nemaina Shopify produktu."
+  },
+  "notice": {
+    "title": "Brīdinājums nonāk pie jums",
+    "body": "Kad tiek izveidots jauns atklājums, ZeroRecall var nosūtīt e-pastu par produktu, Safety Gate salīdzinājumu un saiti, lai to pārskatītu jūsu Shopify lietotnē. Lai saņemtu paziņojumu, jums nav jātur lietotne atvērta.",
+    "whatTitle": "Skaidrs nākamais solis, nevis tikai brīdinājums",
+    "whatBody": "Atveriet atklājumu, salīdziniet fotoattēlus un identifikatorus, pēc tam pārbaudiet modeli un partiju pirms lēmuma pieņemšanas. Jūsu paziņojumu saņēmējs, valoda un preferences ir rediģējamas sadaļā Iestatījumi.",
+    "weeklyTitle": "Nav jaunu atklājumu? Jūs joprojām saņemat atjauninājumu.",
+    "weeklyBody": "Ja ir iespējoti iknedēļas kopsavilkumi, nedēļa bez jauniem atklājumiem sniedz kopsavilkumu. Esošie atvērtie atklājumi joprojām var prasīt jūsu uzmanību; nepabeigta uzraudzības darbība tiek parādīta kā nepabeigta.",
+    "previewTitle": "Ilustratīvs brīdinājuma e-pasts",
+    "previewNote": "Piemēra saturs un ilustrācija, nevis reāls brīdinājums vai nosūtīts e-pasts. Priekšskatījuma poga atver zemāk redzamo aprakstu; reāls e-pasts ved uz jūsu veikala autentificēto pārskatīšanas lapu.",
+    "imageCaption": "Ilustratīvs produkta attēls, nav oficiāla Safety Gate fotogrāfija",
+    "subject": "Mēs atradām iespējamu atbilstību ar ES Safety Gate brīdinājumu.",
+    "productLabel": "Jūsu produkts",
+    "alertLabel": "Safety Gate produkts",
+    "action": "Pārskatīt iespējamo atbilstību",
+    "instruction": "Salīdziniet modeli, zīmolu un partiju ar oficiālo ierakstu. Saglabājiet savu lēmumu un piezīmi lietotnē."
+  },
+  "start": {
+    "title": "Kas notiek pēc instalēšanas",
+    "body": "No pirmās kataloga pārbaudes līdz pastāvīgai uzraudzībai jūs varat redzēt, kas tiek darbināts un kuriem atklājumiem ir nepieciešams lēmums.",
+    "step1Title": "Savienojiet savu veikalu un izvēlieties plānu",
+    "step1Body": "Instalējiet, izmantojot Shopify, apstipriniet piekļuvi produktu lasīšanai un izvēlieties plānu, lai aktivizētu pastāvīgu uzraudzību. Iestatiet savu e-pasta saņēmēju un paziņojumu valodu.",
+    "step2Title": "Ļaujiet pirmajai kataloga revīzijai darboties",
+    "step2Body": "ZeroRecall importē jūsu produktus un fonā pārbauda indeksēto Safety Gate vēsturi. Sekojiet progresam lietotnē; lielākiem katalogiem tas aizņem ilgāku laiku. Tikai imports nav pabeigta drošības pārbaude.",
+    "step3Title": "Pārskatiet rezultātu",
+    "step3Body": "Iespējamās atbilstības nonāk jūsu pārskatīšanas rindā. Salīdziniet oficiālo ierakstu ar savu produktu un saglabājiet lēmumu vai turiet atklājumu atvērtu, gaidot piegādātāju.",
+    "step4Title": "Turpiniet uzraudzību, mainoties lietām",
+    "step4Body": "Jauni Safety Gate brīdinājumi un produktu atjauninājumi izraisa pārbaudes, kamēr jūsu plāns ir aktīvs. Jauni atklājumi var izraisīt e-pasta nosūtīšanu, un jūsu lēmumi paliek pārskatīšanas vēsturē.",
+    "matchTitle": "Tika atrasta iespējama atbilstība",
+    "matchBody": "Šis ir lūgums pārskatīt pierādījumus, nevis pierādījums, ka jūsu precīzais modelis vai partija ir bīstama. Pirms rīcības apstipriniet šīs detaļas.",
+    "clearTitle": "Netika atrasta iespējama atbilstība",
+    "clearBody": "Pabeigtā pārbaude neatrada iespējamu atbilstību indeksētajos ierakstos, ko tā pārbaudīja. Tas nav drošības sertifikāts. Jauni brīdinājumi un produktu izmaiņas var mainīt rezultātu vēlāk.",
+    "audienceTitle": "Veikaliem, kas pārdod fiziskus produktus ES",
+    "audienceBody": "Īpaši noderīgi rotaļlietām, bērnu precēm, elektronikai, kosmētikai, mājsaimniecības precēm un importētiem vai baltās etiķetes produktiem. AI fotoattēlu salīdzināšana var palīdzēt, ja piegādātāju sarakstos ir nepilnīgi identifikatori. Safety Gate aptver bīstamus nepārtikas produktus.",
+    "caseTitle": "Piemērs: mainīts nosaukums, pēc tam piegādātāja pārbaude",
+    "caseBody": "Ilustratīvs scenārijs: piegādātājs sarakstā iekļauj līdzsvara velosipēdu ar citu nosaukumu un izlaiž modeli. Vizuālās detaļas noved pie iespējamas atbilstības. Tirgotājs salīdzina brīdinājumu un pieprasa modeli un partiju no piegādātāja. Ja pierādījumi liecina par citu produktu, viņi noraida atklājumu ar piezīmi; ja tas apstiprina skarto produktu, viņi veic atbilstošas darbības un to reģistrē. Šis ir darbplūsmas piemērs, nevis klienta gadījums vai tiešraides rezultāts."
   }
 }

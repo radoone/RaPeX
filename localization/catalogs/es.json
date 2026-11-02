@@ -162,7 +162,9 @@
       "q4": "¿Qué incluye el escaneo gratuito?",
       "a4": "Todos los productos disponibles en el catálogo público de Shopify de su tienda y un resumen de posibles coincidencias por correo. Se excluyen los anuncios privados; el análisis no es un certificado de seguridad.",
       "q5": "¿Qué ocurre si no se encuentran posibles coincidencias?",
-      "a5": "El informe mostrará cuántos productos se revisaron y que no se encontraron posibles coincidencias en esta revisión. No certifica la seguridad de los productos. Pueden aparecer nuevas alertas más adelante."
+      "a5": "El informe mostrará cuántos productos se revisaron y que no se encontraron posibles coincidencias en esta revisión. No certifica la seguridad de los productos. Pueden aparecer nuevas alertas más adelante.",
+      "q6": "¿Una posible coincidencia prueba que mi producto es peligroso?",
+      "a6": "No. La IA o un identificador pueden conectar su listado a un registro de Safety Gate, pero aún necesita verificar el producto exacto, el modelo y el lote afectado. ZeroRecall apoya su revisión; no certifica la seguridad ni reemplaza sus obligaciones legales."
     },
     "cta": {
       "title": "Empiece con un escaneo gratuito",
@@ -359,6 +361,42 @@
       "languageTitle": "Una interfaz en 24 idiomas de la UE",
       "languageBody": "Elija su idioma de trabajo en la aplicación y su idioma de notificación para el correo electrónico. Los identificadores de producto originales y los datos de la fuente oficial permanecen intactos.",
       "control": "Su catálogo permanece bajo su control. Registrar una decisión de revisión no anula automáticamente la publicación ni cambia un producto de Shopify."
+    },
+    "notice": {
+      "title": "La alerta le llega a usted",
+      "body": "Cuando se crea un nuevo hallazgo, ZeroRecall puede enviarle por correo electrónico el producto, la comparación de Safety Gate y un enlace para revisarlo en su aplicación de Shopify. No tiene que mantener la aplicación abierta para recibir la notificación.",
+      "whatTitle": "Un siguiente paso claro, no solo una advertencia",
+      "whatBody": "Abra el hallazgo, compare las fotos y los identificadores, luego verifique el modelo y el lote antes de decidir. El destinatario de la notificación, el idioma y las preferencias se pueden editar en Configuración.",
+      "weeklyTitle": "¿No hay nuevos hallazgos? Aún recibirá una actualización.",
+      "weeklyBody": "Con los resúmenes semanales habilitados, una semana sin nuevos hallazgos trae un resumen. Los hallazgos abiertos existentes aún pueden necesitar su atención; una ejecución de monitoreo incompleta se muestra como incompleta.",
+      "previewTitle": "Correo electrónico de alerta ilustrativo",
+      "previewNote": "Contenido e ilustración de ejemplo, no una alerta real ni un correo electrónico enviado. El botón de vista previa abre el tutorial a continuación; un correo electrónico real enlaza a la página de revisión autenticada de su tienda.",
+      "imageCaption": "Imagen de producto ilustrativa, no una fotografía oficial de Safety Gate",
+      "subject": "Hemos encontrado una posible coincidencia con una alerta de Safety Gate de la UE.",
+      "productLabel": "Su producto",
+      "alertLabel": "Producto de Safety Gate",
+      "action": "Revisar posible coincidencia",
+      "instruction": "Compare el modelo, la marca y el lote con el registro oficial. Guarde su decisión y una nota en la aplicación."
+    },
+    "start": {
+      "title": "Qué sucede después de la instalación",
+      "body": "Desde la primera verificación del catálogo hasta el monitoreo continuo, puede ver qué está en ejecución y qué hallazgos necesitan una decisión.",
+      "step1Title": "Conecte su tienda y elija un plan",
+      "step1Body": "Instale a través de Shopify, apruebe el acceso de lectura de productos y elija un plan para activar el monitoreo continuo. Establezca su destinatario de correo electrónico y el idioma de notificación.",
+      "step2Title": "Deje que se ejecute la primera auditoría del catálogo",
+      "step2Body": "ZeroRecall importa sus productos y verifica el historial indexado de Safety Gate en segundo plano. Siga el progreso en la aplicación; los catálogos más grandes tardan más. Una importación por sí sola no es una verificación de seguridad completa.",
+      "step3Title": "Revise el resultado",
+      "step3Body": "Las posibles coincidencias entran en su cola de revisión. Compare el registro oficial con su producto y guarde una decisión o mantenga el hallazgo abierto mientras espera a su proveedor.",
+      "step4Title": "Mantenga el monitoreo a medida que cambian las cosas",
+      "step4Body": "Las nuevas alertas de Safety Gate y las actualizaciones de productos activan verificaciones mientras su plan está activo. Los hallazgos recién creados pueden activar un correo electrónico, y sus decisiones permanecen en el historial de revisión.",
+      "matchTitle": "Se encontró una posible coincidencia",
+      "matchBody": "Esta es una solicitud para revisar la evidencia, no una prueba de que su modelo o lote exacto sea peligroso. Confirme esos detalles antes de tomar medidas.",
+      "clearTitle": "No se encontró ninguna posible coincidencia",
+      "clearBody": "La verificación completada no encontró ninguna posible coincidencia en los registros indexados que verificó. Esto no es un certificado de seguridad. Las nuevas alertas y los cambios de producto pueden cambiar el resultado más adelante.",
+      "audienceTitle": "Para tiendas que venden productos físicos en la UE",
+      "audienceBody": "Especialmente útil para juguetes, productos para bebés, electrónica, cosméticos, artículos para el hogar y productos importados o de marca blanca. La comparación de fotos con IA puede ayudar cuando los listados de proveedores tienen identificadores incompletos. Safety Gate cubre productos peligrosos no alimentarios.",
+      "caseTitle": "Ejemplo: un título cambiado, luego una verificación del proveedor",
+      "caseBody": "Escenario ilustrativo: un proveedor lista una bicicleta de equilibrio con un nombre diferente y omite el modelo. Los detalles visuales conducen a una posible coincidencia. El comerciante compara la alerta y solicita el modelo y el lote al proveedor. Si la evidencia muestra un producto diferente, descartan el hallazgo con una nota; si confirma el producto afectado, toman la acción apropiada y la registran. Este es un ejemplo de flujo de trabajo, no un caso de cliente o un resultado en vivo."
     }
   },
   "email": {

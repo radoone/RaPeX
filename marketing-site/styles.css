@@ -1382,3 +1382,54 @@ a {
 
 .hero-app-link { display: inline-block; margin-top: 16px; margin-left: 20px; }
 @media (max-width: 640px) { .hero-app-link { display: block; margin-left: 0; } }
+
+/* Illustrative email and the installed merchant journey. */
+.email-explainer { display: grid; grid-template-columns: 1fr 1.05fr; gap: 65px; align-items: center; border-top: 1px solid var(--border); }
+.email-explainer__copy { min-width: 0; }
+.email-explainer__copy h3 { font-size: 20px; line-height: 1.4; margin: 30px 0 10px; }
+.email-explainer__copy > p { color: var(--text-muted); }
+.email-sample { margin: 0; min-width: 0; }
+.email-sample__envelope { display: flex; flex-direction: column; gap: 5px; padding: 15px 22px; border: 1px solid var(--border); border-radius: 12px 12px 0 0; background: #eff2eb; font-size: 12px; color: var(--text-muted); overflow-wrap: anywhere; }
+.email-sample__envelope > span:first-child { font-weight: 650; color: var(--primary); }
+.email-sample__message { padding: 30px; background: #fffefa; border: 1px solid var(--border); border-top: 0; border-radius: 0 0 12px 12px; }
+.email-sample__brand { display: block; color: #243b2e; font-size: 22px; font-weight: 700; letter-spacing: -.025em; margin-bottom: 24px; }
+.email-sample__message h3 { font-size: clamp(25px, 2.5vw, 33px); line-height: 1.18; letter-spacing: -.025em; margin: 20px 0 24px; }
+.email-sample__product { display: grid; grid-template-columns: .85fr 1fr; align-items: start; gap: 20px; }
+.email-sample__product img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; object-position: 24% center; border-radius: 8px; }
+.email-sample__product dl { margin: 0; min-width: 0; font-size: 13px; }
+.email-sample__product dl > div { padding: 10px 0; border-bottom: 1px solid var(--border); }
+.email-sample__product dl > div:first-child { padding-top: 0; }
+.email-sample__product dt { color: var(--text-muted); margin-bottom: 4px; }
+.email-sample__product dd { margin: 0; line-height: 1.45; font-weight: 600; }
+.email-sample__message .btn { width: 100%; margin-top: 17px; line-height: 1.5; }
+.email-sample__image-caption { color: var(--text-subtle); font-size: 11px; margin: 10px 0 0; }
+.email-sample__instruction { font-size: 13px; line-height: 1.6; color: var(--text-muted); margin: 16px 0 0; }
+.email-sample figcaption { font-size: 12px; line-height: 1.65; color: var(--text-subtle); margin-top: 14px; }
+.install-journey { border-top: 1px solid var(--border); }
+.install-journey__steps { list-style: none; counter-reset: install-step; padding: 0; margin: 0 0 35px; }
+.install-journey__steps li { counter-increment: install-step; display: grid; grid-template-columns: 48px minmax(0, 1fr) minmax(0, 1.25fr); gap: 24px; padding: 25px 0; border-top: 1px solid var(--border); align-items: baseline; }
+.install-journey__steps li::before { content: counter(install-step); font: 500 26px/1.2 var(--font-editorial); color: var(--primary); }
+.install-journey h3 { font-size: 20px; line-height: 1.4; }
+.install-journey p { color: var(--text-muted); margin-bottom: 0; }
+.install-journey__outcomes { display: grid; grid-template-columns: 1fr 1fr; gap: 38px; padding: 28px; border-radius: 12px; background: #edf2e9; }
+.install-journey__outcomes h3 { margin-bottom: 10px; }
+.install-journey__case { padding: 22px 0; border-bottom: 1px solid var(--border); }
+.install-journey__case summary { cursor: pointer; font-size: 16px; font-weight: 600; color: var(--primary); padding: 7px 0; }
+.install-journey__case summary:focus-visible { outline: 3px solid #90b6a1; outline-offset: 4px; }
+.install-journey__case p { margin: 14px 0 0; max-width: 80ch; }
+.install-journey__audience { max-width: 80ch; margin: 30px 0; }
+.install-journey__audience h3 { margin-bottom: 10px; }
+@media (max-width: 900px) {
+ .email-explainer { gap: 30px; }
+ .email-sample__message { padding: 23px; }
+ .install-journey__steps li { gap: 18px; }
+}
+@media (max-width: 640px) {
+ .email-explainer { grid-template-columns: 1fr; gap: 30px; }
+ .email-sample__message { padding: 22px; }
+ .email-sample__product { gap: 16px; }
+ .install-journey__steps li { grid-template-columns: 25px minmax(0, 1fr); gap: 8px 15px; }
+ .install-journey__steps li p { grid-column: 2; }
+ .install-journey__outcomes { grid-template-columns: 1fr; padding: 23px; gap: 25px; }
+ .install-journey > .btn { width: 100%; line-height: 1.4; }
+}

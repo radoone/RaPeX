@@ -218,6 +218,36 @@
           </div>
         </section>
 
+        <section class="section email-explainer" id="email-alert" aria-labelledby="notice-title">
+          <div class="email-explainer__copy">
+            <h2 class="section-title" id="notice-title" data-i18n="notice.title">The alert comes to you</h2>
+            <p class="section-intro" data-i18n="notice.body">When a new finding is created, ZeroRecall can email the product, Safety Gate comparison and a link to review it in your Shopify app. You do not have to keep the app open to receive the notification.</p>
+            <h3 data-i18n="notice.whatTitle">A clear next step, not just a warning</h3>
+            <p data-i18n="notice.whatBody">Open the finding, compare the photos and identifiers, then verify the model and batch before deciding. Your notification recipient, language and preferences are editable in Settings.</p>
+            <h3 data-i18n="notice.weeklyTitle">No new findings? You still get an update.</h3>
+            <p data-i18n="notice.weeklyBody">With weekly summaries enabled, a week without new findings brings a summary. Existing open findings can still need your attention; an incomplete monitoring run is shown as incomplete.</p>
+          </div>
+          <figure class="email-sample" aria-labelledby="email-example-caption">
+            <div class="email-sample__envelope"><span data-i18n="notice.previewTitle">Illustrative alert email</span><span>ZeroRecall &lt;info@zerorecall.online&gt;</span></div>
+            <div class="email-sample__message">
+              <span class="email-sample__brand">ZeroRecall</span>
+              <span class="mock-app__badge" data-i18n="hero.mockStatus">Needs review</span>
+              <h3 data-i18n="notice.subject">We found a possible match with an EU Safety Gate alert</h3>
+              <div class="email-sample__product">
+                <img src="/images/product-comparison-illustration.jpg" width="1536" height="1024" alt="" loading="lazy" />
+                <dl>
+                  <div><dt data-i18n="notice.productLabel">Your product</dt><dd data-i18n="hero.mockProductName">Children's balance bike</dd></div>
+                  <div><dt data-i18n="notice.alertLabel">Safety Gate product</dt><dd data-i18n="hero.mockAlertName">Similar product in an EU alert</dd></div>
+                </dl>
+              </div>
+              <p class="email-sample__image-caption" data-i18n="notice.imageCaption">Illustrative product image, not an official Safety Gate photograph</p>
+              <a href="#match-example" class="btn btn--primary" data-i18n="notice.action">Review possible match</a>
+              <p class="email-sample__instruction" data-i18n="notice.instruction">Compare the model, brand and batch with the official record.</p>
+            </div>
+            <figcaption id="email-example-caption" data-i18n="notice.previewNote">Example content and illustration, not a real alert or a sent email. The preview button opens the walkthrough below; a real email links to your shop's authenticated review page.</figcaption>
+          </figure>
+        </section>
+
         <section class="section ai-section" id="how-it-works" aria-labelledby="ai-title">
           <div class="ai-intro">
             <h2 class="section-title" id="ai-title" data-i18n="ai.title">A different name. A familiar product.</h2>
@@ -330,6 +360,32 @@
           <p class="merchant-features__control" data-i18n="features.control">Your catalog stays under your control. Recording a review decision does not automatically unpublish or change a Shopify product.</p>
         </section>
 
+        <section class="section install-journey" id="after-install" aria-labelledby="start-title">
+          <div class="section-heading">
+            <h2 class="section-title" id="start-title" data-i18n="start.title">What happens after you install</h2>
+            <p class="section-intro" data-i18n="start.body">From the first catalog check to ongoing monitoring, you can see what is running and which findings need a decision.</p>
+          </div>
+          <ol class="install-journey__steps">
+            <li><h3 data-i18n="start.step1Title">Connect your store and choose a plan</h3><p data-i18n="start.step1Body">Install through Shopify, approve product-read access and choose a plan to activate ongoing monitoring. Set your email recipient and notification language.</p></li>
+            <li><h3 data-i18n="start.step2Title">Let the first catalog audit run</h3><p data-i18n="start.step2Body">ZeroRecall imports your products and checks indexed Safety Gate history in the background. Follow progress in the app; larger catalogs take longer. An import alone is not a completed safety check.</p></li>
+            <li><h3 data-i18n="start.step3Title">Review the result</h3><p data-i18n="start.step3Body">Possible matches enter your review queue. Compare the official record with your product and save a decision or keep the finding open while waiting for your supplier.</p></li>
+            <li><h3 data-i18n="start.step4Title">Keep monitoring as things change</h3><p data-i18n="start.step4Body">New Safety Gate alerts and product updates trigger checks while your plan is active. Newly created findings can trigger an email, and your decisions remain in the review history.</p></li>
+          </ol>
+          <div class="install-journey__outcomes">
+            <div><h3 data-i18n="start.matchTitle">A possible match was found</h3><p data-i18n="start.matchBody">This is a request to review the evidence, not proof that your exact model or batch is dangerous. Confirm those details before taking action.</p></div>
+            <div><h3 data-i18n="start.clearTitle">No possible match was found</h3><p data-i18n="start.clearBody">The completed check found no possible match in the indexed records it checked. This is not a safety certificate. New alerts and product changes can change the result later.</p></div>
+          </div>
+          <details class="install-journey__case">
+            <summary data-i18n="start.caseTitle">Example: a changed title, then a supplier check</summary>
+            <p data-i18n="start.caseBody">Illustrative scenario: a supplier lists a balance bike under a different name and omits the model. Visual details lead to a possible match. The merchant compares the alert and requests the model and batch from the supplier. If the evidence shows a different product, they dismiss the finding with a note; if it confirms the affected product, they take the appropriate action and record it. This is a workflow example, not a customer case or a live result.</p>
+          </details>
+          <div class="install-journey__audience">
+            <h3 data-i18n="start.audienceTitle">For stores selling physical products in the EU</h3>
+            <p data-i18n="start.audienceBody">Especially useful for toys, baby products, electronics, cosmetics, home goods and imported or white-label products. AI photo comparison can help when supplier listings have incomplete identifiers. Safety Gate covers dangerous non-food products.</p>
+          </div>
+          <a href="https://apps.shopify.com/safety-gate-checker" class="btn btn--primary" target="_blank" rel="noopener noreferrer" data-i18n="hero.installCta">Install from Shopify App Store</a>
+        </section>
+
         <section class="section pricing-section" id="pricing" aria-labelledby="pricing-title">
           <div class="pricing-section__copy">
             <span class="section-eyebrow" data-i18n="pricing.eyebrow">ONGOING MONITORING AFTER INSTALLATION</span>
@@ -397,6 +453,10 @@
           </div>
 
           <div class="faq-list">
+            <div class="faq-row">
+              <h3 class="faq-question" data-i18n="faq.q6">Does a possible match prove that my product is dangerous?</h3>
+              <p class="faq-answer" data-i18n="faq.a6">No. AI or an identifier can connect your listing to a Safety Gate record, but you still need to verify the exact product, model and affected batch. ZeroRecall supports your review; it does not certify safety or replace your legal obligations.</p>
+            </div>
             <div class="faq-row">
               <h3 class="faq-question" data-i18n="faq.q1">What is Safety Gate?</h3>
               <p class="faq-answer" data-i18n="faq.a1">The EU alert system for dangerous non-food products, formerly RAPEX. It covers products such as toys, electronics and cosmetics.</p>

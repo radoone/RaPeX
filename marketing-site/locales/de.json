@@ -161,7 +161,9 @@
     "q4": "Was ist im kostenlosen Scan enthalten?",
     "a4": "Alle verfügbaren Produkte im öffentlichen Shopify-Katalog Ihres Shops und eine Zusammenfassung möglicher Übereinstimmungen per E-Mail. Private Angebote sind ausgeschlossen; der Scan ist kein Sicherheitszertifikat.",
     "q5": "Was passiert, wenn keine möglichen Übereinstimmungen gefunden werden?",
-    "a5": "Der Bericht zeigt die Anzahl geprüfter Produkte und dass bei dieser Prüfung keine möglichen Übereinstimmungen gefunden wurden. Dies ist kein Nachweis der Produktsicherheit. Neue Warnmeldungen können später hinzukommen."
+    "a5": "Der Bericht zeigt die Anzahl geprüfter Produkte und dass bei dieser Prüfung keine möglichen Übereinstimmungen gefunden wurden. Dies ist kein Nachweis der Produktsicherheit. Neue Warnmeldungen können später hinzukommen.",
+    "q6": "Beweist eine mögliche Übereinstimmung, dass mein Produkt gefährlich ist?",
+    "a6": "Nein. KI oder ein Identifikator können Ihr Angebot mit einem Safety Gate-Datensatz verknüpfen, aber Sie müssen weiterhin das genaue Produkt, Modell und die betroffene Charge überprüfen. ZeroRecall unterstützt Ihre Überprüfung; es zertifiziert keine Sicherheit und ersetzt nicht Ihre rechtlichen Verpflichtungen."
   },
   "cta": {
     "title": "Beginnen Sie mit einem kostenlosen Scan",
@@ -358,5 +360,41 @@
     "languageTitle": "Eine Benutzeroberfläche in 24 EU-Sprachen",
     "languageBody": "Wählen Sie Ihre Arbeitssprache in der App und Ihre Benachrichtigungssprache für E-Mails. Originale Produktidentifikatoren und offizielle Quellenfakten bleiben intakt.",
     "control": "Ihr Katalog bleibt unter Ihrer Kontrolle. Das Aufzeichnen einer Überprüfungsentscheidung führt nicht automatisch zur Aufhebung der Veröffentlichung oder Änderung eines Shopify-Produkts."
+  },
+  "notice": {
+    "title": "Die Benachrichtigung kommt zu Ihnen",
+    "body": "Wenn ein neuer Befund erstellt wird, kann ZeroRecall das Produkt, den Safety Gate-Vergleich und einen Link zur Überprüfung in Ihrer Shopify-App per E-Mail senden. Sie müssen die App nicht geöffnet lassen, um die Benachrichtigung zu erhalten.",
+    "whatTitle": "Ein klarer nächster Schritt, nicht nur eine Warnung",
+    "whatBody": "Öffnen Sie den Befund, vergleichen Sie die Fotos und Identifikatoren, und überprüfen Sie dann Modell und Charge, bevor Sie eine Entscheidung treffen. Ihr Benachrichtigungsempfänger, Ihre Sprache und Ihre Präferenzen können in den Einstellungen bearbeitet werden.",
+    "weeklyTitle": "Keine neuen Befunde? Sie erhalten trotzdem ein Update.",
+    "weeklyBody": "Wenn wöchentliche Zusammenfassungen aktiviert sind, erhalten Sie in einer Woche ohne neue Befunde eine Zusammenfassung. Bestehende offene Befunde können weiterhin Ihre Aufmerksamkeit erfordern; ein unvollständiger Überwachungslauf wird als unvollständig angezeigt.",
+    "previewTitle": "Illustrative Benachrichtigungs-E-Mail",
+    "previewNote": "Beispielinhalt und Illustration, keine echte Warnung oder gesendete E-Mail. Die Vorschau-Schaltfläche öffnet die unten stehende Anleitung; eine echte E-Mail verlinkt zu Ihrer authentifizierten Überprüfungsseite des Shops.",
+    "imageCaption": "Illustratives Produktbild, keine offizielle Safety Gate-Fotografie",
+    "subject": "Wir haben eine mögliche Übereinstimmung mit einer EU Safety Gate-Warnung gefunden.",
+    "productLabel": "Ihr Produkt",
+    "alertLabel": "Safety Gate-Produkt",
+    "action": "Mögliche Übereinstimmung überprüfen",
+    "instruction": "Vergleichen Sie Modell, Marke und Charge mit dem offiziellen Eintrag. Speichern Sie Ihre Entscheidung und eine Notiz in der App."
+  },
+  "start": {
+    "title": "Was nach der Installation passiert",
+    "body": "Von der ersten Katalogprüfung bis zur laufenden Überwachung können Sie sehen, was läuft und welche Befunde eine Entscheidung erfordern.",
+    "step1Title": "Verbinden Sie Ihren Shop und wählen Sie einen Plan",
+    "step1Body": "Installieren Sie über Shopify, genehmigen Sie den Produkt-Lesezugriff und wählen Sie einen Plan, um die laufende Überwachung zu aktivieren. Legen Sie Ihren E-Mail-Empfänger und die Benachrichtigungssprache fest.",
+    "step2Title": "Lassen Sie die erste Katalogprüfung laufen",
+    "step2Body": "ZeroRecall importiert Ihre Produkte und prüft im Hintergrund die indizierte Safety Gate-Historie. Verfolgen Sie den Fortschritt in der App; größere Kataloge dauern länger. Ein Import allein ist keine abgeschlossene Sicherheitsprüfung.",
+    "step3Title": "Überprüfen Sie das Ergebnis",
+    "step3Body": "Mögliche Übereinstimmungen gelangen in Ihre Überprüfungswarteschlange. Vergleichen Sie den offiziellen Datensatz mit Ihrem Produkt und speichern Sie eine Entscheidung oder lassen Sie den Befund offen, während Sie auf Ihren Lieferanten warten.",
+    "step4Title": "Behalten Sie die Überwachung bei, wenn sich Dinge ändern",
+    "step4Body": "Neue Safety Gate-Warnungen und Produktaktualisierungen lösen Prüfungen aus, solange Ihr Plan aktiv ist. Neu erstellte Befunde können eine E-Mail auslösen, und Ihre Entscheidungen bleiben in der Überprüfungshistorie erhalten.",
+    "matchTitle": "Eine mögliche Übereinstimmung wurde gefunden",
+    "matchBody": "Dies ist eine Aufforderung, die Beweise zu überprüfen, kein Beweis dafür, dass Ihr genaues Modell oder Ihre Charge gefährlich ist. Bestätigen Sie diese Details, bevor Sie Maßnahmen ergreifen.",
+    "clearTitle": "Keine mögliche Übereinstimmung wurde gefunden",
+    "clearBody": "Die abgeschlossene Prüfung ergab keine mögliche Übereinstimmung in den indizierten Datensätzen, die sie geprüft hat. Dies ist kein Sicherheitszertifikat. Neue Warnungen und Produktänderungen können das Ergebnis später ändern.",
+    "audienceTitle": "Für Shops, die physische Produkte in der EU verkaufen",
+    "audienceBody": "Besonders nützlich für Spielzeug, Babyprodukte, Elektronik, Kosmetika, Haushaltswaren und importierte oder White-Label-Produkte. KI-Fotovergleiche können helfen, wenn Lieferantenlisten unvollständige Identifikatoren aufweisen. Safety Gate deckt gefährliche Non-Food-Produkte ab.",
+    "caseTitle": "Beispiel: ein geänderter Titel, dann eine Lieferantenprüfung",
+    "caseBody": "Illustratives Szenario: Ein Lieferant listet ein Laufrad unter einem anderen Namen und lässt das Modell weg. Visuelle Details führen zu einer möglichen Übereinstimmung. Der Händler vergleicht die Warnung und fordert Modell und Charge vom Lieferanten an. Wenn die Beweise ein anderes Produkt zeigen, weist er den Befund mit einer Notiz ab; wenn er das betroffene Produkt bestätigt, ergreift er die entsprechenden Maßnahmen und dokumentiert sie. Dies ist ein Workflow-Beispiel, kein Kundenfall oder ein Live-Ergebnis."
   }
 }

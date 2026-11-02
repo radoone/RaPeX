@@ -162,7 +162,9 @@
       "q4": "Mit tartalmaz az ingyenes ellenőrzés?",
       "a4": "Az áruház nyilvános Shopify-katalógusában elérhető összes termék és a lehetséges egyezések összefoglalója e-mailben. A privát listázások nem részei az ellenőrzésnek; az ellenőrzés nem biztonsági tanúsítvány.",
       "q5": "Mi történik, ha nincs lehetséges egyezés?",
-      "a5": "A jelentés megmutatja az ellenőrzött termékek számát és azt, hogy ebben az ellenőrzésben nem találtunk lehetséges egyezést. Ez nem tanúsítja a termékek biztonságát. Később új riasztások jelenhetnek meg."
+      "a5": "A jelentés megmutatja az ellenőrzött termékek számát és azt, hogy ebben az ellenőrzésben nem találtunk lehetséges egyezést. Ez nem tanúsítja a termékek biztonságát. Később új riasztások jelenhetnek meg.",
+      "q6": "Egy lehetséges egyezés bizonyítja, hogy a termékem veszélyes?",
+      "a6": "Nem. Az AI vagy egy azonosító összekapcsolhatja az Ön listáját egy Safety Gate rekorddal, de továbbra is ellenőriznie kell a pontos terméket, modellt és érintett tételt. A ZeroRecall támogatja az áttekintését; nem tanúsítja a biztonságot, és nem helyettesíti az Ön jogi kötelezettségeit."
     },
     "cta": {
       "title": "Kezdje egy ingyenes ellenőrzéssel",
@@ -359,6 +361,42 @@
       "languageTitle": "Interfész 24 EU nyelven",
       "languageBody": "Válassza ki a munkanyelvét az alkalmazásban és az értesítési nyelvét az e-mailekhez. Az eredeti termékazonosítók és a hivatalos forrásadatok érintetlenek maradnak.",
       "control": "Katalógusa az Ön ellenőrzése alatt marad. Az áttekintési döntés rögzítése nem teszi automatikusan közzé vagy módosítja a Shopify terméket."
+    },
+    "notice": {
+      "title": "Az értesítés megérkezik Önhöz",
+      "body": "Amikor új találat jön létre, a ZeroRecall e-mailben elküldheti a terméket, a Safety Gate összehasonlítást és egy linket, amellyel áttekintheti azt a Shopify alkalmazásában. Nem kell nyitva tartania az alkalmazást az értesítés fogadásához.",
+      "whatTitle": "Tiszta következő lépés, nem csak figyelmeztetés",
+      "whatBody": "Nyissa meg a találatot, hasonlítsa össze a fényképeket és az azonosítókat, majd ellenőrizze a modellt és a tételt, mielőtt döntést hoz. Az értesítés címzettje, nyelve és preferenciái a Beállításokban szerkeszthetők.",
+      "weeklyTitle": "Nincsenek új találatok? Akkor is kap frissítést.",
+      "weeklyBody": "Ha engedélyezve vannak a heti összefoglalók, az új találatok nélküli hét összefoglalót hoz. A meglévő nyitott találatok továbbra is igényelhetik a figyelmét; a hiányos ellenőrzési futtatás hiányosként jelenik meg.",
+      "previewTitle": "Szemléltető riasztási e-mail",
+      "previewNote": "Példa tartalom és illusztráció, nem valódi riasztás vagy elküldött e-mail. Az előnézet gomb megnyitja az alábbi útmutatót; egy valódi e-mail a bolt hitelesített áttekintő oldalára mutat.",
+      "imageCaption": "Szemléltető termékkép, nem hivatalos Safety Gate fénykép",
+      "subject": "Lehetséges egyezést találtunk egy EU Safety Gate riasztással.",
+      "productLabel": "Az Ön terméke",
+      "alertLabel": "Safety Gate termék",
+      "action": "Lehetséges egyezés felülvizsgálata",
+      "instruction": "Hasonlítsa össze a modellt, a márkát és a tételt a hivatalos bejegyzéssel. Mentse el döntését és egy megjegyzést az alkalmazásban."
+    },
+    "start": {
+      "title": "Mi történik a telepítés után",
+      "body": "Az első katalógusellenőrzéstől a folyamatos felügyeletig láthatja, mi fut, és mely találatok igényelnek döntést.",
+      "step1Title": "Csatlakoztassa üzletét és válasszon csomagot",
+      "step1Body": "Telepítse a Shopify-on keresztül, hagyja jóvá a termék-olvasási hozzáférést, és válasszon csomagot a folyamatos felügyelet aktiválásához. Állítsa be az e-mail címzettjét és az értesítési nyelvet.",
+      "step2Title": "Futtassa le az első katalógusellenőrzést",
+      "step2Body": "A ZeroRecall importálja termékeit és a háttérben ellenőrzi az indexelt Safety Gate előzményeket. Kövesse a folyamatot az alkalmazásban; a nagyobb katalógusok tovább tartanak. Egy importálás önmagában nem egy befejezett biztonsági ellenőrzés.",
+      "step3Title": "Tekintse át az eredményt",
+      "step3Body": "A lehetséges egyezések bekerülnek az áttekintési sorba. Hasonlítsa össze a hivatalos nyilvántartást a termékével, és mentse el a döntést, vagy tartsa nyitva a találatot, amíg várja a beszállítóját.",
+      "step4Title": "Folytassa a felügyeletet, ahogy a dolgok változnak",
+      "step4Body": "Új Safety Gate riasztások és termékfrissítések indítanak ellenőrzéseket, amíg a csomagja aktív. Az újonnan létrehozott találatok e-mailt válthatnak ki, és döntései megmaradnak az áttekintési előzményekben.",
+      "matchTitle": "Lehetséges egyezés található",
+      "matchBody": "Ez egy felkérés a bizonyítékok áttekintésére, nem pedig annak bizonyítéka, hogy az Ön pontos modellje vagy tétele veszélyes. Mielőtt lépéseket tenne, erősítse meg ezeket a részleteket.",
+      "clearTitle": "Nem található lehetséges egyezés",
+      "clearBody": "A befejezett ellenőrzés nem talált lehetséges egyezést az ellenőrzött indexelt nyilvántartásokban. Ez nem biztonsági tanúsítvány. Új riasztások és termékváltozások később megváltoztathatják az eredményt.",
+      "audienceTitle": "Fizikai termékeket értékesítő üzletek számára az EU-ban",
+      "audienceBody": "Különösen hasznos játékok, babatermékek, elektronikai cikkek, kozmetikumok, háztartási cikkek, valamint importált vagy saját márkás termékek esetében. Az AI fotóösszehasonlítás segíthet, ha a beszállítói listák hiányos azonosítókat tartalmaznak. A Safety Gate a veszélyes nem élelmiszeripari termékekre terjed ki.",
+      "caseTitle": "Példa: megváltozott cím, majd beszállítói ellenőrzés",
+      "caseBody": "Szemléltető forgatókönyv: egy beszállító egy futóbiciklit más néven listáz, és kihagyja a modellt. A vizuális részletek lehetséges egyezéshez vezetnek. A kereskedő összehasonlítja a riasztást, és bekéri a modellt és a tételt a beszállítótól. Ha a bizonyítékok más terméket mutatnak, megjegyzéssel elvetik a találatot; ha megerősíti az érintett terméket, megteszik a megfelelő intézkedéseket és rögzítik azt. Ez egy munkafolyamat-példa, nem ügyfél eset vagy élő eredmény."
     }
   },
   "email": {

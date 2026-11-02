@@ -161,7 +161,9 @@
     "q4": "Mida sisaldab tasuta skaneerimine?",
     "a4": "Kõik poe avalikus Shopify kataloogis saadaolevad tooted ja võimalike vastete kokkuvõte e-postiga. Privaatsed tooted on välja jäetud; skannimine ei ole ohutussertifikaat.",
     "q5": "Mis saab siis, kui võimalikke vasteid ei leita?",
-    "a5": "Aruanne näitab kontrollitud toodete arvu ja seda, et selle kontrolli käigus võimalikke vasteid ei leitud. See ei tõenda toodete ohutust. Uusi teateid võib lisanduda hiljem."
+    "a5": "Aruanne näitab kontrollitud toodete arvu ja seda, et selle kontrolli käigus võimalikke vasteid ei leitud. See ei tõenda toodete ohutust. Uusi teateid võib lisanduda hiljem.",
+    "q6": "Kas võimalik vaste tõestab, et minu toode on ohtlik?",
+    "a6": "Ei. AI või identifikaator võib ühendada sinu kirje Safety Gate'i kirjega, kuid pead siiski kontrollima täpset toodet, mudelit ja mõjutatud partiid. ZeroRecall toetab sinu ülevaatamist; see ei sertifitseeri ohutust ega asenda sinu juriidilisi kohustusi."
   },
   "cta": {
     "title": "Alusta tasuta skaneerimisega",
@@ -358,5 +360,41 @@
     "languageTitle": "Liides 24 EL-i keeles",
     "languageBody": "Vali oma töökeel rakenduses ja teavituste keel e-kirjade jaoks. Algupärased tooteidentifikaatorid ja ametlikud allikaandmed jäävad puutumata.",
     "control": "Sinu kataloog jääb sinu kontrolli alla. Ülevaatuse otsuse registreerimine ei avalda ega muuda automaatselt Shopify toodet."
+  },
+  "notice": {
+    "title": "Hoiatus jõuab sinuni",
+    "body": "Kui luuakse uus leid, saab ZeroRecall saata e-kirjaga toote, Safety Gate'i võrdluse ja lingi selle ülevaatamiseks sinu Shopify rakenduses. Sa ei pea hoidma rakendust avatuna, et teavitust saada.",
+    "whatTitle": "Selge järgmine samm, mitte ainult hoiatus",
+    "whatBody": "Ava leid, võrdle fotosid ja identifikaatoreid, seejärel kontrolli mudelit ja partiid enne otsustamist. Sinu teavituse saaja, keel ja eelistused on seadetes muudetavad.",
+    "weeklyTitle": "Uusi leide pole? Saate siiski uuenduse.",
+    "weeklyBody": "Kui iganädalased kokkuvõtted on lubatud, toob nädal ilma uute leidudeta kokkuvõtte. Olemasolevad avatud leiud võivad siiski vajada sinu tähelepanu; mittetäielik jälgimiskäik kuvatakse mittetäielikuna.",
+    "previewTitle": "Illustreeriv hoiatusteade",
+    "previewNote": "Näidissisu ja illustratsioon, mitte tegelik hoiatus ega saadetud e-kiri. Eelvaate nupp avab alloleva ülevaate; tegelik e-kiri lingib sinu poe autentitud ülevaatamislehele.",
+    "imageCaption": "Illustreeriv tootepilt, mitte ametlik Safety Gate'i foto",
+    "subject": "Leidsime võimaliku vaste EL-i Safety Gate'i hoiatusega.",
+    "productLabel": "Teie toode",
+    "alertLabel": "Safety Gate'i toode",
+    "action": "Vaata üle võimalik vaste",
+    "instruction": "Võrdle mudelit, kaubamärki ja partiid ametliku kirje abil. Salvesta oma otsus ja märkus rakenduses."
+  },
+  "start": {
+    "title": "Mis juhtub pärast installimist",
+    "body": "Alates esimesest kataloogi kontrollist kuni pideva jälgimiseni näed, mis töötab ja millised leiud vajavad otsust.",
+    "step1Title": "Ühenda oma pood ja vali plaan",
+    "step1Body": "Installi Shopify kaudu, kinnita toodete lugemisõigus ja vali plaan pideva jälgimise aktiveerimiseks. Määra oma e-posti saaja ja teavituse keel.",
+    "step2Title": "Lase esimesel kataloogi auditil käivituda",
+    "step2Body": "ZeroRecall impordib sinu tooted ja kontrollib taustal indekseeritud Safety Gate'i ajalugu. Jälgi edenemist rakenduses; suuremad kataloogid võtavad kauem aega. Ainuüksi import ei ole lõpetatud ohutuskontroll.",
+    "step3Title": "Vaata tulemus üle",
+    "step3Body": "Võimalikud vasted sisenevad sinu ülevaatamisjärjekorda. Võrdle ametlikku kirjet oma tootega ja salvesta otsus või hoia leid avatuna, oodates oma tarnijat.",
+    "step4Title": "Jätka jälgimist, kui asjad muutuvad",
+    "step4Body": "Uued Safety Gate'i hoiatused ja tooteuuendused käivitavad kontrollid, kui sinu plaan on aktiivne. Äsja loodud leiud võivad käivitada e-kirja ja sinu otsused jäävad ülevaatamise ajalukku.",
+    "matchTitle": "Leiti võimalik vaste",
+    "matchBody": "See on palve tõendeid üle vaadata, mitte tõestus, et sinu täpne mudel või partii on ohtlik. Kinnita need üksikasjad enne tegutsemist.",
+    "clearTitle": "Võimalikku vastet ei leitud",
+    "clearBody": "Lõpetatud kontroll ei leidnud indekseeritud kirjetest, mida see kontrollis, ühtegi võimalikku vastet. See ei ole ohutussertifikaat. Uued hoiatused ja toote muudatused võivad tulemust hiljem muuta.",
+    "audienceTitle": "Poodidele, mis müüvad füüsilisi tooteid EL-is",
+    "audienceBody": "Eriti kasulik mänguasjade, beebitoodete, elektroonika, kosmeetika, kodukaupade ning imporditud või valge märgistusega toodete puhul. AI fotovõrdlus võib aidata, kui tarnijate nimekirjades on puudulikud identifikaatorid. Safety Gate hõlmab ohtlikke mittetoidutooteid.",
+    "caseTitle": "Näide: muudetud pealkiri, seejärel tarnija kontroll",
+    "caseBody": "Illustreeriv stsenaarium: tarnija loetleb tasakaaluratta teise nime all ja jätab mudeli välja. Visuaalsed detailid viivad võimaliku vasteni. Kaupmees võrdleb hoiatust ja küsib tarnijalt mudelit ja partiid. Kui tõendid näitavad teist toodet, lükkavad nad leiu märkusega tagasi; kui see kinnitab mõjutatud toodet, võtavad nad asjakohased meetmed ja registreerivad selle. See on töövoo näide, mitte kliendijuhtum ega reaalne tulemus."
   }
 }

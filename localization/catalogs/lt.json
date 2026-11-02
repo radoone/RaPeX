@@ -162,7 +162,9 @@
       "q4": "Kas įtraukta į nemokamą skenavimą?",
       "a4": "Visi parduotuvės viešame Shopify kataloge prieinami produktai ir galimų atitikmenų santrauka el. paštu. Privatūs skelbimai neįtraukiami; tikrinimas nėra saugos sertifikatas.",
       "q5": "Kas nutinka, jei galimų sutapimų nerandama?",
-      "a5": "Ataskaitoje pateikiamas patikrintų produktų skaičius ir nurodoma, kad per šią patikrą galimų sutapimų nerasta. Tai nėra produktų saugos patvirtinimas. Naujų įspėjimų gali atsirasti vėliau."
+      "a5": "Ataskaitoje pateikiamas patikrintų produktų skaičius ir nurodoma, kad per šią patikrą galimų sutapimų nerasta. Tai nėra produktų saugos patvirtinimas. Naujų įspėjimų gali atsirasti vėliau.",
+      "q6": "Ar galimas atitikmuo įrodo, kad mano produktas yra pavojingas?",
+      "a6": "Ne. AI arba identifikatorius gali susieti jūsų sąrašą su Safety Gate įrašu, tačiau vis tiek turite patikrinti tikslų produktą, modelį ir paveiktą partiją. ZeroRecall palaiko jūsų peržiūrą; jis nesertifikuoja saugos ir nepakeičia jūsų teisinių įsipareigojimų."
     },
     "cta": {
       "title": "Pradėkite nuo nemokamo skenavimo",
@@ -359,6 +361,42 @@
       "languageTitle": "Sąsaja 24 ES kalbomis",
       "languageBody": "Pasirinkite savo darbo kalbą programėlėje ir pranešimų kalbą el. paštui. Originalūs produkto identifikatoriai ir oficialūs šaltinio faktai lieka nepakitę.",
       "control": "Jūsų katalogas lieka jūsų kontrolėje. Peržiūros sprendimo įrašymas automatiškai nepanaikina publikavimo ar nepakeičia Shopify produkto."
+    },
+    "notice": {
+      "title": "Įspėjimas pasiekia jus",
+      "body": "Kai sukuriama nauja išvada, ZeroRecall gali atsiųsti el. laišką apie produktą, Safety Gate palyginimą ir nuorodą, kad galėtumėte peržiūrėti jį savo Shopify programėlėje. Jums nereikia laikyti programėlės atidarytos, kad gautumėte pranešimą.",
+      "whatTitle": "Aiškus kitas žingsnis, o ne tik įspėjimas",
+      "whatBody": "Atidarykite išvadą, palyginkite nuotraukas ir identifikatorius, tada patikrinkite modelį ir partiją prieš priimdami sprendimą. Jūsų pranešimų gavėjas, kalba ir nuostatos yra redaguojami Nustatymuose.",
+      "weeklyTitle": "Nėra naujų išvadų? Vis tiek gausite atnaujinimą.",
+      "weeklyBody": "Įjungus savaitines suvestines, savaitė be naujų išvadų atneša suvestinę. Esamos atviros išvados vis dar gali reikalauti jūsų dėmesio; nebaigtas stebėjimo vykdymas rodomas kaip nebaigtas.",
+      "previewTitle": "Iliustracinis įspėjimo el. laiškas",
+      "previewNote": "Pavyzdinis turinys ir iliustracija, o ne tikras įspėjimas ar išsiųstas el. laiškas. Peržiūros mygtukas atidaro toliau pateiktą apžvalgą; tikras el. laiškas nukreipia į jūsų parduotuvės autentifikuotą peržiūros puslapį.",
+      "imageCaption": "Iliustracinis produkto vaizdas, o ne oficiali Safety Gate nuotrauka",
+      "subject": "Radome galimą atitikmenį su ES Safety Gate įspėjimu.",
+      "productLabel": "Jūsų produktas",
+      "alertLabel": "Safety Gate produktas",
+      "action": "Peržiūrėti galimą atitikmenį",
+      "instruction": "Palyginkite modelį, prekės ženklą ir partiją su oficialiu įrašu. Išsaugokite savo sprendimą ir pastabą programėlėje."
+    },
+    "start": {
+      "title": "Kas nutinka po įdiegimo",
+      "body": "Nuo pirmojo katalogo patikrinimo iki nuolatinio stebėjimo galite matyti, kas vyksta ir kurios išvados reikalauja sprendimo.",
+      "step1Title": "Prijunkite savo parduotuvę ir pasirinkite planą",
+      "step1Body": "Įdiekite per Shopify, patvirtinkite prieigą prie produktų skaitymo ir pasirinkite planą, kad aktyvuotumėte nuolatinį stebėjimą. Nustatykite savo el. pašto gavėją ir pranešimų kalbą.",
+      "step2Title": "Leiskite atlikti pirmąjį katalogo auditą",
+      "step2Body": "ZeroRecall importuoja jūsų produktus ir fone patikrina indeksuotą Safety Gate istoriją. Stebėkite eigą programėlėje; didesni katalogai užtrunka ilgiau. Vien importavimas nėra baigtas saugos patikrinimas.",
+      "step3Title": "Peržiūrėkite rezultatą",
+      "step3Body": "Galimi atitikmenys patenka į jūsų peržiūros eilę. Palyginkite oficialų įrašą su savo produktu ir išsaugokite sprendimą arba palikite išvadą atvirą, kol laukiate savo tiekėjo.",
+      "step4Title": "Tęskite stebėjimą, kai viskas keičiasi",
+      "step4Body": "Nauji Safety Gate įspėjimai ir produktų atnaujinimai sukelia patikrinimus, kol jūsų planas yra aktyvus. Naujai sukurtos išvados gali sukelti el. laišką, o jūsų sprendimai lieka peržiūros istorijoje.",
+      "matchTitle": "Rastas galimas atitikmuo",
+      "matchBody": "Tai yra prašymas peržiūrėti įrodymus, o ne įrodymas, kad jūsų tikslus modelis ar partija yra pavojinga. Prieš imdamiesi veiksmų, patvirtinkite šias detales.",
+      "clearTitle": "Galimas atitikmuo nerastas",
+      "clearBody": "Baigtas patikrinimas nerado galimo atitikmens patikrintuose indeksuotuose įrašuose. Tai nėra saugos sertifikatas. Nauji įspėjimai ir produktų pakeitimai gali pakeisti rezultatą vėliau.",
+      "audienceTitle": "Parduotuvėms, parduodančioms fizinius produktus ES",
+      "audienceBody": "Ypač naudinga žaislams, kūdikių prekėms, elektronikai, kosmetikai, namų prekėms ir importuotiems ar privačios etiketės produktams. AI nuotraukų palyginimas gali padėti, kai tiekėjų sąrašuose trūksta identifikatorių. Safety Gate apima pavojingus ne maisto produktus.",
+      "caseTitle": "Pavyzdys: pakeistas pavadinimas, tada tiekėjo patikrinimas",
+      "caseBody": "Iliustracinis scenarijus: tiekėjas pateikia balansinį dviratį kitu pavadinimu ir praleidžia modelį. Vizualinės detalės lemia galimą atitikmenį. Prekybininkas palygina įspėjimą ir prašo modelio bei partijos iš tiekėjo. Jei įrodymai rodo kitą produktą, jie atmeta išvadą su pastaba; jei tai patvirtina paveiktą produktą, jie imasi atitinkamų veiksmų ir juos užfiksuoja. Tai yra darbo eigos pavyzdys, o ne kliento atvejis ar gyvas rezultatas."
     }
   },
   "email": {
