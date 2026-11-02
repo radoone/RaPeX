@@ -81,3 +81,22 @@ test('variant hydration also returns authoritative title, images and description
   assert.ok(query.includes('images(first: 4)'));
   assert.deepEqual(result.product.barcodes, [{ barcode: '4006381333931' }]);
 });
+
+test('ingress gives equivalent REST and GraphQL versions the same durable task identity', async () => {
+  const s = setup(), ids = [], bodies = [];
+  const ingress = fn('merchant-monitoring', 'handleStartShopifyProductChangeRequest', {
+    db: s.db, FIRESTORE_COLLECTIONS: collections, FieldValue, installationKey,
+    requireAuthorizedRequest: () => true, coerceString: value => typeof value === 'string' ? value.trim() : undefined,
+    currentEntitlement: () => true, productChangeJobId: value => value.sourceUpdatedAt,
+    productChangeJobRef: (_shop, id) => s.db.doc(`${s.merchantPath}/product_change_jobs/${id}`),
+    PRODUCT_CHANGE_TASK_QUEUE: { enqueue: async (body, options) => { ids.push(options.id); bodies.push(body); } },
+    logger: { error() {} },
+  });
+  const response = { status(code) { assert.equal(code, 202); return this; }, json(body) { assert.equal(body.queued, true); } };
+  for (const version of ['2026-11-02T16:20:00-05:00', sourceUpdatedAt]) {
+    await ingress({ method: 'POST', headers: {}, body: { shop, productId: '1', productTitle: 'Current product', sourceUpdatedAt: version, product: { name: 'Current product', category: 'toys', description: 'Test fixture' } } }, response);
+  }
+  assert.deepEqual(ids, [new Date(sourceUpdatedAt).toISOString(), new Date(sourceUpdatedAt).toISOString()]);
+  assert.ok(bodies.every(body => body.product.sourceUpdatedAt === ids[0]));
+  assert.equal([...s.db.rows.keys()].filter(k => k.includes('/product_change_jobs/')).length, 1);
+});

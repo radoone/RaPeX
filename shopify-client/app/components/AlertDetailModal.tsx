@@ -56,6 +56,7 @@ export function AlertDetailModal({
   );
   const lightboxDialogRef = useRef<HTMLDialogElement>(null);
   const reactivateBtnRef = useRef<HTMLElement>(null);
+  const hasResult = Boolean(alert);
 
   // Polaris upgrades modal custom elements in the browser. Keeping this client-only
   // gives React identical server and first-client markup instead of hiding a mismatch.
@@ -64,9 +65,9 @@ export function AlertDetailModal({
   }, []);
 
   useEffect(() => {
-    if (!isHydrated || !openOnMount || !alert?.id) return;
+    if (!isHydrated || !openOnMount || !hasResult) return;
     return openReviewModalWhenReady(modalId, document, customElements);
-  }, [alert?.id, isHydrated, modalId, openOnMount]);
+  }, [alert?.id, hasResult, isHydrated, modalId, openOnMount]);
 
   // Close lightbox
   const closeLightbox = useCallback(() => {
@@ -751,7 +752,7 @@ export function AlertDetailModal({
             {t("actions.recordDecision")}
           </s-button>
         )}
-        {(alert.status === "dismissed" || alert.status === "resolved") && (
+        {onReactivate && (alert.status === "dismissed" || alert.status === "resolved") && (
           <s-button
             ref={reactivateBtnRef}
             slot="secondary-actions"
