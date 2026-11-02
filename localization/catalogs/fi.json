@@ -54,7 +54,7 @@
     },
     "showcase": {
       "eyebrow": "HAVAINNOLLISET ESIMERKIT",
-      "title": "Mitä saat",
+      "title": "ZeroRecall Shopify-kaupassasi",
       "intro": "Nämä esimerkit käyttävät kuvitteellisia tuotteita ja viestejä.",
       "sample": "Kuvitus",
       "scanKicker": "Skannaa sähköpostivahvistuksen jälkeen",
@@ -68,8 +68,8 @@
       "yourProduct": "Tuotteesi",
       "alertRecord": "Safety Gate -tietue",
       "matchReason": "Vertaa kuvia, mallia ja erää ennen päätöksen tekemistä.",
-      "matchTitle": "Välitön sähköposti uudesta osumasta",
-      "matchBody": "Asennuksen jälkeen saat todisteet tarkistettavaksi sähköpostitse.",
+      "matchTitle": "Vertaa tuotetta. Valitse seuraava vaihe.",
+      "matchBody": "Shopifyn ja Safety Gaten kuvat, tunnisteet ja virallinen riski näkyvät tarkistusohjainten vieressä.",
       "emailLabel": "Sähköpostipäivitys",
       "clearKicker": "Viikoittainen päivitys asennuksen jälkeen",
       "clearScreenTitle": "Ei uusia löydöksiä tällä viikolla",
@@ -77,7 +77,12 @@
       "clearStatus": "Ei toimenpiteitä tarvita",
       "clearTitle": "Mielenrauhaa viikoittaisella päivityksellä",
       "clearBody": "Kun uusia löydöksiä ei ole, vahvistamme sen sähköpostitse.",
-      "disclaimer": "Kuvitukset kuvitteellisilla tuotteilla ja viesteillä. Nämä eivät ole todellisia tuloksia tai lähetettyjä sähköposteja."
+      "disclaimer": "Kuvitukset kuvitteellisilla tuotteilla ja viesteillä. Nämä eivät ole todellisia tuloksia tai lähetettyjä sähköposteja.",
+      "body": "Tarkastele tuoteluetteloasi ja vertaa mahdollista osumaa poistumatta Shopify Administa. Nämä ovat todellisia kuvakaappauksia sovelluksesta.",
+      "catalogTitle": "Tiedä, mitkä tuotteet vaativat vielä tarkistuksen",
+      "catalogBody": "Hae luettelostasi, katso tallennettuja tuloksia ja löydä uudet tai muuttuneet tuotteet.",
+      "open": "Avaa koko näytön kuvakaappaus",
+      "note": "Todellisia sovelluksen kuvakaappauksia testikaupasta. Käyttöliittymä näkyy englanniksi. Tuotenimet, määrät ja löydökset ovat testidataa, eivät asiakastapaustutkimus. Kuvakaappaukset on rajattu sovellukseen; näytetyt tulokset ovat muuttumattomia."
     },
     "preview": {
       "adminStore": "kauppasi.myshopify.com",
@@ -331,6 +336,29 @@
       "reviewBody": "Vertaa listaa ja virallista hälytystä, sitten varmista malli ja erä toimittajaltasi. Asennetussa sovelluksessa kirjaa ratkaisu, hylkää eri tuote tai pidä löydös avoinna odottaessasi toimittajaa.",
       "record": "Tarkistuspäätökset tallennetaan toimijan, ajan ja muistiinpanon kera sovellukseen.",
       "limit": "Tekoäly ehdottaa mahdollisia vastaavuuksia. Se ei sertifioi turvallisuutta tai korvaa omaa tarkistustasi. Tämä esimerkki on havainnollistava; se ei ole todellinen takaisinkutsu tai reaaliaikainen skannaus."
+    },
+    "features": {
+      "title": "Mitä kauppasi saa ZeroRecallilla",
+      "body": "Asennettu sovellus tuo luettelotarkistukset, jatkuvan seurannan ja dokumentoidut päätökset yhteen Shopify-työnkulkuun. Aktiivinen suunnitelma mahdollistaa jatkuvan seurannan; julkinen ilmainen skannaus on erillinen kertaluonteinen tarkistus.",
+      "catalogTitle": "Ensimmäinen tarkistus koko luettelostasi",
+      "catalogBody": "Tuo Shopify-luettelosi ja vertaa sitä indeksoituun Safety Gate -historiaan. Seuraa edistymistä ja näe, millä nykyisillä tuoteversioilla on tallennettu tarkistus.",
+      "monitorTitle": "Taustalla jatkuvasti toimiva seuranta",
+      "monitorBody": "Uudet Safety Gate -hälytykset ja Shopify-tuotemuutokset käynnistävät taustatarkistuksia, vaikka Shopify Admin olisi suljettu.",
+      "aiTitle": "EAN, tuotetiedot ja kuvien vertailu",
+      "aiBody": "Priorisoi tarkat EAN / GTIN-osumiset. Käytä tekoälyä arvioimaan todennäköisiä osumia brändeistä, malleista, kuvauksista ja kuvista, kun tunnisteet ovat puutteellisia.",
+      "productTitle": "Tarkistukset siellä, missä hallitset tuotteita",
+      "productBody": "Hae yhtä tuotetta, suorita manuaalinen tarkistus tai tarkastele sen viimeisintä Safety Gate -tilaa ja pyydä tarkistus suoraan Shopify-tuotesivulta.",
+      "reviewTitle": "Tarkistusjono selkeillä tuloksilla",
+      "reviewBody": "Vertaa todisteita, hylkää eri tuote, kirjaa tehdyt toimenpiteet tai pidä löydös avoinna odottaessasi toimittajaasi. Tarkastele kuvagallerioita ja linkkejä virallisiin hälytyksiin.",
+      "bulkTitle": "Massapäätökset kiireiseen luetteloon",
+      "bulkBody": "Ratkaise tai hylkää useita löydöksiä yhdessä. Pidä muistiinpanoja ja päätöshistoriaa toistamatta samaa tarkistustoimintoa jokaiselle riville.",
+      "emailTitle": "Sähköposti-ilmoitukset ja viikoittaiset yhteenvedot",
+      "emailBody": "Saat välittömän sähköpostin uudesta löydöksestä ja viikoittaisen yhteenvedon, kun uusia löydöksiä ei ole. Valitse vastaanottaja, kieli ja ilmoitusasetukset.",
+      "auditTitle": "Tarkistusten ja päätösten kirjaus",
+      "auditBody": "Säilytä tarkistustulokset toimijan, aikaleiman ja muistiinpanojen kanssa. Tarkastele päätöshistoriaa ja vie tarkistukset ja päätökset CSV-raporttina.",
+      "languageTitle": "Käyttöliittymä 24 EU-kielellä",
+      "languageBody": "Valitse työkielesi sovelluksessa ja ilmoituskielesi sähköpostia varten. Alkuperäiset tuotetunnisteet ja viralliset lähdetiedot pysyvät ennallaan.",
+      "control": "Luettelosi pysyy hallinnassasi. Tarkistuspäätöksen tallentaminen ei automaattisesti poista tai muuta Shopify-tuotetta."
     }
   },
   "email": {

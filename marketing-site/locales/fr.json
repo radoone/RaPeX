@@ -53,7 +53,7 @@
   },
   "showcase": {
     "eyebrow": "APERÇUS ILLUSTRATIFS",
-    "title": "Ce que vous recevez",
+    "title": "Découvrez ZeroRecall dans Shopify",
     "intro": "Ces exemples utilisent des produits et des messages fictifs.",
     "sample": "Illustration",
     "scanKicker": "Scan après confirmation par e-mail",
@@ -67,8 +67,8 @@
     "yourProduct": "Votre produit",
     "alertRecord": "Enregistrement Safety Gate",
     "matchReason": "Comparez les photos, le modèle et le lot avant de décider.",
-    "matchTitle": "E-mail immédiat pour une nouvelle correspondance",
-    "matchBody": "Après l'installation, vous recevez des preuves à examiner par e-mail.",
+    "matchTitle": "Comparez le produit. Choisissez votre prochaine étape.",
+    "matchBody": "Les photos, identifiants et le risque officiel de Shopify et Safety Gate apparaissent à côté des contrôles de révision.",
     "emailLabel": "Mise à jour par e-mail",
     "clearKicker": "Mise à jour hebdomadaire après l'installation",
     "clearScreenTitle": "Aucun nouveau signalement cette semaine",
@@ -76,7 +76,12 @@
     "clearStatus": "Aucune action requise",
     "clearTitle": "Tranquillité d'esprit avec une mise à jour hebdomadaire",
     "clearBody": "Lorsqu'il n'y a pas de nouveaux signalements, nous le confirmons par e-mail.",
-    "disclaimer": "Illustrations avec des produits et des messages fictifs. Ce ne sont pas des résultats réels ou des e-mails envoyés."
+    "disclaimer": "Illustrations avec des produits et des messages fictifs. Ce ne sont pas des résultats réels ou des e-mails envoyés.",
+    "body": "Examinez votre catalogue et comparez une correspondance possible sans quitter l'interface administrateur de Shopify. Ce sont des écrans réels de l'application.",
+    "catalogTitle": "Sachez quels produits nécessitent encore une vérification",
+    "catalogBody": "Recherchez dans votre catalogue, consultez les résultats enregistrés et trouvez les produits nouveaux ou modifiés.",
+    "open": "Ouvrir la capture d'écran en taille réelle",
+    "note": "Captures d'écran réelles de l'application provenant d'une boutique de test. Interface affichée en anglais. Les noms de produits, les quantités et les résultats sont des données de test, pas une étude de cas client. Les captures d'écran sont recadrées sur l'application ; les résultats affichés sont inchangés."
   },
   "preview": {
     "adminStore": "votre-boutique.myshopify.com",
@@ -330,5 +335,28 @@
     "reviewBody": "Comparez l'annonce et l'alerte officielle, puis vérifiez le modèle et le lot auprès de votre fournisseur. Dans l'application installée, enregistrez une résolution, rejetez un produit différent ou laissez la constatation ouverte en attendant le fournisseur.",
     "record": "Les décisions d'examen sont enregistrées avec un acteur, une heure et une note dans l'application.",
     "limit": "L'IA suggère des correspondances possibles. Elle ne certifie pas la sécurité et ne remplace pas votre examen. Cet exemple est illustratif ; ce n'est pas un rappel réel ni une analyse en direct."
+  },
+  "features": {
+    "title": "Ce que votre boutique obtient avec ZeroRecall",
+    "body": "L'application installée intègre les vérifications de catalogue, la surveillance continue et les décisions documentées dans un seul flux de travail Shopify. Un plan actif permet une surveillance continue ; l'analyse gratuite publique est une vérification ponctuelle distincte.",
+    "catalogTitle": "Une première vérification de votre catalogue",
+    "catalogBody": "Importez votre catalogue Shopify et comparez-le avec l'historique indexé de Safety Gate. Suivez les progrès et voyez quelles versions actuelles de produits ont une vérification enregistrée.",
+    "monitorTitle": "Une surveillance qui continue de fonctionner en arrière-plan",
+    "monitorBody": "Les nouvelles alertes Safety Gate et les modifications de produits Shopify déclenchent des vérifications en arrière-plan, même lorsque l'interface administrateur de Shopify est fermée.",
+    "aiTitle": "Comparaison des EAN, des détails du produit et des photos",
+    "aiBody": "Priorisez les correspondances exactes d'EAN / GTIN. Utilisez l'IA pour évaluer les correspondances probables à partir des marques, modèles, descriptions et photos lorsque les identifiants sont incomplets.",
+    "productTitle": "Vérifications là où vous gérez les produits",
+    "productBody": "Recherchez un produit, effectuez une vérification manuelle ou consultez son dernier statut Safety Gate et demandez une vérification directement depuis la page produit Shopify.",
+    "reviewTitle": "Une file d'attente de révision avec des résultats clairs",
+    "reviewBody": "Comparez les preuves, rejetez un produit différent, enregistrez l'action entreprise ou laissez une constatation ouverte en attendant votre fournisseur. Examinez les galeries de photos et les liens vers les alertes officielles.",
+    "bulkTitle": "Décisions en masse pour un catalogue chargé",
+    "bulkBody": "Résolvez ou rejetez plusieurs constatations ensemble. Conservez des notes et l'historique des décisions sans répéter la même action de révision pour chaque ligne.",
+    "emailTitle": "Alertes par e-mail et résumés hebdomadaires",
+    "emailBody": "Recevez un e-mail immédiat pour une nouvelle constatation et un résumé hebdomadaire lorsqu'il n'y a pas de nouvelles constatations. Choisissez le destinataire, la langue et les préférences de notification.",
+    "auditTitle": "Un registre des vérifications et des décisions",
+    "auditBody": "Conservez les résultats des révisions avec un acteur, un horodatage et des notes. Consultez l'historique des décisions et exportez les vérifications et les décisions dans un rapport CSV.",
+    "languageTitle": "Une interface en 24 langues de l'UE",
+    "languageBody": "Choisissez votre langue de travail dans l'application et votre langue de notification pour les e-mails. Les identifiants de produit originaux et les faits de source officielle restent intacts.",
+    "control": "Votre catalogue reste sous votre contrôle. L'enregistrement d'une décision de révision ne dépublie ni ne modifie automatiquement un produit Shopify."
   }
 }

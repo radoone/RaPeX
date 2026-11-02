@@ -53,7 +53,7 @@
   },
   "showcase": {
     "eyebrow": "RÉAMHAMHARCAÍ LÉIRITHEACHA",
-    "title": "Cad a fhaigheann tú",
+    "title": "Féach ar ZeroRecall laistigh de Shopify",
     "intro": "Úsáideann na samplaí seo táirgí agus teachtaireachtaí ficseanúla.",
     "sample": "Léaráid",
     "scanKicker": "Scanadh tar éis deimhniú ríomhphoist",
@@ -67,8 +67,8 @@
     "yourProduct": "Do tháirge",
     "alertRecord": "Taifead Safety Gate",
     "matchReason": "Déan comparáid idir grianghraif, samhail agus bhaisc sula gcinnfidh tú.",
-    "matchTitle": "Ríomhphost láithreach le haghaidh meaitseála nua",
-    "matchBody": "Tar éis na suiteála, gheobhaidh tú fianaise le hathbhreithniú trí ríomhphost.",
+    "matchTitle": "Déan comparáid idir an táirge. Roghnaigh do chéad chéim eile.",
+    "matchBody": "Tá grianghraif, aitheantóirí Shopify agus Safety Gate agus an riosca oifigiúil le feiceáil in aice leis na rialuithe athbhreithnithe.",
     "emailLabel": "Nuashonrú ríomhphoist",
     "clearKicker": "Nuashonrú seachtainiúil tar éis na suiteála",
     "clearScreenTitle": "Gan aon torthaí nua an tseachtain seo",
@@ -76,7 +76,12 @@
     "clearStatus": "Níl aon ghníomh ag teastáil",
     "clearTitle": "Suaimhneas intinne le nuashonrú seachtainiúil",
     "clearBody": "Nuair nach mbíonn aon torthaí nua ann, deimhnímid é trí ríomhphost.",
-    "disclaimer": "Léaráidí le táirgí agus teachtaireachtaí ficseanúla. Ní torthaí fíor nó ríomhphoist seolta iad seo."
+    "disclaimer": "Léaráidí le táirgí agus teachtaireachtaí ficseanúla. Ní torthaí fíor nó ríomhphoist seolta iad seo.",
+    "body": "Déan athbhreithniú ar do chatalóg agus déan comparáid idir meaitseáil fhéideartha gan Shopify Admin a fhágáil. Is scáileáin fhíora iad seo ón aip.",
+    "catalogTitle": "Bíodh a fhios agat cé na táirgí a dteastaíonn seiceáil uathu fós",
+    "catalogBody": "Cuardaigh do chatalóg, féach ar thorthaí sábháilte agus aimsigh táirgí atá nua nó athraithe.",
+    "open": "Oscail an scáileán iomlán",
+    "note": "Fíorscáileáin aipe ó stór tástála. Comhéadan taispeánta i mBéarla. Is sonraí tástála iad ainmneacha táirgí, líon agus torthaí, ní cás-staidéar custaiméara. Tá scáileáin gearrtha don aip; tá na torthaí taispeánta gan athrú."
   },
   "preview": {
     "adminStore": "do-stór.myshopify.com",
@@ -330,5 +335,28 @@
     "reviewBody": "Déan comparáid idir an liostáil agus an foláireamh oifigiúil, ansin fíoraigh an tsamhail agus an bhaisc le do sholáthraí. San aip suiteáilte, taifead réiteach, dífhostaigh táirge difriúil, nó coinnigh an toradh oscailte agus tú ag fanacht leis an soláthraí.",
     "record": "Sábháiltear cinntí athbhreithnithe le haisteoir, am agus nóta san aip.",
     "limit": "Molann AI meaitseálacha féideartha. Ní dheimhníonn sé sábháilteacht ná ní thagann sé in ionad do chuid athbhreithnithe. Is léiriú é an sampla seo; ní fíor-aisghairm ná scanadh beo é."
+  },
+  "features": {
+    "title": "Cad a fhaigheann do stór le ZeroRecall",
+    "body": "Tugann an aip suiteáilte seiceálacha catalóige, monatóireacht leanúnach agus cinntí doiciméadaithe isteach in aon sreabhadh oibre Shopify amháin. Cuireann plean gníomhach ar chumas monatóireachta leanúnaí; is seiceáil aonuaire ar leith é an scanadh poiblí saor in aisce.",
+    "catalogTitle": "An chéad seiceáil ar fud do chatalóige",
+    "catalogBody": "Iompórtáil do chatalóg Shopify agus déan comparáid idir í agus stair innéacsaithe Safety Gate. Lean an dul chun cinn agus féach cé na leaganacha reatha táirgí a bhfuil seiceáil sábháilte acu.",
+    "monitorTitle": "Monatóireacht a leanann ag obair sa chúlra",
+    "monitorBody": "Spreagann foláirimh nua Safety Gate agus athruithe táirgí Shopify seiceálacha cúlra, fiú nuair a bhíonn Shopify Admin dúnta.",
+    "aiTitle": "EAN, sonraí táirge agus comparáid grianghraf",
+    "aiBody": "Tabhair tús áite do mheaitseálacha cruinne EAN / GTIN. Bain úsáid as AI chun meaitseálacha dóchúla a mheas ó bhrandaí, samhlacha, tuairiscí agus grianghraif nuair a bhíonn aitheantóirí neamhiomlán.",
+    "productTitle": "Seiceálacha áit a mbainistíonn tú táirgí",
+    "productBody": "Cuardaigh táirge amháin, rith seiceáil láimhe nó féach ar a stádas Safety Gate is déanaí agus iarr seiceáil go díreach ó leathanach táirge Shopify.",
+    "reviewTitle": "Scuaine athbhreithnithe le torthaí soiléire",
+    "reviewBody": "Déan comparáid idir an fhianaise, dífhostaigh táirge difriúil, taifead an gníomh a rinneadh nó coinnigh toradh oscailte agus tú ag fanacht le do sholáthraí. Déan athbhreithniú ar ghailearaithe grianghraf agus naisc le foláirimh oifigiúla.",
+    "bulkTitle": "Cinntí mórchóir do chatalóg ghnóthach",
+    "bulkBody": "Réitigh nó dífhostaigh ilthorthaí le chéile. Coinnigh nótaí agus stair cinntí gan an gníomh athbhreithnithe céanna a athdhéanamh do gach sraith.",
+    "emailTitle": "Foláirimh ríomhphoist agus achoimrí seachtainiúla",
+    "emailBody": "Faigh ríomhphost láithreach le haghaidh toradh nua-chruthaithe agus achoimre sheachtainiúil nuair nach bhfuil aon torthaí nua ann. Roghnaigh an faighteoir, an teanga agus na roghanna fógraí.",
+    "auditTitle": "Taifead seiceálacha agus cinntí",
+    "auditBody": "Coinnigh torthaí athbhreithnithe le haisteoir, stampa ama agus nótaí. Féach ar stair cinntí agus easpórtáil seiceálacha agus cinntí i dtuarascáil CSV.",
+    "languageTitle": "Comhéadan i 24 teanga AE",
+    "languageBody": "Roghnaigh do theanga oibre san aip agus do theanga fógraí le haghaidh ríomhphoist. Fanann aitheantóirí táirgí bunaidh agus fíricí foinse oifigiúla slán.",
+    "control": "Fanann do chatalóg faoi do smacht. Ní dhéanann taifeadadh cinneadh athbhreithnithe táirge Shopify a dhífhoilsiú nó a athrú go huathoibríoch."
   }
 }

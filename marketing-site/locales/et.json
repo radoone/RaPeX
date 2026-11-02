@@ -53,7 +53,7 @@
   },
   "showcase": {
     "eyebrow": "ILLUSTREERIVAD EELVAATED",
-    "title": "Mida te saate",
+    "title": "Vaata ZeroRecalli Shopify sees",
     "intro": "Need näited kasutavad väljamõeldud tooteid ja sõnumeid.",
     "sample": "Illustratsioon",
     "scanKicker": "Skaneerimine pärast e-posti kinnitust",
@@ -67,8 +67,8 @@
     "yourProduct": "Teie toode",
     "alertRecord": "Safety Gate'i kirje",
     "matchReason": "Võrdle fotosid, mudelit ja partiid enne otsustamist.",
-    "matchTitle": "Kohene e-kiri uue vaste kohta",
-    "matchBody": "Pärast installimist saate ülevaatamiseks tõendid e-posti teel.",
+    "matchTitle": "Võrdle toodet. Vali oma järgmine samm.",
+    "matchBody": "Shopify ja Safety Gate'i fotod, identifikaatorid ja ametlik risk kuvatakse ülevaatuse juhtnuppude kõrval.",
     "emailLabel": "E-posti uuendus",
     "clearKicker": "Iganädalane uuendus pärast installimist",
     "clearScreenTitle": "Sel nädalal uusi leide pole",
@@ -76,7 +76,12 @@
     "clearStatus": "Tegevust pole vaja",
     "clearTitle": "Muretu meel iganädalase uuendusega",
     "clearBody": "Kui uusi leide pole, kinnitame seda e-posti teel.",
-    "disclaimer": "Illustratsioonid väljamõeldud toodete ja sõnumitega. Need ei ole tegelikud tulemused ega saadetud e-kirjad."
+    "disclaimer": "Illustratsioonid väljamõeldud toodete ja sõnumitega. Need ei ole tegelikud tulemused ega saadetud e-kirjad.",
+    "body": "Vaata oma kataloogi ja võrdle võimalikke vasteid Shopify Administ lahkumata. Need on rakenduse tegelikud ekraanipildid.",
+    "catalogTitle": "Tea, millised tooted vajavad veel kontrolli",
+    "catalogBody": "Otsi oma kataloogist, vaata salvestatud tulemusi ja leia uusi või muudetud tooteid.",
+    "open": "Ava täissuuruses ekraanipilt",
+    "note": "Tegelikud rakenduse ekraanipildid testpoest. Liides on näidatud inglise keeles. Tootenimed, kogused ja leiud on testandmed, mitte kliendi juhtumiuuring. Ekraanipildid on kärbitud rakenduse piiridesse; kuvatud tulemused on muutmata."
   },
   "preview": {
     "adminStore": "teie-pood.myshopify.com",
@@ -330,5 +335,28 @@
     "reviewBody": "Võrrelge kirjet ja ametlikku hoiatust, seejärel kontrollige mudelit ja partiid oma tarnijaga. Installitud rakenduses registreerige lahendus, lükake tagasi erinev toode või hoidke leid avatuna, kuni ootate tarnijat.",
     "record": "Ülevaatamise otsused salvestatakse rakenduses koos tegija, aja ja märkusega.",
     "limit": "AI pakub välja võimalikke vasteid. See ei sertifitseeri ohutust ega asenda teie ülevaatust. See näide on illustreeriv; see ei ole tegelik tagasikutsumine ega reaalajas skaneerimine."
+  },
+  "features": {
+    "title": "Mida sinu pood ZeroRecalliga saab",
+    "body": "Installitud rakendus koondab kataloogikontrollid, pideva jälgimise ja dokumenteeritud otsused ühte Shopify töövoogu. Aktiivne pakett võimaldab pidevat jälgimist; avalik tasuta skaneerimine on eraldi ühekordne kontroll.",
+    "catalogTitle": "Esimene kontroll kogu sinu kataloogis",
+    "catalogBody": "Impordi oma Shopify kataloog ja võrdle seda indekseeritud Safety Gate'i ajalooga. Jälgi edenemist ja vaata, millistel praegustel tooteversioonidel on salvestatud kontroll.",
+    "monitorTitle": "Jälgimine, mis töötab taustal edasi",
+    "monitorBody": "Uued Safety Gate'i hoiatused ja Shopify toodete muudatused käivitavad taustakontrollid, isegi kui Shopify Admin on suletud.",
+    "aiTitle": "EAN, tooteandmed ja fotode võrdlus",
+    "aiBody": "Prioriseeri täpsed EAN / GTIN vasted. Kasuta tehisintellekti, et hinnata tõenäolisi vasteid kaubamärkide, mudelite, kirjelduste ja fotode põhjal, kui identifikaatorid on puudulikud.",
+    "productTitle": "Kontrollid seal, kus haldad tooteid",
+    "productBody": "Otsi ühte toodet, käivita käsitsi kontroll või vaata selle viimast Safety Gate'i olekut ja taotle kontrolli otse Shopify tootelehelt.",
+    "reviewTitle": "Ülevaatuse järjekord selgete tulemustega",
+    "reviewBody": "Võrdle tõendeid, lükka tagasi teine toode, registreeri tehtud toiming või hoia leid avatuna, oodates oma tarnijat. Vaata fotogaleriisid ja linke ametlikele hoiatustele.",
+    "bulkTitle": "Hulgiotsused hõivatud kataloogi jaoks",
+    "bulkBody": "Lahenda või lükka tagasi mitu leidu korraga. Hoia märkmeid ja otsuste ajalugu, kordamata sama ülevaatuse toimingut iga rea jaoks.",
+    "emailTitle": "E-posti teavitused ja iganädalased kokkuvõtted",
+    "emailBody": "Saada kohene e-kiri uue leiu kohta ja iganädalane kokkuvõte, kui uusi leide ei ole. Vali saaja, keel ja teavituste eelistused.",
+    "auditTitle": "Kontrollide ja otsuste register",
+    "auditBody": "Hoia ülevaatuse tulemusi koos tegija, ajatempli ja märkmetega. Vaata otsuste ajalugu ja ekspordi kontrollid ja otsused CSV-aruandena.",
+    "languageTitle": "Liides 24 EL-i keeles",
+    "languageBody": "Vali oma töökeel rakenduses ja teavituste keel e-kirjade jaoks. Algupärased tooteidentifikaatorid ja ametlikud allikaandmed jäävad puutumata.",
+    "control": "Sinu kataloog jääb sinu kontrolli alla. Ülevaatuse otsuse registreerimine ei avalda ega muuda automaatselt Shopify toodet."
   }
 }

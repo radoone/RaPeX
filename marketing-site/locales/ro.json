@@ -53,7 +53,7 @@
   },
   "showcase": {
     "eyebrow": "PREVIZUALIZĂRI ILUSTRATIVE",
-    "title": "Ce primiți",
+    "title": "Vedeți ZeroRecall în Shopify",
     "intro": "Aceste exemple folosesc produse și mesaje fictive.",
     "sample": "Ilustrație",
     "scanKicker": "Scanare după confirmarea e-mailului",
@@ -67,8 +67,8 @@
     "yourProduct": "Produsul dvs.",
     "alertRecord": "Înregistrare Safety Gate",
     "matchReason": "Comparați fotografiile, modelul și lotul înainte de a decide.",
-    "matchTitle": "E-mail imediat pentru o nouă potrivire",
-    "matchBody": "După instalare, primiți dovezi pentru a le examina prin e-mail.",
+    "matchTitle": "Comparați produsul. Alegeți următorul pas.",
+    "matchBody": "Fotografiile, identificatorii Shopify și Safety Gate, precum și riscul oficial, apar alături de controalele de revizuire.",
     "emailLabel": "Actualizare e-mail",
     "clearKicker": "Actualizare săptămânală după instalare",
     "clearScreenTitle": "Nicio nouă constatare în această săptămână",
@@ -76,7 +76,12 @@
     "clearStatus": "Nu este necesară nicio acțiune",
     "clearTitle": "Liniște sufletească cu o actualizare săptămânală",
     "clearBody": "Când nu există noi constatări, confirmăm prin e-mail.",
-    "disclaimer": "Ilustrații cu produse și mesaje fictive. Acestea nu sunt rezultate reale sau e-mailuri trimise."
+    "disclaimer": "Ilustrații cu produse și mesaje fictive. Acestea nu sunt rezultate reale sau e-mailuri trimise.",
+    "body": "Examinați-vă catalogul și comparați o posibilă potrivire fără a părăsi Shopify Admin. Acestea sunt ecrane reale din aplicație.",
+    "catalogTitle": "Știți ce produse necesită încă o verificare",
+    "catalogBody": "Căutați în catalogul dvs., vedeți rezultatele salvate și găsiți produse noi sau modificate.",
+    "open": "Deschideți captura de ecran la dimensiune completă",
+    "note": "Capturi de ecran reale ale aplicației dintr-un magazin de test. Interfața este afișată în engleză. Numele produselor, numărul de produse și constatările sunt date de test, nu un studiu de caz al unui client. Capturile de ecran sunt decupate la aplicație; rezultatele afișate sunt neschimbate."
   },
   "preview": {
     "adminStore": "magazinul-dvs.myshopify.com",
@@ -330,5 +335,28 @@
     "reviewBody": "Compară listarea și alerta oficială, apoi verifică modelul și lotul cu furnizorul tău. În aplicația instalată, înregistrează o rezoluție, respinge un produs diferit sau menține constatarea deschisă în așteptarea furnizorului.",
     "record": "Deciziile de verificare sunt salvate cu un actor, oră și notă în aplicație.",
     "limit": "AI sugerează posibile potriviri. Nu certifică siguranța și nu înlocuiește verificarea ta. Acest exemplu este ilustrativ; nu este o rechemare reală sau o scanare în timp real."
+  },
+  "features": {
+    "title": "Ce obține magazinul dvs. cu ZeroRecall",
+    "body": "Aplicația instalată aduce verificări de catalog, monitorizare continuă și decizii documentate într-un singur flux de lucru Shopify. Un plan activ permite monitorizarea continuă; scanarea publică gratuită este o verificare separată, unică.",
+    "catalogTitle": "O primă verificare a catalogului dvs.",
+    "catalogBody": "Importați catalogul dvs. Shopify și comparați-l cu istoricul Safety Gate indexat. Urmăriți progresul și vedeți ce versiuni actuale de produse au o verificare salvată.",
+    "monitorTitle": "Monitorizare care funcționează în fundal",
+    "monitorBody": "Noile alerte Safety Gate și modificările produselor Shopify declanșează verificări în fundal, chiar și atunci când Shopify Admin este închis.",
+    "aiTitle": "EAN, detalii produs și comparație foto",
+    "aiBody": "Prioritizați potrivirile exacte EAN / GTIN. Utilizați AI pentru a evalua potrivirile probabile din mărci, modele, descrieri și fotografii atunci când identificatorii sunt incompleți.",
+    "productTitle": "Verificări acolo unde gestionați produsele",
+    "productBody": "Căutați un produs, rulați o verificare manuală sau vizualizați cel mai recent statut Safety Gate și solicitați o verificare direct de pe pagina de produs Shopify.",
+    "reviewTitle": "O coadă de revizuire cu rezultate clare",
+    "reviewBody": "Comparați dovezile, respingeți un produs diferit, înregistrați acțiunea întreprinsă sau mențineți o constatare deschisă în așteptarea furnizorului dvs. Examinați galeriile foto și linkurile către alertele oficiale.",
+    "bulkTitle": "Decizii în masă pentru un catalog aglomerat",
+    "bulkBody": "Rezolvați sau respingeți mai multe constatări împreună. Păstrați note și istoricul deciziilor fără a repeta aceeași acțiune de revizuire pentru fiecare rând.",
+    "emailTitle": "Alerte prin e-mail și rezumate săptămânale",
+    "emailBody": "Primiți un e-mail imediat pentru o constatare nou creată și un rezumat săptămânal atunci când nu există constatări noi. Alegeți destinatarul, limba și preferințele de notificare.",
+    "auditTitle": "O înregistrare a verificărilor și deciziilor",
+    "auditBody": "Păstrați rezultatele revizuirii cu un actor, marcaj de timp și note. Vizualizați istoricul deciziilor și exportați verificările și deciziile într-un raport CSV.",
+    "languageTitle": "O interfață în 24 de limbi UE",
+    "languageBody": "Alegeți limba de lucru în aplicație și limba de notificare pentru e-mail. Identificatorii originali ai produselor și faptele oficiale din sursă rămân intacte.",
+    "control": "Catalogul dvs. rămâne sub controlul dvs. Înregistrarea unei decizii de revizuire nu anulează automat publicarea sau modificarea unui produs Shopify."
   }
 }

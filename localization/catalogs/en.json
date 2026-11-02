@@ -54,7 +54,7 @@
     },
     "showcase": {
       "eyebrow": "ILLUSTRATIVE PREVIEWS",
-      "title": "What you receive",
+      "title": "See ZeroRecall inside Shopify",
       "intro": "These examples use fictional products and messages.",
       "sample": "Illustration",
       "scanKicker": "Scan after email confirmation",
@@ -68,8 +68,8 @@
       "yourProduct": "Your product",
       "alertRecord": "Safety Gate record",
       "matchReason": "Compare photos, model and batch before deciding.",
-      "matchTitle": "Immediate email for a new match",
-      "matchBody": "After installation, you receive evidence to review by email.",
+      "matchTitle": "Compare the product. Choose your next step.",
+      "matchBody": "Shopify and Safety Gate photos, identifiers and the official risk appear beside the review controls.",
       "emailLabel": "Email update",
       "clearKicker": "Weekly update after installation",
       "clearScreenTitle": "No new findings this week",
@@ -77,7 +77,12 @@
       "clearStatus": "No action needed",
       "clearTitle": "Peace of mind with a weekly update",
       "clearBody": "When there are no new findings, we confirm it by email.",
-      "disclaimer": "Illustrations with fictional products and messages. These are not real results or sent emails."
+      "disclaimer": "Illustrations with fictional products and messages. These are not real results or sent emails.",
+      "body": "Review your catalog and compare a possible match without leaving Shopify Admin. These are real screens from the app.",
+      "catalogTitle": "Know which products still need a check",
+      "catalogBody": "Search your catalog, see saved results and find products that are new or changed.",
+      "open": "Open full-size screenshot",
+      "note": "Real app screenshots from a test store. Interface shown in English. Product names, counts and findings are test data, not a customer case study. Screenshots are cropped to the app; displayed results are unchanged."
     },
     "preview": {
       "adminStore": "your-store.myshopify.com",
@@ -331,6 +336,29 @@
       "reviewBody": "Compare the listing and official alert, then verify the model and batch with your supplier. In the installed app, record a resolution, dismiss a different product, or keep the finding open while waiting for the supplier.",
       "record": "Review decisions are saved with an actor, time and note in the app.",
       "limit": "AI suggests possible matches. It does not certify safety or replace your review. This example is illustrative; it is not a real recall or a live scan."
+    },
+    "features": {
+      "title": "What your store gets with ZeroRecall",
+      "body": "The installed app brings catalog checks, ongoing monitoring and documented decisions into one Shopify workflow. An active plan enables ongoing monitoring; the public free scan is a separate one-off check.",
+      "catalogTitle": "A first check across your catalog",
+      "catalogBody": "Import your Shopify catalog and compare it with indexed Safety Gate history. Follow progress and see which current product versions have a saved check.",
+      "monitorTitle": "Monitoring that keeps working in the background",
+      "monitorBody": "New Safety Gate alerts and Shopify product changes trigger background checks, even when Shopify Admin is closed.",
+      "aiTitle": "EAN, product details and photo comparison",
+      "aiBody": "Prioritize exact EAN / GTIN matches. Use AI to assess likely matches from brands, models, descriptions and photos when identifiers are incomplete.",
+      "productTitle": "Checks where you manage products",
+      "productBody": "Search for one product, run a manual check or view its latest Safety Gate status and request a check directly from the Shopify product page.",
+      "reviewTitle": "A review queue with clear outcomes",
+      "reviewBody": "Compare the evidence, dismiss a different product, record action taken or keep a finding open while waiting for your supplier. Review photo galleries and links to official alerts.",
+      "bulkTitle": "Bulk decisions for a busy catalog",
+      "bulkBody": "Resolve or dismiss multiple findings together. Keep notes and decision history without repeating the same review action for every row.",
+      "emailTitle": "Email alerts and weekly summaries",
+      "emailBody": "Get an immediate email for a newly created finding and a weekly summary when there are no new findings. Choose the recipient, language and notification preferences.",
+      "auditTitle": "A record of checks and decisions",
+      "auditBody": "Keep review outcomes with an actor, timestamp and notes. View decision history and export checks and decisions in a CSV report.",
+      "languageTitle": "An interface in 24 EU languages",
+      "languageBody": "Choose your working language in the app and your notification language for email. Original product identifiers and official source facts stay intact.",
+      "control": "Your catalog stays under your control. Recording a review decision does not automatically unpublish or change a Shopify product."
     }
   },
   "email": {

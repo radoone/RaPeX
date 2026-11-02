@@ -54,7 +54,7 @@
     },
     "showcase": {
       "eyebrow": "ILUSTRATIVNI PREGLEDI",
-      "title": "Što primate",
+      "title": "Pogledajte ZeroRecall unutar Shopifyja",
       "intro": "Ovi primjeri koriste izmišljene proizvode i poruke.",
       "sample": "Ilustracija",
       "scanKicker": "Skeniranje nakon potvrde e-pošte",
@@ -68,8 +68,8 @@
       "yourProduct": "Vaš proizvod",
       "alertRecord": "Zapis Safety Gate",
       "matchReason": "Usporedite fotografije, model i seriju prije donošenja odluke.",
-      "matchTitle": "Trenutna e-pošta za novo podudaranje",
-      "matchBody": "Nakon instalacije, dokaze za pregled primate e-poštom.",
+      "matchTitle": "Usporedite proizvod. Odaberite sljedeći korak.",
+      "matchBody": "Fotografije, identifikatori i službeni rizik iz Shopifyja i Safety Gatea prikazani su pored kontrola za pregled.",
       "emailLabel": "Ažuriranje e-pošte",
       "clearKicker": "Tjedno ažuriranje nakon instalacije",
       "clearScreenTitle": "Nema novih nalaza ovog tjedna",
@@ -77,7 +77,12 @@
       "clearStatus": "Nije potrebna radnja",
       "clearTitle": "Mir uz tjedno ažuriranje",
       "clearBody": "Kada nema novih nalaza, potvrđujemo to e-poštom.",
-      "disclaimer": "Ilustracije s izmišljenim proizvodima i porukama. Ovo nisu stvarni rezultati niti poslane e-poruke."
+      "disclaimer": "Ilustracije s izmišljenim proizvodima i porukama. Ovo nisu stvarni rezultati niti poslane e-poruke.",
+      "body": "Pregledajte svoj katalog i usporedite moguće podudaranje bez napuštanja Shopify Admina. Ovo su stvarni zasloni iz aplikacije.",
+      "catalogTitle": "Znajte koji proizvodi još trebaju provjeru",
+      "catalogBody": "Pretražujte svoj katalog, pregledajte spremljene rezultate i pronađite proizvode koji su novi ili promijenjeni.",
+      "open": "Otvori snimku zaslona u punoj veličini",
+      "note": "Stvarne snimke zaslona aplikacije iz testne trgovine. Sučelje prikazano na engleskom jeziku. Nazivi proizvoda, brojevi i nalazi su testni podaci, a ne studija slučaja kupca. Snimke zaslona su obrezane na aplikaciju; prikazani rezultati su nepromijenjeni."
     },
     "preview": {
       "adminStore": "vaša-trgovina.myshopify.com",
@@ -331,6 +336,29 @@
       "reviewBody": "Usporedite oglas i službeno upozorenje, zatim provjerite model i seriju kod svog dobavljača. U instaliranoj aplikaciji zabilježite rješenje, odbacite drugi proizvod ili ostavite nalaz otvorenim dok čekate dobavljača.",
       "record": "Odluke o pregledu spremaju se s akterom, vremenom i bilješkom u aplikaciji.",
       "limit": "AI predlaže moguće podudarnosti. Ne potvrđuje sigurnost niti zamjenjuje vaš pregled. Ovaj primjer je ilustrativan; to nije stvarni opoziv ili skeniranje uživo."
+    },
+    "features": {
+      "title": "Što vaša trgovina dobiva s ZeroRecallom",
+      "body": "Instalirana aplikacija donosi provjere kataloga, stalno praćenje i dokumentirane odluke u jedan Shopify radni tijek. Aktivan plan omogućuje stalno praćenje; javno besplatno skeniranje je zasebna jednokratna provjera.",
+      "catalogTitle": "Prva provjera vašeg kataloga",
+      "catalogBody": "Uvezite svoj Shopify katalog i usporedite ga s indeksiranom poviješću Safety Gatea. Pratite napredak i pogledajte koje trenutne verzije proizvoda imaju spremljenu provjeru.",
+      "monitorTitle": "Praćenje koje nastavlja raditi u pozadini",
+      "monitorBody": "Nova upozorenja Safety Gatea i promjene proizvoda u Shopifyju pokreću pozadinske provjere, čak i kada je Shopify Admin zatvoren.",
+      "aiTitle": "EAN, detalji proizvoda i usporedba fotografija",
+      "aiBody": "Prioritet dajte točnim EAN / GTIN podudaranjima. Koristite AI za procjenu vjerojatnih podudaranja na temelju marki, modela, opisa i fotografija kada su identifikatori nepotpuni.",
+      "productTitle": "Provjere tamo gdje upravljate proizvodima",
+      "productBody": "Pretražite jedan proizvod, pokrenite ručnu provjeru ili pregledajte njegov najnoviji status Safety Gatea i zatražite provjeru izravno sa stranice proizvoda u Shopifyju.",
+      "reviewTitle": "Red za pregled s jasnim ishodima",
+      "reviewBody": "Usporedite dokaze, odbacite drugi proizvod, zabilježite poduzetu radnju ili ostavite nalaz otvorenim dok čekate dobavljača. Pregledajte galerije fotografija i poveznice na službena upozorenja.",
+      "bulkTitle": "Skupne odluke za zauzet katalog",
+      "bulkBody": "Riješite ili odbacite više nalaza zajedno. Vodite bilješke i povijest odluka bez ponavljanja iste radnje pregleda za svaki redak.",
+      "emailTitle": "Upozorenja e-poštom i tjedni sažeci",
+      "emailBody": "Primite trenutnu e-poštu za novostvoreni nalaz i tjedni sažetak kada nema novih nalaza. Odaberite primatelja, jezik i postavke obavijesti.",
+      "auditTitle": "Zapis provjera i odluka",
+      "auditBody": "Čuvajte ishode pregleda s akterom, vremenskom oznakom i bilješkama. Pregledajte povijest odluka i izvezite provjere i odluke u CSV izvješće.",
+      "languageTitle": "Sučelje na 24 jezika EU-a",
+      "languageBody": "Odaberite svoj radni jezik u aplikaciji i jezik obavijesti za e-poštu. Izvorni identifikatori proizvoda i službene činjenice ostaju netaknuti.",
+      "control": "Vaš katalog ostaje pod vašom kontrolom. Zabilježba odluke o pregledu ne objavljuje automatski niti mijenja Shopify proizvod."
     }
   },
   "email": {

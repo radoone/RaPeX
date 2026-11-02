@@ -53,7 +53,7 @@
   },
   "showcase": {
     "eyebrow": "ILUSTRATIVNÍ NÁHLEDY",
-    "title": "Co obdržíte",
+    "title": "Prohlédněte si ZeroRecall v rámci Shopify",
     "intro": "Tyto příklady používají fiktivní produkty a zprávy.",
     "sample": "Ilustrace",
     "scanKicker": "Skenování po potvrzení e-mailu",
@@ -67,8 +67,8 @@
     "yourProduct": "Váš produkt",
     "alertRecord": "Záznam Safety Gate",
     "matchReason": "Před rozhodnutím porovnejte fotografie, model a šarži.",
-    "matchTitle": "Okamžitý e-mail pro novou shodu",
-    "matchBody": "Po instalaci obdržíte e-mailem důkazy k přezkoumání.",
+    "matchTitle": "Porovnejte produkt. Zvolte další krok.",
+    "matchBody": "Fotografie, identifikátory Shopify a Safety Gate a oficiální riziko se zobrazují vedle ovládacích prvků pro kontrolu.",
     "emailLabel": "Aktualizace e-mailem",
     "clearKicker": "Týdenní aktualizace po instalaci",
     "clearScreenTitle": "Žádné nové nálezy tento týden",
@@ -76,7 +76,12 @@
     "clearStatus": "Není třeba žádná akce",
     "clearTitle": "Klid s týdenní aktualizací",
     "clearBody": "Pokud nejsou žádné nové nálezy, potvrdíme to e-mailem.",
-    "disclaimer": "Ilustrace s fiktivními produkty a zprávami. Nejedná se o skutečné výsledky ani odeslané e-maily."
+    "disclaimer": "Ilustrace s fiktivními produkty a zprávami. Nejedná se o skutečné výsledky ani odeslané e-maily.",
+    "body": "Zkontrolujte svůj katalog a porovnejte možnou shodu, aniž byste opustili administraci Shopify. Toto jsou skutečné obrazovky z aplikace.",
+    "catalogTitle": "Zjistěte, které produkty ještě potřebují kontrolu",
+    "catalogBody": "Prohledejte svůj katalog, prohlédněte si uložené výsledky a najděte nové nebo změněné produkty.",
+    "open": "Otevřít snímek obrazovky v plné velikosti",
+    "note": "Skutečné snímky obrazovky aplikace z testovacího obchodu. Rozhraní zobrazeno v angličtině. Názvy produktů, počty a zjištění jsou testovací data, nikoli případová studie zákazníka. Snímky obrazovky jsou oříznuty na aplikaci; zobrazené výsledky jsou nezměněny."
   },
   "preview": {
     "adminStore": "vas-obchod.myshopify.com",
@@ -330,5 +335,28 @@
     "reviewBody": "Porovnejte záznam a oficiální výstrahu, poté ověřte model a šarži u svého dodavatele. V nainstalované aplikaci zaznamenejte řešení, zamítněte jiný produkt nebo ponechte nález otevřený, dokud čekáte na dodavatele.",
     "record": "Rozhodnutí o přezkoumání jsou uložena s aktérem, časem a poznámkou v aplikaci.",
     "limit": "AI navrhuje možné shody. Neosvědčuje bezpečnost ani nenahrazuje vaše přezkoumání. Tento příklad je ilustrativní; nejedná se o skutečné stažení z trhu ani o živé skenování."
+  },
+  "features": {
+    "title": "Co váš obchod získá s ZeroRecall",
+    "body": "Nainstalovaná aplikace přináší kontroly katalogu, průběžné monitorování a zdokumentovaná rozhodnutí do jednoho pracovního postupu Shopify. Aktivní plán umožňuje průběžné monitorování; veřejné bezplatné skenování je samostatná jednorázová kontrola.",
+    "catalogTitle": "První kontrola napříč vaším katalogem",
+    "catalogBody": "Importujte svůj katalog Shopify a porovnejte jej s indexovanou historií Safety Gate. Sledujte průběh a zjistěte, které aktuální verze produktů mají uloženou kontrolu.",
+    "monitorTitle": "Monitorování, které pracuje na pozadí",
+    "monitorBody": "Nové upozornění Safety Gate a změny produktů Shopify spouštějí kontroly na pozadí, i když je administrace Shopify zavřená.",
+    "aiTitle": "EAN, detaily produktu a porovnání fotografií",
+    "aiBody": "Upřednostněte přesné shody EAN / GTIN. Použijte AI k posouzení pravděpodobných shod značek, modelů, popisů a fotografií, když jsou identifikátory neúplné.",
+    "productTitle": "Kontroly tam, kde spravujete produkty",
+    "productBody": "Vyhledejte jeden produkt, spusťte ruční kontrolu nebo si prohlédněte jeho nejnovější stav Safety Gate a vyžádejte si kontrolu přímo ze stránky produktu Shopify.",
+    "reviewTitle": "Fronta na kontrolu s jasnými výsledky",
+    "reviewBody": "Porovnejte důkazy, odmítněte jiný produkt, zaznamenejte provedenou akci nebo ponechte zjištění otevřené, zatímco čekáte na svého dodavatele. Prohlédněte si fotogalerie a odkazy na oficiální upozornění.",
+    "bulkTitle": "Hromadná rozhodnutí pro zaneprázdněný katalog",
+    "bulkBody": "Vyřešte nebo zamítněte více zjištění najednou. Uchovávejte poznámky a historii rozhodnutí, aniž byste opakovali stejnou akci kontroly pro každý řádek.",
+    "emailTitle": "E-mailová upozornění a týdenní souhrny",
+    "emailBody": "Získejte okamžitý e-mail pro nově vytvořené zjištění a týdenní souhrn, pokud nejsou žádná nová zjištění. Vyberte příjemce, jazyk a předvolby oznámení.",
+    "auditTitle": "Záznam kontrol a rozhodnutí",
+    "auditBody": "Uchovávejte výsledky kontrol s aktérem, časovým razítkem a poznámkami. Prohlédněte si historii rozhodnutí a exportujte kontroly a rozhodnutí ve zprávě CSV.",
+    "languageTitle": "Rozhraní ve 24 jazycích EU",
+    "languageBody": "Vyberte si svůj pracovní jazyk v aplikaci a jazyk oznámení pro e-mail. Původní identifikátory produktů a oficiální zdrojová fakta zůstávají nedotčena.",
+    "control": "Váš katalog zůstává pod vaší kontrolou. Zaznamenání rozhodnutí o kontrole automaticky nezruší publikování ani nezmění produkt Shopify."
   }
 }

@@ -53,7 +53,7 @@
   },
   "showcase": {
     "eyebrow": "ILLUSTRATIEVE VOORBEELDEN",
-    "title": "Wat u ontvangt",
+    "title": "ZeroRecall in Shopify",
     "intro": "Deze voorbeelden gebruiken fictieve producten en berichten.",
     "sample": "Illustratie",
     "scanKicker": "Scan na e-mailbevestiging",
@@ -67,8 +67,8 @@
     "yourProduct": "Uw product",
     "alertRecord": "Safety Gate-record",
     "matchReason": "Vergelijk foto's, model en batch voordat u een beslissing neemt.",
-    "matchTitle": "Directe e-mail voor een nieuwe overeenkomst",
-    "matchBody": "Na installatie ontvangt u bewijsmateriaal ter beoordeling per e-mail.",
+    "matchTitle": "Vergelijk het product. Kies uw volgende stap.",
+    "matchBody": "Shopify- en Safety Gate-foto's, identificatiegegevens en het officiële risico verschijnen naast de controleopties.",
     "emailLabel": "E-mailupdate",
     "clearKicker": "Wekelijkse update na installatie",
     "clearScreenTitle": "Geen nieuwe bevindingen deze week",
@@ -76,7 +76,12 @@
     "clearStatus": "Geen actie nodig",
     "clearTitle": "Gemoedsrust met een wekelijkse update",
     "clearBody": "Wanneer er geen nieuwe bevindingen zijn, bevestigen we dit per e-mail.",
-    "disclaimer": "Illustraties met fictieve producten en berichten. Dit zijn geen echte resultaten of verzonden e-mails."
+    "disclaimer": "Illustraties met fictieve producten en berichten. Dit zijn geen echte resultaten of verzonden e-mails.",
+    "body": "Bekijk uw catalogus en vergelijk een mogelijke match zonder Shopify Admin te verlaten. Dit zijn echte schermen van de app.",
+    "catalogTitle": "Weet welke producten nog gecontroleerd moeten worden",
+    "catalogBody": "Doorzoek uw catalogus, bekijk opgeslagen resultaten en vind producten die nieuw zijn of gewijzigd.",
+    "open": "Open screenshot op ware grootte",
+    "note": "Echte app-screenshots van een testwinkel. Interface getoond in het Engels. Productnamen, aantallen en bevindingen zijn testgegevens, geen klantcase study. Screenshots zijn bijgesneden tot de app; weergegeven resultaten zijn ongewijzigd."
   },
   "preview": {
     "adminStore": "uw-winkel.myshopify.com",
@@ -330,5 +335,28 @@
     "reviewBody": "Vergelijk de advertentie en de officiële waarschuwing, en verifieer vervolgens het model en de batch met uw leverancier. Leg in de geïnstalleerde app een oplossing vast, negeer een ander product, of houd de bevinding open in afwachting van de leverancier.",
     "record": "Beoordelingsbeslissingen worden opgeslagen met een actor, tijd en notitie in de app.",
     "limit": "AI suggereert mogelijke overeenkomsten. Het certificeert geen veiligheid en vervangt uw beoordeling niet. Dit voorbeeld is illustratief; het is geen echte terugroepactie of een live scan."
+  },
+  "features": {
+    "title": "Wat uw winkel krijgt met ZeroRecall",
+    "body": "De geïnstalleerde app brengt cataloguscontroles, continue monitoring en gedocumenteerde beslissingen samen in één Shopify-workflow. Een actief abonnement maakt continue monitoring mogelijk; de openbare gratis scan is een aparte eenmalige controle.",
+    "catalogTitle": "Een eerste controle van uw catalogus",
+    "catalogBody": "Importeer uw Shopify-catalogus en vergelijk deze met de geïndexeerde Safety Gate-geschiedenis. Volg de voortgang en zie welke huidige productversies een opgeslagen controle hebben.",
+    "monitorTitle": "Monitoring die op de achtergrond blijft werken",
+    "monitorBody": "Nieuwe Safety Gate-waarschuwingen en Shopify-productwijzigingen activeren achtergrondcontroles, zelfs wanneer Shopify Admin gesloten is.",
+    "aiTitle": "EAN, productdetails en fotovergelijking",
+    "aiBody": "Geef prioriteit aan exacte EAN / GTIN-matches. Gebruik AI om waarschijnlijke matches te beoordelen op basis van merken, modellen, beschrijvingen en foto's wanneer identificatiegegevens onvolledig zijn.",
+    "productTitle": "Controles waar u producten beheert",
+    "productBody": "Zoek naar één product, voer een handmatige controle uit of bekijk de laatste Safety Gate-status en vraag een controle aan direct vanaf de Shopify-productpagina.",
+    "reviewTitle": "Een beoordelingswachtrij met duidelijke uitkomsten",
+    "reviewBody": "Vergelijk het bewijs, negeer een ander product, registreer de genomen actie of houd een bevinding open in afwachting van uw leverancier. Bekijk fotogalerijen en links naar officiële waarschuwingen.",
+    "bulkTitle": "Bulkbeslissingen voor een drukke catalogus",
+    "bulkBody": "Los meerdere bevindingen tegelijk op of negeer ze. Houd notities en beslissingsgeschiedenis bij zonder dezelfde beoordelingsactie voor elke rij te herhalen.",
+    "emailTitle": "E-mailwaarschuwingen en wekelijkse samenvattingen",
+    "emailBody": "Ontvang een directe e-mail voor een nieuw gecreëerde bevinding en een wekelijkse samenvatting wanneer er geen nieuwe bevindingen zijn. Kies de ontvanger, taal en meldingsvoorkeuren.",
+    "auditTitle": "Een overzicht van controles en beslissingen",
+    "auditBody": "Bewaar beoordelingsresultaten met een actor, tijdstempel en notities. Bekijk de beslissingsgeschiedenis en exporteer controles en beslissingen in een CSV-rapport.",
+    "languageTitle": "Een interface in 24 EU-talen",
+    "languageBody": "Kies uw werktal in de app en uw meldingstaal voor e-mail. Originele productidentificatiegegevens en officiële bronfeiten blijven intact.",
+    "control": "Uw catalogus blijft onder uw controle. Het vastleggen van een beoordelingsbeslissing publiceert of wijzigt een Shopify-product niet automatisch."
   }
 }

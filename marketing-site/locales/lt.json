@@ -53,7 +53,7 @@
   },
   "showcase": {
     "eyebrow": "ILIUSTRACINĖS PERŽIŪROS",
-    "title": "Ką gausite",
+    "title": "Pamatykite ZeroRecall Shopify sistemoje",
     "intro": "Šiuose pavyzdžiuose naudojami išgalvoti produktai ir pranešimai.",
     "sample": "Iliustracija",
     "scanKicker": "Skenavimas po el. pašto patvirtinimo",
@@ -67,8 +67,8 @@
     "yourProduct": "Jūsų produktas",
     "alertRecord": "Safety Gate įrašas",
     "matchReason": "Prieš priimdami sprendimą, palyginkite nuotraukas, modelį ir partiją.",
-    "matchTitle": "Greitas el. laiškas apie naują atitikmenį",
-    "matchBody": "Po įdiegimo gausite įrodymus peržiūrai el. paštu.",
+    "matchTitle": "Palyginkite produktą. Pasirinkite kitą veiksmą.",
+    "matchBody": "Shopify ir Safety Gate nuotraukos, identifikatoriai ir oficiali rizika rodomi šalia peržiūros valdiklių.",
     "emailLabel": "El. pašto atnaujinimas",
     "clearKicker": "Savaitinis atnaujinimas po įdiegimo",
     "clearScreenTitle": "Šią savaitę naujų radinių nėra",
@@ -76,7 +76,12 @@
     "clearStatus": "Veiksmų nereikia",
     "clearTitle": "Ramybė su savaitiniu atnaujinimu",
     "clearBody": "Kai nėra naujų radinių, patvirtiname tai el. paštu.",
-    "disclaimer": "Iliustracijos su išgalvotais produktais ir pranešimais. Tai nėra tikri rezultatai ar išsiųsti el. laiškai."
+    "disclaimer": "Iliustracijos su išgalvotais produktais ir pranešimais. Tai nėra tikri rezultatai ar išsiųsti el. laiškai.",
+    "body": "Peržiūrėkite savo katalogą ir palyginkite galimą atitikmenį neišeidami iš Shopify administratoriaus sąsajos. Tai yra tikri programėlės ekranai.",
+    "catalogTitle": "Žinokite, kuriuos produktus dar reikia patikrinti",
+    "catalogBody": "Ieškokite savo kataloge, peržiūrėkite išsaugotus rezultatus ir raskite naujus ar pakeistus produktus.",
+    "open": "Atidaryti viso dydžio ekrano nuotrauką",
+    "note": "Tikros programėlės ekrano nuotraukos iš bandomosios parduotuvės. Sąsaja rodoma anglų kalba. Produktų pavadinimai, kiekiai ir radiniai yra bandomieji duomenys, o ne klientų atvejo tyrimas. Ekrano nuotraukos yra apkarpytos iki programėlės; rodomi rezultatai nepakeisti."
   },
   "preview": {
     "adminStore": "jūsų-parduotuvė.myshopify.com",
@@ -330,5 +335,28 @@
     "reviewBody": "Palyginkite sąrašą ir oficialų įspėjimą, tada patikrinkite modelį ir partiją su savo tiekėju. Įdiegtoje programėlėje įrašykite sprendimą, atmeskite kitą produktą arba palikite radinį atvirą, kol laukiate tiekėjo.",
     "record": "Peržiūros sprendimai išsaugomi su veikėju, laiku ir pastaba programėlėje.",
     "limit": "Dirbtinis intelektas siūlo galimus atitikmenis. Jis nepatvirtina saugumo ir nepakeičia jūsų peržiūros. Šis pavyzdys yra iliustratyvus; tai nėra tikras atšaukimas ar tiesioginis nuskaitymas."
+  },
+  "features": {
+    "title": "Ką jūsų parduotuvė gauna su ZeroRecall",
+    "body": "Įdiegta programėlė sujungia katalogo patikras, nuolatinį stebėjimą ir dokumentuotus sprendimus į vieną Shopify darbo eigą. Aktyvus planas leidžia nuolat stebėti; viešas nemokamas nuskaitymas yra atskiras vienkartinis patikrinimas.",
+    "catalogTitle": "Pirmasis viso katalogo patikrinimas",
+    "catalogBody": "Importuokite savo Shopify katalogą ir palyginkite jį su indeksuota Safety Gate istorija. Stebėkite eigą ir pamatykite, kurios dabartinės produkto versijos turi išsaugotą patikrinimą.",
+    "monitorTitle": "Stebėjimas, kuris veikia fone",
+    "monitorBody": "Nauji Safety Gate įspėjimai ir Shopify produkto pakeitimai sukelia fono patikrinimus, net kai Shopify administratoriaus sąsaja yra uždaryta.",
+    "aiTitle": "EAN, produkto detalės ir nuotraukų palyginimas",
+    "aiBody": "Prioritetą teikite tiksliems EAN / GTIN atitikmenims. Naudokite dirbtinį intelektą, kad įvertintumėte galimus atitikmenis pagal prekės ženklus, modelius, aprašymus ir nuotraukas, kai identifikatoriai yra neišsamūs.",
+    "productTitle": "Patikrinimai ten, kur valdote produktus",
+    "productBody": "Ieškokite vieno produkto, atlikite rankinį patikrinimą arba peržiūrėkite jo naujausią Safety Gate būseną ir paprašykite patikrinimo tiesiai iš Shopify produkto puslapio.",
+    "reviewTitle": "Peržiūros eilė su aiškiais rezultatais",
+    "reviewBody": "Palyginkite įrodymus, atmeskite kitą produktą, užregistruokite atliktą veiksmą arba palikite radinį atvirą, kol laukiate savo tiekėjo. Peržiūrėkite nuotraukų galerijas ir nuorodas į oficialius įspėjimus.",
+    "bulkTitle": "Masiniai sprendimai užimtam katalogui",
+    "bulkBody": "Išspręskite arba atmeskite kelis radinius kartu. Išsaugokite pastabas ir sprendimų istoriją, nekartodami to paties peržiūros veiksmo kiekvienai eilutei.",
+    "emailTitle": "El. pašto įspėjimai ir savaitės suvestinės",
+    "emailBody": "Gaukite tiesioginį el. laišką apie naujai sukurtą radinį ir savaitės suvestinę, kai nėra naujų radinių. Pasirinkite gavėją, kalbą ir pranešimų nuostatas.",
+    "auditTitle": "Patikrinimų ir sprendimų įrašas",
+    "auditBody": "Išsaugokite peržiūros rezultatus su veikėju, laiko žyma ir pastabomis. Peržiūrėkite sprendimų istoriją ir eksportuokite patikrinimus bei sprendimus CSV ataskaitoje.",
+    "languageTitle": "Sąsaja 24 ES kalbomis",
+    "languageBody": "Pasirinkite savo darbo kalbą programėlėje ir pranešimų kalbą el. paštui. Originalūs produkto identifikatoriai ir oficialūs šaltinio faktai lieka nepakitę.",
+    "control": "Jūsų katalogas lieka jūsų kontrolėje. Peržiūros sprendimo įrašymas automatiškai nepanaikina publikavimo ar nepakeičia Shopify produkto."
   }
 }

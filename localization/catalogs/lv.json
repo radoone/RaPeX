@@ -54,7 +54,7 @@
     },
     "showcase": {
       "eyebrow": "ILUSTRATĪVI PRIEKŠSKATĪJUMI",
-      "title": "Ko jūs saņemat",
+      "title": "Skatiet ZeroRecall pakalpojumā Shopify",
       "intro": "Šajos piemēros tiek izmantoti izdomāti produkti un ziņojumi.",
       "sample": "Ilustrācija",
       "scanKicker": "Skenēšana pēc e-pasta apstiprināšanas",
@@ -68,8 +68,8 @@
       "yourProduct": "Jūsu produkts",
       "alertRecord": "Safety Gate ieraksts",
       "matchReason": "Pirms lēmuma pieņemšanas salīdziniet fotoattēlus, modeli un partiju.",
-      "matchTitle": "Tūlītējs e-pasts par jaunu atbilstību",
-      "matchBody": "Pēc instalēšanas jūs saņemat pierādījumus pārskatīšanai pa e-pastu.",
+      "matchTitle": "Salīdziniet produktu. Izvēlieties nākamo soli.",
+      "matchBody": "Shopify un Safety Gate fotoattēli, identifikatori un oficiālais risks tiek parādīti blakus pārskatīšanas vadīklām.",
       "emailLabel": "E-pasta atjauninājums",
       "clearKicker": "Iknedēļas atjauninājums pēc instalēšanas",
       "clearScreenTitle": "Šonedēļ nav jaunu atklājumu",
@@ -77,7 +77,12 @@
       "clearStatus": "Nav nepieciešama darbība",
       "clearTitle": "Miers ar iknedēļas atjauninājumu",
       "clearBody": "Ja nav jaunu atklājumu, mēs to apstiprinām pa e-pastu.",
-      "disclaimer": "Ilustrācijas ar izdomātiem produktiem un ziņojumiem. Tie nav reāli rezultāti vai nosūtīti e-pasti."
+      "disclaimer": "Ilustrācijas ar izdomātiem produktiem un ziņojumiem. Tie nav reāli rezultāti vai nosūtīti e-pasti.",
+      "body": "Pārskatiet savu katalogu un salīdziniet iespējamo atbilstību, neizejot no Shopify administrēšanas paneļa. Šie ir reāli ekrānuzņēmumi no lietotnes.",
+      "catalogTitle": "Ziniet, kuriem produktiem vēl nepieciešama pārbaude",
+      "catalogBody": "Meklējiet savā katalogā, skatiet saglabātos rezultātus un atrodiet jaunus vai mainītus produktus.",
+      "open": "Atvērt pilna izmēra ekrānuzņēmumu",
+      "note": "Reāli lietotnes ekrānuzņēmumi no testa veikala. Saskarne parādīta angļu valodā. Produktu nosaukumi, skaits un atklājumi ir testa dati, nevis klientu gadījumu izpēte. Ekrānuzņēmumi ir apgriezti atbilstoši lietotnei; parādītie rezultāti nav mainīti."
     },
     "preview": {
       "adminStore": "jūsu-veikals.myshopify.com",
@@ -331,6 +336,29 @@
       "reviewBody": "Salīdziniet sarakstu un oficiālo brīdinājumu, pēc tam pārbaudiet modeli un partiju ar savu piegādātāju. Instalētajā lietotnē ierakstiet risinājumu, noraidiet citu produktu vai atstājiet atradumu atvērtu, gaidot piegādātāju.",
       "record": "Pārskatīšanas lēmumi tiek saglabāti ar aktoru, laiku un piezīmi lietotnē.",
       "limit": "AI iesaka iespējamās atbilstības. Tas nesertificē drošību un neaizstāj jūsu pārskatīšanu. Šis piemērs ir ilustratīvs; tas nav reāls atsaukums vai tiešraides skenēšana."
+    },
+    "features": {
+      "title": "Ko jūsu veikals iegūst ar ZeroRecall",
+      "body": "Instalētā lietotne apvieno katalogu pārbaudes, nepārtrauktu uzraudzību un dokumentētus lēmumus vienā Shopify darbplūsmā. Aktīvs plāns nodrošina nepārtrauktu uzraudzību; publiskā bezmaksas skenēšana ir atsevišķa vienreizēja pārbaude.",
+      "catalogTitle": "Pirmā pārbaude visā jūsu katalogā",
+      "catalogBody": "Importējiet savu Shopify katalogu un salīdziniet to ar indeksēto Safety Gate vēsturi. Sekojiet progresam un skatiet, kurām pašreizējām produktu versijām ir saglabāta pārbaude.",
+      "monitorTitle": "Uzraudzība, kas turpina darboties fonā",
+      "monitorBody": "Jauni Safety Gate brīdinājumi un Shopify produktu izmaiņas iedarbina fona pārbaudes, pat ja Shopify administrēšanas panelis ir aizvērts.",
+      "aiTitle": "EAN, produkta detaļas un fotoattēlu salīdzināšana",
+      "aiBody": "Prioritizējiet precīzas EAN / GTIN atbilstības. Izmantojiet AI, lai novērtētu iespējamās atbilstības pēc zīmoliem, modeļiem, aprakstiem un fotoattēliem, ja identifikatori ir nepilnīgi.",
+      "productTitle": "Pārbaudes tur, kur pārvaldāt produktus",
+      "productBody": "Meklējiet vienu produktu, veiciet manuālu pārbaudi vai skatiet tā jaunāko Safety Gate statusu un pieprasiet pārbaudi tieši no Shopify produkta lapas.",
+      "reviewTitle": "Pārskatīšanas rinda ar skaidriem rezultātiem",
+      "reviewBody": "Salīdziniet pierādījumus, noraidiet citu produktu, ierakstiet veiktās darbības vai saglabājiet atklājumu atvērtu, gaidot piegādātāju. Pārskatiet fotoattēlu galerijas un saites uz oficiālajiem brīdinājumiem.",
+      "bulkTitle": "Masveida lēmumi aizņemtam katalogam",
+      "bulkBody": "Atrisiniet vai noraidiet vairākus atklājumus kopā. Saglabājiet piezīmes un lēmumu vēsturi, neatkārtojot to pašu pārskatīšanas darbību katrai rindiņai.",
+      "emailTitle": "E-pasta brīdinājumi un iknedēļas kopsavilkumi",
+      "emailBody": "Saņemiet tūlītēju e-pastu par jaunizveidotu atklājumu un iknedēļas kopsavilkumu, ja nav jaunu atklājumu. Izvēlieties saņēmēju, valodu un paziņojumu preferences.",
+      "auditTitle": "Pārbaudes un lēmumu ieraksts",
+      "auditBody": "Saglabājiet pārskatīšanas rezultātus ar aktoru, laika zīmogu un piezīmēm. Skatiet lēmumu vēsturi un eksportējiet pārbaudes un lēmumus CSV pārskatā.",
+      "languageTitle": "Saskarne 24 ES valodās",
+      "languageBody": "Izvēlieties savu darba valodu lietotnē un paziņojumu valodu e-pastam. Oriģinālie produktu identifikatori un oficiālie avota fakti paliek neskarti.",
+      "control": "Jūsu katalogs paliek jūsu kontrolē. Pārskatīšanas lēmuma ierakstīšana automātiski neatpublicē vai nemaina Shopify produktu."
     }
   },
   "email": {

@@ -1354,3 +1354,31 @@ a {
   .match-demo__context h4 { margin-top: 12px; }
   .match-demo__context .btn { width: 100%; line-height: 1.4; }
 }
+
+/* Actual Shopify app captures, followed by the merchant feature reference. */
+.app-showcase, .merchant-features { border-top: 1px solid var(--border); }
+.app-showcase__gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 34px; align-items: start; }
+.app-showcase__gallery figure { min-width: 0; margin: 0; }
+.app-showcase__image { display: block; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: #fff; }
+.app-showcase__image:hover { border-color: var(--primary); }
+.app-showcase__image:focus-visible { outline: 3px solid #90b6a1; outline-offset: 5px; }
+.app-showcase__image img { width: 100%; height: auto; display: block; }
+.app-showcase figcaption { padding: 20px 0 0; }
+.app-showcase figcaption h3 { font-size: 20px; line-height: 1.4; margin: 0 0 9px; }
+.app-showcase figcaption p { color: var(--text-muted); margin: 0 0 12px; }
+.app-showcase figcaption .text-link { display: inline-block; padding: 7px 0; min-height: 44px; }
+.app-showcase__note { color: var(--text-subtle); font-size: 13px; line-height: 1.65; max-width: 95ch; margin: 26px 0 0; }
+.merchant-features__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 60px; margin: 0; }
+.merchant-features__list > div { border-top: 1px solid var(--border); padding: 23px 0 27px; min-width: 0; }
+.merchant-features dt { font-size: 20px; font-weight: 650; line-height: 1.4; margin-bottom: 9px; }
+.merchant-features dd { margin: 0; color: var(--text-muted); max-width: 65ch; }
+.merchant-features__control { padding-top: 22px; border-top: 1px solid var(--border); margin: 0; color: var(--primary); max-width: 80ch; }
+@media (max-width: 640px) {
+  .app-showcase__gallery, .merchant-features__list { grid-template-columns: 1fr; }
+  .app-showcase__gallery { gap: 35px; }
+  .app-showcase figcaption { padding-top: 17px; }
+  .merchant-features dt { font-size: 19px; }
+}
+
+.hero-app-link { display: inline-block; margin-top: 16px; margin-left: 20px; }
+@media (max-width: 640px) { .hero-app-link { display: block; margin-left: 0; } }

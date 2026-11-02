@@ -54,7 +54,7 @@
     },
     "showcase": {
       "eyebrow": "PREVIEWS ILLUSTRATTIVI",
-      "title": "X'tirċievi",
+      "title": "Ara ZeroRecall ġewwa Shopify",
       "intro": "Dawn l-eżempji jużaw prodotti u messaġġi fittizji.",
       "sample": "Illustrazzjoni",
       "scanKicker": "Skannjar wara konferma tal-email",
@@ -68,8 +68,8 @@
       "yourProduct": "Il-prodott tiegħek",
       "alertRecord": "Rekord ta' Safety Gate",
       "matchReason": "Qabbel ir-ritratti, il-mudell u l-lott qabel ma tiddeċiedi.",
-      "matchTitle": "Email immedjata għal tqabbil ġdid",
-      "matchBody": "Wara l-installazzjoni, tirċievi evidenza biex tirrevedi bl-email.",
+      "matchTitle": "Qabbel il-prodott. Agħżel il-pass li jmiss tiegħek.",
+      "matchBody": "Ritratti, identifikaturi u r-riskju uffiċjali ta' Shopify u Safety Gate jidhru ħdejn il-kontrolli tar-reviżjoni.",
       "emailLabel": "Aġġornament tal-email",
       "clearKicker": "Aġġornament ta' kull ġimgħa wara l-installazzjoni",
       "clearScreenTitle": "Ebda sejbiet ġodda din il-ġimgħa",
@@ -77,7 +77,12 @@
       "clearStatus": "Ebda azzjoni meħtieġa",
       "clearTitle": "Serħan il-moħħ b'aġġornament ta' kull ġimgħa",
       "clearBody": "Meta ma jkunx hemm sejbiet ġodda, nikkonfermaw dan bl-email.",
-      "disclaimer": "Illustrazzjonijiet bi prodotti u messaġġi fittizji. Dawn mhumiex riżultati reali jew emails mibgħuta."
+      "disclaimer": "Illustrazzjonijiet bi prodotti u messaġġi fittizji. Dawn mhumiex riżultati reali jew emails mibgħuta.",
+      "body": "Irrevedi l-katalgu tiegħek u qabbel tqabbil possibbli mingħajr ma titlaq mill-Amministrazzjoni ta' Shopify. Dawn huma skrins reali mill-app.",
+      "catalogTitle": "Kun af liema prodotti għadhom jeħtieġu verifika",
+      "catalogBody": "Fittex fil-katalgu tiegħek, ara r-riżultati ssejvjati u sib prodotti li huma ġodda jew mibdula.",
+      "open": "Iftaħ screenshot fid-daqs sħiħ",
+      "note": "Screenshots reali tal-app minn ħanut tat-test. L-interface muri bl-Ingliż. L-ismijiet tal-prodotti, l-għadd u s-sejbiet huma data tat-test, mhux studju ta' każ tal-klijent. Is-screenshots huma maqtugħin għall-app; ir-riżultati murija ma nbidlux."
     },
     "preview": {
       "adminStore": "your-store.myshopify.com",
@@ -331,6 +336,29 @@
       "reviewBody": "Qabbel il-lista u t-twissija uffiċjali, imbagħad ivverifika l-mudell u l-lott mal-fornitur tiegħek. Fl-app installata, irreġistra riżoluzzjoni, ċaħad prodott differenti, jew żomm is-sejba miftuħa waqt li tistenna lill-fornitur.",
       "record": "Id-deċiżjonijiet ta' reviżjoni jiġu ssejvjati b'attur, ħin u nota fl-app.",
       "limit": "L-AI tissuġġerixxi tqabbil possibbli. Ma tiċċertifikax is-sigurtà jew tissostitwixxi r-reviżjoni tiegħek. Dan l-eżempju huwa illustrattiv; mhuwiex sejħa lura reali jew skan dirett."
+    },
+    "features": {
+      "title": "X'jikseb il-ħanut tiegħek b'ZeroRecall",
+      "body": "L-app installata ġġib verifiki tal-katalgu, monitoraġġ kontinwu u deċiżjonijiet dokumentati f'workflow wieħed ta' Shopify. Pjan attiv jippermetti monitoraġġ kontinwu; l-iskannjar pubbliku b'xejn huwa verifika separata ta' darba.",
+      "catalogTitle": "L-ewwel verifika fil-katalgu tiegħek",
+      "catalogBody": "Importa l-katalgu tiegħek ta' Shopify u qabbelha mal-istorja indiċjata ta' Safety Gate. Segwi l-progress u ara liema verżjonijiet attwali tal-prodotti għandhom verifika ssejvjata.",
+      "monitorTitle": "Monitoraġġ li jkompli jaħdem fl-isfond",
+      "monitorBody": "Twissijiet ġodda ta' Safety Gate u bidliet fil-prodotti ta' Shopify jiskattaw verifiki fl-isfond, anke meta l-Amministrazzjoni ta' Shopify tkun magħluqa.",
+      "aiTitle": "EAN, dettalji tal-prodott u tqabbil tar-ritratti",
+      "aiBody": "Ipprijoritizza tqabbil eżatt ta' EAN / GTIN. Uża l-AI biex tivvaluta tqabbil probabbli minn marki, mudelli, deskrizzjonijiet u ritratti meta l-identifikaturi jkunu mhux kompluti.",
+      "productTitle": "Verifiki fejn timmaniġġja l-prodotti",
+      "productBody": "Fittex prodott wieħed, agħmel verifika manwali jew ara l-aħħar status tiegħu ta' Safety Gate u itlob verifika direttament mill-paġna tal-prodott ta' Shopify.",
+      "reviewTitle": "Kju ta' reviżjoni b'riżultati ċari",
+      "reviewBody": "Qabbel l-evidenza, ċaħad prodott differenti, irreġistra azzjoni meħuda jew żomm sejba miftuħa waqt li tistenna lill-fornitur tiegħek. Irrevedi galleriji tar-ritratti u links għal twissijiet uffiċjali.",
+      "bulkTitle": "Deċiżjonijiet bl-ingrossa għal katalgu impenjattiv",
+      "bulkBody": "Issolvi jew ċaħad sejbiet multipli flimkien. Żomm noti u storja tad-deċiżjonijiet mingħajr ma tirrepeti l-istess azzjoni ta' reviżjoni għal kull ringiela.",
+      "emailTitle": "Twissijiet bl-email u sommarji ta' kull ġimgħa",
+      "emailBody": "Ikseb email immedjata għal sejba maħluqa ġdida u sommarju ta' kull ġimgħa meta ma jkunx hemm sejbiet ġodda. Agħżel ir-riċevitur, il-lingwa u l-preferenzi tan-notifika.",
+      "auditTitle": "Reġistru ta' verifiki u deċiżjonijiet",
+      "auditBody": "Żomm ir-riżultati tar-reviżjoni b'attur, timestamp u noti. Ara l-istorja tad-deċiżjonijiet u esporta verifiki u deċiżjonijiet f'rapport CSV.",
+      "languageTitle": "Interface f'24 lingwa tal-UE",
+      "languageBody": "Agħżel il-lingwa tax-xogħol tiegħek fl-app u l-lingwa tan-notifika tiegħek għall-email. L-identifikaturi oriġinali tal-prodotti u l-fatti tas-sors uffiċjali jibqgħu intatti.",
+      "control": "Il-katalgu tiegħek jibqa' taħt il-kontroll tiegħek. Ir-reġistrazzjoni ta' deċiżjoni ta' reviżjoni ma tippubblikax awtomatikament jew tibdel prodott ta' Shopify."
     }
   },
   "email": {

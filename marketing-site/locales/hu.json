@@ -53,7 +53,7 @@
   },
   "showcase": {
     "eyebrow": "ILLUSZTRATÍV ELŐNÉZETEK",
-    "title": "Amit kap",
+    "title": "ZeroRecall a Shopify-ban",
     "intro": "Ezek a példák fiktív termékeket és üzeneteket használnak.",
     "sample": "Illusztráció",
     "scanKicker": "Ellenőrzés e-mail megerősítés után",
@@ -67,8 +67,8 @@
     "yourProduct": "Az Ön terméke",
     "alertRecord": "Safety Gate bejegyzés",
     "matchReason": "Döntés előtt hasonlítsa össze a fényképeket, a modellt és a tételt.",
-    "matchTitle": "Azonnali e-mail új egyezés esetén",
-    "matchBody": "Telepítés után e-mailben kap bizonyítékokat a felülvizsgálathoz.",
+    "matchTitle": "Hasonlítsa össze a terméket. Válassza ki a következő lépést.",
+    "matchBody": "A Shopify és a Safety Gate fotói, azonosítói és a hivatalos kockázat megjelennek az ellenőrzési vezérlők mellett.",
     "emailLabel": "E-mail frissítés",
     "clearKicker": "Heti frissítés telepítés után",
     "clearScreenTitle": "Nincs új eredmény ezen a héten",
@@ -76,7 +76,12 @@
     "clearStatus": "Nincs szükség intézkedésre",
     "clearTitle": "Nyugalom heti frissítéssel",
     "clearBody": "Ha nincsenek új eredmények, e-mailben megerősítjük.",
-    "disclaimer": "Illusztrációk fiktív termékekkel és üzenetekkel. Ezek nem valós eredmények vagy elküldött e-mailek."
+    "disclaimer": "Illusztrációk fiktív termékekkel és üzenetekkel. Ezek nem valós eredmények vagy elküldött e-mailek.",
+    "body": "Tekintse át katalógusát, és hasonlítsa össze a lehetséges egyezéseket anélkül, hogy elhagyná a Shopify Admin felületét. Ezek valós képernyők az alkalmazásból.",
+    "catalogTitle": "Tudja, mely termékeket kell még ellenőrizni",
+    "catalogBody": "Keresse meg katalógusát, tekintse meg a mentett eredményeket, és találja meg az új vagy megváltozott termékeket.",
+    "open": "Teljes méretű képernyőkép megnyitása",
+    "note": "Valós alkalmazás képernyőképek egy tesztboltból. Az interfész angol nyelven látható. A terméknevek, darabszámok és megállapítások tesztadatok, nem ügyfél esettanulmány. A képernyőképek az alkalmazásra vannak vágva; a megjelenített eredmények változatlanok."
   },
   "preview": {
     "adminStore": "az-ön-áruháza.myshopify.com",
@@ -330,5 +335,28 @@
     "reviewBody": "Hasonlítsa össze a terméklistát és a hivatalos riasztást, majd ellenőrizze a modellt és a tételt a beszállítójával. A telepített alkalmazásban rögzítsen egy megoldást, utasítson el egy másik terméket, vagy tartsa nyitva a megállapítást, amíg várja a beszállítót.",
     "record": "A felülvizsgálati döntések az alkalmazásban szereplő szereplővel, idővel és megjegyzéssel kerülnek mentésre.",
     "limit": "Az MI lehetséges egyezéseket javasol. Nem tanúsítja a biztonságot, és nem helyettesíti az Ön felülvizsgálatát. Ez a példa illusztratív; nem valós visszahívás vagy élő szkennelés."
+  },
+  "features": {
+    "title": "Amit az üzlete kap a ZeroRecall-lal",
+    "body": "A telepített alkalmazás a katalógusellenőrzéseket, a folyamatos felügyeletet és a dokumentált döntéseket egyetlen Shopify munkafolyamatba integrálja. Az aktív előfizetés lehetővé teszi a folyamatos felügyeletet; a nyilvános ingyenes szkennelés egy külön egyszeri ellenőrzés.",
+    "catalogTitle": "Első ellenőrzés a katalógusában",
+    "catalogBody": "Importálja Shopify katalógusát, és hasonlítsa össze az indexelt Safety Gate előzményekkel. Kövesse a folyamatot, és nézze meg, mely aktuális termékverziók rendelkeznek mentett ellenőrzéssel.",
+    "monitorTitle": "Felügyelet, amely a háttérben is működik",
+    "monitorBody": "Az új Safety Gate riasztások és a Shopify termékváltozások háttér-ellenőrzéseket indítanak, még akkor is, ha a Shopify Admin felület zárva van.",
+    "aiTitle": "EAN, termékadatok és fotó összehasonlítás",
+    "aiBody": "Priorizálja a pontos EAN / GTIN egyezéseket. Használja az AI-t a valószínű egyezések felmérésére márkák, modellek, leírások és fotók alapján, ha az azonosítók hiányosak.",
+    "productTitle": "Ellenőrzések ott, ahol a termékeket kezeli",
+    "productBody": "Keressen egy terméket, futtasson manuális ellenőrzést, vagy tekintse meg annak legújabb Safety Gate állapotát, és kérjen ellenőrzést közvetlenül a Shopify termékoldaláról.",
+    "reviewTitle": "Áttekintési sor tiszta eredményekkel",
+    "reviewBody": "Hasonlítsa össze a bizonyítékokat, utasítson el egy másik terméket, rögzítse a megtett intézkedést, vagy tartson nyitva egy megállapítást, amíg várja a beszállítóját. Tekintse át a fotógalériákat és a hivatalos riasztásokra mutató linkeket.",
+    "bulkTitle": "Tömeges döntések egy forgalmas katalógushoz",
+    "bulkBody": "Oldjon meg vagy utasítson el több megállapítást egyszerre. Tartson jegyzeteket és döntési előzményeket anélkül, hogy minden sorhoz megismételné ugyanazt az áttekintési műveletet.",
+    "emailTitle": "E-mail értesítések és heti összefoglalók",
+    "emailBody": "Azonnali e-mailt kap az újonnan létrehozott megállapításról, és heti összefoglalót, ha nincsenek új megállapítások. Válassza ki a címzettet, a nyelvet és az értesítési preferenciákat.",
+    "auditTitle": "Az ellenőrzések és döntések nyilvántartása",
+    "auditBody": "Őrizze meg az áttekintési eredményeket szereplővel, időbélyegzővel és jegyzetekkel. Tekintse meg a döntési előzményeket, és exportálja az ellenőrzéseket és döntéseket CSV jelentésbe.",
+    "languageTitle": "Interfész 24 EU nyelven",
+    "languageBody": "Válassza ki a munkanyelvét az alkalmazásban és az értesítési nyelvét az e-mailekhez. Az eredeti termékazonosítók és a hivatalos forrásadatok érintetlenek maradnak.",
+    "control": "Katalógusa az Ön ellenőrzése alatt marad. Az áttekintési döntés rögzítése nem teszi automatikusan közzé vagy módosítja a Shopify terméket."
   }
 }

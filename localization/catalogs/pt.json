@@ -54,7 +54,7 @@
     },
     "showcase": {
       "eyebrow": "PRÉ-VISUALIZAÇÕES ILUSTRATIVAS",
-      "title": "O que recebe",
+      "title": "Veja o ZeroRecall dentro do Shopify",
       "intro": "Estes exemplos usam produtos e mensagens fictícios.",
       "sample": "Ilustração",
       "scanKicker": "Análise após confirmação por e-mail",
@@ -68,8 +68,8 @@
       "yourProduct": "O seu produto",
       "alertRecord": "Registo Safety Gate",
       "matchReason": "Compare fotos, modelo e lote antes de decidir.",
-      "matchTitle": "E-mail imediato para uma nova correspondência",
-      "matchBody": "Após a instalação, recebe provas para rever por e-mail.",
+      "matchTitle": "Compare o produto. Escolha o seu próximo passo.",
+      "matchBody": "As fotos, identificadores e o risco oficial do Shopify e do Safety Gate aparecem ao lado dos controlos de revisão.",
       "emailLabel": "Atualização por e-mail",
       "clearKicker": "Atualização semanal após instalação",
       "clearScreenTitle": "Nenhum novo achado esta semana",
@@ -77,7 +77,12 @@
       "clearStatus": "Nenhuma ação necessária",
       "clearTitle": "Tranquilidade com uma atualização semanal",
       "clearBody": "Quando não há novos achados, confirmamos por e-mail.",
-      "disclaimer": "Ilustrações com produtos e mensagens fictícios. Estes não são resultados reais ou e-mails enviados."
+      "disclaimer": "Ilustrações com produtos e mensagens fictícios. Estes não são resultados reais ou e-mails enviados.",
+      "body": "Analise o seu catálogo e compare uma possível correspondência sem sair do Shopify Admin. Estas são telas reais da aplicação.",
+      "catalogTitle": "Saiba quais produtos ainda precisam de verificação",
+      "catalogBody": "Pesquise o seu catálogo, veja os resultados guardados e encontre produtos novos ou alterados.",
+      "open": "Abrir captura de ecrã em tamanho real",
+      "note": "Capturas de ecrã reais da aplicação de uma loja de teste. Interface mostrada em inglês. Nomes de produtos, contagens e resultados são dados de teste, não um estudo de caso de cliente. As capturas de ecrã são cortadas para a aplicação; os resultados exibidos não são alterados."
     },
     "preview": {
       "adminStore": "a-sua-loja.myshopify.com",
@@ -331,6 +336,29 @@
       "reviewBody": "Compare o anúncio e o alerta oficial, depois verifique o modelo e o lote com o seu fornecedor. Na aplicação instalada, registe uma resolução, descarte um produto diferente ou mantenha a descoberta em aberto enquanto aguarda o fornecedor.",
       "record": "As decisões de revisão são guardadas com um interveniente, hora e nota na aplicação.",
       "limit": "A IA sugere possíveis correspondências. Não certifica a segurança nem substitui a sua revisão. Este exemplo é ilustrativo; não é um recolha real ou uma análise em tempo real."
+    },
+    "features": {
+      "title": "O que a sua loja obtém com o ZeroRecall",
+      "body": "A aplicação instalada integra verificações de catálogo, monitorização contínua e decisões documentadas num único fluxo de trabalho do Shopify. Um plano ativo permite a monitorização contínua; a verificação pública gratuita é uma verificação única separada.",
+      "catalogTitle": "Uma primeira verificação em todo o seu catálogo",
+      "catalogBody": "Importe o seu catálogo Shopify e compare-o com o histórico indexado do Safety Gate. Acompanhe o progresso e veja quais versões atuais de produtos têm uma verificação guardada.",
+      "monitorTitle": "Monitorização que continua a funcionar em segundo plano",
+      "monitorBody": "Novos alertas do Safety Gate e alterações de produtos Shopify acionam verificações em segundo plano, mesmo quando o Shopify Admin está fechado.",
+      "aiTitle": "EAN, detalhes do produto e comparação de fotos",
+      "aiBody": "Priorize correspondências exatas de EAN / GTIN. Use IA para avaliar correspondências prováveis de marcas, modelos, descrições e fotos quando os identificadores estão incompletos.",
+      "productTitle": "Verificações onde gere produtos",
+      "productBody": "Pesquise um produto, execute uma verificação manual ou visualize o seu status mais recente do Safety Gate e solicite uma verificação diretamente da página do produto Shopify.",
+      "reviewTitle": "Uma fila de revisão com resultados claros",
+      "reviewBody": "Compare as evidências, descarte um produto diferente, registe a ação tomada ou mantenha um resultado em aberto enquanto aguarda o seu fornecedor. Revise galerias de fotos e links para alertas oficiais.",
+      "bulkTitle": "Decisões em massa para um catálogo movimentado",
+      "bulkBody": "Resolva ou descarte várias descobertas em conjunto. Mantenha notas e histórico de decisões sem repetir a mesma ação de revisão para cada linha.",
+      "emailTitle": "Alertas por e-mail e resumos semanais",
+      "emailBody": "Receba um e-mail imediato para uma nova descoberta e um resumo semanal quando não houver novas descobertas. Escolha o destinatário, idioma e preferências de notificação.",
+      "auditTitle": "Um registo de verificações e decisões",
+      "auditBody": "Mantenha os resultados da revisão com um ator, carimbo de data/hora e notas. Visualize o histórico de decisões e exporte verificações e decisões num relatório CSV.",
+      "languageTitle": "Uma interface em 24 idiomas da UE",
+      "languageBody": "Escolha o seu idioma de trabalho na aplicação e o seu idioma de notificação para e-mail. Os identificadores de produto originais e os factos da fonte oficial permanecem intactos.",
+      "control": "O seu catálogo permanece sob o seu controlo. O registo de uma decisão de revisão não anula automaticamente a publicação ou altera um produto Shopify."
     }
   },
   "email": {

@@ -576,6 +576,41 @@
       "model": "gemini-2.5-flash",
       "review": "EN/SK authored directly; other languages machine translated, structure and cautious claims checked, selected translations spot-checked. No native-speaker review of every language.",
       "sourceSha256": "f2cc3ed9df235cc84589d422be9a0b3330e1930dbed87244423997d33650a74d"
+    },
+    {
+      "date": "2026-11-02",
+      "scope": "29 marketing-only strings: real Shopify screenshot captions and nine merchant feature descriptions; no email changes.",
+      "sourceLocales": [
+        "en",
+        "sk"
+      ],
+      "translatedLocales": [
+        "bg",
+        "cs",
+        "da",
+        "de",
+        "el",
+        "es",
+        "et",
+        "fi",
+        "fr",
+        "ga",
+        "hr",
+        "hu",
+        "it",
+        "lt",
+        "lv",
+        "mt",
+        "nl",
+        "pl",
+        "pt",
+        "ro",
+        "sl",
+        "sv"
+      ],
+      "model": "gemini-2.5-flash",
+      "review": "EN/SK authored directly; 22 other languages machine translated, key completeness and placeholders checked. No native-speaker review of every language.",
+      "sourceSha256": "1ead9bee9123c64eac634d09249401fe32067841223b764b9813ce8e7c2f32fe"
     }
   ]
 }

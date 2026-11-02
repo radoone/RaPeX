@@ -53,7 +53,7 @@
   },
   "showcase": {
     "eyebrow": "ILLUSTRATIVE VORSCHAUEN",
-    "title": "Was Sie erhalten",
+    "title": "ZeroRecall in Shopify erleben",
     "intro": "Diese Beispiele verwenden fiktive Produkte und Nachrichten.",
     "sample": "Illustration",
     "scanKicker": "Scan nach E-Mail-Bestätigung",
@@ -67,8 +67,8 @@
     "yourProduct": "Ihr Produkt",
     "alertRecord": "Safety Gate-Eintrag",
     "matchReason": "Vergleichen Sie Fotos, Modell und Charge, bevor Sie entscheiden.",
-    "matchTitle": "Sofortige E-Mail bei neuer Übereinstimmung",
-    "matchBody": "Nach der Installation erhalten Sie Nachweise zur Überprüfung per E-Mail.",
+    "matchTitle": "Vergleichen Sie das Produkt. Wählen Sie Ihren nächsten Schritt.",
+    "matchBody": "Shopify- und Safety Gate-Fotos, Identifikatoren und das offizielle Risiko erscheinen neben den Überprüfungskontrollen.",
     "emailLabel": "E-Mail-Update",
     "clearKicker": "Wöchentliches Update nach der Installation",
     "clearScreenTitle": "Keine neuen Erkenntnisse diese Woche",
@@ -76,7 +76,12 @@
     "clearStatus": "Keine Aktion erforderlich",
     "clearTitle": "Sorgenfreiheit mit einem wöchentlichen Update",
     "clearBody": "Wenn es keine neuen Erkenntnisse gibt, bestätigen wir dies per E-Mail.",
-    "disclaimer": "Illustrationen mit fiktiven Produkten und Nachrichten. Dies sind keine echten Ergebnisse oder gesendeten E-Mails."
+    "disclaimer": "Illustrationen mit fiktiven Produkten und Nachrichten. Dies sind keine echten Ergebnisse oder gesendeten E-Mails.",
+    "body": "Überprüfen Sie Ihren Katalog und vergleichen Sie eine mögliche Übereinstimmung, ohne Shopify Admin zu verlassen. Dies sind echte Bildschirme aus der App.",
+    "catalogTitle": "Wissen, welche Produkte noch überprüft werden müssen",
+    "catalogBody": "Durchsuchen Sie Ihren Katalog, sehen Sie gespeicherte Ergebnisse und finden Sie neue oder geänderte Produkte.",
+    "open": "Screenshot in voller Größe öffnen",
+    "note": "Echte App-Screenshots aus einem Test-Shop. Die Benutzeroberfläche wird auf Englisch angezeigt. Produktnamen, Anzahlen und Ergebnisse sind Testdaten, keine Kundenfallstudie. Screenshots sind auf die App zugeschnitten; die angezeigten Ergebnisse sind unverändert."
   },
   "preview": {
     "adminStore": "ihr-shop.myshopify.com",
@@ -330,5 +335,28 @@
     "reviewBody": "Vergleichen Sie das Angebot und die offizielle Warnung, und überprüfen Sie dann Modell und Charge mit Ihrem Lieferanten. In der installierten App können Sie eine Lösung festhalten, ein anderes Produkt ablehnen oder den Befund offen lassen, während Sie auf den Lieferanten warten.",
     "record": "Überprüfungsentscheidungen werden mit Akteur, Zeit und Notiz in der App gespeichert.",
     "limit": "KI schlägt mögliche Übereinstimmungen vor. Sie zertifiziert keine Sicherheit und ersetzt nicht Ihre Überprüfung. Dieses Beispiel ist illustrativ; es handelt sich nicht um einen echten Rückruf oder einen Live-Scan."
+  },
+  "features": {
+    "title": "Was Ihr Shop mit ZeroRecall erhält",
+    "body": "Die installierte App vereint Katalogprüfungen, fortlaufende Überwachung und dokumentierte Entscheidungen in einem Shopify-Workflow. Ein aktiver Plan ermöglicht die fortlaufende Überwachung; der öffentliche kostenlose Scan ist eine separate einmalige Prüfung.",
+    "catalogTitle": "Eine erste Prüfung Ihres gesamten Katalogs",
+    "catalogBody": "Importieren Sie Ihren Shopify-Katalog und vergleichen Sie ihn mit der indizierten Safety Gate-Historie. Verfolgen Sie den Fortschritt und sehen Sie, welche aktuellen Produktversionen eine gespeicherte Prüfung haben.",
+    "monitorTitle": "Überwachung, die im Hintergrund weiterarbeitet",
+    "monitorBody": "Neue Safety Gate-Warnungen und Shopify-Produktänderungen lösen Hintergrundprüfungen aus, auch wenn Shopify Admin geschlossen ist.",
+    "aiTitle": "EAN, Produktdetails und Fotovergleich",
+    "aiBody": "Priorisieren Sie exakte EAN / GTIN-Übereinstimmungen. Nutzen Sie KI, um wahrscheinliche Übereinstimmungen anhand von Marken, Modellen, Beschreibungen und Fotos zu bewerten, wenn Identifikatoren unvollständig sind.",
+    "productTitle": "Prüfungen dort, wo Sie Produkte verwalten",
+    "productBody": "Suchen Sie nach einem Produkt, führen Sie eine manuelle Prüfung durch oder sehen Sie dessen neuesten Safety Gate-Status und fordern Sie eine Prüfung direkt von der Shopify-Produktseite an.",
+    "reviewTitle": "Eine Überprüfungswarteschlange mit klaren Ergebnissen",
+    "reviewBody": "Vergleichen Sie die Beweise, weisen Sie ein anderes Produkt zurück, dokumentieren Sie ergriffene Maßnahmen oder lassen Sie einen Befund offen, während Sie auf Ihren Lieferanten warten. Überprüfen Sie Fotogalerien und Links zu offiziellen Warnungen.",
+    "bulkTitle": "Massenentscheidungen für einen umfangreichen Katalog",
+    "bulkBody": "Lösen oder verwerfen Sie mehrere Befunde zusammen. Führen Sie Notizen und eine Entscheidungshistorie, ohne dieselbe Überprüfungsaktion für jede Zeile zu wiederholen.",
+    "emailTitle": "E-Mail-Benachrichtigungen und wöchentliche Zusammenfassungen",
+    "emailBody": "Erhalten Sie eine sofortige E-Mail für einen neu erstellten Befund und eine wöchentliche Zusammenfassung, wenn keine neuen Befunde vorliegen. Wählen Sie Empfänger, Sprache und Benachrichtigungseinstellungen.",
+    "auditTitle": "Eine Aufzeichnung von Prüfungen und Entscheidungen",
+    "auditBody": "Halten Sie Überprüfungsergebnisse mit Akteur, Zeitstempel und Notizen fest. Zeigen Sie die Entscheidungshistorie an und exportieren Sie Prüfungen und Entscheidungen in einem CSV-Bericht.",
+    "languageTitle": "Eine Benutzeroberfläche in 24 EU-Sprachen",
+    "languageBody": "Wählen Sie Ihre Arbeitssprache in der App und Ihre Benachrichtigungssprache für E-Mails. Originale Produktidentifikatoren und offizielle Quellenfakten bleiben intakt.",
+    "control": "Ihr Katalog bleibt unter Ihrer Kontrolle. Das Aufzeichnen einer Überprüfungsentscheidung führt nicht automatisch zur Aufhebung der Veröffentlichung oder Änderung eines Shopify-Produkts."
   }
 }

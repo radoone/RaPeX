@@ -53,7 +53,7 @@
   },
   "showcase": {
     "eyebrow": "ILLUSTRATIVE FORHÅNDSVISNINGER",
-    "title": "Hvad du modtager",
+    "title": "Se ZeroRecall i Shopify",
     "intro": "Disse eksempler bruger fiktive produkter og meddelelser.",
     "sample": "Illustration",
     "scanKicker": "Scanning efter e-mailbekræftelse",
@@ -67,8 +67,8 @@
     "yourProduct": "Dit produkt",
     "alertRecord": "Safety Gate-registrering",
     "matchReason": "Sammenlign fotos, model og batch, før du beslutter dig.",
-    "matchTitle": "Øjeblikkelig e-mail for et nyt match",
-    "matchBody": "Efter installation modtager du beviser til gennemgang via e-mail.",
+    "matchTitle": "Sammenlign produktet. Vælg dit næste skridt.",
+    "matchBody": "Shopify- og Safety Gate-fotos, identifikatorer og den officielle risiko vises ved siden af gennemgangskontrollerne.",
     "emailLabel": "E-mailopdatering",
     "clearKicker": "Ugentlig opdatering efter installation",
     "clearScreenTitle": "Ingen nye fund denne uge",
@@ -76,7 +76,12 @@
     "clearStatus": "Ingen handling nødvendig",
     "clearTitle": "Ro i sindet med en ugentlig opdatering",
     "clearBody": "Når der ikke er nye fund, bekræfter vi det via e-mail.",
-    "disclaimer": "Illustrationer med fiktive produkter og meddelelser. Dette er ikke reelle resultater eller sendte e-mails."
+    "disclaimer": "Illustrationer med fiktive produkter og meddelelser. Dette er ikke reelle resultater eller sendte e-mails.",
+    "body": "Gennemgå dit katalog og sammenlign et muligt match uden at forlade Shopify Admin. Disse er rigtige skærmbilleder fra appen.",
+    "catalogTitle": "Vid hvilke produkter der stadig mangler et tjek",
+    "catalogBody": "Søg i dit katalog, se gemte resultater og find produkter, der er nye eller ændrede.",
+    "open": "Åbn skærmbillede i fuld størrelse",
+    "note": "Rigtige app-skærmbilleder fra en testbutik. Grænseflade vist på engelsk. Produktnavne, antal og fund er testdata, ikke en kundecase-studie. Skærmbilleder er beskåret til appen; viste resultater er uændrede."
   },
   "preview": {
     "adminStore": "din-butik.myshopify.com",
@@ -330,5 +335,28 @@
     "reviewBody": "Sammenlign annoncen og den officielle advarsel, og verificer derefter model og batch med din leverandør. I den installerede app kan du registrere en løsning, afvise et andet produkt eller holde fundet åbent, mens du venter på leverandøren.",
     "record": "Gennemgangsbeslutninger gemmes med en aktør, tid og note i appen.",
     "limit": "AI foreslår mulige match. Den certificerer ikke sikkerhed eller erstatter din gennemgang. Dette eksempel er illustrativt; det er ikke en reel tilbagekaldelse eller en live-scanning."
+  },
+  "features": {
+    "title": "Hvad din butik får med ZeroRecall",
+    "body": "Den installerede app samler katalogtjek, løbende overvågning og dokumenterede beslutninger i én Shopify-arbejdsgang. En aktiv plan muliggør løbende overvågning; den offentlige gratis scanning er et separat engangstjek.",
+    "catalogTitle": "Et første tjek af dit katalog",
+    "catalogBody": "Importer dit Shopify-katalog og sammenlign det med indekseret Safety Gate-historik. Følg fremskridt og se hvilke nuværende produktversioner der har et gemt tjek.",
+    "monitorTitle": "Overvågning der fortsætter med at arbejde i baggrunden",
+    "monitorBody": "Nye Safety Gate-advarsler og Shopify-produktændringer udløser baggrundstjek, selv når Shopify Admin er lukket.",
+    "aiTitle": "EAN, produktdetaljer og fotosammenligning",
+    "aiBody": "Prioriter nøjagtige EAN / GTIN-matches. Brug AI til at vurdere sandsynlige matches ud fra mærker, modeller, beskrivelser og fotos, når identifikatorer er ufuldstændige.",
+    "productTitle": "Tjek hvor du administrerer produkter",
+    "productBody": "Søg efter ét produkt, kør et manuelt tjek eller se dets seneste Safety Gate-status og anmod om et tjek direkte fra Shopify-produktsiden.",
+    "reviewTitle": "En gennemgangskø med klare resultater",
+    "reviewBody": "Sammenlign beviserne, afvis et andet produkt, registrer handling udført eller hold et fund åbent, mens du venter på din leverandør. Gennemgå fotogallerier og links til officielle advarsler.",
+    "bulkTitle": "Bulkbeslutninger for et travlt katalog",
+    "bulkBody": "Løs eller afvis flere fund sammen. Gem noter og beslutningshistorik uden at gentage den samme gennemgangshandling for hver række.",
+    "emailTitle": "E-mail-advarsler og ugentlige oversigter",
+    "emailBody": "Få en øjeblikkelig e-mail for et nyoprettet fund og en ugentlig oversigt, når der ikke er nye fund. Vælg modtager, sprog og notifikationspræferencer.",
+    "auditTitle": "En registrering af tjek og beslutninger",
+    "auditBody": "Gem gennemgangsresultater med en aktør, tidsstempel og noter. Se beslutningshistorik og eksporter tjek og beslutninger i en CSV-rapport.",
+    "languageTitle": "En grænseflade på 24 EU-sprog",
+    "languageBody": "Vælg dit arbejdssprog i appen og dit notifikationssprog for e-mail. Originale produktidentifikatorer og officielle kildeoplysninger forbliver intakte.",
+    "control": "Dit katalog forbliver under din kontrol. Registrering af en gennemgangsbeslutning afpublicerer eller ændrer ikke automatisk et Shopify-produkt."
   }
 }

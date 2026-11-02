@@ -54,7 +54,7 @@
     },
     "showcase": {
       "eyebrow": "ILLUSTRATIVA FÖRHANDSGRANSKNINGAR",
-      "title": "Vad du får",
+      "title": "Se ZeroRecall i Shopify",
       "intro": "Dessa exempel använder fiktiva produkter och meddelanden.",
       "sample": "Illustration",
       "scanKicker": "Skanna efter e-postbekräftelse",
@@ -68,8 +68,8 @@
       "yourProduct": "Din produkt",
       "alertRecord": "Safety Gate-post",
       "matchReason": "Jämför foton, modell och batch innan du bestämmer dig.",
-      "matchTitle": "Omedelbart e-postmeddelande för en ny matchning",
-      "matchBody": "Efter installationen får du bevis att granska via e-post.",
+      "matchTitle": "Jämför produkten. Välj nästa steg.",
+      "matchBody": "Shopify- och Safety Gate-foton, identifierare och den officiella risken visas bredvid granskningskontrollerna.",
       "emailLabel": "E-postuppdatering",
       "clearKicker": "Veckouppdatering efter installation",
       "clearScreenTitle": "Inga nya fynd denna vecka",
@@ -77,7 +77,12 @@
       "clearStatus": "Ingen åtgärd behövs",
       "clearTitle": "Lugn och ro med en veckouppdatering",
       "clearBody": "När det inte finns några nya fynd bekräftar vi det via e-post.",
-      "disclaimer": "Illustrationer med fiktiva produkter och meddelanden. Dessa är inte verkliga resultat eller skickade e-postmeddelanden."
+      "disclaimer": "Illustrationer med fiktiva produkter och meddelanden. Dessa är inte verkliga resultat eller skickade e-postmeddelanden.",
+      "body": "Granska din katalog och jämför en möjlig matchning utan att lämna Shopify Admin. Dessa är riktiga skärmbilder från appen.",
+      "catalogTitle": "Vet vilka produkter som fortfarande behöver kontrolleras",
+      "catalogBody": "Sök i din katalog, se sparade resultat och hitta produkter som är nya eller ändrade.",
+      "open": "Öppna skärmbild i full storlek",
+      "note": "Verkliga skärmbilder från en testbutik. Gränssnittet visas på engelska. Produktnamn, antal och fynd är testdata, inte en kundfallstudie. Skärmbilder är beskurna till appen; visade resultat är oförändrade."
     },
     "preview": {
       "adminStore": "din-butik.myshopify.com",
@@ -331,6 +336,29 @@
       "reviewBody": "Jämför listningen och den officiella varningen, verifiera sedan modell och batch med din leverantör. I den installerade appen, registrera en lösning, avfärda en annan produkt eller håll fyndet öppet medan du väntar på leverantören.",
       "record": "Granskningsbeslut sparas med en aktör, tid och anteckning i appen.",
       "limit": "AI föreslår möjliga matchningar. Den certifierar inte säkerhet eller ersätter din granskning. Detta exempel är illustrativt; det är inte en verklig återkallelse eller en live-skanning."
+    },
+    "features": {
+      "title": "Vad din butik får med ZeroRecall",
+      "body": "Den installerade appen samlar katalogkontroller, löpande övervakning och dokumenterade beslut i ett och samma Shopify-arbetsflöde. En aktiv plan möjliggör löpande övervakning; den offentliga gratisskanningen är en separat engångskontroll.",
+      "catalogTitle": "En första kontroll av din katalog",
+      "catalogBody": "Importera din Shopify-katalog och jämför den med indexerad Safety Gate-historik. Följ framstegen och se vilka aktuella produktversioner som har en sparad kontroll.",
+      "monitorTitle": "Övervakning som fortsätter att arbeta i bakgrunden",
+      "monitorBody": "Nya Safety Gate-varningar och ändringar i Shopify-produkter utlöser bakgrundskontroller, även när Shopify Admin är stängt.",
+      "aiTitle": "EAN, produktinformation och fotokomparation",
+      "aiBody": "Prioritera exakta EAN / GTIN-matchningar. Använd AI för att bedöma sannolika matchningar från varumärken, modeller, beskrivningar och foton när identifierare är ofullständiga.",
+      "productTitle": "Kontroller där du hanterar produkter",
+      "productBody": "Sök efter en produkt, kör en manuell kontroll eller se dess senaste Safety Gate-status och begär en kontroll direkt från Shopify-produktsidan.",
+      "reviewTitle": "En granskningskö med tydliga resultat",
+      "reviewBody": "Jämför bevisen, avfärda en annan produkt, registrera vidtagen åtgärd eller håll ett fynd öppet medan du väntar på din leverantör. Granska fotogallerier och länkar till officiella varningar.",
+      "bulkTitle": "Massbeslut för en upptagen katalog",
+      "bulkBody": "Lös eller avfärda flera fynd tillsammans. Behåll anteckningar och beslutshistorik utan att upprepa samma granskningsåtgärd för varje rad.",
+      "emailTitle": "E-postvarningar och veckosammanfattningar",
+      "emailBody": "Få ett omedelbart e-postmeddelande för ett nyupptäckt fynd och en veckosammanfattning när det inte finns några nya fynd. Välj mottagare, språk och meddelandepreferenser.",
+      "auditTitle": "En registrering av kontroller och beslut",
+      "auditBody": "Behåll granskningsresultat med aktör, tidsstämpel och anteckningar. Visa beslutshistorik och exportera kontroller och beslut i en CSV-rapport.",
+      "languageTitle": "Ett gränssnitt på 24 EU-språk",
+      "languageBody": "Välj ditt arbetsspråk i appen och ditt meddelandespråk för e-post. Ursprungliga produktidentifierare och officiella källfakta förblir intakta.",
+      "control": "Din katalog förblir under din kontroll. Att registrera ett granskningsbeslut publicerar eller ändrar inte automatiskt en Shopify-produkt."
     }
   },
   "email": {
