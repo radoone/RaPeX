@@ -75,6 +75,7 @@ export const MatchSchema = functionsAi.defineSchema(
   z.object({
     alertId: z.string(),
     matchBasis: z.enum(["gtin", "similarity"]).optional(),
+    identityAssessment: z.enum(["identifier", "same_model", "distinctive_visual", "uncertain"]).optional(),
     identifierMatches: z.array(z.object({
       gtin: z.string(), barcode: z.string(), alertBarcode: z.string(),
       variantId: z.string().optional(), variantTitle: z.string().optional(),
@@ -107,6 +108,7 @@ export const AnalysisMatchesSchema = functionsAi.defineSchema(
     overallSimilarity: z.number().min(0).max(100),
     textSimilarity: z.number().min(0).max(100),
     imageSimilarity: z.number().min(0).max(100).optional(),
+    identityAssessment: z.enum(["same_model", "distinctive_visual", "uncertain"]),
     reason: z.string().min(1).max(1500),
   })).max(12),
 );
@@ -125,6 +127,7 @@ export const SafetyCheckResultSchema = functionsAi.defineSchema(
       productImagesUsed: z.number(),
       alertImagesUsed: z.number(),
       candidateAlertsConsidered: z.number(),
+      comparedImageAlertIds: z.array(z.string()).optional(),
     }),
   }),
 );

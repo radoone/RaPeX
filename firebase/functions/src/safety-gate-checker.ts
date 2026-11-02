@@ -103,7 +103,7 @@ function buildMatchCacheKey(product: ProductInput, alerts: NormalizedAlert[]): {
   const productFingerprint = buildProductFingerprint(product);
   const alertSignature = buildAlertSignature(alerts);
   const docId = hashValue({
-    reliabilityVersion: 5,
+    reliabilityVersion: 6,
     shop,
     productId,
     productFingerprint,
@@ -282,6 +282,7 @@ async function analyzeProductMatches(product: ProductInput, alerts: NormalizedAl
       productImagesUsed: input.productImages.length,
       alertImagesUsed: input.alertImages.length,
       candidateAlertsConsidered: alerts.length,
+      comparedImageAlertIds: [...new Set(input.alertImages.map(image => image.alertId))],
     };
 
     try {
@@ -334,7 +335,7 @@ export async function checkProductAgainstAlerts(
       delete evidence.imageSimilarity;
       delete evidence.textSimilarity;
       delete evidence.scoreBreakdown;
-      return { ...evidence, overallSimilarity: 100, matchBasis: "gtin" as const, identifierMatches, reason };
+      return { ...evidence, overallSimilarity: 100, matchBasis: "gtin" as const, identityAssessment: "identifier" as const, identifierMatches, reason };
     });
     return { ...base, isSafe: false, warnings: [...exactWarnings, ...base.warnings],
       recommendation: "A validated product barcode matches a Safety Gate alert. Review the affected variant, model and batch before deciding.",
@@ -348,7 +349,8 @@ export async function checkProductAgainstAlerts(
     return {
       ...batches[0], warnings, isSafe: warnings.length === 0,
       checkedAt: new Date().toISOString(),
-      analysis: { ...batches[0].analysis!, candidateAlertsConsidered: candidateAlerts.length },
+      analysis: { ...batches[0].analysis!, candidateAlertsConsidered: candidateAlerts.length,
+        comparedImageAlertIds: [...new Set(batches.flatMap(batch => batch.analysis.comparedImageAlertIds || []))] },
     };
   }
   const productImageCount = getProductImageUrls(product).length;
@@ -379,7 +381,7 @@ export async function checkProductAgainstAlerts(
   console.log("Gemini analysis response:", analysisResult.response.text);
   console.log("Safety check analysis mode:", analysisResult.analysis);
   const matches = parseAnalysisMatches(analysisResult.response);
-  const result = buildSafetyCheckResult(matches, candidateAlerts, analysisResult.analysis);
+  const result = buildSafetyCheckResult(matches, candidateAlerts, analysisResult.analysis, product);
   await writeCachedMatchResult(product, candidateAlerts, result);
   return result;
 }

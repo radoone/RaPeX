@@ -8,6 +8,7 @@ import type {
   NormalizedAlert,
   SafetyCheckAnalysis,
 } from "./safety-gate-checker.types.js";
+import { compareExplicitModels, explicitProductModel } from "./product-model-identity.js";
 
 type AnalysisResponseShape = {
   output?: unknown;
@@ -47,6 +48,9 @@ export function buildComparisonPrompt(product: ProductInput, alerts: NormalizedA
       const category = sanitizePromptField(f.category || f.product_category || "Not specified", 200);
       const brand = sanitizePromptField(f.brand || f.product_brand || "Unknown", 200);
       const model = sanitizePromptField(f.type_numberOfModel || f.product_model || f.product_model_type || "Not specified", 250);
+      const description = sanitizePromptField(f.description || f.product_description || "Not specified", 1500);
+      const batch = sanitizePromptField(f.batchNumber || "Not specified", 500);
+      const barcode = sanitizePromptField(f.barcode || f.product_barcode || "Not specified", 300);
       const danger = sanitizePromptField(f.danger || f.alert_description || f.risk_legal_provision || "Not specified", 1000);
       const measures = sanitizePromptField(f.measures || f.technical_defect || f.measures_country || "Not specified", 600);
       const riskType = sanitizePromptField(f.riskType || f.alert_type || "Not specified", 200);
@@ -59,6 +63,9 @@ Product: ${prodName}
 Category: ${category}
 Brand: ${brand}
 Model: ${model}
+Description (actual source construction/dimensions): ${description}
+Batch / production codes: ${batch}
+Source barcode text (not a validated merchant identifier match): ${barcode}
 Danger: ${danger}
 Measures: ${measures}
 Risk Type: ${riskType}
@@ -72,7 +79,7 @@ ${describeAlertSource(alert)}`;
   const safeCategory = sanitizePromptField(product.category, 150);
   const safeDescription = sanitizePromptField(product.description, 2500);
   const safeBrand = sanitizePromptField(product.brand || "Not specified", 200);
-  const safeModel = sanitizePromptField(product.model || "Not specified", 200);
+  const safeModel = sanitizePromptField(explicitProductModel(product) || "Not specified", 200);
 
   return `<merchant_product>
 Name: ${safeName}
@@ -215,7 +222,8 @@ export function parseAnalysisMatches(
     !value || typeof value !== "object" ||
     typeof value.alertId !== "string" || !value.alertId.trim() ||
     !Number.isFinite(value.textSimilarity ?? value.overallSimilarity) ||
-    (value.imageSimilarity != null && !Number.isFinite(value.imageSimilarity)))) {
+    (value.imageSimilarity != null && !Number.isFinite(value.imageSimilarity)) ||
+    !["same_model", "distinctive_visual", "uncertain"].includes(value.identityAssessment))) {
     throw new Error("Invalid Safety Gate match structure; retry the check");
   }
   return parsed as AnalysisMatchCandidate[];
@@ -371,6 +379,7 @@ export function buildSafetyCheckResult(
   matches: AnalysisMatchCandidate[],
   alerts: NormalizedAlert[],
   analysis: SafetyCheckAnalysis,
+  product?: ProductInput,
 ): SafetyCheckResult {
   // A visual comparison requires an image from both sides, not merely a source photograph.
   analysis = { ...analysis, scoringMode: analysis.scoringMode === "image-first" && analysis.productImagesUsed > 0 && analysis.alertImagesUsed > 0 ? "image-first" : "text-only" };
@@ -381,12 +390,25 @@ export function buildSafetyCheckResult(
         throw new Error("Safety Gate model referenced an unknown candidate; retry the check");
       }
 
+      const modelIdentity = product ? compareExplicitModels(product, alert) : "unknown";
+      if (modelIdentity === "different") return null;
+      const comparedPhoto = analysis.productImagesUsed > 0 &&
+        (analysis.comparedImageAlertIds?.includes(alert.id) ?? analysis.alertImagesUsed > 0);
+      let identityAssessment = match.identityAssessment || "uncertain";
+      if (identityAssessment === "same_model" && product && modelIdentity === "unknown") {
+        // A model read only from the photographs is visual evidence, not an
+        // independently supplied structured merchant identifier.
+        identityAssessment = comparedPhoto && (match.imageSimilarity ?? 0) >= 90 ? "distinctive_visual" : "uncertain";
+      }
+      if (modelIdentity === "variant" ||
+        (identityAssessment === "distinctive_visual" && !comparedPhoto)) identityAssessment = "uncertain";
+
       const alertDetails = buildAlertDetails(alert);
       const alertType = alertDetails.fields.alert_type;
       const alertLevel = alertDetails.fields.alert_level;
       const riskLegalProvision = alertDetails.fields.risk_legal_provision;
       const scoringMode =
-        analysis.scoringMode === "image-first" && Number.isFinite(match.imageSimilarity)
+        analysis.scoringMode === "image-first" && comparedPhoto && Number.isFinite(match.imageSimilarity)
           ? "image-first"
           : "text-only";
       const textSimilarity = getTextSimilarity(match);
@@ -400,6 +422,7 @@ export function buildSafetyCheckResult(
       return {
         alertId: alert.id,
         matchBasis: "similarity",
+        identityAssessment,
         overallSimilarity,
         imageSimilarity,
         textSimilarity,
@@ -407,7 +430,9 @@ export function buildSafetyCheckResult(
         riskLevel: mapRiskLevel(alertDetails.fields.level || alertDetails.fields.risk_level || alertDetails.fields.alert_level || ""),
         alertType: alertDetails.fields.riskType || alertType || alertLevel || "Unknown",
         riskLegalProvision: riskLegalProvision || alertDetails.fields.danger || "",
-        reason: enrichReason(match.reason, scoringMode, imageSimilarity, overallSimilarity),
+        reason: (identityAssessment === "uncertain"
+          ? "Identity not confirmed; verify the exact model, submodel and batch before deciding. " : "") +
+          enrichReason(match.reason, scoringMode, imageSimilarity, overallSimilarity),
         alertDetails,
       };
     })

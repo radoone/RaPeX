@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { AnalysisMatchesSchema } from '../lib/safety-gate-checker.schemas.js';
 import { buildSafetyCheckResult } from '../lib/safety-gate-checker-results.js';
 
-const match = { alertId: 'source', overallSimilarity: 92, textSimilarity: 92, reason: 'Same brand and model.' };
+const match = { alertId: 'source', overallSimilarity: 92, textSimilarity: 92, identityAssessment: 'same_model', reason: 'Same brand and model.' };
 test('model output accepts bounded similarity judgements and empty lists without source records', () => {
   assert.deepEqual(AnalysisMatchesSchema.parse([]), []);
   assert.deepEqual(AnalysisMatchesSchema.parse([match]), [match]);

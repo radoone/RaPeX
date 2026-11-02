@@ -1,0 +1,741 @@
+{
+  "version": "identity-regression-15-v1",
+  "provenance": "Public official Safety Gate records and actual official photographs; labels fixed by assistant review at owner request before predictions. Authored listing transformations are explicitly described. This is a tuning/regression set, not independent held-out accuracy evidence. No merchant identifiers are supplied. Two pairs intentionally include public validated GTINs and synthetic variant labels; the other thirteen isolate similarity matching.",
+  "pipeline": "Validated GTIN lookup first -> batch text embeddings and Firestore text/image KNN -> AI only for shortlisted non-GTIN candidates -> server identity guard. Retrieval misses are reported separately.",
+  "pairs": [
+    {
+      "id": "01-exact-akyga-format",
+      "expected": "identifier",
+      "labelReason": "Exact Akyga AK-ND-07; formatting is not a model conflict. Validated EAN/GTIN is the primary evidence; equivalent 13/14-digit representations must retain both variants.",
+      "product": {
+        "name": "Akyga Napájecí adaptér Power adaptor AK-ND-07",
+        "category": "Electrical appliances and equipment",
+        "description": "Adaptor accompanied by multilingual instructions for use, Input: 100-250V AC, 2.4A, 50/60Hz, output: 19.5V DC, 4.62",
+        "brand": "Akyga",
+        "model": "ak nd 07",
+        "imageUrls": [
+          "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10115713",
+          "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10115714"
+        ],
+        "barcodes": [
+          {
+            "barcode": "5901720130549",
+            "variantId": "qa-blue",
+            "variantTitle": "Blue"
+          },
+          {
+            "barcode": "05901720130549",
+            "variantId": "qa-red",
+            "variantTitle": "Red"
+          }
+        ],
+        "barcodesComplete": true
+      },
+      "alert": {
+        "id": "006f294540cfd397bda02d4b77ab4f7f133531d8",
+        "meta": {
+          "recordid": "006f294540cfd397bda02d4b77ab4f7f133531d8",
+          "alert_date": "{'_seconds': 1711670400, '_nanoseconds': 0}",
+          "ingested_at": ""
+        },
+        "fields": {
+          "caseNumber": "A12/00831/24",
+          "brand": "Akyga",
+          "name": "Napájecí adaptér",
+          "product": "Power adaptor",
+          "type_numberOfModel": "AK-ND-07",
+          "category": "Electrical appliances and equipment",
+          "description": "Adaptor accompanied by multilingual instructions for use, Input: 100-250V AC, 2.4A, 50/60Hz, output: 19.5V DC, 4.62",
+          "danger": "The electrical insulation is insufficient and the clearance and creepage distance between the primary circuit and the accessible secondary circuits are not sufficient. The product can overheat or the user can have access to live parts and receive an electric shock.",
+          "measures": "Measures ordered by public authorities (to: Distributor) Ban on the marketing of the product and any accompanying measures",
+          "level": "Serious risk",
+          "riskType": "Electric shock",
+          "notifyingCountry": "Czechia",
+          "countryOfOrigin": "People's Republic of China",
+          "batchNumber": "",
+          "barcode": "5901720130549",
+          "pictures": [
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10115713",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10115714",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10115715"
+          ],
+          "url": "https://ec.europa.eu/safety-gate-alerts/screen/webReport/alertDetail/10012443"
+        }
+      }
+    },
+    {
+      "id": "02-lighter-repeat-report-2021",
+      "expected": "same_model",
+      "labelReason": "MXM CHINA P10-X08 is visibly marked on the base in both official reports.",
+      "product": {
+        "name": "MXM China  Novelty lighter P10-X08",
+        "category": "Lighters",
+        "description": "Refillable, lipstick-shaped lighters, approx. 8 cm long, black, white or pink, spotted.",
+        "brand": "MXM China",
+        "model": "P10-X08",
+        "imageUrls": [
+          "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/93456",
+          "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/93457"
+        ]
+      },
+      "alert": {
+        "id": "cf5e6b675b77cece3d05533aacf7ea7de3d85682",
+        "meta": {
+          "recordid": "cf5e6b675b77cece3d05533aacf7ea7de3d85682",
+          "alert_date": "{'_seconds': 1631232000, '_nanoseconds': 0}",
+          "ingested_at": ""
+        },
+        "fields": {
+          "caseNumber": "A12/01276/21",
+          "brand": "MXM CHINA",
+          "name": "",
+          "product": "Novelty lighter",
+          "type_numberOfModel": "P10-X08",
+          "category": "Lighters",
+          "description": "Novelty lighter in the shape of a lipstick.",
+          "danger": "The lighter is appealing to children and can easily be mistaken as a toy. Children may play with it and suffer burns or cause a fire. No lighter shall be appealing to children.",
+          "measures": "Measures ordered by public authorities (to: Retailer) Withdrawal of the product from market",
+          "level": "Serious risk",
+          "riskType": "Burns,Fire",
+          "notifyingCountry": "Cyprus",
+          "countryOfOrigin": "People's Republic of China",
+          "batchNumber": "",
+          "barcode": "",
+          "pictures": [
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10035913",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10035914"
+          ],
+          "url": "https://ec.europa.eu/safety-gate-alerts/screen/webReport/alertDetail/10004079"
+        }
+      }
+    },
+    {
+      "id": "03-lighter-repeat-report-2013",
+      "expected": "same_model",
+      "labelReason": "Same MXM China P10-X08 model and distinctive dotted lipstick construction across report years.",
+      "product": {
+        "name": "MXM China  Novelty lighter P10-X08",
+        "category": "Lighters",
+        "description": "Refillable, lipstick-shaped lighters, approx. 8 cm long, black, white or pink, spotted.",
+        "brand": "MXM China",
+        "model": "P10-X08",
+        "imageUrls": [
+          "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/93456",
+          "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/93457"
+        ]
+      },
+      "alert": {
+        "id": "a502a58e34c9b4f677983fa0121eabf822bf7329",
+        "meta": {
+          "recordid": "a502a58e34c9b4f677983fa0121eabf822bf7329",
+          "alert_date": "{'_seconds': 1379030400, '_nanoseconds': 0}",
+          "ingested_at": ""
+        },
+        "fields": {
+          "caseNumber": "A12/1214/13",
+          "brand": "MXM China",
+          "name": "Teling Smoking Set",
+          "product": "Novelty lighter",
+          "type_numberOfModel": "P10-X08",
+          "category": "Lighters",
+          "description": "Novelty lighter in the shape of a lipstick.",
+          "danger": "null The product is a novelty lighter and is attractive to children.The product does not comply with the Commission Decision 2006/502 EC prohibiting the placing on the market of novelty lighters.",
+          "measures": "Type of economic operator to whom the measure(s) were ordered: OtherCategory of measure(s): Withdrawal of the product from the marketDate of entry into force: 31/07/2013",
+          "level": "Serious risk",
+          "riskType": "Burns, Fire",
+          "notifyingCountry": "Cyprus",
+          "countryOfOrigin": "People's Republic of China",
+          "batchNumber": "Unknown",
+          "barcode": "",
+          "pictures": [
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/390761",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/390762",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/390763",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/390764"
+          ],
+          "url": "https://ec.europa.eu/safety-gate-alerts/screen/webReport/alertDetail/82691"
+        }
+      }
+    },
+    {
+      "id": "04-detector-exact-model",
+      "expected": "identifier",
+      "labelReason": "Extralink JKD-512COM matches official model and photographs; no GTIN supplied. Validated EAN/GTIN is the primary evidence; equivalent 13/14-digit representations must retain both variants.",
+      "product": {
+        "name": "Extralink Carbon Monoxide Smoke Detector Carbon monoxide detector JKD-512COM",
+        "category": "Construction products",
+        "description": "Carbon monoxide and smoke detector, battery powered (3 x1,5 V AA).",
+        "brand": "Extralink",
+        "model": "JKD-512COM",
+        "imageUrls": [
+          "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/11004619",
+          "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/11004620"
+        ],
+        "barcodes": [
+          {
+            "barcode": "5905090331087",
+            "variantId": "qa-blue",
+            "variantTitle": "Blue"
+          },
+          {
+            "barcode": "05905090331087",
+            "variantId": "qa-red",
+            "variantTitle": "Red"
+          }
+        ],
+        "barcodesComplete": true
+      },
+      "alert": {
+        "id": "00d77a7d413bf51954f335329c9f43ab4b99487f",
+        "meta": {
+          "recordid": "00d77a7d413bf51954f335329c9f43ab4b99487f",
+          "alert_date": "{'_seconds': 1776384000, '_nanoseconds': 0}",
+          "ingested_at": ""
+        },
+        "fields": {
+          "caseNumber": "SR/01136/26",
+          "brand": "Extralink",
+          "name": "Carbon Monoxide Smoke Detector",
+          "product": "Carbon monoxide detector",
+          "type_numberOfModel": "JKD-512COM",
+          "category": "Construction products",
+          "description": "Carbon monoxide and smoke detector, battery powered (3 x1,5 V AA).",
+          "danger": "The product is not sufficiently sensitive with respect to detection of carbon monoxide (CO) and poses a risk of CO poisoning in that a person may inadvertently be exposed to CO trusting that the product functions correctly. This may lead to asphyxiation.",
+          "measures": "Measures ordered by economic operators (to: Importer) Withdrawal of the product from market",
+          "level": "Serious risk",
+          "riskType": "Asphyxiation",
+          "notifyingCountry": "Poland",
+          "countryOfOrigin": "People's Republic of China",
+          "batchNumber": "",
+          "barcode": "5905090331087",
+          "pictures": [
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/11004619",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/11004620",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/11004621",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/11004622"
+          ],
+          "url": "https://ec.europa.eu/safety-gate-alerts/screen/webReport/alertDetail/10098636"
+        }
+      }
+    },
+    {
+      "id": "05-laser-exact-model",
+      "expected": "same_model",
+      "labelReason": "ZK ZK-9110, matching construction and packaging; no GTIN supplied.",
+      "product": {
+        "name": "ZK 2 Function Laser & LED Light with Carabiner Clip Laser pointer ZK-9110",
+        "category": "Laser pointers",
+        "description": "Laser pointer with LED light and carabiner. Product size: 6.72 cm. Packaging: sold individually from a display box.",
+        "brand": "ZK",
+        "model": "ZK-9110",
+        "imageUrls": [
+          "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/94491",
+          "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/94492"
+        ]
+      },
+      "alert": {
+        "id": "0b1edc47f3fa0dbaefaa0026aeefb00e01f1b0f7",
+        "meta": {
+          "recordid": "0b1edc47f3fa0dbaefaa0026aeefb00e01f1b0f7",
+          "alert_date": "{'_seconds': 1541116800, '_nanoseconds': 0}",
+          "ingested_at": ""
+        },
+        "fields": {
+          "caseNumber": "A12/1615/18",
+          "brand": "ZK",
+          "name": "2 Function Laser & LED Light with Carabiner Clip",
+          "product": "Laser pointer",
+          "type_numberOfModel": "ZK-9110",
+          "category": "Laser pointers",
+          "description": "Laser pointer with LED light and carabiner. Product size: 6.72 cm. Packaging: sold individually from a display box.",
+          "danger": "The laser beam is too powerful.",
+          "measures": "Measures ordered by public authorities (to: Distributor) Recall of the product from end users,Measures ordered by public authorities (to: Distributor) Withdrawal of the product from market",
+          "level": "Serious risk",
+          "riskType": "Damage to sight",
+          "notifyingCountry": "Hungary",
+          "countryOfOrigin": "People's Republic of China",
+          "batchNumber": "786311428893",
+          "barcode": "",
+          "pictures": [
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/94491",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/94492",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/94493"
+          ],
+          "url": "https://ec.europa.eu/safety-gate-alerts/screen/webReport/alertDetail/338120"
+        }
+      }
+    },
+    {
+      "id": "06-visual-missing-identifiers",
+      "expected": "distinctive_visual",
+      "labelReason": "Authored missing-identifier control using actual BIBS photos: flat violet textile strap, round wooden button, printed label, metal clip.",
+      "product": {
+        "name": "Violet textile pacifier strap",
+        "category": "Childcare articles and children's equipment",
+        "description": "Flat violet textile soother strap with a round wooden button and a metal clip. Compare the actual product and packaging photographs; model and brand are not transcribed in this listing.",
+        "brand": "",
+        "model": "",
+        "imageUrls": [
+          "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10134748",
+          "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10134749"
+        ]
+      },
+      "alert": {
+        "id": "001e89de820e265750c0d07da339a1fd30585eaa",
+        "meta": {
+          "recordid": "001e89de820e265750c0d07da339a1fd30585eaa",
+          "alert_date": "{'_seconds': 1724976000, '_nanoseconds': 0}",
+          "ingested_at": ""
+        },
+        "fields": {
+          "caseNumber": "A12/02463/24",
+          "brand": "Bibs",
+          "name": "1) Pacifier Clip, 2) Pacifier Clip (Bibs x Liberty)",
+          "product": "Soother holder",
+          "type_numberOfModel": "9401111, 942112231",
+          "category": "Childcare articles and children's equipment",
+          "description": "Textile soother holder with a metal clip and a wooden button, with coloured straps (violet, blue with flowers).",
+          "danger": "The clip can break apart, releasing small parts. A small child may put them in the mouth and choke.",
+          "measures": "Measures ordered by public authorities (to: Distributor) Stop of sales",
+          "level": "Serious risk",
+          "riskType": "Choking",
+          "notifyingCountry": "Finland",
+          "countryOfOrigin": "Türkiye",
+          "batchNumber": "B08BBEV \nB12BBUT",
+          "barcode": "5713795238620\n5713795243266",
+          "pictures": [
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10134748",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10134749",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10134750",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10134751"
+          ],
+          "url": "https://ec.europa.eu/safety-gate-alerts/screen/webReport/alertDetail/10014202"
+        }
+      }
+    },
+    {
+      "id": "07-adapter-same-brand-wrong-model",
+      "expected": "no_match",
+      "labelReason": "AK-ND-07 differs from AK-ND-44, confirmed by printed labels.",
+      "product": {
+        "name": "Akyga Napájecí adaptér Power adaptor AK-ND-07",
+        "category": "Electrical appliances and equipment",
+        "description": "Adaptor accompanied by multilingual instructions for use, Input: 100-250V AC, 2.4A, 50/60Hz, output: 19.5V DC, 4.62",
+        "brand": "Akyga",
+        "model": "AK-ND-07",
+        "imageUrls": [
+          "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10115713",
+          "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10115714"
+        ]
+      },
+      "alert": {
+        "id": "d9a31c0885e06ba5aa210205cbf1cc1672e6183e",
+        "meta": {
+          "recordid": "d9a31c0885e06ba5aa210205cbf1cc1672e6183e",
+          "alert_date": "{'_seconds': 1579219200, '_nanoseconds': 0}",
+          "ingested_at": ""
+        },
+        "fields": {
+          "caseNumber": "A12/00059/20",
+          "brand": "Akyga",
+          "name": "notebook power supply",
+          "product": "Laptop power supply",
+          "type_numberOfModel": "AK-ND-44",
+          "category": "Electrical appliances and equipment",
+          "description": "Black notebook power supply.",
+          "danger": "The electrical insulation is inadequate and the product can overheat. This can consequently lead to an electric shock or burns. The product does not comply with the requirements of the Low Voltage Directive.",
+          "measures": "Type of economic operator to whom the measure(s) were ordered: RetailerCategory of measure(s): Withdrawal of the product from the marketDate of entry into force: Unknown",
+          "level": "Serious risk",
+          "riskType": "Burns, Electric shock",
+          "notifyingCountry": "Lithuania",
+          "countryOfOrigin": "People's Republic of China",
+          "batchNumber": "",
+          "barcode": "5901720133755",
+          "pictures": [
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10002838",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10002839",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10002840"
+          ],
+          "url": "https://ec.europa.eu/safety-gate-alerts/screen/webReport/alertDetail/10000374"
+        }
+      }
+    },
+    {
+      "id": "08-adapter-universal-versus-fixed",
+      "expected": "no_match",
+      "labelReason": "AK-ND-07 fixed connector versus AK-NU-05 universal interchangeable connector kit.",
+      "product": {
+        "name": "Akyga Napájecí adaptér Power adaptor AK-ND-07",
+        "category": "Electrical appliances and equipment",
+        "description": "Adaptor accompanied by multilingual instructions for use, Input: 100-250V AC, 2.4A, 50/60Hz, output: 19.5V DC, 4.62",
+        "brand": "Akyga",
+        "model": "AK-ND-07",
+        "imageUrls": [
+          "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10115713",
+          "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10115714"
+        ]
+      },
+      "alert": {
+        "id": "c2fa7909f0c8d7975628274c34bebbab32464bfc",
+        "meta": {
+          "recordid": "c2fa7909f0c8d7975628274c34bebbab32464bfc",
+          "alert_date": "{'_seconds': 1506643200, '_nanoseconds': 0}",
+          "ingested_at": ""
+        },
+        "fields": {
+          "caseNumber": "A12/1321/17",
+          "brand": "Akyga",
+          "name": "AC/DC notebook power adapter",
+          "product": "Computer power supply",
+          "type_numberOfModel": "AK-NU-05",
+          "category": "Communication and media equipment",
+          "description": "Power supply (supplied with a notebook computer).",
+          "danger": "Type of economic operator to whom the measure(s) were ordered: Distributor\nCategory of measure(s): Recall of the product from end users\nDate of entry into force: 08/08/2017\n\nType of economic operator to whom the measure(s) were ordered: Distributor\nCategory of measure(s): Withdrawal of the product from the market\nDate of entry into force: 08/08/2017",
+          "measures": "Measures ordered by public authorities (to: Distributor) Withdrawal of the product from market,Measures ordered by public authorities (to: Distributor) Recall of the product from end users",
+          "level": "Serious risk",
+          "riskType": "Electric shock",
+          "notifyingCountry": "Finland",
+          "countryOfOrigin": "People's Republic of China",
+          "batchNumber": "5901720133151",
+          "barcode": "",
+          "pictures": [
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/199624",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/199625",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/199626"
+          ],
+          "url": "https://ec.europa.eu/safety-gate-alerts/screen/webReport/alertDetail/279143"
+        }
+      }
+    },
+    {
+      "id": "09-light-chain-model-and-led-count",
+      "expected": "no_match",
+      "labelReason": "CL4133 has 138 LEDs in stars; CL4104 has 300 LEDs and another construction.",
+      "product": {
+        "name": "SPRINGOS®  Lighting chain CL4133",
+        "category": "Lighting chains",
+        "description": "Lighting chain, intended for interconnection, containing 138 non-replaceable LED lights. The product includes a device for changing lighting modes.",
+        "brand": "SPRINGOS®",
+        "model": "CL4133",
+        "imageUrls": [
+          "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/11230158",
+          "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/11230159"
+        ]
+      },
+      "alert": {
+        "id": "6d2749138d3c476b82cf827671fd2f15fde7178f",
+        "meta": {
+          "recordid": "6d2749138d3c476b82cf827671fd2f15fde7178f",
+          "alert_date": "{'_seconds': 1786665600, '_nanoseconds': 0}",
+          "ingested_at": ""
+        },
+        "fields": {
+          "caseNumber": "SR/02242/26",
+          "brand": "SPRINGOS®",
+          "name": "",
+          "product": "Lighting chain",
+          "type_numberOfModel": "CL4104",
+          "category": "Lighting chains",
+          "description": "Lighting chain intended for interconnection, which contains 300 non-replaceable LED light sources. The product includes a device for changing lighting modes.",
+          "danger": "Due to the insufficient mechanical strength of the product, live parts are accessible, which could result in electric shock to the user. Moreover, the product has an inadequate conductor cross-section and a flawed design that allows the plug to be inserted in a single-pole manner. The product does not comply with the requirements of the Low Voltage Directive nor with the European standards EN 60598-1 and EN 60598-2-20.",
+          "measures": "Type of economic operator to whom the measure(s) were ordered: DistributorCategory of measure(s): Recall of the product from end usersDate of entry into force: UnknownType of economic operator to whom the measure(s) were ordered: DistributorCategory of measure(s): Withdrawal of the product from the marketDate of entry into force: UnknownType of economic operator to whom the measure(s) were ordered: DistributorCategory of measure(s): Warning consumers of the risksDate of entry into force: Unknown",
+          "level": "Serious risk",
+          "riskType": "Electric shock",
+          "notifyingCountry": "Slovakia",
+          "countryOfOrigin": "People's Republic of China",
+          "batchNumber": "",
+          "barcode": "5907719464879",
+          "pictures": [
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/11230173",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/11230174",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/11230175",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/11230176",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/11230177",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/11230178"
+          ],
+          "url": "https://ec.europa.eu/safety-gate-alerts/screen/webReport/alertDetail/10118552"
+        }
+      }
+    },
+    {
+      "id": "10-soother-textile-versus-silicone",
+      "expected": "no_match",
+      "labelReason": "BIBS flat textile strap/wooden button differs from X001ZDH0DT silicone beaded chains.",
+      "product": {
+        "name": "Bibs 1) Pacifier Clip, 2) Pacifier Clip (Bibs x Liberty) Soother holder 9401111, 942112231",
+        "category": "Childcare articles and children's equipment",
+        "description": "Textile soother holder with a metal clip and a wooden button, with coloured straps (violet, blue with flowers).",
+        "brand": "Bibs",
+        "model": "9401111, 942112231",
+        "imageUrls": [
+          "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10134748",
+          "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10134749"
+        ]
+      },
+      "alert": {
+        "id": "0ba613cb32afafc9553d7ff595a8b14451612641",
+        "meta": {
+          "recordid": "0ba613cb32afafc9553d7ff595a8b14451612641",
+          "alert_date": "{'_seconds': 1741305600, '_nanoseconds': 0}",
+          "ingested_at": ""
+        },
+        "fields": {
+          "caseNumber": "SR/00844/25",
+          "brand": "",
+          "name": "X001ZDH0DT",
+          "product": "Soother holder",
+          "type_numberOfModel": "",
+          "category": "Childcare articles and children's equipment",
+          "description": "Set of four silicon soother chains. Product sold online, in particular via Amazon (ASIN: B0CY4XPG4C). Stock Keeping Unit: X001ZDH0DT.",
+          "danger": "The cord of the soother holder is too long. It can become trapped during various activities of a child, leading to strangulation.",
+          "measures": "Measures ordered by economic operators (to: Other) Recall of the product from end users",
+          "level": "Serious risk",
+          "riskType": "Strangulation",
+          "notifyingCountry": "Germany",
+          "countryOfOrigin": "People's Republic of China",
+          "batchNumber": "",
+          "barcode": "C1218-01",
+          "pictures": [
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10950089"
+          ],
+          "url": "https://ec.europa.eu/safety-gate-alerts/screen/webReport/alertDetail/10093292"
+        }
+      }
+    },
+    {
+      "id": "11-hoodie-model-and-graphics",
+      "expected": "no_match",
+      "labelReason": "AY7115222 Self Destruction differs from AY7061222 H2 Hitting in model, barcode and graphics.",
+      "product": {
+        "name": "Yours by 02Tandem Self Destruction Children's hoodie AY7115222",
+        "category": "Clothing, textiles and fashion items",
+        "description": "Black sweatshirt, intended for children aged 12-13 years, with a hood and a drawstring.",
+        "brand": "Yours by 02Tandem",
+        "model": "AY7115222",
+        "imageUrls": [
+          "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10122357",
+          "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10122358"
+        ]
+      },
+      "alert": {
+        "id": "ab1d6a21d96fa6fc710a03eb07cec32ab0e5ad3b",
+        "meta": {
+          "recordid": "ab1d6a21d96fa6fc710a03eb07cec32ab0e5ad3b",
+          "alert_date": "{'_seconds': 1716508800, '_nanoseconds': 0}",
+          "ingested_at": ""
+        },
+        "fields": {
+          "caseNumber": "A12/01325/24",
+          "brand": "Yours by 02Tandem",
+          "name": "H2 Hitting",
+          "product": "Children's hoodie",
+          "type_numberOfModel": "AY7061222",
+          "category": "Clothing, textiles and fashion items",
+          "description": "Hooded sweatshirt, intended for children, with a drawstring and a central pocket.",
+          "danger": "The product has long functional cords with free ends in the neck area which can become trapped during various activities of a child, leading to strangulation or injuries.",
+          "measures": "Measures ordered by public authorities (to: Retailer) Withdrawal of the product from market",
+          "level": "Serious risk",
+          "riskType": "Injuries,Strangulation",
+          "notifyingCountry": "Italy",
+          "countryOfOrigin": "Unknown",
+          "batchNumber": "312-222",
+          "barcode": "4568048051218",
+          "pictures": [
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10122363",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10122364"
+          ],
+          "url": "https://ec.europa.eu/safety-gate-alerts/screen/webReport/alertDetail/10011989"
+        }
+      }
+    },
+    {
+      "id": "12-detector-brand-and-front-panel",
+      "expected": "no_match",
+      "labelReason": "Extralink JKD-512COM black circular centre differs from Xblitz DT3-1 LEDs/rectangular display.",
+      "product": {
+        "name": "Extralink Carbon Monoxide Smoke Detector Carbon monoxide detector JKD-512COM",
+        "category": "Construction products",
+        "description": "Carbon monoxide and smoke detector, battery powered (3 x1,5 V AA).",
+        "brand": "Extralink",
+        "model": "JKD-512COM",
+        "imageUrls": [
+          "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/11004619",
+          "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/11004620"
+        ]
+      },
+      "alert": {
+        "id": "d8c712e653ab953df523f886074590a4702c4ea6",
+        "meta": {
+          "recordid": "d8c712e653ab953df523f886074590a4702c4ea6",
+          "alert_date": "{'_seconds': 1552608000, '_nanoseconds': 0}",
+          "ingested_at": ""
+        },
+        "fields": {
+          "caseNumber": "A12/0446/19",
+          "brand": "Xblitz",
+          "name": "Carbon Monoxide Alarm",
+          "product": "Carbon monoxide detector",
+          "type_numberOfModel": "DT3-1",
+          "category": "-",
+          "description": "Carbon monoxide detector, battery-powered. Packaged in a cardboard box.",
+          "danger": "The device is not sufficiently sensitive with respect to the detection of carbon monoxide.",
+          "measures": "Measures ordered by economic operators (to: Manufacturer) Withdrawal of the product from market",
+          "level": "Serious risk",
+          "riskType": "Asphyxiation",
+          "notifyingCountry": "Poland",
+          "countryOfOrigin": "People's Republic of China",
+          "batchNumber": "EAN: 5902479670812",
+          "barcode": "",
+          "pictures": [
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/46224",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/46225",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/46226",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/46227"
+          ],
+          "url": "https://ec.europa.eu/safety-gate-alerts/screen/webReport/alertDetail/357944"
+        }
+      }
+    },
+    {
+      "id": "13-lighter-different-brand-model-mold",
+      "expected": "no_match",
+      "labelReason": "MXM P10-X08 dotted plastic base differs from Yomin ST8333K54 smooth metallic case and markings.",
+      "product": {
+        "name": "MXM China  Novelty lighter P10-X08",
+        "category": "Lighters",
+        "description": "Refillable, lipstick-shaped lighters, approx. 8 cm long, black, white or pink, spotted.",
+        "brand": "MXM China",
+        "model": "P10-X08",
+        "imageUrls": [
+          "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/93456",
+          "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/93457"
+        ]
+      },
+      "alert": {
+        "id": "4e7db804d6bd966591e00294246c9b83a95184b0",
+        "meta": {
+          "recordid": "4e7db804d6bd966591e00294246c9b83a95184b0",
+          "alert_date": "{'_seconds': 1734652800, '_nanoseconds': 0}",
+          "ingested_at": ""
+        },
+        "fields": {
+          "caseNumber": "SR/03746/24",
+          "brand": "Yomin",
+          "name": "Zapalovač YoMin rtěnka",
+          "product": "Novelty lighter",
+          "type_numberOfModel": "ST8333K54",
+          "category": "Lighters",
+          "description": "Gas lighter in the shape of a red lipstick, without a lid. The \"case\" of the lipstick is decorated in metal colours. The red part of the lipstick is divided into two parts. When the top part of the lipstick is flipped open, a flame will erupt.",
+          "danger": "The lighter is appealing to children due to its shape and colour. Children may play with it and suffer burns or cause a fire.",
+          "measures": "Measures ordered by public authorities (to: Distributor) Withdrawal of the product from market,Measures ordered by public authorities (to: Distributor) Recall of the product from end users,Measures ordered by public authorities (to: Distributor) Ban on the marketing of the product and any accompanying measures",
+          "level": "Serious risk",
+          "riskType": "Burns",
+          "notifyingCountry": "Czechia",
+          "countryOfOrigin": "People's Republic of China",
+          "batchNumber": "",
+          "barcode": "",
+          "pictures": [
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10940834",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10940833",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10940835",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10940836"
+          ],
+          "url": "https://ec.europa.eu/safety-gate-alerts/screen/webReport/alertDetail/10092585"
+        }
+      }
+    },
+    {
+      "id": "14-laser-brand-length-and-components",
+      "expected": "no_match",
+      "labelReason": "ZK 6.72 cm metal LED face differs from CP 7.45 cm transparent shaped cap and switches.",
+      "product": {
+        "name": "ZK 2 Function Laser & LED Light with Carabiner Clip Laser pointer ZK-9110",
+        "category": "Laser pointers",
+        "description": "Laser pointer with LED light and carabiner. Product size: 6.72 cm. Packaging: sold individually from a display box.",
+        "brand": "ZK",
+        "model": "ZK-9110",
+        "imageUrls": [
+          "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/94491",
+          "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/94492"
+        ]
+      },
+      "alert": {
+        "id": "5f25d9130f8514d6257bb50012623868b2a886cb",
+        "meta": {
+          "recordid": "5f25d9130f8514d6257bb50012623868b2a886cb",
+          "alert_date": "{'_seconds': 1626998400, '_nanoseconds': 0}",
+          "ingested_at": ""
+        },
+        "fields": {
+          "caseNumber": "A12/01083/21",
+          "brand": "CP",
+          "name": "",
+          "product": "Laser pointer",
+          "type_numberOfModel": "",
+          "category": "Laser pointers",
+          "description": "The laser pointer has a cylindrical plastic body of 7.45 cm long and a diameter of 1.29 cm. Laser pointer with 2 LEDs torch and carabiner, powered by 3 button cells. On the product there are two buttons for switching of torch and laser.",
+          "danger": "The laser beam is too powerful. Direct viewing of the laser beam could cause damage to sight.",
+          "measures": "Measures ordered by public authorities (to: Distributor) Withdrawal of the product from market,Measures ordered by public authorities (to: Distributor) Recall of the product from end users",
+          "level": "Serious risk",
+          "riskType": "Damage to sight",
+          "notifyingCountry": "Hungary",
+          "countryOfOrigin": "Unknown",
+          "batchNumber": "",
+          "barcode": "",
+          "pictures": [
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10034183",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10034184"
+          ],
+          "url": "https://ec.europa.eu/safety-gate-alerts/screen/webReport/alertDetail/10004168"
+        }
+      }
+    },
+    {
+      "id": "15-respirator-unresolved-submodel",
+      "expected": "uncertain",
+      "labelReason": "LK-003 vs LK-003-A004: related packaging/model family, photographed A003/A004 and production dates differ; batch applicability unresolved.",
+      "product": {
+        "name": "Huizhou LexusLance Technology, LexusLance Particulate Respirator FFP2 Lexuslance Particle filter mask LK-003",
+        "category": "Protective equipment",
+        "description": "White particle filter mask with the brand/name, model and claim FFP2/EN 149 printed on it, as well as with the CE 202003 marking. The product is also sold online.",
+        "brand": "Huizhou LexusLance Technology, LexusLance",
+        "model": "LK-003",
+        "imageUrls": [
+          "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10034661",
+          "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10034662"
+        ]
+      },
+      "alert": {
+        "id": "87d2c81bdd69a07df9409c2f95735fa4b71c3ea9",
+        "meta": {
+          "recordid": "87d2c81bdd69a07df9409c2f95735fa4b71c3ea9",
+          "alert_date": "{'_seconds': 1592524800, '_nanoseconds': 0}",
+          "ingested_at": ""
+        },
+        "fields": {
+          "caseNumber": "A12/00881/20",
+          "brand": "LexusLance",
+          "name": "FFP2",
+          "product": "Particle filter mask",
+          "type_numberOfModel": "LK-003-A004",
+          "category": "Protective equipment",
+          "description": "Respiratory protective mask of category FFP2 according to EN 149, made of non-woven fabric.",
+          "danger": "The product bears a CE marking but is not certified as protective equipment by a relevant body. Additionally, the particle/filter retention of the material is insufficient (measured value ≤ 58 %) and the mask does not properly adapt to the face.Consequently, an excessive amount of particles or microorganisms might pass through the mask, increasing the risk of infection if not combined with additional protective measures.  The product does not comply with the Personal Protective Equipment Regulation and the relevant European standard EN 149.",
+          "measures": "Type of economic operator to whom the measure(s) were ordered: ImporterCategory of measure(s): Ban on the marketing of the product and any accompanying measuresDate of entry into force: 26/05/2020Type of economic operator to whom the measure(s) were ordered: ImporterCategory of measure(s): Warning consumers of the risksDate of entry into force: 26/05/2020Type of economic operator taking notified measure(s): ImporterCategory of measure(s): Withdrawal of the product from the marketDate of entry into force: 26/05/2020",
+          "level": "Serious risk",
+          "riskType": "Health risk / other",
+          "notifyingCountry": "Germany",
+          "countryOfOrigin": "People's Republic of China",
+          "batchNumber": "Lot number: LK-003-A004Production 91441300053799610KProduction date: 16/03/2020 Expiry Date: 15/03/2021",
+          "barcode": "6 973133 450018",
+          "pictures": [
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10011885",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10011886",
+            "https://ec.europa.eu/safety-gate-alerts/public/api/notification/image/10011887"
+          ],
+          "url": "https://ec.europa.eu/safety-gate-alerts/screen/webReport/alertDetail/10001428"
+        }
+      }
+    }
+  ]
+}

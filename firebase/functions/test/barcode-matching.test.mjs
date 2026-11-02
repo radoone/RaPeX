@@ -43,6 +43,7 @@ test('a validated exact code produces variant evidence without Gemini or invente
   assert.equal(result.warnings.length, 1);
   const warning = result.warnings[0];
   assert.equal(warning.matchBasis, 'gtin');
+  assert.equal(warning.identityAssessment, 'identifier');
   assert.equal(warning.identifierMatches.length, 2);
   assert.equal(warning.alertDetails.fields.batchNumber, 'affected-batch');
   for (const key of ['imageSimilarity', 'textSimilarity', 'scoreBreakdown']) assert.equal(Object.hasOwn(warning, key), false);
@@ -57,13 +58,22 @@ test('exact matches coexist with similarity matches, and an incomplete similarit
   await assert.rejects(checker()(product, [alert, other]), /Unexpected model/);
 });
 
+test('exact GTIN evidence is first and survives conflicting text models without visual measurements', async () => {
+  const result = await checker()({ ...product, model: 'OTHER-MODEL' }, [{ ...alert, fields: { ...alert.fields, type_numberOfModel: 'RECALLED-MODEL' } }]);
+  assert.equal(result.warnings[0].matchBasis, 'gtin');
+  assert.equal(result.warnings[0].identityAssessment, 'identifier');
+  assert.equal(result.warnings[0].imageSimilarity, undefined);
+});
+
 test('manual retrieval retains exact candidates outside the cached vector shortlist', async () => {
   const exact = { ...alert, fields: { ...alert.fields, category: 'Other' } };
+  const order = [];
   const retrieve = fn('safety-gate-checker-retrieval', 'retrieveAlertsWithRag', {
-    retrieveAlertsByGtins: async () => [exact],
-    retrieveAlertsFromCachedVectors: async () => [exact, { ...alert, id: 'B' }], hydrateAlertsIfMissing: async x => x,
+    retrieveAlertsByGtins: async () => { order.push('gtin'); return [exact]; },
+    retrieveAlertsFromCachedVectors: async () => { order.push('vectors'); return [exact, { ...alert, id: 'B' }]; }, hydrateAlertsIfMissing: async x => x,
   });
   assert.deepEqual((await retrieve(product)).map(a => a.id), ['A', 'B']);
+  assert.deepEqual(order, ['gtin', 'vectors']);
 });
 
 test('indexed barcode retrieval paginates all source matches', async () => {

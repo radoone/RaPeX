@@ -10,6 +10,7 @@ export type SafetyCheckAnalysis = {
   productImagesUsed: number;
   alertImagesUsed: number;
   candidateAlertsConsidered: number;
+  comparedImageAlertIds?: string[];
 };
 
 export type NormalizedAlert = {
@@ -59,6 +60,7 @@ export type NormalizedAlert = {
 };
 
 export type AnalysisMatchCandidate = {
+  identityAssessment?: "same_model" | "distinctive_visual" | "uncertain";
   alertId?: string;
   overallSimilarity?: number;
   imageSimilarity?: number;
