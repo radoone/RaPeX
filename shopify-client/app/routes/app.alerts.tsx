@@ -116,12 +116,13 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
     );
 
   const productImages: Record<string, string | null> = {};
+  const productBrands: Record<string, string | null> = {};
   if (productIds.length > 0) {
     try {
       const response = await admin.graphql(
         `#graphql
         query getProductImages($ids: [ID!]!) {
-          nodes(ids: $ids) { ... on Product { id featuredImage { url } } }
+          nodes(ids: $ids) { ... on Product { id vendor featuredImage { url } } }
         }`,
         { variables: { ids: productIds } },
       );
@@ -131,6 +132,8 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
           const numericId = node.id.replace("gid://shopify/Product/", "");
           productImages[numericId] = node.featuredImage?.url || null;
           productImages[node.id] = node.featuredImage?.url || null;
+          productBrands[numericId] = node.vendor || null;
+          productBrands[node.id] = node.vendor || null;
         }
       });
     } catch (error) {
@@ -186,6 +189,7 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
       overallSimilarity,
       matchBasis,
       riskLevel: effectiveRiskLevel,
+      brand: productBrands[alert.productId] || alert.brand || null,
       productImage:
         productImages[alert.productId] ||
         productImages[`gid://shopify/Product/${alert.productId}`] ||

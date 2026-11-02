@@ -254,6 +254,7 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
 
     const transformedAlert = {
       ...alert,
+      brand: product?.vendor || alert.brand || null,
       alertType,
       riskDescription,
       alertDetails,
@@ -1421,6 +1422,7 @@ export default function ManualCheckPage() {
 
           const newAlert = {
             id: currentAlertId,
+            brand: selectedProduct?.vendor || null,
             shop,
             productId:
               selectedProduct?.id?.replace("gid://shopify/Product/", "") || "",
