@@ -54,6 +54,7 @@ export type NormalizedAlert = {
     [key: string]: any;
   };
   distance?: number;
+  matchedImageUrls?: string[];
   source?: "retriever" | "recent";
 };
 

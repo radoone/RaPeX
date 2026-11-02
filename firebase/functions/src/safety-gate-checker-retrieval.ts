@@ -2,6 +2,7 @@ import { defineFirestoreRetriever } from "@genkit-ai/firebase";
 import { vertexAI } from "@genkit-ai/google-genai";
 import { FieldPath, getFirestore, Timestamp } from "firebase-admin/firestore";
 import { productGtins } from "./product-barcodes.js";
+import { prioritizeMonitoringImages } from "./monitoring-images.js";
 import type { DocumentData, RetrieverAction } from "genkit/retriever";
 import { functionsAi } from "./firebase-admin.js";
 import { FIRESTORE_COLLECTIONS, MATCHING_THRESHOLDS } from "./safety-gate-config.js";
@@ -122,11 +123,11 @@ for (const document of docs) {
             distance: document.get("distance"),
           },
         } as DocumentData);
-        if (!normalized || seen.has(normalized.id) || (normalized.distance != null && normalized.distance > MATCHING_THRESHOLDS.imageDistance)) {
+        if (!normalized || (normalized.distance != null && normalized.distance > MATCHING_THRESHOLDS.imageDistance)) {
           continue;
         }
         seen.add(normalized.id);
-        candidates.push(normalized);
+        mergeImageRecall(candidates, normalized);
       }
   }
 
@@ -157,6 +158,23 @@ function toVertexInlineMedia(encodedImage: { url: string; contentType?: string }
     url: base64,
     contentType,
   };
+}
+
+/** A text hit must not discard the stronger image hit for the same source. */
+function mergeImageRecall(candidates: NormalizedAlert[], image: NormalizedAlert): void {
+  const index = candidates.findIndex(candidate => candidate.id === image.id);
+  if (index < 0) { candidates.push(image); return; }
+  const existing = candidates[index];
+  const distance = Math.min(existing.distance ?? Infinity, image.distance ?? Infinity);
+  const imageUrls = (image.distance ?? Infinity) < (existing.distance ?? Infinity)
+    ? [...(image.matchedImageUrls || []), ...(existing.matchedImageUrls || [])]
+    : [...(existing.matchedImageUrls || []), ...(image.matchedImageUrls || [])];
+  candidates[index] = { ...existing, ...(Number.isFinite(distance) ? { distance } : {}), matchedImageUrls: [...new Set(imageUrls)] };
+}
+
+function prioritizeRetrievedImages(alert: NormalizedAlert): NormalizedAlert {
+  const currentPictures = normalizePictures(alert.fields);
+  return prioritizeMonitoringImages(alert, (alert.matchedImageUrls || []).filter(url => currentPictures.includes(url)));
 }
 
 function ensureTextRetriever(): RetrieverAction | null {
@@ -245,6 +263,7 @@ function normalizeRetrieverDocument(doc: DocumentData): NormalizedAlert | null {
       pictures: normalizePictures(fieldsSection),
     },
     distance: metadata.distance,
+    ...(typeof metadata.imageUrl === "string" ? { matchedImageUrls: [metadata.imageUrl] } : {}),
     source: "retriever",
   };
 }
@@ -255,7 +274,7 @@ async function hydrateAlertsIfMissing(candidates: NormalizedAlert[]): Promise<No
     .map((c) => c.id);
 
   if (missingAlertIds.length === 0) {
-    return candidates;
+    return candidates.map(prioritizeRetrievedImages);
   }
 
   const db = getFirestore();
@@ -318,7 +337,7 @@ async function hydrateAlertsIfMissing(candidates: NormalizedAlert[]): Promise<No
         pictures: normalizePictures(fields),
       },
     };
-  });
+  }).map(prioritizeRetrievedImages);
 }
 
 export async function retrieveAlertsWithRag(product: ProductInput): Promise<NormalizedAlert[]> {
@@ -370,12 +389,12 @@ for (const document of result || []) {
       const result = await functionsAi.retrieve({retriever: activeImageRetriever, query: {content: [{media: vertexInlineMedia}]}, options: {limit: RAG_IMAGE_LIMIT}});
 for (const document of result || []) {
           const normalized = normalizeRetrieverDocument(document);
-          if (!normalized || seen.has(normalized.id) || (normalized.distance != null && normalized.distance > MATCHING_THRESHOLDS.imageDistance)) {
+          if (!normalized || (normalized.distance != null && normalized.distance > MATCHING_THRESHOLDS.imageDistance)) {
             continue;
           }
 
           seen.add(normalized.id);
-          candidates.push(normalized);
+          mergeImageRecall(candidates, normalized);
         }
     }
   }

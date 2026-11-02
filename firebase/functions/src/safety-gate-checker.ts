@@ -102,7 +102,7 @@ function buildMatchCacheKey(product: ProductInput, alerts: NormalizedAlert[]): {
   const productFingerprint = buildProductFingerprint(product);
   const alertSignature = buildAlertSignature(alerts);
   const docId = hashValue({
-    reliabilityVersion: 4,
+    reliabilityVersion: 5,
     shop,
     productId,
     productFingerprint,
