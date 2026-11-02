@@ -25,7 +25,7 @@
   "hero": {
     "badge": "FOR SHOPIFY STORES SELLING IN THE EU",
     "title": "Get alerted to possible matches with dangerous products.",
-    "subtitle": "ZeroRecall compares products in your Shopify store with the European Commission’s Safety Gate database. Get an email and evidence to review a possible match, without manually searching alerts.",
+    "subtitle": "AI compares your Shopify products with EU Safety Gate alerts using product details and photos. It can surface possible matches even when names differ or an EAN is missing, so you know what to review.",
     "inputPlaceholder": "your-store.myshopify.com",
     "emailPlaceholder": "your-email@store.com",
     "ctaButton": "Free check",
@@ -219,7 +219,7 @@
     "previewLabel": "Illustrative finding preview",
     "status": "Needs review",
     "findingTitle": "Possible product match",
-    "findingReason": "Why it appeared: similar product shape and category despite a different listing name.",
+    "findingReason": "Illustrative reason: similar frame construction and steering joint despite a different listing name. The model and batch still need verification.",
     "findingAction": "Compare model and batch →"
   },
   "scan": {
@@ -314,5 +314,21 @@
     "metaTitle": "Privacy and data retention | ZeroRecall",
     "metaDescription": "How ZeroRecall processes and retains data for public catalog scans and the Shopify app.",
     "footer": "Privacy and data retention information."
+  },
+  "ai": {
+    "title": "A different name. A familiar product.",
+    "body": "Suppliers change titles. Listings lose model numbers. ZeroRecall uses AI to compare product details and photos with official EU Safety Gate records, helping you spot possible matches that an exact text search can miss.",
+    "exactTitle": "EAN first. More evidence when it is missing.",
+    "exactBody": "An exact EAN / GTIN match is the strongest signal of product identity. When identifiers are incomplete, AI weighs the brand, model, description and distinctive visual details together. A shared category alone is not enough.",
+    "visualTitle": "Photos add context that a title cannot.",
+    "visualBody": "Similar construction, packaging or visible model markings can help connect differently named listings. Conflicting identifiers and missing evidence matter too: an uncertain match stays a question for review.",
+    "exampleTitle": "See a possible match become a decision",
+    "missing": "EAN and model missing from the listing",
+    "detailTitle": "What the AI would flag for review",
+    "detailBody": "In this illustration: a similar frame, steering joint and wheel design. These details support a possible match; they do not confirm the exact model or affected batch.",
+    "reviewTitle": "Your decision, with evidence attached",
+    "reviewBody": "Compare the listing and official alert, then verify the model and batch with your supplier. In the installed app, record a resolution, dismiss a different product, or keep the finding open while waiting for the supplier.",
+    "record": "Review decisions are saved with an actor, time and note in the app.",
+    "limit": "AI suggests possible matches. It does not certify safety or replace your review. This example is illustrative; it is not a real recall or a live scan."
   }
 }

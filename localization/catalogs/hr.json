@@ -26,7 +26,7 @@
     "hero": {
       "badge": "ZA SHOPIFY TRGOVINE KOJE PRODAJU U EU-U",
       "title": "Primajte upozorenja o mogućim podudaranjima s opasnim proizvodima.",
-      "subtitle": "ZeroRecall uspoređuje proizvode vaše Shopify trgovine s bazom Safety Gate Europske komisije. Kod mogućeg podudaranja dobivate e-poruku i podatke za provjeru, bez ručnog pretraživanja upozorenja.",
+      "subtitle": "AI uspoređuje vaše Shopify proizvode s upozorenjima EU Safety Gatea koristeći detalje proizvoda i fotografije. Može otkriti moguće podudarnosti čak i kada se nazivi razlikuju ili nedostaje EAN, tako da znate što trebate pregledati.",
       "inputPlaceholder": "vaša-trgovina.myshopify.com",
       "emailPlaceholder": "vaša-e-pošta@trgovina.com",
       "ctaButton": "Besplatno skeniranje",
@@ -220,7 +220,7 @@
       "previewLabel": "Ilustrativni pregled nalaza",
       "status": "Potrebna provjera",
       "findingTitle": "Moguće podudaranje proizvoda",
-      "findingReason": "Zašto se pojavilo: sličan oblik proizvoda i kategorija unatoč drugačijem nazivu popisa.",
+      "findingReason": "Ilustrativan razlog: slična konstrukcija okvira i zglob upravljača unatoč drugačijem nazivu oglasa. Model i serija još uvijek trebaju provjeru.",
       "findingAction": "Usporedite model i seriju →"
     },
     "scan": {
@@ -315,6 +315,22 @@
       "metaTitle": "Privatnost i zadržavanje podataka | ZeroRecall",
       "metaDescription": "Kako ZeroRecall obrađuje i zadržava podatke za skeniranje javnog kataloga i Shopify aplikaciju.",
       "footer": "Informacije o privatnosti i zadržavanju podataka."
+    },
+    "ai": {
+      "title": "Drugačiji naziv. Poznat proizvod.",
+      "body": "Dobavljači mijenjaju naslove. Oglasi gube brojeve modela. ZeroRecall koristi AI za usporedbu detalja proizvoda i fotografija sa službenim zapisima EU Safety Gatea, pomažući vam da uočite moguće podudarnosti koje točno tekstualno pretraživanje može propustiti.",
+      "exactTitle": "Prvo EAN. Više dokaza kada nedostaje.",
+      "exactBody": "Točno podudaranje EAN / GTIN-a najjači je signal identiteta proizvoda. Kada su identifikatori nepotpuni, AI zajedno procjenjuje marku, model, opis i prepoznatljive vizualne detalje. Sama zajednička kategorija nije dovoljna.",
+      "visualTitle": "Fotografije dodaju kontekst koji naslov ne može.",
+      "visualBody": "Slična konstrukcija, pakiranje ili vidljive oznake modela mogu pomoći u povezivanju različito nazvanih oglasa. Konfliktni identifikatori i nedostajući dokazi također su važni: nesigurno podudaranje ostaje pitanje za pregled.",
+      "exampleTitle": "Pogledajte kako moguća podudarnost postaje odluka",
+      "missing": "EAN i model nedostaju u oglasu",
+      "detailTitle": "Što bi AI označio za pregled",
+      "detailBody": "U ovoj ilustraciji: sličan okvir, zglob upravljača i dizajn kotača. Ovi detalji podržavaju moguću podudarnost; oni ne potvrđuju točan model ili zahvaćenu seriju.",
+      "reviewTitle": "Vaša odluka, s priloženim dokazima",
+      "reviewBody": "Usporedite oglas i službeno upozorenje, zatim provjerite model i seriju kod svog dobavljača. U instaliranoj aplikaciji zabilježite rješenje, odbacite drugi proizvod ili ostavite nalaz otvorenim dok čekate dobavljača.",
+      "record": "Odluke o pregledu spremaju se s akterom, vremenom i bilješkom u aplikaciji.",
+      "limit": "AI predlaže moguće podudarnosti. Ne potvrđuje sigurnost niti zamjenjuje vaš pregled. Ovaj primjer je ilustrativan; to nije stvarni opoziv ili skeniranje uživo."
     }
   },
   "email": {

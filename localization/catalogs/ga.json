@@ -26,7 +26,7 @@
     "hero": {
       "badge": "DO SHIOPAÍ SHOPIFY A DHÍOLANN SAN AE",
       "title": "Faigh foláirimh faoi mheaitseálacha féideartha le táirgí contúirteacha.",
-      "subtitle": "Déanann ZeroRecall comparáid idir táirgí do shiopa Shopify agus bunachar Safety Gate an Choimisiúin Eorpaigh. Má aimsítear meaitseáil fhéideartha, gheobhaidh tú ríomhphost agus sonraí lena scrúdú, gan foláirimh a chuardach de láimh.",
+      "subtitle": "Déanann AI comparáid idir do tháirgí Shopify agus foláirimh Gheata Sábháilteachta an AE ag baint úsáide as sonraí táirge agus grianghraif. Féadann sé teacht ar mheaitseálacha féideartha fiú nuair a bhíonn ainmneacha éagsúla ann nó nuair a bhíonn EAN in easnamh, ionas go mbeidh a fhios agat cad atá le hathbhreithniú.",
       "inputPlaceholder": "do-stór.myshopify.com",
       "emailPlaceholder": "do-ríomhphost@stór.com",
       "ctaButton": "Scanadh saor in aisce",
@@ -220,7 +220,7 @@
       "previewLabel": "Réamhamharc ar aimsiú léiritheach",
       "status": "Ní mór athbhreithniú a dhéanamh air",
       "findingTitle": "Meaitseáil táirge féideartha",
-      "findingReason": "Cén fáth ar tháinig sé chun cinn: cruth agus catagóir táirge cosúil leis in ainneoin ainm liostála difriúil.",
+      "findingReason": "Cúis léiritheach: tógáil fráma agus comhpháirteach stiúrtha cosúil leis cé go bhfuil ainm liostála difriúil. Ní mór an tsamhail agus an bhaisc a fhíorú fós.",
       "findingAction": "Déan comparáid idir samhail agus bhaisc →"
     },
     "scan": {
@@ -315,6 +315,22 @@
       "metaTitle": "Príobháideacht agus coinneáil sonraí | ZeroRecall",
       "metaDescription": "Conas a phróiseálann agus a choinníonn ZeroRecall sonraí le haghaidh scananna catalóige poiblí agus an aip Shopify.",
       "footer": "Faisnéis príobháideachta agus coinneála sonraí."
+    },
+    "ai": {
+      "title": "Ainm difriúil. Táirge eolach.",
+      "body": "Athraíonn soláthraithe teidil. Cailleann liostálacha uimhreacha samhla. Úsáideann ZeroRecall AI chun sonraí táirge agus grianghraif a chur i gcomparáid le taifid oifigiúla Gheata Sábháilteachta an AE, ag cabhrú leat teacht ar mheaitseálacha féideartha a d'fhéadfadh cuardach téacs cruinn a chailleadh.",
+      "exactTitle": "EAN ar dtús. Níos mó fianaise nuair a bhíonn sé in easnamh.",
+      "exactBody": "Is é meaitseáil chruinn EAN / GTIN an comhartha is láidre d'aitheantas táirge. Nuair a bhíonn aitheantóirí neamhiomlán, déanann AI an branda, an tsamhail, an cur síos agus na sonraí amhairc sainiúla a mheá le chéile. Ní leor catagóir chomhroinnte amháin.",
+      "visualTitle": "Cuireann grianghraif comhthéacs leis nach féidir le teideal.",
+      "visualBody": "Is féidir le tógáil, pacáistiú nó marcálacha samhla infheicthe cosúla cabhrú le liostálacha a bhfuil ainmneacha éagsúla orthu a nascadh. Tá tábhacht le haitheantóirí contrártha agus fianaise in easnamh freisin: fanann meaitseáil neamhchinnte mar cheist le hathbhreithniú.",
+      "exampleTitle": "Féach ar mheaitseáil fhéideartha ag éirí mar chinneadh",
+      "missing": "EAN agus samhail in easnamh ón liostáil",
+      "detailTitle": "Cad a chuirfeadh an AI in iúl le haghaidh athbhreithnithe",
+      "detailBody": "Sa léiriú seo: fráma, comhpháirteach stiúrtha agus dearadh rotha cosúil leis. Tacaíonn na sonraí seo le meaitseáil fhéideartha; ní dhearbhaíonn siad an tsamhail chruinn ná an bhaisc atá i gceist.",
+      "reviewTitle": "Do chinneadh, le fianaise ceangailte",
+      "reviewBody": "Déan comparáid idir an liostáil agus an foláireamh oifigiúil, ansin fíoraigh an tsamhail agus an bhaisc le do sholáthraí. San aip suiteáilte, taifead réiteach, dífhostaigh táirge difriúil, nó coinnigh an toradh oscailte agus tú ag fanacht leis an soláthraí.",
+      "record": "Sábháiltear cinntí athbhreithnithe le haisteoir, am agus nóta san aip.",
+      "limit": "Molann AI meaitseálacha féideartha. Ní dheimhníonn sé sábháilteacht ná ní thagann sé in ionad do chuid athbhreithnithe. Is léiriú é an sampla seo; ní fíor-aisghairm ná scanadh beo é."
     }
   },
   "email": {

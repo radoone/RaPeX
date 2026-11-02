@@ -113,7 +113,7 @@
             <div class="hero-copy">
               <span class="section-eyebrow" data-i18n="hero.badge">FOR SHOPIFY STORES SELLING IN THE EU</span>
               <h1 class="hero-title" data-i18n="hero.title">Get alerted to possible matches with dangerous products.</h1>
-              <p class="hero-subtitle" data-i18n="hero.subtitle">ZeroRecall compares products in your Shopify store with the European Commission’s Safety Gate database. Get an email and evidence to review a possible match, without manually searching alerts.</p>
+              <p class="hero-subtitle" data-i18n="hero.subtitle">AI compares your Shopify products with EU Safety Gate alerts using product details and photos. It can surface possible matches even when names differ or an EAN is missing, so you know what to review.</p>
               <ol class="hero-summary" aria-label="How the service works" data-i18n="hero.flowLabel" data-i18n-attr="aria-label">
                 <li data-i18n="hero.flowCatalog">Your Shopify catalog</li>
                 <li data-i18n="hero.flowCompare">Compare with EU alerts</li>
@@ -124,7 +124,7 @@
                 <a href="https://apps.shopify.com/safety-gate-checker" class="btn btn--secondary" target="_blank" rel="noopener noreferrer" data-i18n="hero.installCta">Install from Shopify App Store</a>
               </div>
               <p class="hero-reassurance" data-i18n="hero.reassurance">One-off check. No installation or payment card. Results by email.</p>
-              <a href="#example" class="text-link hero-example-link" data-i18n="hero.exampleCta">See an example result</a>
+              <a href="#match-example" class="text-link hero-example-link" data-i18n="hero.exampleCta">See an example result</a>
             </div>
             <figure class="hero-visual" id="example" aria-labelledby="example-caption">
               <div class="mock-app">
@@ -154,7 +154,7 @@
                       <strong data-i18n="hero.mockAlertName">Similar product in an EU alert</strong>
                     </div>
                   </div>
-                  <p class="mock-app__reason" data-i18n="example.findingReason">Why it appeared: a similar shape and category despite a different listing name.</p>
+                  <p class="mock-app__reason" data-i18n="example.findingReason">Illustrative reason: similar frame construction and steering joint despite a different listing name. The model and batch still need verification.</p>
                   <div class="mock-app__insight">
                     <span class="mock-app__insight-icon" aria-hidden="true">i</span>
                     <div><strong data-i18n="example.decisionTitle">Your next step</strong><span data-i18n="hero.mockReason">Compare the model and batch before deciding.</span></div>
@@ -217,29 +217,66 @@
           </div>
         </section>
 
-        <!-- 3-Step Workflow -->
-        <section class="section" id="how-it-works">
-          <div class="section-heading">
-            <span class="section-eyebrow" data-i18n="workflow.eyebrow">How it works</span>
-            <h2 class="section-title" data-i18n="workflow.title">From your product to a clear next step</h2>
+        <section class="section ai-section" id="how-it-works" aria-labelledby="ai-title">
+          <div class="ai-intro">
+            <h2 class="section-title" id="ai-title" data-i18n="ai.title">A different name. A familiar product.</h2>
+            <p data-i18n="ai.body">Suppliers change titles. Listings lose model numbers. ZeroRecall uses AI to compare product details and photos with official EU Safety Gate records, helping you spot possible matches that an exact text search can miss.</p>
+          </div>
+          <div class="ai-evidence">
+            <div>
+              <h3 data-i18n="ai.exactTitle">EAN first. More evidence when it is missing.</h3>
+              <p data-i18n="ai.exactBody">An exact EAN / GTIN match is the strongest signal of product identity. When identifiers are incomplete, AI weighs the brand, model, description and distinctive visual details together. A shared category alone is not enough.</p>
+            </div>
+            <div>
+              <h3 data-i18n="ai.visualTitle">Photos add context that a title cannot.</h3>
+              <p data-i18n="ai.visualBody">Similar construction, packaging or visible model markings can help connect differently named listings. Conflicting identifiers and missing evidence matter too: an uncertain match stays a question for review.</p>
+            </div>
           </div>
 
-          <div class="workflow-grid">
-            <div class="workflow-card">
-              <span class="step-num">01</span>
-              <h3 class="step-title" data-i18n="workflow.step1Title">We compare products</h3>
-              <p class="step-desc" data-i18n="workflow.step1Desc">We compare names, brands, models and photos with EU alerts about dangerous products.</p>
+          <div class="match-demo" id="match-example">
+            <h3 class="match-demo__title" id="match-example-title" data-i18n="ai.exampleTitle">See a possible match become a decision</h3>
+            <div class="match-demo__tabs" role="tablist" aria-labelledby="match-example-title">
+              <button type="button" role="tab" id="demo-tab-1" aria-controls="demo-panel-1" aria-selected="true" tabindex="0"><span aria-hidden="true">1</span><span data-i18n="workflow.step1Title">We compare products</span></button>
+              <button type="button" role="tab" id="demo-tab-2" aria-controls="demo-panel-2" aria-selected="false" tabindex="-1"><span aria-hidden="true">2</span><span data-i18n="workflow.step2Title">We flag possible matches</span></button>
+              <button type="button" role="tab" id="demo-tab-3" aria-controls="demo-panel-3" aria-selected="false" tabindex="-1"><span aria-hidden="true">3</span><span data-i18n="workflow.step3Title">You decide what to do</span></button>
             </div>
-            <div class="workflow-card">
-              <span class="step-num">02</span>
-              <h3 class="step-title" data-i18n="workflow.step2Title">We flag possible matches</h3>
-              <p class="step-desc" data-i18n="workflow.step2Desc">You receive the result and evidence by email so you can review a possible match.</p>
+            <div class="match-demo__panel" id="demo-panel-1" role="tabpanel" aria-labelledby="demo-tab-1" tabindex="0">
+              <div class="match-demo__art match-demo__art--catalog"><img src="/images/product-comparison-illustration.jpg" width="1536" height="1024" alt="" loading="lazy" /></div>
+              <div class="match-demo__context">
+                <span class="match-demo__source" data-i18n="hero.mockYourProduct">Your product</span>
+                <h4 data-i18n="hero.mockProductName">Children's balance bike</h4>
+                <p class="match-demo__missing" data-i18n="ai.missing">EAN and model missing from the listing</p>
+                <p data-i18n="workflow.step1Desc">We compare names, brands, models and photos with EU alerts about dangerous products.</p>
+                <button type="button" class="text-link match-demo__next" data-demo-next="2" data-i18n="workflow.step2Title">We flag possible matches</button>
+              </div>
             </div>
-            <div class="workflow-card">
-              <span class="step-num">03</span>
-              <h3 class="step-title" data-i18n="workflow.step3Title">You decide what to do</h3>
-              <p class="step-desc" data-i18n="workflow.step3Desc">Compare the model, photos and batch. Record the outcome of your review in the app.</p>
+            <div class="match-demo__panel" id="demo-panel-2" role="tabpanel" aria-labelledby="demo-tab-2" tabindex="0" hidden>
+              <div class="match-demo__art"><img src="/images/product-comparison-illustration.jpg" width="1536" height="1024" alt="" loading="lazy" /></div>
+              <div class="match-demo__context">
+                <span class="mock-app__badge" data-i18n="hero.mockStatus">Needs review</span>
+                <h4 data-i18n="ai.detailTitle">What the AI would flag for review</h4>
+                <p data-i18n="ai.detailBody">In this illustration: a similar frame, steering joint and wheel design. These details support a possible match; they do not confirm the exact model or affected batch.</p>
+                <button type="button" class="text-link match-demo__next" data-demo-next="3" data-i18n="workflow.step3Title">You decide what to do</button>
+              </div>
             </div>
+            <div class="match-demo__panel" id="demo-panel-3" role="tabpanel" aria-labelledby="demo-tab-3" tabindex="0" hidden>
+              <div class="match-demo__review-art">
+                <div class="match-demo__document">
+                  <div class="match-demo__document-brand">ZeroRecall <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 3h9l4 4v14H5V3h1Z"/><path d="M14 3v5h5M8 12h8M8 16h5"/></svg></div>
+                  <span class="mock-app__badge" data-i18n="hero.mockStatus">Needs review</span>
+                  <strong data-i18n="hero.mockProductName">Children's balance bike</strong>
+                  <div class="match-demo__document-rule"></div>
+                  <p data-i18n="hero.mockReason">Compare the model and batch before deciding.</p>
+                  <div class="match-demo__audit"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg><span data-i18n="ai.record">Review decisions are saved with an actor, time and note in the app.</span></div>
+                </div>
+              </div>
+              <div class="match-demo__context">
+                <h4 data-i18n="ai.reviewTitle">Your decision, with evidence attached</h4>
+                <p data-i18n="ai.reviewBody">Compare the listing and official alert, then verify the model and batch with your supplier. In the installed app, record a resolution, dismiss a different product, or keep the finding open while waiting for the supplier.</p>
+                <a href="#free-scan" class="btn btn--primary" data-i18n="hero.scanLink">Check my store for free</a>
+              </div>
+            </div>
+            <p class="match-demo__disclaimer" data-i18n="ai.limit">AI suggests possible matches. It does not certify safety or replace your review. This example is illustrative; it is not a real recall or a live scan.</p>
           </div>
         </section>
 

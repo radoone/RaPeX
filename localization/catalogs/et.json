@@ -26,7 +26,7 @@
     "hero": {
       "badge": "ELIS MÜÜVATELE SHOPIFY POODIDELE",
       "title": "Saage teavitus võimalikest vastetest ohtlike toodetega.",
-      "subtitle": "ZeroRecall võrdleb teie Shopify poe tooteid Euroopa Komisjoni Safety Gate’i andmebaasiga. Võimaliku vaste korral saate e-kirja ja andmed kontrollimiseks, ilma et peaksite teateid käsitsi läbi otsima.",
+      "subtitle": "AI võrdleb teie Shopify tooteid EL-i Safety Gate'i hoiatustega, kasutades toote üksikasju ja fotosid. See võib leida võimalikke vasteid isegi siis, kui nimed erinevad või EAN puudub, et teaksite, mida üle vaadata.",
       "inputPlaceholder": "teie-pood.myshopify.com",
       "emailPlaceholder": "teie-e-post@pood.com",
       "ctaButton": "Tasuta skaneerimine",
@@ -220,7 +220,7 @@
       "previewLabel": "Illustreeriv leiu eelvaade",
       "status": "Vajab ülevaatamist",
       "findingTitle": "Võimalik toote vaste",
-      "findingReason": "Miks see ilmus: sarnane toote kuju ja kategooria hoolimata erinevast kuulutuse nimest.",
+      "findingReason": "Illustreeriv põhjus: sarnane raami konstruktsioon ja rooliliigend, hoolimata erinevast kirje nimest. Mudel ja partii vajavad endiselt kontrollimist.",
       "findingAction": "Võrdle mudelit ja partiid →"
     },
     "scan": {
@@ -315,6 +315,22 @@
       "metaTitle": "Privaatsus ja andmete säilitamine | ZeroRecall",
       "metaDescription": "Kuidas ZeroRecall töötleb ja säilitab andmeid avaliku kataloogi skaneerimiste ja Shopify rakenduse jaoks.",
       "footer": "Privaatsus ja andmete säilitamise teave."
+    },
+    "ai": {
+      "title": "Erinev nimi. Tuttav toode.",
+      "body": "Tarnijad muudavad pealkirju. Kirjetest kaovad mudelinumbrid. ZeroRecall kasutab tehisintellekti, et võrrelda toote üksikasju ja fotosid ametlike EL-i Safety Gate'i andmetega, aidates teil leida võimalikke vasteid, mida täpne tekstotsing võib mööda lasta.",
+      "exactTitle": "EAN kõigepealt. Rohkem tõendeid, kui see puudub.",
+      "exactBody": "Täpne EAN / GTIN vaste on toote identiteedi tugevaim signaal. Kui identifikaatorid on puudulikud, kaalub AI koos kaubamärki, mudelit, kirjeldust ja eristavaid visuaalseid detaile. Ainuüksi jagatud kategooriast ei piisa.",
+      "visualTitle": "Fotod lisavad konteksti, mida pealkiri ei suuda.",
+      "visualBody": "Sarnane konstruktsioon, pakend või nähtavad mudelimärgistused võivad aidata ühendada erinevalt nimetatud kirjeid. Olulised on ka vastuolulised identifikaatorid ja puuduvad tõendid: ebakindel vaste jääb ülevaatamiseks küsimuseks.",
+      "exampleTitle": "Vaadake, kuidas võimalikust vastest saab otsus",
+      "missing": "EAN ja mudel puuduvad kirjest",
+      "detailTitle": "Mida AI ülevaatamiseks märgistaks",
+      "detailBody": "Selles illustratsioonis: sarnane raam, rooliliigend ja rattadisain. Need detailid toetavad võimalikku vastet; need ei kinnita täpset mudelit ega mõjutatud partiid.",
+      "reviewTitle": "Teie otsus koos lisatud tõenditega",
+      "reviewBody": "Võrrelge kirjet ja ametlikku hoiatust, seejärel kontrollige mudelit ja partiid oma tarnijaga. Installitud rakenduses registreerige lahendus, lükake tagasi erinev toode või hoidke leid avatuna, kuni ootate tarnijat.",
+      "record": "Ülevaatamise otsused salvestatakse rakenduses koos tegija, aja ja märkusega.",
+      "limit": "AI pakub välja võimalikke vasteid. See ei sertifitseeri ohutust ega asenda teie ülevaatust. See näide on illustreeriv; see ei ole tegelik tagasikutsumine ega reaalajas skaneerimine."
     }
   },
   "email": {

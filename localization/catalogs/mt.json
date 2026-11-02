@@ -26,7 +26,7 @@
     "hero": {
       "badge": "GĦAL ĦWIENET SHOPIFY LI JBIGĦU FL-UE",
       "title": "Irċievi twissijiet dwar tqabbil possibbli ma’ prodotti perikolużi.",
-      "subtitle": "ZeroRecall iqabbel il-prodotti tal-ħanut Shopify tiegħek mad-database Safety Gate tal-Kummissjoni Ewropea. Meta jinstab tqabbil possibbli, tirċievi email u informazzjoni biex tivverifikah, mingħajr ma tfittex it-twissijiet manwalment.",
+      "subtitle": "L-AI tqabbel il-prodotti Shopify tiegħek ma' twissijiet tal-EU Safety Gate billi tuża dettalji u ritratti tal-prodott. Tista' tidentifika tqabbil possibbli anke meta l-ismijiet ivarjaw jew meta jkun nieqes EAN, sabiex tkun taf x'għandek tirrevedi.",
       "inputPlaceholder": "your-store.myshopify.com",
       "emailPlaceholder": "your-email@store.com",
       "ctaButton": "Skannjar b'xejn",
@@ -220,7 +220,7 @@
       "previewLabel": "Preview illustrattiv tas-sejba",
       "status": "Jeħtieġ reviżjoni",
       "findingTitle": "Tqabbil possibbli tal-prodott",
-      "findingReason": "Għaliex deher: forma u kategorija tal-prodott simili minkejja isem ta' lista differenti.",
+      "findingReason": "Raġuni illustrattiva: kostruzzjoni tal-qafas u ġonta tal-istering simili minkejja isem differenti tal-lista. Il-mudell u l-lott għad iridu jiġu vverifikati.",
       "findingAction": "Qabbel il-mudell u l-lott →"
     },
     "scan": {
@@ -315,6 +315,22 @@
       "metaTitle": "Privatezza u żamma tad-dejta | ZeroRecall",
       "metaDescription": "Kif ZeroRecall tipproċessa u żżomm id-dejta għal skannjar tal-katalgu pubbliku u l-app Shopify.",
       "footer": "Informazzjoni dwar il-privatezza u ż-żamma tad-dejta."
+    },
+    "ai": {
+      "title": "Isem differenti. Prodott familjari.",
+      "body": "Il-fornituri jibdlu t-titli. Il-listi jitilfu n-numri tal-mudell. ZeroRecall juża l-AI biex iqabbel id-dettalji u r-ritratti tal-prodotti mar-rekords uffiċjali tal-EU Safety Gate, u jgħinek tidentifika tqabbil possibbli li tfittxija eżatta tat-test tista' titlef.",
+      "exactTitle": "EAN l-ewwel. Aktar evidenza meta jkun nieqes.",
+      "exactBody": "Tqabbil eżatt tal-EAN / GTIN huwa l-aktar sinjal b'saħħtu tal-identità tal-prodott. Meta l-identifikaturi jkunu inkompleti, l-AI tiżen il-marka, il-mudell, id-deskrizzjoni u d-dettalji viżwali distintivi flimkien. Kategorija maqsuma waħedha mhix biżżejjed.",
+      "visualTitle": "Ir-ritratti jżidu kuntest li titlu ma jistax.",
+      "visualBody": "Kostruzzjoni, ippakkjar jew marki tal-mudell viżibbli simili jistgħu jgħinu biex jgħaqqdu listi b'ismijiet differenti. Identifikaturi konfliġġenti u evidenza nieqsa huma importanti wkoll: tqabbil inċert jibqa' mistoqsija għal reviżjoni.",
+      "exampleTitle": "Ara tqabbil possibbli jsir deċiżjoni",
+      "missing": "EAN u mudell neqsin mil-lista",
+      "detailTitle": "X'tindika l-AI għal reviżjoni",
+      "detailBody": "F'din l-illustrazzjoni: qafas, ġonta tal-istering u disinn tar-rota simili. Dawn id-dettalji jappoġġjaw tqabbil possibbli; ma jikkonfermawx il-mudell eżatt jew il-lott affettwat.",
+      "reviewTitle": "Id-deċiżjoni tiegħek, b'evidenza mehmuża",
+      "reviewBody": "Qabbel il-lista u t-twissija uffiċjali, imbagħad ivverifika l-mudell u l-lott mal-fornitur tiegħek. Fl-app installata, irreġistra riżoluzzjoni, ċaħad prodott differenti, jew żomm is-sejba miftuħa waqt li tistenna lill-fornitur.",
+      "record": "Id-deċiżjonijiet ta' reviżjoni jiġu ssejvjati b'attur, ħin u nota fl-app.",
+      "limit": "L-AI tissuġġerixxi tqabbil possibbli. Ma tiċċertifikax is-sigurtà jew tissostitwixxi r-reviżjoni tiegħek. Dan l-eżempju huwa illustrattiv; mhuwiex sejħa lura reali jew skan dirett."
     }
   },
   "email": {

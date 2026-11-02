@@ -25,7 +25,7 @@
   "hero": {
     "badge": "DLA SKLEPÓW SHOPIFY SPRZEDAJĄCYCH W UE",
     "title": "Otrzymuj powiadomienia o możliwych dopasowaniach do niebezpiecznych produktów.",
-    "subtitle": "ZeroRecall porównuje produkty Twojego sklepu Shopify z bazą Safety Gate Komisji Europejskiej. Przy możliwym dopasowaniu otrzymasz e-mail i dane do weryfikacji, bez ręcznego przeszukiwania ostrzeżeń.",
+    "subtitle": "AI porównuje Twoje produkty Shopify z alertami EU Safety Gate, wykorzystując szczegóły produktów i zdjęcia. Może wskazać możliwe dopasowania, nawet gdy nazwy się różnią lub brakuje numeru EAN, dzięki czemu wiesz, co należy sprawdzić.",
     "inputPlaceholder": "twoj-sklep.myshopify.com",
     "emailPlaceholder": "twoj-email@sklep.com",
     "ctaButton": "Darmowe skanowanie",
@@ -219,7 +219,7 @@
     "previewLabel": "Podgląd ilustracyjnego znaleziska",
     "status": "Wymaga weryfikacji",
     "findingTitle": "Możliwe dopasowanie produktu",
-    "findingReason": "Dlaczego się pojawiło: podobny kształt produktu i kategoria pomimo innej nazwy oferty.",
+    "findingReason": "Przykład: podobna konstrukcja ramy i połączenie kierownicy pomimo innej nazwy w ofercie. Model i partia nadal wymagają weryfikacji.",
     "findingAction": "Porównaj model i partię →"
   },
   "scan": {
@@ -314,5 +314,21 @@
     "metaTitle": "Prywatność i przechowywanie danych | ZeroRecall",
     "metaDescription": "Jak ZeroRecall przetwarza i przechowuje dane dla skanów katalogów publicznych i aplikacji Shopify.",
     "footer": "Informacje o prywatności i przechowywaniu danych."
+  },
+  "ai": {
+    "title": "Inna nazwa. Znajomy produkt.",
+    "body": "Dostawcy zmieniają nazwy. W ofertach brakuje numerów modeli. ZeroRecall wykorzystuje AI do porównywania szczegółów produktów i zdjęć z oficjalnymi rejestrami EU Safety Gate, pomagając Ci wykryć możliwe dopasowania, które dokładne wyszukiwanie tekstowe może przeoczyć.",
+    "exactTitle": "Najpierw EAN. Więcej dowodów, gdy go brakuje.",
+    "exactBody": "Dokładne dopasowanie EAN / GTIN jest najsilniejszym sygnałem identyfikacji produktu. Gdy identyfikatory są niekompletne, AI waży markę, model, opis i charakterystyczne szczegóły wizualne. Sama wspólna kategoria nie wystarczy.",
+    "visualTitle": "Zdjęcia dodają kontekst, którego nie może zapewnić tytuł.",
+    "visualBody": "Podobna konstrukcja, opakowanie lub widoczne oznaczenia modelu mogą pomóc połączyć oferty o różnych nazwach. Sprzeczne identyfikatory i brakujące dowody również mają znaczenie: niepewne dopasowanie pozostaje pytaniem do weryfikacji.",
+    "exampleTitle": "Zobacz, jak możliwe dopasowanie staje się decyzją",
+    "missing": "Brak EAN i modelu w ofercie",
+    "detailTitle": "Co AI oznaczyłoby do weryfikacji",
+    "detailBody": "W tej ilustracji: podobna rama, połączenie kierownicy i konstrukcja kół. Te szczegóły wspierają możliwe dopasowanie; nie potwierdzają dokładnego modelu ani partii, której dotyczy problem.",
+    "reviewTitle": "Twoja decyzja, z dołączonymi dowodami",
+    "reviewBody": "Porównaj ofertę i oficjalny alert, a następnie zweryfikuj model i partię u swojego dostawcy. W zainstalowanej aplikacji zarejestruj rozwiązanie, odrzuć inny produkt lub pozostaw znalezisko otwarte, czekając na dostawcę.",
+    "record": "Decyzje dotyczące weryfikacji są zapisywane w aplikacji wraz z aktorem, czasem i notatką.",
+    "limit": "AI sugeruje możliwe dopasowania. Nie certyfikuje bezpieczeństwa ani nie zastępuje Twojej weryfikacji. Ten przykład jest ilustracyjny; nie jest to prawdziwe wycofanie produktu ani skanowanie na żywo."
   }
 }

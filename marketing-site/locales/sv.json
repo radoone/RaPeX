@@ -25,7 +25,7 @@
   "hero": {
     "badge": "FÖR SHOPIFY-BUTIKER SOM SÄLJER I EU",
     "title": "Få aviseringar om möjliga matchningar med farliga produkter.",
-    "subtitle": "ZeroRecall jämför produkterna i din Shopify-butik med EU-kommissionens Safety Gate-databas. Vid en möjlig matchning får du ett mejl och underlag att granska, utan att söka igenom varningarna manuellt.",
+    "subtitle": "AI jämför dina Shopify-produkter med EU Safety Gate-varningar med hjälp av produktinformation och foton. Den kan hitta möjliga matchningar även när namnen skiljer sig åt eller ett EAN saknas, så att du vet vad du ska granska.",
     "inputPlaceholder": "din-butik.myshopify.com",
     "emailPlaceholder": "din-e-post@butik.com",
     "ctaButton": "Gratisskanning",
@@ -219,7 +219,7 @@
     "previewLabel": "Illustrativ förhandsgranskning av fynd",
     "status": "Behöver granskas",
     "findingTitle": "Möjlig produktmatchning",
-    "findingReason": "Varför den dök upp: liknande produktform och kategori trots ett annat listningsnamn.",
+    "findingReason": "Illustrativ anledning: liknande ramkonstruktion och styrled trots ett annat listningsnamn. Modell och batch behöver fortfarande verifieras.",
     "findingAction": "Jämför modell och batch →"
   },
   "scan": {
@@ -314,5 +314,21 @@
     "metaTitle": "Integritet och datalagring | ZeroRecall",
     "metaDescription": "Hur ZeroRecall behandlar och lagrar data för offentliga katalogskanningar och Shopify-appen.",
     "footer": "Information om integritet och datalagring."
+  },
+  "ai": {
+    "title": "Ett annat namn. En välbekant produkt.",
+    "body": "Leverantörer ändrar titlar. Listningar tappar modellnummer. ZeroRecall använder AI för att jämföra produktinformation och foton med officiella EU Safety Gate-register, vilket hjälper dig att upptäcka möjliga matchningar som en exakt textsökning kan missa.",
+    "exactTitle": "EAN först. Mer bevis när det saknas.",
+    "exactBody": "En exakt EAN / GTIN-matchning är den starkaste signalen för produktidentitet. När identifierare är ofullständiga väger AI samman varumärke, modell, beskrivning och distinkta visuella detaljer. Enbart en delad kategori är inte tillräckligt.",
+    "visualTitle": "Foton lägger till sammanhang som en titel inte kan.",
+    "visualBody": "Liknande konstruktion, förpackning eller synliga modellmarkeringar kan hjälpa till att koppla samman listningar med olika namn. Motstridiga identifierare och saknade bevis spelar också roll: en osäker matchning förblir en fråga för granskning.",
+    "exampleTitle": "Se en möjlig matchning bli ett beslut",
+    "missing": "EAN och modell saknas i listningen",
+    "detailTitle": "Vad AI skulle flagga för granskning",
+    "detailBody": "I denna illustration: en liknande ram, styrled och hjuldesign. Dessa detaljer stöder en möjlig matchning; de bekräftar inte den exakta modellen eller den berörda batchen.",
+    "reviewTitle": "Ditt beslut, med bifogade bevis",
+    "reviewBody": "Jämför listningen och den officiella varningen, verifiera sedan modell och batch med din leverantör. I den installerade appen, registrera en lösning, avfärda en annan produkt eller håll fyndet öppet medan du väntar på leverantören.",
+    "record": "Granskningsbeslut sparas med en aktör, tid och anteckning i appen.",
+    "limit": "AI föreslår möjliga matchningar. Den certifierar inte säkerhet eller ersätter din granskning. Detta exempel är illustrativt; det är inte en verklig återkallelse eller en live-skanning."
   }
 }

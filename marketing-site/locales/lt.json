@@ -25,7 +25,7 @@
   "hero": {
     "badge": "ES PARDUODANČIOMS SHOPIFY PARDUOTUVĖMS",
     "title": "Gaukite pranešimus apie galimus sutapimus su pavojingais gaminiais.",
-    "subtitle": "ZeroRecall lygina jūsų Shopify parduotuvės produktus su Europos Komisijos Safety Gate duomenų baze. Radę galimą sutapimą, atsiunčiame el. laišką ir duomenis patikrai, kad nereikėtų įspėjimų ieškoti rankiniu būdu.",
+    "subtitle": "Dirbtinis intelektas palygina jūsų Shopify produktus su ES Safety Gate įspėjimais, naudodamas produkto detales ir nuotraukas. Jis gali aptikti galimus atitikmenis net tada, kai pavadinimai skiriasi arba trūksta EAN, todėl žinote, ką peržiūrėti.",
     "inputPlaceholder": "jūsų-parduotuvė.myshopify.com",
     "emailPlaceholder": "jūsų-el.paštas@parduotuvė.com",
     "ctaButton": "Nemokamas skenavimas",
@@ -219,7 +219,7 @@
     "previewLabel": "Iliustracinė radinio peržiūra",
     "status": "Reikia peržiūros",
     "findingTitle": "Galimas produkto atitikmuo",
-    "findingReason": "Kodėl jis atsirado: panaši produkto forma ir kategorija, nepaisant skirtingo sąrašo pavadinimo.",
+    "findingReason": "Iliustratyvi priežastis: panaši rėmo konstrukcija ir vairo jungtis, nepaisant skirtingo sąrašo pavadinimo. Modelis ir partija vis dar turi būti patikrinti.",
     "findingAction": "Palyginkite modelį ir partiją →"
   },
   "scan": {
@@ -314,5 +314,21 @@
     "metaTitle": "Privatumas ir duomenų saugojimas | ZeroRecall",
     "metaDescription": "Kaip ZeroRecall apdoroja ir saugo duomenis viešų katalogų skenavimams ir Shopify programėlei.",
     "footer": "Privatumo ir duomenų saugojimo informacija."
+  },
+  "ai": {
+    "title": "Kitas pavadinimas. Pažįstamas produktas.",
+    "body": "Tiekėjai keičia pavadinimus. Sąrašuose dingsta modelių numeriai. ZeroRecall naudoja dirbtinį intelektą, kad palygintų produkto detales ir nuotraukas su oficialiais ES Safety Gate įrašais, padėdamas jums aptikti galimus atitikmenis, kurių tiksli tekstinė paieška gali nepastebėti.",
+    "exactTitle": "Pirmiausia EAN. Daugiau įrodymų, kai jo trūksta.",
+    "exactBody": "Tikslus EAN / GTIN atitikimas yra stipriausias produkto tapatybės signalas. Kai identifikatoriai yra neišsamūs, dirbtinis intelektas kartu įvertina prekės ženklą, modelį, aprašymą ir išskirtines vizualines detales. Vien tik bendra kategorija nepakanka.",
+    "visualTitle": "Nuotraukos suteikia kontekstą, kurio pavadinimas negali.",
+    "visualBody": "Panaši konstrukcija, pakuotė ar matomi modelio žymėjimai gali padėti susieti skirtingai pavadintus sąrašus. Svarbu ir prieštaringi identifikatoriai bei trūkstami įrodymai: neaiškus atitikimas lieka klausimu peržiūrai.",
+    "exampleTitle": "Pažiūrėkite, kaip galimas atitikimas tampa sprendimu",
+    "missing": "EAN ir modelis trūksta sąraše",
+    "detailTitle": "Ką dirbtinis intelektas pažymėtų peržiūrai",
+    "detailBody": "Šioje iliustracijoje: panašus rėmas, vairo jungtis ir ratų dizainas. Šios detalės patvirtina galimą atitikimą; jos nepatvirtina tikslaus modelio ar paveiktos partijos.",
+    "reviewTitle": "Jūsų sprendimas su pridėtais įrodymais",
+    "reviewBody": "Palyginkite sąrašą ir oficialų įspėjimą, tada patikrinkite modelį ir partiją su savo tiekėju. Įdiegtoje programėlėje įrašykite sprendimą, atmeskite kitą produktą arba palikite radinį atvirą, kol laukiate tiekėjo.",
+    "record": "Peržiūros sprendimai išsaugomi su veikėju, laiku ir pastaba programėlėje.",
+    "limit": "Dirbtinis intelektas siūlo galimus atitikmenis. Jis nepatvirtina saugumo ir nepakeičia jūsų peržiūros. Šis pavyzdys yra iliustratyvus; tai nėra tikras atšaukimas ar tiesioginis nuskaitymas."
   }
 }

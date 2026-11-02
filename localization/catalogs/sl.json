@@ -26,7 +26,7 @@
     "hero": {
       "badge": "ZA TRGOVINE SHOPIFY, KI PRODAJAJO V EU",
       "title": "Prejmite opozorila o možnih ujemanjih z nevarnimi izdelki.",
-      "subtitle": "ZeroRecall primerja izdelke vaše trgovine Shopify z zbirko Safety Gate Evropske komisije. Ob možnem ujemanju prejmete e-pošto in podatke za preverjanje, brez ročnega iskanja med opozorili.",
+      "subtitle": "AI primerja vaše izdelke Shopify z opozorili EU Safety Gate z uporabo podrobnosti o izdelku in fotografij. Lahko prikaže morebitna ujemanja, tudi če se imena razlikujejo ali manjka EAN, tako da veste, kaj morate pregledati.",
       "inputPlaceholder": "vasha-trgovina.myshopify.com",
       "emailPlaceholder": "vasa-e-posta@trgovina.com",
       "ctaButton": "Brezplačno skeniranje",
@@ -220,7 +220,7 @@
       "previewLabel": "Ilustrativen predogled ugotovitve",
       "status": "Potreben pregled",
       "findingTitle": "Možno ujemanje izdelka",
-      "findingReason": "Zakaj se je pojavilo: podobna oblika in kategorija izdelka kljub drugačnemu imenu oglasa.",
+      "findingReason": "Ilustrativni razlog: podobna konstrukcija okvirja in krmilnega zgloba kljub drugačnemu imenu oglasa. Model in serija še vedno potrebujeta preverjanje.",
       "findingAction": "Primerjajte model in serijo →"
     },
     "scan": {
@@ -315,6 +315,22 @@
       "metaTitle": "Zasebnost in hramba podatkov | ZeroRecall",
       "metaDescription": "Kako ZeroRecall obdeluje in hrani podatke za skeniranje javnega kataloga in aplikacijo Shopify.",
       "footer": "Informacije o zasebnosti in hrambi podatkov."
+    },
+    "ai": {
+      "title": "Drugo ime. Znan izdelek.",
+      "body": "Dobavitelji spreminjajo naslove. Oglasi izgubijo številke modelov. ZeroRecall uporablja AI za primerjavo podrobnosti o izdelkih in fotografij z uradnimi zapisi EU Safety Gate, kar vam pomaga odkriti morebitna ujemanja, ki jih natančno iskanje besedila lahko zgreši.",
+      "exactTitle": "Najprej EAN. Več dokazov, ko manjka.",
+      "exactBody": "Natančno ujemanje EAN / GTIN je najmočnejši signal identitete izdelka. Ko so identifikatorji nepopolni, AI skupaj pretehta blagovno znamko, model, opis in značilne vizualne podrobnosti. Sama skupna kategorija ni dovolj.",
+      "visualTitle": "Fotografije dodajo kontekst, ki ga naslov ne more.",
+      "visualBody": "Podobna konstrukcija, embalaža ali vidne oznake modela lahko pomagajo povezati različno imenovane oglase. Pomembni so tudi nasprotujoči si identifikatorji in manjkajoči dokazi: negotovo ujemanje ostaja vprašanje za pregled.",
+      "exampleTitle": "Oglejte si, kako morebitno ujemanje postane odločitev",
+      "missing": "EAN in model manjkata v oglasu",
+      "detailTitle": "Kaj bi AI označil za pregled",
+      "detailBody": "Na tej ilustraciji: podoben okvir, krmilni zglob in zasnova koles. Te podrobnosti podpirajo morebitno ujemanje; ne potrjujejo točnega modela ali prizadete serije.",
+      "reviewTitle": "Vaša odločitev, z priloženimi dokazi",
+      "reviewBody": "Primerjajte oglas in uradno opozorilo, nato preverite model in serijo pri svojem dobavitelju. V nameščeni aplikaciji zabeležite rešitev, zavrnite drug izdelek ali pustite ugotovitev odprto, medtem ko čakate na dobavitelja.",
+      "record": "Odločitve o pregledu so shranjene z akterjem, časom in opombo v aplikaciji.",
+      "limit": "AI predlaga morebitna ujemanja. Ne potrjuje varnosti in ne nadomešča vašega pregleda. Ta primer je ilustrativen; ni pravi odpoklic ali skeniranje v živo."
     }
   },
   "email": {

@@ -25,7 +25,7 @@
   "hero": {
     "badge": "PARA TIENDAS SHOPIFY QUE VENDEN EN LA UE",
     "title": "Reciba avisos de posibles coincidencias con productos peligrosos.",
-    "subtitle": "ZeroRecall compara los productos de su tienda Shopify con la base Safety Gate de la Comisión Europea. Si hay una posible coincidencia, recibirá un correo con información para revisarla, sin buscar manualmente entre las alertas.",
+    "subtitle": "La IA compara sus productos de Shopify con las alertas de la Safety Gate de la UE utilizando los detalles y las fotos del producto. Puede detectar posibles coincidencias incluso cuando los nombres difieren o falta un EAN, para que sepa qué revisar.",
     "inputPlaceholder": "su-tienda.myshopify.com",
     "emailPlaceholder": "su-correo@tienda.com",
     "ctaButton": "Escaneo gratuito",
@@ -219,7 +219,7 @@
     "previewLabel": "Vista previa de hallazgo ilustrativo",
     "status": "Necesita revisión",
     "findingTitle": "Posible coincidencia de producto",
-    "findingReason": "Por qué apareció: forma y categoría de producto similares a pesar de un nombre de listado diferente.",
+    "findingReason": "Motivo ilustrativo: construcción del cuadro y articulación de la dirección similares a pesar de un nombre de anuncio diferente. El modelo y el lote aún requieren verificación.",
     "findingAction": "Comparar modelo y lote →"
   },
   "scan": {
@@ -314,5 +314,21 @@
     "metaTitle": "Privacidad y retención de datos | ZeroRecall",
     "metaDescription": "Cómo ZeroRecall procesa y retiene datos para escaneos de catálogo público y la aplicación de Shopify.",
     "footer": "Información de privacidad y retención de datos."
+  },
+  "ai": {
+    "title": "Un nombre diferente. Un producto familiar.",
+    "body": "Los proveedores cambian los títulos. Los listados pierden los números de modelo. ZeroRecall utiliza IA para comparar los detalles y las fotos de los productos con los registros oficiales de la Safety Gate de la UE, lo que le ayuda a detectar posibles coincidencias que una búsqueda de texto exacta podría pasar por alto.",
+    "exactTitle": "EAN primero. Más pruebas cuando falta.",
+    "exactBody": "Una coincidencia exacta de EAN / GTIN es la señal más fuerte de identidad del producto. Cuando los identificadores están incompletos, la IA sopesa la marca, el modelo, la descripción y los detalles visuales distintivos en conjunto. Una categoría compartida por sí sola no es suficiente.",
+    "visualTitle": "Las fotos añaden un contexto que un título no puede.",
+    "visualBody": "Una construcción, un embalaje o unas marcas de modelo visibles similares pueden ayudar a conectar listados con nombres diferentes. Los identificadores contradictorios y la falta de pruebas también importan: una coincidencia incierta sigue siendo una cuestión a revisar.",
+    "exampleTitle": "Vea cómo una posible coincidencia se convierte en una decisión",
+    "missing": "Faltan EAN y modelo en el listado",
+    "detailTitle": "Lo que la IA marcaría para revisión",
+    "detailBody": "En esta ilustración: un cuadro, una articulación de la dirección y un diseño de rueda similares. Estos detalles respaldan una posible coincidencia; no confirman el modelo exacto ni el lote afectado.",
+    "reviewTitle": "Su decisión, con pruebas adjuntas",
+    "reviewBody": "Compare el listado y la alerta oficial, luego verifique el modelo y el lote con su proveedor. En la aplicación instalada, registre una resolución, descarte un producto diferente o mantenga el hallazgo abierto mientras espera al proveedor.",
+    "record": "Las decisiones de revisión se guardan con un actor, la hora y una nota en la aplicación.",
+    "limit": "La IA sugiere posibles coincidencias. No certifica la seguridad ni reemplaza su revisión. Este ejemplo es ilustrativo; no es una retirada real ni un escaneo en vivo."
   }
 }

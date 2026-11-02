@@ -25,7 +25,7 @@
   "hero": {
     "badge": "EU:SSA MYYVILLE SHOPIFY-KAUPOILLE",
     "title": "Saat ilmoituksen mahdollisista vastaavuuksista vaarallisten tuotteiden kanssa.",
-    "subtitle": "ZeroRecall vertaa Shopify-kauppasi tuotteita Euroopan komission Safety Gate -tietokantaan. Mahdollisesta vastaavuudesta saat sähköpostin ja tarkistettavat tiedot ilman ilmoitusten käsin läpikäyntiä.",
+    "subtitle": "Tekoäly vertaa Shopify-tuotteitasi EU:n Safety Gate -hälytyksiin tuotetietojen ja kuvien perusteella. Se voi löytää mahdollisia vastaavuuksia, vaikka nimet eroaisivat tai EAN-koodi puuttuisi, jotta tiedät, mitä tarkistaa.",
     "inputPlaceholder": "kauppasi.myshopify.com",
     "emailPlaceholder": "sähköpostisi@kauppa.com",
     "ctaButton": "Ilmainen skannaus",
@@ -219,7 +219,7 @@
     "previewLabel": "Havainnollinen löydöksen esikatselu",
     "status": "Vaatii tarkistusta",
     "findingTitle": "Mahdollinen tuoteosuma",
-    "findingReason": "Miksi se ilmestyi: samankaltainen tuotteen muoto ja kategoria eri listausnimestä huolimatta.",
+    "findingReason": "Kuvitteellinen syy: samanlainen rungon rakenne ja ohjausnivel eri listausnimestä huolimatta. Malli ja erä vaativat edelleen varmistusta.",
     "findingAction": "Vertaa mallia ja erää →"
   },
   "scan": {
@@ -314,5 +314,21 @@
     "metaTitle": "Tietosuoja ja tietojen säilytys | ZeroRecall",
     "metaDescription": "Miten ZeroRecall käsittelee ja säilyttää tietoja julkisten luetteloiden skannauksia ja Shopify-sovellusta varten.",
     "footer": "Tietosuoja- ja tietojen säilytystiedot."
+  },
+  "ai": {
+    "title": "Eri nimi. Tutun oloinen tuote.",
+    "body": "Toimittajat muuttavat nimiä. Listauksista puuttuu mallinumeroita. ZeroRecall käyttää tekoälyä vertaamaan tuotetietoja ja kuvia virallisiin EU:n Safety Gate -tietoihin, auttaen sinua löytämään mahdolliset vastaavuudet, jotka tarkka tekstihaku voi jättää huomaamatta.",
+    "exactTitle": "EAN ensin. Lisää todisteita, kun se puuttuu.",
+    "exactBody": "Tarkka EAN- / GTIN-vastaavuus on vahvin merkki tuotteen identiteetistä. Kun tunnisteet ovat puutteellisia, tekoäly punnitsee brändiä, mallia, kuvausta ja erottuvia visuaalisia yksityiskohtia yhdessä. Pelkkä jaettu kategoria ei riitä.",
+    "visualTitle": "Kuvat lisäävät kontekstia, mitä otsikko ei voi.",
+    "visualBody": "Samankaltainen rakenne, pakkaus tai näkyvät mallimerkinnät voivat auttaa yhdistämään eri nimisiä listauksia. Ristiriitaiset tunnisteet ja puuttuvat todisteet ovat myös tärkeitä: epävarma vastaavuus jää tarkistettavaksi kysymykseksi.",
+    "exampleTitle": "Katso, kuinka mahdollisesta vastaavuudesta tulee päätös",
+    "missing": "EAN ja malli puuttuvat listauksesta",
+    "detailTitle": "Mitä tekoäly merkitsisi tarkistettavaksi",
+    "detailBody": "Tässä esimerkissä: samanlainen runko, ohjausnivel ja pyörän muotoilu. Nämä yksityiskohdat tukevat mahdollista vastaavuutta; ne eivät vahvista tarkkaa mallia tai kyseistä erää.",
+    "reviewTitle": "Päätöksesi, todisteineen",
+    "reviewBody": "Vertaa listaa ja virallista hälytystä, sitten varmista malli ja erä toimittajaltasi. Asennetussa sovelluksessa kirjaa ratkaisu, hylkää eri tuote tai pidä löydös avoinna odottaessasi toimittajaa.",
+    "record": "Tarkistuspäätökset tallennetaan toimijan, ajan ja muistiinpanon kera sovellukseen.",
+    "limit": "Tekoäly ehdottaa mahdollisia vastaavuuksia. Se ei sertifioi turvallisuutta tai korvaa omaa tarkistustasi. Tämä esimerkki on havainnollistava; se ei ole todellinen takaisinkutsu tai reaaliaikainen skannaus."
   }
 }

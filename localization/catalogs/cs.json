@@ -26,7 +26,7 @@
     "hero": {
       "badge": "PRO SHOPIFY OBCHODY PRODÁVAJÍCÍ V EU",
       "title": "Upozorníme vás na možné shody s nebezpečnými výrobky.",
-      "subtitle": "ZeroRecall porovnává produkty vašeho Shopify obchodu s databází Safety Gate Evropské komise. Při možné shodě dostanete e-mail a podklady k prověření — bez ručního prohledávání upozornění.",
+      "subtitle": "Umělá inteligence porovnává vaše produkty Shopify s výstrahami EU Safety Gate pomocí podrobností o produktech a fotografií. Dokáže odhalit možné shody, i když se názvy liší nebo chybí EAN, takže víte, co zkontrolovat.",
       "inputPlaceholder": "vas-obchod.myshopify.com",
       "emailPlaceholder": "vas-email@obchod.com",
       "ctaButton": "Bezplatná kontrola",
@@ -220,7 +220,7 @@
       "previewLabel": "Ilustrativní náhled nálezu",
       "status": "Vyžaduje kontrolu",
       "findingTitle": "Možná shoda produktu",
-      "findingReason": "Proč se objevila: podobný tvar a kategorie produktu navzdory jinému názvu záznamu.",
+      "findingReason": "Ilustrativní důvod: podobná konstrukce rámu a kloubu řízení navzdory odlišnému názvu v seznamu. Model a šarže stále vyžadují ověření.",
       "findingAction": "Porovnat model a šarži →"
     },
     "scan": {
@@ -315,6 +315,22 @@
       "metaTitle": "Soukromí a uchovávání dat | ZeroRecall",
       "metaDescription": "Jak ZeroRecall zpracovává a uchovává data pro skenování veřejného katalogu a aplikaci Shopify.",
       "footer": "Informace o soukromí a uchovávání dat."
+    },
+    "ai": {
+      "title": "Jiný název. Známý produkt.",
+      "body": "Dodavatelé mění názvy. V seznamech chybí čísla modelů. ZeroRecall používá umělou inteligenci k porovnání podrobností o produktech a fotografií s oficiálními záznamy EU Safety Gate, což vám pomůže odhalit možné shody, které by přesné textové vyhledávání mohlo minout.",
+      "exactTitle": "Nejprve EAN. Více důkazů, když chybí.",
+      "exactBody": "Přesná shoda EAN / GTIN je nejsilnějším signálem identity produktu. Pokud jsou identifikátory neúplné, umělá inteligence zvažuje značku, model, popis a výrazné vizuální detaily dohromady. Pouze sdílená kategorie nestačí.",
+      "visualTitle": "Fotografie přidávají kontext, který název nemůže.",
+      "visualBody": "Podobná konstrukce, balení nebo viditelné označení modelu mohou pomoci propojit různě pojmenované záznamy. Důležité jsou také protichůdné identifikátory a chybějící důkazy: nejistá shoda zůstává otázkou k přezkoumání.",
+      "exampleTitle": "Podívejte se, jak se z možné shody stane rozhodnutí",
+      "missing": "EAN a model chybí v seznamu",
+      "detailTitle": "Co by AI označila k přezkoumání",
+      "detailBody": "V této ilustraci: podobný rám, kloub řízení a design kol. Tyto detaily podporují možnou shodu; nepotvrzují přesný model ani dotčenou šarži.",
+      "reviewTitle": "Vaše rozhodnutí s připojenými důkazy",
+      "reviewBody": "Porovnejte záznam a oficiální výstrahu, poté ověřte model a šarži u svého dodavatele. V nainstalované aplikaci zaznamenejte řešení, zamítněte jiný produkt nebo ponechte nález otevřený, dokud čekáte na dodavatele.",
+      "record": "Rozhodnutí o přezkoumání jsou uložena s aktérem, časem a poznámkou v aplikaci.",
+      "limit": "AI navrhuje možné shody. Neosvědčuje bezpečnost ani nenahrazuje vaše přezkoumání. Tento příklad je ilustrativní; nejedná se o skutečné stažení z trhu ani o živé skenování."
     }
   },
   "email": {

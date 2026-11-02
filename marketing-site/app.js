@@ -449,3 +449,29 @@ initI18n().catch((error) => {
   initFormHandler();
   initMenu();
 });
+
+// An explicit, keyboard-accessible walkthrough; no automatic step changes.
+const demoTabs = [...document.querySelectorAll('.match-demo [role="tab"]')];
+function showDemoStep(index, focus = false) {
+  demoTabs.forEach((tab, position) => {
+    const selected = position === index;
+    tab.setAttribute("aria-selected", String(selected));
+    tab.tabIndex = selected ? 0 : -1;
+    document.getElementById(tab.getAttribute("aria-controls")).hidden = !selected;
+    if (selected && focus) tab.focus();
+  });
+}
+demoTabs.forEach((tab, index) => {
+  tab.addEventListener("click", () => showDemoStep(index));
+  tab.addEventListener("keydown", event => {
+    const keys = ["ArrowRight", "ArrowLeft", "Home", "End"];
+    if (!keys.includes(event.key)) return;
+    event.preventDefault();
+    const next = event.key === "Home" ? 0 : event.key === "End" ? demoTabs.length - 1
+      : (index + (event.key === "ArrowRight" ? 1 : -1) + demoTabs.length) % demoTabs.length;
+    showDemoStep(next, true);
+  });
+});
+document.querySelectorAll("[data-demo-next]").forEach(button => {
+  button.addEventListener("click", () => showDemoStep(Number(button.dataset.demoNext) - 1, true));
+});

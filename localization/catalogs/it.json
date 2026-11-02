@@ -26,7 +26,7 @@
     "hero": {
       "badge": "PER I NEGOZI SHOPIFY CHE VENDONO NELL’UE",
       "title": "Ricevi avvisi sulle possibili corrispondenze con prodotti pericolosi.",
-      "subtitle": "ZeroRecall confronta i prodotti del tuo negozio Shopify con la banca dati Safety Gate della Commissione europea. In caso di possibile corrispondenza, ricevi un’e-mail e gli elementi da verificare, senza cercare manualmente tra gli avvisi.",
+      "subtitle": "L'IA confronta i tuoi prodotti Shopify con gli avvisi EU Safety Gate utilizzando i dettagli e le foto dei prodotti. Può individuare possibili corrispondenze anche quando i nomi differiscono o manca un EAN, così sai cosa controllare.",
       "inputPlaceholder": "il-tuo-negozio.myshopify.com",
       "emailPlaceholder": "la-tua-email@negozio.com",
       "ctaButton": "Scansione gratuita",
@@ -220,7 +220,7 @@
       "previewLabel": "Anteprima illustrativa della scoperta",
       "status": "Richiede revisione",
       "findingTitle": "Possibile corrispondenza prodotto",
-      "findingReason": "Perché è apparso: forma e categoria del prodotto simili nonostante un nome di elenco diverso.",
+      "findingReason": "Motivo illustrativo: costruzione del telaio e giunto dello sterzo simili nonostante un nome di inserzione diverso. Il modello e il lotto devono ancora essere verificati.",
       "findingAction": "Confronta modello e lotto →"
     },
     "scan": {
@@ -315,6 +315,22 @@
       "metaTitle": "Privacy e conservazione dei dati | ZeroRecall",
       "metaDescription": "Come ZeroRecall elabora e conserva i dati per le scansioni del catalogo pubblico e l'app Shopify.",
       "footer": "Informazioni sulla privacy e sulla conservazione dei dati."
+    },
+    "ai": {
+      "title": "Un nome diverso. Un prodotto familiare.",
+      "body": "I fornitori cambiano i titoli. Le inserzioni perdono i numeri di modello. ZeroRecall utilizza l'IA per confrontare i dettagli e le foto dei prodotti con i registri ufficiali dell'EU Safety Gate, aiutandoti a individuare possibili corrispondenze che una ricerca testuale esatta potrebbe mancare.",
+      "exactTitle": "Prima l'EAN. Più prove quando manca.",
+      "exactBody": "Una corrispondenza esatta EAN / GTIN è il segnale più forte dell'identità del prodotto. Quando gli identificatori sono incompleti, l'IA valuta insieme il marchio, il modello, la descrizione e i dettagli visivi distintivi. Una categoria condivisa da sola non è sufficiente.",
+      "visualTitle": "Le foto aggiungono un contesto che un titolo non può dare.",
+      "visualBody": "Costruzione, imballaggio o marcature del modello visibili simili possono aiutare a collegare inserzioni con nomi diversi. Anche gli identificatori contrastanti e le prove mancanti contano: una corrispondenza incerta rimane una questione da esaminare.",
+      "exampleTitle": "Guarda una possibile corrispondenza trasformarsi in una decisione",
+      "missing": "EAN e modello mancanti dall'inserzione",
+      "detailTitle": "Cosa l'IA segnalerebbe per la revisione",
+      "detailBody": "In questa illustrazione: un telaio, un giunto dello sterzo e un design delle ruote simili. Questi dettagli supportano una possibile corrispondenza; non confermano il modello esatto o il lotto interessato.",
+      "reviewTitle": "La tua decisione, con prove allegate",
+      "reviewBody": "Confronta l'inserzione e l'avviso ufficiale, quindi verifica il modello e il lotto con il tuo fornitore. Nell'app installata, registra una risoluzione, scarta un prodotto diverso o mantieni il risultato aperto in attesa del fornitore.",
+      "record": "Le decisioni di revisione vengono salvate con un attore, l'ora e una nota nell'app.",
+      "limit": "L'IA suggerisce possibili corrispondenze. Non certifica la sicurezza né sostituisce la tua revisione. Questo esempio è illustrativo; non è un richiamo reale o una scansione in tempo reale."
     }
   },
   "email": {

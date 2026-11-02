@@ -26,7 +26,7 @@
     "hero": {
       "badge": "TIL SHOPIFY-BUTIKKER, DER SÆLGER I EU",
       "title": "Få besked om mulige match med farlige produkter.",
-      "subtitle": "ZeroRecall sammenligner produkterne i din Shopify-butik med Europa-Kommissionens Safety Gate-database. Ved et muligt match får du en e-mail og oplysninger til gennemgang, uden selv at søge i advarslerne.",
+      "subtitle": "AI sammenligner dine Shopify-produkter med EU Safety Gate-advarsler ved hjælp af produktdetaljer og fotos. Den kan finde mulige match, selv når navne afviger, eller et EAN mangler, så du ved, hvad du skal gennemgå.",
       "inputPlaceholder": "din-butik.myshopify.com",
       "emailPlaceholder": "din-e-mail@butik.com",
       "ctaButton": "Gratis scanning",
@@ -220,7 +220,7 @@
       "previewLabel": "Illustrativ forhåndsvisning af fund",
       "status": "Kræver gennemgang",
       "findingTitle": "Muligt produktmatch",
-      "findingReason": "Hvorfor det dukkede op: lignende produktform og kategori trods et andet listningsnavn.",
+      "findingReason": "Illustrativ årsag: lignende rammekonstruktion og styretøjssamling trods et andet listningsnavn. Model og batch skal stadig verificeres.",
       "findingAction": "Sammenlign model og batch →"
     },
     "scan": {
@@ -315,6 +315,22 @@
       "metaTitle": "Privatliv og datalagring | ZeroRecall",
       "metaDescription": "Hvordan ZeroRecall behandler og opbevarer data for offentlige katalogscanninger og Shopify-appen.",
       "footer": "Information om privatliv og datalagring."
+    },
+    "ai": {
+      "title": "Et andet navn. Et velkendt produkt.",
+      "body": "Leverandører ændrer titler. Annoncer mister modelnumre. ZeroRecall bruger AI til at sammenligne produktdetaljer og fotos med officielle EU Safety Gate-optegnelser, hvilket hjælper dig med at finde mulige match, som en nøjagtig tekstsøgning kan overse.",
+      "exactTitle": "EAN først. Mere bevis, når det mangler.",
+      "exactBody": "Et nøjagtigt EAN / GTIN-match er det stærkeste signal om produktidentitet. Når identifikatorer er ufuldstændige, vægter AI mærke, model, beskrivelse og karakteristiske visuelle detaljer sammen. En delt kategori alene er ikke nok.",
+      "visualTitle": "Fotos tilføjer kontekst, som en titel ikke kan.",
+      "visualBody": "Lignende konstruktion, emballage eller synlige modelmarkeringer kan hjælpe med at forbinde forskelligt navngivne annoncer. Modstridende identifikatorer og manglende beviser betyder også noget: et usikkert match forbliver et spørgsmål til gennemgang.",
+      "exampleTitle": "Se et muligt match blive en beslutning",
+      "missing": "EAN og model mangler fra annoncen",
+      "detailTitle": "Hvad AI ville markere til gennemgang",
+      "detailBody": "I denne illustration: en lignende ramme, styretøjssamling og hjuldesign. Disse detaljer understøtter et muligt match; de bekræfter ikke den nøjagtige model eller det berørte batch.",
+      "reviewTitle": "Din beslutning, med beviser vedlagt",
+      "reviewBody": "Sammenlign annoncen og den officielle advarsel, og verificer derefter model og batch med din leverandør. I den installerede app kan du registrere en løsning, afvise et andet produkt eller holde fundet åbent, mens du venter på leverandøren.",
+      "record": "Gennemgangsbeslutninger gemmes med en aktør, tid og note i appen.",
+      "limit": "AI foreslår mulige match. Den certificerer ikke sikkerhed eller erstatter din gennemgang. Dette eksempel er illustrativt; det er ikke en reel tilbagekaldelse eller en live-scanning."
     }
   },
   "email": {

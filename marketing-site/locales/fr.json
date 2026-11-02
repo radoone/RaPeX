@@ -25,7 +25,7 @@
   "hero": {
     "badge": "POUR LES BOUTIQUES SHOPIFY QUI VENDENT DANS L’UE",
     "title": "Recevez une alerte en cas de correspondance possible avec un produit dangereux.",
-    "subtitle": "ZeroRecall compare les produits de votre boutique Shopify à la base Safety Gate de la Commission européenne. En cas de correspondance possible, vous recevez un e-mail et les éléments à vérifier, sans parcourir manuellement les alertes.",
+    "subtitle": "L'IA compare vos produits Shopify avec les alertes Safety Gate de l'UE en utilisant les détails et les photos des produits. Elle peut identifier des correspondances possibles même lorsque les noms diffèrent ou qu'un EAN est manquant, afin que vous sachiez ce qu'il faut examiner.",
     "inputPlaceholder": "votre-boutique.myshopify.com",
     "emailPlaceholder": "votre-email@boutique.com",
     "ctaButton": "Scan gratuit",
@@ -219,7 +219,7 @@
     "previewLabel": "Aperçu illustratif du signalement",
     "status": "Nécessite un examen",
     "findingTitle": "Correspondance de produit possible",
-    "findingReason": "Pourquoi cela est apparu : forme et catégorie de produit similaires malgré un nom de liste différent.",
+    "findingReason": "Raison illustrative : construction du cadre et articulation de la direction similaires malgré un nom d'annonce différent. Le modèle et le lot doivent encore être vérifiés.",
     "findingAction": "Comparer le modèle et le lot →"
   },
   "scan": {
@@ -314,5 +314,21 @@
     "metaTitle": "Confidentialité et conservation des données | ZeroRecall",
     "metaDescription": "Comment ZeroRecall traite et conserve les données pour les scans de catalogue public et l'application Shopify.",
     "footer": "Informations sur la confidentialité et la conservation des données."
+  },
+  "ai": {
+    "title": "Un nom différent. Un produit familier.",
+    "body": "Les fournisseurs changent les titres. Les annonces perdent les numéros de modèle. ZeroRecall utilise l'IA pour comparer les détails et les photos des produits avec les registres officiels de Safety Gate de l'UE, vous aidant à repérer les correspondances possibles qu'une recherche textuelle exacte pourrait manquer.",
+    "exactTitle": "L'EAN d'abord. Plus de preuves quand il manque.",
+    "exactBody": "Une correspondance exacte de l'EAN / GTIN est le signal le plus fort de l'identité d'un produit. Lorsque les identifiants sont incomplets, l'IA pondère ensemble la marque, le modèle, la description et les détails visuels distinctifs. Une catégorie partagée seule ne suffit pas.",
+    "visualTitle": "Les photos ajoutent un contexte qu'un titre ne peut pas.",
+    "visualBody": "Une construction, un emballage ou des marquages de modèle visibles similaires peuvent aider à relier des annonces nommées différemment. Les identifiants contradictoires et les preuves manquantes comptent également : une correspondance incertaine reste une question à examiner.",
+    "exampleTitle": "Voyez une correspondance possible devenir une décision",
+    "missing": "EAN et modèle manquants dans l'annonce",
+    "detailTitle": "Ce que l'IA signalerait pour examen",
+    "detailBody": "Dans cette illustration : un cadre, une articulation de direction et une conception de roue similaires. Ces détails étayent une correspondance possible ; ils ne confirment pas le modèle exact ou le lot affecté.",
+    "reviewTitle": "Votre décision, avec les preuves jointes",
+    "reviewBody": "Comparez l'annonce et l'alerte officielle, puis vérifiez le modèle et le lot auprès de votre fournisseur. Dans l'application installée, enregistrez une résolution, rejetez un produit différent ou laissez la constatation ouverte en attendant le fournisseur.",
+    "record": "Les décisions d'examen sont enregistrées avec un acteur, une heure et une note dans l'application.",
+    "limit": "L'IA suggère des correspondances possibles. Elle ne certifie pas la sécurité et ne remplace pas votre examen. Cet exemple est illustratif ; ce n'est pas un rappel réel ni une analyse en direct."
   }
 }

@@ -26,7 +26,7 @@
     "hero": {
       "badge": "FÜR SHOPIFY-SHOPS MIT VERKAUF IN DER EU",
       "title": "Wir melden mögliche Übereinstimmungen mit gefährlichen Produkten.",
-      "subtitle": "ZeroRecall vergleicht Produkte Ihres Shopify-Shops mit der Safety-Gate-Datenbank der Europäischen Kommission. Bei einer möglichen Übereinstimmung erhalten Sie eine E-Mail mit Prüfunterlagen — ohne Warnmeldungen manuell zu durchsuchen.",
+      "subtitle": "KI vergleicht Ihre Shopify-Produkte anhand von Produktdetails und Fotos mit EU Safety Gate-Warnungen. So können mögliche Übereinstimmungen aufgedeckt werden, selbst wenn Namen abweichen oder eine EAN fehlt, damit Sie wissen, was überprüft werden muss.",
       "inputPlaceholder": "ihr-shop.myshopify.com",
       "emailPlaceholder": "ihre-email@shop.com",
       "ctaButton": "Kostenloser Scan",
@@ -220,7 +220,7 @@
       "previewLabel": "Illustrative Ergebnisvorschau",
       "status": "Überprüfung erforderlich",
       "findingTitle": "Mögliche Produktübereinstimmung",
-      "findingReason": "Warum es erschien: ähnliche Produktform und Kategorie trotz eines anderen Listennamens.",
+      "findingReason": "Illustrativer Grund: ähnliche Rahmenkonstruktion und Lenkgelenk trotz abweichendem Angebotsnamen. Modell und Charge müssen noch verifiziert werden.",
       "findingAction": "Modell und Charge vergleichen →"
     },
     "scan": {
@@ -315,6 +315,22 @@
       "metaTitle": "Datenschutz und Datenaufbewahrung | ZeroRecall",
       "metaDescription": "Wie ZeroRecall Daten für öffentliche Katalog-Scans und die Shopify-App verarbeitet und aufbewahrt.",
       "footer": "Informationen zu Datenschutz und Datenaufbewahrung."
+    },
+    "ai": {
+      "title": "Ein anderer Name. Ein bekanntes Produkt.",
+      "body": "Lieferanten ändern Titel. Angebote verlieren Modellnummern. ZeroRecall nutzt KI, um Produktdetails und Fotos mit offiziellen EU Safety Gate-Datensätzen zu vergleichen. Dies hilft Ihnen, mögliche Übereinstimmungen zu erkennen, die eine exakte Textsuche übersehen könnte.",
+      "exactTitle": "EAN zuerst. Mehr Beweise, wenn sie fehlen.",
+      "exactBody": "Eine exakte EAN / GTIN-Übereinstimmung ist das stärkste Signal für die Produktidentität. Wenn Identifikatoren unvollständig sind, berücksichtigt die KI Marke, Modell, Beschreibung und markante visuelle Details zusammen. Eine gemeinsame Kategorie allein ist nicht ausreichend.",
+      "visualTitle": "Fotos fügen Kontext hinzu, den ein Titel nicht kann.",
+      "visualBody": "Ähnliche Konstruktion, Verpackung oder sichtbare Modellkennzeichnungen können helfen, unterschiedlich benannte Angebote zu verbinden. Widersprüchliche Identifikatoren und fehlende Beweise sind ebenfalls wichtig: Eine unsichere Übereinstimmung bleibt eine Frage zur Überprüfung.",
+      "exampleTitle": "Sehen Sie, wie aus einer möglichen Übereinstimmung eine Entscheidung wird",
+      "missing": "EAN und Modell fehlen im Angebot",
+      "detailTitle": "Was die KI zur Überprüfung kennzeichnen würde",
+      "detailBody": "In dieser Abbildung: ein ähnlicher Rahmen, Lenkgelenk und Raddesign. Diese Details unterstützen eine mögliche Übereinstimmung; sie bestätigen nicht das genaue Modell oder die betroffene Charge.",
+      "reviewTitle": "Ihre Entscheidung, mit beigefügten Beweisen",
+      "reviewBody": "Vergleichen Sie das Angebot und die offizielle Warnung, und überprüfen Sie dann Modell und Charge mit Ihrem Lieferanten. In der installierten App können Sie eine Lösung festhalten, ein anderes Produkt ablehnen oder den Befund offen lassen, während Sie auf den Lieferanten warten.",
+      "record": "Überprüfungsentscheidungen werden mit Akteur, Zeit und Notiz in der App gespeichert.",
+      "limit": "KI schlägt mögliche Übereinstimmungen vor. Sie zertifiziert keine Sicherheit und ersetzt nicht Ihre Überprüfung. Dieses Beispiel ist illustrativ; es handelt sich nicht um einen echten Rückruf oder einen Live-Scan."
     }
   },
   "email": {

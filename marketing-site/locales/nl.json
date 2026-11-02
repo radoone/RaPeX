@@ -25,7 +25,7 @@
   "hero": {
     "badge": "VOOR SHOPIFY-WINKELS DIE IN DE EU VERKOPEN",
     "title": "Ontvang meldingen van mogelijke overeenkomsten met gevaarlijke producten.",
-    "subtitle": "ZeroRecall vergelijkt producten in je Shopify-winkel met de Safety Gate-database van de Europese Commissie. Bij een mogelijke overeenkomst krijg je een e-mail en informatie om te beoordelen, zonder zelf waarschuwingen te doorzoeken.",
+    "subtitle": "AI vergelijkt uw Shopify-producten met EU Safety Gate-waarschuwingen aan de hand van productdetails en foto's. Het kan mogelijke overeenkomsten vinden, zelfs als namen verschillen of een EAN ontbreekt, zodat u weet wat u moet controleren.",
     "inputPlaceholder": "uw-winkel.myshopify.com",
     "emailPlaceholder": "uw-email@winkel.com",
     "ctaButton": "Gratis scan",
@@ -219,7 +219,7 @@
     "previewLabel": "Illustratieve voorbeeld van bevinding",
     "status": "Beoordeling nodig",
     "findingTitle": "Mogelijke productovereenkomst",
-    "findingReason": "Waarom het verscheen: vergelijkbare productvorm en -categorie ondanks een andere vermelding.",
+    "findingReason": "Illustratieve reden: vergelijkbare frameconstructie en stuurgewricht ondanks een andere advertentienaam. Het model en de batch moeten nog worden geverifieerd.",
     "findingAction": "Vergelijk model en batch →"
   },
   "scan": {
@@ -314,5 +314,21 @@
     "metaTitle": "Privacy en gegevensbewaring | ZeroRecall",
     "metaDescription": "Hoe ZeroRecall gegevens verwerkt en bewaart voor openbare catalogusscans en de Shopify-app.",
     "footer": "Informatie over privacy en gegevensbewaring."
+  },
+  "ai": {
+    "title": "Een andere naam. Een bekend product.",
+    "body": "Leveranciers wijzigen titels. Advertenties verliezen modelnummers. ZeroRecall gebruikt AI om productdetails en foto's te vergelijken met officiële EU Safety Gate-gegevens, zodat u mogelijke overeenkomsten kunt opsporen die een exacte tekstzoekopdracht kan missen.",
+    "exactTitle": "EAN eerst. Meer bewijs wanneer het ontbreekt.",
+    "exactBody": "Een exacte EAN / GTIN-overeenkomst is het sterkste signaal van productidentiteit. Wanneer identificatiegegevens onvolledig zijn, weegt AI het merk, model, de beschrijving en onderscheidende visuele details samen. Een gedeelde categorie alleen is niet voldoende.",
+    "visualTitle": "Foto's voegen context toe die een titel niet kan.",
+    "visualBody": "Vergelijkbare constructie, verpakking of zichtbare modelmarkeringen kunnen helpen om anders benoemde advertenties te verbinden. Tegenstrijdige identificatiegegevens en ontbrekend bewijs zijn ook van belang: een onzekere overeenkomst blijft een vraag voor beoordeling.",
+    "exampleTitle": "Zie een mogelijke overeenkomst een beslissing worden",
+    "missing": "EAN en model ontbreken in de advertentie",
+    "detailTitle": "Wat de AI zou markeren voor beoordeling",
+    "detailBody": "In deze illustratie: een vergelijkbaar frame, stuurgewricht en wielontwerp. Deze details ondersteunen een mogelijke overeenkomst; ze bevestigen niet het exacte model of de betreffende batch.",
+    "reviewTitle": "Uw beslissing, met bewijs bijgevoegd",
+    "reviewBody": "Vergelijk de advertentie en de officiële waarschuwing, en verifieer vervolgens het model en de batch met uw leverancier. Leg in de geïnstalleerde app een oplossing vast, negeer een ander product, of houd de bevinding open in afwachting van de leverancier.",
+    "record": "Beoordelingsbeslissingen worden opgeslagen met een actor, tijd en notitie in de app.",
+    "limit": "AI suggereert mogelijke overeenkomsten. Het certificeert geen veiligheid en vervangt uw beoordeling niet. Dit voorbeeld is illustratief; het is geen echte terugroepactie of een live scan."
   }
 }

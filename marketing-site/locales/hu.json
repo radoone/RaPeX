@@ -25,7 +25,7 @@
   "hero": {
     "badge": "AZ EU-BAN ÉRTÉKESÍTŐ SHOPIFY-ÁRUHÁZAKNAK",
     "title": "Értesüljön a veszélyes termékekkel való lehetséges egyezésekről.",
-    "subtitle": "A ZeroRecall összehasonlítja Shopify-áruháza termékeit az Európai Bizottság Safety Gate adatbázisával. Lehetséges egyezés esetén e-mailt és ellenőrizhető adatokat kap, a riasztások kézi keresése nélkül.",
+    "subtitle": "Az MI összehasonlítja az Ön Shopify termékeit az EU Safety Gate riasztásaival a termékadatok és fényképek alapján. Lehetséges egyezéseket találhat akkor is, ha a nevek eltérnek, vagy hiányzik az EAN, így Ön tudja, mit kell átnéznie.",
     "inputPlaceholder": "az-ön-áruháza.myshopify.com",
     "emailPlaceholder": "az-ön-e-mailje@áruház.com",
     "ctaButton": "Ingyenes ellenőrzés",
@@ -219,7 +219,7 @@
     "previewLabel": "Illusztratív eredmény előnézet",
     "status": "Felülvizsgálatra szorul",
     "findingTitle": "Lehetséges termékegyezés",
-    "findingReason": "Miért jelent meg: hasonló termékforma és kategória, annak ellenére, hogy eltérő a listázási név.",
+    "findingReason": "Szemléltető ok: hasonló vázszerkezet és kormánycsukló, annak ellenére, hogy a termék neve eltér. A modell és a tételszám ellenőrzésre szorul.",
     "findingAction": "Modell és tétel összehasonlítása →"
   },
   "scan": {
@@ -314,5 +314,21 @@
     "metaTitle": "Adatvédelem és adatmegőrzés | ZeroRecall",
     "metaDescription": "Hogyan dolgozza fel és őrzi meg a ZeroRecall az adatokat a nyilvános katalógus ellenőrzésekhez és a Shopify alkalmazáshoz.",
     "footer": "Adatvédelem és adatmegőrzési információk."
+  },
+  "ai": {
+    "title": "Más név. Ismerős termék.",
+    "body": "A beszállítók változtatják a címeket. A terméklisták elveszítik a modellszámokat. A ZeroRecall MI-t használ a termékadatok és fényképek összehasonlítására a hivatalos EU Safety Gate nyilvántartásokkal, segítve Önt abban, hogy észrevegye azokat a lehetséges egyezéseket, amelyeket egy pontos szöveges keresés kihagyhat.",
+    "exactTitle": "Először az EAN. Több bizonyíték, ha hiányzik.",
+    "exactBody": "Az pontos EAN / GTIN egyezés a termékazonosítás legerősebb jele. Ha az azonosítók hiányosak, az MI együtt mérlegeli a márkát, a modellt, a leírást és a jellegzetes vizuális részleteket. Egyedül egy megosztott kategória nem elegendő.",
+    "visualTitle": "A fotók olyan kontextust adnak, amit egy cím nem tud.",
+    "visualBody": "Hasonló szerkezet, csomagolás vagy látható modelljelölések segíthetnek összekapcsolni a különböző nevű terméklistákat. Az ellentmondó azonosítók és a hiányzó bizonyítékok is számítanak: egy bizonytalan egyezés továbbra is kérdés marad felülvizsgálatra.",
+    "exampleTitle": "Nézze meg, hogyan válik egy lehetséges egyezés döntéssé",
+    "missing": "EAN és modell hiányzik a listából",
+    "detailTitle": "Amit az MI felülvizsgálatra jelölne",
+    "detailBody": "Ebben az illusztrációban: hasonló váz, kormánycsukló és kerék kialakítás. Ezek a részletek alátámasztanak egy lehetséges egyezést; nem erősítik meg a pontos modellt vagy az érintett tételt.",
+    "reviewTitle": "Az Ön döntése, mellékelt bizonyítékokkal",
+    "reviewBody": "Hasonlítsa össze a terméklistát és a hivatalos riasztást, majd ellenőrizze a modellt és a tételt a beszállítójával. A telepített alkalmazásban rögzítsen egy megoldást, utasítson el egy másik terméket, vagy tartsa nyitva a megállapítást, amíg várja a beszállítót.",
+    "record": "A felülvizsgálati döntések az alkalmazásban szereplő szereplővel, idővel és megjegyzéssel kerülnek mentésre.",
+    "limit": "Az MI lehetséges egyezéseket javasol. Nem tanúsítja a biztonságot, és nem helyettesíti az Ön felülvizsgálatát. Ez a példa illusztratív; nem valós visszahívás vagy élő szkennelés."
   }
 }

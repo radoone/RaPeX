@@ -25,7 +25,7 @@
   "hero": {
     "badge": "PENTRU MAGAZINE SHOPIFY CARE VÂND ÎN UE",
     "title": "Primiți alerte despre posibile potriviri cu produse periculoase.",
-    "subtitle": "ZeroRecall compară produsele magazinului dvs. Shopify cu baza Safety Gate a Comisiei Europene. La o posibilă potrivire, primiți un e-mail și informații pentru verificare, fără căutarea manuală a alertelor.",
+    "subtitle": "AI compară produsele tale Shopify cu alertele EU Safety Gate folosind detalii și fotografii ale produselor. Poate identifica posibile potriviri chiar și atunci când numele diferă sau lipsește un EAN, astfel încât să știi ce să verifici.",
     "inputPlaceholder": "magazinul-dvs.myshopify.com",
     "emailPlaceholder": "e-mailul-dvs@magazin.com",
     "ctaButton": "Scanare gratuită",
@@ -219,7 +219,7 @@
     "previewLabel": "Previzualizare constatare ilustrativă",
     "status": "Necesită revizuire",
     "findingTitle": "Potrivire posibilă a produsului",
-    "findingReason": "De ce a apărut: formă și categorie de produs similare, în ciuda unui nume de listare diferit.",
+    "findingReason": "Motiv ilustrativ: construcție similară a cadrului și a articulației direcției, în ciuda unui nume diferit al listării. Modelul și lotul necesită încă verificare.",
     "findingAction": "Comparați modelul și lotul →"
   },
   "scan": {
@@ -314,5 +314,21 @@
     "metaTitle": "Confidențialitate și păstrarea datelor | ZeroRecall",
     "metaDescription": "Cum ZeroRecall procesează și păstrează datele pentru scanările catalogului public și aplicația Shopify.",
     "footer": "Informații privind confidențialitatea și păstrarea datelor."
+  },
+  "ai": {
+    "title": "Un nume diferit. Un produs familiar.",
+    "body": "Furnizorii schimbă titlurile. Listările pierd numerele de model. ZeroRecall utilizează AI pentru a compara detaliile și fotografiile produselor cu înregistrările oficiale EU Safety Gate, ajutându-te să identifici posibile potriviri pe care o căutare exactă de text le-ar putea rata.",
+    "exactTitle": "EAN mai întâi. Mai multe dovezi când lipsește.",
+    "exactBody": "O potrivire exactă EAN / GTIN este cel mai puternic semnal de identitate a produsului. Când identificatorii sunt incompleți, AI ia în considerare împreună marca, modelul, descrierea și detaliile vizuale distinctive. O categorie comună nu este suficientă.",
+    "visualTitle": "Fotografiile adaugă context pe care un titlu nu-l poate oferi.",
+    "visualBody": "Construcția similară, ambalajul sau marcajele vizibile ale modelului pot ajuta la conectarea listărilor cu nume diferite. Identificatorii conflictuali și dovezile lipsă contează, de asemenea: o potrivire incertă rămâne o întrebare pentru verificare.",
+    "exampleTitle": "Vezi cum o posibilă potrivire devine o decizie",
+    "missing": "EAN și model lipsă din listare",
+    "detailTitle": "Ce ar semnala AI pentru verificare",
+    "detailBody": "În această ilustrație: un cadru, o articulație a direcției și un design al roților similare. Aceste detalii susțin o posibilă potrivire; ele nu confirmă modelul exact sau lotul afectat.",
+    "reviewTitle": "Decizia ta, cu dovezi atașate",
+    "reviewBody": "Compară listarea și alerta oficială, apoi verifică modelul și lotul cu furnizorul tău. În aplicația instalată, înregistrează o rezoluție, respinge un produs diferit sau menține constatarea deschisă în așteptarea furnizorului.",
+    "record": "Deciziile de verificare sunt salvate cu un actor, oră și notă în aplicație.",
+    "limit": "AI sugerează posibile potriviri. Nu certifică siguranța și nu înlocuiește verificarea ta. Acest exemplu este ilustrativ; nu este o rechemare reală sau o scanare în timp real."
   }
 }

@@ -25,7 +25,7 @@
   "hero": {
     "badge": "PRE SHOPIFY OBCHODY PREDÁVAJÚCE V EÚ",
     "title": "Upozorníme vás na možné zhody s nebezpečnými výrobkami.",
-    "subtitle": "ZeroRecall porovnáva produkty vášho Shopify obchodu s databázou Safety Gate Európskej komisie. Pri možnej zhode dostanete e-mail a podklady na preverenie — bez ručného prehľadávania upozornení.",
+    "subtitle": "AI porovnáva produkty z vášho Shopify obchodu s upozorneniami EU Safety Gate podľa údajov aj fotografií. Dokáže nájsť možné zhody aj pri odlišnom názve či chýbajúcom EAN, aby ste vedeli, čo preveriť.",
     "inputPlaceholder": "vas-obchod.myshopify.com",
     "emailPlaceholder": "vas-email@obchod.sk",
     "ctaButton": "Bezplatná kontrola",
@@ -219,7 +219,7 @@
     "previewLabel": "Ilustračná ukážka nálezu",
     "status": "Vyžaduje kontrolu",
     "findingTitle": "Možná zhoda produktu",
-    "findingReason": "Prečo sa zobrazila: podobný tvar a kategória napriek odlišnému názvu v ponuke.",
+    "findingReason": "Ilustračný dôvod: podobná konštrukcia rámu a spoj riadenia napriek odlišnému názvu ponuky. Model a šaržu treba ešte overiť.",
     "findingAction": "Porovnať model a šaržu →"
   },
   "scan": {
@@ -314,5 +314,21 @@
     "metaTitle": "Ochrana súkromia a uchovávanie údajov | ZeroRecall",
     "metaDescription": "Ako ZeroRecall spracúva a uchováva údaje pri verejných skenoch katalógu a v aplikácii Shopify.",
     "footer": "Informácie o ochrane súkromia a uchovávaní údajov."
+  },
+  "ai": {
+    "title": "Iný názov. Známy produkt.",
+    "body": "Dodávatelia menia názvy. V ponukách chýbajú modelové čísla. ZeroRecall pomocou AI porovnáva údaje aj fotografie produktov s oficiálnymi záznamami EU Safety Gate a pomáha odhaliť možné zhody, ktoré presné textové vyhľadávanie môže prehliadnuť.",
+    "exactTitle": "Najprv EAN. Keď chýba, hľadáme ďalšie dôkazy.",
+    "exactBody": "Presná zhoda EAN / GTIN je najsilnejším signálom totožnosti produktu. Ak sú identifikátory neúplné, AI spoločne posudzuje značku, model, popis a charakteristické vizuálne detaily. Samotná rovnaká kategória nestačí.",
+    "visualTitle": "Fotografie doplnia to, čo názov nepovie.",
+    "visualBody": "Podobná konštrukcia, balenie či viditeľné označenie modelu môžu pomôcť prepojiť ponuky s rôznymi názvami. Dôležité sú aj odlišné identifikátory a chýbajúce dôkazy: neistá zhoda zostáva otázkou na preverenie.",
+    "exampleTitle": "Od možnej zhody k vášmu rozhodnutiu",
+    "missing": "V ponuke chýba EAN aj model",
+    "detailTitle": "Na čo by AI upozornila pri kontrole",
+    "detailBody": "V tejto ilustrácii: podobný rám, spoj riadenia a dizajn kolies. Tieto detaily podporujú možnú zhodu; nepotvrdzujú však presný model ani dotknutú šaržu.",
+    "reviewTitle": "Vaše rozhodnutie podložené dôkazmi",
+    "reviewBody": "Porovnajte ponuku s oficiálnym upozornením a overte model a šaržu u dodávateľa. V nainštalovanej aplikácii zaznamenáte vyriešenie, zamietnete odlišný produkt alebo necháte nález otvorený počas čakania na dodávateľa.",
+    "record": "Rozhodnutia sa v aplikácii ukladajú s autorom, časom a poznámkou.",
+    "limit": "AI navrhuje možné zhody. Necertifikuje bezpečnosť a nenahrádza vaše posúdenie. Tento príklad je ilustračný; nejde o skutočné stiahnutie výrobku ani živú kontrolu."
   }
 }

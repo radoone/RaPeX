@@ -541,6 +541,41 @@
       "date": "2026-10-19",
       "change": "Entire public catalog replaces 100-product free-scan scope in all 24 languages",
       "method": "Edited scope strings; no runtime translation calls; no native-speaker review claimed"
+    },
+    {
+      "date": "2026-11-02",
+      "scope": "16 marketing-only strings: AI matching explanation, illustrative merchant walkthrough, hero subtitle and evidence reason. Email copy unchanged.",
+      "sourceLocales": [
+        "en",
+        "sk"
+      ],
+      "translatedLocales": [
+        "bg",
+        "cs",
+        "da",
+        "de",
+        "el",
+        "es",
+        "et",
+        "fi",
+        "fr",
+        "ga",
+        "hr",
+        "hu",
+        "it",
+        "lt",
+        "lv",
+        "mt",
+        "nl",
+        "pl",
+        "pt",
+        "ro",
+        "sl",
+        "sv"
+      ],
+      "model": "gemini-2.5-flash",
+      "review": "EN/SK authored directly; other languages machine translated, structure and cautious claims checked, selected translations spot-checked. No native-speaker review of every language.",
+      "sourceSha256": "f2cc3ed9df235cc84589d422be9a0b3330e1930dbed87244423997d33650a74d"
     }
   ]
 }

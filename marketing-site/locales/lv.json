@@ -25,7 +25,7 @@
   "hero": {
     "badge": "SHOPIFY VEIKALIEM, KAS PĀRDOD ES",
     "title": "Saņemiet paziņojumus par iespējamām atbilstībām bīstamiem izstrādājumiem.",
-    "subtitle": "ZeroRecall salīdzina jūsu Shopify veikala produktus ar Eiropas Komisijas Safety Gate datubāzi. Iespējamas atbilstības gadījumā saņemat e-pastu un pārbaudāmu informāciju, neveicot manuālu meklēšanu brīdinājumos.",
+    "subtitle": "AI salīdzina jūsu Shopify produktus ar ES drošības vārtu brīdinājumiem, izmantojot produkta informāciju un fotoattēlus. Tas var atklāt iespējamās atbilstības pat tad, ja nosaukumi atšķiras vai trūkst EAN, lai jūs zinātu, kas jāpārskata.",
     "inputPlaceholder": "jūsu-veikals.myshopify.com",
     "emailPlaceholder": "jūsu-e-pasts@veikals.com",
     "ctaButton": "Bezmaksas skenēšana",
@@ -219,7 +219,7 @@
     "previewLabel": "Ilustratīvs atklājuma priekšskatījums",
     "status": "Nepieciešama pārskatīšana",
     "findingTitle": "Iespējama produkta atbilstība",
-    "findingReason": "Kāpēc tas parādījās: līdzīga produkta forma un kategorija, neskatoties uz atšķirīgu saraksta nosaukumu.",
+    "findingReason": "Ilustratīvs iemesls: līdzīga rāmja konstrukcija un stūres savienojums, neskatoties uz atšķirīgu saraksta nosaukumu. Modelis un partija joprojām ir jāpārbauda.",
     "findingAction": "Salīdzināt modeli un partiju →"
   },
   "scan": {
@@ -314,5 +314,21 @@
     "metaTitle": "Privātums un datu glabāšana | ZeroRecall",
     "metaDescription": "Kā ZeroRecall apstrādā un glabā datus publisko katalogu skenēšanai un Shopify lietotnei.",
     "footer": "Privātuma un datu glabāšanas informācija."
+  },
+  "ai": {
+    "title": "Cits nosaukums. Pazīstams produkts.",
+    "body": "Piegādātāji maina nosaukumus. Sarakstos trūkst modeļu numuru. ZeroRecall izmanto AI, lai salīdzinātu produkta informāciju un fotoattēlus ar oficiālajiem ES drošības vārtu ierakstiem, palīdzot jums atklāt iespējamās atbilstības, kuras precīza teksta meklēšana var palaist garām.",
+    "exactTitle": "Vispirms EAN. Vairāk pierādījumu, ja tas trūkst.",
+    "exactBody": "Precīza EAN / GTIN atbilstība ir spēcīgākais produkta identitātes signāls. Ja identifikatori ir nepilnīgi, AI kopā izvērtē zīmolu, modeli, aprakstu un atšķirīgās vizuālās detaļas. Ar kopīgu kategoriju vien nepietiek.",
+    "visualTitle": "Fotoattēli pievieno kontekstu, ko nosaukums nevar.",
+    "visualBody": "Līdzīga konstrukcija, iepakojums vai redzamas modeļa marķējumi var palīdzēt savienot dažādi nosauktus sarakstus. Svarīgi ir arī pretrunīgi identifikatori un trūkstošie pierādījumi: neskaidra atbilstība paliek jautājums pārskatīšanai.",
+    "exampleTitle": "Skatiet, kā iespējamā atbilstība kļūst par lēmumu",
+    "missing": "EAN un modelis trūkst sarakstā",
+    "detailTitle": "Ko AI atzīmētu pārskatīšanai",
+    "detailBody": "Šajā ilustrācijā: līdzīgs rāmis, stūres savienojums un riteņu dizains. Šīs detaļas atbalsta iespējamu atbilstību; tās neapstiprina precīzu modeli vai skarto partiju.",
+    "reviewTitle": "Jūsu lēmums ar pievienotiem pierādījumiem",
+    "reviewBody": "Salīdziniet sarakstu un oficiālo brīdinājumu, pēc tam pārbaudiet modeli un partiju ar savu piegādātāju. Instalētajā lietotnē ierakstiet risinājumu, noraidiet citu produktu vai atstājiet atradumu atvērtu, gaidot piegādātāju.",
+    "record": "Pārskatīšanas lēmumi tiek saglabāti ar aktoru, laiku un piezīmi lietotnē.",
+    "limit": "AI iesaka iespējamās atbilstības. Tas nesertificē drošību un neaizstāj jūsu pārskatīšanu. Šis piemērs ir ilustratīvs; tas nav reāls atsaukums vai tiešraides skenēšana."
   }
 }
