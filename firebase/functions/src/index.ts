@@ -281,7 +281,7 @@ export const shopifyProductChangeTask = onTaskDispatched(
       maxBackoffSeconds: 600,
       maxDoublings: 4,
     },
-    secrets: ["GOOGLE_API_KEY"],
+    secrets: ["GOOGLE_API_KEY", "SAFETY_GATE_API_KEY"],
   },
   async (request) => {
     await handleShopifyProductChangeTask(request.data, request.context.retryCount);
