@@ -10,6 +10,7 @@ import {
 } from "react-router";
 import { data as json } from "react-router";
 import { useTranslation } from "react-i18next";
+import { sameProductVersion } from "../services/catalog-coverage";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
 import { shopifyProductToProductData } from "../services/safety-gate-product-data";
@@ -147,7 +148,7 @@ async function planCatalogChecksForManualCheck(params: {
       hasCachedVectors &&
       cachedSourceUpdatedAt &&
       incomingSourceUpdatedAt &&
-      cachedSourceUpdatedAt === incomingSourceUpdatedAt,
+      sameProductVersion(cachedSourceUpdatedAt, incomingSourceUpdatedAt),
     );
 
     if (unchanged) {

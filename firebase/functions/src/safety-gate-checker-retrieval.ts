@@ -3,6 +3,7 @@ import { vertexAI } from "@genkit-ai/google-genai";
 import { FieldPath, getFirestore, Timestamp } from "firebase-admin/firestore";
 import { productGtins } from "./product-barcodes.js";
 import { prioritizeMonitoringImages } from "./monitoring-images.js";
+import { sameProductVersion } from "./product-lifecycle.js";
 import type { DocumentData, RetrieverAction } from "genkit/retriever";
 import { functionsAi } from "./firebase-admin.js";
 import { FIRESTORE_COLLECTIONS, MATCHING_THRESHOLDS } from "./safety-gate-config.js";
@@ -73,7 +74,7 @@ async function getCachedMerchantProductVectors(product: ProductInput): Promise<{
     typeof data.sourceUpdatedAt === "string" ? data.sourceUpdatedAt.trim() : undefined;
   const requestedSourceUpdatedAt = product.sourceUpdatedAt?.trim();
 
-  if (requestedSourceUpdatedAt && cachedSourceUpdatedAt !== requestedSourceUpdatedAt) {
+  if (requestedSourceUpdatedAt && !sameProductVersion(cachedSourceUpdatedAt, requestedSourceUpdatedAt)) {
     return null;
   }
 

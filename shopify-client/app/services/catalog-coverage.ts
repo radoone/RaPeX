@@ -3,6 +3,12 @@ export type ProductCheckVersion = {
   checkedAt?: Date | string | null;
 };
 
+export function sameProductVersion(left: unknown, right: unknown): boolean {
+  const first = typeof left === "string" ? Date.parse(left) : NaN;
+  const second = typeof right === "string" ? Date.parse(right) : NaN;
+  return Number.isFinite(first) && first === second;
+}
+
 function parseTimestamp(
   value: Date | string | null | undefined,
 ): number | null {
@@ -27,7 +33,7 @@ export function checkCoversCurrentProductVersion(
   if (!check || !productUpdatedAt) return false;
 
   if (check.sourceUpdatedAt) {
-    return check.sourceUpdatedAt === productUpdatedAt;
+    return sameProductVersion(check.sourceUpdatedAt, productUpdatedAt);
   }
 
   // Legacy check documents do not contain the product version. Count one only

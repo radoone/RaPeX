@@ -12,7 +12,7 @@ import { recallWithinThreshold } from "./vector-recall.js";
 import { selectMonitoringImages, prioritizeMonitoringImages, type MonitoringImage, type StoredMonitoringImage } from "./monitoring-images.js";
 import { buildMonitoringCursorValues } from "./monitoring-cursor.js";
 import { monitoringTaskId, scheduledMonitoringRunId } from "./monitoring-task-id.js";
-import { canApplyProductVersion, installationKey, isProductChangeSupersededByDeletion } from "./product-lifecycle.js";
+import { canApplyProductVersion, installationKey, isProductChangeSupersededByDeletion, sameProductVersion } from "./product-lifecycle.js";
 import { checkProductAgainstAlerts, checkProductSafety } from "./safety-gate-checker.js";
 import type { ProductInput } from "./safety-gate-checker.schemas.js";
 import { normalizePictures } from "./safety-gate-checker-media.js";
@@ -494,7 +494,7 @@ async function upsertAlertForProduct(params: {
         transaction.get(alertsCollection.where("productId", "==", params.productId)),
       ]);
       if (!merchant.exists || merchant.get("installationRetiredAt") || product.get("deletedAt")) return false;
-      if (params.sourceUpdatedAt && product.get("sourceUpdatedAt") !== params.sourceUpdatedAt) return false;
+      if (params.sourceUpdatedAt && !sameProductVersion(product.get("sourceUpdatedAt"), params.sourceUpdatedAt)) return false;
       if (params.installation && installationKey(merchant.data() || {}) !== params.installation) return false;
       if (current.exists) return false; // Preserve original evidence and every merchant decision.
       const existingPair = legacy.docs.some((doc) => {
@@ -552,7 +552,7 @@ export async function upsertMerchantProduct(
     existingSnapshot.exists &&
       existingSourceUpdatedAt &&
       incomingSourceUpdatedAt &&
-      existingData.embeddingVersion === 2 && existingSourceUpdatedAt === incomingSourceUpdatedAt && Boolean(asVectorArray(existingData.vector_text)?.length),
+      existingData.embeddingVersion === 2 && sameProductVersion(existingSourceUpdatedAt, incomingSourceUpdatedAt) && Boolean(asVectorArray(existingData.vector_text)?.length),
   );
 
   const [vectorText, vectorImage] = await Promise.all([
@@ -652,7 +652,7 @@ export async function upsertMerchantProductsBatch(
     return existing.exists &&
       typeof existingData.sourceUpdatedAt === "string" &&
       Boolean(item.input.sourceUpdatedAt) &&
-      existingData.embeddingVersion === 2 && existingData.sourceUpdatedAt === item.input.sourceUpdatedAt && Boolean(asVectorArray(existingData.vector_text)?.length);
+      existingData.embeddingVersion === 2 && sameProductVersion(existingData.sourceUpdatedAt, item.input.sourceUpdatedAt) && Boolean(asVectorArray(existingData.vector_text)?.length);
   });
 
   const textVectors: Array<number[] | undefined> = new Array(prepared.length);
@@ -1219,6 +1219,44 @@ function productChangeJobRef(shop: string, jobId: string) {
     .doc(jobId);
 }
 
+/** Recover a newer authoritative version without running model work on stale data. */
+async function enqueueRefreshedProductChange(payload: ShopifyProductChangeTaskPayload): Promise<void> {
+  const sourceUpdatedAt = payload.sourceUpdatedAt;
+  if (!sourceUpdatedAt || !Number.isFinite(Date.parse(sourceUpdatedAt))) throw new Error("Refreshed Shopify product version is missing");
+  const merchantRef = db.collection(FIRESTORE_COLLECTIONS.merchants).doc(encodeURIComponent(payload.shop));
+  const productRef = merchantRef.collection(FIRESTORE_COLLECTIONS.subProducts).doc(encodeURIComponent(payload.productId));
+  const jobId = productChangeJobId(payload);
+  const jobRef = productChangeJobRef(payload.shop, jobId);
+  const shouldEnqueue = await db.runTransaction(async transaction => {
+    const [merchant, product, job] = await Promise.all([transaction.get(merchantRef), transaction.get(productRef), transaction.get(jobRef)]);
+    if (!merchant.exists || merchant.get("installationRetiredAt") || installationKey(merchant.data() || {}) !== payload.installation || !currentEntitlement(merchant.data() || {})) return false;
+    if (isProductChangeSupersededByDeletion(product.get("deletedAt"), product.get("deletedSourceUpdatedAt"), sourceUpdatedAt)) return false;
+    if (Date.parse(product.get("sourceUpdatedAt")) > Date.parse(sourceUpdatedAt)) return false;
+    if (["processing", "completed"].includes(String(job.get("status")))) return false;
+    transaction.set(jobRef, {
+      shop: payload.shop, productId: payload.productId, sourceUpdatedAt: payload.sourceUpdatedAt,
+      status: "queued", attemptCount: job.get("attemptCount") || 0,
+      createdAt: job.get("createdAt") || FieldValue.serverTimestamp(),
+      queuedAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp(),
+    }, { merge: true });
+    return true;
+  });
+  if (!shouldEnqueue) return;
+  try {
+    await PRODUCT_CHANGE_TASK_QUEUE.enqueue(payload, { id: jobId, dispatchDeadlineSeconds: 1800 });
+  } catch (error) {
+    if ((error as { code?: string }).code !== "functions/task-already-exists") {
+      await db.runTransaction(async transaction => {
+        const merchant = await transaction.get(merchantRef);
+        if (merchant.exists && !merchant.get("installationRetiredAt") && installationKey(merchant.data() || {}) === payload.installation) {
+          transaction.set(jobRef, { status: "enqueue_failed", lastError: error instanceof Error ? error.message : String(error), updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+        }
+      });
+      throw error;
+    }
+  }
+}
+
 /** Fast authenticated ingress: Shopify's webhook only queues work and returns. */
 export async function handleStartShopifyProductChangeRequest(
   request: RequestShape,
@@ -1233,7 +1271,8 @@ export async function handleStartShopifyProductChangeRequest(
     const shop = coerceString(body.shop);
     const productId = coerceString(body.productId);
     const productTitle = coerceString(body.productTitle);
-    const sourceUpdatedAt = coerceString(body.sourceUpdatedAt);
+    const sourceVersion = coerceString(body.sourceUpdatedAt);
+    const sourceUpdatedAt = sourceVersion && Number.isFinite(Date.parse(sourceVersion)) ? new Date(sourceVersion).toISOString() : sourceVersion;
     const operation = body.operation === "delete" ? "delete" : "upsert";
     const product = body.product as ProductInput | undefined;
     const threshold = Number(body.similarityThreshold ?? 0);
@@ -1357,7 +1396,7 @@ export async function handleShopifyProductChangeTask(
     }
     const existingProduct = await productRef.get();
     const existingVersion = existingProduct.get("sourceUpdatedAt");
-    if (typeof existingVersion === "string" && Date.parse(existingVersion) > Date.parse(payload.sourceUpdatedAt)) {
+    if (typeof existingVersion === "string" && Date.parse(existingVersion) > Date.parse(payload.sourceUpdatedAt) && payload.product.barcodesComplete !== false) {
       await setJob({ status: "superseded", updatedAt: FieldValue.serverTimestamp() });
       return;
     }
@@ -1373,7 +1412,13 @@ export async function handleShopifyProductChangeTask(
       const { loadShopifyProductBarcodes } = await import("./merchant-catalog-audit.js");
       const identifiers = await loadShopifyProductBarcodes(shop, payload.productId);
       if (Date.parse(identifiers.sourceUpdatedAt) !== Date.parse(payload.sourceUpdatedAt)) {
-        await setJob({ status: "superseded", updatedAt: FieldValue.serverTimestamp() });
+        if (Date.parse(identifiers.sourceUpdatedAt) < Date.parse(payload.sourceUpdatedAt)) throw new Error("Shopify product version is older than the webhook; retry");
+        const refreshedPayload: ShopifyProductChangeTaskPayload = {
+          ...payload, ...identifiers,
+          product: { ...identifiers.product, barcodesComplete: false },
+        };
+        await enqueueRefreshedProductChange(refreshedPayload);
+        await setJob({ status: "superseded", supersededByVersion: identifiers.sourceUpdatedAt, recoveryJobId: productChangeJobId(refreshedPayload), updatedAt: FieldValue.serverTimestamp() });
         return;
       }
       payload.product = { ...payload.product, barcodes: identifiers.barcodes, barcodesComplete: true };
@@ -1387,7 +1432,7 @@ export async function handleShopifyProductChangeTask(
       sourceUpdatedAt: payload.sourceUpdatedAt,
     });
     const currentProduct = await productRef.get();
-    if (currentProduct.get("sourceUpdatedAt") !== payload.sourceUpdatedAt) {
+    if (!sameProductVersion(currentProduct.get("sourceUpdatedAt"), payload.sourceUpdatedAt)) {
       await setJob({ status: "superseded", updatedAt: FieldValue.serverTimestamp() });
       return;
     }
@@ -1418,7 +1463,7 @@ export async function handleShopifyProductChangeTask(
     const committed = await db.runTransaction(async (transaction) => {
       const [latest, merchant] = await Promise.all([transaction.get(productRef), transaction.get(merchantRef)]);
       if (!merchant.exists || installationKey(merchant.data() || {}) !== installationKey(merchantSnapshot.data() || {})) return false;
-      if (!latest.exists || !canApplyProductVersion(latest.data() || {}, payload.sourceUpdatedAt!) || latest.get("sourceUpdatedAt") !== payload.sourceUpdatedAt) return false;
+      if (!latest.exists || !canApplyProductVersion(latest.data() || {}, payload.sourceUpdatedAt!) || !sameProductVersion(latest.get("sourceUpdatedAt"), payload.sourceUpdatedAt)) return false;
       transaction.set(merchantRef.collection(FIRESTORE_COLLECTIONS.subChecks).doc(productKey), {
       shop,
       productId: payload.productId,

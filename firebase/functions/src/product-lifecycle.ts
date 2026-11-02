@@ -22,3 +22,10 @@ export function installationKey(data: Record<string, unknown>): string {
   const created = data.createdAt as { toMillis?: () => number } | undefined;
   return created?.toMillis ? String(created.toMillis()) : String(data.createdAt || "legacy");
 }
+/** REST webhooks and GraphQL can encode the same Shopify version with different offsets. */
+export function sameProductVersion(left: unknown, right: unknown): boolean {
+  const first = typeof left === "string" ? Date.parse(left) : NaN;
+  const second = typeof right === "string" ? Date.parse(right) : NaN;
+  return Number.isFinite(first) && first === second;
+}
+

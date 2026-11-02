@@ -15,6 +15,13 @@ describe("catalog check coverage", () => {
     )).toBe(false);
   });
 
+  it("recognizes equivalent REST offsets, GraphQL UTC and fractional-second formats", () => {
+    expect(checkCoversCurrentProductVersion({ sourceUpdatedAt: "2026-09-30T03:00:00-05:00" }, currentVersion)).toBe(true);
+    expect(checkCoversCurrentProductVersion({ sourceUpdatedAt: "2026-09-30T08:00:00Z" }, currentVersion)).toBe(true);
+    expect(checkCoversCurrentProductVersion({ sourceUpdatedAt: "invalid" }, "invalid")).toBe(false);
+    expect(checkCoversCurrentProductVersion({ sourceUpdatedAt: "2026-09-30T03:00:01-05:00" }, currentVersion)).toBe(false);
+  });
+
   it("uses check time conservatively for legacy records without a product version", () => {
     expect(checkCoversCurrentProductVersion(
       { checkedAt: new Date("2026-09-30T08:00:01.000Z") },

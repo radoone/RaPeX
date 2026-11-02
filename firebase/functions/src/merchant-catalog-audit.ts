@@ -203,13 +203,16 @@ export async function loadShopifyProductBarcodes(shop: string, productId: string
   const token = await loadOfflineAccessToken(shop);
   const request = (query: string, variables: Record<string, unknown>) => requestShopifyBarcodes(shop, token, query, variables);
   const payload = await request(`query ProductBarcodes($id: ID!) {
-    product(id: $id) { id updatedAt variants(first: 250) {
+    product(id: $id) { id title handle vendor productType tags description descriptionHtml updatedAt
+      featuredImage { url } images(first: 4) { nodes { url } }
+      variants(first: 250) {
       nodes { id title barcode } pageInfo { hasNextPage endCursor }
     } }
   }`, { id: productId.startsWith("gid://") ? productId : `gid://shopify/Product/${productId}` });
   if (payload.errors?.length || !payload.data?.product?.variants) throw new Error("Could not load Shopify product barcodes");
   if (typeof payload.data.product.updatedAt !== "string" || !Number.isFinite(Date.parse(payload.data.product.updatedAt))) throw new Error("Shopify product version is unavailable");
-  return { barcodes: await completeShopifyBarcodes(payload.data.product, request), sourceUpdatedAt: payload.data.product.updatedAt };
+  const barcodes = await completeShopifyBarcodes(payload.data.product, request);
+  return { ...toProductInput({ ...payload.data.product, barcodes }, shop), barcodes, sourceUpdatedAt: payload.data.product.updatedAt as string };
 }
 
 async function enqueue(payload: MerchantCatalogAuditTaskPayload): Promise<void> {
