@@ -46,7 +46,7 @@
       "mockProductName": "Rothar cothromaíochta leanaí",
       "mockAlert": "Foláireamh Safety Gate",
       "mockAlertName": "Táirge cosúil leis i bhfoláireamh AE",
-      "mockReason": "Déan comparáid idir an tsamhail agus an bhaisc sula gcinnfidh tú.",
+      "mockReason": "Déan comparáid idir an tsamhail sula ndéanann tú cinneadh.",
       "flowLabel": "Conas a oibríonn an tseirbhís",
       "flowCatalog": "Do chatalóg Shopify",
       "flowCompare": "Déan comparáid le foláirimh AE",
@@ -67,7 +67,7 @@
       "matchScreenTitle": "Meaitseáil fhéideartha",
       "yourProduct": "Do tháirge",
       "alertRecord": "Taifead Safety Gate",
-      "matchReason": "Déan comparáid idir grianghraif, samhail agus bhaisc sula gcinnfidh tú.",
+      "matchReason": "Déan comparáid idir grianghraif agus an tsamhail sula ndéanann tú cinneadh.",
       "matchTitle": "Déan comparáid idir an táirge. Roghnaigh do chéad chéim eile.",
       "matchBody": "Tá grianghraif, aitheantóirí Shopify agus Safety Gate agus an riosca oifigiúil le feiceáil in aice leis na rialuithe athbhreithnithe.",
       "emailLabel": "Nuashonrú ríomhphoist",
@@ -134,7 +134,7 @@
       "step2Title": "Déanaimid meaitseálacha féideartha a bhratach",
       "step2Desc": "Faigheann tú an toradh agus an fhianaise trí ríomhphost ionas gur féidir leat meaitseáil fhéideartha a athbhreithniú.",
       "step3Title": "Cinntíonn tú cad atá le déanamh",
-      "step3Desc": "Déan comparáid idir an tsamhail, na grianghraif agus an bhaisc. Taifead toradh do athbhreithnithe san aip."
+      "step3Desc": "Déan comparáid idir an tsamhail agus na grianghraif. Taifead toradh d'athbhreithnithe san aip."
     },
     "compliance": {
       "eyebrow": "Comhthéacs Rialála",
@@ -164,7 +164,7 @@
       "q5": "Cad a tharlaíonn mura n-aimsítear meaitseálacha féideartha?",
       "a5": "Taispeánfaidh an tuairisc líon na dtáirgí a seiceáladh agus nár aimsíodh meaitseálacha féideartha sa tseiceáil seo. Ní deimhniú sábháilteachta táirgí é seo. D’fhéadfadh foláirimh nua teacht níos déanaí.",
       "q6": "An gcruthaíonn meaitseáil fhéideartha go bhfuil mo tháirge contúirteach?",
-      "a6": "Ní hea. Is féidir le AI nó aitheantóir do liostú a nascadh le taifead Safety Gate, ach ní mór duit fós an táirge cruinn, an tsamhail agus an bhaisc lena mbaineann a fhíorú. Tacaíonn ZeroRecall le d'athbhreithniú; ní dheimhníonn sé sábháilteacht ná ní thagann sé in ionad do chuid oibleagáidí dlíthiúla."
+      "a6": "Ní hea. Is féidir le hAI nó le haitheantóir do liostú a nascadh le taifead Safety Gate, ach ní mór duit fós an táirge agus an tsamhail chruinn a fhíorú. Tacaíonn ZeroRecall le d'athbhreithniú; ní dheimhníonn sé sábháilteacht ná ní thagann sé in ionad do chuid oibleagáidí dlíthiúla."
     },
     "cta": {
       "title": "Tosaigh le scanadh saor in aisce",
@@ -222,13 +222,13 @@
       "alertTitle": "Táirge cosúil leis i bhfoláireamh AE",
       "alertDetail": "Tugann íomhánna agus sonraí táirgí le fios go bhfuil meaitseáil ann ar fiú é a sheiceáil.",
       "decisionTitle": "Do chéad chéim eile",
-      "decisionBody": "Déan comparáid idir an tsamhail, na grianghraif agus an bhaisc. Cinntigh an mbaineann an foláireamh le do tháirge.",
+      "decisionBody": "Déan comparáid idir an tsamhail agus na grianghraif. Cinntigh an mbaineann an foláireamh le do tháirge.",
       "disclaimer": "Léaráid, ní fíor-aimsiú é.",
       "previewLabel": "Réamhamharc ar aimsiú léiritheach",
       "status": "Ní mór athbhreithniú a dhéanamh air",
       "findingTitle": "Meaitseáil táirge féideartha",
-      "findingReason": "Cúis léiritheach: tógáil fráma agus comhpháirteach stiúrtha cosúil leis cé go bhfuil ainm liostála difriúil. Ní mór an tsamhail agus an bhaisc a fhíorú fós.",
-      "findingAction": "Déan comparáid idir samhail agus bhaisc →"
+      "findingReason": "Cúis léiritheach: tógáil fráma agus comhpháirteach stiúrtha cosúil leis cé go bhfuil ainm liostála difriúil ann. Ní mór an tsamhail a fhíorú fós.",
+      "findingAction": "Déan comparáid idir an tsamhail →"
     },
     "scan": {
       "eyebrow": "SEICEÁIL AON-uaire · GAN SUITEÁIL",
@@ -333,9 +333,9 @@
       "exampleTitle": "Féach ar mheaitseáil fhéideartha ag éirí mar chinneadh",
       "missing": "EAN agus samhail in easnamh ón liostáil",
       "detailTitle": "Cad a chuirfeadh an AI in iúl le haghaidh athbhreithnithe",
-      "detailBody": "Sa léiriú seo: fráma, comhpháirteach stiúrtha agus dearadh rotha cosúil leis. Tacaíonn na sonraí seo le meaitseáil fhéideartha; ní dhearbhaíonn siad an tsamhail chruinn ná an bhaisc atá i gceist.",
+      "detailBody": "Sa léiriú seo: fráma, comhpháirteach stiúrtha agus dearadh rotha cosúil leis. Tacaíonn na sonraí seo le meaitseáil fhéideartha; ní dhearbhaíonn siad an tsamhail chruinn.",
       "reviewTitle": "Do chinneadh, le fianaise ceangailte",
-      "reviewBody": "Déan comparáid idir an liostáil agus an foláireamh oifigiúil, ansin fíoraigh an tsamhail agus an bhaisc le do sholáthraí. San aip suiteáilte, taifead réiteach, dífhostaigh táirge difriúil, nó coinnigh an toradh oscailte agus tú ag fanacht leis an soláthraí.",
+      "reviewBody": "Déan comparáid idir an liostú agus an foláireamh oifigiúil, ansin fíoraigh an tsamhail le do sholáthraí. San aip suiteáilte, taifead réiteach, dífhostaigh táirge difriúil, nó coinnigh an toradh ar oscailt agus tú ag fanacht leis an soláthraí.",
       "record": "Sábháiltear cinntí athbhreithnithe le haisteoir, am agus nóta san aip.",
       "limit": "Molann AI meaitseálacha féideartha. Ní dheimhníonn sé sábháilteacht ná ní thagann sé in ionad do chuid athbhreithnithe. Is léiriú é an sampla seo; ní fíor-aisghairm ná scanadh beo é."
     },
@@ -366,7 +366,7 @@
       "title": "Tagann an foláireamh chugat",
       "body": "Nuair a chruthaítear fionnachtain nua, is féidir le ZeroRecall ríomhphost a sheoladh chuig an táirge, comparáid Safety Gate agus nasc chun é a athbhreithniú i d'aip Shopify. Ní gá duit an aip a choinneáil oscailte chun an fógra a fháil.",
       "whatTitle": "Céim shoiléir eile, ní hamháin rabhadh",
-      "whatBody": "Oscail an fionnachtain, déan comparáid idir na grianghraif agus na haitheantóirí, ansin fíoraigh an tsamhail agus an bhaisc sula ndéanann tú cinneadh. Is féidir do ghlacadóir fógra, do theanga agus do shocruithe a chur in eagar sna Socruithe.",
+      "whatBody": "Oscail an toradh, déan comparáid idir na grianghraif agus na haitheantóirí, ansin fíoraigh an tsamhail sula ndéanann tú cinneadh. Is féidir do fhaighteoir fógra, teanga agus sainroghanna a chur in eagar i Socruithe.",
       "weeklyTitle": "Gan aon fhionnachtana nua? Faigheann tú nuashonrú fós.",
       "weeklyBody": "Le hachoimrí seachtainiúla cumasaithe, tugann seachtain gan fionnachtana nua achoimre. D'fhéadfadh go mbeadh d'aird fós ag teastáil ó fhionnachtana oscailte atá ann cheana féin; taispeántar rith monatóireachta neamhiomlán mar neamhiomlán.",
       "previewTitle": "Ríomhphost foláirimh léiritheach",
@@ -376,7 +376,7 @@
       "productLabel": "Do tháirge",
       "alertLabel": "Táirge Safety Gate",
       "action": "Athbhreithnigh meaitseáil fhéideartha",
-      "instruction": "Déan comparáid idir an tsamhail, an branda agus an bhaisc leis an taifead oifigiúil. Sábháil do chinneadh agus nóta san aip."
+      "instruction": "Déan comparáid idir an tsamhail agus an taifead oifigiúil. Sábháil do chinneadh agus nóta san aip."
     },
     "start": {
       "title": "Cad a tharlaíonn tar éis duit a shuiteáil",
@@ -390,13 +390,13 @@
       "step4Title": "Coinnigh monatóireacht de réir mar a athraíonn rudaí",
       "step4Body": "Spreagann foláirimh nua Safety Gate agus nuashonruithe táirgí seiceálacha fad is atá do phlean gníomhach. Is féidir le fionnachtana nua-chruthaithe ríomhphost a spreagadh, agus fanann do chinntí sa stair athbhreithnithe.",
       "matchTitle": "Fuarthas meaitseáil fhéideartha",
-      "matchBody": "Is iarratas é seo chun an fhianaise a athbhreithniú, ní cruthúnas go bhfuil do mhúnla nó do bhaisc chruinn contúirteach. Deimhnigh na sonraí sin sula nglacfaidh tú gníomh.",
+      "matchBody": "Is iarratas é seo chun an fhianaise a athbhreithniú, ní cruthúnas go bhfuil do mhúnla cruinn contúirteach. Deimhnigh an tsamhail sula nglacfaidh tú beart.",
       "clearTitle": "Níor aimsíodh aon mheaitseáil fhéideartha",
       "clearBody": "Níor aimsigh an seiceáil críochnaithe aon mheaitseáil fhéideartha sna taifid innéacsaithe a seiceáladh. Ní deimhniú sábháilteachta é seo. Is féidir le foláirimh nua agus athruithe táirgí an toradh a athrú níos déanaí.",
       "audienceTitle": "Do shiopaí a dhíolann táirgí fisiceacha san AE",
       "audienceBody": "Úsáideach go háirithe le haghaidh bréagán, táirgí leanbh, leictreonaic, cosmaidí, earraí tí agus táirgí allmhairithe nó lipéad bán. Is féidir le comparáid grianghraf AI cabhrú nuair a bhíonn aitheantóirí neamhiomlána ag liostaí soláthraithe. Clúdaíonn Safety Gate táirgí neamhbhia contúirteacha.",
       "caseTitle": "Sampla: teideal athraithe, ansin seiceáil soláthraí",
-      "caseBody": "Cás léiritheach: liostaíonn soláthraí rothar cothromaíochta faoi ainm difriúil agus fágann sé an tsamhail ar lár. Mar thoradh ar shonraí amhairc tá meaitseáil fhéideartha. Déanann an ceannaí comparáid idir an foláireamh agus iarrann sé an tsamhail agus an bhaisc ón soláthraí. Má léiríonn an fhianaise táirge difriúil, dífhostaíonn siad an fionnachtain le nóta; má dheimhníonn sé an táirge lena mbaineann, glacann siad an gníomh cuí agus taifeadann siad é. Is sampla sreafa oibre é seo, ní cás custaiméara ná toradh beo."
+      "caseBody": "Cás léiritheach: liostaíonn soláthraí rothar cothromaíochta faoi ainm difriúil agus fágann sé an tsamhail ar lár. Mar thoradh ar shonraí amhairc tá meaitseáil fhéideartha. Déanann an ceannaí comparáid idir an foláireamh agus iarrann sé an tsamhail ón soláthraí. Má léiríonn an fhianaise táirge difriúil, dífhostaíonn siad an toradh le nóta; má dhearbhaíonn sé an táirge lena mbaineann, glacann siad an beart cuí agus taifeadann siad é. Is sampla sreafa oibre é seo, ní cás custaiméara ná toradh beo."
     }
   },
   "email": {

@@ -45,7 +45,7 @@
     "mockProductName": "Bicicleta de equilíbrio infantil",
     "mockAlert": "Alerta Safety Gate",
     "mockAlertName": "Produto semelhante num alerta da UE",
-    "mockReason": "Compare o modelo e o lote antes de decidir.",
+    "mockReason": "Compare o modelo antes de decidir.",
     "flowLabel": "Como funciona o serviço",
     "flowCatalog": "O seu catálogo Shopify",
     "flowCompare": "Comparar com alertas da UE",
@@ -66,7 +66,7 @@
     "matchScreenTitle": "Possível correspondência",
     "yourProduct": "O seu produto",
     "alertRecord": "Registo Safety Gate",
-    "matchReason": "Compare fotos, modelo e lote antes de decidir.",
+    "matchReason": "Compare as fotos e o modelo antes de decidir.",
     "matchTitle": "Compare o produto. Escolha o seu próximo passo.",
     "matchBody": "As fotos, identificadores e o risco oficial do Shopify e do Safety Gate aparecem ao lado dos controlos de revisão.",
     "emailLabel": "Atualização por e-mail",
@@ -133,7 +133,7 @@
     "step2Title": "Assinalamos possíveis correspondências",
     "step2Desc": "Recebe o resultado e as provas por e-mail para que possa rever uma possível correspondência.",
     "step3Title": "Você decide o que fazer",
-    "step3Desc": "Compare o modelo, fotos e lote. Registe o resultado da sua revisão na aplicação."
+    "step3Desc": "Compare o modelo e as fotos. Registe o resultado da sua revisão na aplicação."
   },
   "compliance": {
     "eyebrow": "Contexto Regulatório",
@@ -163,7 +163,7 @@
     "q5": "E se não forem encontradas possíveis correspondências?",
     "a5": "O relatório indica o número de produtos verificados e que não foram encontradas possíveis correspondências nesta verificação. Não certifica a segurança dos produtos. Podem surgir novos alertas mais tarde.",
     "q6": "Uma possível correspondência prova que o meu produto é perigoso?",
-    "a6": "Não. A IA ou um identificador pode ligar a sua listagem a um registo do Safety Gate, mas ainda precisa de verificar o produto exato, o modelo e o lote afetado. O ZeroRecall apoia a sua revisão; não certifica a segurança nem substitui as suas obrigações legais."
+    "a6": "Não. A IA ou um identificador podem ligar o seu anúncio a um registo Safety Gate, mas ainda precisa de verificar o produto e o modelo exatos. O ZeroRecall apoia a sua revisão; não certifica a segurança nem substitui as suas obrigações legais."
   },
   "cta": {
     "title": "Comece com uma análise gratuita",
@@ -221,13 +221,13 @@
     "alertTitle": "Produto semelhante num alerta da UE",
     "alertDetail": "Imagens e detalhes do produto sugerem uma correspondência que vale a pena verificar.",
     "decisionTitle": "O seu próximo passo",
-    "decisionBody": "Compare o modelo, fotos e lote. Decida se o alerta se aplica ao seu produto.",
+    "decisionBody": "Compare o modelo e as fotos. Decida se o alerta se aplica ao seu produto.",
     "disclaimer": "Ilustração, não um achado real.",
     "previewLabel": "Pré-visualização de achado ilustrativo",
     "status": "Requer revisão",
     "findingTitle": "Possível correspondência de produto",
-    "findingReason": "Motivo ilustrativo: construção do quadro e junta de direção semelhantes, apesar de um nome de anúncio diferente. O modelo e o lote ainda precisam de verificação.",
-    "findingAction": "Comparar modelo e lote →"
+    "findingReason": "Motivo ilustrativo: construção do quadro e junta da direção semelhantes, apesar de um nome de anúncio diferente. O modelo ainda precisa de verificação.",
+    "findingAction": "Comparar o modelo →"
   },
   "scan": {
     "eyebrow": "VERIFICAÇÃO ÚNICA · SEM INSTALAÇÃO",
@@ -332,9 +332,9 @@
     "exampleTitle": "Veja uma possível correspondência tornar-se uma decisão",
     "missing": "EAN e modelo em falta no anúncio",
     "detailTitle": "O que a IA sinalizaria para revisão",
-    "detailBody": "Nesta ilustração: um quadro, junta de direção e design de roda semelhantes. Estes detalhes apoiam uma possível correspondência; não confirmam o modelo exato ou o lote afetado.",
+    "detailBody": "Nesta ilustração: um quadro, junta da direção e design da roda semelhantes. Estes detalhes apoiam uma possível correspondência; não confirmam o modelo exato.",
     "reviewTitle": "A sua decisão, com evidências anexadas",
-    "reviewBody": "Compare o anúncio e o alerta oficial, depois verifique o modelo e o lote com o seu fornecedor. Na aplicação instalada, registe uma resolução, descarte um produto diferente ou mantenha a descoberta em aberto enquanto aguarda o fornecedor.",
+    "reviewBody": "Compare o anúncio e o alerta oficial, depois verifique o modelo com o seu fornecedor. Na aplicação instalada, registe uma resolução, descarte um produto diferente ou mantenha a descoberta em aberto enquanto aguarda o fornecedor.",
     "record": "As decisões de revisão são guardadas com um interveniente, hora e nota na aplicação.",
     "limit": "A IA sugere possíveis correspondências. Não certifica a segurança nem substitui a sua revisão. Este exemplo é ilustrativo; não é um recolha real ou uma análise em tempo real."
   },
@@ -365,7 +365,7 @@
     "title": "O alerta chega até si",
     "body": "Quando é criada uma nova ocorrência, o ZeroRecall pode enviar por e-mail o produto, a comparação com o Safety Gate e um link para o rever na sua aplicação Shopify. Não precisa de manter a aplicação aberta para receber a notificação.",
     "whatTitle": "Um próximo passo claro, não apenas um aviso",
-    "whatBody": "Abra a ocorrência, compare as fotos e os identificadores, depois verifique o modelo e o lote antes de decidir. O destinatário da notificação, o idioma e as preferências são editáveis nas Definições.",
+    "whatBody": "Abra a descoberta, compare as fotos e os identificadores, depois verifique o modelo antes de decidir. O seu destinatário de notificação, idioma e preferências são editáveis nas Definições.",
     "weeklyTitle": "Sem novas ocorrências? Ainda recebe uma atualização.",
     "weeklyBody": "Com os resumos semanais ativados, uma semana sem novas ocorrências traz um resumo. As ocorrências abertas existentes ainda podem precisar da sua atenção; uma execução de monitorização incompleta é mostrada como incompleta.",
     "previewTitle": "Exemplo ilustrativo de e-mail de alerta",
@@ -375,7 +375,7 @@
     "productLabel": "O seu produto",
     "alertLabel": "Produto Safety Gate",
     "action": "Rever possível correspondência",
-    "instruction": "Compare o modelo, marca e lote com o registo oficial. Guarde a sua decisão e uma nota na aplicação."
+    "instruction": "Compare o modelo com o registo oficial. Guarde a sua decisão e uma nota na aplicação."
   },
   "start": {
     "title": "O que acontece depois de instalar",
@@ -389,12 +389,12 @@
     "step4Title": "Mantenha a monitorização à medida que as coisas mudam",
     "step4Body": "Novos alertas do Safety Gate e atualizações de produtos acionam verificações enquanto o seu plano estiver ativo. As ocorrências recém-criadas podem acionar um e-mail, e as suas decisões permanecem no histórico de revisão.",
     "matchTitle": "Foi encontrada uma possível correspondência",
-    "matchBody": "Este é um pedido para rever as provas, não uma prova de que o seu modelo exato ou lote é perigoso. Confirme esses detalhes antes de agir.",
+    "matchBody": "Este é um pedido para rever a evidência, não uma prova de que o seu modelo exato é perigoso. Confirme o modelo antes de agir.",
     "clearTitle": "Não foi encontrada nenhuma possível correspondência",
     "clearBody": "A verificação concluída não encontrou nenhuma possível correspondência nos registos indexados que verificou. Este não é um certificado de segurança. Novos alertas e alterações de produtos podem alterar o resultado mais tarde.",
     "audienceTitle": "Para lojas que vendem produtos físicos na UE",
     "audienceBody": "Especialmente útil para brinquedos, produtos para bebés, eletrónica, cosméticos, artigos para o lar e produtos importados ou de marca branca. A comparação de fotos por IA pode ajudar quando as listagens de fornecedores têm identificadores incompletos. O Safety Gate abrange produtos perigosos não alimentares.",
     "caseTitle": "Exemplo: um título alterado, depois uma verificação do fornecedor",
-    "caseBody": "Cenário ilustrativo: um fornecedor lista uma bicicleta de equilíbrio com um nome diferente e omite o modelo. Detalhes visuais levam a uma possível correspondência. O comerciante compara o alerta e solicita o modelo e o lote ao fornecedor. Se a evidência mostrar um produto diferente, eles descartam a ocorrência com uma nota; se confirmar o produto afetado, eles tomam a ação apropriada e registam-na. Este é um exemplo de fluxo de trabalho, não um caso de cliente ou um resultado em tempo real."
+    "caseBody": "Cenário ilustrativo: um fornecedor lista uma bicicleta de equilíbrio com um nome diferente e omite o modelo. Detalhes visuais levam a uma possível correspondência. O comerciante compara o alerta e solicita o modelo ao fornecedor. Se a evidência mostrar um produto diferente, eles descartam a descoberta com uma nota; se confirmar o produto afetado, eles tomam a ação apropriada e registam-na. Este é um exemplo de fluxo de trabalho, não um caso de cliente ou um resultado em tempo real."
   }
 }

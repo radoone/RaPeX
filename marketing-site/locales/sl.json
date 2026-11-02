@@ -45,7 +45,7 @@
     "mockProductName": "Otroško kolo za ravnotežje",
     "mockAlert": "Opozorilo Safety Gate",
     "mockAlertName": "Podoben izdelek v opozorilu EU",
-    "mockReason": "Pred odločitvijo primerjajte model in serijo.",
+    "mockReason": "Primerjajte model, preden se odločite.",
     "flowLabel": "Kako storitev deluje",
     "flowCatalog": "Vaš katalog Shopify",
     "flowCompare": "Primerjajte z opozorili EU",
@@ -66,7 +66,7 @@
     "matchScreenTitle": "Možno ujemanje",
     "yourProduct": "Vaš izdelek",
     "alertRecord": "Zapis Safety Gate",
-    "matchReason": "Pred odločitvijo primerjajte fotografije, model in serijo.",
+    "matchReason": "Primerjajte fotografije in model, preden se odločite.",
     "matchTitle": "Primerjajte izdelek. Izberite naslednji korak.",
     "matchBody": "Fotografije, identifikatorji in uradno tveganje iz Shopifyja in Safety Gate se prikažejo poleg kontrolnikov za pregled.",
     "emailLabel": "Posodobitev e-pošte",
@@ -133,7 +133,7 @@
     "step2Title": "Označimo morebitna ujemanja",
     "step2Desc": "Rezultat in dokaze prejmete po e-pošti, da lahko pregledate morebitno ujemanje.",
     "step3Title": "Vi se odločite, kaj storiti",
-    "step3Desc": "Primerjajte model, fotografije in serijo. Zabeležite rezultat vašega pregleda v aplikaciji."
+    "step3Desc": "Primerjajte model in fotografije. V aplikaciji zabeležite izid vašega pregleda."
   },
   "compliance": {
     "eyebrow": "Regulativni kontekst",
@@ -163,7 +163,7 @@
     "q5": "Kaj če ni najdenih možnih ujemanj?",
     "a5": "Poročilo prikaže število preverjenih izdelkov in podatek, da pri tem preverjanju ni bilo možnih ujemanj. To ni potrdilo o varnosti izdelkov. Nova opozorila se lahko pojavijo pozneje.",
     "q6": "Ali možno ujemanje dokazuje, da je moj izdelek nevaren?",
-    "a6": "Ne. Umetna inteligenca ali identifikator lahko poveže vaš seznam z zapisom Safety Gate, vendar morate še vedno preveriti točen izdelek, model in prizadeto serijo. ZeroRecall podpira vaš pregled; ne potrjuje varnosti in ne nadomešča vaših zakonskih obveznosti."
+    "a6": "Ne. Umetna inteligenca ali identifikator lahko poveže vaš oglas z zapisom Safety Gate, vendar morate še vedno preveriti točen izdelek in model. ZeroRecall podpira vaš pregled; ne potrjuje varnosti ali nadomešča vaših zakonskih obveznosti."
   },
   "cta": {
     "title": "Začnite z brezplačnim skeniranjem",
@@ -221,13 +221,13 @@
     "alertTitle": "Podoben izdelek v opozorilu EU",
     "alertDetail": "Slike in podrobnosti o izdelku kažejo na ujemanje, ki ga je vredno preveriti.",
     "decisionTitle": "Vaš naslednji korak",
-    "decisionBody": "Primerjajte model, fotografije in serijo. Odločite se, ali opozorilo velja za vaš izdelek.",
+    "decisionBody": "Primerjajte model in fotografije. Odločite se, ali se opozorilo nanaša na vaš izdelek.",
     "disclaimer": "Ilustracija, ne prava ugotovitev.",
     "previewLabel": "Ilustrativen predogled ugotovitve",
     "status": "Potreben pregled",
     "findingTitle": "Možno ujemanje izdelka",
-    "findingReason": "Ilustrativni razlog: podobna konstrukcija okvirja in krmilnega zgloba kljub drugačnemu imenu oglasa. Model in serija še vedno potrebujeta preverjanje.",
-    "findingAction": "Primerjajte model in serijo →"
+    "findingReason": "Ilustrativni razlog: podobna konstrukcija okvirja in krmilni zglob kljub drugačnemu imenu oglasa. Model je še vedno potreben preverjanja.",
+    "findingAction": "Primerjajte model →"
   },
   "scan": {
     "eyebrow": "ENKRATNO PREVERJANJE · BREZ NAMESTITVE",
@@ -332,9 +332,9 @@
     "exampleTitle": "Oglejte si, kako morebitno ujemanje postane odločitev",
     "missing": "EAN in model manjkata v oglasu",
     "detailTitle": "Kaj bi AI označil za pregled",
-    "detailBody": "Na tej ilustraciji: podoben okvir, krmilni zglob in zasnova koles. Te podrobnosti podpirajo morebitno ujemanje; ne potrjujejo točnega modela ali prizadete serije.",
+    "detailBody": "Na tej ilustraciji: podoben okvir, krmilni zglob in zasnova koles. Ti detajli podpirajo možno ujemanje; ne potrjujejo točnega modela.",
     "reviewTitle": "Vaša odločitev, z priloženimi dokazi",
-    "reviewBody": "Primerjajte oglas in uradno opozorilo, nato preverite model in serijo pri svojem dobavitelju. V nameščeni aplikaciji zabeležite rešitev, zavrnite drug izdelek ali pustite ugotovitev odprto, medtem ko čakate na dobavitelja.",
+    "reviewBody": "Primerjajte oglas in uradno opozorilo, nato preverite model pri svojem dobavitelju. V nameščeni aplikaciji zabeležite rešitev, zavrzite drug izdelek ali pustite ugotovitev odprto, medtem ko čakate na dobavitelja.",
     "record": "Odločitve o pregledu so shranjene z akterjem, časom in opombo v aplikaciji.",
     "limit": "AI predlaga morebitna ujemanja. Ne potrjuje varnosti in ne nadomešča vašega pregleda. Ta primer je ilustrativen; ni pravi odpoklic ali skeniranje v živo."
   },
@@ -365,7 +365,7 @@
     "title": "Opozorilo pride k vam",
     "body": "Ko je ustvarjena nova ugotovitev, vam lahko ZeroRecall pošlje e-pošto z izdelkom, primerjavo Safety Gate in povezavo za pregled v vaši aplikaciji Shopify. Za prejemanje obvestila vam ni treba imeti odprte aplikacije.",
     "whatTitle": "Jasni naslednji koraki, ne le opozorilo",
-    "whatBody": "Odprite ugotovitev, primerjajte fotografije in identifikatorje, nato preverite model in serijo, preden se odločite. Prejemnika obvestil, jezik in nastavitve lahko uredite v Nastavitvah.",
+    "whatBody": "Odprite ugotovitev, primerjajte fotografije in identifikatorje, nato preverite model, preden se odločite. Prejemnika obvestila, jezik in preference lahko uredite v Nastavitvah.",
     "weeklyTitle": "Ni novih ugotovitev? Še vedno prejmete posodobitev.",
     "weeklyBody": "Z omogočenimi tedenskimi povzetki teden brez novih ugotovitev prinese povzetek. Obstoječe odprte ugotovitve morda še vedno potrebujejo vašo pozornost; nepopoln nadzorni zagon je prikazan kot nepopoln.",
     "previewTitle": "Ilustrativno opozorilno e-poštno sporočilo",
@@ -375,7 +375,7 @@
     "productLabel": "Vaš izdelek",
     "alertLabel": "Izdelek Safety Gate",
     "action": "Preglejte možno ujemanje",
-    "instruction": "Primerjajte model, blagovno znamko in serijo z uradnim zapisom. Shranite svojo odločitev in opombo v aplikaciji."
+    "instruction": "Primerjajte model z uradnim zapisom. Shranite svojo odločitev in opombo v aplikaciji."
   },
   "start": {
     "title": "Kaj se zgodi po namestitvi",
@@ -389,12 +389,12 @@
     "step4Title": "Nadaljujte s spremljanjem, ko se stvari spreminjajo",
     "step4Body": "Nova opozorila Safety Gate in posodobitve izdelkov sprožijo preverjanja, medtem ko je vaš načrt aktiven. Novo ustvarjene ugotovitve lahko sprožijo e-poštno sporočilo, vaše odločitve pa ostanejo v zgodovini pregledov.",
     "matchTitle": "Najdeno je bilo možno ujemanje",
-    "matchBody": "To je zahteva za pregled dokazov, ne dokaz, da je vaš točen model ali serija nevaren. Preden ukrepate, potrdite te podrobnosti.",
+    "matchBody": "To je zahteva za pregled dokazov, ne pa dokaz, da je vaš točen model nevaren. Preden ukrepate, potrdite model.",
     "clearTitle": "Ni bilo najdeno možno ujemanje",
     "clearBody": "Dokončan pregled ni našel možnega ujemanja v indeksiranih zapisih, ki jih je preveril. To ni varnostni certifikat. Nova opozorila in spremembe izdelkov lahko pozneje spremenijo rezultat.",
     "audienceTitle": "Za trgovine, ki prodajajo fizične izdelke v EU",
     "audienceBody": "Posebej uporabno za igrače, otroške izdelke, elektroniko, kozmetiko, gospodinjske izdelke ter uvožene ali izdelke z belo etiketo. Primerjava fotografij z umetno inteligenco lahko pomaga, ko imajo seznami dobaviteljev nepopolne identifikatorje. Safety Gate pokriva nevarne neživilske izdelke.",
     "caseTitle": "Primer: spremenjen naslov, nato preverjanje dobavitelja",
-    "caseBody": "Ilustrativen scenarij: dobavitelj navede poganjalec pod drugim imenom in izpusti model. Vizualne podrobnosti vodijo do možnega ujemanja. Trgovec primerja opozorilo in zahteva model ter serijo od dobavitelja. Če dokazi kažejo na drug izdelek, zavrnejo ugotovitev z opombo; če potrjujejo prizadeti izdelek, sprejmejo ustrezne ukrepe in jih zabeležijo. To je primer poteka dela, ne primer stranke ali rezultat v živo."
+    "caseBody": "Ilustrativni scenarij: dobavitelj oglasi poganjalec pod drugim imenom in izpusti model. Vizualni detajli vodijo do možnega ujemanja. Trgovec primerja opozorilo in zahteva model od dobavitelja. Če dokazi kažejo na drug izdelek, zavrže ugotovitev z opombo; če potrjujejo prizadeti izdelek, sprejme ustrezne ukrepe in jih zabeleži. To je primer poteka dela, ne primer stranke ali dejanski rezultat."
   }
 }

@@ -45,7 +45,7 @@
     "mockProductName": "Bērnu līdzsvara velosipēds",
     "mockAlert": "Safety Gate brīdinājums",
     "mockAlertName": "Līdzīgs produkts ES brīdinājumā",
-    "mockReason": "Pirms lēmuma pieņemšanas salīdziniet modeli un partiju.",
+    "mockReason": "Pirms lēmuma pieņemšanas salīdziniet modeli.",
     "flowLabel": "Kā pakalpojums darbojas",
     "flowCatalog": "Jūsu Shopify katalogs",
     "flowCompare": "Salīdzināt ar ES brīdinājumiem",
@@ -66,7 +66,7 @@
     "matchScreenTitle": "Iespējama atbilstība",
     "yourProduct": "Jūsu produkts",
     "alertRecord": "Safety Gate ieraksts",
-    "matchReason": "Pirms lēmuma pieņemšanas salīdziniet fotoattēlus, modeli un partiju.",
+    "matchReason": "Pirms lēmuma pieņemšanas salīdziniet fotoattēlus un modeli.",
     "matchTitle": "Salīdziniet produktu. Izvēlieties nākamo soli.",
     "matchBody": "Shopify un Safety Gate fotoattēli, identifikatori un oficiālais risks tiek parādīti blakus pārskatīšanas vadīklām.",
     "emailLabel": "E-pasta atjauninājums",
@@ -133,7 +133,7 @@
     "step2Title": "Mēs atzīmējam iespējamās atbilstības",
     "step2Desc": "Jūs saņemat rezultātu un pierādījumus pa e-pastu, lai jūs varētu pārskatīt iespējamo atbilstību.",
     "step3Title": "Jūs izlemjat, ko darīt",
-    "step3Desc": "Salīdziniet modeli, fotoattēlus un partiju. Ierakstiet pārskatīšanas rezultātu lietotnē."
+    "step3Desc": "Salīdziniet modeli un fotoattēlus. Lietotnē ierakstiet pārskata rezultātu."
   },
   "compliance": {
     "eyebrow": "Regulatīvais konteksts",
@@ -163,7 +163,7 @@
     "q5": "Kas notiek, ja iespējamās atbilstības netiek atrastas?",
     "a5": "Pārskatā būs norādīts pārbaudīto produktu skaits un tas, ka šajā pārbaudē iespējamās atbilstības netika atrastas. Tas neapliecina produktu drošumu. Vēlāk var parādīties jauni brīdinājumi.",
     "q6": "Vai iespējama atbilstība pierāda, ka mans produkts ir bīstams?",
-    "a6": "Nē. AI vai identifikators var savienot jūsu sarakstu ar Safety Gate ierakstu, taču jums joprojām ir jāpārbauda precīzs produkts, modelis un skartā partija. ZeroRecall atbalsta jūsu pārskatīšanu; tas nesertificē drošību un neaizstāj jūsu juridiskās saistības."
+    "a6": "Nē. AI vai identifikators var savienot jūsu sarakstu ar Safety Gate ierakstu, taču jums joprojām ir jāpārbauda precīzs produkts un modelis. ZeroRecall atbalsta jūsu pārskatu; tas nesertificē drošību un neaizstāj jūsu juridiskās saistības."
   },
   "cta": {
     "title": "Sāciet ar bezmaksas skenēšanu",
@@ -221,13 +221,13 @@
     "alertTitle": "Līdzīgs produkts ES brīdinājumā",
     "alertDetail": "Attēli un produkta detaļas liecina par atbilstību, ko vērts pārbaudīt.",
     "decisionTitle": "Jūsu nākamais solis",
-    "decisionBody": "Salīdziniet modeli, fotoattēlus un partiju. Izlemiet, vai brīdinājums attiecas uz jūsu produktu.",
+    "decisionBody": "Salīdziniet modeli un fotoattēlus. Izlemiet, vai brīdinājums attiecas uz jūsu produktu.",
     "disclaimer": "Ilustrācija, nav reāls atklājums.",
     "previewLabel": "Ilustratīvs atklājuma priekšskatījums",
     "status": "Nepieciešama pārskatīšana",
     "findingTitle": "Iespējama produkta atbilstība",
-    "findingReason": "Ilustratīvs iemesls: līdzīga rāmja konstrukcija un stūres savienojums, neskatoties uz atšķirīgu saraksta nosaukumu. Modelis un partija joprojām ir jāpārbauda.",
-    "findingAction": "Salīdzināt modeli un partiju →"
+    "findingReason": "Ilustratīvs iemesls: līdzīga rāmja konstrukcija un stūres savienojums, neskatoties uz atšķirīgu nosaukumu. Modelis joprojām ir jāpārbauda.",
+    "findingAction": "Salīdzināt modeli →"
   },
   "scan": {
     "eyebrow": "VIENREIZĒJA PĀRBAUDE · NAV INSTALĀCIJAS",
@@ -332,9 +332,9 @@
     "exampleTitle": "Skatiet, kā iespējamā atbilstība kļūst par lēmumu",
     "missing": "EAN un modelis trūkst sarakstā",
     "detailTitle": "Ko AI atzīmētu pārskatīšanai",
-    "detailBody": "Šajā ilustrācijā: līdzīgs rāmis, stūres savienojums un riteņu dizains. Šīs detaļas atbalsta iespējamu atbilstību; tās neapstiprina precīzu modeli vai skarto partiju.",
+    "detailBody": "Šajā ilustrācijā: līdzīgs rāmis, stūres savienojums un riteņu dizains. Šīs detaļas apstiprina iespējamu sakritību; tās neapstiprina precīzu modeli.",
     "reviewTitle": "Jūsu lēmums ar pievienotiem pierādījumiem",
-    "reviewBody": "Salīdziniet sarakstu un oficiālo brīdinājumu, pēc tam pārbaudiet modeli un partiju ar savu piegādātāju. Instalētajā lietotnē ierakstiet risinājumu, noraidiet citu produktu vai atstājiet atradumu atvērtu, gaidot piegādātāju.",
+    "reviewBody": "Salīdziniet sarakstu un oficiālo brīdinājumu, pēc tam pārbaudiet modeli ar savu piegādātāju. Instalētajā lietotnē ierakstiet risinājumu, noraidiet citu produktu vai atstājiet atradumu atvērtu, gaidot piegādātāju.",
     "record": "Pārskatīšanas lēmumi tiek saglabāti ar aktoru, laiku un piezīmi lietotnē.",
     "limit": "AI iesaka iespējamās atbilstības. Tas nesertificē drošību un neaizstāj jūsu pārskatīšanu. Šis piemērs ir ilustratīvs; tas nav reāls atsaukums vai tiešraides skenēšana."
   },
@@ -365,7 +365,7 @@
     "title": "Brīdinājums nonāk pie jums",
     "body": "Kad tiek izveidots jauns atklājums, ZeroRecall var nosūtīt e-pastu par produktu, Safety Gate salīdzinājumu un saiti, lai to pārskatītu jūsu Shopify lietotnē. Lai saņemtu paziņojumu, jums nav jātur lietotne atvērta.",
     "whatTitle": "Skaidrs nākamais solis, nevis tikai brīdinājums",
-    "whatBody": "Atveriet atklājumu, salīdziniet fotoattēlus un identifikatorus, pēc tam pārbaudiet modeli un partiju pirms lēmuma pieņemšanas. Jūsu paziņojumu saņēmējs, valoda un preferences ir rediģējamas sadaļā Iestatījumi.",
+    "whatBody": "Atveriet atradumu, salīdziniet fotoattēlus un identifikatorus, pēc tam pirms lēmuma pieņemšanas pārbaudiet modeli. Jūsu paziņojuma saņēmējs, valoda un preferences ir rediģējamas iestatījumos.",
     "weeklyTitle": "Nav jaunu atklājumu? Jūs joprojām saņemat atjauninājumu.",
     "weeklyBody": "Ja ir iespējoti iknedēļas kopsavilkumi, nedēļa bez jauniem atklājumiem sniedz kopsavilkumu. Esošie atvērtie atklājumi joprojām var prasīt jūsu uzmanību; nepabeigta uzraudzības darbība tiek parādīta kā nepabeigta.",
     "previewTitle": "Ilustratīvs brīdinājuma e-pasts",
@@ -375,7 +375,7 @@
     "productLabel": "Jūsu produkts",
     "alertLabel": "Safety Gate produkts",
     "action": "Pārskatīt iespējamo atbilstību",
-    "instruction": "Salīdziniet modeli, zīmolu un partiju ar oficiālo ierakstu. Saglabājiet savu lēmumu un piezīmi lietotnē."
+    "instruction": "Salīdziniet modeli ar oficiālo ierakstu. Saglabājiet savu lēmumu un piezīmi lietotnē."
   },
   "start": {
     "title": "Kas notiek pēc instalēšanas",
@@ -389,12 +389,12 @@
     "step4Title": "Turpiniet uzraudzību, mainoties lietām",
     "step4Body": "Jauni Safety Gate brīdinājumi un produktu atjauninājumi izraisa pārbaudes, kamēr jūsu plāns ir aktīvs. Jauni atklājumi var izraisīt e-pasta nosūtīšanu, un jūsu lēmumi paliek pārskatīšanas vēsturē.",
     "matchTitle": "Tika atrasta iespējama atbilstība",
-    "matchBody": "Šis ir lūgums pārskatīt pierādījumus, nevis pierādījums, ka jūsu precīzais modelis vai partija ir bīstama. Pirms rīcības apstipriniet šīs detaļas.",
+    "matchBody": "Šis ir lūgums pārskatīt pierādījumus, nevis pierādījums, ka jūsu precīzais modelis ir bīstams. Pirms rīcības apstipriniet modeli.",
     "clearTitle": "Netika atrasta iespējama atbilstība",
     "clearBody": "Pabeigtā pārbaude neatrada iespējamu atbilstību indeksētajos ierakstos, ko tā pārbaudīja. Tas nav drošības sertifikāts. Jauni brīdinājumi un produktu izmaiņas var mainīt rezultātu vēlāk.",
     "audienceTitle": "Veikaliem, kas pārdod fiziskus produktus ES",
     "audienceBody": "Īpaši noderīgi rotaļlietām, bērnu precēm, elektronikai, kosmētikai, mājsaimniecības precēm un importētiem vai baltās etiķetes produktiem. AI fotoattēlu salīdzināšana var palīdzēt, ja piegādātāju sarakstos ir nepilnīgi identifikatori. Safety Gate aptver bīstamus nepārtikas produktus.",
     "caseTitle": "Piemērs: mainīts nosaukums, pēc tam piegādātāja pārbaude",
-    "caseBody": "Ilustratīvs scenārijs: piegādātājs sarakstā iekļauj līdzsvara velosipēdu ar citu nosaukumu un izlaiž modeli. Vizuālās detaļas noved pie iespējamas atbilstības. Tirgotājs salīdzina brīdinājumu un pieprasa modeli un partiju no piegādātāja. Ja pierādījumi liecina par citu produktu, viņi noraida atklājumu ar piezīmi; ja tas apstiprina skarto produktu, viņi veic atbilstošas darbības un to reģistrē. Šis ir darbplūsmas piemērs, nevis klienta gadījums vai tiešraides rezultāts."
+    "caseBody": "Ilustratīvs scenārijs: piegādātājs piedāvā līdzsvara velosipēdu ar citu nosaukumu un izlaiž modeli. Vizuālās detaļas norāda uz iespējamu sakritību. Tirgotājs salīdzina brīdinājumu un pieprasa modeli no piegādātāja. Ja pierādījumi liecina par citu produktu, viņš noraida atradumu ar piezīmi; ja tas apstiprina skarto produktu, viņš veic atbilstošas darbības un tās reģistrē. Šis ir darbplūsmas piemērs, nevis klienta gadījums vai tiešraides rezultāts."
   }
 }

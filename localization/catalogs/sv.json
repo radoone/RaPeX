@@ -46,7 +46,7 @@
       "mockProductName": "Barnbalanscykel",
       "mockAlert": "Safety Gate-varning",
       "mockAlertName": "Liknande produkt i en EU-varning",
-      "mockReason": "Jämför modell och batch innan du bestämmer dig.",
+      "mockReason": "Jämför modellen innan du bestämmer dig.",
       "flowLabel": "Så fungerar tjänsten",
       "flowCatalog": "Din Shopify-katalog",
       "flowCompare": "Jämför med EU-varningar",
@@ -67,7 +67,7 @@
       "matchScreenTitle": "Möjlig matchning",
       "yourProduct": "Din produkt",
       "alertRecord": "Safety Gate-post",
-      "matchReason": "Jämför foton, modell och batch innan du bestämmer dig.",
+      "matchReason": "Jämför foton och modellen innan du bestämmer dig.",
       "matchTitle": "Jämför produkten. Välj nästa steg.",
       "matchBody": "Shopify- och Safety Gate-foton, identifierare och den officiella risken visas bredvid granskningskontrollerna.",
       "emailLabel": "E-postuppdatering",
@@ -134,7 +134,7 @@
       "step2Title": "Vi flaggar möjliga matchningar",
       "step2Desc": "Du får resultatet och bevis via e-post så att du kan granska en möjlig matchning.",
       "step3Title": "Du bestämmer vad du ska göra",
-      "step3Desc": "Jämför modell, foton och batch. Registrera resultatet av din granskning i appen."
+      "step3Desc": "Jämför modellen och fotona. Registrera resultatet av din granskning i appen."
     },
     "compliance": {
       "eyebrow": "Regulatorisk kontext",
@@ -164,7 +164,7 @@
       "q5": "Vad händer om inga möjliga matchningar hittas?",
       "a5": "Rapporten visar antalet kontrollerade produkter och att inga möjliga matchningar hittades vid denna kontroll. Det är inget intyg om produktsäkerhet. Nya varningar kan tillkomma senare.",
       "q6": "Bevisar en möjlig matchning att min produkt är farlig?",
-      "a6": "Nej. AI eller en identifierare kan koppla din annons till en Safety Gate-post, men du måste fortfarande verifiera den exakta produkten, modellen och den berörda batchen. ZeroRecall stöder din granskning; det certifierar inte säkerhet eller ersätter dina juridiska skyldigheter."
+      "a6": "Nej. AI eller en identifierare kan koppla din listning till en Safety Gate-post, men du måste fortfarande verifiera den exakta produkten och modellen. ZeroRecall stöder din granskning; det certifierar inte säkerhet eller ersätter dina juridiska skyldigheter."
     },
     "cta": {
       "title": "Börja med en gratisskanning",
@@ -222,13 +222,13 @@
       "alertTitle": "Liknande produkt i en EU-varning",
       "alertDetail": "Bilder och produktdetaljer tyder på en matchning värd att kontrollera.",
       "decisionTitle": "Ditt nästa steg",
-      "decisionBody": "Jämför modell, foton och batch. Bestäm om varningen gäller din produkt.",
+      "decisionBody": "Jämför modellen och fotona. Bestäm om varningen gäller din produkt.",
       "disclaimer": "Illustration, inte ett verkligt fynd.",
       "previewLabel": "Illustrativ förhandsgranskning av fynd",
       "status": "Behöver granskas",
       "findingTitle": "Möjlig produktmatchning",
-      "findingReason": "Illustrativ anledning: liknande ramkonstruktion och styrled trots ett annat listningsnamn. Modell och batch behöver fortfarande verifieras.",
-      "findingAction": "Jämför modell och batch →"
+      "findingReason": "Illustrativ anledning: liknande ramkonstruktion och styrled trots ett annat listningsnamn. Modellen behöver fortfarande verifieras.",
+      "findingAction": "Jämför modellen →"
     },
     "scan": {
       "eyebrow": "ENGÅNGSKONTROLL · INGEN INSTALLATION",
@@ -333,9 +333,9 @@
       "exampleTitle": "Se en möjlig matchning bli ett beslut",
       "missing": "EAN och modell saknas i listningen",
       "detailTitle": "Vad AI skulle flagga för granskning",
-      "detailBody": "I denna illustration: en liknande ram, styrled och hjuldesign. Dessa detaljer stöder en möjlig matchning; de bekräftar inte den exakta modellen eller den berörda batchen.",
+      "detailBody": "I denna illustration: en liknande ram, styrled och hjuldesign. Dessa detaljer stöder en möjlig matchning; de bekräftar inte den exakta modellen.",
       "reviewTitle": "Ditt beslut, med bifogade bevis",
-      "reviewBody": "Jämför listningen och den officiella varningen, verifiera sedan modell och batch med din leverantör. I den installerade appen, registrera en lösning, avfärda en annan produkt eller håll fyndet öppet medan du väntar på leverantören.",
+      "reviewBody": "Jämför listningen och den officiella varningen, verifiera sedan modellen med din leverantör. I den installerade appen, registrera en lösning, avfärda en annan produkt, eller håll ärendet öppet medan du väntar på leverantören.",
       "record": "Granskningsbeslut sparas med en aktör, tid och anteckning i appen.",
       "limit": "AI föreslår möjliga matchningar. Den certifierar inte säkerhet eller ersätter din granskning. Detta exempel är illustrativt; det är inte en verklig återkallelse eller en live-skanning."
     },
@@ -366,7 +366,7 @@
       "title": "Varningen kommer till dig",
       "body": "När ett nytt fynd skapas kan ZeroRecall skicka e-post om produkten, Safety Gate-jämförelsen och en länk för att granska den i din Shopify-app. Du behöver inte ha appen öppen för att få aviseringen.",
       "whatTitle": "Ett tydligt nästa steg, inte bara en varning",
-      "whatBody": "Öppna fyndet, jämför foton och identifierare, verifiera sedan modell och batch innan du fattar ett beslut. Din mottagare för aviseringar, språk och inställningar kan redigeras i Inställningar.",
+      "whatBody": "Öppna ärendet, jämför fotona och identifierarna, verifiera sedan modellen innan du bestämmer dig. Din meddelandemottagare, språk och preferenser kan redigeras i Inställningar.",
       "weeklyTitle": "Inga nya fynd? Du får ändå en uppdatering.",
       "weeklyBody": "Med veckosammanfattningar aktiverade, ger en vecka utan nya fynd en sammanfattning. Befintliga öppna fynd kan fortfarande behöva din uppmärksamhet; en ofullständig övervakningskörning visas som ofullständig.",
       "previewTitle": "Illustrativt varningsmeddelande via e-post",
@@ -376,7 +376,7 @@
       "productLabel": "Din produkt",
       "alertLabel": "Safety Gate-produkt",
       "action": "Granska möjlig matchning",
-      "instruction": "Jämför modell, varumärke och batch med den officiella posten. Spara ditt beslut och en anteckning i appen."
+      "instruction": "Jämför modellen med den officiella registreringen. Spara ditt beslut och en anteckning i appen."
     },
     "start": {
       "title": "Vad händer efter installationen",
@@ -390,13 +390,13 @@
       "step4Title": "Fortsätt övervaka när saker förändras",
       "step4Body": "Nya Safety Gate-varningar och produktuppdateringar utlöser kontroller medan din plan är aktiv. Nyskapade fynd kan utlösa ett e-postmeddelande, och dina beslut finns kvar i granskningshistoriken.",
       "matchTitle": "En möjlig matchning hittades",
-      "matchBody": "Detta är en begäran om att granska bevisen, inte ett bevis på att din exakta modell eller batch är farlig. Bekräfta dessa detaljer innan du vidtar åtgärder.",
+      "matchBody": "Detta är en begäran om att granska bevisen, inte ett bevis på att din exakta modell är farlig. Bekräfta modellen innan du vidtar åtgärder.",
       "clearTitle": "Ingen möjlig matchning hittades",
       "clearBody": "Den slutförda kontrollen hittade ingen möjlig matchning i de indexerade poster den kontrollerade. Detta är inget säkerhetscertifikat. Nya varningar och produktändringar kan ändra resultatet senare.",
       "audienceTitle": "För butiker som säljer fysiska produkter inom EU",
       "audienceBody": "Särskilt användbart för leksaker, babyprodukter, elektronik, kosmetika, hushållsartiklar och importerade eller white-label-produkter. AI-fotjämförelse kan hjälpa när leverantörslistor har ofullständiga identifierare. Safety Gate täcker farliga icke-livsmedelsprodukter.",
       "caseTitle": "Exempel: en ändrad titel, sedan en leverantörskontroll",
-      "caseBody": "Illustrativt scenario: en leverantör listar en balanscykel under ett annat namn och utelämnar modellen. Visuella detaljer leder till en möjlig matchning. Handlaren jämför varningen och begär modell och batch från leverantören. Om bevisen visar en annan produkt avfärdar de fyndet med en anteckning; om det bekräftar den berörda produkten vidtar de lämpliga åtgärder och registrerar det. Detta är ett arbetsflödesexempel, inte ett kundfall eller ett live-resultat."
+      "caseBody": "Illustrativt scenario: en leverantör listar en balanscykel under ett annat namn och utelämnar modellen. Visuella detaljer leder till en möjlig matchning. Handlaren jämför varningen och begär modellen från leverantören. Om bevisen visar en annan produkt, avfärdar de ärendet med en anteckning; om det bekräftar den berörda produkten, vidtar de lämpliga åtgärder och registrerar det. Detta är ett arbetsflödesexempel, inte ett kundärende eller ett live-resultat."
     }
   },
   "email": {

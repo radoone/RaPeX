@@ -45,7 +45,7 @@
     "mockProductName": "Vaikiškas balansinis dviratis",
     "mockAlert": "Safety Gate įspėjimas",
     "mockAlertName": "Panašus produktas ES įspėjime",
-    "mockReason": "Prieš priimdami sprendimą, palyginkite modelį ir partiją.",
+    "mockReason": "Prieš priimdami sprendimą, palyginkite modelį.",
     "flowLabel": "Kaip veikia paslauga",
     "flowCatalog": "Jūsų Shopify katalogas",
     "flowCompare": "Palyginti su ES įspėjimais",
@@ -66,7 +66,7 @@
     "matchScreenTitle": "Galimas atitikmuo",
     "yourProduct": "Jūsų produktas",
     "alertRecord": "Safety Gate įrašas",
-    "matchReason": "Prieš priimdami sprendimą, palyginkite nuotraukas, modelį ir partiją.",
+    "matchReason": "Prieš priimdami sprendimą, palyginkite nuotraukas ir modelį.",
     "matchTitle": "Palyginkite produktą. Pasirinkite kitą veiksmą.",
     "matchBody": "Shopify ir Safety Gate nuotraukos, identifikatoriai ir oficiali rizika rodomi šalia peržiūros valdiklių.",
     "emailLabel": "El. pašto atnaujinimas",
@@ -133,7 +133,7 @@
     "step2Title": "Mes pažymime galimus atitikmenis",
     "step2Desc": "Jūs gaunate rezultatą ir įrodymus el. paštu, kad galėtumėte peržiūrėti galimą atitikmenį.",
     "step3Title": "Jūs nusprendžiate, ką daryti",
-    "step3Desc": "Palyginkite modelį, nuotraukas ir partiją. Įrašykite savo peržiūros rezultatą programėlėje."
+    "step3Desc": "Palyginkite modelį ir nuotraukas. Programėlėje įrašykite savo peržiūros rezultatą."
   },
   "compliance": {
     "eyebrow": "Reguliavimo kontekstas",
@@ -163,7 +163,7 @@
     "q5": "Kas nutinka, jei galimų sutapimų nerandama?",
     "a5": "Ataskaitoje pateikiamas patikrintų produktų skaičius ir nurodoma, kad per šią patikrą galimų sutapimų nerasta. Tai nėra produktų saugos patvirtinimas. Naujų įspėjimų gali atsirasti vėliau.",
     "q6": "Ar galimas atitikmuo įrodo, kad mano produktas yra pavojingas?",
-    "a6": "Ne. AI arba identifikatorius gali susieti jūsų sąrašą su Safety Gate įrašu, tačiau vis tiek turite patikrinti tikslų produktą, modelį ir paveiktą partiją. ZeroRecall palaiko jūsų peržiūrą; jis nesertifikuoja saugos ir nepakeičia jūsų teisinių įsipareigojimų."
+    "a6": "Ne. Dirbtinis intelektas arba identifikatorius gali susieti jūsų sąrašą su Safety Gate įrašu, tačiau vis tiek turite patikrinti tikslų produktą ir modelį. ZeroRecall palaiko jūsų peržiūrą; jis nesertifikuoja saugos ir nepakeičia jūsų teisinių įsipareigojimų."
   },
   "cta": {
     "title": "Pradėkite nuo nemokamo skenavimo",
@@ -221,13 +221,13 @@
     "alertTitle": "Panašus produktas ES įspėjime",
     "alertDetail": "Vaizdai ir produkto detalės rodo, kad verta patikrinti atitikmenį.",
     "decisionTitle": "Jūsų kitas žingsnis",
-    "decisionBody": "Palyginkite modelį, nuotraukas ir partiją. Nuspręskite, ar įspėjimas taikomas jūsų produktui.",
+    "decisionBody": "Palyginkite modelį ir nuotraukas. Nuspręskite, ar įspėjimas taikomas jūsų produktui.",
     "disclaimer": "Iliustracija, ne tikras radinys.",
     "previewLabel": "Iliustracinė radinio peržiūra",
     "status": "Reikia peržiūros",
     "findingTitle": "Galimas produkto atitikmuo",
-    "findingReason": "Iliustratyvi priežastis: panaši rėmo konstrukcija ir vairo jungtis, nepaisant skirtingo sąrašo pavadinimo. Modelis ir partija vis dar turi būti patikrinti.",
-    "findingAction": "Palyginkite modelį ir partiją →"
+    "findingReason": "Iliustratyvi priežastis: panaši rėmo konstrukcija ir vairo jungtis, nepaisant skirtingo sąrašo pavadinimo. Modelį vis dar reikia patikrinti.",
+    "findingAction": "Palyginti modelį →"
   },
   "scan": {
     "eyebrow": "VIENKARTINIS PATIKRINIMAS · NEREIKIA ĮDIEGTI",
@@ -332,9 +332,9 @@
     "exampleTitle": "Pažiūrėkite, kaip galimas atitikimas tampa sprendimu",
     "missing": "EAN ir modelis trūksta sąraše",
     "detailTitle": "Ką dirbtinis intelektas pažymėtų peržiūrai",
-    "detailBody": "Šioje iliustracijoje: panašus rėmas, vairo jungtis ir ratų dizainas. Šios detalės patvirtina galimą atitikimą; jos nepatvirtina tikslaus modelio ar paveiktos partijos.",
+    "detailBody": "Šioje iliustracijoje: panašus rėmas, vairo jungtis ir ratų dizainas. Šios detalės patvirtina galimą atitikimą; jos nepatvirtina tikslaus modelio.",
     "reviewTitle": "Jūsų sprendimas su pridėtais įrodymais",
-    "reviewBody": "Palyginkite sąrašą ir oficialų įspėjimą, tada patikrinkite modelį ir partiją su savo tiekėju. Įdiegtoje programėlėje įrašykite sprendimą, atmeskite kitą produktą arba palikite radinį atvirą, kol laukiate tiekėjo.",
+    "reviewBody": "Palyginkite sąrašą ir oficialų įspėjimą, tada patikrinkite modelį su savo tiekėju. Įdiegtoje programėlėje įrašykite sprendimą, atmeskite kitą produktą arba palikite radinį atvirą, kol laukiate tiekėjo.",
     "record": "Peržiūros sprendimai išsaugomi su veikėju, laiku ir pastaba programėlėje.",
     "limit": "Dirbtinis intelektas siūlo galimus atitikmenis. Jis nepatvirtina saugumo ir nepakeičia jūsų peržiūros. Šis pavyzdys yra iliustratyvus; tai nėra tikras atšaukimas ar tiesioginis nuskaitymas."
   },
@@ -365,7 +365,7 @@
     "title": "Įspėjimas pasiekia jus",
     "body": "Kai sukuriama nauja išvada, ZeroRecall gali atsiųsti el. laišką apie produktą, Safety Gate palyginimą ir nuorodą, kad galėtumėte peržiūrėti jį savo Shopify programėlėje. Jums nereikia laikyti programėlės atidarytos, kad gautumėte pranešimą.",
     "whatTitle": "Aiškus kitas žingsnis, o ne tik įspėjimas",
-    "whatBody": "Atidarykite išvadą, palyginkite nuotraukas ir identifikatorius, tada patikrinkite modelį ir partiją prieš priimdami sprendimą. Jūsų pranešimų gavėjas, kalba ir nuostatos yra redaguojami Nustatymuose.",
+    "whatBody": "Atidarykite radinį, palyginkite nuotraukas ir identifikatorius, tada patikrinkite modelį prieš priimdami sprendimą. Jūsų pranešimo gavėjas, kalba ir nuostatos yra redaguojami Nustatymuose.",
     "weeklyTitle": "Nėra naujų išvadų? Vis tiek gausite atnaujinimą.",
     "weeklyBody": "Įjungus savaitines suvestines, savaitė be naujų išvadų atneša suvestinę. Esamos atviros išvados vis dar gali reikalauti jūsų dėmesio; nebaigtas stebėjimo vykdymas rodomas kaip nebaigtas.",
     "previewTitle": "Iliustracinis įspėjimo el. laiškas",
@@ -375,7 +375,7 @@
     "productLabel": "Jūsų produktas",
     "alertLabel": "Safety Gate produktas",
     "action": "Peržiūrėti galimą atitikmenį",
-    "instruction": "Palyginkite modelį, prekės ženklą ir partiją su oficialiu įrašu. Išsaugokite savo sprendimą ir pastabą programėlėje."
+    "instruction": "Palyginkite modelį su oficialiu įrašu. Išsaugokite savo sprendimą ir pastabą programėlėje."
   },
   "start": {
     "title": "Kas nutinka po įdiegimo",
@@ -389,12 +389,12 @@
     "step4Title": "Tęskite stebėjimą, kai viskas keičiasi",
     "step4Body": "Nauji Safety Gate įspėjimai ir produktų atnaujinimai sukelia patikrinimus, kol jūsų planas yra aktyvus. Naujai sukurtos išvados gali sukelti el. laišką, o jūsų sprendimai lieka peržiūros istorijoje.",
     "matchTitle": "Rastas galimas atitikmuo",
-    "matchBody": "Tai yra prašymas peržiūrėti įrodymus, o ne įrodymas, kad jūsų tikslus modelis ar partija yra pavojinga. Prieš imdamiesi veiksmų, patvirtinkite šias detales.",
+    "matchBody": "Tai yra prašymas peržiūrėti įrodymus, o ne įrodymas, kad jūsų tikslus modelis yra pavojingas. Prieš imdamiesi veiksmų, patvirtinkite modelį.",
     "clearTitle": "Galimas atitikmuo nerastas",
     "clearBody": "Baigtas patikrinimas nerado galimo atitikmens patikrintuose indeksuotuose įrašuose. Tai nėra saugos sertifikatas. Nauji įspėjimai ir produktų pakeitimai gali pakeisti rezultatą vėliau.",
     "audienceTitle": "Parduotuvėms, parduodančioms fizinius produktus ES",
     "audienceBody": "Ypač naudinga žaislams, kūdikių prekėms, elektronikai, kosmetikai, namų prekėms ir importuotiems ar privačios etiketės produktams. AI nuotraukų palyginimas gali padėti, kai tiekėjų sąrašuose trūksta identifikatorių. Safety Gate apima pavojingus ne maisto produktus.",
     "caseTitle": "Pavyzdys: pakeistas pavadinimas, tada tiekėjo patikrinimas",
-    "caseBody": "Iliustracinis scenarijus: tiekėjas pateikia balansinį dviratį kitu pavadinimu ir praleidžia modelį. Vizualinės detalės lemia galimą atitikmenį. Prekybininkas palygina įspėjimą ir prašo modelio bei partijos iš tiekėjo. Jei įrodymai rodo kitą produktą, jie atmeta išvadą su pastaba; jei tai patvirtina paveiktą produktą, jie imasi atitinkamų veiksmų ir juos užfiksuoja. Tai yra darbo eigos pavyzdys, o ne kliento atvejis ar gyvas rezultatas."
+    "caseBody": "Iliustratyvus scenarijus: tiekėjas balansinį dviratį įrašo kitu pavadinimu ir praleidžia modelį. Vizualinės detalės leidžia manyti, kad tai gali būti atitikimas. Prekybininkas palygina įspėjimą ir prašo tiekėjo pateikti modelį. Jei įrodymai rodo kitą produktą, jie atmeta radinį su pastaba; jei tai patvirtina paveiktą produktą, jie imasi atitinkamų veiksmų ir juos įrašo. Tai yra darbo eigos pavyzdys, o ne kliento atvejis ar gyvas rezultatas."
   }
 }

@@ -45,7 +45,7 @@
     "mockProductName": "Kinderlaufrad",
     "mockAlert": "Safety Gate-Warnung",
     "mockAlertName": "Ähnliches Produkt in einer EU-Warnung",
-    "mockReason": "Vergleichen Sie Modell und Charge, bevor Sie entscheiden.",
+    "mockReason": "Vergleichen Sie das Modell, bevor Sie sich entscheiden.",
     "flowLabel": "So funktioniert der Dienst",
     "flowCatalog": "Ihr Shopify-Katalog",
     "flowCompare": "Mit EU-Warnungen vergleichen",
@@ -66,7 +66,7 @@
     "matchScreenTitle": "Mögliche Übereinstimmung",
     "yourProduct": "Ihr Produkt",
     "alertRecord": "Safety Gate-Eintrag",
-    "matchReason": "Vergleichen Sie Fotos, Modell und Charge, bevor Sie entscheiden.",
+    "matchReason": "Vergleichen Sie Fotos und das Modell, bevor Sie sich entscheiden.",
     "matchTitle": "Vergleichen Sie das Produkt. Wählen Sie Ihren nächsten Schritt.",
     "matchBody": "Shopify- und Safety Gate-Fotos, Identifikatoren und das offizielle Risiko erscheinen neben den Überprüfungskontrollen.",
     "emailLabel": "E-Mail-Update",
@@ -133,7 +133,7 @@
     "step2Title": "Wir kennzeichnen mögliche Übereinstimmungen",
     "step2Desc": "Sie erhalten das Ergebnis und die Nachweise per E-Mail, damit Sie eine mögliche Übereinstimmung überprüfen können.",
     "step3Title": "Sie entscheiden, was zu tun ist",
-    "step3Desc": "Vergleichen Sie Modell, Fotos und Charge. Erfassen Sie das Ergebnis Ihrer Überprüfung in der App."
+    "step3Desc": "Vergleichen Sie das Modell und die Fotos. Halten Sie das Ergebnis Ihrer Überprüfung in der App fest."
   },
   "compliance": {
     "eyebrow": "Regulatorischer Kontext",
@@ -163,7 +163,7 @@
     "q5": "Was passiert, wenn keine möglichen Übereinstimmungen gefunden werden?",
     "a5": "Der Bericht zeigt die Anzahl geprüfter Produkte und dass bei dieser Prüfung keine möglichen Übereinstimmungen gefunden wurden. Dies ist kein Nachweis der Produktsicherheit. Neue Warnmeldungen können später hinzukommen.",
     "q6": "Beweist eine mögliche Übereinstimmung, dass mein Produkt gefährlich ist?",
-    "a6": "Nein. KI oder ein Identifikator können Ihr Angebot mit einem Safety Gate-Datensatz verknüpfen, aber Sie müssen weiterhin das genaue Produkt, Modell und die betroffene Charge überprüfen. ZeroRecall unterstützt Ihre Überprüfung; es zertifiziert keine Sicherheit und ersetzt nicht Ihre rechtlichen Verpflichtungen."
+    "a6": "Nein. KI oder ein Identifikator können Ihr Angebot mit einem Safety Gate-Eintrag verbinden, aber Sie müssen trotzdem das genaue Produkt und Modell überprüfen. ZeroRecall unterstützt Ihre Überprüfung; es zertifiziert weder die Sicherheit noch ersetzt es Ihre rechtlichen Verpflichtungen."
   },
   "cta": {
     "title": "Beginnen Sie mit einem kostenlosen Scan",
@@ -221,13 +221,13 @@
     "alertTitle": "Ähnliches Produkt in einer EU-Warnung",
     "alertDetail": "Bilder und Produktdetails deuten auf eine Überprüfungswerte Übereinstimmung hin.",
     "decisionTitle": "Ihr nächster Schritt",
-    "decisionBody": "Vergleichen Sie Modell, Fotos und Charge. Entscheiden Sie, ob die Warnung für Ihr Produkt gilt.",
+    "decisionBody": "Vergleichen Sie das Modell und die Fotos. Entscheiden Sie, ob die Warnung für Ihr Produkt zutrifft.",
     "disclaimer": "Illustration, kein echtes Ergebnis.",
     "previewLabel": "Illustrative Ergebnisvorschau",
     "status": "Überprüfung erforderlich",
     "findingTitle": "Mögliche Produktübereinstimmung",
-    "findingReason": "Illustrativer Grund: ähnliche Rahmenkonstruktion und Lenkgelenk trotz abweichendem Angebotsnamen. Modell und Charge müssen noch verifiziert werden.",
-    "findingAction": "Modell und Charge vergleichen →"
+    "findingReason": "Beispielhafter Grund: ähnliche Rahmenkonstruktion und Lenkgelenk trotz abweichendem Angebotsnamen. Das Modell muss noch überprüft werden.",
+    "findingAction": "Modell vergleichen →"
   },
   "scan": {
     "eyebrow": "EINMALIGE PRÜFUNG · KEINE INSTALLATION",
@@ -332,9 +332,9 @@
     "exampleTitle": "Sehen Sie, wie aus einer möglichen Übereinstimmung eine Entscheidung wird",
     "missing": "EAN und Modell fehlen im Angebot",
     "detailTitle": "Was die KI zur Überprüfung kennzeichnen würde",
-    "detailBody": "In dieser Abbildung: ein ähnlicher Rahmen, Lenkgelenk und Raddesign. Diese Details unterstützen eine mögliche Übereinstimmung; sie bestätigen nicht das genaue Modell oder die betroffene Charge.",
+    "detailBody": "In dieser Abbildung: ein ähnlicher Rahmen, Lenkgelenk und Raddesign. Diese Details unterstützen eine mögliche Übereinstimmung; sie bestätigen nicht das exakte Modell.",
     "reviewTitle": "Ihre Entscheidung, mit beigefügten Beweisen",
-    "reviewBody": "Vergleichen Sie das Angebot und die offizielle Warnung, und überprüfen Sie dann Modell und Charge mit Ihrem Lieferanten. In der installierten App können Sie eine Lösung festhalten, ein anderes Produkt ablehnen oder den Befund offen lassen, während Sie auf den Lieferanten warten.",
+    "reviewBody": "Vergleichen Sie das Angebot und die offizielle Warnung, dann überprüfen Sie das Modell mit Ihrem Lieferanten. In der installierten App können Sie eine Lösung festhalten, ein anderes Produkt ablehnen oder den Befund offen lassen, während Sie auf den Lieferanten warten.",
     "record": "Überprüfungsentscheidungen werden mit Akteur, Zeit und Notiz in der App gespeichert.",
     "limit": "KI schlägt mögliche Übereinstimmungen vor. Sie zertifiziert keine Sicherheit und ersetzt nicht Ihre Überprüfung. Dieses Beispiel ist illustrativ; es handelt sich nicht um einen echten Rückruf oder einen Live-Scan."
   },
@@ -365,7 +365,7 @@
     "title": "Die Benachrichtigung kommt zu Ihnen",
     "body": "Wenn ein neuer Befund erstellt wird, kann ZeroRecall das Produkt, den Safety Gate-Vergleich und einen Link zur Überprüfung in Ihrer Shopify-App per E-Mail senden. Sie müssen die App nicht geöffnet lassen, um die Benachrichtigung zu erhalten.",
     "whatTitle": "Ein klarer nächster Schritt, nicht nur eine Warnung",
-    "whatBody": "Öffnen Sie den Befund, vergleichen Sie die Fotos und Identifikatoren, und überprüfen Sie dann Modell und Charge, bevor Sie eine Entscheidung treffen. Ihr Benachrichtigungsempfänger, Ihre Sprache und Ihre Präferenzen können in den Einstellungen bearbeitet werden.",
+    "whatBody": "Öffnen Sie den Befund, vergleichen Sie die Fotos und Identifikatoren und überprüfen Sie dann das Modell, bevor Sie sich entscheiden. Ihr Benachrichtigungsempfänger, die Sprache und die Präferenzen können in den Einstellungen bearbeitet werden.",
     "weeklyTitle": "Keine neuen Befunde? Sie erhalten trotzdem ein Update.",
     "weeklyBody": "Wenn wöchentliche Zusammenfassungen aktiviert sind, erhalten Sie in einer Woche ohne neue Befunde eine Zusammenfassung. Bestehende offene Befunde können weiterhin Ihre Aufmerksamkeit erfordern; ein unvollständiger Überwachungslauf wird als unvollständig angezeigt.",
     "previewTitle": "Illustrative Benachrichtigungs-E-Mail",
@@ -375,7 +375,7 @@
     "productLabel": "Ihr Produkt",
     "alertLabel": "Safety Gate-Produkt",
     "action": "Mögliche Übereinstimmung überprüfen",
-    "instruction": "Vergleichen Sie Modell, Marke und Charge mit dem offiziellen Eintrag. Speichern Sie Ihre Entscheidung und eine Notiz in der App."
+    "instruction": "Vergleichen Sie das Modell mit dem offiziellen Datensatz. Speichern Sie Ihre Entscheidung und eine Notiz in der App."
   },
   "start": {
     "title": "Was nach der Installation passiert",
@@ -389,12 +389,12 @@
     "step4Title": "Behalten Sie die Überwachung bei, wenn sich Dinge ändern",
     "step4Body": "Neue Safety Gate-Warnungen und Produktaktualisierungen lösen Prüfungen aus, solange Ihr Plan aktiv ist. Neu erstellte Befunde können eine E-Mail auslösen, und Ihre Entscheidungen bleiben in der Überprüfungshistorie erhalten.",
     "matchTitle": "Eine mögliche Übereinstimmung wurde gefunden",
-    "matchBody": "Dies ist eine Aufforderung, die Beweise zu überprüfen, kein Beweis dafür, dass Ihr genaues Modell oder Ihre Charge gefährlich ist. Bestätigen Sie diese Details, bevor Sie Maßnahmen ergreifen.",
+    "matchBody": "Dies ist eine Aufforderung zur Überprüfung der Beweise, kein Beweis dafür, dass Ihr exaktes Modell gefährlich ist. Bestätigen Sie das Modell, bevor Sie Maßnahmen ergreifen.",
     "clearTitle": "Keine mögliche Übereinstimmung wurde gefunden",
     "clearBody": "Die abgeschlossene Prüfung ergab keine mögliche Übereinstimmung in den indizierten Datensätzen, die sie geprüft hat. Dies ist kein Sicherheitszertifikat. Neue Warnungen und Produktänderungen können das Ergebnis später ändern.",
     "audienceTitle": "Für Shops, die physische Produkte in der EU verkaufen",
     "audienceBody": "Besonders nützlich für Spielzeug, Babyprodukte, Elektronik, Kosmetika, Haushaltswaren und importierte oder White-Label-Produkte. KI-Fotovergleiche können helfen, wenn Lieferantenlisten unvollständige Identifikatoren aufweisen. Safety Gate deckt gefährliche Non-Food-Produkte ab.",
     "caseTitle": "Beispiel: ein geänderter Titel, dann eine Lieferantenprüfung",
-    "caseBody": "Illustratives Szenario: Ein Lieferant listet ein Laufrad unter einem anderen Namen und lässt das Modell weg. Visuelle Details führen zu einer möglichen Übereinstimmung. Der Händler vergleicht die Warnung und fordert Modell und Charge vom Lieferanten an. Wenn die Beweise ein anderes Produkt zeigen, weist er den Befund mit einer Notiz ab; wenn er das betroffene Produkt bestätigt, ergreift er die entsprechenden Maßnahmen und dokumentiert sie. Dies ist ein Workflow-Beispiel, kein Kundenfall oder ein Live-Ergebnis."
+    "caseBody": "Illustratives Szenario: Ein Lieferant listet ein Laufrad unter einem anderen Namen und lässt das Modell weg. Visuelle Details führen zu einer möglichen Übereinstimmung. Der Händler vergleicht die Warnung und fordert das Modell vom Lieferanten an. Wenn die Beweise ein anderes Produkt zeigen, lehnt er den Befund mit einer Notiz ab; wenn sie das betroffene Produkt bestätigen, ergreift er die entsprechenden Maßnahmen und dokumentiert diese. Dies ist ein Workflow-Beispiel, kein Kundenfall oder Live-Ergebnis."
   }
 }

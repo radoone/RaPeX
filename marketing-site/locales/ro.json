@@ -45,7 +45,7 @@
     "mockProductName": "Bicicletă de echilibru pentru copii",
     "mockAlert": "Alertă Safety Gate",
     "mockAlertName": "Produs similar într-o alertă UE",
-    "mockReason": "Comparați modelul și lotul înainte de a decide.",
+    "mockReason": "Comparați modelul înainte de a decide.",
     "flowLabel": "Cum funcționează serviciul",
     "flowCatalog": "Catalogul dvs. Shopify",
     "flowCompare": "Comparați cu alertele UE",
@@ -66,7 +66,7 @@
     "matchScreenTitle": "Potrivire posibilă",
     "yourProduct": "Produsul dvs.",
     "alertRecord": "Înregistrare Safety Gate",
-    "matchReason": "Comparați fotografiile, modelul și lotul înainte de a decide.",
+    "matchReason": "Comparați fotografiile și modelul înainte de a decide.",
     "matchTitle": "Comparați produsul. Alegeți următorul pas.",
     "matchBody": "Fotografiile, identificatorii Shopify și Safety Gate, precum și riscul oficial, apar alături de controalele de revizuire.",
     "emailLabel": "Actualizare e-mail",
@@ -133,7 +133,7 @@
     "step2Title": "Semnalăm posibilele potriviri",
     "step2Desc": "Primiți rezultatul și dovezile prin e-mail pentru a putea examina o posibilă potrivire.",
     "step3Title": "Decideți ce să faceți",
-    "step3Desc": "Comparați modelul, fotografiile și lotul. Înregistrați rezultatul revizuirii dvs. în aplicație."
+    "step3Desc": "Comparați modelul și fotografiile. Înregistrați rezultatul revizuirii dumneavoastră în aplicație."
   },
   "compliance": {
     "eyebrow": "Contextul reglementar",
@@ -163,7 +163,7 @@
     "q5": "Ce se întâmplă dacă nu se găsesc posibile potriviri?",
     "a5": "Raportul arată numărul de produse verificate și faptul că nu s-au găsit posibile potriviri în această verificare. Nu certifică siguranța produselor. Pot apărea alerte noi ulterior.",
     "q6": "O posibilă potrivire demonstrează că produsul meu este periculos?",
-    "a6": "Nu. AI sau un identificator pot conecta listarea ta la o înregistrare Safety Gate, dar trebuie să verifici în continuare produsul exact, modelul și lotul afectat. ZeroRecall îți sprijină revizuirea; nu certifică siguranța și nu înlocuiește obligațiile tale legale."
+    "a6": "Nu. AI sau un identificator poate conecta listarea dumneavoastră la o înregistrare Safety Gate, dar trebuie să verificați în continuare produsul și modelul exact. ZeroRecall susține revizuirea dumneavoastră; nu certifică siguranța și nu înlocuiește obligațiile dumneavoastră legale."
   },
   "cta": {
     "title": "Începeți cu o scanare gratuită",
@@ -221,13 +221,13 @@
     "alertTitle": "Produs similar într-o alertă UE",
     "alertDetail": "Imaginile și detaliile produsului sugerează o potrivire care merită verificată.",
     "decisionTitle": "Următorul pas",
-    "decisionBody": "Comparați modelul, fotografiile și lotul. Decideți dacă alerta se aplică produsului dvs.",
+    "decisionBody": "Comparați modelul și fotografiile. Decideți dacă alerta se aplică produsului dumneavoastră.",
     "disclaimer": "Ilustrație, nu o constatare reală.",
     "previewLabel": "Previzualizare constatare ilustrativă",
     "status": "Necesită revizuire",
     "findingTitle": "Potrivire posibilă a produsului",
-    "findingReason": "Motiv ilustrativ: construcție similară a cadrului și a articulației direcției, în ciuda unui nume diferit al listării. Modelul și lotul necesită încă verificare.",
-    "findingAction": "Comparați modelul și lotul →"
+    "findingReason": "Motiv ilustrativ: construcție similară a cadrului și îmbinare a direcției, în ciuda unui nume de listare diferit. Modelul necesită încă verificare.",
+    "findingAction": "Comparați modelul →"
   },
   "scan": {
     "eyebrow": "VERIFICARE UNICĂ · FĂRĂ INSTALARE",
@@ -332,9 +332,9 @@
     "exampleTitle": "Vezi cum o posibilă potrivire devine o decizie",
     "missing": "EAN și model lipsă din listare",
     "detailTitle": "Ce ar semnala AI pentru verificare",
-    "detailBody": "În această ilustrație: un cadru, o articulație a direcției și un design al roților similare. Aceste detalii susțin o posibilă potrivire; ele nu confirmă modelul exact sau lotul afectat.",
+    "detailBody": "În această ilustrație: un cadru similar, îmbinare a direcției și design al roților. Aceste detalii susțin o posibilă potrivire; ele nu confirmă modelul exact.",
     "reviewTitle": "Decizia ta, cu dovezi atașate",
-    "reviewBody": "Compară listarea și alerta oficială, apoi verifică modelul și lotul cu furnizorul tău. În aplicația instalată, înregistrează o rezoluție, respinge un produs diferit sau menține constatarea deschisă în așteptarea furnizorului.",
+    "reviewBody": "Comparați listarea și alerta oficială, apoi verificați modelul cu furnizorul dumneavoastră. În aplicația instalată, înregistrați o rezoluție, respingeți un produs diferit sau mențineți constatarea deschisă în așteptarea furnizorului.",
     "record": "Deciziile de verificare sunt salvate cu un actor, oră și notă în aplicație.",
     "limit": "AI sugerează posibile potriviri. Nu certifică siguranța și nu înlocuiește verificarea ta. Acest exemplu este ilustrativ; nu este o rechemare reală sau o scanare în timp real."
   },
@@ -365,7 +365,7 @@
     "title": "Alerta ajunge la tine",
     "body": "Atunci când este creată o nouă constatare, ZeroRecall poate trimite prin e-mail produsul, comparația Safety Gate și un link pentru a o revizui în aplicația ta Shopify. Nu trebuie să ții aplicația deschisă pentru a primi notificarea.",
     "whatTitle": "Un pas clar, nu doar un avertisment",
-    "whatBody": "Deschide constatarea, compară fotografiile și identificatorii, apoi verifică modelul și lotul înainte de a decide. Destinatarul notificării, limba și preferințele tale sunt editabile în Setări.",
+    "whatBody": "Deschideți constatarea, comparați fotografiile și identificatorii, apoi verificați modelul înainte de a decide. Destinatarul notificării, limba și preferințele dumneavoastră sunt editabile în Setări.",
     "weeklyTitle": "Nu sunt constatări noi? Primești totuși o actualizare.",
     "weeklyBody": "Cu rezumatele săptămânale activate, o săptămână fără constatări noi aduce un rezumat. Constatările deschise existente pot necesita în continuare atenția ta; o rulare incompletă de monitorizare este afișată ca incompletă.",
     "previewTitle": "E-mail de alertă ilustrativ",
@@ -375,7 +375,7 @@
     "productLabel": "Produsul dvs.",
     "alertLabel": "Produs Safety Gate",
     "action": "Revizuiți potrivirea posibilă",
-    "instruction": "Comparați modelul, marca și lotul cu înregistrarea oficială. Salvați decizia și o notă în aplicație."
+    "instruction": "Comparați modelul cu înregistrarea oficială. Salvați decizia și o notă în aplicație."
   },
   "start": {
     "title": "Ce se întâmplă după instalare",
@@ -389,12 +389,12 @@
     "step4Title": "Menține monitorizarea pe măsură ce lucrurile se schimbă",
     "step4Body": "Noile alerte Safety Gate și actualizările de produse declanșează verificări în timp ce planul tău este activ. Constatările nou create pot declanșa un e-mail, iar deciziile tale rămân în istoricul revizuirilor.",
     "matchTitle": "A fost găsită o posibilă potrivire",
-    "matchBody": "Aceasta este o solicitare de a revizui dovezile, nu o dovadă că modelul sau lotul tău exact este periculos. Confirmă aceste detalii înainte de a lua măsuri.",
+    "matchBody": "Aceasta este o solicitare de a examina dovezile, nu o dovadă că modelul dumneavoastră exact este periculos. Confirmați modelul înainte de a lua măsuri.",
     "clearTitle": "Nu a fost găsită nicio posibilă potrivire",
     "clearBody": "Verificarea completată nu a găsit nicio posibilă potrivire în înregistrările indexate pe care le-a verificat. Acesta nu este un certificat de siguranță. Noile alerte și modificările produselor pot schimba rezultatul ulterior.",
     "audienceTitle": "Pentru magazinele care vând produse fizice în UE",
     "audienceBody": "Deosebit de util pentru jucării, produse pentru bebeluși, electronice, cosmetice, articole de uz casnic și produse importate sau white-label. Comparația foto AI poate ajuta atunci când listările furnizorilor au identificatori incompleți. Safety Gate acoperă produse periculoase non-alimentare.",
     "caseTitle": "Exemplu: un titlu schimbat, apoi o verificare a furnizorului",
-    "caseBody": "Scenariu ilustrativ: un furnizor listează o bicicletă de echilibru sub un nume diferit și omite modelul. Detaliile vizuale duc la o posibilă potrivire. Comerciantul compară alerta și solicită modelul și lotul de la furnizor. Dacă dovezile arată un produs diferit, ei resping constatarea cu o notă; dacă confirmă produsul afectat, iau măsura corespunzătoare și o înregistrează. Acesta este un exemplu de flux de lucru, nu un caz de client sau un rezultat live."
+    "caseBody": "Scenariu ilustrativ: un furnizor listează o bicicletă de echilibru sub un nume diferit și omite modelul. Detaliile vizuale duc la o posibilă potrivire. Comerciantul compară alerta și solicită modelul de la furnizor. Dacă dovezile arată un produs diferit, ei resping constatarea cu o notă; dacă confirmă produsul afectat, ei iau măsurile corespunzătoare și le înregistrează. Acesta este un exemplu de flux de lucru, nu un caz de client sau un rezultat live."
   }
 }

@@ -45,7 +45,7 @@
     "mockProductName": "Lasten potkupyörä",
     "mockAlert": "Safety Gate -hälytys",
     "mockAlertName": "Samankaltainen tuote EU-hälytyksessä",
-    "mockReason": "Vertaa mallia ja erää ennen päätöksen tekemistä.",
+    "mockReason": "Vertaa mallia ennen päätöksentekoa.",
     "flowLabel": "Miten palvelu toimii",
     "flowCatalog": "Shopify-luettelosi",
     "flowCompare": "Vertaa EU-hälytyksiin",
@@ -66,7 +66,7 @@
     "matchScreenTitle": "Mahdollinen osuma",
     "yourProduct": "Tuotteesi",
     "alertRecord": "Safety Gate -tietue",
-    "matchReason": "Vertaa kuvia, mallia ja erää ennen päätöksen tekemistä.",
+    "matchReason": "Vertaa kuvia ja mallia ennen päätöksentekoa.",
     "matchTitle": "Vertaa tuotetta. Valitse seuraava vaihe.",
     "matchBody": "Shopifyn ja Safety Gaten kuvat, tunnisteet ja virallinen riski näkyvät tarkistusohjainten vieressä.",
     "emailLabel": "Sähköpostipäivitys",
@@ -133,7 +133,7 @@
     "step2Title": "Merkitsemme mahdolliset osumat",
     "step2Desc": "Saat tuloksen ja todisteet sähköpostitse, jotta voit tarkistaa mahdollisen osuman.",
     "step3Title": "Päätät, mitä tehdä",
-    "step3Desc": "Vertaa mallia, valokuvia ja erää. Tallenna tarkistuksesi tulos sovellukseen."
+    "step3Desc": "Vertaa mallia ja kuvia. Tallenna tarkistuksesi tulos sovellukseen."
   },
   "compliance": {
     "eyebrow": "Sääntelykonteksti",
@@ -163,7 +163,7 @@
     "q5": "Entä jos mahdollisia vastaavuuksia ei löydy?",
     "a5": "Raportti näyttää tarkistettujen tuotteiden määrän ja sen, ettei tässä tarkistuksessa löytynyt mahdollisia vastaavuuksia. Se ei ole todistus tuoteturvallisuudesta. Uusia ilmoituksia voi tulla myöhemmin.",
     "q6": "Todistaako mahdollinen osuma, että tuotteeni on vaarallinen?",
-    "a6": "Ei. Tekoäly tai tunniste voi yhdistää listauksesi Safety Gate -tietueeseen, mutta sinun on silti varmistettava tarkka tuote, malli ja kyseinen erä. ZeroRecall tukee tarkistustasi; se ei sertifioi turvallisuutta tai korvaa laillisia velvoitteitasi."
+    "a6": "Ei. Tekoäly tai tunniste voi yhdistää listauksesi Safety Gate -tietueeseen, mutta sinun on silti varmennettava tarkka tuote ja malli. ZeroRecall tukee tarkistustasi; se ei sertifioi turvallisuutta tai korvaa lakisääteisiä velvoitteitasi."
   },
   "cta": {
     "title": "Aloita ilmaisella skannauksella",
@@ -221,13 +221,13 @@
     "alertTitle": "Samankaltainen tuote EU-hälytyksessä",
     "alertDetail": "Kuvat ja tuotetiedot viittaavat tarkistamisen arvoiseen osumaan.",
     "decisionTitle": "Seuraava vaiheesi",
-    "decisionBody": "Vertaa mallia, valokuvia ja erää. Päätä, koskeeko hälytys tuotettasi.",
+    "decisionBody": "Vertaa mallia ja kuvia. Päätä, koskeeko hälytys tuotettasi.",
     "disclaimer": "Kuvitus, ei todellinen löydös.",
     "previewLabel": "Havainnollinen löydöksen esikatselu",
     "status": "Vaatii tarkistusta",
     "findingTitle": "Mahdollinen tuoteosuma",
-    "findingReason": "Kuvitteellinen syy: samanlainen rungon rakenne ja ohjausnivel eri listausnimestä huolimatta. Malli ja erä vaativat edelleen varmistusta.",
-    "findingAction": "Vertaa mallia ja erää →"
+    "findingReason": "Havainnollistava syy: samanlainen rungon rakenne ja ohjausnivel eri listausnimestä huolimatta. Malli vaatii edelleen varmennusta.",
+    "findingAction": "Vertaa mallia →"
   },
   "scan": {
     "eyebrow": "KERTAKUONTAINEN TARKISTUS · EI ASENNUSTA",
@@ -332,9 +332,9 @@
     "exampleTitle": "Katso, kuinka mahdollisesta vastaavuudesta tulee päätös",
     "missing": "EAN ja malli puuttuvat listauksesta",
     "detailTitle": "Mitä tekoäly merkitsisi tarkistettavaksi",
-    "detailBody": "Tässä esimerkissä: samanlainen runko, ohjausnivel ja pyörän muotoilu. Nämä yksityiskohdat tukevat mahdollista vastaavuutta; ne eivät vahvista tarkkaa mallia tai kyseistä erää.",
+    "detailBody": "Tässä kuvituksessa: samanlainen runko, ohjausnivel ja pyörän muotoilu. Nämä yksityiskohdat tukevat mahdollista osumaa; ne eivät vahvista tarkkaa mallia.",
     "reviewTitle": "Päätöksesi, todisteineen",
-    "reviewBody": "Vertaa listaa ja virallista hälytystä, sitten varmista malli ja erä toimittajaltasi. Asennetussa sovelluksessa kirjaa ratkaisu, hylkää eri tuote tai pidä löydös avoinna odottaessasi toimittajaa.",
+    "reviewBody": "Vertaa listaa ja virallista hälytystä, ja varmenna sitten malli toimittajasi kanssa. Tallenna asennetussa sovelluksessa ratkaisu, hylkää eri tuote tai pidä havainto avoinna odottaessasi toimittajaa.",
     "record": "Tarkistuspäätökset tallennetaan toimijan, ajan ja muistiinpanon kera sovellukseen.",
     "limit": "Tekoäly ehdottaa mahdollisia vastaavuuksia. Se ei sertifioi turvallisuutta tai korvaa omaa tarkistustasi. Tämä esimerkki on havainnollistava; se ei ole todellinen takaisinkutsu tai reaaliaikainen skannaus."
   },
@@ -365,7 +365,7 @@
     "title": "Hälytys tulee sinulle",
     "body": "Kun uusi havainto luodaan, ZeroRecall voi lähettää sähköpostitse tuotteen, Safety Gate -vertailun ja linkin tarkastellaksesi sitä Shopify-sovelluksessasi. Sinun ei tarvitse pitää sovellusta auki saadaksesi ilmoituksen.",
     "whatTitle": "Selkeä seuraava askel, ei vain varoitus",
-    "whatBody": "Avaa havainto, vertaa kuvia ja tunnisteita ja varmista sitten malli ja erä ennen päätöksen tekemistä. Ilmoituksen vastaanottaja, kieli ja asetukset ovat muokattavissa Asetuksissa.",
+    "whatBody": "Avaa havainto, vertaa kuvia ja tunnisteita ja varmenna sitten malli ennen päätöksentekoa. Ilmoituksen vastaanottaja, kieli ja asetukset ovat muokattavissa Asetuksissa.",
     "weeklyTitle": "Ei uusia havaintoja? Saat silti päivityksen.",
     "weeklyBody": "Kun viikoittaiset yhteenvedot ovat käytössä, viikko ilman uusia havaintoja tuo yhteenvedon. Olemassa olevat avoimet havainnot saattavat edelleen vaatia huomiotasi; puutteellinen valvontakierros näytetään puutteellisena.",
     "previewTitle": "Havainnollistava hälytyssähköposti",
@@ -375,7 +375,7 @@
     "productLabel": "Tuotteesi",
     "alertLabel": "Safety Gate -tuote",
     "action": "Tarkista mahdollinen osuma",
-    "instruction": "Vertaa mallia, tuotemerkkiä ja erää viralliseen tietueeseen. Tallenna päätöksesi ja muistiinpano sovellukseen."
+    "instruction": "Vertaa mallia viralliseen tietueeseen. Tallenna päätöksesi ja muistiinpano sovellukseen."
   },
   "start": {
     "title": "Mitä tapahtuu asennuksen jälkeen",
@@ -389,12 +389,12 @@
     "step4Title": "Jatka seurantaa asioiden muuttuessa",
     "step4Body": "Uudet Safety Gate -hälytykset ja tuotepäivitykset käynnistävät tarkistuksia suunnitelmasi ollessa aktiivinen. Äskettäin luodut havainnot voivat laukaista sähköpostin, ja päätöksesi säilyvät tarkistushistoriassa.",
     "matchTitle": "Mahdollinen osuma löytyi",
-    "matchBody": "Tämä on pyyntö tarkistaa todisteet, ei todiste siitä, että tarkka mallisi tai eräsi on vaarallinen. Vahvista nämä tiedot ennen toimenpiteisiin ryhtymistä.",
+    "matchBody": "Tämä on pyyntö tarkistaa todisteet, ei todiste siitä, että tarkka mallisi on vaarallinen. Vahvista malli ennen toimenpiteitä.",
     "clearTitle": "Mahdollista osumaa ei löytynyt",
     "clearBody": "Suoritettu tarkistus ei löytänyt mahdollista osumaa tarkistetuista indeksoiduista tiedoista. Tämä ei ole turvallisuustodistus. Uudet hälytykset ja tuotemuutokset voivat muuttaa tulosta myöhemmin.",
     "audienceTitle": "Kaupoille, jotka myyvät fyysisiä tuotteita EU:ssa",
     "audienceBody": "Erityisen hyödyllinen leluille, vauvatuotteille, elektroniikalle, kosmetiikalle, kodintavaroille sekä tuonti- tai omamerkkisille tuotteille. Tekoälyn kuvien vertailu voi auttaa, kun toimittajien luetteloissa on puutteellisia tunnisteita. Safety Gate kattaa vaaralliset muut kuin elintarvikkeet.",
     "caseTitle": "Esimerkki: muutettu otsikko, sitten toimittajan tarkistus",
-    "caseBody": "Havainnollistava skenaario: toimittaja listaa potkupyörän eri nimellä ja jättää mallin pois. Visuaaliset yksityiskohdat johtavat mahdolliseen osumaan. Kauppias vertaa hälytystä ja pyytää mallia ja erää toimittajalta. Jos todisteet osoittavat eri tuotteen, he hylkäävät havainnon muistiinpanolla; jos se vahvistaa kyseisen tuotteen, he ryhtyvät asianmukaisiin toimiin ja kirjaavat sen. Tämä on työnkulun esimerkki, ei asiakastapaus tai reaaliaikainen tulos."
+    "caseBody": "Havainnollistava skenaario: toimittaja listaa tasapainopyörän eri nimellä ja jättää mallin pois. Visuaaliset yksityiskohdat johtavat mahdolliseen osumaan. Kauppias vertaa hälytystä ja pyytää mallia toimittajalta. Jos todisteet osoittavat eri tuotteen, he hylkäävät havainnon muistiinpanolla; jos se vahvistaa kyseisen tuotteen, he ryhtyvät asianmukaisiin toimenpiteisiin ja tallentavat sen. Tämä on työnkulun esimerkki, ei asiakastapaus tai reaaliaikainen tulos."
   }
 }

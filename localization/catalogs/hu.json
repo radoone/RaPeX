@@ -46,7 +46,7 @@
       "mockProductName": "Gyermek futóbicikli",
       "mockAlert": "Safety Gate riasztás",
       "mockAlertName": "Hasonló termék egy EU riasztásban",
-      "mockReason": "Döntés előtt hasonlítsa össze a modellt és a tételt.",
+      "mockReason": "Döntés előtt hasonlítsa össze a modellt.",
       "flowLabel": "Hogyan működik a szolgáltatás",
       "flowCatalog": "Az Ön Shopify katalógusa",
       "flowCompare": "Összehasonlítás EU riasztásokkal",
@@ -67,7 +67,7 @@
       "matchScreenTitle": "Lehetséges egyezés",
       "yourProduct": "Az Ön terméke",
       "alertRecord": "Safety Gate bejegyzés",
-      "matchReason": "Döntés előtt hasonlítsa össze a fényképeket, a modellt és a tételt.",
+      "matchReason": "Döntés előtt hasonlítsa össze a fényképeket és a modellt.",
       "matchTitle": "Hasonlítsa össze a terméket. Válassza ki a következő lépést.",
       "matchBody": "A Shopify és a Safety Gate fotói, azonosítói és a hivatalos kockázat megjelennek az ellenőrzési vezérlők mellett.",
       "emailLabel": "E-mail frissítés",
@@ -134,7 +134,7 @@
       "step2Title": "Megjelöljük a lehetséges egyezéseket",
       "step2Desc": "E-mailben megkapja az eredményt és a bizonyítékokat, így felülvizsgálhatja a lehetséges egyezést.",
       "step3Title": "Ön dönti el, mit tegyen",
-      "step3Desc": "Hasonlítsa össze a modellt, a fényképeket és a tételt. Rögzítse a felülvizsgálat eredményét az alkalmazásban."
+      "step3Desc": "Hasonlítsa össze a modellt és a fényképeket. Rögzítse az áttekintés eredményét az alkalmazásban."
     },
     "compliance": {
       "eyebrow": "Szabályozási környezet",
@@ -164,7 +164,7 @@
       "q5": "Mi történik, ha nincs lehetséges egyezés?",
       "a5": "A jelentés megmutatja az ellenőrzött termékek számát és azt, hogy ebben az ellenőrzésben nem találtunk lehetséges egyezést. Ez nem tanúsítja a termékek biztonságát. Később új riasztások jelenhetnek meg.",
       "q6": "Egy lehetséges egyezés bizonyítja, hogy a termékem veszélyes?",
-      "a6": "Nem. Az AI vagy egy azonosító összekapcsolhatja az Ön listáját egy Safety Gate rekorddal, de továbbra is ellenőriznie kell a pontos terméket, modellt és érintett tételt. A ZeroRecall támogatja az áttekintését; nem tanúsítja a biztonságot, és nem helyettesíti az Ön jogi kötelezettségeit."
+      "a6": "Nem. Az AI vagy egy azonosító összekapcsolhatja az Ön terméklistáját egy Safety Gate nyilvántartással, de továbbra is ellenőriznie kell a pontos terméket és modellt. A ZeroRecall támogatja az áttekintést; nem tanúsítja a biztonságot, és nem helyettesíti az Ön jogi kötelezettségeit."
     },
     "cta": {
       "title": "Kezdje egy ingyenes ellenőrzéssel",
@@ -222,13 +222,13 @@
       "alertTitle": "Hasonló termék egy EU riasztásban",
       "alertDetail": "A képek és a termékadatok ellenőrzésre érdemes egyezésre utalnak.",
       "decisionTitle": "Az Ön következő lépése",
-      "decisionBody": "Hasonlítsa össze a modellt, a fényképeket és a tételt. Döntse el, hogy a riasztás vonatkozik-e az Ön termékére.",
+      "decisionBody": "Hasonlítsa össze a modellt és a fényképeket. Döntse el, hogy a riasztás vonatkozik-e az Ön termékére.",
       "disclaimer": "Illusztráció, nem valós eredmény.",
       "previewLabel": "Illusztratív eredmény előnézet",
       "status": "Felülvizsgálatra szorul",
       "findingTitle": "Lehetséges termékegyezés",
-      "findingReason": "Szemléltető ok: hasonló vázszerkezet és kormánycsukló, annak ellenére, hogy a termék neve eltér. A modell és a tételszám ellenőrzésre szorul.",
-      "findingAction": "Modell és tétel összehasonlítása →"
+      "findingReason": "Szemléltető ok: hasonló vázszerkezet és kormánymű, annak ellenére, hogy a termék neve eltér. A modell ellenőrzése továbbra is szükséges.",
+      "findingAction": "Hasonlítsa össze a modellt →"
     },
     "scan": {
       "eyebrow": "EGYSZERI ELLENŐRZÉS · NINCS TELEPÍTÉS",
@@ -333,9 +333,9 @@
       "exampleTitle": "Nézze meg, hogyan válik egy lehetséges egyezés döntéssé",
       "missing": "EAN és modell hiányzik a listából",
       "detailTitle": "Amit az MI felülvizsgálatra jelölne",
-      "detailBody": "Ebben az illusztrációban: hasonló váz, kormánycsukló és kerék kialakítás. Ezek a részletek alátámasztanak egy lehetséges egyezést; nem erősítik meg a pontos modellt vagy az érintett tételt.",
+      "detailBody": "Ebben az illusztrációban: hasonló váz, kormánymű és kerékkialakítás. Ezek a részletek alátámasztják a lehetséges egyezést; nem erősítik meg a pontos modellt.",
       "reviewTitle": "Az Ön döntése, mellékelt bizonyítékokkal",
-      "reviewBody": "Hasonlítsa össze a terméklistát és a hivatalos riasztást, majd ellenőrizze a modellt és a tételt a beszállítójával. A telepített alkalmazásban rögzítsen egy megoldást, utasítson el egy másik terméket, vagy tartsa nyitva a megállapítást, amíg várja a beszállítót.",
+      "reviewBody": "Hasonlítsa össze a terméklistát és a hivatalos riasztást, majd ellenőrizze a modellt a beszállítójával. A telepített alkalmazásban rögzítsen egy megoldást, utasítson el egy másik terméket, vagy tartsa nyitva a megállapítást, amíg várja a beszállítót.",
       "record": "A felülvizsgálati döntések az alkalmazásban szereplő szereplővel, idővel és megjegyzéssel kerülnek mentésre.",
       "limit": "Az MI lehetséges egyezéseket javasol. Nem tanúsítja a biztonságot, és nem helyettesíti az Ön felülvizsgálatát. Ez a példa illusztratív; nem valós visszahívás vagy élő szkennelés."
     },
@@ -366,7 +366,7 @@
       "title": "Az értesítés megérkezik Önhöz",
       "body": "Amikor új találat jön létre, a ZeroRecall e-mailben elküldheti a terméket, a Safety Gate összehasonlítást és egy linket, amellyel áttekintheti azt a Shopify alkalmazásában. Nem kell nyitva tartania az alkalmazást az értesítés fogadásához.",
       "whatTitle": "Tiszta következő lépés, nem csak figyelmeztetés",
-      "whatBody": "Nyissa meg a találatot, hasonlítsa össze a fényképeket és az azonosítókat, majd ellenőrizze a modellt és a tételt, mielőtt döntést hoz. Az értesítés címzettje, nyelve és preferenciái a Beállításokban szerkeszthetők.",
+      "whatBody": "Nyissa meg a megállapítást, hasonlítsa össze a fényképeket és az azonosítókat, majd döntés előtt ellenőrizze a modellt. Az értesítés címzettje, nyelve és preferenciái a Beállításokban szerkeszthetők.",
       "weeklyTitle": "Nincsenek új találatok? Akkor is kap frissítést.",
       "weeklyBody": "Ha engedélyezve vannak a heti összefoglalók, az új találatok nélküli hét összefoglalót hoz. A meglévő nyitott találatok továbbra is igényelhetik a figyelmét; a hiányos ellenőrzési futtatás hiányosként jelenik meg.",
       "previewTitle": "Szemléltető riasztási e-mail",
@@ -376,7 +376,7 @@
       "productLabel": "Az Ön terméke",
       "alertLabel": "Safety Gate termék",
       "action": "Lehetséges egyezés felülvizsgálata",
-      "instruction": "Hasonlítsa össze a modellt, a márkát és a tételt a hivatalos bejegyzéssel. Mentse el döntését és egy megjegyzést az alkalmazásban."
+      "instruction": "Hasonlítsa össze a modellt a hivatalos nyilvántartással. Mentse el döntését és egy megjegyzést az alkalmazásban."
     },
     "start": {
       "title": "Mi történik a telepítés után",
@@ -390,13 +390,13 @@
       "step4Title": "Folytassa a felügyeletet, ahogy a dolgok változnak",
       "step4Body": "Új Safety Gate riasztások és termékfrissítések indítanak ellenőrzéseket, amíg a csomagja aktív. Az újonnan létrehozott találatok e-mailt válthatnak ki, és döntései megmaradnak az áttekintési előzményekben.",
       "matchTitle": "Lehetséges egyezés található",
-      "matchBody": "Ez egy felkérés a bizonyítékok áttekintésére, nem pedig annak bizonyítéka, hogy az Ön pontos modellje vagy tétele veszélyes. Mielőtt lépéseket tenne, erősítse meg ezeket a részleteket.",
+      "matchBody": "Ez egy felkérés a bizonyítékok áttekintésére, nem pedig annak bizonyítéka, hogy az Ön pontos modellje veszélyes. Mielőtt bármilyen intézkedést tenne, erősítse meg a modellt.",
       "clearTitle": "Nem található lehetséges egyezés",
       "clearBody": "A befejezett ellenőrzés nem talált lehetséges egyezést az ellenőrzött indexelt nyilvántartásokban. Ez nem biztonsági tanúsítvány. Új riasztások és termékváltozások később megváltoztathatják az eredményt.",
       "audienceTitle": "Fizikai termékeket értékesítő üzletek számára az EU-ban",
       "audienceBody": "Különösen hasznos játékok, babatermékek, elektronikai cikkek, kozmetikumok, háztartási cikkek, valamint importált vagy saját márkás termékek esetében. Az AI fotóösszehasonlítás segíthet, ha a beszállítói listák hiányos azonosítókat tartalmaznak. A Safety Gate a veszélyes nem élelmiszeripari termékekre terjed ki.",
       "caseTitle": "Példa: megváltozott cím, majd beszállítói ellenőrzés",
-      "caseBody": "Szemléltető forgatókönyv: egy beszállító egy futóbiciklit más néven listáz, és kihagyja a modellt. A vizuális részletek lehetséges egyezéshez vezetnek. A kereskedő összehasonlítja a riasztást, és bekéri a modellt és a tételt a beszállítótól. Ha a bizonyítékok más terméket mutatnak, megjegyzéssel elvetik a találatot; ha megerősíti az érintett terméket, megteszik a megfelelő intézkedéseket és rögzítik azt. Ez egy munkafolyamat-példa, nem ügyfél eset vagy élő eredmény."
+      "caseBody": "Szemléltető forgatókönyv: egy beszállító más néven listáz egy futóbiciklit, és kihagyja a modellt. A vizuális részletek lehetséges egyezéshez vezetnek. A kereskedő összehasonlítja a riasztást, és bekéri a modellt a beszállítótól. Ha a bizonyítékok más terméket mutatnak, megjegyzéssel elutasítja a megállapítást; ha megerősítik az érintett terméket, megteszi a megfelelő intézkedéseket és rögzíti azokat. Ez egy munkafolyamat-példa, nem ügyfél eset vagy élő eredmény."
     }
   },
   "email": {

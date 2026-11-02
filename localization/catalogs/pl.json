@@ -46,7 +46,7 @@
       "mockProductName": "Rowerek biegowy dla dzieci",
       "mockAlert": "Alert Safety Gate",
       "mockAlertName": "Podobny produkt w alercie UE",
-      "mockReason": "Porównaj model i partię przed podjęciem decyzji.",
+      "mockReason": "Porównaj model przed podjęciem decyzji.",
       "flowLabel": "Jak działa usługa",
       "flowCatalog": "Twój katalog Shopify",
       "flowCompare": "Porównaj z alertami UE",
@@ -67,7 +67,7 @@
       "matchScreenTitle": "Możliwe dopasowanie",
       "yourProduct": "Twój produkt",
       "alertRecord": "Zapis Safety Gate",
-      "matchReason": "Porównaj zdjęcia, model i partię przed podjęciem decyzji.",
+      "matchReason": "Porównaj zdjęcia i model przed podjęciem decyzji.",
       "matchTitle": "Porównaj produkt. Wybierz kolejny krok.",
       "matchBody": "Zdjęcia Shopify i Safety Gate, identyfikatory oraz oficjalne ryzyko pojawiają się obok elementów sterujących przeglądu.",
       "emailLabel": "Aktualizacja e-maila",
@@ -134,7 +134,7 @@
       "step2Title": "Oznaczamy możliwe dopasowania",
       "step2Desc": "Otrzymujesz wynik i dowody e-mailem, aby móc zweryfikować możliwe dopasowanie.",
       "step3Title": "Ty decydujesz, co zrobić",
-      "step3Desc": "Porównaj model, zdjęcia i partię. Zapisz wynik swojej weryfikacji w aplikacji."
+      "step3Desc": "Porównaj model i zdjęcia. Zapisz wynik swojej oceny w aplikacji."
     },
     "compliance": {
       "eyebrow": "Kontekst regulacyjny",
@@ -164,7 +164,7 @@
       "q5": "Co jeśli nie zostaną znalezione możliwe dopasowania?",
       "a5": "Raport pokaże liczbę sprawdzonych produktów i informację, że w tym sprawdzeniu nie znaleziono możliwych dopasowań. Nie jest to potwierdzenie bezpieczeństwa produktów. Nowe ostrzeżenia mogą pojawić się później.",
       "q6": "Czy możliwe dopasowanie dowodzi, że mój produkt jest niebezpieczny?",
-      "a6": "Nie. AI lub identyfikator może połączyć Twoją ofertę z rekordem Safety Gate, ale nadal musisz zweryfikować dokładny produkt, model i partię objętą problemem. ZeroRecall wspiera Twój przegląd; nie certyfikuje bezpieczeństwa ani nie zastępuje Twoich zobowiązań prawnych."
+      "a6": "Nie. AI lub identyfikator może połączyć Twoją ofertę z rekordem Safety Gate, ale nadal musisz zweryfikować dokładny produkt i model. ZeroRecall wspiera Twoją weryfikację; nie certyfikuje bezpieczeństwa ani nie zastępuje Twoich zobowiązań prawnych."
     },
     "cta": {
       "title": "Rozpocznij od darmowego skanowania",
@@ -222,13 +222,13 @@
       "alertTitle": "Podobny produkt w alercie UE",
       "alertDetail": "Obrazy i szczegóły produktu sugerują dopasowanie warte sprawdzenia.",
       "decisionTitle": "Twój następny krok",
-      "decisionBody": "Porównaj model, zdjęcia i partię. Zdecyduj, czy alert dotyczy Twojego produktu.",
+      "decisionBody": "Porównaj model i zdjęcia. Zdecyduj, czy alert dotyczy Twojego produktu.",
       "disclaimer": "Ilustracja, nie jest to prawdziwe znalezisko.",
       "previewLabel": "Podgląd ilustracyjnego znaleziska",
       "status": "Wymaga weryfikacji",
       "findingTitle": "Możliwe dopasowanie produktu",
-      "findingReason": "Przykład: podobna konstrukcja ramy i połączenie kierownicy pomimo innej nazwy w ofercie. Model i partia nadal wymagają weryfikacji.",
-      "findingAction": "Porównaj model i partię →"
+      "findingReason": "Przykład: podobna konstrukcja ramy i przegub kierowniczy pomimo innej nazwy oferty. Model nadal wymaga weryfikacji.",
+      "findingAction": "Porównaj model →"
     },
     "scan": {
       "eyebrow": "JEDNORAZOWA KONTROLA · BEZ INSTALACJI",
@@ -333,9 +333,9 @@
       "exampleTitle": "Zobacz, jak możliwe dopasowanie staje się decyzją",
       "missing": "Brak EAN i modelu w ofercie",
       "detailTitle": "Co AI oznaczyłoby do weryfikacji",
-      "detailBody": "W tej ilustracji: podobna rama, połączenie kierownicy i konstrukcja kół. Te szczegóły wspierają możliwe dopasowanie; nie potwierdzają dokładnego modelu ani partii, której dotyczy problem.",
+      "detailBody": "Na tej ilustracji: podobna rama, przegub kierowniczy i konstrukcja kół. Te szczegóły wskazują na możliwe dopasowanie; nie potwierdzają one dokładnego modelu.",
       "reviewTitle": "Twoja decyzja, z dołączonymi dowodami",
-      "reviewBody": "Porównaj ofertę i oficjalny alert, a następnie zweryfikuj model i partię u swojego dostawcy. W zainstalowanej aplikacji zarejestruj rozwiązanie, odrzuć inny produkt lub pozostaw znalezisko otwarte, czekając na dostawcę.",
+      "reviewBody": "Porównaj ofertę i oficjalny alert, a następnie zweryfikuj model u swojego dostawcy. W zainstalowanej aplikacji zapisz rozwiązanie, odrzuć inny produkt lub pozostaw zgłoszenie otwarte, czekając na dostawcę.",
       "record": "Decyzje dotyczące weryfikacji są zapisywane w aplikacji wraz z aktorem, czasem i notatką.",
       "limit": "AI sugeruje możliwe dopasowania. Nie certyfikuje bezpieczeństwa ani nie zastępuje Twojej weryfikacji. Ten przykład jest ilustracyjny; nie jest to prawdziwe wycofanie produktu ani skanowanie na żywo."
     },
@@ -366,7 +366,7 @@
       "title": "Powiadomienie przychodzi do Ciebie",
       "body": "Gdy pojawi się nowe znalezisko, ZeroRecall może wysłać e-mail z informacjami o produkcie, porównaniem Safety Gate i linkiem do jego przeglądu w Twojej aplikacji Shopify. Nie musisz trzymać aplikacji otwartej, aby otrzymać powiadomienie.",
       "whatTitle": "Jasny następny krok, a nie tylko ostrzeżenie",
-      "whatBody": "Otwórz znalezisko, porównaj zdjęcia i identyfikatory, a następnie zweryfikuj model i partię przed podjęciem decyzji. Odbiorca powiadomień, język i preferencje są edytowalne w Ustawieniach.",
+      "whatBody": "Otwórz zgłoszenie, porównaj zdjęcia i identyfikatory, a następnie zweryfikuj model przed podjęciem decyzji. Odbiorca powiadomień, język i preferencje są edytowalne w Ustawieniach.",
       "weeklyTitle": "Brak nowych znalezisk? Nadal otrzymujesz aktualizację.",
       "weeklyBody": "Po włączeniu cotygodniowych podsumowań, tydzień bez nowych znalezisk przynosi podsumowanie. Istniejące otwarte znaleziska mogą nadal wymagać Twojej uwagi; niekompletne uruchomienie monitoringu jest wyświetlane jako niekompletne.",
       "previewTitle": "Przykładowy e-mail z alertem",
@@ -376,7 +376,7 @@
       "productLabel": "Twój produkt",
       "alertLabel": "Produkt Safety Gate",
       "action": "Przejrzyj możliwe dopasowanie",
-      "instruction": "Porównaj model, markę i partię z oficjalnym zapisem. Zapisz swoją decyzję i notatkę w aplikacji."
+      "instruction": "Porównaj model z oficjalnym zapisem. Zapisz swoją decyzję i notatkę w aplikacji."
     },
     "start": {
       "title": "Co dzieje się po instalacji",
@@ -390,13 +390,13 @@
       "step4Title": "Kontynuuj monitorowanie, gdy sytuacja się zmienia",
       "step4Body": "Nowe alerty Safety Gate i aktualizacje produktów wywołują kontrole, gdy Twój plan jest aktywny. Nowo utworzone znaleziska mogą wywołać e-mail, a Twoje decyzje pozostają w historii przeglądów.",
       "matchTitle": "Znaleziono możliwe dopasowanie",
-      "matchBody": "Jest to prośba o przejrzenie dowodów, a nie dowód, że Twój dokładny model lub partia jest niebezpieczna. Potwierdź te szczegóły przed podjęciem działań.",
+      "matchBody": "Jest to prośba o przejrzenie dowodów, a nie dowód na to, że Twój dokładny model jest niebezpieczny. Potwierdź model przed podjęciem działań.",
       "clearTitle": "Nie znaleziono możliwego dopasowania",
       "clearBody": "Zakończona kontrola nie znalazła możliwego dopasowania w zindeksowanych rekordach, które sprawdziła. Nie jest to certyfikat bezpieczeństwa. Nowe alerty i zmiany produktów mogą później zmienić wynik.",
       "audienceTitle": "Dla sklepów sprzedających produkty fizyczne w UE",
       "audienceBody": "Szczególnie przydatne dla zabawek, produktów dla dzieci, elektroniki, kosmetyków, artykułów gospodarstwa domowego oraz produktów importowanych lub marek własnych. Porównanie zdjęć AI może pomóc, gdy listy dostawców mają niekompletne identyfikatory. Safety Gate obejmuje niebezpieczne produkty nieżywnościowe.",
       "caseTitle": "Przykład: zmieniony tytuł, a następnie kontrola dostawcy",
-      "caseBody": "Ilustracyjny scenariusz: dostawca umieszcza rowerek biegowy pod inną nazwą i pomija model. Szczegóły wizualne prowadzą do możliwego dopasowania. Sprzedawca porównuje alert i prosi dostawcę o model i partię. Jeśli dowody wskazują na inny produkt, odrzuca znalezisko z notatką; jeśli potwierdza to produkt objęty problemem, podejmuje odpowiednie działania i je rejestruje. Jest to przykład przepływu pracy, a nie przypadek klienta ani wynik na żywo."
+      "caseBody": "Ilustracyjny scenariusz: dostawca wystawia rowerek biegowy pod inną nazwą i pomija model. Szczegóły wizualne prowadzą do możliwego dopasowania. Sprzedawca porównuje alert i prosi dostawcę o model. Jeśli dowody wskazują na inny produkt, odrzuca zgłoszenie z notatką; jeśli potwierdzają produkt objęty alertem, podejmuje odpowiednie działania i je rejestruje. Jest to przykład przepływu pracy, a nie przypadek klienta ani wynik na żywo."
     }
   },
   "email": {

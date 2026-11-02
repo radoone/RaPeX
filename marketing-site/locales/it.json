@@ -45,7 +45,7 @@
     "mockProductName": "Bicicletta senza pedali per bambini",
     "mockAlert": "Avviso Safety Gate",
     "mockAlertName": "Prodotto simile in un avviso UE",
-    "mockReason": "Confronta il modello e il lotto prima di decidere.",
+    "mockReason": "Confronta il modello prima di decidere.",
     "flowLabel": "Come funziona il servizio",
     "flowCatalog": "Il tuo catalogo Shopify",
     "flowCompare": "Confronta con gli avvisi UE",
@@ -66,7 +66,7 @@
     "matchScreenTitle": "Possibile corrispondenza",
     "yourProduct": "Il tuo prodotto",
     "alertRecord": "Record Safety Gate",
-    "matchReason": "Confronta foto, modello e lotto prima di decidere.",
+    "matchReason": "Confronta le foto e il modello prima di decidere.",
     "matchTitle": "Confronta il prodotto. Scegli il tuo prossimo passo.",
     "matchBody": "Le foto, gli identificativi di Shopify e Safety Gate e il rischio ufficiale appaiono accanto ai controlli di revisione.",
     "emailLabel": "Aggiornamento e-mail",
@@ -133,7 +133,7 @@
     "step2Title": "Segnaliamo possibili corrispondenze",
     "step2Desc": "Ricevi il risultato e le prove via e-mail in modo da poter esaminare una possibile corrispondenza.",
     "step3Title": "Decidi cosa fare",
-    "step3Desc": "Confronta il modello, le foto e il lotto. Registra l'esito della tua revisione nell'app."
+    "step3Desc": "Confronta il modello e le foto. Registra l'esito della tua revisione nell'app."
   },
   "compliance": {
     "eyebrow": "Contesto normativo",
@@ -163,7 +163,7 @@
     "q5": "E se non vengono trovate possibili corrispondenze?",
     "a5": "Il report indica il numero di prodotti controllati e che non sono state trovate possibili corrispondenze in questo controllo. Non certifica la sicurezza dei prodotti. Nuovi avvisi possono comparire in seguito.",
     "q6": "Una possibile corrispondenza dimostra che il mio prodotto è pericoloso?",
-    "a6": "No. L'IA o un identificatore possono collegare la tua inserzione a un record di Safety Gate, ma devi comunque verificare il prodotto esatto, il modello e il lotto interessato. ZeroRecall supporta la tua revisione; non certifica la sicurezza né sostituisce i tuoi obblighi legali."
+    "a6": "No. L'IA o un identificatore possono collegare la tua inserzione a un record Safety Gate, ma devi comunque verificare il prodotto e il modello esatti. ZeroRecall supporta la tua revisione; non certifica la sicurezza né sostituisce i tuoi obblighi legali."
   },
   "cta": {
     "title": "Inizia con una scansione gratuita",
@@ -221,13 +221,13 @@
     "alertTitle": "Prodotto simile in un avviso UE",
     "alertDetail": "Immagini e dettagli del prodotto suggeriscono una corrispondenza che vale la pena controllare.",
     "decisionTitle": "Il tuo prossimo passo",
-    "decisionBody": "Confronta il modello, le foto e il lotto. Decidi se l'avviso si applica al tuo prodotto.",
+    "decisionBody": "Confronta il modello e le foto. Decidi se l'avviso si applica al tuo prodotto.",
     "disclaimer": "Illustrazione, non una scoperta reale.",
     "previewLabel": "Anteprima illustrativa della scoperta",
     "status": "Richiede revisione",
     "findingTitle": "Possibile corrispondenza prodotto",
-    "findingReason": "Motivo illustrativo: costruzione del telaio e giunto dello sterzo simili nonostante un nome di inserzione diverso. Il modello e il lotto devono ancora essere verificati.",
-    "findingAction": "Confronta modello e lotto →"
+    "findingReason": "Motivo illustrativo: costruzione del telaio e giunto dello sterzo simili nonostante un nome di inserzione diverso. Il modello necessita ancora di verifica.",
+    "findingAction": "Confronta il modello →"
   },
   "scan": {
     "eyebrow": "CONTROLLO UNA TANTUM · NESSUNA INSTALLAZIONE",
@@ -332,9 +332,9 @@
     "exampleTitle": "Guarda una possibile corrispondenza trasformarsi in una decisione",
     "missing": "EAN e modello mancanti dall'inserzione",
     "detailTitle": "Cosa l'IA segnalerebbe per la revisione",
-    "detailBody": "In questa illustrazione: un telaio, un giunto dello sterzo e un design delle ruote simili. Questi dettagli supportano una possibile corrispondenza; non confermano il modello esatto o il lotto interessato.",
+    "detailBody": "In questa illustrazione: telaio, giunto dello sterzo e design delle ruote simili. Questi dettagli supportano una possibile corrispondenza; non confermano il modello esatto.",
     "reviewTitle": "La tua decisione, con prove allegate",
-    "reviewBody": "Confronta l'inserzione e l'avviso ufficiale, quindi verifica il modello e il lotto con il tuo fornitore. Nell'app installata, registra una risoluzione, scarta un prodotto diverso o mantieni il risultato aperto in attesa del fornitore.",
+    "reviewBody": "Confronta l'inserzione e l'avviso ufficiale, quindi verifica il modello con il tuo fornitore. Nell'app installata, registra una risoluzione, scarta un prodotto diverso o mantieni il risultato aperto in attesa del fornitore.",
     "record": "Le decisioni di revisione vengono salvate con un attore, l'ora e una nota nell'app.",
     "limit": "L'IA suggerisce possibili corrispondenze. Non certifica la sicurezza né sostituisce la tua revisione. Questo esempio è illustrativo; non è un richiamo reale o una scansione in tempo reale."
   },
@@ -365,7 +365,7 @@
     "title": "L'allerta ti raggiunge",
     "body": "Quando viene creato un nuovo rilevamento, ZeroRecall può inviare via email il prodotto, il confronto con Safety Gate e un link per esaminarlo nella tua app Shopify. Non è necessario tenere l'app aperta per ricevere la notifica.",
     "whatTitle": "Un chiaro passo successivo, non solo un avvertimento",
-    "whatBody": "Apri il rilevamento, confronta le foto e gli identificatori, quindi verifica il modello e il lotto prima di decidere. Il destinatario della notifica, la lingua e le preferenze sono modificabili in Impostazioni.",
+    "whatBody": "Apri il risultato, confronta le foto e gli identificatori, quindi verifica il modello prima di decidere. Il destinatario della notifica, la lingua e le preferenze sono modificabili in Impostazioni.",
     "weeklyTitle": "Nessun nuovo rilevamento? Ricevi comunque un aggiornamento.",
     "weeklyBody": "Con i riepiloghi settimanali abilitati, una settimana senza nuovi rilevamenti porta un riepilogo. I rilevamenti aperti esistenti potrebbero ancora richiedere la tua attenzione; un'esecuzione di monitoraggio incompleta viene mostrata come incompleta.",
     "previewTitle": "Email di avviso illustrativa",
@@ -375,7 +375,7 @@
     "productLabel": "Il tuo prodotto",
     "alertLabel": "Prodotto Safety Gate",
     "action": "Rivedi possibile corrispondenza",
-    "instruction": "Confronta il modello, il marchio e il lotto con il record ufficiale. Salva la tua decisione e una nota nell'app."
+    "instruction": "Confronta il modello con il record ufficiale. Salva la tua decisione e una nota nell'app."
   },
   "start": {
     "title": "Cosa succede dopo l'installazione",
@@ -389,12 +389,12 @@
     "step4Title": "Continua a monitorare mentre le cose cambiano",
     "step4Body": "Nuovi avvisi di Safety Gate e aggiornamenti dei prodotti attivano controlli mentre il tuo piano è attivo. I rilevamenti appena creati possono attivare un'email e le tue decisioni rimangono nella cronologia delle revisioni.",
     "matchTitle": "È stata trovata una possibile corrispondenza",
-    "matchBody": "Questa è una richiesta di revisione delle prove, non la prova che il tuo modello o lotto esatto sia pericoloso. Conferma questi dettagli prima di agire.",
+    "matchBody": "Questa è una richiesta di revisione delle prove, non una prova che il tuo modello esatto sia pericoloso. Conferma il modello prima di agire.",
     "clearTitle": "Nessuna possibile corrispondenza è stata trovata",
     "clearBody": "Il controllo completato non ha trovato alcuna possibile corrispondenza nei record indicizzati che ha verificato. Questo non è un certificato di sicurezza. Nuovi avvisi e modifiche ai prodotti possono cambiare il risultato in seguito.",
     "audienceTitle": "Per i negozi che vendono prodotti fisici nell'UE",
     "audienceBody": "Particolarmente utile per giocattoli, prodotti per bambini, elettronica, cosmetici, articoli per la casa e prodotti importati o a marchio del distributore. Il confronto fotografico tramite IA può aiutare quando gli elenchi dei fornitori hanno identificatori incompleti. Safety Gate copre i prodotti non alimentari pericolosi.",
     "caseTitle": "Esempio: un titolo modificato, poi un controllo del fornitore",
-    "caseBody": "Scenario illustrativo: un fornitore elenca una bici senza pedali con un nome diverso e omette il modello. I dettagli visivi portano a una possibile corrispondenza. Il commerciante confronta l'avviso e richiede il modello e il lotto al fornitore. Se le prove mostrano un prodotto diverso, archiviano il rilevamento con una nota; se conferma il prodotto interessato, intraprendono l'azione appropriata e la registrano. Questo è un esempio di flusso di lavoro, non un caso cliente o un risultato in tempo reale."
+    "caseBody": "Scenario illustrativo: un fornitore elenca una bici senza pedali con un nome diverso e omette il modello. I dettagli visivi portano a una possibile corrispondenza. Il commerciante confronta l'avviso e richiede il modello al fornitore. Se le prove mostrano un prodotto diverso, scartano il risultato con una nota; se conferma il prodotto interessato, intraprendono l'azione appropriata e la registrano. Questo è un esempio di flusso di lavoro, non un caso cliente o un risultato in tempo reale."
   }
 }

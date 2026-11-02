@@ -45,7 +45,7 @@
     "mockProductName": "Laste tasakaaluratas",
     "mockAlert": "Safety Gate'i hoiatus",
     "mockAlertName": "Sarnane toode EL-i hoiatusteates",
-    "mockReason": "Võrdle mudelit ja partiid enne otsustamist.",
+    "mockReason": "Võrdle mudelit enne otsustamist.",
     "flowLabel": "Kuidas teenus töötab",
     "flowCatalog": "Teie Shopify kataloog",
     "flowCompare": "Võrdle EL-i hoiatustega",
@@ -66,7 +66,7 @@
     "matchScreenTitle": "Võimalik vaste",
     "yourProduct": "Teie toode",
     "alertRecord": "Safety Gate'i kirje",
-    "matchReason": "Võrdle fotosid, mudelit ja partiid enne otsustamist.",
+    "matchReason": "Võrdle fotosid ja mudelit enne otsustamist.",
     "matchTitle": "Võrdle toodet. Vali oma järgmine samm.",
     "matchBody": "Shopify ja Safety Gate'i fotod, identifikaatorid ja ametlik risk kuvatakse ülevaatuse juhtnuppude kõrval.",
     "emailLabel": "E-posti uuendus",
@@ -133,7 +133,7 @@
     "step2Title": "Märgistame võimalikud vasted",
     "step2Desc": "Saate tulemuse ja tõendid e-posti teel, et saaksite võimaliku vaste üle vaadata.",
     "step3Title": "Teie otsustate, mida teha",
-    "step3Desc": "Võrdle mudelit, fotosid ja partiid. Salvesta oma ülevaatuse tulemus rakenduses."
+    "step3Desc": "Võrdle mudelit ja fotosid. Salvesta oma ülevaatuse tulemus rakenduses."
   },
   "compliance": {
     "eyebrow": "Regulatiivne kontekst",
@@ -163,7 +163,7 @@
     "q5": "Mis saab siis, kui võimalikke vasteid ei leita?",
     "a5": "Aruanne näitab kontrollitud toodete arvu ja seda, et selle kontrolli käigus võimalikke vasteid ei leitud. See ei tõenda toodete ohutust. Uusi teateid võib lisanduda hiljem.",
     "q6": "Kas võimalik vaste tõestab, et minu toode on ohtlik?",
-    "a6": "Ei. AI või identifikaator võib ühendada sinu kirje Safety Gate'i kirjega, kuid pead siiski kontrollima täpset toodet, mudelit ja mõjutatud partiid. ZeroRecall toetab sinu ülevaatamist; see ei sertifitseeri ohutust ega asenda sinu juriidilisi kohustusi."
+    "a6": "Ei. AI või identifikaator võib ühendada sinu kirje Safety Gate'i andmetega, kuid pead siiski kontrollima täpset toodet ja mudelit. ZeroRecall toetab sinu ülevaatust; see ei taga ohutust ega asenda sinu juriidilisi kohustusi."
   },
   "cta": {
     "title": "Alusta tasuta skaneerimisega",
@@ -221,13 +221,13 @@
     "alertTitle": "Sarnane toode EL-i hoiatusteates",
     "alertDetail": "Pildid ja tooteandmed viitavad kontrollimist väärt vastele.",
     "decisionTitle": "Teie järgmine samm",
-    "decisionBody": "Võrdle mudelit, fotosid ja partiid. Otsusta, kas hoiatus kehtib teie toote kohta.",
+    "decisionBody": "Võrdle mudelit ja fotosid. Otsusta, kas hoiatus kehtib sinu toote kohta.",
     "disclaimer": "Illustratsioon, mitte tegelik leid.",
     "previewLabel": "Illustreeriv leiu eelvaade",
     "status": "Vajab ülevaatamist",
     "findingTitle": "Võimalik toote vaste",
-    "findingReason": "Illustreeriv põhjus: sarnane raami konstruktsioon ja rooliliigend, hoolimata erinevast kirje nimest. Mudel ja partii vajavad endiselt kontrollimist.",
-    "findingAction": "Võrdle mudelit ja partiid →"
+    "findingReason": "Illustreeriv põhjus: sarnane raami konstruktsioon ja rooliliigend, hoolimata erinevast kirje nimest. Mudel vajab veel kontrollimist.",
+    "findingAction": "Võrdle mudelit →"
   },
   "scan": {
     "eyebrow": "ÜHEKORDNE KONTROLL · INSTALLIMIST POLE",
@@ -332,9 +332,9 @@
     "exampleTitle": "Vaadake, kuidas võimalikust vastest saab otsus",
     "missing": "EAN ja mudel puuduvad kirjest",
     "detailTitle": "Mida AI ülevaatamiseks märgistaks",
-    "detailBody": "Selles illustratsioonis: sarnane raam, rooliliigend ja rattadisain. Need detailid toetavad võimalikku vastet; need ei kinnita täpset mudelit ega mõjutatud partiid.",
+    "detailBody": "Selles illustratsioonis: sarnane raam, rooliliigend ja rattadisain. Need detailid toetavad võimalikku vastavust; need ei kinnita täpset mudelit.",
     "reviewTitle": "Teie otsus koos lisatud tõenditega",
-    "reviewBody": "Võrrelge kirjet ja ametlikku hoiatust, seejärel kontrollige mudelit ja partiid oma tarnijaga. Installitud rakenduses registreerige lahendus, lükake tagasi erinev toode või hoidke leid avatuna, kuni ootate tarnijat.",
+    "reviewBody": "Võrdle kirjet ja ametlikku hoiatust, seejärel kontrolli mudelit oma tarnijaga. Paigaldatud rakenduses salvesta lahendus, lükka tagasi erinev toode või hoia leid avatuna, oodates tarnijalt vastust.",
     "record": "Ülevaatamise otsused salvestatakse rakenduses koos tegija, aja ja märkusega.",
     "limit": "AI pakub välja võimalikke vasteid. See ei sertifitseeri ohutust ega asenda teie ülevaatust. See näide on illustreeriv; see ei ole tegelik tagasikutsumine ega reaalajas skaneerimine."
   },
@@ -365,7 +365,7 @@
     "title": "Hoiatus jõuab sinuni",
     "body": "Kui luuakse uus leid, saab ZeroRecall saata e-kirjaga toote, Safety Gate'i võrdluse ja lingi selle ülevaatamiseks sinu Shopify rakenduses. Sa ei pea hoidma rakendust avatuna, et teavitust saada.",
     "whatTitle": "Selge järgmine samm, mitte ainult hoiatus",
-    "whatBody": "Ava leid, võrdle fotosid ja identifikaatoreid, seejärel kontrolli mudelit ja partiid enne otsustamist. Sinu teavituse saaja, keel ja eelistused on seadetes muudetavad.",
+    "whatBody": "Ava leid, võrdle fotosid ja identifikaatoreid, seejärel kontrolli mudelit enne otsustamist. Sinu teavituse saaja, keel ja eelistused on seadetes muudetavad.",
     "weeklyTitle": "Uusi leide pole? Saate siiski uuenduse.",
     "weeklyBody": "Kui iganädalased kokkuvõtted on lubatud, toob nädal ilma uute leidudeta kokkuvõtte. Olemasolevad avatud leiud võivad siiski vajada sinu tähelepanu; mittetäielik jälgimiskäik kuvatakse mittetäielikuna.",
     "previewTitle": "Illustreeriv hoiatusteade",
@@ -375,7 +375,7 @@
     "productLabel": "Teie toode",
     "alertLabel": "Safety Gate'i toode",
     "action": "Vaata üle võimalik vaste",
-    "instruction": "Võrdle mudelit, kaubamärki ja partiid ametliku kirje abil. Salvesta oma otsus ja märkus rakenduses."
+    "instruction": "Võrdle mudelit ametliku kirje abil. Salvesta oma otsus ja märkus rakenduses."
   },
   "start": {
     "title": "Mis juhtub pärast installimist",
@@ -389,12 +389,12 @@
     "step4Title": "Jätka jälgimist, kui asjad muutuvad",
     "step4Body": "Uued Safety Gate'i hoiatused ja tooteuuendused käivitavad kontrollid, kui sinu plaan on aktiivne. Äsja loodud leiud võivad käivitada e-kirja ja sinu otsused jäävad ülevaatamise ajalukku.",
     "matchTitle": "Leiti võimalik vaste",
-    "matchBody": "See on palve tõendeid üle vaadata, mitte tõestus, et sinu täpne mudel või partii on ohtlik. Kinnita need üksikasjad enne tegutsemist.",
+    "matchBody": "See on palve tõendeid üle vaadata, mitte tõestus, et sinu täpne mudel on ohtlik. Kinnita mudel enne tegutsemist.",
     "clearTitle": "Võimalikku vastet ei leitud",
     "clearBody": "Lõpetatud kontroll ei leidnud indekseeritud kirjetest, mida see kontrollis, ühtegi võimalikku vastet. See ei ole ohutussertifikaat. Uued hoiatused ja toote muudatused võivad tulemust hiljem muuta.",
     "audienceTitle": "Poodidele, mis müüvad füüsilisi tooteid EL-is",
     "audienceBody": "Eriti kasulik mänguasjade, beebitoodete, elektroonika, kosmeetika, kodukaupade ning imporditud või valge märgistusega toodete puhul. AI fotovõrdlus võib aidata, kui tarnijate nimekirjades on puudulikud identifikaatorid. Safety Gate hõlmab ohtlikke mittetoidutooteid.",
     "caseTitle": "Näide: muudetud pealkiri, seejärel tarnija kontroll",
-    "caseBody": "Illustreeriv stsenaarium: tarnija loetleb tasakaaluratta teise nime all ja jätab mudeli välja. Visuaalsed detailid viivad võimaliku vasteni. Kaupmees võrdleb hoiatust ja küsib tarnijalt mudelit ja partiid. Kui tõendid näitavad teist toodet, lükkavad nad leiu märkusega tagasi; kui see kinnitab mõjutatud toodet, võtavad nad asjakohased meetmed ja registreerivad selle. See on töövoo näide, mitte kliendijuhtum ega reaalne tulemus."
+    "caseBody": "Illustreeriv stsenaarium: tarnija loetleb tasakaaluratta teise nime all ja jätab mudeli välja. Visuaalsed detailid viivad võimaliku vastavuseni. Kaupmees võrdleb hoiatust ja küsib tarnijalt mudelit. Kui tõendid näitavad teist toodet, lükkab ta leiu märkusega tagasi; kui see kinnitab mõjutatud toodet, võtab ta asjakohased meetmed ja salvestab need. See on töövoo näide, mitte kliendijuhtum ega reaalne tulemus."
   }
 }

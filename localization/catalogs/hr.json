@@ -46,7 +46,7 @@
       "mockProductName": "Dječji bicikl za ravnotežu",
       "mockAlert": "Upozorenje Safety Gate",
       "mockAlertName": "Sličan proizvod u EU upozorenju",
-      "mockReason": "Usporedite model i seriju prije donošenja odluke.",
+      "mockReason": "Usporedite model prije odluke.",
       "flowLabel": "Kako usluga radi",
       "flowCatalog": "Vaš Shopify katalog",
       "flowCompare": "Usporedite s EU upozorenjima",
@@ -67,7 +67,7 @@
       "matchScreenTitle": "Moguće podudaranje",
       "yourProduct": "Vaš proizvod",
       "alertRecord": "Zapis Safety Gate",
-      "matchReason": "Usporedite fotografije, model i seriju prije donošenja odluke.",
+      "matchReason": "Usporedite fotografije i model prije odluke.",
       "matchTitle": "Usporedite proizvod. Odaberite sljedeći korak.",
       "matchBody": "Fotografije, identifikatori i službeni rizik iz Shopifyja i Safety Gatea prikazani su pored kontrola za pregled.",
       "emailLabel": "Ažuriranje e-pošte",
@@ -134,7 +134,7 @@
       "step2Title": "Označavamo moguća podudaranja",
       "step2Desc": "Rezultat i dokaze primate e-poštom kako biste mogli pregledati moguće podudaranje.",
       "step3Title": "Vi odlučujete što ćete učiniti",
-      "step3Desc": "Usporedite model, fotografije i seriju. Zabilježite ishod vašeg pregleda u aplikaciji."
+      "step3Desc": "Usporedite model i fotografije. Zabilježite ishod pregleda u aplikaciji."
     },
     "compliance": {
       "eyebrow": "Regulatorni kontekst",
@@ -164,7 +164,7 @@
       "q5": "Što ako se ne pronađu moguća podudaranja?",
       "a5": "Izvješće prikazuje broj provjerenih proizvoda i da u ovoj provjeri nisu pronađena moguća podudaranja. Time se ne potvrđuje sigurnost proizvoda. Nova upozorenja mogu se pojaviti kasnije.",
       "q6": "Dokazuje li moguće podudaranje da je moj proizvod opasan?",
-      "a6": "Ne. AI ili identifikator mogu povezati vaš oglas sa zapisom Safety Gate-a, ali i dalje morate provjeriti točan proizvod, model i pogođenu seriju. ZeroRecall podržava vaš pregled; ne certificira sigurnost niti zamjenjuje vaše zakonske obveze."
+      "a6": "Ne. AI ili identifikator mogu povezati vaš oglas sa zapisom Safety Gate, ali još uvijek morate provjeriti točan proizvod i model. ZeroRecall podržava vaš pregled; ne potvrđuje sigurnost niti zamjenjuje vaše zakonske obveze."
     },
     "cta": {
       "title": "Započnite s besplatnim skeniranjem",
@@ -222,13 +222,13 @@
       "alertTitle": "Sličan proizvod u EU upozorenju",
       "alertDetail": "Slike i detalji proizvoda sugeriraju podudaranje koje vrijedi provjeriti.",
       "decisionTitle": "Vaš sljedeći korak",
-      "decisionBody": "Usporedite model, fotografije i seriju. Odlučite odnosi li se upozorenje na vaš proizvod.",
+      "decisionBody": "Usporedite model i fotografije. Odlučite odnosi li se upozorenje na vaš proizvod.",
       "disclaimer": "Ilustracija, nije stvarni nalaz.",
       "previewLabel": "Ilustrativni pregled nalaza",
       "status": "Potrebna provjera",
       "findingTitle": "Moguće podudaranje proizvoda",
-      "findingReason": "Ilustrativan razlog: slična konstrukcija okvira i zglob upravljača unatoč drugačijem nazivu oglasa. Model i serija još uvijek trebaju provjeru.",
-      "findingAction": "Usporedite model i seriju →"
+      "findingReason": "Ilustrativni razlog: slična konstrukcija okvira i zglob upravljača unatoč drugačijem nazivu oglasa. Model još uvijek treba provjeru.",
+      "findingAction": "Usporedite model →"
     },
     "scan": {
       "eyebrow": "JEDNOKRATNA PROVJERA · BEZ INSTALACIJE",
@@ -333,9 +333,9 @@
       "exampleTitle": "Pogledajte kako moguća podudarnost postaje odluka",
       "missing": "EAN i model nedostaju u oglasu",
       "detailTitle": "Što bi AI označio za pregled",
-      "detailBody": "U ovoj ilustraciji: sličan okvir, zglob upravljača i dizajn kotača. Ovi detalji podržavaju moguću podudarnost; oni ne potvrđuju točan model ili zahvaćenu seriju.",
+      "detailBody": "Na ovoj ilustraciji: sličan okvir, zglob upravljača i dizajn kotača. Ovi detalji podržavaju moguće podudaranje; oni ne potvrđuju točan model.",
       "reviewTitle": "Vaša odluka, s priloženim dokazima",
-      "reviewBody": "Usporedite oglas i službeno upozorenje, zatim provjerite model i seriju kod svog dobavljača. U instaliranoj aplikaciji zabilježite rješenje, odbacite drugi proizvod ili ostavite nalaz otvorenim dok čekate dobavljača.",
+      "reviewBody": "Usporedite oglas i službeno upozorenje, zatim provjerite model kod svog dobavljača. U instaliranoj aplikaciji zabilježite rješenje, odbacite drugi proizvod ili ostavite nalaz otvorenim dok čekate dobavljača.",
       "record": "Odluke o pregledu spremaju se s akterom, vremenom i bilješkom u aplikaciji.",
       "limit": "AI predlaže moguće podudarnosti. Ne potvrđuje sigurnost niti zamjenjuje vaš pregled. Ovaj primjer je ilustrativan; to nije stvarni opoziv ili skeniranje uživo."
     },
@@ -366,7 +366,7 @@
       "title": "Upozorenje stiže vama",
       "body": "Kada se pronađe novi nalaz, ZeroRecall može poslati e-poštom proizvod, usporedbu Safety Gate-a i poveznicu za pregled u vašoj Shopify aplikaciji. Ne morate držati aplikaciju otvorenom da biste primili obavijest.",
       "whatTitle": "Jasan sljedeći korak, a ne samo upozorenje",
-      "whatBody": "Otvorite nalaz, usporedite fotografije i identifikatore, zatim provjerite model i seriju prije donošenja odluke. Primatelj obavijesti, jezik i postavke mogu se uređivati u Postavkama.",
+      "whatBody": "Otvorite nalaz, usporedite fotografije i identifikatore, zatim provjerite model prije odluke. Primatelj obavijesti, jezik i postavke mogu se urediti u Postavkama.",
       "weeklyTitle": "Nema novih nalaza? I dalje dobivate ažuriranje.",
       "weeklyBody": "S omogućenim tjednim sažecima, tjedan bez novih nalaza donosi sažetak. Postojeći otvoreni nalazi i dalje mogu zahtijevati vašu pažnju; nepotpuno praćenje prikazano je kao nepotpuno.",
       "previewTitle": "Ilustrativni e-mail upozorenja",
@@ -376,7 +376,7 @@
       "productLabel": "Vaš proizvod",
       "alertLabel": "Proizvod Safety Gate",
       "action": "Pregledajte moguće podudaranje",
-      "instruction": "Usporedite model, marku i seriju sa službenim zapisom. Spremite svoju odluku i bilješku u aplikaciji."
+      "instruction": "Usporedite model sa službenim zapisom. Spremite svoju odluku i bilješku u aplikaciju."
     },
     "start": {
       "title": "Što se događa nakon instalacije",
@@ -390,13 +390,13 @@
       "step4Title": "Nastavite pratiti kako se stvari mijenjaju",
       "step4Body": "Nova upozorenja Safety Gate-a i ažuriranja proizvoda pokreću provjere dok je vaš plan aktivan. Novo stvoreni nalazi mogu pokrenuti e-poštu, a vaše odluke ostaju u povijesti pregleda.",
       "matchTitle": "Pronađeno je moguće podudaranje",
-      "matchBody": "Ovo je zahtjev za pregled dokaza, a ne dokaz da je vaš točan model ili serija opasan. Potvrdite te detalje prije poduzimanja radnji.",
+      "matchBody": "Ovo je zahtjev za pregled dokaza, a ne dokaz da je vaš točan model opasan. Potvrdite model prije poduzimanja radnji.",
       "clearTitle": "Nije pronađeno moguće podudaranje",
       "clearBody": "Dovršena provjera nije pronašla moguće podudaranje u indeksiranim zapisima koje je provjerila. Ovo nije sigurnosni certifikat. Nova upozorenja i promjene proizvoda mogu kasnije promijeniti rezultat.",
       "audienceTitle": "Za trgovine koje prodaju fizičke proizvode u EU",
       "audienceBody": "Posebno korisno za igračke, proizvode za bebe, elektroniku, kozmetiku, kućanske potrepštine te uvezene ili proizvode pod privatnom robnom markom. Usporedba fotografija pomoću umjetne inteligencije može pomoći kada popisi dobavljača imaju nepotpune identifikatore. Safety Gate pokriva opasne neprehrambene proizvode.",
       "caseTitle": "Primjer: promijenjen naslov, zatim provjera dobavljača",
-      "caseBody": "Ilustrativni scenarij: dobavljač navodi bicikl za ravnotežu pod drugim imenom i izostavlja model. Vizualni detalji dovode do mogućeg podudaranja. Trgovac uspoređuje upozorenje i traži model i seriju od dobavljača. Ako dokazi pokazuju drugačiji proizvod, odbacuju nalaz s bilješkom; ako potvrđuje pogođeni proizvod, poduzimaju odgovarajuće radnje i bilježe ih. Ovo je primjer tijeka rada, a ne slučaj kupca ili živi rezultat."
+      "caseBody": "Ilustrativni scenarij: dobavljač navodi bicikl za ravnotežu pod drugim imenom i izostavlja model. Vizualni detalji dovode do mogućeg podudaranja. Trgovac uspoređuje upozorenje i traži model od dobavljača. Ako dokazi pokazuju drugačiji proizvod, odbacuju nalaz s bilješkom; ako potvrđuju zahvaćeni proizvod, poduzimaju odgovarajuće radnje i bilježe ih. Ovo je primjer tijeka rada, a ne slučaj kupca ili rezultat uživo."
     }
   },
   "email": {

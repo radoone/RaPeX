@@ -46,7 +46,7 @@
       "mockProductName": "Detské odrážadlo",
       "mockAlert": "Upozornenie Safety Gate",
       "mockAlertName": "Podobný výrobok v upozornení EÚ",
-      "mockReason": "Pred rozhodnutím porovnajte model a šaržu.",
+      "mockReason": "Pred rozhodnutím porovnajte model.",
       "flowLabel": "Ako služba funguje",
       "flowCatalog": "Váš Shopify katalóg",
       "flowCompare": "Porovnanie s databázou EÚ",
@@ -67,7 +67,7 @@
       "matchScreenTitle": "Možná zhoda",
       "yourProduct": "Váš produkt",
       "alertRecord": "Záznam Safety Gate",
-      "matchReason": "Pred rozhodnutím porovnajte fotky, model a šaržu.",
+      "matchReason": "Pred rozhodnutím porovnajte fotky a model.",
       "matchTitle": "Porovnajte produkt. Vyberte ďalší krok.",
       "matchBody": "Fotografie zo Shopify a Safety Gate, identifikátory a oficiálne riziko vidíte vedľa možností rozhodnutia.",
       "emailLabel": "E-mailová správa",
@@ -134,7 +134,7 @@
       "step2Title": "Upozorníme na možnú zhodu",
       "step2Desc": "E-mailom dostanete výsledok a podklady, podľa ktorých môžete zhodu preveriť.",
       "step3Title": "Rozhodnete, čo ďalej",
-      "step3Desc": "Porovnáte model, fotografie a šaržu. V aplikácii zaznamenáte výsledok preverenia."
+      "step3Desc": "Porovnáte model a fotografie. V aplikácii zaznamenáte výsledok preverenia."
     },
     "compliance": {
       "eyebrow": "Právny rámec",
@@ -164,7 +164,7 @@
       "q5": "Čo ak sa nenájdu žiadne možné zhody?",
       "a5": "V reporte uvidíte počet preverených produktov a informáciu, že sa pri tejto kontrole nenašli možné zhody. Nejde o potvrdenie bezpečnosti výrobkov. Nové upozornenia môžu pribudnúť neskôr.",
       "q6": "Dokazuje možná zhoda, že je môj produkt nebezpečný?",
-      "a6": "Nie. AI alebo identifikátor môžu prepojiť vašu ponuku so záznamom Safety Gate, no stále treba overiť presný produkt, model a dotknutú šaržu. ZeroRecall pomáha pri posúdení; necertifikuje bezpečnosť a nenahrádza vaše zákonné povinnosti."
+      "a6": "Nie. AI alebo identifikátor môžu prepojiť vašu ponuku so záznamom Safety Gate, no stále treba overiť presný produkt a model. ZeroRecall pomáha pri posúdení; necertifikuje bezpečnosť a nenahrádza vaše zákonné povinnosti."
     },
     "cta": {
       "title": "Začnite bezplatnou kontrolou",
@@ -222,13 +222,13 @@
       "alertTitle": "Podobný produkt v európskom upozornení",
       "alertDetail": "Fotografie a údaje naznačujú zhodu, ktorú sa oplatí preveriť.",
       "decisionTitle": "Váš ďalší krok",
-      "decisionBody": "Porovnajte model, fotografie a šaržu. Rozhodnite, či sa upozornenie týka vášho produktu.",
+      "decisionBody": "Porovnajte model a fotografie. Rozhodnite, či sa upozornenie týka vášho produktu.",
       "disclaimer": "Ilustrácia, nie skutočný nález.",
       "previewLabel": "Ilustračná ukážka nálezu",
       "status": "Vyžaduje kontrolu",
       "findingTitle": "Možná zhoda produktu",
-      "findingReason": "Ilustračný dôvod: podobná konštrukcia rámu a spoj riadenia napriek odlišnému názvu ponuky. Model a šaržu treba ešte overiť.",
-      "findingAction": "Porovnať model a šaržu →"
+      "findingReason": "Ilustračný dôvod: podobná konštrukcia rámu a spoj riadenia napriek odlišnému názvu ponuky. Model treba ešte overiť.",
+      "findingAction": "Porovnať model →"
     },
     "scan": {
       "eyebrow": "JEDNORAZOVÁ KONTROLA BEZ INŠTALÁCIE",
@@ -333,9 +333,9 @@
       "exampleTitle": "Od možnej zhody k vášmu rozhodnutiu",
       "missing": "V ponuke chýba EAN aj model",
       "detailTitle": "Na čo by AI upozornila pri kontrole",
-      "detailBody": "V tejto ilustrácii: podobný rám, spoj riadenia a dizajn kolies. Tieto detaily podporujú možnú zhodu; nepotvrdzujú však presný model ani dotknutú šaržu.",
+      "detailBody": "V tejto ilustrácii: podobný rám, spoj riadenia a dizajn kolies. Tieto detaily podporujú možnú zhodu; nepotvrdzujú však presný model.",
       "reviewTitle": "Vaše rozhodnutie podložené dôkazmi",
-      "reviewBody": "Porovnajte ponuku s oficiálnym upozornením a overte model a šaržu u dodávateľa. V nainštalovanej aplikácii zaznamenáte vyriešenie, zamietnete odlišný produkt alebo necháte nález otvorený počas čakania na dodávateľa.",
+      "reviewBody": "Porovnajte ponuku s oficiálnym upozornením a overte model u dodávateľa. V nainštalovanej aplikácii zaznamenáte vyriešenie, zamietnete odlišný produkt alebo necháte nález otvorený počas čakania na dodávateľa.",
       "record": "Rozhodnutia sa v aplikácii ukladajú s autorom, časom a poznámkou.",
       "limit": "AI navrhuje možné zhody. Necertifikuje bezpečnosť a nenahrádza vaše posúdenie. Tento príklad je ilustračný; nejde o skutočné stiahnutie výrobku ani živú kontrolu."
     },
@@ -366,7 +366,7 @@
       "title": "Upozornenie príde za vami",
       "body": "Keď vznikne nový nález, ZeroRecall vám môže poslať email s produktom, porovnaním so Safety Gate a odkazom na posúdenie v Shopify aplikácii. Na prijatie upozornenia nemusíte mať aplikáciu otvorenú.",
       "whatTitle": "Jasný ďalší krok, nielen varovanie",
-      "whatBody": "Otvorte nález, porovnajte fotografie a identifikátory a pred rozhodnutím overte model a šaržu. Príjemcu, jazyk a preferencie upozornení môžete upraviť v Nastaveniach.",
+      "whatBody": "Otvorte nález, porovnajte fotografie a identifikátory a pred rozhodnutím overte model. Príjemcu, jazyk a preferencie upozornení môžete upraviť v Nastaveniach.",
       "weeklyTitle": "Žiadne nové nálezy? Aj tak dostanete správu.",
       "weeklyBody": "Pri zapnutých týždenných súhrnoch dostanete prehľad aj za týždeň bez nových nálezov. Staršie otvorené nálezy môžu stále vyžadovať pozornosť; nedokončené sledovanie sa zobrazí ako nedokončené.",
       "previewTitle": "Ilustračná ukážka emailového upozornenia",
@@ -376,7 +376,7 @@
       "productLabel": "Váš produkt",
       "alertLabel": "Produkt Safety Gate",
       "action": "Preveriť možnú zhodu",
-      "instruction": "Porovnajte model, značku a šaržu s oficiálnym záznamom. Rozhodnutie a poznámku uložte v aplikácii."
+      "instruction": "Porovnajte model s oficiálnym záznamom. Rozhodnutie a poznámku uložte v aplikácii."
     },
     "start": {
       "title": "Čo sa deje po inštalácii",
@@ -390,13 +390,13 @@
       "step4Title": "Sledujte aj ďalšie zmeny",
       "step4Body": "Pri aktívnom pláne spúšťajú nové upozornenia Safety Gate a aktualizácie produktov ďalšie kontroly. Nové nálezy môžu vyvolať email a vaše rozhodnutia zostávajú v histórii posúdení.",
       "matchTitle": "Našla sa možná zhoda",
-      "matchBody": "Je to podnet na posúdenie dôkazov, nie potvrdenie, že váš konkrétny model či šarža sú nebezpečné. Pred ďalším krokom tieto údaje overte.",
+      "matchBody": "Je to podnet na posúdenie dôkazov, nie potvrdenie, že váš konkrétny model je nebezpečný. Pred ďalším krokom model overte.",
       "clearTitle": "Nenašla sa možná zhoda",
       "clearBody": "Dokončená kontrola nenašla možnú zhodu v indexovaných záznamoch, ktoré preverila. Nejde o certifikát bezpečnosti. Nové upozornenia a zmeny produktov môžu neskôr priniesť iný výsledok.",
       "audienceTitle": "Pre obchody predávajúce fyzické produkty v EÚ",
       "audienceBody": "Obzvlášť užitočné pre hračky, detský sortiment, elektroniku, kozmetiku, domáce potreby a dovážaný tovar či vlastné značky. AI porovnanie fotografií môže pomôcť pri neúplných identifikátoroch od dodávateľa. Safety Gate eviduje nebezpečné nepotravinové produkty.",
       "caseTitle": "Príklad: zmenený názov a následné overenie u dodávateľa",
-      "caseBody": "Ilustračná situácia: dodávateľ ponúka odrážadlo pod iným názvom a neuvedie model. Vizuálne detaily vedú k možnej zhode. Obchodník porovná upozornenie a vyžiada si od dodávateľa model a šaržu. Ak dôkazy ukážu odlišný produkt, nález zamietne s poznámkou; ak potvrdia dotknutý produkt, vykoná primeraný krok a zaznamená ho. Ide o ukážku postupu, nie zákaznícku skúsenosť ani živý výsledok."
+      "caseBody": "Ilustračná situácia: dodávateľ ponúka odrážadlo pod iným názvom a neuvedie model. Vizuálne detaily vedú k možnej zhode. Obchodník porovná upozornenie a vyžiada si od dodávateľa model. Ak dôkazy ukážu odlišný produkt, nález zamietne s poznámkou; ak potvrdia dotknutý produkt, vykoná primeraný krok a zaznamená ho. Ide o ukážku postupu, nie zákaznícku skúsenosť ani živý výsledok."
     }
   },
   "email": {

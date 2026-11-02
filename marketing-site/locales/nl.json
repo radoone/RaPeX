@@ -45,7 +45,7 @@
     "mockProductName": "Kinderloopfiets",
     "mockAlert": "Safety Gate-waarschuwing",
     "mockAlertName": "Vergelijkbaar product in een EU-waarschuwing",
-    "mockReason": "Vergelijk het model en de batch voordat u een beslissing neemt.",
+    "mockReason": "Vergelijk het model voordat u een beslissing neemt.",
     "flowLabel": "Hoe de service werkt",
     "flowCatalog": "Uw Shopify-catalogus",
     "flowCompare": "Vergelijken met EU-waarschuwingen",
@@ -66,7 +66,7 @@
     "matchScreenTitle": "Mogelijke overeenkomst",
     "yourProduct": "Uw product",
     "alertRecord": "Safety Gate-record",
-    "matchReason": "Vergelijk foto's, model en batch voordat u een beslissing neemt.",
+    "matchReason": "Vergelijk foto's en het model voordat u een beslissing neemt.",
     "matchTitle": "Vergelijk het product. Kies uw volgende stap.",
     "matchBody": "Shopify- en Safety Gate-foto's, identificatiegegevens en het officiële risico verschijnen naast de controleopties.",
     "emailLabel": "E-mailupdate",
@@ -133,7 +133,7 @@
     "step2Title": "Wij markeren mogelijke overeenkomsten",
     "step2Desc": "U ontvangt het resultaat en bewijsmateriaal per e-mail, zodat u een mogelijke overeenkomst kunt beoordelen.",
     "step3Title": "U beslist wat u doet",
-    "step3Desc": "Vergelijk het model, de foto's en de batch. Leg het resultaat van uw beoordeling vast in de app."
+    "step3Desc": "Vergelijk het model en de foto's. Leg het resultaat van uw beoordeling vast in de app."
   },
   "compliance": {
     "eyebrow": "Regelgevende context",
@@ -163,7 +163,7 @@
     "q5": "Wat als er geen mogelijke overeenkomsten worden gevonden?",
     "a5": "Het rapport toont het aantal gecontroleerde producten en dat bij deze controle geen mogelijke overeenkomsten zijn gevonden. Dit is geen bewijs van productveiligheid. Later kunnen nieuwe waarschuwingen verschijnen.",
     "q6": "Bewijst een mogelijke overeenkomst dat mijn product gevaarlijk is?",
-    "a6": "Nee. AI of een identificatiecode kan uw vermelding koppelen aan een Safety Gate-record, maar u moet nog steeds het exacte product, model en de betreffende batch verifiëren. ZeroRecall ondersteunt uw beoordeling; het certificeert geen veiligheid en vervangt uw wettelijke verplichtingen niet."
+    "a6": "Nee. AI of een identificatiemiddel kan uw advertentie koppelen aan een Safety Gate-record, maar u moet nog steeds het exacte product en model verifiëren. ZeroRecall ondersteunt uw beoordeling; het certificeert geen veiligheid en vervangt uw wettelijke verplichtingen niet."
   },
   "cta": {
     "title": "Begin met een gratis scan",
@@ -221,13 +221,13 @@
     "alertTitle": "Vergelijkbaar product in een EU-waarschuwing",
     "alertDetail": "Afbeeldingen en productdetails suggereren een overeenkomst die de moeite waard is om te controleren.",
     "decisionTitle": "Uw volgende stap",
-    "decisionBody": "Vergelijk het model, de foto's en de batch. Beslis of de waarschuwing van toepassing is op uw product.",
+    "decisionBody": "Vergelijk het model en de foto's. Bepaal of de waarschuwing van toepassing is op uw product.",
     "disclaimer": "Illustratie, geen echte bevinding.",
     "previewLabel": "Illustratieve voorbeeld van bevinding",
     "status": "Beoordeling nodig",
     "findingTitle": "Mogelijke productovereenkomst",
-    "findingReason": "Illustratieve reden: vergelijkbare frameconstructie en stuurgewricht ondanks een andere advertentienaam. Het model en de batch moeten nog worden geverifieerd.",
-    "findingAction": "Vergelijk model en batch →"
+    "findingReason": "Illustratieve reden: vergelijkbare frameconstructie en stuurgewricht ondanks een andere advertentienaam. Het model moet nog worden geverifieerd.",
+    "findingAction": "Vergelijk het model →"
   },
   "scan": {
     "eyebrow": "EENMALIGE CONTROLE · GEEN INSTALLATIE",
@@ -332,9 +332,9 @@
     "exampleTitle": "Zie een mogelijke overeenkomst een beslissing worden",
     "missing": "EAN en model ontbreken in de advertentie",
     "detailTitle": "Wat de AI zou markeren voor beoordeling",
-    "detailBody": "In deze illustratie: een vergelijkbaar frame, stuurgewricht en wielontwerp. Deze details ondersteunen een mogelijke overeenkomst; ze bevestigen niet het exacte model of de betreffende batch.",
+    "detailBody": "In deze illustratie: een vergelijkbaar frame, stuurgewricht en wielontwerp. Deze details ondersteunen een mogelijke overeenkomst; ze bevestigen niet het exacte model.",
     "reviewTitle": "Uw beslissing, met bewijs bijgevoegd",
-    "reviewBody": "Vergelijk de advertentie en de officiële waarschuwing, en verifieer vervolgens het model en de batch met uw leverancier. Leg in de geïnstalleerde app een oplossing vast, negeer een ander product, of houd de bevinding open in afwachting van de leverancier.",
+    "reviewBody": "Vergelijk de advertentie en de officiële waarschuwing, en verifieer vervolgens het model met uw leverancier. Leg in de geïnstalleerde app een oplossing vast, negeer een ander product, of houd de bevinding open in afwachting van de leverancier.",
     "record": "Beoordelingsbeslissingen worden opgeslagen met een actor, tijd en notitie in de app.",
     "limit": "AI suggereert mogelijke overeenkomsten. Het certificeert geen veiligheid en vervangt uw beoordeling niet. Dit voorbeeld is illustratief; het is geen echte terugroepactie of een live scan."
   },
@@ -365,7 +365,7 @@
     "title": "De melding komt naar u toe",
     "body": "Wanneer een nieuwe bevinding wordt gecreëerd, kan ZeroRecall een e-mail sturen met het product, de Safety Gate-vergelijking en een link om deze te bekijken in uw Shopify-app. U hoeft de app niet open te houden om de melding te ontvangen.",
     "whatTitle": "Een duidelijke volgende stap, niet zomaar een waarschuwing",
-    "whatBody": "Open de bevinding, vergelijk de foto's en identificatiegegevens, en verifieer vervolgens het model en de batch voordat u een beslissing neemt. Uw meldingsontvanger, taal en voorkeuren zijn bewerkbaar in Instellingen.",
+    "whatBody": "Open de bevinding, vergelijk de foto's en identificatiemiddelen, en verifieer vervolgens het model voordat u een beslissing neemt. Uw notificatieontvanger, taal en voorkeuren zijn bewerkbaar in Instellingen.",
     "weeklyTitle": "Geen nieuwe bevindingen? U krijgt toch een update.",
     "weeklyBody": "Met wekelijkse samenvattingen ingeschakeld, brengt een week zonder nieuwe bevindingen een samenvatting. Bestaande openstaande bevindingen kunnen nog steeds uw aandacht nodig hebben; een onvolledige monitoringrun wordt als onvolledig weergegeven.",
     "previewTitle": "Illustratieve waarschuwings-e-mail",
@@ -375,7 +375,7 @@
     "productLabel": "Uw product",
     "alertLabel": "Safety Gate-product",
     "action": "Mogelijke overeenkomst beoordelen",
-    "instruction": "Vergelijk het model, merk en batch met het officiële record. Sla uw beslissing en een notitie op in de app."
+    "instruction": "Vergelijk het model met het officiële dossier. Sla uw beslissing en een notitie op in de app."
   },
   "start": {
     "title": "Wat er gebeurt nadat u installeert",
@@ -389,12 +389,12 @@
     "step4Title": "Blijf monitoren als dingen veranderen",
     "step4Body": "Nieuwe Safety Gate-waarschuwingen en productupdates activeren controles terwijl uw abonnement actief is. Nieuw gecreëerde bevindingen kunnen een e-mail activeren, en uw beslissingen blijven in de beoordelingsgeschiedenis.",
     "matchTitle": "Er is een mogelijke overeenkomst gevonden",
-    "matchBody": "Dit is een verzoek om het bewijs te beoordelen, geen bewijs dat uw exacte model of batch gevaarlijk is. Bevestig die details voordat u actie onderneemt.",
+    "matchBody": "Dit is een verzoek om het bewijs te beoordelen, geen bewijs dat uw exacte model gevaarlijk is. Bevestig het model voordat u actie onderneemt.",
     "clearTitle": "Geen mogelijke overeenkomst gevonden",
     "clearBody": "De voltooide controle heeft geen mogelijke overeenkomst gevonden in de geïndexeerde records die het heeft gecontroleerd. Dit is geen veiligheidscertificaat. Nieuwe waarschuwingen en productwijzigingen kunnen het resultaat later veranderen.",
     "audienceTitle": "Voor winkels die fysieke producten verkopen in de EU",
     "audienceBody": "Vooral nuttig voor speelgoed, babyproducten, elektronica, cosmetica, huishoudelijke artikelen en geïmporteerde of white-label producten. AI-fotovergelijking kan helpen wanneer leverancierslijsten onvolledige identificatiegegevens hebben. Safety Gate dekt gevaarlijke non-foodproducten.",
     "caseTitle": "Voorbeeld: een gewijzigde titel, daarna een leverancierscontrole",
-    "caseBody": "Illustratief scenario: een leverancier vermeldt een loopfiets onder een andere naam en laat het model weg. Visuele details leiden tot een mogelijke overeenkomst. De handelaar vergelijkt de waarschuwing en vraagt het model en de batch op bij de leverancier. Als het bewijs een ander product aantoont, sluiten ze de bevinding af met een notitie; als het het betreffende product bevestigt, ondernemen ze de juiste actie en leggen ze dit vast. Dit is een workflowvoorbeeld, geen klantcase of een live resultaat."
+    "caseBody": "Illustratief scenario: een leverancier adverteert een loopfiets onder een andere naam en vermeldt het model niet. Visuele details leiden tot een mogelijke overeenkomst. De verkoper vergelijkt de waarschuwing en vraagt het model op bij de leverancier. Als het bewijs een ander product aantoont, sluiten ze de bevinding af met een notitie; als het het betreffende product bevestigt, ondernemen ze de juiste actie en leggen dit vast. Dit is een voorbeeld van een workflow, geen klantcasus of een live resultaat."
   }
 }

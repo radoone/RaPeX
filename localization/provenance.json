@@ -646,6 +646,41 @@
       "model": "gemini-2.5-flash",
       "review": "EN/SK authored directly. Other additions machine translated; keys/placeholders and selected copy checked, no native-speaker review of every language.",
       "sourceSha256": "54a56f3fb58590faea195dcf4f65f0e14b863820b5562d97a252dd3f8755ba74"
+    },
+    {
+      "date": "2026-11-03",
+      "scope": "Owner requested model-only verification wording across marketing. Thirteen web strings updated; production email and checker unchanged.",
+      "sourceLocales": [
+        "en",
+        "sk"
+      ],
+      "translatedLocales": [
+        "bg",
+        "cs",
+        "da",
+        "de",
+        "el",
+        "es",
+        "et",
+        "fi",
+        "fr",
+        "ga",
+        "hr",
+        "hu",
+        "it",
+        "lt",
+        "lv",
+        "mt",
+        "nl",
+        "pl",
+        "pt",
+        "ro",
+        "sl",
+        "sv"
+      ],
+      "model": "gemini-2.5-flash",
+      "review": "EN/SK authored directly; other web changes machine translated with key/placeholder checks. No native-speaker review of every language.",
+      "sourceSha256": "e9c7d390e2e31fdf94633e36cf14c611eb54c9dd2bcfe5491ec997f4b1c39ef9"
     }
   ]
 }

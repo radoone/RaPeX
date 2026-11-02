@@ -45,7 +45,7 @@
     "mockProductName": "Rota tal-bilanċ tat-tfal",
     "mockAlert": "Twissija ta' Safety Gate",
     "mockAlertName": "Prodott simili f'twissija tal-UE",
-    "mockReason": "Qabbel il-mudell u l-lott qabel ma tiddeċiedi.",
+    "mockReason": "Qabbel il-mudell qabel ma tiddeċiedi.",
     "flowLabel": "Kif jaħdem is-servizz",
     "flowCatalog": "Il-katalgu Shopify tiegħek",
     "flowCompare": "Qabbel ma' twissijiet tal-UE",
@@ -66,7 +66,7 @@
     "matchScreenTitle": "Tqabbil possibbli",
     "yourProduct": "Il-prodott tiegħek",
     "alertRecord": "Rekord ta' Safety Gate",
-    "matchReason": "Qabbel ir-ritratti, il-mudell u l-lott qabel ma tiddeċiedi.",
+    "matchReason": "Qabbel ir-ritratti u l-mudell qabel ma tiddeċiedi.",
     "matchTitle": "Qabbel il-prodott. Agħżel il-pass li jmiss tiegħek.",
     "matchBody": "Ritratti, identifikaturi u r-riskju uffiċjali ta' Shopify u Safety Gate jidhru ħdejn il-kontrolli tar-reviżjoni.",
     "emailLabel": "Aġġornament tal-email",
@@ -133,7 +133,7 @@
     "step2Title": "Aħna nindikaw tqabbil possibbli",
     "step2Desc": "Tirċievi r-riżultat u l-evidenza bl-email sabiex tkun tista' tirrevedi tqabbil possibbli.",
     "step3Title": "Int tiddeċiedi x'għandek tagħmel",
-    "step3Desc": "Qabbel il-mudell, ir-ritratti u l-lott. Irreġistra r-riżultat tar-reviżjoni tiegħek fl-app."
+    "step3Desc": "Qabbel il-mudell u r-ritratti. Irreġistra r-riżultat tar-reviżjoni tiegħek fl-app."
   },
   "compliance": {
     "eyebrow": "Kuntest Regolatorju",
@@ -163,7 +163,7 @@
     "q5": "X’jiġri jekk ma jinstab ebda tqabbil possibbli?",
     "a5": "Ir-rapport juri n-numru ta’ prodotti ċċekkjati u li ma nstab ebda tqabbil possibbli f’din il-verifika. Dan ma jiċċertifikax is-sikurezza tal-prodotti. Jistgħu jidhru twissijiet ġodda aktar tard.",
     "q6": "Tqabbil possibbli jipprova li l-prodott tiegħi huwa perikoluż?",
-    "a6": "Le. L-AI jew identifikatur jistgħu jgħaqqdu l-lista tiegħek ma' rekord ta' Safety Gate, iżda xorta trid tivverifika l-prodott eżatt, il-mudell u l-lott affettwat. ZeroRecall jappoġġja r-reviżjoni tiegħek; ma jiċċertifikax is-sigurtà jew jissostitwixxi l-obbligi legali tiegħek."
+    "a6": "Le. L-AI jew identifikatur jistgħu jgħaqqdu l-lista tiegħek ma' rekord ta' Safety Gate, iżda xorta trid tivverifika l-prodott u l-mudell eżatt. ZeroRecall jappoġġja r-reviżjoni tiegħek; ma jiċċertifikax is-sigurtà jew jissostitwixxi l-obbligi legali tiegħek."
   },
   "cta": {
     "title": "Ibda b'skannjar b'xejn",
@@ -221,13 +221,13 @@
     "alertTitle": "Prodott simili f'twissija tal-UE",
     "alertDetail": "Stampi u dettalji tal-prodott jissuġġerixxu tqabbil li jiswa li jiġi ċċekkjat.",
     "decisionTitle": "Il-pass li jmiss tiegħek",
-    "decisionBody": "Qabbel il-mudell, ir-ritratti u l-lott. Iddeċiedi jekk it-twissija tapplikax għall-prodott tiegħek.",
+    "decisionBody": "Qabbel il-mudell u r-ritratti. Iddeċiedi jekk l-allert japplikax għall-prodott tiegħek.",
     "disclaimer": "Illustrazzjoni, mhux sejba reali.",
     "previewLabel": "Preview illustrattiv tas-sejba",
     "status": "Jeħtieġ reviżjoni",
     "findingTitle": "Tqabbil possibbli tal-prodott",
-    "findingReason": "Raġuni illustrattiva: kostruzzjoni tal-qafas u ġonta tal-istering simili minkejja isem differenti tal-lista. Il-mudell u l-lott għad iridu jiġu vverifikati.",
-    "findingAction": "Qabbel il-mudell u l-lott →"
+    "findingReason": "Raġuni illustrattiva: kostruzzjoni tal-qafas u ġonta tal-istering simili minkejja isem ta' lista differenti. Il-mudell għad irid jiġi vverifikat.",
+    "findingAction": "Qabbel il-mudell →"
   },
   "scan": {
     "eyebrow": "KONTROLL TA' DARBA · EBDA INSTALLAZZJONI",
@@ -332,9 +332,9 @@
     "exampleTitle": "Ara tqabbil possibbli jsir deċiżjoni",
     "missing": "EAN u mudell neqsin mil-lista",
     "detailTitle": "X'tindika l-AI għal reviżjoni",
-    "detailBody": "F'din l-illustrazzjoni: qafas, ġonta tal-istering u disinn tar-rota simili. Dawn id-dettalji jappoġġjaw tqabbil possibbli; ma jikkonfermawx il-mudell eżatt jew il-lott affettwat.",
+    "detailBody": "F'din l-illustrazzjoni: qafas, ġonta tal-istering u disinn tar-roti simili. Dawn id-dettalji jappoġġjaw taqbila possibbli; ma jikkonfermawx il-mudell eżatt.",
     "reviewTitle": "Id-deċiżjoni tiegħek, b'evidenza mehmuża",
-    "reviewBody": "Qabbel il-lista u t-twissija uffiċjali, imbagħad ivverifika l-mudell u l-lott mal-fornitur tiegħek. Fl-app installata, irreġistra riżoluzzjoni, ċaħad prodott differenti, jew żomm is-sejba miftuħa waqt li tistenna lill-fornitur.",
+    "reviewBody": "Qabbel il-lista u l-allert uffiċjali, imbagħad ivverifika l-mudell mal-fornitur tiegħek. Fl-app installata, irreġistra riżoluzzjoni, tiċħad prodott differenti, jew żomm is-sejba miftuħa waqt li tistenna lill-fornitur.",
     "record": "Id-deċiżjonijiet ta' reviżjoni jiġu ssejvjati b'attur, ħin u nota fl-app.",
     "limit": "L-AI tissuġġerixxi tqabbil possibbli. Ma tiċċertifikax is-sigurtà jew tissostitwixxi r-reviżjoni tiegħek. Dan l-eżempju huwa illustrattiv; mhuwiex sejħa lura reali jew skan dirett."
   },
@@ -365,7 +365,7 @@
     "title": "L-allert jasal għandek",
     "body": "Meta tinħoloq sejba ġdida, ZeroRecall jista' jibgħat email bil-prodott, tqabbil ta' Safety Gate u link biex tirrevedih fl-app Shopify tiegħek. M'għandekx għalfejn iżżomm l-app miftuħa biex tirċievi n-notifika.",
     "whatTitle": "Pass ċar li jmiss, mhux biss twissija",
-    "whatBody": "Iftaħ is-sejba, qabbel ir-ritratti u l-identifikaturi, imbagħad ivverifika l-mudell u l-lott qabel ma tiddeċiedi. Ir-riċevitur tan-notifika tiegħek, il-lingwa u l-preferenzi huma editjabbli fis-Settings.",
+    "whatBody": "Iftaħ is-sejba, qabbel ir-ritratti u l-identifikaturi, imbagħad ivverifika l-mudell qabel ma tiddeċiedi. Ir-riċevitur tan-notifika tiegħek, il-lingwa u l-preferenzi huma editjabbli fis-Settings.",
     "weeklyTitle": "L-ebda sejbiet ġodda? Xorta tirċievi aġġornament.",
     "weeklyBody": "B'sommarji ta' kull ġimgħa attivati, ġimgħa mingħajr sejbiet ġodda ġġib sommarju. Sejbiet miftuħa eżistenti xorta jistgħu jeħtieġu l-attenzjoni tiegħek; ġirja ta' monitoraġġ mhux kompluta tintwera bħala mhux kompluta.",
     "previewTitle": "Email ta' allert illustrattiva",
@@ -375,7 +375,7 @@
     "productLabel": "Il-prodott tiegħek",
     "alertLabel": "Prodott ta' Safety Gate",
     "action": "Irrevedi tqabbil possibbli",
-    "instruction": "Qabbel il-mudell, il-marka u l-lott mar-rekord uffiċjali. Issejvja d-deċiżjoni tiegħek u nota fl-app."
+    "instruction": "Qabbel il-mudell mar-rekord uffiċjali. Issejvja d-deċiżjoni tiegħek u nota fl-app."
   },
   "start": {
     "title": "X'jiġri wara li tinstalla",
@@ -389,12 +389,12 @@
     "step4Title": "Żomm il-monitoraġġ hekk kif l-affarijiet jinbidlu",
     "step4Body": "Allerti ġodda ta' Safety Gate u aġġornamenti tal-prodott jiskattaw kontrolli waqt li l-pjan tiegħek ikun attiv. Sejbiet maħluqa ġodda jistgħu jiskattaw email, u d-deċiżjonijiet tiegħek jibqgħu fl-istorja tar-reviżjoni.",
     "matchTitle": "Instab tqabbil possibbli",
-    "matchBody": "Din hija talba biex tirrevedi l-evidenza, mhux prova li l-mudell jew il-lott eżatt tiegħek huwa perikoluż. Ikkonferma dawk id-dettalji qabel ma tieħu azzjoni.",
+    "matchBody": "Din hija talba biex tirrevedi l-evidenza, mhux prova li l-mudell eżatt tiegħek huwa perikoluż. Ikkonferma l-mudell qabel ma tieħu azzjoni.",
     "clearTitle": "Ma nstab l-ebda tqabbil possibbli",
     "clearBody": "Il-kontroll komplut ma sab l-ebda tqabbil possibbli fir-rekords indiċjati li ċċekkja. Dan mhuwiex ċertifikat ta' sigurtà. Allerti ġodda u bidliet fil-prodott jistgħu jibdlu r-riżultat aktar tard.",
     "audienceTitle": "Għal ħwienet li jbigħu prodotti fiżiċi fl-UE",
     "audienceBody": "Speċjalment utli għal ġugarelli, prodotti tat-trabi, elettronika, kożmetiċi, oġġetti tad-dar u prodotti importati jew white-label. It-tqabbil tar-ritratti bl-AI jista' jgħin meta l-listi tal-fornituri jkollhom identifikaturi mhux kompluti. Safety Gate ikopri prodotti perikolużi mhux tal-ikel.",
     "caseTitle": "Eżempju: titolu mibdul, imbagħad kontroll tal-fornitur",
-    "caseBody": "Xenarju illustrattiv: fornitur jelenka rota tal-bilanċ taħt isem differenti u jħalli barra l-mudell. Dettalji viżwali jwasslu għal tqabbil possibbli. Il-merkant iqabbel l-allert u jitlob il-mudell u l-lott mingħand il-fornitur. Jekk l-evidenza turi prodott differenti, huma jwarrbu s-sejba b'nota; jekk tikkonferma l-prodott affettwat, huma jieħdu l-azzjoni xierqa u jirreġistrawha. Dan huwa eżempju ta' fluss tax-xogħol, mhux każ tal-klijent jew riżultat dirett."
+    "caseBody": "Xenarju illustrattiv: fornitur jelenka rota tal-bilanċ taħt isem differenti u jħalli barra l-mudell. Dettalji viżwali jwasslu għal taqbila possibbli. Il-merkant iqabbel l-allert u jitlob il-mudell mingħand il-fornitur. Jekk l-evidenza turi prodott differenti, huma jiċħdu s-sejba b'nota; jekk tikkonferma l-prodott affettwat, huma jieħdu l-azzjoni xierqa u jirreġistrawha. Dan huwa eżempju ta' fluss tax-xogħol, mhux każ ta' klijent jew riżultat dirett."
   }
 }

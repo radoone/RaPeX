@@ -45,7 +45,7 @@
     "mockProductName": "Children's balance bike",
     "mockAlert": "Safety Gate alert",
     "mockAlertName": "Similar product in an EU alert",
-    "mockReason": "Compare the model and batch before deciding.",
+    "mockReason": "Compare the model before deciding.",
     "flowLabel": "How the service works",
     "flowCatalog": "Your Shopify catalog",
     "flowCompare": "Compare with EU alerts",
@@ -66,7 +66,7 @@
     "matchScreenTitle": "Possible match",
     "yourProduct": "Your product",
     "alertRecord": "Safety Gate record",
-    "matchReason": "Compare photos, model and batch before deciding.",
+    "matchReason": "Compare photos and the model before deciding.",
     "matchTitle": "Compare the product. Choose your next step.",
     "matchBody": "Shopify and Safety Gate photos, identifiers and the official risk appear beside the review controls.",
     "emailLabel": "Email update",
@@ -133,7 +133,7 @@
     "step2Title": "We flag possible matches",
     "step2Desc": "You receive the result and evidence by email so you can review a possible match.",
     "step3Title": "You decide what to do",
-    "step3Desc": "Compare the model, photos and batch. Record the outcome of your review in the app."
+    "step3Desc": "Compare the model and photos. Record the outcome of your review in the app."
   },
   "compliance": {
     "eyebrow": "Regulatory Context",
@@ -163,7 +163,7 @@
     "q5": "What if no possible matches are found?",
     "a5": "Your report will show the number of checked products and that no possible matches were found in this check. This does not certify product safety. New alerts can appear later.",
     "q6": "Does a possible match prove that my product is dangerous?",
-    "a6": "No. AI or an identifier can connect your listing to a Safety Gate record, but you still need to verify the exact product, model and affected batch. ZeroRecall supports your review; it does not certify safety or replace your legal obligations."
+    "a6": "No. AI or an identifier can connect your listing to a Safety Gate record, but you still need to verify the exact product and model. ZeroRecall supports your review; it does not certify safety or replace your legal obligations."
   },
   "cta": {
     "title": "Start with a free check",
@@ -221,13 +221,13 @@
     "alertTitle": "Similar product in an EU alert",
     "alertDetail": "Images and product details suggest a match worth checking.",
     "decisionTitle": "Your next step",
-    "decisionBody": "Compare the model, photos and batch. Decide whether the alert applies to your product.",
+    "decisionBody": "Compare the model and photos. Decide whether the alert applies to your product.",
     "disclaimer": "Illustration, not a real finding.",
     "previewLabel": "Illustrative finding preview",
     "status": "Needs review",
     "findingTitle": "Possible product match",
-    "findingReason": "Illustrative reason: similar frame construction and steering joint despite a different listing name. The model and batch still need verification.",
-    "findingAction": "Compare model and batch →"
+    "findingReason": "Illustrative reason: similar frame construction and steering joint despite a different listing name. The model still needs verification.",
+    "findingAction": "Compare the model →"
   },
   "scan": {
     "eyebrow": "ONE-OFF CHECK · NO INSTALLATION",
@@ -332,9 +332,9 @@
     "exampleTitle": "See a possible match become a decision",
     "missing": "EAN and model missing from the listing",
     "detailTitle": "What the AI would flag for review",
-    "detailBody": "In this illustration: a similar frame, steering joint and wheel design. These details support a possible match; they do not confirm the exact model or affected batch.",
+    "detailBody": "In this illustration: a similar frame, steering joint and wheel design. These details support a possible match; they do not confirm the exact model.",
     "reviewTitle": "Your decision, with evidence attached",
-    "reviewBody": "Compare the listing and official alert, then verify the model and batch with your supplier. In the installed app, record a resolution, dismiss a different product, or keep the finding open while waiting for the supplier.",
+    "reviewBody": "Compare the listing and official alert, then verify the model with your supplier. In the installed app, record a resolution, dismiss a different product, or keep the finding open while waiting for the supplier.",
     "record": "Review decisions are saved with an actor, time and note in the app.",
     "limit": "AI suggests possible matches. It does not certify safety or replace your review. This example is illustrative; it is not a real recall or a live scan."
   },
@@ -365,7 +365,7 @@
     "title": "The alert comes to you",
     "body": "When a new finding is created, ZeroRecall can email the product, Safety Gate comparison and a link to review it in your Shopify app. You do not have to keep the app open to receive the notification.",
     "whatTitle": "A clear next step, not just a warning",
-    "whatBody": "Open the finding, compare the photos and identifiers, then verify the model and batch before deciding. Your notification recipient, language and preferences are editable in Settings.",
+    "whatBody": "Open the finding, compare the photos and identifiers, then verify the model before deciding. Your notification recipient, language and preferences are editable in Settings.",
     "weeklyTitle": "No new findings? You still get an update.",
     "weeklyBody": "With weekly summaries enabled, a week without new findings brings a summary. Existing open findings can still need your attention; an incomplete monitoring run is shown as incomplete.",
     "previewTitle": "Illustrative alert email",
@@ -375,7 +375,7 @@
     "productLabel": "Your product",
     "alertLabel": "Safety Gate product",
     "action": "Review possible match",
-    "instruction": "Compare the model, brand and batch with the official record. Save your decision and a note in the app."
+    "instruction": "Compare the model with the official record. Save your decision and a note in the app."
   },
   "start": {
     "title": "What happens after you install",
@@ -389,12 +389,12 @@
     "step4Title": "Keep monitoring as things change",
     "step4Body": "New Safety Gate alerts and product updates trigger checks while your plan is active. Newly created findings can trigger an email, and your decisions remain in the review history.",
     "matchTitle": "A possible match was found",
-    "matchBody": "This is a request to review the evidence, not proof that your exact model or batch is dangerous. Confirm those details before taking action.",
+    "matchBody": "This is a request to review the evidence, not proof that your exact model is dangerous. Confirm the model before taking action.",
     "clearTitle": "No possible match was found",
     "clearBody": "The completed check found no possible match in the indexed records it checked. This is not a safety certificate. New alerts and product changes can change the result later.",
     "audienceTitle": "For stores selling physical products in the EU",
     "audienceBody": "Especially useful for toys, baby products, electronics, cosmetics, home goods and imported or white-label products. AI photo comparison can help when supplier listings have incomplete identifiers. Safety Gate covers dangerous non-food products.",
     "caseTitle": "Example: a changed title, then a supplier check",
-    "caseBody": "Illustrative scenario: a supplier lists a balance bike under a different name and omits the model. Visual details lead to a possible match. The merchant compares the alert and requests the model and batch from the supplier. If the evidence shows a different product, they dismiss the finding with a note; if it confirms the affected product, they take the appropriate action and record it. This is a workflow example, not a customer case or a live result."
+    "caseBody": "Illustrative scenario: a supplier lists a balance bike under a different name and omits the model. Visual details lead to a possible match. The merchant compares the alert and requests the model from the supplier. If the evidence shows a different product, they dismiss the finding with a note; if it confirms the affected product, they take the appropriate action and record it. This is a workflow example, not a customer case or a live result."
   }
 }
