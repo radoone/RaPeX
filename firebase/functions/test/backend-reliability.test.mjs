@@ -6,6 +6,7 @@ import { recallWithinThreshold } from '../lib/vector-recall.js';
 import { selectMonitoringImages, prioritizeMonitoringImages } from '../lib/monitoring-images.js';
 import { mapBounded, memoizeBounded } from '../lib/matching-work.js';
 import { prepareMonitoringShortlist, processMonitoringProducts } from '../lib/monitoring-work.js';
+import { loadSmallMonitoringCatalog } from '../lib/monitoring-small-catalog.js';
 import { createMonitoringProductCache, MONITORING_PRODUCT_FIELDS } from '../lib/monitoring-product-cache.js';
 import { canApplyProductVersion, installationKey, isProductChangeSupersededByDeletion } from '../lib/product-lifecycle.js';
 import { sourceFunction as fn, database, Timestamp, FieldValue, collections, logger } from './helpers/isolated-source.mjs';
@@ -18,7 +19,7 @@ function fixture() {
   db.rows.set(productPath, { productId: '1', name: 'Example', sourceUpdatedAt: '2026-10-23T10:00:00Z', vector_text: FieldValue.vector([.1]) });
   return db;
 }
-const deps = db => ({ db, logger, FieldValue, Timestamp, FIRESTORE_COLLECTIONS: collections, createHash, installationKey, canApplyProductVersion,
+const deps = db => ({ loadPublicMonitoringDocuments: async docs => docs.map(doc => { if (!doc.exists) throw Error("Source missing"); return { id: doc.id, data: doc.data() }; }), db, logger, FieldValue, Timestamp, FIRESTORE_COLLECTIONS: collections, createHash, installationKey, canApplyProductVersion,
   createMonitoringProductLoader: fn('merchant-monitoring', 'createMonitoringProductLoader', { db, FIRESTORE_COLLECTIONS: collections, createMonitoringProductCache, MONITORING_PRODUCT_FIELDS }),
 });
 const writer = (db, embedText = async () => [.2]) => fn('merchant-monitoring', 'upsertMerchantProduct', {
@@ -155,6 +156,7 @@ function monitor(db, dateCandidates = [], check = async () => ({ isSafe: true, w
   const normalize = fn('merchant-monitoring', 'normalizeAlertDate', { Timestamp });
   return fn('merchant-monitoring', 'runMerchantDeltaMonitoringForShop', {
     ...deps(db), prepareMonitoringShortlist, processMonitoringProducts,
+    loadSmallMonitoringCatalog,
     createMonitoringWorkStore: fn('monitoring-work', 'createMonitoringWorkStore', { ...deps(db), randomUUID: () => 'generation', Buffer }),
     getMonitorState: async () => db.rows.get(merchantPath), randomUUID: () => 'run',
     resolveMonitoringWindow: ({ currentState }) => ({ mode: 'delta', strategy: 'since-last-check', days: null, checkpointDate: normalize(currentState.lastRapexAlertDate) || new Date('2026-01-01'), checkpointRecordTimestamp: null }),
@@ -338,4 +340,20 @@ test('monitoring progress cannot recreate an orphaned run after the tenant is pu
   await assert.rejects(monitor(db, [candidate(1)])({ shop, runId: 'purged-progress' }), /installation changed/);
   assert.equal(purged, true);
   assert.equal(db.rows.size, 0);
+});
+
+
+test('small-catalog monitoring bypasses KNN indexes but preserves decisions and version-fenced checks', async () => {
+  const db = fixture();db.indexFailure = true;
+  let calls = 0;
+  const summary = await monitor(db, Array.from({ length: 16 }, (_, i) => candidate(i)), async (_product, alerts) => {
+    calls++; assert.equal(alerts.length, 16);
+    return { isSafe: true, warnings: [], checkedAt: new Date().toISOString() };
+  })({ shop, runId: 'small-catalog' });
+  assert.equal(calls, 1);assert.equal(summary.productsScanned, 1);
+  assert.equal([...db.rows.keys()].filter(key => key.includes('/checks/')).length, 1);
+  assert.equal(db.rows.get(merchantPath).lastMonitorStatus, 'SUCCESS');
+  // The prepared page must not retain merchant vector copies.
+  const saved = [...db.rows.entries()].find(([key]) => key.includes('/monitoring_work_products/'))[1];
+  assert.equal(JSON.stringify(saved).includes('vector_text'), false);
 });

@@ -1,11 +1,13 @@
 import { ownerTestAccessGranted } from "./owner-test-access.js";
-import { FieldPath, FieldValue, Timestamp, type DocumentReference } from "firebase-admin/firestore";
+import { FieldPath, FieldValue, Timestamp, type DocumentSnapshot, type DocumentReference } from "firebase-admin/firestore";
 import { getFunctions } from "firebase-admin/functions";
 import { createHash, randomUUID } from "node:crypto";
 import * as logger from "firebase-functions/logger";
 import { isAuthorizedApiKey } from "./api-auth.js";
 import { db } from "./firebase-admin.js";
 import { createMonitoringWorkStore, prepareMonitoringShortlist, processMonitoringProducts, type MonitoringPageSeed, type MonitoringPreparedPage, type MonitoringProductWork } from "./monitoring-work.js";
+import { publicMonitoringCache, PUBLIC_MONITORING_FIELDS } from "./monitoring-public-cache.js";
+import { loadSmallMonitoringCatalog } from "./monitoring-small-catalog.js";
 import { createMonitoringProductCache, MONITORING_PRODUCT_FIELDS } from "./monitoring-product-cache.js";
 import { alertGtins, normalizeProductBarcodes, productGtins } from "./product-barcodes.js";
 import { AI_CONFIG, FIRESTORE_COLLECTIONS, MATCHING_THRESHOLDS } from "./safety-gate-config.js";
@@ -335,6 +337,10 @@ async function getMonitorState(shop: string): Promise<MerchantMonitorStateDocume
   return snapshot.data() as MerchantMonitorStateDocument;
 }
 
+async function loadPublicMonitoringDocuments(documents: DocumentSnapshot[]) {
+  return publicMonitoringCache.load(documents, refs => db.getAll(...refs, { fieldMask: PUBLIC_MONITORING_FIELDS }));
+}
+
 async function loadRapexAlertCandidatesSince(
   checkpointDate: Date,
   limit: number,
@@ -362,11 +368,12 @@ async function loadRapexAlertCandidatesSince(
     );
   }
 
-  const snapshot = await query.limit(limit).get();
+  const snapshot = await query.select("meta").limit(limit).get();
+  const documents = await loadPublicMonitoringDocuments(snapshot.docs);
 
-  return snapshot.docs
+  return documents
     .map((doc) => {
-      const data = doc.data() as Record<string, unknown>;
+      const data = doc.data;
       return {
         alert: normalizeRapexAlert(doc.id, data),
         textVector: asVectorArray(data.vector_text),
@@ -393,12 +400,13 @@ async function loadMonitoringImages(candidates: AlertRetrievalCandidate[]): Prom
   for (let offset = 0; offset < ids.length; offset += 30) {
     const snapshots = await db.collection(FIRESTORE_COLLECTIONS.alertImages)
       .where("alertId", "in", ids.slice(offset, offset + 30))
-      .select("alertId", "imageUrl", "embeddingSourceUrl", "vector_image").get();
-    for (const doc of snapshots.docs) {
-      const data = doc.data();
+      .select("alertId").get();
+    const documents = await loadPublicMonitoringDocuments(snapshots.docs);
+    for (const doc of documents) {
+      const data = doc.data;
       const alertId = String(data.alertId);
       const images = byAlert.get(alertId) || [];
-      images.push({ imageUrl: String(data.imageUrl), embeddingSourceUrl: data.embeddingSourceUrl, vector: asVectorArray(data.vector_image) });
+      images.push({ imageUrl: String(data.imageUrl), embeddingSourceUrl: typeof data.embeddingSourceUrl === "string" ? data.embeddingSourceUrl : undefined, vector: asVectorArray(data.vector_image) });
       byAlert.set(alertId, images);
     }
   }
@@ -829,13 +837,15 @@ export async function runMerchantDeltaMonitoringForShop(params: {
     const changes = params.checkpointScope ? null : await changesQuery.limit(limit).get();
     if (changes) {
       const seen = new Set(rapexAlertCandidates.map((candidate) => candidate.alert.id));
-      const snapshots = await Promise.all(changes.docs.map((change) => db.collection(FIRESTORE_COLLECTIONS.alerts).doc(String(change.get("alertId"))).get()));
-      for (const snapshot of snapshots) {
-        if (!snapshot.exists) throw new Error("Safety Gate change references a missing source");
-        if (seen.has(snapshot.id)) continue;
-        const data = snapshot.data()!;
-        rapexAlertCandidates.push({ alert: normalizeRapexAlert(snapshot.id, data), textVector: asVectorArray(data.vector_text) });
-        seen.add(snapshot.id);
+      const references = changes.docs.map(change => db.collection(FIRESTORE_COLLECTIONS.alerts).doc(String(change.get("alertId")))).filter(ref => !seen.has(ref.id));
+      for (let offset = 0; offset < references.length; offset += 100) {
+        const snapshots = await db.getAll(...references.slice(offset, offset + 100), { fieldMask: ["meta"] });
+        const documents = await loadPublicMonitoringDocuments(snapshots);
+        for (const doc of documents) {
+          if (seen.has(doc.id)) continue;
+          rapexAlertCandidates.push({ alert: normalizeRapexAlert(doc.id, doc.data), textVector: asVectorArray(doc.data.vector_text) });
+          seen.add(doc.id);
+        }
       }
     }
     await loadMonitoringImages(rapexAlertCandidates);
@@ -846,8 +856,15 @@ export async function runMerchantDeltaMonitoringForShop(params: {
     >();
 
     const loadProducts = createMonitoringProductLoader(shop);
+    const local = await loadSmallMonitoringCatalog(monitorRef.collection(FIRESTORE_COLLECTIONS.subProducts), rapexAlertCandidates);
+    let localFallbacks = 0;
     await prepareMonitoringShortlist(rapexAlertCandidates,
-      alertCandidate => findCandidateProductsForAlert(shop, alertCandidate, loadProducts),
+      async alertCandidate => {
+        const found = local.catalog?.retrieve(alertCandidate);
+        if (found) return found;
+        if (local.catalog) localFallbacks++;
+        return findCandidateProductsForAlert(shop, alertCandidate, loadProducts);
+      },
       (alertCandidate, productCandidates) => {
       for (const productCandidate of productCandidates) {
         const existing = candidateProductsByDocId.get(productCandidate.id) ?? {
@@ -866,6 +883,9 @@ export async function runMerchantDeltaMonitoringForShop(params: {
       rapexAlertsScanned: rapexAlerts.length,
       candidateProducts: candidateProductsByDocId.size,
       retrievalMs: Date.now() - retrievalStarted,
+      retrievalStrategy: local.catalog ? "bounded-snapshot" : "firestore-knn",
+      retrievalReason: local.reason, snapshotProducts: local.productCount ?? null,
+      snapshotBytes: local.bytes ?? null, localFallbacks,
       mode: monitoringWindow.mode,
       windowStrategy: monitoringWindow.strategy,
       windowDays: monitoringWindow.days,

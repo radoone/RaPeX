@@ -36,6 +36,7 @@ test('batched hydration covers publication and correction candidates, with all v
   const batches = [];
   const candidates = Array.from({ length: 31 }, (_, i) => ({ alert: alert(String(i)), imageVector: vector(1) }));
   const loader = fn('merchant-monitoring', 'loadMonitoringImages', {
+    loadPublicMonitoringDocuments: async docs => docs.map(doc => ({ id: doc.id, data: doc.data() })),
     FIRESTORE_COLLECTIONS: { alertImages: 'rapex_alert_images' }, normalizePictures, selectMonitoringImages,
     asVectorArray: value => value?.toArray(),
     db: { collection: () => ({ where: (_field, _op, ids) => ({ select: () => ({ get: async () => { batches.push(ids); return { docs: ids.map(id => ({ data: () => ({ alertId: id, imageUrl: picture(2), vector_image: { toArray: () => vector(2) } }) })) }; } }) }) }) },

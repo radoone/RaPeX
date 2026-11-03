@@ -3,6 +3,7 @@ import * as gtin from '../../lib/gtin.js';
 import * as productBarcodes from '../../lib/product-barcodes.js';
 import * as productLifecycle from '../../lib/product-lifecycle.js';
 import ts from 'typescript';
+import { Readable } from 'node:stream';
 import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
 
@@ -41,6 +42,8 @@ export function database() {
   const collection = (path, filters = [], cap = Infinity) => ({
     orderBy: () => collection(path, filters, cap), startAfter: () => collection(path, filters, cap),
     select: () => collection(path, filters, cap),
+    count: () => ({ get: async () => ({ data: () => ({ count: [...rows.keys()].filter(key => key.startsWith(`${path}/`) && !key.slice(path.length + 1).includes('/')).slice(0, cap).length }) }) }),
+    stream: () => Readable.from((async function* () { yield* (await collection(path, filters, cap).get()).docs; })()),
     doc: id => doc(`${path}/${id}`), where: (k, op, v) => collection(path, [...filters, [k, op, v]], cap), limit: n => collection(path, filters, n),
     get: async () => {
       const docs = [...rows.keys()].filter(k => k.startsWith(`${path}/`) && !k.slice(path.length + 1).includes('/'))
