@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 import { alertGtins, findBarcodeMatches, normalizeProductBarcodes, productGtins } from '../lib/product-barcodes.js';
 import { completeShopifyBarcodes } from '../lib/shopify-variant-barcodes.js';
 import { buildSafetyCheckResult, createNoAlertsResult } from '../lib/safety-gate-checker-results.js';
+import { createMonitoringProductCache, MONITORING_PRODUCT_FIELDS } from '../lib/monitoring-product-cache.js';
 import { recallWithinThreshold } from '../lib/vector-recall.js';
 import { canApplyProductVersion, installationKey } from '../lib/product-lifecycle.js';
 import { sourceFunction as fn, database, collections, FieldValue } from './helpers/isolated-source.mjs';
@@ -104,11 +105,11 @@ test('delta monitoring finds exact products outside vector thresholds, within th
     const root = collection(name), doc = root.doc.bind(root);
     return { ...root, doc: id => {
       const ref = doc(id), child = ref.collection.bind(ref);
-      return { ...ref, collection: path => ({ ...child(path), findNearest: () => ({ get: async () => ({ docs: [] }) }) }) };
+      return { ...ref, collection: path => ({ ...child(path), select: () => ({ findNearest: () => ({ get: async () => ({ docs: [] }) }) }) }) };
     } };
   };
   const find = fn('merchant-monitoring', 'findCandidateProductsForAlert', {
-    db, FIRESTORE_COLLECTIONS: collections, FieldPath: { documentId: () => '__name__' }, recallWithinThreshold,
+    db, FIRESTORE_COLLECTIONS: collections, createMonitoringProductLoader: fn('merchant-monitoring', 'createMonitoringProductLoader', { db, FIRESTORE_COLLECTIONS: collections, createMonitoringProductCache, MONITORING_PRODUCT_FIELDS }), FieldPath: { documentId: () => '__name__' }, recallWithinThreshold,
     MONITOR_TEXT_CANDIDATE_LIMIT: 8, MONITOR_IMAGE_CANDIDATE_LIMIT: 5,
     MATCHING_THRESHOLDS: { textDistance: .38, imageDistance: .35 },
   });

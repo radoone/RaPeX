@@ -54,7 +54,7 @@ export function database() {
       return { docs: all.docs.slice(0, options.limit).map(s => ({ ...s, get: key => key === 'distance' ? .01 : s.get(key) })) };
     } }),
   });
-  const db = { rows, doc, collection, runTransaction: callback => {
+  const db = { rows, doc, collection, getAll: async (...references) => Promise.all(references.filter(ref => typeof ref?.get === 'function').map(ref => ref.get())), runTransaction: callback => {
     const run = serial.then(async () => {
       const operations = [];
       const result = await callback({ get: ref => ref.get(), set: (ref, data) => operations.push(() => merge(ref.path, data)), create: (ref, data) => operations.push(() => { assert.ok(!rows.has(ref.path)); merge(ref.path, data); }) });

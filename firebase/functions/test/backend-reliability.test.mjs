@@ -6,6 +6,7 @@ import { recallWithinThreshold } from '../lib/vector-recall.js';
 import { selectMonitoringImages, prioritizeMonitoringImages } from '../lib/monitoring-images.js';
 import { mapBounded, memoizeBounded } from '../lib/matching-work.js';
 import { prepareMonitoringShortlist, processMonitoringProducts } from '../lib/monitoring-work.js';
+import { createMonitoringProductCache, MONITORING_PRODUCT_FIELDS } from '../lib/monitoring-product-cache.js';
 import { canApplyProductVersion, installationKey, isProductChangeSupersededByDeletion } from '../lib/product-lifecycle.js';
 import { sourceFunction as fn, database, Timestamp, FieldValue, collections, logger } from './helpers/isolated-source.mjs';
 
@@ -17,7 +18,9 @@ function fixture() {
   db.rows.set(productPath, { productId: '1', name: 'Example', sourceUpdatedAt: '2026-10-23T10:00:00Z', vector_text: FieldValue.vector([.1]) });
   return db;
 }
-const deps = db => ({ db, logger, FieldValue, Timestamp, FIRESTORE_COLLECTIONS: collections, createHash, installationKey, canApplyProductVersion });
+const deps = db => ({ db, logger, FieldValue, Timestamp, FIRESTORE_COLLECTIONS: collections, createHash, installationKey, canApplyProductVersion,
+  createMonitoringProductLoader: fn('merchant-monitoring', 'createMonitoringProductLoader', { db, FIRESTORE_COLLECTIONS: collections, createMonitoringProductCache, MONITORING_PRODUCT_FIELDS }),
+});
 const writer = (db, embedText = async () => [.2]) => fn('merchant-monitoring', 'upsertMerchantProduct', {
   ...deps(db), buildEmbeddingText: () => 'changed product', asVectorArray: value => value?.toArray(), embedText, embedImage: async () => undefined,
 });

@@ -6,6 +6,7 @@ import * as logger from "firebase-functions/logger";
 import { isAuthorizedApiKey } from "./api-auth.js";
 import { db } from "./firebase-admin.js";
 import { createMonitoringWorkStore, prepareMonitoringShortlist, processMonitoringProducts, type MonitoringPageSeed, type MonitoringPreparedPage, type MonitoringProductWork } from "./monitoring-work.js";
+import { createMonitoringProductCache, MONITORING_PRODUCT_FIELDS } from "./monitoring-product-cache.js";
 import { alertGtins, normalizeProductBarcodes, productGtins } from "./product-barcodes.js";
 import { AI_CONFIG, FIRESTORE_COLLECTIONS, MATCHING_THRESHOLDS } from "./safety-gate-config.js";
 import { recallWithinThreshold } from "./vector-recall.js";
@@ -406,9 +407,18 @@ async function loadMonitoringImages(candidates: AlertRetrievalCandidate[]): Prom
   }
 }
 
+function createMonitoringProductLoader(shop: string) {
+  const products = db.collection(FIRESTORE_COLLECTIONS.merchants).doc(encodeURIComponent(shop)).collection(FIRESTORE_COLLECTIONS.subProducts);
+  return createMonitoringProductCache(async ids => {
+    const documents = await db.getAll(...ids.map(id => products.doc(id)), { fieldMask: MONITORING_PRODUCT_FIELDS });
+    return documents.filter(doc => doc.exists).map(doc => ({ id: doc.id, data: doc.data() as Record<string, unknown> }));
+  });
+}
+
 async function findCandidateProductsForAlert(
   shop: string,
   alertCandidate: AlertRetrievalCandidate,
+  loadProducts = createMonitoringProductLoader(shop),
 ): Promise<MerchantProductCandidate[]> {
   const candidates = new Map<string, MerchantProductCandidate>();
   const collection = db
@@ -419,7 +429,7 @@ async function findCandidateProductsForAlert(
   const gtins = alertGtins(alertCandidate.alert.fields);
   for (let offset = 0; offset < gtins.length; offset += 30) {
     const query = collection.where("gtins", "array-contains-any", gtins.slice(offset, offset + 30))
-      .orderBy(FieldPath.documentId()).limit(200);
+      .orderBy(FieldPath.documentId()).select("sourceUpdatedAt", "deletedAt").limit(200);
     let page = await query.get();
     while (!page.empty) {
       for (const doc of page.docs) {
@@ -441,7 +451,7 @@ async function findCandidateProductsForAlert(
     if (!vector?.length) continue;
     const docs = await recallWithinThreshold({
       initialLimit, maxDistance,
-      fetch: async (limit) => (await collection.findNearest({
+      fetch: async (limit) => (await collection.select("sourceUpdatedAt", "deletedAt", "distance").findNearest({
         vectorField: field, queryVector: vector, limit, distanceMeasure: "COSINE", distanceResultField: "distance",
       }).get()).docs,
       distance: (doc) => doc.get("distance"),
@@ -460,7 +470,11 @@ async function findCandidateProductsForAlert(
     }
   }
 
-  return Array.from(candidates.values());
+  const facts = await loadProducts([...candidates.values()].map(candidate => ({ id: candidate.id, sourceUpdatedAt: candidate.data.sourceUpdatedAt })));
+  return [...candidates.values()].flatMap(candidate => {
+    const data = facts.get(candidate.id);
+    return data ? [{ ...candidate, data }] : [];
+  });
 }
 
 async function upsertAlertForProduct(params: {
@@ -831,8 +845,9 @@ export async function runMerchantDeltaMonitoringForShop(params: {
       { product: MerchantProductCandidate; alerts: Map<string, NormalizedAlert> }
     >();
 
+    const loadProducts = createMonitoringProductLoader(shop);
     await prepareMonitoringShortlist(rapexAlertCandidates,
-      alertCandidate => findCandidateProductsForAlert(shop, alertCandidate),
+      alertCandidate => findCandidateProductsForAlert(shop, alertCandidate, loadProducts),
       (alertCandidate, productCandidates) => {
       for (const productCandidate of productCandidates) {
         const existing = candidateProductsByDocId.get(productCandidate.id) ?? {

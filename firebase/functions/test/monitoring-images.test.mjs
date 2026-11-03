@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { selectMonitoringImages, prioritizeMonitoringImages } from '../lib/monitoring-images.js';
 import { recallWithinThreshold } from '../lib/vector-recall.js';
+import { createMonitoringProductCache } from '../lib/monitoring-product-cache.js';
 import { loadFirstSuccessful } from '../lib/matching-work.js';
 import { sourceFunction as fn } from './helpers/isolated-source.mjs';
 
@@ -48,7 +49,11 @@ test('batched hydration covers publication and correction candidates, with all v
 
 function finder(search) {
   return fn('merchant-monitoring', 'findCandidateProductsForAlert', {
-    db: { collection: () => ({ doc: () => ({ collection: () => ({ findNearest: options => ({ get: async () => ({ docs: await search(options) }) }) }) }) }) },
+    db: { collection: () => ({ doc: () => ({ collection: () => ({ select: (...fields) => {
+      assert.deepEqual(fields, ['sourceUpdatedAt', 'deletedAt', 'distance']);
+      return { findNearest: options => ({ get: async () => ({ docs: await search(options) }) }) };
+    } }) }) }) },
+    createMonitoringProductLoader: () => async hits => new Map(hits.map(hit => [hit.id, { productId: hit.id }])),
     FIRESTORE_COLLECTIONS: { merchants: 'merchants', subProducts: 'products' }, recallWithinThreshold,
     MONITOR_TEXT_CANDIDATE_LIMIT: 8, MONITOR_IMAGE_CANDIDATE_LIMIT: 5,
     MATCHING_THRESHOLDS: { textDistance: .38, imageDistance: .35 },
@@ -100,4 +105,18 @@ test('the real media preparation gives the matcher the secondary retrieval photo
   assert.equal(input.alertImages[0].media.url, picture(7));
   assert.equal(input.alertImages.length, 2);
   assert.equal(source.fields.product_image, picture(1));
+});
+
+
+test('shared product facts keep source-specific image priority separate', async () => {
+  let reads = 0;
+  const load = createMonitoringProductCache(async ids => { reads++; return ids.map(id => ({ id, data: { productId: id } })); });
+  const find = finder(async () => [doc('shared')]);
+  const [first, second] = await Promise.all([1, 2].map(n => find('shop', {
+    alert: alert(String(n)), textVector: [1], images: [{ vector: vector(n), mediaUrl: picture(n) }],
+  }, load)));
+  assert.equal(reads, 1);
+  assert.equal(first[0].data, second[0].data);
+  assert.deepEqual(first[0].matchedImageUrls, [picture(1)]);
+  assert.deepEqual(second[0].matchedImageUrls, [picture(2)]);
 });
