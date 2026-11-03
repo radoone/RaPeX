@@ -13,8 +13,15 @@ const functionLock = read('firebase/functions/package-lock.json');
 for (const [manifest, lock] of [[read('package.json'), rootLock], [read('firebase/functions/package.json'), functionLock]]) {
   for (const [name, expected] of Object.entries(manifest.overrides ?? {})) {
     if (typeof expected !== 'string') continue;
+    const selected = name.match(/^(.*)@>=(\d+)\.(\d+)\.(\d+)$/);
+    const packageName = selected ? selected[1] : name;
     for (const [path, installed] of Object.entries(lock.packages)) {
-      if (path.endsWith(`node_modules/${name}`)) {
+      if (selected) {
+        const minimum = selected.slice(2).map(Number), actual = installed.version?.split('.').map(Number) ?? [];
+        const difference = actual.findIndex((part, index) => part !== minimum[index]);
+        if (difference !== -1 && actual[difference] < minimum[difference]) continue;
+      }
+      if (path.endsWith(`node_modules/${packageName}`)) {
         assert.equal(installed.version, expected, `Stale override for ${name} at ${path}; regenerate the lockfile`);
       }
     }
