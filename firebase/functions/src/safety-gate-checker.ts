@@ -2,7 +2,8 @@ import { loadFirstSuccessful, mapBounded, memoizeBounded } from "./matching-work
 import { createHash } from "node:crypto";
 import { findBarcodeMatches, normalizeProductBarcodes } from "./product-barcodes.js";
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
-import { googleAI } from "@genkit-ai/google-genai";
+import { vertexAI } from "@genkit-ai/google-genai";
+import { isPermanentProviderFailure, runAnalysisAttempts } from "./analysis-attempts.js";
 import { type Part } from "genkit";
 import { db, functionsAi } from "./firebase-admin.js";
 import { AI_CONFIG, FIRESTORE_COLLECTIONS } from "./safety-gate-config.js";
@@ -270,7 +271,7 @@ async function analyzeProductMatches(product: ProductInput, alerts: NormalizedAl
     { model: AI_CONFIG.fallbackModel, promptType: "text", label: "2.5-flash-lite text-only" },
   ] as const;
 
-  for (const attempt of attempts) {
+  return runAnalysisAttempts(attempts, async (attempt, abortSignal) => {
     const input =
       attempt.promptType === "text"
         ? { ...promptInput, productImages: [], alertImages: [] }
@@ -285,33 +286,25 @@ async function analyzeProductMatches(product: ProductInput, alerts: NormalizedAl
       comparedImageAlertIds: [...new Set(input.alertImages.map(image => image.alertId))],
     };
 
-    try {
-      if (attempt.promptType === "text") {
-        const response = await productMatchAnalysisPrompt(input, {
-          model: googleAI.model(attempt.model),
-        });
-        return { response, analysis };
-      }
-
-      const renderedPrompt = await productMatchAnalysisPrompt.render(input, {
-        model: googleAI.model(attempt.model),
-      });
-      const response = await functionsAi.generate({
-        ...renderedPrompt,
-        messages: appendMediaMessages(renderedPrompt.messages ?? [], input),
-        model: googleAI.model(attempt.model),
-      });
-      return { response, analysis };
-    } catch (error) {
-      const mimeIssue = isUnsupportedMimeError(error);
-      console.error(
-        `Analysis attempt failed (${attempt.label})${mimeIssue ? " [unsupported mime]" : ""}; trying next`,
-        error,
-      );
-    }
-  }
-
-  return null;
+    // Vertex uses the project's existing IAM/billing, including for images;
+    // Gemini Developer API prepaid credit is not part of this path.
+    const renderedPrompt = await productMatchAnalysisPrompt.render(input, {
+      model: vertexAI.model(attempt.model),
+    });
+    const response = await functionsAi.generate({
+      ...renderedPrompt,
+      messages: attempt.promptType === "text" ? renderedPrompt.messages : appendMediaMessages(renderedPrompt.messages ?? [], input),
+      model: vertexAI.model(attempt.model),
+      abortSignal,
+    });
+    return { response, analysis };
+  }, (attempt, error) => {
+    const mimeIssue = isUnsupportedMimeError(error);
+    console.error(
+      `Vertex analysis attempt failed (${attempt.label})${mimeIssue ? " [unsupported mime]" : ""}`,
+      { permanentProviderFailure: isPermanentProviderFailure(error), errorType: error instanceof Error ? error.name : "unknown" },
+    );
+  });
 }
 
 export async function checkProductAgainstAlerts(
