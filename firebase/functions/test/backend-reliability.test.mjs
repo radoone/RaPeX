@@ -122,6 +122,7 @@ function handler(db, checkProductSafety) {
     currentEntitlement: fn('merchant-monitoring', 'currentEntitlement', { Timestamp }),
     isProductChangeSupersededByDeletion, upsertMerchantProduct: writer(db), checkProductSafety,
     upsertAlertForProduct: fn('merchant-monitoring', 'upsertAlertForProduct', deps(db)),
+    markMerchantProductDeleted: fn('product-deletion', 'markMerchantProductDeleted', { FieldValue, FieldPath: { documentId: () => '__name__' }, installationKey, canApplyProductVersion, sameProductVersion: (a,b) => Date.parse(a) === Date.parse(b) }),
   });
 }
 test('delete during model analysis remains deleted and writes no successful late check', async () => {

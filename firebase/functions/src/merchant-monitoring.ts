@@ -16,6 +16,7 @@ import { selectMonitoringImages, prioritizeMonitoringImages, type MonitoringImag
 import { buildMonitoringCursorValues } from "./monitoring-cursor.js";
 import { monitoringTaskId, scheduledMonitoringRunId } from "./monitoring-task-id.js";
 import { canApplyProductVersion, installationKey, isProductChangeSupersededByDeletion, sameProductVersion } from "./product-lifecycle.js";
+import { markMerchantProductDeleted } from "./product-deletion.js";
 import { checkProductAgainstAlerts, checkProductSafety } from "./safety-gate-checker.js";
 import type { ProductInput } from "./safety-gate-checker.schemas.js";
 import { normalizePictures } from "./safety-gate-checker-media.js";
@@ -101,6 +102,8 @@ export type MerchantMonitoringTaskPayload = {
 };
 
 export type ShopifyProductChangeTaskPayload = {
+  recoveryRunId?: string;
+  refreshFromShopify?: boolean;
   operation?: "upsert" | "delete";
   installation?: string;
   shop: string;
@@ -119,7 +122,7 @@ function monitoringRunRef(shop: string, runId: string, collection = MONITORING_R
     .doc(runId);
 }
 
-function currentEntitlement(data: Record<string, unknown>): boolean {
+export function currentEntitlement(data: Record<string, unknown>): boolean {
   if (data.ownerTestAccess && ownerTestAccessGranted(data, String(data.shop || ""))) return true;
   if (data.installationRetiredAt || data.monitoringEntitled !== true || data.subscriptionStatus !== "active") return false;
   const validUntil = data.subscriptionValidUntil;
@@ -1254,10 +1257,11 @@ export async function runDailyMerchantDeltaMonitoring(scheduleTime?: string): Pr
   };
 }
 
-function productChangeJobId(payload: ShopifyProductChangeTaskPayload): string {
+export function productChangeJobId(payload: ShopifyProductChangeTaskPayload): string {
+  const recovery = payload.recoveryRunId ? `:recovery:${payload.recoveryRunId}` : "";
   return monitoringTaskId(payload.shop, payload.operation === "delete"
-    ? `product-delete:${payload.productId}:${payload.sourceUpdatedAt}:${payload.installation || "legacy"}`
-    : `product:${payload.productId}:${payload.sourceUpdatedAt}:${payload.installation || "legacy"}`);
+    ? `product-delete:${payload.productId}:${payload.sourceUpdatedAt}:${payload.installation || "legacy"}${recovery}`
+    : `product:${payload.productId}:${payload.sourceUpdatedAt}:${payload.installation || "legacy"}${recovery}`);
 }
 
 function productChangeJobRef(shop: string, jobId: string) {
@@ -1412,33 +1416,35 @@ export async function handleShopifyProductChangeTask(
     return;
   }
 
-  await setJob({ status: "processing", attemptCount: retryCount + 1, startedAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp() });
+  await setJob({ shop, productId: payload.productId, sourceUpdatedAt: payload.sourceUpdatedAt, ...(payload.recoveryRunId ? { recoveryRunId: payload.recoveryRunId } : {}), status: "processing", attemptCount: retryCount + 1, startedAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp() });
   try {
     const productRef = merchantRef.collection(FIRESTORE_COLLECTIONS.subProducts).doc(encodeURIComponent(payload.productId));
     if (payload.operation === "delete") {
       const now = FieldValue.serverTimestamp();
-      await db.runTransaction(async (transaction) => {
-        const [product, merchant, alerts] = await Promise.all([
-          transaction.get(productRef), transaction.get(merchantRef),
-          transaction.get(merchantRef.collection(FIRESTORE_COLLECTIONS.subAlerts).where("productId", "==", payload.productId)),
-        ]);
-        if (!merchant.exists || installationKey(merchant.data() || {}) !== installationKey(merchantSnapshot.data() || {})) return;
-        const incoming = payload.sourceUpdatedAt;
-        if (!incoming || !canApplyProductVersion(product.data() || {}, incoming)) return;
-        transaction.set(productRef, {
-          shop, productId: payload.productId, deletedAt: now,
-          deletedSourceUpdatedAt: incoming, updatedAt: now,
-          vector_text: FieldValue.delete(), vector_image: FieldValue.delete(),
-          gtins: [], barcodes: [],
-        }, { merge: true });
-        alerts.docs.forEach((document) => transaction.set(document.ref, {
-          productDeleted: true, productDeletedAt: now, updatedAt: now,
-        }, { merge: true }));
-      });
+      if (!payload.sourceUpdatedAt) throw new Error("Product deletion version is missing");
+      await markMerchantProductDeleted(db, merchantRef, shop, payload.productId, payload.sourceUpdatedAt, installationKey(merchantSnapshot.data() || {}));
       await setJob({ status: "completed", completedAt: now, updatedAt: now });
       return;
     }
 
+    if (payload.refreshFromShopify) {
+      if (!payload.sourceUpdatedAt) throw new Error("Catalog repair is missing its Shopify version");
+      const currentProduct = await productRef.get();
+      if (isProductChangeSupersededByDeletion(currentProduct.get("deletedAt"), currentProduct.get("deletedSourceUpdatedAt"), payload.sourceUpdatedAt)) {
+        await setJob({ status: "superseded", updatedAt: FieldValue.serverTimestamp() });
+        return;
+      }
+      const { loadShopifyProductBarcodes } = await import("./merchant-catalog-audit.js");
+      const current = await loadShopifyProductBarcodes(shop, payload.productId);
+      if (Date.parse(current.sourceUpdatedAt) < Date.parse(payload.sourceUpdatedAt)) throw new Error("Shopify product version is older than the catalog; retry");
+      if (!sameProductVersion(current.sourceUpdatedAt, payload.sourceUpdatedAt)) {
+        const refreshed = { ...payload, ...current, product: { ...current.product, barcodesComplete: true } };
+        await enqueueRefreshedProductChange(refreshed);
+        await setJob({ status: "superseded", supersededByVersion: current.sourceUpdatedAt, recoveryJobId: productChangeJobId(refreshed), updatedAt: FieldValue.serverTimestamp() });
+        return;
+      }
+      Object.assign(payload, current, { product: { ...current.product, barcodesComplete: true } });
+    }
     if (!payload.sourceUpdatedAt || !payload.product || !payload.productTitle) {
       throw new Error("Product change task is missing normalized product data");
     }

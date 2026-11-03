@@ -219,5 +219,8 @@
       ]
     }
   ],
-  "fieldOverrides": []
+  "fieldOverrides": [
+    { "collectionGroup": "catalog_reconciliation_runs", "fieldPath": "prepared", "indexes": [] },
+    { "collectionGroup": "catalog_reconciliation_runs", "fieldPath": "expireAt", "ttl": true, "indexes": [] }
+  ]
 }

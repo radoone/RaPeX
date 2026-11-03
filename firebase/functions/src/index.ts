@@ -35,6 +35,24 @@ import {
   handleStartMerchantCatalogAuditRequest,
 } from "./merchant-catalog-audit.js";
 import { requireOperationsKey } from "./api-auth.js";
+import { handleCatalogReconciliationTask, reconcileMerchantCatalogs } from "./merchant-catalog-reconciliation.js";
+
+export const dailyMerchantCatalogReconciliation = onSchedule({
+  region: "europe-west1", schedule: "17 2 * * *", timeZone: "Europe/Bratislava",
+  memory: "256MiB", timeoutSeconds: 540, maxInstances: 1,
+  retryCount: 3, minBackoffSeconds: 60, maxBackoffSeconds: 600,
+}, async event => {
+  const result = await reconcileMerchantCatalogs(event.scheduleTime);
+  logger.info("Daily Shopify catalog reconciliation queued", result);
+  if (result.failures) throw new Error("Some Shopify catalog reconciliations could not be queued");
+});
+
+export const merchantCatalogReconciliationTask = onTaskDispatched({
+  region: "europe-west1", memory: "512MiB", timeoutSeconds: 1200, maxInstances: 5,
+  rateLimits: { maxConcurrentDispatches: 4, maxDispatchesPerSecond: 1 },
+  retryConfig: { maxAttempts: 8, maxRetrySeconds: 24 * 60 * 60, minBackoffSeconds: 60, maxBackoffSeconds: 600, maxDoublings: 4 },
+  secrets: ["SAFETY_GATE_API_KEY"],
+}, async request => { await handleCatalogReconciliationTask(request.data, request.context.retryCount); });
 
 // --- Scheduled Function ---
 export const dailyRapexDeltaLoader = onSchedule(
