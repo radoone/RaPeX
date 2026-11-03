@@ -5,6 +5,7 @@ import { createUnavailableAnalysisResult, parseAnalysisMatches, buildSafetyCheck
 import { recallWithinThreshold } from '../lib/vector-recall.js';
 import { selectMonitoringImages, prioritizeMonitoringImages } from '../lib/monitoring-images.js';
 import { mapBounded, memoizeBounded } from '../lib/matching-work.js';
+import { prepareMonitoringShortlist, processMonitoringProducts } from '../lib/monitoring-work.js';
 import { canApplyProductVersion, installationKey, isProductChangeSupersededByDeletion } from '../lib/product-lifecycle.js';
 import { sourceFunction as fn, database, Timestamp, FieldValue, collections, logger } from './helpers/isolated-source.mjs';
 
@@ -150,7 +151,9 @@ test('an in-flight product worker cannot recreate a purged tenant or its job', a
 function monitor(db, dateCandidates = [], check = async () => ({ isSafe: true, warnings: [], checkedAt: new Date().toISOString() })) {
   const normalize = fn('merchant-monitoring', 'normalizeAlertDate', { Timestamp });
   return fn('merchant-monitoring', 'runMerchantDeltaMonitoringForShop', {
-    ...deps(db), getMonitorState: async () => db.rows.get(merchantPath), randomUUID: () => 'run',
+    ...deps(db), prepareMonitoringShortlist, processMonitoringProducts,
+    createMonitoringWorkStore: fn('monitoring-work', 'createMonitoringWorkStore', { ...deps(db), randomUUID: () => 'generation', Buffer }),
+    getMonitorState: async () => db.rows.get(merchantPath), randomUUID: () => 'run',
     resolveMonitoringWindow: ({ currentState }) => ({ mode: 'delta', strategy: 'since-last-check', days: null, checkpointDate: normalize(currentState.lastRapexAlertDate) || new Date('2026-01-01'), checkpointRecordTimestamp: null }),
     loadRapexAlertCandidatesSince: async () => dateCandidates,
     loadMonitoringImages: fn('merchant-monitoring', 'loadMonitoringImages', { ...deps(db), selectMonitoringImages, normalizePictures: fields => fields?.pictures || [], asVectorArray: x => x?.toArray() }),
@@ -165,7 +168,36 @@ function monitor(db, dateCandidates = [], check = async () => ({ isSafe: true, w
     FieldPath: { documentId: () => '__name__' },
   });
 }
-const candidate = i => ({ alert: { id: `A${i}`, meta: { alert_date: '2026-10-23T00:00:00Z', record_timestamp: String(i) } }, textVector: [1] });
+const candidate = i => ({ alert: { id: `A${i}`, meta: { alert_date: '2026-10-23T00:00:00Z', record_timestamp: String(i) }, fields: { pictures: [] } }, textVector: [1] });
+
+test('monitoring retry reuses its prepared page and skips committed product checks', async () => {
+  const db = fixture();
+  for (const id of ['2','3']) db.rows.set(`${merchantPath}/products/${id}`, {...db.rows.get(productPath),productId:id});
+  let fail=true; const calls=[];
+  const check=async product=>{calls.push(product.productId);if(product.productId==='2'&&fail)throw Error('provider unavailable');return {isSafe:true,warnings:[],checkedAt:new Date().toISOString()};};
+  await assert.rejects(monitor(db,[candidate(1)],check)({shop,runId:'resume'}),/provider unavailable/);
+  assert.equal(db.rows.get(merchantPath).lastRapexAlertDocId,undefined);
+  assert.equal([...db.rows.values()].filter(row=>row.completed?.productsScanned===1).length,1);
+  fail=false;
+  // A later query would return A99. Resume must finish the original A1 page.
+  const summary=await monitor(db,[candidate(99)],check)({shop,runId:'resume'});
+  assert.deepEqual(calls,['1','2','2','3']);
+  assert.equal(summary.productsScanned,3);assert.equal(summary.checkpoint.lastRapexAlertDocId,'A1');
+  assert.equal([...db.rows.keys()].filter(key=>key.includes('/checks/')).length,3);
+});
+
+test('finding creation before an interrupted product commit retains its original count on retry', async () => {
+  const db=fixture(), transact=db.runTransaction;let fail=true;
+  db.runTransaction=callback=>transact(transaction=>callback({...transaction,set:(ref,data,...rest)=>{
+    if(fail&&ref.path.includes('/monitoring_work_products/')&&data.completed){fail=false;throw Error('interrupted after finding');}
+    return transaction.set(ref,data,...rest);
+  }}));
+  const check=async()=>({isSafe:false,warnings:[{alertId:'A1',overallSimilarity:95}],checkedAt:new Date().toISOString()});
+  await assert.rejects(monitor(db,[candidate(1)],check)({shop,runId:'finding-resume'}),/interrupted after finding/);
+  const summary=await monitor(db,[],check)({shop,runId:'finding-resume'});
+  assert.equal(summary.alertsCreated,1);assert.equal(summary.matchesFound,1);
+  assert.equal([...db.rows.keys()].filter(key=>key.includes('/alerts/')).length,1);
+});
 
 test('missing index or AI failure cannot advance a monitoring checkpoint or write a successful check', async () => {
   for (const mode of ['index', 'model']) {

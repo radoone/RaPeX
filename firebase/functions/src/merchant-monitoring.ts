@@ -5,7 +5,7 @@ import { createHash, randomUUID } from "node:crypto";
 import * as logger from "firebase-functions/logger";
 import { isAuthorizedApiKey } from "./api-auth.js";
 import { db } from "./firebase-admin.js";
-import { mapBounded } from "./matching-work.js";
+import { createMonitoringWorkStore, prepareMonitoringShortlist, processMonitoringProducts, type MonitoringPageSeed, type MonitoringPreparedPage, type MonitoringProductWork } from "./monitoring-work.js";
 import { alertGtins, normalizeProductBarcodes, productGtins } from "./product-barcodes.js";
 import { AI_CONFIG, FIRESTORE_COLLECTIONS, MATCHING_THRESHOLDS } from "./safety-gate-config.js";
 import { recallWithinThreshold } from "./vector-recall.js";
@@ -471,6 +471,7 @@ async function upsertAlertForProduct(params: {
   resultJson: string;
   sourceUpdatedAt?: string;
   installation?: string;
+  monitoringWorkKey?: string;
   warningsCount: number;
   riskLevel: string;
 }): Promise<number> {
@@ -496,13 +497,14 @@ async function upsertAlertForProduct(params: {
       if (!merchant.exists || merchant.get("installationRetiredAt") || product.get("deletedAt")) return false;
       if (params.sourceUpdatedAt && !sameProductVersion(product.get("sourceUpdatedAt"), params.sourceUpdatedAt)) return false;
       if (params.installation && installationKey(merchant.data() || {}) !== params.installation) return false;
-      if (current.exists) return false; // Preserve original evidence and every merchant decision.
+      if (current.exists) return Boolean(params.monitoringWorkKey && current.get("monitoringWorkKey") === params.monitoringWorkKey); // Preserve original evidence and every merchant decision.
       const existingPair = legacy.docs.some((doc) => {
         try { return JSON.parse(String(doc.get("checkResult"))).warnings?.some((w: { alertId?: string }) => w.alertId === warning.alertId); }
         catch { throw new Error("Stored finding evidence cannot be read"); }
       });
       if (existingPair) return false; // Preserve pre-migration findings, including reviewed history.
       transaction.create(ref, {
+        ...(params.monitoringWorkKey ? { monitoringWorkKey: params.monitoringWorkKey } : {}),
         shop: params.shop, productId: params.productId, productTitle: params.productTitle,
         productHandle: params.productHandle || null, sourceAlertId: warning.alertId,
         checkResult: JSON.stringify({ ...result, warnings: [warning], isSafe: false }),
@@ -794,7 +796,10 @@ export async function runMerchantDeltaMonitoringForShop(params: {
     }, { merge: true });
   });
 
+  const workStore = runRef ? createMonitoringWorkStore(db, runRef, monitorRef, installationKey(merchantState as unknown as Record<string, unknown>)) : null;
   try {
+    const preparePage = async (): Promise<MonitoringPreparedPage> => {
+    const retrievalStarted = Date.now();
     const rapexAlertCandidates = await loadRapexAlertCandidatesSince(
       monitoringWindow.checkpointDate,
       limit,
@@ -826,8 +831,9 @@ export async function runMerchantDeltaMonitoringForShop(params: {
       { product: MerchantProductCandidate; alerts: Map<string, NormalizedAlert> }
     >();
 
-    for (const alertCandidate of rapexAlertCandidates) {
-      const productCandidates = await findCandidateProductsForAlert(shop, alertCandidate);
+    await prepareMonitoringShortlist(rapexAlertCandidates,
+      alertCandidate => findCandidateProductsForAlert(shop, alertCandidate),
+      (alertCandidate, productCandidates) => {
       for (const productCandidate of productCandidates) {
         const existing = candidateProductsByDocId.get(productCandidate.id) ?? {
           product: productCandidate,
@@ -838,37 +844,70 @@ export async function runMerchantDeltaMonitoringForShop(params: {
 
         candidateProductsByDocId.set(productCandidate.id, existing);
       }
-    }
+    });
 
     logger.info("Merchant delta monitoring shortlist prepared", {
       shop,
       rapexAlertsScanned: rapexAlerts.length,
       candidateProducts: candidateProductsByDocId.size,
+      retrievalMs: Date.now() - retrievalStarted,
       mode: monitoringWindow.mode,
       windowStrategy: monitoringWindow.strategy,
       windowDays: monitoringWindow.days,
       checkpointDate: monitoringWindow.checkpointDate.toISOString(),
     });
 
-    if (runRef) {
-      await setProgress({
-        status: "processing",
-        rapexAlertsScanned: rapexAlerts.length,
-        candidateProducts: candidateProductsByDocId.size,
-        productsScanned: 0,
-        matchesFound: 0,
-        alertsCreated: 0,
-        heartbeatAt: FieldValue.serverTimestamp(),
-        updatedAt: FieldValue.serverTimestamp(),
-      });
-    }
+    const latestAlert = dateCandidates.at(-1)?.alert;
+    const lastChange = changes?.docs.at(-1);
+    const changeTime = lastChange?.get("changedAt");
+    if (lastChange && !(changeTime instanceof Timestamp)) throw new Error("Safety Gate change has no committed timestamp");
+    const seed: MonitoringPageSeed = {
+      shop, mode: monitoringWindow.mode,
+      window: { strategy: monitoringWindow.strategy, days: monitoringWindow.days, checkpointDate: monitoringWindow.checkpointDate.toISOString() },
+      hasMore: dateCandidates.length >= limit || (changes?.size || 0) >= limit,
+      rapexAlertsScanned: rapexAlerts.length,
+      checkpoint: {
+        lastRapexAlertDate: latestAlert?.meta.alert_date || normalizeAlertDate(currentState?.lastRapexAlertDate)?.toISOString() || null,
+        lastRapexRecordTimestamp: latestAlert?.meta.record_timestamp || currentState?.lastRapexRecordTimestamp || null,
+        lastRapexAlertDocId: latestAlert?.id || currentState?.lastRapexAlertDocId || null,
+      },
+      changeCursor: lastChange ? { id: lastChange.id, changedAt: (changeTime as Timestamp).toDate().toISOString() } : null,
+    };
+    const items: MonitoringProductWork[] = Array.from(candidateProductsByDocId.values());
+    return workStore ? workStore.save(seed, rapexAlerts, items) : { seed, items };
+    };
 
+    const prepared = await workStore?.load() || await preparePage();
+    const { seed, items } = prepared;
     let matchesFound = 0;
     let alertsCreated = 0;
     let productsScanned = 0;
-
-    const candidateEntries = Array.from(candidateProductsByDocId.values());
-    await mapBounded(candidateEntries, 2, async (candidate) => {
+    for (const item of items) {
+      if (item.completed) {
+        productsScanned += item.completed.productsScanned;
+        matchesFound += item.completed.matchesFound;
+        alertsCreated += item.completed.alertsCreated;
+      }
+    }
+    logger.info("Merchant monitoring work ready", { shop, runId, resumedProducts: productsScanned, candidateProducts: items.length });
+    await setProgress({ status: "processing", phase: "analyzing", rapexAlertsScanned: seed.rapexAlertsScanned,
+      candidateProducts: items.length, productsScanned, matchesFound, alertsCreated,
+      heartbeatAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp() });
+    const finish = async (candidate: MonitoringProductWork, counts: { productsScanned: number; matchesFound: number; alertsCreated: number }) => {
+      if (workStore) await workStore.complete(candidate, counts);
+      productsScanned += counts.productsScanned;
+      matchesFound += counts.matchesFound;
+      alertsCreated += counts.alertsCreated;
+      if (runRef) await setProgress({ productsScanned, matchesFound, alertsCreated,
+        heartbeatAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp() });
+    };
+    await processMonitoringProducts(items.filter(candidate => !candidate.completed), async (candidate) => {
+      const productRef = monitorRef.collection(FIRESTORE_COLLECTIONS.subProducts).doc(candidate.product.id);
+      const latestProduct = await productRef.get();
+      if (!latestProduct.exists || latestProduct.get("deletedAt") || latestProduct.get("sourceUpdatedAt") !== candidate.product.data.sourceUpdatedAt) {
+        await finish(candidate, { productsScanned: 1, matchesFound: 0, alertsCreated: 0 });
+        return;
+      }
       const productInput = toProductInput(candidate.product.data);
       const result = await checkProductAgainstAlerts(
         productInput,
@@ -879,12 +918,10 @@ export async function runMerchantDeltaMonitoringForShop(params: {
         result.warnings = result.warnings.filter((warning) => warning.matchBasis === "gtin" || warning.identityAssessment === "uncertain" || warning.overallSimilarity >= threshold);
         result.isSafe = result.warnings.length === 0;
       }
-      productsScanned += 1;
 
       const expireDate = new Date();
       expireDate.setDate(expireDate.getDate() + AI_CONFIG.checkHistoryTtlDays);
 
-      const productRef = monitorRef.collection(FIRESTORE_COLLECTIONS.subProducts).doc(candidate.product.id);
       const applied = await db.runTransaction(async (transaction) => {
         const [product, merchant] = await Promise.all([transaction.get(productRef), transaction.get(monitorRef)]);
         if (!merchant.exists || installationKey(merchant.data() || {}) !== installationKey(merchantState as unknown as Record<string, unknown>)) throw new Error("Merchant installation changed during monitoring");
@@ -902,10 +939,10 @@ export async function runMerchantDeltaMonitoringForShop(params: {
         }, { merge: true });
         return true;
       });
-      if (!applied) return;
-
-      if (!result.isSafe && result.warnings.length > 0) {
-        matchesFound += result.warnings.length;
+      let productMatches = 0;
+      let productAlertsCreated = 0;
+      if (applied && !result.isSafe && result.warnings.length > 0) {
+        productMatches = result.warnings.length;
         const created = await upsertAlertForProduct({
           shop,
           productId: String(candidate.product.data.productId || ""),
@@ -914,6 +951,7 @@ export async function runMerchantDeltaMonitoringForShop(params: {
           resultJson: JSON.stringify(result),
           sourceUpdatedAt: coerceString(candidate.product.data.sourceUpdatedAt),
           installation: installationKey((currentState || {}) as unknown as Record<string, unknown>),
+          monitoringWorkKey: candidate.workKey,
           warningsCount: result.warnings.length,
           riskLevel:
             result.warnings[0]?.alertDetails?.fields?.alert_level ||
@@ -922,40 +960,17 @@ export async function runMerchantDeltaMonitoringForShop(params: {
             "Unknown",
         });
         if (created) {
-          alertsCreated += created;
+          productAlertsCreated = created;
         }
       }
 
-      if (runRef && (productsScanned % 5 === 0 || productsScanned === candidateProductsByDocId.size)) {
-        await setProgress({
-          productsScanned,
-          matchesFound,
-          alertsCreated,
-          heartbeatAt: FieldValue.serverTimestamp(),
-          updatedAt: FieldValue.serverTimestamp(),
-        });
-      }
+      await finish(candidate, { productsScanned: 1, matchesFound: productMatches, alertsCreated: productAlertsCreated });
     });
 
-    const latestAlert = dateCandidates.at(-1)?.alert;
     const summary: MerchantMonitoringSummary = {
-      shop,
-      mode: monitoringWindow.mode,
-      window: {
-        strategy: monitoringWindow.strategy,
-        days: monitoringWindow.days,
-        checkpointDate: monitoringWindow.checkpointDate.toISOString(),
-      },
-      hasMore: dateCandidates.length >= limit || (changes?.size || 0) >= limit,
-      productsScanned,
-      rapexAlertsScanned: rapexAlerts.length,
-      matchesFound,
-      alertsCreated,
-      checkpoint: {
-        lastRapexAlertDate: latestAlert?.meta.alert_date || normalizeAlertDate(currentState?.lastRapexAlertDate)?.toISOString() || null,
-        lastRapexRecordTimestamp: latestAlert?.meta.record_timestamp || currentState?.lastRapexRecordTimestamp || null,
-        lastRapexAlertDocId: latestAlert?.id || currentState?.lastRapexAlertDocId || null,
-      },
+      shop: seed.shop, mode: seed.mode, window: seed.window, hasMore: seed.hasMore,
+      rapexAlertsScanned: seed.rapexAlertsScanned, checkpoint: seed.checkpoint,
+      productsScanned, matchesFound, alertsCreated,
     };
 
     const checkpointUpdate = {
@@ -971,7 +986,7 @@ export async function runMerchantDeltaMonitoringForShop(params: {
           : currentState?.lastRapexAlertDate || null,
         lastRapexRecordTimestamp:
           summary.checkpoint.lastRapexRecordTimestamp || currentState?.lastRapexRecordTimestamp || null,
-        lastRapexAlertDocId: latestAlert?.id || currentState?.lastRapexAlertDocId || null,
+        lastRapexAlertDocId: summary.checkpoint.lastRapexAlertDocId,
       } satisfies Partial<MerchantMonitorStateDocument>;
     await db.runTransaction(async (transaction) => {
       const merchant = await transaction.get(monitorRef);
@@ -981,13 +996,11 @@ export async function runMerchantDeltaMonitoringForShop(params: {
       const nextDate = normalizeAlertDate(checkpointUpdate.lastRapexAlertDate)?.getTime() || 0;
       const savedTuple = `${String(checkpoint.get("lastRapexRecordTimestamp") || "")}:${String(checkpoint.get("lastRapexAlertDocId") || "")}`;
       const nextTuple = `${checkpointUpdate.lastRapexRecordTimestamp || ""}:${checkpointUpdate.lastRapexAlertDocId || ""}`;
-      if (changes?.docs.length) {
-        const lastChange = changes.docs.at(-1)!;
+      if (seed.changeCursor) {
         const previousTime = merchant.get("lastRapexChangeAt");
-        const nextTime = lastChange.get("changedAt");
-        if (!(nextTime instanceof Timestamp)) throw new Error("Safety Gate change has no committed timestamp");
-        if (!(previousTime instanceof Timestamp) || nextTime.valueOf() > previousTime.valueOf() || (nextTime.valueOf() === previousTime.valueOf() && lastChange.id > String(merchant.get("lastRapexChangeId") || ""))) {
-          transaction.set(monitorRef, { lastRapexChangeId: lastChange.id, lastRapexChangeAt: lastChange.get("changedAt") }, { merge: true });
+        const nextTime = Timestamp.fromDate(new Date(seed.changeCursor.changedAt));
+        if (!(previousTime instanceof Timestamp) || nextTime.valueOf() > previousTime.valueOf() || (nextTime.valueOf() === previousTime.valueOf() && seed.changeCursor.id > String(merchant.get("lastRapexChangeId") || ""))) {
+          transaction.set(monitorRef, { lastRapexChangeId: seed.changeCursor.id, lastRapexChangeAt: nextTime }, { merge: true });
         }
       }
       if (nextDate > savedDate || (nextDate === savedDate && nextTuple >= savedTuple)) transaction.set(checkpointRef, checkpointUpdate, { merge: true });
