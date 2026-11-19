@@ -612,7 +612,13 @@
       "progress": "Importati {{imported}} di {{fetched}} prodotti; confrontati {{scanned}} prodotti con {{alerts}} avvisi Safety Gate finora.",
       "stepAudit": "3. Prepara il registro di audit GPSR e lo stato di conformità",
       "stepImport": "1. Importa i prodotti da Shopify",
-      "stepScan": "2. Confronta con il database Safety Gate (oltre 35.000 record)"
+      "stepScan": "2. Confronta con il database Safety Gate (oltre 35.000 record)",
+      "checkingLabel": "Prodotti controllati",
+      "checkingNote": "Controllo del catalogo importato rispetto a Safety Gate. I progressi si aggiornano al completamento dei lotti.",
+      "importingLabel": "Prodotti importati",
+      "importingNote": "Importazione dei prodotti da Shopify. Il totale sarà noto al termine dell'importazione.",
+      "retrying": "Il controllo ha riscontrato un problema e verrà riprovato. Il lavoro completato viene mantenuto.",
+      "retryingHeading": "Il controllo ha riscontrato un problema"
     },
     "metricsCard": {
       "activeAlertsHeading": "Avvisi attivi",
@@ -1438,5 +1444,110 @@
     "label": "Corrispondenza esatta del codice a barre",
     "help": "Il codice a barre convalidato di una variante corrisponde alla scheda Safety Gate. Verifica il modello e il lotto interessato prima di decidere."
   },
-  "ownerTestAccess": "Test autorizzato dal proprietario — nessun piano richiesto"
+  "ownerTestAccess": "Test autorizzato dal proprietario — nessun piano richiesto",
+  "catalogOverview": {
+    "coverage": "{{checked}} di {{total}}",
+    "coverageHelp": "Alcuni prodotti sono nuovi o sono cambiati dall'ultimo controllo. Apri l'elenco per vedere cosa deve ancora essere controllato.",
+    "currentProducts": "Prodotti con un risultato attuale",
+    "initialAudit": "Controllo iniziale del catalogo",
+    "lastCheck": "Ultimo controllo del catalogo riuscito",
+    "monitoring": {
+      "delayed": "Controllo in ritardo",
+      "enabled": "In esecuzione automaticamente",
+      "failed": "Ultimo controllo fallito",
+      "paused": "In pausa",
+      "preview": "Anteprima di sviluppo",
+      "processing": "Controllo in corso",
+      "unknown": "Attività non confermata",
+      "unverified": "Verifica del piano non disponibile"
+    },
+    "monitoringHelp": {
+      "delayed": "L'ultimo controllo automatico risale a più di 48 ore fa. Se lo stato persiste, contatta l'assistenza.",
+      "failed": "I tuoi ultimi risultati positivi sono ancora disponibili. Se anche il prossimo controllo fallisce, contatta l'assistenza.",
+      "paused": "Scegli un piano Shopify attivo per riprendere i controlli automatici.",
+      "preview": "I controlli programmati richiedono un piano Shopify verificato.",
+      "processing": "Il controllo è in coda o in esecuzione. I risultati appariranno al completamento.",
+      "unknown": "Nessun controllo automatico completato è registrato. Se l'aggiornamento di questo stato non aiuta, contatta l'assistenza.",
+      "unverified": "Aggiorna per verificare il tuo piano Shopify. Se lo stato persiste, contatta l'assistenza."
+    },
+    "monitoringRun": "Verifica la presenza di nuovi o aggiornati avvisi Safety Gate",
+    "noActionHelp": "Il tuo catalogo attuale è coperto e nessun possibile corrispondenza è in attesa della tua revisione.",
+    "noCompletedCheck": "Nessun controllo del catalogo completato registrato",
+    "purpose": "ZeroRecall confronta il tuo catalogo Shopify con gli avvisi <portalLink>EU Safety Gate</portalLink> e ti mostra quali possibili corrispondenze richiedono una revisione.",
+    "refreshStatus": "Aggiorna lo stato del monitoraggio",
+    "reviewHelp": "Confronta il tuo prodotto con l'avviso ufficiale, quindi registra la tua decisione.",
+    "reviewNext": "Rivedi la prossima corrispondenza"
+  },
+  "findingOverview": {
+    "matches": "Corrispondenze",
+    "missing": "Informazioni mancanti: {{fields}}.",
+    "noConfirmedIdentifiers": "Nessun identificatore corrispondente confermato.",
+    "officialRisk": "Rischio nell'avviso Safety Gate",
+    "riskUnavailable": "I dettagli sul rischio non sono disponibili in questo avviso salvato.",
+    "saveFailed": "Impossibile salvare la decisione. Riprova.",
+    "verify": "Cosa verificare",
+    "verifyApplicability": "Verifica che l'avviso ufficiale si applichi al tuo prodotto."
+  },
+  "pendingCoverage": {
+    "automaticCount_few": "{{count}} prodotti hanno controlli automatici in coda.",
+    "automaticCount_many": "{{count}} prodotti hanno controlli automatici in coda.",
+    "automaticCount_one": "{{count}} prodotto ha un controllo automatico in coda.",
+    "automaticCount_other": "{{count}} prodotti hanno controlli automatici in coda.",
+    "automaticCount_plural": "{{count}} prodotti hanno controlli automatici in coda.",
+    "automaticOnly": "ZeroRecall sta controllando questi prodotti automaticamente. Nessuna azione richiesta.",
+    "batchResult": "Controlli completati: {{checked}}. Controlli falliti: {{failed}}.",
+    "checkBatch_few": "Controlla {{count}} prodotti",
+    "checkBatch_many": "Controlla {{count}} prodotti",
+    "checkBatch_one": "Controlla {{count}} prodotto",
+    "checkBatch_other": "Controlla {{count}} prodotti",
+    "checkBatch_plural": "Controlla {{count}} prodotti",
+    "complete": "Ogni versione attuale del prodotto Shopify ha un risultato salvato.",
+    "current": "Risultati attuali per {{checked}} di {{total}} prodotti.",
+    "empty": "I prodotti appaiono qui dopo averli aggiunti in Shopify.",
+    "emptyTitle": "Nessun prodotto da controllare ancora",
+    "filters": "Cerca e filtra",
+    "manualHelp": "Controlla i prodotti ora se ZeroRecall non ha un controllo automatico confermato.",
+    "pendingTab": "In attesa di un controllo",
+    "planRequired": "È richiesto un piano Shopify attivo per controllare i prodotti rimanenti.",
+    "planUnconfirmed": "I controlli automatici non sono confermati per i prodotti rimanenti. Controlla lo stato del tuo piano in Impostazioni di monitoraggio.",
+    "row": {
+      "automatic": "Controllo automatico in coda o in corso",
+      "planRequired": "È richiesto un piano Shopify attivo",
+      "planUnconfirmed": "Controllo automatico e stato del piano non confermati",
+      "unconfirmed": "Nessun controllo automatico confermato"
+    },
+    "title_few": "{{count}} prodotti sono in attesa di un controllo",
+    "title_many": "{{count}} prodotti sono in attesa di un controllo",
+    "title_one": "{{count}} prodotto è in attesa di un controllo",
+    "title_other": "{{count}} prodotti sono in attesa di un controllo",
+    "title_plural": "{{count}} prodotti sono in attesa di un controllo",
+    "viewAll": "Visualizza tutti i prodotti"
+  },
+  "reviewOverview": {
+    "closed": "Chiuso (risolto o ignorato)",
+    "current": "Risultati attuali",
+    "decisions": "Decisioni registrate",
+    "emptyDecisions": "Nessuna decisione registrata finora.",
+    "filters": "Filtri",
+    "open": "Risultati aperti",
+    "report": "Risultati in questo report"
+  },
+  "settingsOverview": {
+    "active": "Attivo",
+    "activePlan": "Piano Shopify attivo",
+    "delivery": {
+      "paused": "La consegna è in pausa finché l'accesso al monitoraggio non sarà attivo.",
+      "unconfirmed": "Lo stato di consegna dell'email non è confermato."
+    },
+    "editEmail": "Modifica preferenze email",
+    "mondayEmail": "Riepilogo del lunedì",
+    "noActivePlan": "Nessun piano attivo",
+    "off": "Disattivato",
+    "on": "Attivato",
+    "planUnverified": "Piano non verificato",
+    "previousPlan": "Ultimo piano verificato: {{plan}}",
+    "recipient": "Inviato a {{email}}",
+    "testAccess": "Accesso di prova del proprietario",
+    "weeklyHelp": "Inviato il lunedì con lo stato del monitoraggio e i risultati aperti."
+  }
 }

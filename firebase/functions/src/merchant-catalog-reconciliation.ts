@@ -5,7 +5,7 @@ import * as logger from "firebase-functions/logger";
 import { db } from "./firebase-admin.js";
 import { installationKey } from "./product-lifecycle.js";
 import { currentEntitlement, productChangeJobId, type ShopifyProductChangeTaskPayload } from "./merchant-monitoring.js";
-import { decryptStoredShopifyToken } from "./merchant-catalog-audit.js";
+import { loadOfflineAccessToken } from "./shopify-offline-session.js";
 import { merchantCatalogAuditTaskId } from "./monitoring-task-id.js";
 import { mapBounded } from "./matching-work.js";
 import { catalogNeedsRepair, dispatchCatalogRepairs, parseCatalogNodes, parseCatalogPage, prepareCatalogVerification, type CatalogSnapshot, type ReconciliationPage } from "./catalog-reconciliation.js";
@@ -84,8 +84,7 @@ export async function reserveCatalogReconciliation(shop: string, date: Date): Pr
 /** OAuth stays server-side; failed/partial GraphQL responses never mean an empty catalog. */
 export async function requestCatalogGraphQL(shop: string, query: string, variables: Record<string, unknown>): Promise<any> {
   if (!validShop(shop)) throw new Error("Invalid reconciliation shop");
-  const sessions = await db.collection("shopify_sessions").where("shop", "==", shop).where("isOnline", "==", false).limit(1).get();
-  const accessToken = decryptStoredShopifyToken(sessions.docs[0]?.get("accessToken"));
+  const accessToken = await loadOfflineAccessToken(db, shop);
   const version = process.env.SHOPIFY_ADMIN_API_VERSION || process.env.SHOPIFY_API_VERSION || "2026-07";
   const response = await fetch(`https://${shop}/admin/api/${version}/graphql.json`, {
     method: "POST", headers: { "Content-Type": "application/json", "X-Shopify-Access-Token": accessToken },

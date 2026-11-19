@@ -21,6 +21,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const phase = run?.get("phase");
   return json({
     phase: phase === "import" || phase === "monitor" ? phase : null,
+    runStatus: typeof run?.get("status") === "string" ? run.get("status") : null,
     status:
       typeof data.initialScanStatus === "string"
         ? data.initialScanStatus

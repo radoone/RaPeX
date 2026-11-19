@@ -33,7 +33,7 @@ describe("decision history uses event dates before preview limits", () => {
     expect(result.total).toBe(1);
     expect(result.records[0].decisions).toHaveLength(1);
     expect(result.records[0].decisions[0].action).toBe("reactivate");
-    expect(result.summary).toEqual({ active: 1, documented: 0 });
+    expect(result.summary).toEqual({ needsReview: 1, waiting: 0, closed: 0 });
     expect(paths[0]).toEqual(["merchants", "test.myshopify.com", "alerts", "old", "decision_events"]);
     expect((await reviewRecords("test.myshopify.com", { ...filters, dateBasis: "findings" })).total).toBe(0);
   });

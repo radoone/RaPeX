@@ -612,7 +612,13 @@
       "progress": "Imporditud {{imported}} toodet {{fetched}}-st; võrreldud {{scanned}} toodet {{alerts}} Safety Gate'i hoiatusega seni.",
       "stepAudit": "3. Valmistage ette GPSR-i auditi jälg ja vastavusstaatus",
       "stepImport": "1. Importige tooted Shopifyst",
-      "stepScan": "2. Võrrelge Safety Gate'i andmebaasiga (üle 35 000 kirje)"
+      "stepScan": "2. Võrrelge Safety Gate'i andmebaasiga (üle 35 000 kirje)",
+      "checkingLabel": "Kontrollitud tooted",
+      "checkingNote": "Imporditud kataloogi kontrollimine Safety Gate'i vastu. Edenemine uueneb partiide lõppemisel.",
+      "importingLabel": "Imporditud tooted",
+      "importingNote": "Toodete importimine Shopify'st. Kogusumma on teada, kui import lõpeb.",
+      "retrying": "Kontrollis tekkis probleem ja see proovitakse uuesti. Lõpetatud töö säilitatakse.",
+      "retryingHeading": "Auditiga tekkis probleem"
     },
     "metricsCard": {
       "activeAlertsHeading": "Aktiivsed hoiatused",
@@ -1438,5 +1444,110 @@
     "label": "Vöötkoodi täpne vaste",
     "help": "Variandi valideeritud vöötkood vastab Safety Gate’i kirjele. Enne otsustamist kontrollige mudelit ja mõjutatud partiid."
   },
-  "ownerTestAccess": "Omaniku lubatud testimine — hinnapaketti pole vaja"
+  "ownerTestAccess": "Omaniku lubatud testimine — hinnapaketti pole vaja",
+  "catalogOverview": {
+    "coverage": "{{checked}} / {{total}}",
+    "coverageHelp": "Mõned tooted on uued või on muutunud pärast viimast kontrolli. Avage loend, et näha, mida on veel vaja kontrollida.",
+    "currentProducts": "Praeguse tulemusega tooted",
+    "initialAudit": "Kataloogi esmane kontroll",
+    "lastCheck": "Viimane edukas kataloogi kontroll",
+    "monitoring": {
+      "delayed": "Kontroll on hilinenud",
+      "enabled": "Töötab automaatselt",
+      "failed": "Viimane kontroll ebaõnnestus",
+      "paused": "Peatatud",
+      "preview": "Arenduse eelvaade",
+      "processing": "Kontroll käib",
+      "unknown": "Tegevus kinnitamata",
+      "unverified": "Plaani kinnitamine pole saadaval"
+    },
+    "monitoringHelp": {
+      "delayed": "Viimane automaatne kontroll toimus rohkem kui 48 tundi tagasi. Kui olek püsib, võtke ühendust toega.",
+      "failed": "Teie viimased edukad tulemused on endiselt saadaval. Kui ka järgmine kontroll ebaõnnestub, võtke ühendust toega.",
+      "paused": "Automaatsete kontrollide jätkamiseks valige aktiivne Shopify plaan.",
+      "preview": "Planeeritud kontrollid nõuavad kinnitatud Shopify plaani.",
+      "processing": "Kontroll on järjekorras või käib. Tulemused kuvatakse pärast selle lõppemist.",
+      "unknown": "Salvestatud automaatset kontrolli pole. Kui oleku värskendamine ei aita, võtke ühendust toega.",
+      "unverified": "Värskendage oma Shopify plaani kinnitamiseks. Kui olek püsib, võtke ühendust toega."
+    },
+    "monitoringRun": "Kontrolli uute või uuendatud Safety Gate'i hoiatuste olemasolu",
+    "noActionHelp": "Teie praegune kataloog on kaetud ja ükski võimalik vaste ei oota teie ülevaatamist.",
+    "noCompletedCheck": "Salvestatud kataloogi kontrolli pole",
+    "purpose": "ZeroRecall kontrollib teie Shopify kataloogi EL-i <portalLink>Safety Gate</portalLink>'i hoiatuste vastu ja näitab teile, millised võimalikud vasted vajavad ülevaatamist.",
+    "refreshStatus": "Värskenda jälgimise olekut",
+    "reviewHelp": "Võrrelge oma toodet ametliku hoiatusega, seejärel salvestage oma otsus.",
+    "reviewNext": "Vaata järgmist vastet"
+  },
+  "findingOverview": {
+    "matches": "Mis sobib",
+    "missing": "Puuduv teave: {{fields}}.",
+    "noConfirmedIdentifiers": "Vastendavaid identifikaatoreid pole kinnitatud.",
+    "officialRisk": "Risk Safety Gate'i hoiatuses",
+    "riskUnavailable": "Riski üksikasjad pole selles salvestatud hoiatuses saadaval.",
+    "saveFailed": "Otsust ei saanud salvestada. Proovige uuesti.",
+    "verify": "Mida kontrollida",
+    "verifyApplicability": "Kontrollige, kas ametlik hoiatus kehtib teie toote kohta."
+  },
+  "pendingCoverage": {
+    "automaticCount_few": "{{count}} toodet on automaatsete kontrollide järjekorras.",
+    "automaticCount_many": "{{count}} toodet on automaatsete kontrollide järjekorras.",
+    "automaticCount_one": "{{count}} toode on automaatsete kontrollide järjekorras.",
+    "automaticCount_other": "{{count}} toodet on automaatsete kontrollide järjekorras.",
+    "automaticCount_plural": "{{count}} toodet on automaatsete kontrollide järjekorras.",
+    "automaticOnly": "ZeroRecall kontrollib neid tooteid automaatselt. Tegevust pole vaja.",
+    "batchResult": "Kontrollid lõpetatud: {{checked}}. Ebaõnnestunud kontrollid: {{failed}}.",
+    "checkBatch_few": "Kontrolli {{count}} toodet",
+    "checkBatch_many": "Kontrolli {{count}} toodet",
+    "checkBatch_one": "Kontrolli {{count}} toodet",
+    "checkBatch_other": "Kontrolli {{count}} toodet",
+    "checkBatch_plural": "Kontrolli {{count}} toodet",
+    "complete": "Igal praegusel Shopify tooteversioonil on salvestatud tulemus.",
+    "current": "Praegused tulemused {{checked}}/{{total}} toote kohta.",
+    "empty": "Tooted ilmuvad siia pärast nende lisamist Shopifys.",
+    "emptyTitle": "Kontrollitavaid tooteid veel pole",
+    "filters": "Otsi ja filtreeri",
+    "manualHelp": "Kontrolli tooteid kohe, kui ZeroRecallil pole automaatset kontrolli kinnitatud.",
+    "pendingTab": "Ootab kontrolli",
+    "planRequired": "Ülejäänud toodete kontrollimiseks on vaja aktiivset Shopify plaani.",
+    "planUnconfirmed": "Automaatsed kontrollid on ülejäänud toodete puhul kinnitamata. Kontrolli oma plaani olekut jälgimisseadetes.",
+    "row": {
+      "automatic": "Automaatne kontroll järjekorras või pooleli",
+      "planRequired": "Vajalik on aktiivne Shopify plaan",
+      "planUnconfirmed": "Automaatne kontroll ja plaani olek kinnitamata",
+      "unconfirmed": "Automaatne kontroll kinnitamata"
+    },
+    "title_few": "{{count}} toodet ootab kontrolli",
+    "title_many": "{{count}} toodet ootab kontrolli",
+    "title_one": "{{count}} toode ootab kontrolli",
+    "title_other": "{{count}} toodet ootab kontrolli",
+    "title_plural": "{{count}} toodet ootab kontrolli",
+    "viewAll": "Vaata kõiki tooteid"
+  },
+  "reviewOverview": {
+    "closed": "Suletud (lahendatud või tagasi lükatud)",
+    "current": "Praegused leiud",
+    "decisions": "Salvestatud otsused",
+    "emptyDecisions": "Otsuseid pole veel salvestatud.",
+    "filters": "Filtrid",
+    "open": "Avatud leiud",
+    "report": "Selles aruandes olevad leiud"
+  },
+  "settingsOverview": {
+    "active": "Aktiivne",
+    "activePlan": "Aktiivne Shopify pakett",
+    "delivery": {
+      "paused": "Kohaletoimetamine on peatatud, kuni jälgimisjuurdepääs on aktiivne.",
+      "unconfirmed": "E-posti kohaletoimetamise olek on kinnitamata."
+    },
+    "editEmail": "Muuda e-posti eelistusi",
+    "mondayEmail": "Esmaspäevane kokkuvõte",
+    "noActivePlan": "Aktiivne pakett puudub",
+    "off": "Väljas",
+    "on": "Sees",
+    "planUnverified": "Pakett kinnitamata",
+    "previousPlan": "Viimati kinnitatud pakett: {{plan}}",
+    "recipient": "Saadetud aadressile {{email}}",
+    "testAccess": "Omaniku testjuurdepääs",
+    "weeklyHelp": "Saadetakse esmaspäeviti koos teie jälgimisoleku ja avatud leidudega."
+  }
 }

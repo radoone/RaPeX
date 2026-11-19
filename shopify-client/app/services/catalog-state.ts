@@ -1,4 +1,4 @@
-import { checkCoversCurrentProductVersion } from "./catalog-coverage";
+import { checkCoversCurrentProductVersion, sameProductVersion } from "./catalog-coverage";
 
 type Check = {
   productId?: string | null;
@@ -41,4 +41,43 @@ export function catalogCheckStates(
       ];
     }),
   );
+}
+
+export type PendingCatalogJob = {
+  productId?: string;
+  sourceUpdatedAt?: string;
+  status?: string;
+  attemptCount?: number;
+  queuedAt?: number;
+  startedAt?: number;
+  createdAt?: number;
+  updatedAt?: number;
+};
+
+export const productCheckRetryWindow = 24 * 60 * 60_000;
+
+/** A queued check covers only the same Shopify version and current installation. */
+export function pendingAutomaticProductIds(
+  products: Array<{ id: string; updatedAt?: string | null }>,
+  jobs: PendingCatalogJob[],
+  observedAt: number,
+  installationStartedAt: number,
+): string[] {
+  const versions = new Map(products.map(product => [
+    product.id.replace("gid://shopify/Product/", ""),
+    product.updatedAt,
+  ]));
+  const currentJobs = jobs.filter(job => {
+    const started = job.createdAt ?? job.queuedAt ?? job.startedAt;
+    if (!job.productId || started === undefined || started < installationStartedAt ||
+      !sameProductVersion(job.sourceUpdatedAt, versions.get(job.productId))) return false;
+    const age = observedAt - started;
+    if (age < 0 || age >= productCheckRetryWindow) return false;
+
+    if (job.status === "queued") return true;
+    if (job.status === "retrying") return (job.attemptCount ?? 8) < 8;
+    return job.status === "processing" &&
+      observedAt - (job.updatedAt ?? started) < 33 * 60_000;
+  });
+  return [...new Set(currentJobs.flatMap(job => job.productId ? [job.productId] : []))];
 }

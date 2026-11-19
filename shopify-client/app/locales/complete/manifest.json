@@ -1,72 +1,72 @@
 {
   "createdOn": "2026-11-01T10:02:43.104Z",
   "model": "gemini-2.5-flash",
-  "sourceSha256": "a7a0d51b12e4e5d4e24e556ee3640e369d5f159717e9e682038b7a341341e8ac",
-  "sourceKeys": 1147,
+  "sourceSha256": "66583dac6546710cd14485fdde90da0a24aea4094ad3a43ced5bf3eb05994c73",
+  "sourceKeys": 1240,
   "scope": "Complete Shopify merchant UI, excluding stored product facts, identifiers and original Safety Gate records; response guide translations updated with Gemini 2.5 Flash; response guide and monitoring evidence translations updated with Gemini 2.5 Flash",
   "nativeSpeakerReview": "Not performed for every language",
   "locales": {
     "bg": {
-      "keys": 1118,
-      "promptTokens": 27540,
-      "outputTokens": 22412,
-      "batches": 12,
+      "keys": 1239,
+      "promptTokens": 30915,
+      "outputTokens": 24085,
+      "batches": 17,
       "extraPluralKeys": []
     },
     "cs": {
-      "keys": 1118,
-      "promptTokens": 29924,
-      "outputTokens": 21809,
-      "batches": 12,
+      "keys": 1239,
+      "promptTokens": 33299,
+      "outputTokens": 23441,
+      "batches": 17,
       "extraPluralKeys": []
     },
     "da": {
-      "keys": 1118,
-      "promptTokens": 29518,
-      "outputTokens": 20548,
-      "batches": 12,
+      "keys": 1239,
+      "promptTokens": 32893,
+      "outputTokens": 22044,
+      "batches": 17,
       "extraPluralKeys": []
     },
     "de": {
-      "keys": 1118,
-      "promptTokens": 31682,
-      "outputTokens": 19934,
-      "batches": 12,
+      "keys": 1239,
+      "promptTokens": 35057,
+      "outputTokens": 21602,
+      "batches": 17,
       "extraPluralKeys": []
     },
     "el": {
-      "keys": 1118,
-      "promptTokens": 30084,
-      "outputTokens": 27104,
-      "batches": 12,
+      "keys": 1239,
+      "promptTokens": 33459,
+      "outputTokens": 29092,
+      "batches": 17,
       "extraPluralKeys": []
     },
     "es": {
-      "keys": 1118,
-      "promptTokens": 29924,
-      "outputTokens": 18591,
-      "batches": 12,
+      "keys": 1239,
+      "promptTokens": 33299,
+      "outputTokens": 19932,
+      "batches": 17,
       "extraPluralKeys": []
     },
     "fi": {
-      "keys": 1118,
-      "promptTokens": 29298,
-      "outputTokens": 23038,
-      "batches": 12,
+      "keys": 1239,
+      "promptTokens": 32673,
+      "outputTokens": 24826,
+      "batches": 17,
       "extraPluralKeys": []
     },
     "fr": {
-      "keys": 1118,
-      "promptTokens": 31872,
-      "outputTokens": 19556,
-      "batches": 12,
+      "keys": 1239,
+      "promptTokens": 35247,
+      "outputTokens": 21037,
+      "batches": 17,
       "extraPluralKeys": []
     },
     "ga": {
-      "keys": 1134,
-      "promptTokens": 30684,
-      "outputTokens": 26776,
-      "batches": 13,
+      "keys": 1258,
+      "promptTokens": 34148,
+      "outputTokens": 28984,
+      "batches": 18,
       "extraPluralKeys": [
         "actions.reviewProductsNeedingAction_two",
         "alerts.admin.actionNeededTitle_two",
@@ -83,42 +83,45 @@
         "dashboard.admin.status.reviewNeeded.title_two",
         "dashboard.admin.warningBannerTitle_two",
         "dashboard.recentAlerts.matchCount_two",
-        "uxEnhancements.alerts.floating.selectedCount_two"
+        "uxEnhancements.alerts.floating.selectedCount_two",
+        "pendingCoverage.automaticCount_two",
+        "pendingCoverage.checkBatch_two",
+        "pendingCoverage.title_two"
       ]
     },
     "hr": {
-      "keys": 1118,
-      "promptTokens": 29477,
-      "outputTokens": 21729,
-      "batches": 12,
+      "keys": 1239,
+      "promptTokens": 32852,
+      "outputTokens": 23248,
+      "batches": 17,
       "extraPluralKeys": []
     },
     "hu": {
-      "keys": 1118,
-      "promptTokens": 31075,
-      "outputTokens": 23680,
-      "batches": 12,
+      "keys": 1239,
+      "promptTokens": 34450,
+      "outputTokens": 25512,
+      "batches": 17,
       "extraPluralKeys": []
     },
     "it": {
-      "keys": 1118,
-      "promptTokens": 34025,
-      "outputTokens": 19937,
-      "batches": 12,
+      "keys": 1239,
+      "promptTokens": 37400,
+      "outputTokens": 21407,
+      "batches": 17,
       "extraPluralKeys": []
     },
     "lt": {
-      "keys": 1118,
-      "promptTokens": 34025,
-      "outputTokens": 24512,
-      "batches": 12,
+      "keys": 1239,
+      "promptTokens": 37400,
+      "outputTokens": 26470,
+      "batches": 17,
       "extraPluralKeys": []
     },
     "lv": {
-      "keys": 1134,
-      "promptTokens": 34866,
-      "outputTokens": 25846,
-      "batches": 13,
+      "keys": 1258,
+      "promptTokens": 38330,
+      "outputTokens": 27930,
+      "batches": 18,
       "extraPluralKeys": [
         "actions.reviewProductsNeedingAction_zero",
         "alerts.admin.actionNeededTitle_zero",
@@ -135,14 +138,17 @@
         "dashboard.admin.status.reviewNeeded.title_zero",
         "dashboard.admin.warningBannerTitle_zero",
         "dashboard.recentAlerts.matchCount_zero",
-        "uxEnhancements.alerts.floating.selectedCount_zero"
+        "uxEnhancements.alerts.floating.selectedCount_zero",
+        "pendingCoverage.automaticCount_zero",
+        "pendingCoverage.checkBatch_zero",
+        "pendingCoverage.title_zero"
       ]
     },
     "mt": {
-      "keys": 1134,
-      "promptTokens": 34866,
-      "outputTokens": 26961,
-      "batches": 13,
+      "keys": 1258,
+      "promptTokens": 38330,
+      "outputTokens": 29082,
+      "batches": 18,
       "extraPluralKeys": [
         "actions.reviewProductsNeedingAction_two",
         "alerts.admin.actionNeededTitle_two",
@@ -159,28 +165,31 @@
         "dashboard.admin.status.reviewNeeded.title_two",
         "dashboard.admin.warningBannerTitle_two",
         "dashboard.recentAlerts.matchCount_two",
-        "uxEnhancements.alerts.floating.selectedCount_two"
+        "uxEnhancements.alerts.floating.selectedCount_two",
+        "pendingCoverage.automaticCount_two",
+        "pendingCoverage.checkBatch_two",
+        "pendingCoverage.title_two"
       ]
     },
     "nl": {
-      "keys": 1118,
-      "promptTokens": 34025,
-      "outputTokens": 20668,
-      "batches": 12,
+      "keys": 1239,
+      "promptTokens": 37400,
+      "outputTokens": 22322,
+      "batches": 17,
       "extraPluralKeys": []
     },
     "pl": {
-      "keys": 1118,
-      "promptTokens": 34025,
-      "outputTokens": 20298,
-      "batches": 12,
+      "keys": 1239,
+      "promptTokens": 37400,
+      "outputTokens": 21878,
+      "batches": 17,
       "extraPluralKeys": []
     },
     "pt": {
-      "keys": 1118,
-      "promptTokens": 34049,
-      "outputTokens": 17963,
-      "batches": 12,
+      "keys": 1239,
+      "promptTokens": 37434,
+      "outputTokens": 19248,
+      "batches": 17,
       "extraPluralKeys": []
     },
     "sk": {
@@ -191,17 +200,17 @@
       "extraPluralKeys": []
     },
     "ro": {
-      "keys": 1118,
-      "promptTokens": 34025,
-      "outputTokens": 20552,
-      "batches": 12,
+      "keys": 1239,
+      "promptTokens": 37400,
+      "outputTokens": 22071,
+      "batches": 17,
       "extraPluralKeys": []
     },
     "sl": {
-      "keys": 1134,
-      "promptTokens": 34866,
-      "outputTokens": 22841,
-      "batches": 13,
+      "keys": 1258,
+      "promptTokens": 38330,
+      "outputTokens": 24598,
+      "batches": 18,
       "extraPluralKeys": [
         "actions.reviewProductsNeedingAction_two",
         "alerts.admin.actionNeededTitle_two",
@@ -218,21 +227,24 @@
         "dashboard.admin.status.reviewNeeded.title_two",
         "dashboard.admin.warningBannerTitle_two",
         "dashboard.recentAlerts.matchCount_two",
-        "uxEnhancements.alerts.floating.selectedCount_two"
+        "uxEnhancements.alerts.floating.selectedCount_two",
+        "pendingCoverage.automaticCount_two",
+        "pendingCoverage.checkBatch_two",
+        "pendingCoverage.title_two"
       ]
     },
     "sv": {
-      "keys": 1118,
-      "promptTokens": 34025,
-      "outputTokens": 20173,
-      "batches": 12,
+      "keys": 1239,
+      "promptTokens": 37400,
+      "outputTokens": 21736,
+      "batches": 17,
       "extraPluralKeys": []
     },
     "et": {
-      "keys": 1118,
-      "promptTokens": 30680,
-      "outputTokens": 22170,
-      "batches": 12,
+      "keys": 1239,
+      "promptTokens": 34055,
+      "outputTokens": 23845,
+      "batches": 17,
       "extraPluralKeys": []
     }
   },
@@ -281,5 +293,6 @@
       ],
       "source": "Manually authored in app/locales/gallery.ts; no model translation job was run for this addition."
     }
-  ]
+  ],
+  "updatedOn": "2026-11-18T15:37:02.794Z"
 }

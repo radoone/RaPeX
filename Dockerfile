@@ -17,7 +17,6 @@ COPY shopify-client/extensions/safety-gate-product-block/package.json ./shopify-
 RUN npm ci
 
 COPY . .
-RUN cd shopify-client && npx prisma generate
 RUN npm run build --workspace=shopify-client
 RUN npm prune --omit=dev --ignore-scripts
 
@@ -29,8 +28,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends openssl libstdc
 WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=8080
-ENV SHOPIFY_SESSION_STORAGE=firestore
-ENV DATABASE_URL=file:/tmp/rapex-sessions.sqlite
 COPY --from=build /app ./
 
 WORKDIR /app/shopify-client

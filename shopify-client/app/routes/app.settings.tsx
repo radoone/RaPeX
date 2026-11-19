@@ -5,6 +5,7 @@ import {
   useActionData,
   useLoaderData,
   useNavigation,
+  useRevalidator,
   Form,
   useRouteError,
   isRouteErrorResponse,
@@ -21,6 +22,8 @@ import { EU_LANGUAGES } from "../locales/languages";
 import { firestore } from "../firestore.server";
 import { getRecentMonitoringRuns } from "../services/monitoring-runs.server";
 import { toIsoString } from "../services/monitoring-runs";
+import { monitoringState } from "../services/monitoring-state";
+import { displayShopifyPlan } from "../services/partner-entitlement";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const SUPPORTED_LANGUAGES = new Set(
@@ -50,11 +53,21 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
     getRecentMonitoringRuns(session.shop).catch(() => []),
   ]);
   const monitor = monitorSnapshot?.exists ? monitorSnapshot.data() : null;
-  const lastMonitoringAt = runs.find((run) => run.status === "completed")?.updatedAt ||
+  const lastMonitoringAt = runs.find((run) => run.status === "completed" && run.updatedAt)?.updatedAt ||
     (monitor?.lastMonitorStatus === "SUCCESS" ? toIsoString(monitor.lastMonitorRunEnd) : null);
-  const monitoringStatus = runs[0]?.status === "completed"
+  const latestRunStatus = runs[0]?.status === "completed"
     ? monitor?.lastMonitorStatus || null
     : runs[0]?.status || monitor?.lastMonitorStatus || null;
+  const observedAt = Date.now();
+  const entitlementExpiry = toIsoString(monitor?.subscriptionValidUntil);
+  const emailDelivery = !monitorSnapshot ? "unconfirmed" : monitor?.installationRetiredAt ? "paused" :
+    billingStatus.ownerTestAccess || (
+      monitor?.subscriptionStatus === "active" &&
+      monitor.monitoringEntitled === true &&
+      entitlementExpiry && Date.parse(entitlementExpiry) > observedAt
+    ) ? "eligible" : "paused";
+  const automaticMonitoring = monitoringState(billingStatus, latestRunStatus, observedAt, lastMonitoringAt);
+
   let settings = await db.safetySetting.findUnique({
     where: { shop: session.shop },
   });
@@ -157,12 +170,12 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
       excludeVendors: null,
       excludeTypes: null,
     },
-    envDefault: fallbackDefault,
     billingStatus,
     lastMonitoringAt,
-    monitoringStatus,
-    shopifyContactEmail,
-  });
+    automaticMonitoring,
+    emailDelivery,
+    lastVerifiedPlan: displayShopifyPlan(monitor?.planHandle),
+  } as const);
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -212,6 +225,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       similarityThreshold,
       autoDraftHighRisk,
       emailNotifications,
+      immediateAlertEmails,
+      weeklySummaryEmails,
       notificationEmail: notificationEmail || null,
       notificationEmailSource: "custom",
       notificationLanguage,
@@ -256,10 +271,11 @@ export function ErrorBoundary() {
 }
 
 export default function Settings() {
-  const { settings, billingStatus, catalog, saved, lastMonitoringAt, monitoringStatus } =
+  const { settings, billingStatus, catalog, saved, lastMonitoringAt, automaticMonitoring, emailDelivery, lastVerifiedPlan } =
     useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
+  const revalidator = useRevalidator();
   const { t, i18n } = useTranslation();
   const initial = {
     threshold: String(settings.similarityThreshold ?? 70),
@@ -272,22 +288,12 @@ export default function Settings() {
     vendors: settings.excludeVendors || "",
     types: settings.excludeTypes || "",
   };
+  const savedValues = JSON.stringify(initial);
   const [values, setValues] = useState(initial);
   useEffect(() => {
-    setValues({
-      threshold: String(settings.similarityThreshold ?? 70),
-      priority: settings.autoDraftHighRisk ?? false,
-      immediate:
-        settings.immediateAlertEmails ?? settings.emailNotifications ?? true,
-      weekly:
-        settings.weeklySummaryEmails ?? settings.emailNotifications ?? true,
-      email: settings.notificationEmail || "",
-      language: settings.notificationLanguage || "en",
-      vendors: settings.excludeVendors || "",
-      types: settings.excludeTypes || "",
-    });
-  }, [settings]);
-  const dirty = JSON.stringify(values) !== JSON.stringify(initial);
+    setValues(JSON.parse(savedValues) as typeof initial);
+  }, [savedValues]);
+  const dirty = JSON.stringify(values) !== savedValues;
   const busy = navigation.state !== "idle";
   const change = <K extends keyof typeof values>(
     key: K,
@@ -300,11 +306,82 @@ export default function Settings() {
       : Number(values.threshold) <= 75
         ? "balanced"
         : "strict";
+  const planVerified = billingStatus.billingVerified && !billingStatus.ownerTestAccess && !billingStatus.developmentBypass;
+  const planName = billingStatus.ownerTestAccess ? t("settingsOverview.testAccess")
+    : billingStatus.developmentBypass ? t("catalogOverview.monitoring.preview")
+    : !planVerified ? t("settingsOverview.planUnverified")
+    : billingStatus.hasActivePayment ? displayShopifyPlan(billingStatus.planHandle) || t("settingsOverview.activePlan")
+    : t("settingsOverview.noActivePlan");
+  const showLastPlan = !planVerified && !billingStatus.ownerTestAccess && !billingStatus.developmentBypass && lastVerifiedPlan;
+  const sendsEmail = initial.immediate || initial.weekly;
+  const emails = [
+    ["settingsAdmin.notifications.immediateTitle", initial.immediate],
+    ["settingsOverview.mondayEmail", initial.weekly],
+  ] as const;
+  const refreshStatusAvailable = automaticMonitoring === "unknown" || automaticMonitoring === "unverified";
+  const planButtonLabel = planVerified && !billingStatus.hasActivePayment
+    ? t("billingRedirect.openPricingPlans") : t("billing.managePlanButton");
+
   return (
     <s-page size="large" className="page-shell">
       <s-heading slot="title">{t("settings.title")}</s-heading>
       <div className="admin-stack">
-        <MonitoringStatus billing={billingStatus} status={monitoringStatus} lastSuccess={lastMonitoringAt} />
+        <AdminCard className="admin-card">
+          <div className="settings-overview">
+            <section className="settings-overview__panel">
+              <h2>{t("billing.statusLabel")}</h2>
+              <div className="settings-overview__plan">
+                <strong>{planName}</strong>
+                {planVerified && billingStatus.hasActivePayment && (
+                  <s-badge tone="success">{t("settingsOverview.active")}</s-badge>
+                )}
+              </div>
+              {showLastPlan && (
+                <p className="admin-helper">{t("settingsOverview.previousPlan", { plan: lastVerifiedPlan })}</p>
+              )}
+              {planVerified && !billingStatus.hasActivePayment && !billingStatus.freeScanUsed && (
+                <p className="admin-helper">{t("billing.planFreeAvailableDescription")}</p>
+              )}
+              {billingStatus.pricingPlansUrl && (
+                <s-link href={billingStatus.pricingPlansUrl} target="_top">{planButtonLabel}</s-link>
+              )}
+            </section>
+            <MonitoringStatus state={automaticMonitoring} lastSuccess={lastMonitoringAt} />
+            <section className="settings-overview__panel">
+              <h2>{t("settingsAdmin.notifications.enabledTitle")}</h2>
+              <dl className="settings-overview__emails">
+                {emails.map(([label, enabled]) => (
+                  <div key={label}>
+                    <dt>{t(label)}</dt>
+                    <dd>
+                      <s-badge tone={enabled ? "success" : "subdued"}>
+                        {t(enabled ? "settingsOverview.on" : "settingsOverview.off")}
+                      </s-badge>
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+              {sendsEmail && initial.email && (
+                <p className="admin-helper">{t("settingsOverview.recipient", { email: initial.email })}</p>
+              )}
+              {sendsEmail && !initial.email && (
+                <p className="admin-helper">{t("settingsAdmin.notifications.noRecipientDescription")}</p>
+              )}
+              {sendsEmail && initial.email && emailDelivery !== "eligible" && (
+                <p className="admin-helper">{t(`settingsOverview.delivery.${emailDelivery}`)}</p>
+              )}
+            </section>
+          </div>
+          {refreshStatusAvailable && (
+            <s-button
+              variant="tertiary"
+              loading={revalidator.state !== "idle"}
+              onClick={() => revalidator.revalidate()}
+            >
+              {t("catalogOverview.refreshStatus")}
+            </s-button>
+          )}
+        </AdminCard>
         {saved && !dirty && <p role="status">{t("workspace.saved")}</p>}
         {actionData && "error" in actionData && (
           <s-banner
@@ -341,127 +418,87 @@ export default function Settings() {
           />
           <input type="hidden" name="excludeVendors" value={values.vendors} />
           <input type="hidden" name="excludeTypes" value={values.types} />
-          <div
-            className={`settings-save-bar ${dirty ? "settings-save-bar--dirty" : ""}`}
-          >
-            <span role="status">
-              {dirty ? t("workspace.unsaved") : t("settings.subtitle")}
-            </span>
-            <s-button
-              type="submit"
-              variant="primary"
-              disabled={!dirty || busy}
-              loading={busy}
-            >
-              {t("workspace.saveChanges")}
-            </s-button>
-          </div>
-          <div className="admin-section-grid admin-section-grid--wide">
-            <AdminCard className="admin-card admin-stack">
-              <h2 className="admin-card__title">
-                {t("settingsAdmin.notifications.enabledTitle")}
-              </h2>
-              <s-checkbox
-                label={t("settingsAdmin.notifications.immediateTitle")}
-                checked={values.immediate}
-                onChange={(event: any) =>
-                  change("immediate", event.currentTarget.checked)
-                }
-              />
-              <p className="admin-helper">
-                {t("settingsAdmin.notifications.immediateDescription")}
-              </p>
-              <s-checkbox
-                label={t("settingsAdmin.notifications.weeklyTitle")}
-                checked={values.weekly}
-                onChange={(event: any) =>
-                  change("weekly", event.currentTarget.checked)
-                }
-              />
-              <p className="admin-helper">
-                {t("settingsAdmin.notifications.weeklyDescription")}
-              </p>
-              <s-text-field
-                label={t("settingsAdmin.notifications.emailLabel")}
-                type="email"
-                value={values.email}
-                onInput={(event: any) =>
-                  change("email", event.currentTarget.value)
-                }
-                required={values.immediate || values.weekly}
-              />
-              <s-select
-                label={t("workspace.notificationLanguage")}
-                value={values.language}
-                onChange={(event: any) =>
-                  change("language", event.currentTarget.value)
-                }
-              >
-                {EU_LANGUAGES.map((language) => (
-                  <s-option key={language.code} value={language.code}>
-                    {language.label}
-                  </s-option>
-                ))}
-              </s-select>
-              {i18n.language.split(/[-_]/)[0] !== values.language && (
-                <p className="admin-helper" role="status">
-                  {t("analysis.reviewLayout.languageDiffNote", {
-                    appLang:
-                      EU_LANGUAGES.find(
-                        (l) => l.code === i18n.language.split(/[-_]/)[0],
-                      )?.label || i18n.language,
-                    emailLang:
-                      EU_LANGUAGES.find((l) => l.code === values.language)
-                        ?.label || values.language,
-                  })}
-                </p>
-              )}
-            </AdminCard>
-            <div className="admin-stack">
-              <AdminCard className="admin-card">
-                <h2 className="admin-card__title">
-                  {t("workspace.appLanguage")}
-                </h2>
-                <LanguageSwitcher />
-              </AdminCard>
-              <AdminCard className="admin-card admin-stack">
-                <h2 className="admin-card__title">{t("billing.planTitle")}</h2>
-                <p>
-                  {billingStatus.ownerTestAccess ? t("ownerTestAccess") : billingStatus.developmentBypass
-                    ? t("billing.statusDevelopmentBypass")
-                    : !billingStatus.billingVerified
-                      ? t("billing.verificationError")
-                      : billingStatus.hasActivePayment
-                        ? t("billing.statusActivePro")
-                        : t(
-                            billingStatus.freeScanUsed
-                              ? "billing.statusFreeUsed"
-                              : "billing.statusFreeAvailable",
-                          )}
-                </p>
-                <p className="admin-helper">{t("experience.valueBody")}</p>
-                {billingStatus.pricingPlansUrl && (
-                  <s-button
-                    type="button"
-                    onClick={() =>
-                      window.open(billingStatus.pricingPlansUrl!, "_top")
-                    }
-                  >
-                    {t("billing.managePlanButton")}
-                  </s-button>
-                )}
-              </AdminCard>
+          {dirty && (
+            <div className="settings-save-bar settings-save-bar--dirty">
+              <span role="status">{t("workspace.unsaved")}</span>
+              <s-button type="submit" variant="primary" disabled={busy} loading={busy}>
+                {t("workspace.saveChanges")}
+              </s-button>
             </div>
-          </div>
+          )}
           <AdminCard className="admin-card">
-            <h2 className="admin-card__title">{t("workspace.recommended")}</h2>
-            <p>{t("workspace.balancedHelp")}</p>
-            <s-badge tone="info">{t(`settingsAdmin.mode.${mode}`)}</s-badge>
+            <details className="advanced-settings-disclosure" open={actionData && "error" in actionData ? true : undefined}>
+              <summary>{t("settingsOverview.editEmail")}</summary>
+              <div className="admin-stack">
+                <s-checkbox
+                  label={t("settingsAdmin.notifications.immediateTitle")}
+                  checked={values.immediate}
+                  onChange={(event: any) =>
+                    change("immediate", event.currentTarget.checked)
+                  }
+                />
+                <p className="admin-helper">
+                  {t("settingsAdmin.notifications.immediateDescription")}
+                </p>
+                <s-checkbox
+                  label={t("settingsAdmin.notifications.weeklyTitle")}
+                  checked={values.weekly}
+                  onChange={(event: any) =>
+                    change("weekly", event.currentTarget.checked)
+                  }
+                />
+                <p className="admin-helper">
+                  {t("settingsOverview.weeklyHelp")}
+                </p>
+                <s-text-field
+                  label={t("settingsAdmin.notifications.emailLabel")}
+                  type="email"
+                  value={values.email}
+                  onInput={(event: any) =>
+                    change("email", event.currentTarget.value)
+                  }
+                  required={values.immediate || values.weekly}
+                />
+                <s-select
+                  label={t("workspace.notificationLanguage")}
+                  value={values.language}
+                  onChange={(event: any) =>
+                    change("language", event.currentTarget.value)
+                  }
+                >
+                  {EU_LANGUAGES.map((language) => (
+                    <s-option key={language.code} value={language.code}>
+                      {language.label}
+                    </s-option>
+                  ))}
+                </s-select>
+                {i18n.language.split(/[-_]/)[0] !== values.language && (
+                  <p className="admin-helper" role="status">
+                    {t("analysis.reviewLayout.languageDiffNote", {
+                      appLang:
+                        EU_LANGUAGES.find(
+                          (l) => l.code === i18n.language.split(/[-_]/)[0],
+                        )?.label || i18n.language,
+                      emailLang:
+                        EU_LANGUAGES.find((l) => l.code === values.language)
+                          ?.label || values.language,
+                    })}
+                  </p>
+                )}
+              </div>
+            </details>
+          </AdminCard>
+          <AdminCard className="admin-card">
+            <details className="advanced-settings-disclosure">
+              <summary>{t("workspace.appLanguage")}</summary>
+              <LanguageSwitcher />
+            </details>
           </AdminCard>
           <AdminCard className="admin-card">
             <details className="advanced-settings-disclosure">
               <summary>{t("workspace.settingsAdvanced")}</summary>
               <div className="admin-stack">
+                <p className="admin-helper">{t("workspace.balancedHelp")}</p>
                 <div
                   className="monitoring-mode-grid"
                   role="group"

@@ -486,6 +486,11 @@
     "state_resolved": "Gelöst",
     "state_dismissed": "Abgelehnt",
     "state_unknown": "Überprüfen Sie die App für den aktuellen Status",
-    "entire_public_catalog": "Gesamter öffentlicher Katalog"
+    "entire_public_catalog": "Gesamter öffentlicher Katalog",
+    "weekly_new_period": "In diesem Zeitraum erstellt",
+    "weekly_open_snapshot": "Derzeit offen, auch aus früheren Zeiträumen",
+    "new_products_checked": "Neue geprüfte Produkte",
+    "safety_gate_records_imported": "Neue importierte RAPEX-Einträge",
+    "weekly_new_products_explanation": "Neue geprüfte Produkte wurden in diesem Zeitraum zur Überwachung hinzugefügt und erfolgreich geprüft. Jedes Produkt wird nur einmal gezählt."
   }
 }

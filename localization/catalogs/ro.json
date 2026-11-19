@@ -486,6 +486,11 @@
     "state_resolved": "Rezolvat",
     "state_dismissed": "Ignorat",
     "state_unknown": "Verificați aplicația pentru starea curentă",
-    "entire_public_catalog": "Întregul catalog public"
+    "entire_public_catalog": "Întregul catalog public",
+    "weekly_new_period": "Create în această perioadă",
+    "weekly_open_snapshot": "Deschise acum, inclusiv din perioade anterioare",
+    "new_products_checked": "Produse noi verificate",
+    "safety_gate_records_imported": "Înregistrări noi importate în RAPEX",
+    "weekly_new_products_explanation": "Produsele noi verificate au fost adăugate la monitorizare și verificate cu succes în această perioadă. Fiecare produs este numărat o singură dată."
   }
 }

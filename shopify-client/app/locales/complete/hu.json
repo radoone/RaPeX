@@ -612,7 +612,13 @@
       "progress": "Importálva {{imported}} termék a {{fetched}} termékből; összehasonlítva {{scanned}} termékkel, eddig {{alerts}} Safety Gate riasztással.",
       "stepAudit": "3. GPSR audit nyomvonal és megfelelőségi állapot előkészítése",
       "stepImport": "1. Termékek importálása a Shopify-ból",
-      "stepScan": "2. Összehasonlítás a Safety Gate adatbázissal (több mint 35 000 rekord)"
+      "stepScan": "2. Összehasonlítás a Safety Gate adatbázissal (több mint 35 000 rekord)",
+      "checkingLabel": "Ellenőrzött termékek",
+      "checkingNote": "Az importált katalógus ellenőrzése a Safety Gate ellen. A folyamat frissül, ahogy a kötegek befejeződnek.",
+      "importingLabel": "Importált termékek",
+      "importingNote": "Termékek importálása a Shopify-ból. A teljes szám az importálás befejezésekor lesz ismert.",
+      "retrying": "Az ellenőrzés problémába ütközött, és újrapróbálkozik. A befejezett munka megmarad.",
+      "retryingHeading": "Az audit problémába ütközött"
     },
     "metricsCard": {
       "activeAlertsHeading": "Aktív riasztások",
@@ -1438,5 +1444,110 @@
     "label": "Pontos vonalkódegyezés",
     "help": "Egy változat ellenőrzött vonalkódja egyezik a Safety Gate bejegyzésével. Döntés előtt ellenőrizze a modellt és az érintett gyártási tételt."
   },
-  "ownerTestAccess": "A tulajdonos által engedélyezett tesztelés — nem szükséges díjcsomag"
+  "ownerTestAccess": "A tulajdonos által engedélyezett tesztelés — nem szükséges díjcsomag",
+  "catalogOverview": {
+    "coverage": "{{checked}} / {{total}}",
+    "coverageHelp": "Néhány termék új, vagy megváltozott az utolsó ellenőrzés óta. Nyissa meg a listát, hogy lássa, mit kell még ellenőrizni.",
+    "currentProducts": "Termékek aktuális eredménnyel",
+    "initialAudit": "Kezdeti katalógusellenőrzés",
+    "lastCheck": "Utolsó sikeres katalógusellenőrzés",
+    "monitoring": {
+      "delayed": "Ellenőrzés esedékes",
+      "enabled": "Automatikusan fut",
+      "failed": "Az utolsó ellenőrzés sikertelen",
+      "paused": "Szüneteltetve",
+      "preview": "Fejlesztői előnézet",
+      "processing": "Ellenőrzés folyamatban",
+      "unknown": "Tevékenység meg nem erősítve",
+      "unverified": "Terv ellenőrzése nem elérhető"
+    },
+    "monitoringHelp": {
+      "delayed": "Az utolsó automatikus ellenőrzés több mint 48 órája történt. Ha az állapot továbbra is fennáll, lépjen kapcsolatba az ügyfélszolgálattal.",
+      "failed": "Az utolsó sikeres eredmények továbbra is elérhetők. Ha a következő ellenőrzés is sikertelen, lépjen kapcsolatba az ügyfélszolgálattal.",
+      "paused": "Válasszon aktív Shopify csomagot az automatikus ellenőrzések folytatásához.",
+      "preview": "Az ütemezett ellenőrzésekhez ellenőrzött Shopify csomag szükséges.",
+      "processing": "Az ellenőrzés sorban áll vagy fut. Az eredmények a befejezés után jelennek meg.",
+      "unknown": "Nincs rögzített befejezett automatikus ellenőrzés. Ha az állapot frissítése nem segít, lépjen kapcsolatba az ügyfélszolgálattal.",
+      "unverified": "Frissítse a Shopify csomag ellenőrzéséhez. Ha az állapot továbbra is fennáll, lépjen kapcsolatba az ügyfélszolgálattal."
+    },
+    "monitoringRun": "Új vagy frissített Safety Gate riasztások ellenőrzése",
+    "noActionHelp": "Az aktuális katalógusa lefedett, és nincsenek lehetséges egyezések, amelyek az Ön felülvizsgálatára várnának.",
+    "noCompletedCheck": "Nincs rögzített befejezett katalógusellenőrzés",
+    "purpose": "A ZeroRecall összehasonlítja az Ön Shopify katalógusát az <portalLink>EU Safety Gate</portalLink> riasztásaival, és megmutatja, mely lehetséges egyezéseket kell felülvizsgálni.",
+    "refreshStatus": "Ellenőrzési állapot frissítése",
+    "reviewHelp": "Hasonlítsa össze termékét a hivatalos riasztással, majd rögzítse döntését.",
+    "reviewNext": "Következő egyezés felülvizsgálata"
+  },
+  "findingOverview": {
+    "matches": "Egyezések",
+    "missing": "Hiányzó információ: {{fields}}.",
+    "noConfirmedIdentifiers": "Nincs megerősített egyező azonosító.",
+    "officialRisk": "Kockázat a Safety Gate riasztásban",
+    "riskUnavailable": "A kockázati adatok nem érhetők el ebben a mentett riasztásban.",
+    "saveFailed": "A döntést nem sikerült menteni. Próbálja újra.",
+    "verify": "Mit kell ellenőrizni",
+    "verifyApplicability": "Ellenőrizze, hogy a hivatalos riasztás vonatkozik-e a termékére."
+  },
+  "pendingCoverage": {
+    "automaticCount_few": "{{count}} termék automatikus ellenőrzése várólistán.",
+    "automaticCount_many": "{{count}} termék automatikus ellenőrzése várólistán.",
+    "automaticCount_one": "{{count}} termék automatikus ellenőrzése várólistán.",
+    "automaticCount_other": "{{count}} termék automatikus ellenőrzése várólistán.",
+    "automaticCount_plural": "{{count}} termék automatikus ellenőrzése várólistán.",
+    "automaticOnly": "A ZeroRecall automatikusan ellenőrzi ezeket a termékeket. Nincs szükség beavatkozásra.",
+    "batchResult": "Ellenőrzések befejezve: {{checked}}. Sikertelen ellenőrzések: {{failed}}.",
+    "checkBatch_few": "{{count}} termék ellenőrzése",
+    "checkBatch_many": "{{count}} termék ellenőrzése",
+    "checkBatch_one": "{{count}} termék ellenőrzése",
+    "checkBatch_other": "{{count}} termék ellenőrzése",
+    "checkBatch_plural": "{{count}} termék ellenőrzése",
+    "complete": "Minden aktuális Shopify termékverzióhoz van mentett eredmény.",
+    "current": "Aktuális eredmények {{checked}}/{{total}} termékhez.",
+    "empty": "A termékek itt jelennek meg, miután hozzáadta őket a Shopify-ban.",
+    "emptyTitle": "Még nincsenek ellenőrizendő termékek",
+    "filters": "Keresés és szűrés",
+    "manualHelp": "Ellenőrizze a termékeket most, ha a ZeroRecall nem erősített meg automatikus ellenőrzést.",
+    "pendingTab": "Ellenőrzésre vár",
+    "planRequired": "A fennmaradó termékek ellenőrzéséhez aktív Shopify-előfizetés szükséges.",
+    "planUnconfirmed": "A fennmaradó termékek automatikus ellenőrzése nincs megerősítve. Ellenőrizze az előfizetés állapotát a Figyelési beállításokban.",
+    "row": {
+      "automatic": "Automatikus ellenőrzés várólistán vagy folyamatban",
+      "planRequired": "Aktív Shopify-előfizetés szükséges",
+      "planUnconfirmed": "Automatikus ellenőrzés és előfizetés állapota nincs megerősítve",
+      "unconfirmed": "Nincs megerősített automatikus ellenőrzés"
+    },
+    "title_few": "{{count}} termék vár ellenőrzésre",
+    "title_many": "{{count}} termék vár ellenőrzésre",
+    "title_one": "{{count}} termék vár ellenőrzésre",
+    "title_other": "{{count}} termék vár ellenőrzésre",
+    "title_plural": "{{count}} termék vár ellenőrzésre",
+    "viewAll": "Összes termék megtekintése"
+  },
+  "reviewOverview": {
+    "closed": "Lezárva (feloldva vagy elvetve)",
+    "current": "Jelenlegi megállapítások",
+    "decisions": "Rögzített döntések",
+    "emptyDecisions": "Még nincsenek rögzített döntések.",
+    "filters": "Szűrők",
+    "open": "Nyitott megállapítások",
+    "report": "Megállapítások ebben a jelentésben"
+  },
+  "settingsOverview": {
+    "active": "Aktív",
+    "activePlan": "Aktív Shopify-csomag",
+    "delivery": {
+      "paused": "A kézbesítés szünetel, amíg a felügyeleti hozzáférés aktív nem lesz.",
+      "unconfirmed": "Az e-mail kézbesítési állapota nem megerősített."
+    },
+    "editEmail": "E-mail-beállítások szerkesztése",
+    "mondayEmail": "Hétfői összefoglaló",
+    "noActivePlan": "Nincs aktív csomag",
+    "off": "Ki",
+    "on": "Be",
+    "planUnverified": "Csomag nem ellenőrizve",
+    "previousPlan": "Utolsó ellenőrzött csomag: {{plan}}",
+    "recipient": "Elküldve a következő címre: {{email}}",
+    "testAccess": "Tulajdonosi teszthozzáférés",
+    "weeklyHelp": "Hétfőnként küldjük el a felügyeleti állapotoddal és a nyitott megállapításokkal."
+  }
 }

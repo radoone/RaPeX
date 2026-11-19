@@ -486,6 +486,11 @@
     "state_resolved": "Разрешено",
     "state_dismissed": "Отхвърлено",
     "state_unknown": "Проверете приложението за текущия статус",
-    "entire_public_catalog": "Целият публичен каталог"
+    "entire_public_catalog": "Целият публичен каталог",
+    "weekly_new_period": "Създадени през този период",
+    "weekly_open_snapshot": "Отворени сега, включително от предходни периоди",
+    "new_products_checked": "Нови проверени продукти",
+    "safety_gate_records_imported": "Нови записи, импортирани в RAPEX",
+    "weekly_new_products_explanation": "Новите проверени продукти са добавени към наблюдението и успешно проверени през този период. Всеки продукт се брои само веднъж."
   }
 }

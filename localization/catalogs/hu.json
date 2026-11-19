@@ -486,6 +486,11 @@
     "state_resolved": "Megoldva",
     "state_dismissed": "Elvetve",
     "state_unknown": "Ellenőrizze az alkalmazásban az aktuális állapotot",
-    "entire_public_catalog": "A teljes nyilvános katalógus"
+    "entire_public_catalog": "A teljes nyilvános katalógus",
+    "weekly_new_period": "Ebben az időszakban létrehozva",
+    "weekly_open_snapshot": "Jelenleg nyitott, korábbi időszakokból is",
+    "new_products_checked": "Új ellenőrzött termékek",
+    "safety_gate_records_imported": "Új importált RAPEX-rekordok",
+    "weekly_new_products_explanation": "Az új ellenőrzött termékeket ebben az időszakban adták a figyeléshez és sikeresen ellenőrizték. Minden termék csak egyszer számít."
   }
 }

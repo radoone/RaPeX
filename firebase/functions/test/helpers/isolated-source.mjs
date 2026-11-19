@@ -2,6 +2,8 @@ import * as matchingWork from '../../lib/matching-work.js';
 import * as gtin from '../../lib/gtin.js';
 import * as productBarcodes from '../../lib/product-barcodes.js';
 import * as productLifecycle from '../../lib/product-lifecycle.js';
+import { MATCHER_POLICY_VERSION } from '../../lib/safety-gate-config.js';
+import { selectRagCandidates } from '../../lib/candidate-selection.js';
 import ts from 'typescript';
 import { Readable } from 'node:stream';
 import { readFileSync } from 'node:fs';
@@ -9,7 +11,7 @@ import assert from 'node:assert/strict';
 
 // Evaluate owning source with explicit I/O substitutes. No Firebase SDK, credentials or live calls.
 export function sourceFunction(module, name, deps = {}) {
-  deps = { ...matchingWork, ...gtin, ...productBarcodes, ...productLifecycle, ...deps };
+  deps = { ...matchingWork, ...gtin, ...productBarcodes, ...productLifecycle, MATCHER_POLICY_VERSION, selectRagCandidates, ...deps };
   const source = readFileSync(new URL(`../../src/${module}.ts`, import.meta.url), 'utf8');
   const tree = ts.createSourceFile('test.ts', source, ts.ScriptTarget.Latest, true);
   const node = tree.statements.find(n => ts.isFunctionDeclaration(n) && n.name?.text === name);
@@ -23,6 +25,7 @@ const DEL = Symbol('delete');
 export class Timestamp {
   constructor(ms) { this.ms = ms; }
   toMillis() { return this.ms; }
+  valueOf() { return this.ms; }
   toDate() { return new Date(this.ms); }
   static now() { return new Timestamp(Date.now()); }
   static fromDate(d) { return new Timestamp(d.getTime()); }
@@ -38,7 +41,7 @@ export function database() {
     rows.set(path, value);
   };
   const doc = path => ({ path, id: path.split('/').at(-1), collection: name => collection(`${path}/${name}`), get: async () => snapshot(path), set: async data => merge(path, data) });
-  const snapshot = path => { const exists = rows.has(path), data = exists ? { ...rows.get(path) } : undefined; return { id: path.split('/').at(-1), ref: doc(path), exists, data: () => data && { ...data }, get: key => key.split('.').reduce((v, k) => v?.[k], data) }; };
+  const snapshot = path => { const exists = rows.has(path), data = exists ? { ...rows.get(path) } : undefined; return { id: path.split('/').at(-1), ref: doc(path), exists, readTime: Timestamp.now(), data: () => data && { ...data }, get: key => key.split('.').reduce((v, k) => v?.[k], data) }; };
   const collection = (path, filters = [], cap = Infinity) => ({
     orderBy: () => collection(path, filters, cap), startAfter: () => collection(path, filters, cap),
     select: () => collection(path, filters, cap),
@@ -47,7 +50,7 @@ export function database() {
     doc: id => doc(`${path}/${id}`), where: (k, op, v) => collection(path, [...filters, [k, op, v]], cap), limit: n => collection(path, filters, n),
     get: async () => {
       const docs = [...rows.keys()].filter(k => k.startsWith(`${path}/`) && !k.slice(path.length + 1).includes('/'))
-        .map(snapshot).filter(d => filters.every(([k, op, v]) => op === 'in' ? v.includes(d.get(k)) : op === 'array-contains-any' ? (d.get(k) || []).some(x => v.includes(x)) : d.get(k) === v)).slice(0, cap);
+        .map(snapshot).filter(d => filters.every(([k, op, v]) => op === 'in' ? v.includes(d.get(k)) : op === 'array-contains-any' ? (d.get(k) || []).some(x => v.includes(x)) : op === '>' ? d.get(k) > v : d.get(k) === v)).slice(0, cap);
       return { docs, empty: !docs.length, size: docs.length };
     },
     add: async data => { const ref = doc(`${path}/auto-${++sequence}`); await ref.set(data); return ref; },

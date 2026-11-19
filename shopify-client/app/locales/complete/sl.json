@@ -626,7 +626,13 @@
       "progress": "Uvoženih {{imported}} od {{fetched}} izdelkov; primerjanih {{scanned}} izdelkov z {{alerts}} opozorili Safety Gate do sedaj.",
       "stepAudit": "3. Pripravite revizijsko sled GPSR in status skladnosti",
       "stepImport": "1. Uvoz izdelkov iz Shopifyja",
-      "stepScan": "2. Primerjava z bazo podatkov Safety Gate (35.000+ zapisov)"
+      "stepScan": "2. Primerjava z bazo podatkov Safety Gate (35.000+ zapisov)",
+      "checkingLabel": "Preverjeni izdelki",
+      "checkingNote": "Preverjanje uvoženega kataloga glede na Safety Gate. Napredek se posodablja, ko so serije končane.",
+      "importingLabel": "Uvoženi izdelki",
+      "importingNote": "Uvažanje izdelkov iz Shopifyja. Skupno število bo znano, ko bo uvoz končan.",
+      "retrying": "Pri preverjanju je prišlo do težave in bo poskus ponovljen. Dokončano delo je ohranjeno.",
+      "retryingHeading": "Pri pregledu je prišlo do težave"
     },
     "metricsCard": {
       "activeAlertsHeading": "Aktivna opozorila",
@@ -1454,5 +1460,113 @@
     "label": "Natančno ujemanje črtne kode",
     "help": "Preverjena črtna koda različice se ujema z zapisom Safety Gate. Pred odločitvijo preverite model in zadevno serijo."
   },
-  "ownerTestAccess": "Testiranje z dovoljenjem lastnika — plačljiv paket ni potreben"
+  "ownerTestAccess": "Testiranje z dovoljenjem lastnika — plačljiv paket ni potreben",
+  "catalogOverview": {
+    "coverage": "{{checked}} od {{total}}",
+    "coverageHelp": "Nekateri izdelki so novi ali so se spremenili od zadnjega preverjanja. Odprite seznam, da vidite, kaj je še treba preveriti.",
+    "currentProducts": "Izdelki s trenutnim rezultatom",
+    "initialAudit": "Začetni pregled kataloga",
+    "lastCheck": "Zadnje uspešno preverjanje kataloga",
+    "monitoring": {
+      "delayed": "Preverjanje je zapadlo",
+      "enabled": "Samodejno delovanje",
+      "failed": "Zadnje preverjanje ni uspelo",
+      "paused": "Začasno ustavljeno",
+      "preview": "Predogled razvoja",
+      "processing": "Preverjanje v teku",
+      "unknown": "Dejavnost ni potrjena",
+      "unverified": "Preverjanje načrta ni na voljo"
+    },
+    "monitoringHelp": {
+      "delayed": "Zadnje samodejno preverjanje je bilo pred več kot 48 urami. Če stanje ostaja enako, se obrnite na podporo.",
+      "failed": "Vaši zadnji uspešni rezultati so še vedno na voljo. Če tudi naslednje preverjanje ne uspe, se obrnite na podporo.",
+      "paused": "Izberite aktiven načrt Shopify, da nadaljujete samodejna preverjanja.",
+      "preview": "Načrtovana preverjanja zahtevajo preverjen načrt Shopify.",
+      "processing": "Preverjanje je v čakalni vrsti ali v teku. Rezultati se prikažejo, ko je končano.",
+      "unknown": "Ni zabeleženega dokončanega samodejnega preverjanja. Če osvežitev tega stanja ne pomaga, se obrnite na podporo.",
+      "unverified": "Osvežite, da preverite svoj načrt Shopify. Če stanje ostaja enako, se obrnite na podporo."
+    },
+    "monitoringRun": "Preverite nove ali posodobljene opozorila Safety Gate",
+    "noActionHelp": "Vaš trenutni katalog je pokrit in ni možnih ujemanja, ki bi čakala na vaš pregled.",
+    "noCompletedCheck": "Ni zabeleženega dokončanega preverjanja kataloga",
+    "purpose": "ZeroRecall preverja vaš katalog Shopify glede na opozorila <portalLink>EU Safety Gate</portalLink> in vam pokaže, katera možna ujemanja potrebujejo pregled.",
+    "refreshStatus": "Osveži stanje spremljanja",
+    "reviewHelp": "Primerjajte svoj izdelek z uradnim opozorilom, nato zabeležite svojo odločitev.",
+    "reviewNext": "Preglej naslednje ujemanje"
+  },
+  "findingOverview": {
+    "matches": "Kaj se ujema",
+    "missing": "Manjkajoče informacije: {{fields}}.",
+    "noConfirmedIdentifiers": "Potrjenih ujemajočih se identifikatorjev ni.",
+    "officialRisk": "Tveganje v opozorilu Safety Gate",
+    "riskUnavailable": "Podrobnosti o tveganju niso na voljo v tem shranjenem opozorilu.",
+    "saveFailed": "Odločitve ni bilo mogoče shraniti. Poskusite znova.",
+    "verify": "Kaj preveriti",
+    "verifyApplicability": "Preverite, ali uradno opozorilo velja za vaš izdelek."
+  },
+  "pendingCoverage": {
+    "automaticCount_few": "{{count}} izdelkov ima samodejne preglede v čakalni vrsti.",
+    "automaticCount_many": "{{count}} izdelkov ima samodejne preglede v čakalni vrsti.",
+    "automaticCount_one": "{{count}} izdelek ima samodejni pregled v čakalni vrsti.",
+    "automaticCount_other": "{{count}} izdelkov ima samodejne preglede v čakalni vrsti.",
+    "automaticCount_plural": "{{count}} izdelkov ima samodejne preglede v čakalni vrsti.",
+    "automaticCount_two": "{{count}} izdelka imata samodejne preglede v čakalni vrsti.",
+    "automaticOnly": "ZeroRecall samodejno preverja te izdelke. Dejanje ni potrebno.",
+    "batchResult": "Pregledi zaključeni: {{checked}}. Neuspeli pregledi: {{failed}}.",
+    "checkBatch_few": "Preveri {{count}} izdelkov",
+    "checkBatch_many": "Preveri {{count}} izdelkov",
+    "checkBatch_one": "Preveri {{count}} izdelek",
+    "checkBatch_other": "Preveri {{count}} izdelkov",
+    "checkBatch_plural": "Preveri {{count}} izdelkov",
+    "checkBatch_two": "Preveri {{count}} izdelka",
+    "complete": "Vsaka trenutna različica izdelka Shopify ima shranjen rezultat.",
+    "current": "Trenutni rezultati za {{checked}} od {{total}} izdelkov.",
+    "empty": "Izdelki se prikažejo tukaj, ko jih dodate v Shopify.",
+    "emptyTitle": "Še ni izdelkov za pregled",
+    "filters": "Iskanje in filtriranje",
+    "manualHelp": "Preverite izdelke zdaj, če ZeroRecall nima potrjenega samodejnega pregleda.",
+    "pendingTab": "Čaka na pregled",
+    "planRequired": "Za pregled preostalih izdelkov je potreben aktiven načrt Shopify.",
+    "planUnconfirmed": "Samodejni pregledi za preostale izdelke niso potrjeni. Preverite stanje svojega načrta v nastavitvah spremljanja.",
+    "row": {
+      "automatic": "Samodejni pregled v čakalni vrsti ali v teku",
+      "planRequired": "Potreben je aktiven načrt Shopify",
+      "planUnconfirmed": "Samodejni pregled in stanje načrta nista potrjena",
+      "unconfirmed": "Samodejni pregled ni potrjen"
+    },
+    "title_few": "{{count}} izdelkov čaka na pregled",
+    "title_many": "{{count}} izdelkov čaka na pregled",
+    "title_one": "{{count}} izdelek čaka na pregled",
+    "title_other": "{{count}} izdelkov čaka na pregled",
+    "title_plural": "{{count}} izdelkov čaka na pregled",
+    "title_two": "{{count}} izdelka čakata na pregled",
+    "viewAll": "Ogled vseh izdelkov"
+  },
+  "reviewOverview": {
+    "closed": "Zaprto (rešeno ali zavrnjeno)",
+    "current": "Trenutne ugotovitve",
+    "decisions": "Zabeležene odločitve",
+    "emptyDecisions": "Odločitve še niso zabeležene.",
+    "filters": "Filtri",
+    "open": "Odprte ugotovitve",
+    "report": "Ugotovitve v tem poročilu"
+  },
+  "settingsOverview": {
+    "active": "Aktivno",
+    "activePlan": "Aktiven načrt Shopify",
+    "delivery": {
+      "paused": "Dostava je zaustavljena, dokler ni omogočen dostop do spremljanja.",
+      "unconfirmed": "Status dostave e-pošte je nepotrjen."
+    },
+    "editEmail": "Uredi nastavitve e-pošte",
+    "mondayEmail": "Ponedeljkov povzetek",
+    "noActivePlan": "Ni aktivnega načrta",
+    "off": "Izklopljeno",
+    "on": "Vklopljeno",
+    "planUnverified": "Načrt ni preverjen",
+    "previousPlan": "Zadnji preverjeni načrt: {{plan}}",
+    "recipient": "Poslano na {{email}}",
+    "testAccess": "Lastnikov testni dostop",
+    "weeklyHelp": "Poslano ob ponedeljkih s statusom spremljanja in odprtimi ugotovitvami."
+  }
 }

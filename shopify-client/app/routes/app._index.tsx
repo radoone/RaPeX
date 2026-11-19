@@ -1,25 +1,25 @@
 import { AdminCard } from "../components/AdminCard";
 import { LocalDateTime } from "../components/LocalDateTime";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { randomUUID } from "node:crypto";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
 import {
   useFetcher,
   useLoaderData,
   useNavigation,
-  useNavigate,
   useRevalidator,
   useRouteError,
   isRouteErrorResponse,
 } from "react-router";
 import { data as json } from "react-router";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
 import db, { type SafetySettingRecord } from "../merchant-db.server";
 import { firestore } from "../firestore.server";
 import { formatRelativeDate } from "../components";
 import { compareReviewPriority } from "../services/review-priority";
+import { isWaitingForSupplier } from "../services/review-evidence";
 import {
   getBillingStatus,
   requireActiveBilling,
@@ -29,8 +29,6 @@ import {
   startMerchantCatalogAudit,
 } from "../services/safety-gate-checker.server";
 import { catalogCheckStates } from "../services/catalog-state";
-import { MonitoringStatus } from "../components/MonitoringStatus";
-import { AlertBadge } from "../components/AlertBadge";
 import { monitoringState } from "../services/monitoring-state";
 import { getRecentMonitoringRuns } from "../services/monitoring-runs.server";
 import { toIsoString } from "../services/monitoring-runs";
@@ -65,6 +63,7 @@ type ActionResponse = {
 
 type CatalogAuditProgress = {
   phase: "import" | "monitor" | null;
+  runStatus: string | null;
   status: string | null;
   productsFetched: number;
   productsImported: number;
@@ -120,34 +119,13 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const billingStatus = await getBillingStatus(billing, session.shop, admin);
 
   const [
-    activeAlerts,
-    totalAlerts,
-    resolvedAlerts,
-    dismissedAlerts,
-    totalChecks,
     recentAlerts,
     checkedProductIds,
     storedSettings,
     currentCatalogProductIds,
   ] = await Promise.all([
-    db.safetyAlert.count({
-      where: { shop: session.shop, status: "active" },
-    }),
-    db.safetyAlert.count({
-      where: { shop: session.shop },
-    }),
-    db.safetyAlert.count({
-      where: { shop: session.shop, status: "resolved" },
-    }),
-    db.safetyAlert.count({
-      where: { shop: session.shop, status: "dismissed" },
-    }),
-    db.safetyCheck.count({
-      where: { shop: session.shop },
-    }),
     db.safetyAlert.findMany({
       where: { shop: session.shop, status: "active" },
-      orderBy: { createdAt: "desc" },
     }),
     // Get list of already checked product IDs
     db.safetyCheck.findMany({
@@ -161,11 +139,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     fetchCurrentCatalogProductVersions(admin),
   ]);
 
-  recentAlerts.sort(compareReviewPriority);
-  const displayAlerts = recentAlerts.slice(0, 3);
-  const nextReviewAlert = recentAlerts[0]
-    ? { id: recentAlerts[0].id, productTitle: recentAlerts[0].productTitle }
-    : null;
+  const pendingReview = recentAlerts.filter(alert => !isWaitingForSupplier(alert));
+  pendingReview.sort(compareReviewPriority);
+  const nextReviewAlertId = pendingReview[0]?.id || null;
   const monitorStateSnapshot = await firestore
     .collection("merchants")
     .doc(encodeURIComponent(session.shop))
@@ -238,69 +214,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     });
   }
 
-  // Fetch product images from Shopify
-  const productIds = displayAlerts
-    .map((a: any) => a.productId)
-    .filter(Boolean)
-    .map((id: string) =>
-      id.startsWith("gid://shopify/Product/")
-        ? id
-        : `gid://shopify/Product/${id}`,
-    );
-
-  const productImages: Record<string, string | null> = {};
-  if (productIds.length > 0) {
-    try {
-      const response = await admin.graphql(
-        `#graphql
-        query getProductImages($ids: [ID!]!) {
-          nodes(ids: $ids) { ... on Product { id featuredImage { url } } }
-        }`,
-        { variables: { ids: productIds } },
-      );
-      const { data } = await response.json();
-      data?.nodes?.forEach((node: any) => {
-        if (node?.id) {
-          const numericId = node.id.replace("gid://shopify/Product/", "");
-          productImages[numericId] = node.featuredImage?.url || null;
-          productImages[node.id] = node.featuredImage?.url || null;
-        }
-      });
-    } catch (error) {
-      console.error("Error fetching product images:", error);
-    }
-  }
-
-  const processedRecentAlerts = displayAlerts.map((alert: any) => {
-    let alertType = undefined;
-    let riskDescription = undefined;
-
-    try {
-      if (alert.checkResult) {
-        const checkResult = JSON.parse(alert.checkResult);
-        if (checkResult.warnings && checkResult.warnings.length > 0) {
-          const firstWarning = checkResult.warnings[0];
-          alertType =
-            firstWarning.alertType ||
-            firstWarning.alertDetails?.fields?.alert_type;
-          riskDescription =
-            firstWarning.riskLegalProvision ||
-            firstWarning.alertDetails?.fields?.risk_legal_provision;
-
-        }
-      }
-    } catch (error) {
-      console.error("Error parsing checkResult for alert", alert.id, error);
-    }
-
-    const productImage =
-      productImages[alert.productId] ||
-      productImages[`gid://shopify/Product/${alert.productId}`] ||
-      null;
-
-    return { ...alert, alertType, riskDescription, productImage };
-  });
-
   const totalProductsCount = currentCatalogProductIds.length;
   const productStates = catalogCheckStates(
     currentCatalogProductIds,
@@ -310,7 +223,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     (item) => item.state === "current",
   ).length;
   const uncheckedProductCount = totalProductsCount - checkedProductCount;
-  const criticalActiveAlerts = recentAlerts.filter((alert: any) => {
+  const criticalActiveAlerts = pendingReview.filter((alert: any) => {
     try {
       const parsed = alert.checkResult ? JSON.parse(alert.checkResult) : null;
       const warning = Array.isArray(parsed?.warnings)
@@ -340,6 +253,14 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     }
   }).length;
 
+  const lastMonitoringAt =
+    recentMonitoringRuns.find((run) => run.status === "completed" && run.updatedAt)
+      ?.updatedAt ||
+    (monitorState?.lastMonitorStatus === "SUCCESS"
+      ? toIsoString(monitorState.lastMonitorRunEnd)
+      : null);
+  const lastAuditAt = toIsoString(monitorState?.initialScanCompletedAt);
+
   const defaultSettings: Partial<SafetySettingRecord> & {
     onboardingCompleted: boolean;
   } = {
@@ -356,38 +277,21 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   return json({
     stats: {
-      activeAlerts,
-      totalAlerts,
-      resolvedAlerts,
-      dismissedAlerts,
-      totalChecks,
+      activeAlerts: pendingReview.length,
+      waitingForSupplier: recentAlerts.length - pendingReview.length,
       totalProducts: totalProductsCount,
       checkedProducts: checkedProductCount,
       uncheckedProducts: uncheckedProductCount,
       criticalActiveAlerts,
     },
-    recentAlerts: processedRecentAlerts,
-    nextReviewAlert,
+    nextReviewAlertId,
     settings: resolvedSettings,
     billingStatus,
     recentMonitoringRuns,
     observedAt: Date.now(),
-    monitorState: monitorState
-      ? {
-          status: monitorState.lastMonitorStatus || null,
-          lastRunAt: toIsoString(monitorState.lastMonitorRunEnd),
-          lastError:
-            monitorState.lastMonitorStatus === "FAILURE"
-              ? monitorState.lastError || null
-              : null,
-        }
-      : null,
-    lastMonitoringAt:
-      recentMonitoringRuns.find((run) => run.status === "completed")
-        ?.updatedAt ||
-      (monitorState?.lastMonitorStatus === "SUCCESS"
-        ? toIsoString(monitorState.lastMonitorRunEnd)
-        : null),
+    lastMonitorStatus: monitorState?.lastMonitorStatus || null,
+    lastMonitoringAt,
+    lastAuditAt,
   });
 };
 
@@ -634,12 +538,12 @@ export function ErrorBoundary() {
 export default function Index() {
   const {
     stats,
-    recentAlerts,
-    nextReviewAlert,
+    nextReviewAlertId,
     settings,
     billingStatus,
     lastMonitoringAt,
-    monitorState,
+    lastAuditAt,
+    lastMonitorStatus,
     recentMonitoringRuns,
     observedAt,
   } = useLoaderData<typeof loader>();
@@ -649,101 +553,79 @@ export default function Index() {
   const revalidator = useRevalidator();
   const shopify = useAppBridge();
   const { t, i18n } = useTranslation();
-  const navigate = useNavigate();
 
   const isLoading = navigation.state === "loading";
   const isSubmitting = fetcher.state === "submitting";
-  const monitoredProductLabel = `${stats.checkedProducts}/${stats.totalProducts || 0}`;
-  const hasCompleteCoverage =
-    stats.totalProducts > 0 && stats.checkedProducts >= stats.totalProducts;
-  const confirmedMonitoringAt = lastMonitoringAt;
+  const remainingCatalogHref = "/app/manual-check?coverage=remaining#product-catalogue";
   const latestMonitoringStatus = recentMonitoringRuns[0]?.status === "completed"
-    ? monitorState?.status
-    : recentMonitoringRuns[0]?.status || monitorState?.status;
-  const coveragePercent =
-    stats.totalProducts > 0
-      ? Math.min(
-          100,
-          Math.round((stats.checkedProducts / stats.totalProducts) * 100),
-        )
-      : 0;
-
+    ? lastMonitorStatus
+    : recentMonitoringRuns[0]?.status || lastMonitorStatus;
+  const automaticStatus = monitoringState(
+    billingStatus, latestMonitoringStatus, observedAt, lastMonitoringAt,
+  );
+  const lastCheckWasAudit = Boolean(lastAuditAt && (!lastMonitoringAt || lastAuditAt > lastMonitoringAt));
+  const lastCatalogCheckAt = lastCheckWasAudit ? lastAuditAt : lastMonitoringAt;
+  const monitoringNeedsRefresh = automaticStatus === "unknown" || automaticStatus === "unverified";
+  const pricingPlansUrl = automaticStatus === "paused" ? billingStatus.pricingPlansUrl : null;
+  const monitoringActionHref =
+    automaticStatus === "enabled" || automaticStatus === "processing" || monitoringNeedsRefresh
+      ? null
+      : pricingPlansUrl || "/app/settings";
+  const monitoringActionLabel = t(pricingPlansUrl ? "billingRedirect.openPricingPlans" : "settings.title");
   const dashboardState =
     stats.activeAlerts > 0
       ? "review-needed"
       : stats.totalProducts === 0
-        ? "no-action-needed"
-        : !hasCompleteCoverage
+        ? "empty"
+        : stats.uncheckedProducts > 0
           ? "coverage-incomplete"
-          : monitoringState(billingStatus, latestMonitoringStatus, observedAt, lastMonitoringAt) !==
-                "enabled" || !lastMonitoringAt
-            ? "monitoring-problem"
-            : "no-action-needed";
-  const dashboardStatus = {
+          : automaticStatus === "enabled"
+            ? "no-action-needed"
+            : "monitoring-problem";
+  const summary = {
     "review-needed": {
       tone: stats.criticalActiveAlerts > 0 ? "critical" : "warning",
-      eyebrow:
-        stats.criticalActiveAlerts > 0
-          ? t("dashboard.admin.status.reviewNeeded.criticalEyebrow")
-          : t("dashboard.admin.status.reviewNeeded.eyebrow"),
-      title:
-        stats.criticalActiveAlerts > 0
-          ? t("dashboard.admin.status.reviewNeeded.criticalTitle", {
-              count: stats.criticalActiveAlerts,
-            })
-          : t("dashboard.admin.status.reviewNeeded.title", {
-              count: stats.activeAlerts,
-            }),
-      description:
-        stats.criticalActiveAlerts > 0
-          ? t("dashboard.admin.status.reviewNeeded.criticalDescription")
-          : t("dashboard.admin.status.reviewNeeded.description"),
-      actionHref: "/app/alerts?status=active",
-      actionLabel:
-        stats.activeAlerts === 1
-          ? t("actions.reviewOneMatch")
-          : t("actions.reviewMultipleMatches", { count: stats.activeAlerts }),
+      title: t("dashboard.admin.status.reviewNeeded.title", { count: stats.activeAlerts }),
+      description: stats.criticalActiveAlerts > 0
+        ? t("dashboard.admin.status.reviewNeeded.criticalDescription")
+        : t("catalogOverview.reviewHelp"),
+      actionHref: nextReviewAlertId
+        ? `/app/alerts?status=active&open=${encodeURIComponent(nextReviewAlertId)}`
+        : "/app/alerts?status=active",
+      actionLabel: t("catalogOverview.reviewNext"),
     },
     "coverage-incomplete": {
       tone: "warning",
-      eyebrow: t("dashboard.admin.status.coverageIncomplete.eyebrow"),
-      title: t("dashboard.admin.status.coverageIncomplete.title", {
-        count: stats.uncheckedProducts,
-      }),
-      description: t("dashboard.admin.status.coverageIncomplete.description", {
-        checked: stats.checkedProducts,
-        total: stats.totalProducts,
-      }),
-      actionHref: "/app/manual-check#product-catalogue",
-      actionLabel: t("dashboard.admin.finishCoverage"),
+      title: t("dashboard.admin.status.coverageIncomplete.title", { count: stats.uncheckedProducts }),
+      description: t("catalogOverview.coverageHelp"),
+      actionHref: remainingCatalogHref,
+      actionLabel: t("workspace.viewRemainingProducts", { count: stats.uncheckedProducts }),
     },
     "monitoring-problem": {
-      tone: "critical",
-      eyebrow: t("dashboard.admin.status.monitoringProblem.eyebrow"),
-      title: t("dashboard.admin.status.monitoringProblem.title"),
-      description: t("dashboard.admin.status.monitoringProblem.description"),
-      actionHref: "/app/manual-check#product-catalogue",
-      actionLabel: t("dashboard.admin.status.monitoringProblem.action"),
+      tone: automaticStatus === "processing" ? "info" : "warning",
+      title: t(`catalogOverview.monitoring.${automaticStatus}`),
+      description: t(`catalogOverview.monitoringHelp.${automaticStatus}`),
+      actionHref: monitoringActionHref,
+      actionLabel: monitoringActionLabel,
     },
     "no-action-needed": {
       tone: "success",
-      eyebrow: t("dashboard.admin.status.noActionNeeded.eyebrow"),
-      title:
-        stats.totalProducts === 0
-          ? t("dashboard.admin.status.noActionNeeded.emptyCatalogTitle")
-          : t("dashboard.admin.status.noActionNeeded.title"),
-      description:
-        stats.totalProducts === 0
-          ? t("dashboard.admin.status.noActionNeeded.emptyCatalogDescription")
-          : t("dashboard.admin.status.noActionNeeded.description", {
-              count: stats.checkedProducts,
-            }),
-      actionHref: "/app/manual-check#product-catalogue",
-      actionLabel: t("dashboard.admin.status.noActionNeeded.action"),
+      title: t("dashboard.admin.status.noActionNeeded.title"),
+      description: t("catalogOverview.noActionHelp"),
+      actionHref: null,
+      actionLabel: "",
+    },
+    empty: {
+      tone: "info",
+      title: t("dashboard.admin.status.noActionNeeded.emptyCatalogTitle"),
+      description: t("dashboard.admin.status.noActionNeeded.emptyCatalogDescription"),
+      actionHref: null,
+      actionLabel: "",
     },
   }[dashboardState];
   const hasAutoStartedScan = useRef(false);
   const refreshedAfterAudit = useRef(false);
+  const [retryRequested, setRetryRequested] = useState(false);
   const loadAuditProgress = progressFetcher.load;
   useEffect(() => {
     // Start first-run protection without asking the merchant to discover a
@@ -766,6 +648,7 @@ export default function Index() {
       stats.uncheckedProducts > 0 &&
       canRetryInitialScan &&
       settings?.initialScanStatus !== "scanning" &&
+      settings?.initialScanStatus !== "failed" &&
       (settings?.initialScanStatus !== "completed" || completedWithoutChecks);
     if (
       isScanNeeded &&
@@ -791,9 +674,10 @@ export default function Index() {
 
   useEffect(() => {
     const observedStatus = progressFetcher.data?.status;
-    if (observedStatus === "completed" || observedStatus === "failed") return;
+    if (observedStatus === "completed" || (observedStatus === "failed" && !retryRequested)) return;
     const shouldPoll =
       observedStatus === "scanning" ||
+      (retryRequested && fetcher.data?.success) ||
       (!observedStatus &&
         (settings?.initialScanStatus === "scanning" || fetcher.data?.success));
     if (!shouldPoll) return;
@@ -807,11 +691,19 @@ export default function Index() {
     settings?.initialScanStatus,
     progressFetcher.data?.status,
     fetcher.data?.success,
+    retryRequested,
     loadAuditProgress,
   ]);
 
-  const scanStatus =
-    progressFetcher.data?.status || settings?.initialScanStatus;
+  const observedScanStatus = progressFetcher.data?.status || settings?.initialScanStatus;
+  const scanStatus = retryRequested && fetcher.data?.success && observedScanStatus !== "completed"
+    ? "scanning"
+    : observedScanStatus;
+  useEffect(() => {
+    if (retryRequested && (progressFetcher.data?.status === "scanning" || progressFetcher.data?.status === "completed" || (fetcher.state === "idle" && fetcher.data && !fetcher.data.success))) {
+      setRetryRequested(false);
+    }
+  }, [retryRequested, progressFetcher.data?.status, fetcher.state, fetcher.data]);
   useEffect(() => {
     if (scanStatus !== "completed") {
       refreshedAfterAudit.current = false;
@@ -852,26 +744,91 @@ export default function Index() {
   // ═══════════════════════════════════════════════════════════════════════════
   // STANDARD DASHBOARD VIEW (Direct access, zero onboarding blocker)
   // ═══════════════════════════════════════════════════════════════════════════
-  const shouldShowPrimaryAction =
-    !isScanning && dashboardState === "review-needed";
+  const auditProgress = progressFetcher.data;
+  const auditIsChecking = auditProgress?.phase === "monitor";
+  const auditTotal = auditIsChecking ? auditProgress.productsImported : 0;
+  const auditChecked = Math.min(auditProgress?.productsScanned || 0, auditTotal);
 
   return (
     <s-page size="large" className="page-shell" suppressHydrationWarning>
       <s-heading slot="title" size="large" suppressHydrationWarning>
         {t("dashboard.title")}
       </s-heading>
-      {shouldShowPrimaryAction ? (
-        <s-button
-          slot="primary-action"
-          variant="primary"
-          onClick={() => navigate(dashboardStatus.actionHref)}
-          suppressHydrationWarning
-        >
-          {dashboardStatus.actionLabel}
-        </s-button>
-      ) : null}
 
       <div className="admin-stack">
+        <AdminCard className="admin-card admin-stack catalog-overview">
+          <p className="catalog-overview__purpose">
+            <Trans
+              i18nKey="catalogOverview.purpose"
+              components={{
+                portalLink: <a
+                  href="https://ec.europa.eu/safety-gate-alerts/screen/home"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                />,
+              }}
+            />
+          </p>
+          <dl className="catalog-overview__facts">
+            <div>
+              <dt>{t("catalogOverview.lastCheck")}</dt>
+              <dd>
+                {lastCatalogCheckAt ? (
+                  <LocalDateTime
+                    value={lastCatalogCheckAt}
+                    format={(date) => new Intl.DateTimeFormat(i18n.language === "en" ? "en-GB" : i18n.language, {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    }).format(date)}
+                  />
+                ) : t("catalogOverview.noCompletedCheck")}
+              </dd>
+              {lastCatalogCheckAt && (
+                <dd className="catalog-overview__detail">{t(lastCheckWasAudit ? "catalogOverview.initialAudit" : "catalogOverview.monitoringRun")}</dd>
+              )}
+            </div>
+            <div>
+              <dt>{t("catalogOverview.currentProducts")}</dt>
+              <dd>{t("catalogOverview.coverage", { checked: stats.checkedProducts, total: stats.totalProducts })}</dd>
+              {stats.uncheckedProducts > 0 && dashboardState !== "coverage-incomplete" && (
+                <dd className="catalog-overview__detail">
+                  <s-link href={remainingCatalogHref}>
+                    {t("workspace.viewRemainingProducts", { count: stats.uncheckedProducts })}
+                  </s-link>
+                </dd>
+              )}
+            </div>
+            <div>
+              <dt>{t("workspace.monitoringLabel")}</dt>
+              <dd>
+                <s-badge tone={automaticStatus === "enabled" ? "success" : automaticStatus === "processing" ? "info" : "warning"}>
+                  {t(`catalogOverview.monitoring.${automaticStatus}`)}
+                </s-badge>
+              </dd>
+              {dashboardState !== "monitoring-problem" && automaticStatus !== "enabled" && (
+                <dd className="catalog-overview__detail">{t(`catalogOverview.monitoringHelp.${automaticStatus}`)}</dd>
+              )}
+              {dashboardState !== "monitoring-problem" && monitoringActionHref && (
+                <dd className="catalog-overview__detail">
+                  <s-link href={monitoringActionHref} target={pricingPlansUrl ? "_top" : undefined}>
+                    {monitoringActionLabel}
+                  </s-link>
+                </dd>
+              )}
+              {dashboardState !== "monitoring-problem" && monitoringNeedsRefresh && (
+                <dd className="catalog-overview__detail">
+                  <s-button
+                    variant="tertiary"
+                    loading={revalidator.state !== "idle"}
+                    onClick={() => revalidator.revalidate()}
+                  >
+                    {t("catalogOverview.refreshStatus")}
+                  </s-button>
+                </dd>
+              )}
+            </div>
+          </dl>
+        </AdminCard>
         {/* Live Scan Progress Card when scan is active */}
         {isScanning && (
           <section className="live-scan-card" aria-live="polite">
@@ -908,22 +865,33 @@ export default function Index() {
             >
               {t("dashboard.liveScan.description")}
             </p>
-            {progressFetcher.data ? (
-              <p
-                style={{
-                  margin: "8px 0 0",
-                  fontSize: "13px",
-                  color: "var(--text-subdued)",
-                }}
-              >
-                {t("dashboard.liveScan.progress", {
-                  imported: progressFetcher.data.productsImported,
-                  fetched: progressFetcher.data.productsFetched,
-                  scanned: progressFetcher.data.productsScanned,
-                  alerts: progressFetcher.data.alertsScanned,
-                })}
-              </p>
+            {auditProgress?.runStatus === "retrying" ? (
+              <div className="live-scan-retry" role="status">
+                <strong>{t("dashboard.liveScan.retryingHeading", { defaultValue: "The audit encountered a problem" })}</strong>
+                <span>{t("dashboard.liveScan.retrying", { defaultValue: "The check hit a problem and will retry. Completed work is retained." })}</span>
+              </div>
             ) : null}
+            <div className="live-scan-progress">
+              <div className="live-scan-progress-heading">
+                <span>{auditIsChecking
+                  ? t("dashboard.liveScan.checkingLabel", { defaultValue: "Products checked" })
+                  : t("dashboard.liveScan.importingLabel", { defaultValue: "Products imported" })}</span>
+                <strong>{auditIsChecking
+                  ? `${auditChecked} / ${auditTotal}`
+                  : (auditProgress?.productsImported || 0)}</strong>
+              </div>
+              {auditIsChecking && auditTotal > 0 ? (
+                <progress className="live-scan-progress-bar" value={auditChecked} max={auditTotal}
+                  aria-label={t("dashboard.liveScan.checkingLabel", { defaultValue: "Products checked" })} />
+              ) : (
+                <progress className="live-scan-progress-bar" aria-label={t("dashboard.liveScan.importingLabel", { defaultValue: "Products imported" })} />
+              )}
+              <p className="live-scan-progress-note">
+                {auditIsChecking
+                    ? t("dashboard.liveScan.checkingNote", { defaultValue: "Checking the imported catalog against Safety Gate. Progress updates as batches finish." })
+                    : t("dashboard.liveScan.importingNote", { defaultValue: "Importing products from Shopify. The total will be known when import finishes." })}
+              </p>
+            </div>
             <div className="live-scan-steps">
               <div
                 className={`live-scan-step ${progressFetcher.data?.phase === "monitor" ? "live-scan-step--done" : "live-scan-step--active"}`}
@@ -963,6 +931,29 @@ export default function Index() {
 
         {!isScanning ? (
           <>
+            <s-banner tone={summary.tone} heading={summary.title}>
+              <s-stack gap="small">
+                <s-text>{summary.description}</s-text>
+                {summary.actionHref && (
+                  <div>
+                    <s-button
+                      variant="primary"
+                      href={summary.actionHref}
+                      target={dashboardState === "monitoring-problem" && pricingPlansUrl ? "_top" : undefined}
+                    >
+                      {summary.actionLabel}
+                    </s-button>
+                  </div>
+                )}
+                {dashboardState === "monitoring-problem" && monitoringNeedsRefresh && (
+                  <div>
+                    <s-button variant="primary" loading={revalidator.state !== "idle"} onClick={() => revalidator.revalidate()}>
+                      {t("catalogOverview.refreshStatus")}
+                    </s-button>
+                  </div>
+                )}
+              </s-stack>
+            </s-banner>
             {scanStatus === "failed" && (
               <s-banner
                 tone="warning"
@@ -972,209 +963,28 @@ export default function Index() {
                 <div style={{ marginTop: "var(--s-space-200)" }}>
                   <s-button
                     variant="secondary"
-                    onClick={() => window.location.reload()}
+                    onClick={() => {
+                      setRetryRequested(true);
+                      fetcher.submit({ action: "importCatalogAndMonitor" }, { method: "POST" });
+                    }}
                   >
                     {t("actions.retry")}
                   </s-button>
                 </div>
               </s-banner>
             )}
-            {billingStatus &&
-              !billingStatus.developmentBypass && !billingStatus.ownerTestAccess &&
-              !billingStatus.billingVerified && (
-                <s-banner
-                  tone="warning"
-                  heading={t("billing.statusUnverified")}
-                >
-                  <s-text>{t("billing.verificationError")}</s-text>
-                  <div style={{ marginTop: "var(--s-space-300)" }}>
-                    <s-button
-                      variant="secondary"
-                      onClick={() => window.location.reload()}
-                    >
-                      {t("actions.retry")}
-                    </s-button>
-                  </div>
-                </s-banner>
+            <s-stack direction="inline" gap="base" wrap>
+              <s-link href="/app/audit-report">{t("workspace.reportTitle")}</s-link>
+              {stats.waitingForSupplier > 0 && (
+                <s-link href="/app/alerts?status=waiting_for_supplier">
+                  {t("workspace.waiting")} ({stats.waitingForSupplier})
+                </s-link>
               )}
-            {billingStatus &&
-              !billingStatus.developmentBypass && !billingStatus.ownerTestAccess &&
-              billingStatus.billingVerified &&
-              !billingStatus.hasActivePayment &&
-              billingStatus.freeScanUsed && (
-                <s-banner
-                  tone="warning"
-                  heading={t("billing.upgradeRequiredHeading")}
-                >
-                  <s-text>{t("billing.upgradeRequiredDescription")}</s-text>
-                  <div style={{ marginTop: "var(--s-space-300)" }}>
-                    <s-button
-                      variant="primary"
-                      onClick={() =>
-                        billingStatus.pricingPlansUrl &&
-                        window.open(billingStatus.pricingPlansUrl, "_top")
-                      }
-                      disabled={!billingStatus.pricingPlansUrl}
-                      suppressHydrationWarning
-                    >
-                      {t("billing.upgradePlanButton")}
-                    </s-button>
-                  </div>
-                </s-banner>
-              )}
-            <s-banner
-              tone={dashboardStatus.tone}
-              heading={dashboardStatus.title}
-            >
-              <s-stack gap="base">
-                <s-text>{dashboardStatus.description}</s-text>
-                <div className="dashboard-banner-actions">
-                  <s-button
-                    variant="primary"
-                    onClick={() =>
-                      navigate(
-                        dashboardState === "review-needed" && nextReviewAlert?.id
-                          ? `/app/alerts?status=active&open=${encodeURIComponent(nextReviewAlert.id)}`
-                          : dashboardStatus.actionHref,
-                      )
-                    }
-                  >
-                    {dashboardState === "review-needed" && nextReviewAlert?.id
-                      ? t("workspace.reviewNext", { title: nextReviewAlert.productTitle })
-                      : dashboardStatus.actionLabel}
-                  </s-button>
-                  {stats.uncheckedProducts > 0 &&
-                    dashboardState === "review-needed" && (
-                      <s-button
-                        variant="secondary"
-                        onClick={() => navigate("/app/manual-check")}
-                      >
-                        {t("workspace.viewRemainingProducts", {
-                          count: stats.uncheckedProducts,
-                        })}
-                      </s-button>
-                    )}
-                </div>
-                <div className="dashboard-coverage-inline">
-                  <s-text>
-                    {t("dashboard.admin.productsMonitored")}:{" "}
-                    <strong>{monitoredProductLabel}</strong> · {coveragePercent}
-                    %
-                  </s-text>
-                  <s-text tone="subdued">{t("workspace.verifyScope")}</s-text>
-                </div>
-              </s-stack>
-            </s-banner>
-            <MonitoringStatus
-              billing={billingStatus}
-              status={latestMonitoringStatus}
-              lastSuccess={confirmedMonitoringAt}
-            />
-            <AdminCard className="admin-card">
-              <div className="admin-card__header">
-                <h2 className="admin-card__title">{t("workspace.goReview")}</h2>
-                <s-button
-                  variant="secondary"
-                  onClick={() => navigate("/app/alerts?status=active")}
-                >
-                  {t("actions.viewAlerts")}
-                </s-button>
-              </div>
-              {recentAlerts.length === 0 ? (
-                <div className="admin-empty-state">
-                  <p>{t("workspace.emptyHelp")}</p>
-                  <p>{t("workspace.onboarding")}</p>
-                  <s-button href="/app/manual-check">
-                    {t("actions.checkOneProduct")}
-                  </s-button>
-                </div>
-              ) : (
-                <div className="admin-alert-list">
-                  {recentAlerts.slice(0, 3).map((alert) => (
-                    <div
-                      className="admin-alert-row admin-alert-row--compact"
-                      key={alert.id}
-                    >
-                      <div className="admin-alert-row__media">
-                        {alert.productImage && (
-                          <img
-                            src={alert.productImage}
-                            alt={alert.productTitle}
-                            className="admin-alert-row__image"
-                          />
-                        )}
-                      </div>
-                      <div className="admin-alert-row__content">
-                        <h3>{alert.productTitle}</h3>
-                        <p className="match-reason-preview">{t("workspace.matchNeedsVerification")}</p>
-                        <div className="admin-inline-meta">
-                          <AlertBadge alertType={alert.alertType} />
-                          <span>
-                            <LocalDateTime
-                              value={alert.createdAt}
-                              format={(date) =>
-                                formatRelativeDate(date, t, i18n.language)
-                              }
-                            />
-                          </span>
-                        </div>
-                      </div>
-                      <s-button
-                        variant="secondary"
-                        onClick={() =>
-                          navigate(
-                            `/app/alerts?status=active&open=${encodeURIComponent(alert.id)}`,
-                          )
-                        }
-                      >
-                        {t("workspace.compare")}
-                      </s-button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </AdminCard>
-            <AdminCard className="admin-card admin-stack">
-              <h2 className="admin-card__title">
-                {t("experience.valueTitle")}
-              </h2>
-              <p className="admin-card__description">
-                {t("experience.valueBody")}
-              </p>
-              <dl className="monitoring-value-facts">
-                <div>
-                  <dt>{t("dashboard.admin.productsMonitored")}</dt>
-                  <dd>{monitoredProductLabel}</dd>
-                </div>
-                <div>
-                  <dt>{t("dashboard.admin.checksCompletedTitle")}</dt>
-                  <dd>{stats.totalChecks}</dd>
-                </div>
-                <div>
-                  <dt>{t("workspace.documentedFindings")}</dt>
-                  <dd>{stats.resolvedAlerts + stats.dismissedAlerts}</dd>
-                </div>
-              </dl>
-              <div className="admin-actions">
-                <s-button variant="secondary" href="/app/settings">
-                  {t("billing.managePlanButton")}
-                </s-button>
-                <s-button variant="tertiary" href="/app/audit-report">
-                  {t("workspace.reportTitle")}
-                </s-button>
-                <s-button
-                  variant="tertiary"
-                  href="/app/evidence?view=decisions"
-                >
-                  {t("workspace.history")}
-                </s-button>
-              </div>
-            </AdminCard>
+            </s-stack>
 
-            {!isScanning && recentMonitoringRuns.length > 0 ? (
-              <s-section
-                heading={t("dashboard.admin.monitoringRunHistoryTitle")}
-              >
+            {recentMonitoringRuns.length > 0 && (
+              <details className="catalog-overview__run-history">
+                <summary>{t("dashboard.admin.monitoringRunHistoryTitle")}</summary>
                 <div
                   className="monitoring-run-list"
                   aria-label={t("dashboard.admin.monitoringRunHistoryTitle")}
@@ -1232,8 +1042,8 @@ export default function Index() {
                     );
                   })}
                 </div>
-              </s-section>
-            ) : null}
+              </details>
+            )}
           </>
         ) : null}
       </div>

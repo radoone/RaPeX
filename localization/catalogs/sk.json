@@ -486,6 +486,11 @@
     "state_resolved": "Vyriešené",
     "state_dismissed": "Zamietnuté",
     "state_unknown": "Aktuálny stav nájdete v aplikácii",
-    "entire_public_catalog": "Celý verejný katalóg"
+    "entire_public_catalog": "Celý verejný katalóg",
+    "weekly_new_period": "Vytvorené počas tohto obdobia",
+    "weekly_open_snapshot": "Otvorené teraz, aj zo starších období",
+    "new_products_checked": "Nové skontrolované produkty",
+    "safety_gate_records_imported": "Nové záznamy importované do RAPEX",
+    "weekly_new_products_explanation": "Nové skontrolované produkty sú produkty pridané do monitoringu a úspešne skontrolované počas tohto obdobia. Každý produkt sa počíta iba raz."
   }
 }

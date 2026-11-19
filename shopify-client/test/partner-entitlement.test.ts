@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { partnerEntitlement } from "../app/services/partner-entitlement";
+import { displayShopifyPlan, partnerEntitlement } from "../app/services/partner-entitlement";
 
 describe("verified Partner contract", () => {
   const now = Date.parse("2026-10-23T12:00:00Z");
@@ -47,4 +47,10 @@ describe("verified Partner contract", () => {
       partnerEntitlement({ ...contract, cancelAtEndOfCycle: true }, shop, now),
     ).toMatchObject({ active: true, cancelAtEndOfCycle: true });
   });
+});
+
+it("displays the verified Shopify plan without substituting Pro for test plans", () => {
+  expect(displayShopifyPlan("shopify-test")).toBe("Review test");
+  expect(displayShopifyPlan("zerorecall-pro")).toBe("ZeroRecall Pro");
+  expect(displayShopifyPlan(null)).toBeNull();
 });

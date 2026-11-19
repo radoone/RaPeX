@@ -626,7 +626,13 @@
       "progress": "Importēti {{imported}} no {{fetched}} produktiem; salīdzināti {{scanned}} produkti ar {{alerts}} Safety Gate brīdinājumiem līdz šim.",
       "stepAudit": "3. Sagatavojiet GPSR audita ceļu un atbilstības statusu",
       "stepImport": "1. Importējiet produktus no Shopify",
-      "stepScan": "2. Salīdziniet ar Safety Gate datubāzi (35 000+ ierakstu)"
+      "stepScan": "2. Salīdziniet ar Safety Gate datubāzi (35 000+ ierakstu)",
+      "checkingLabel": "Pārbaudītie produkti",
+      "checkingNote": "Tiek pārbaudīts importētais katalogs pret Safety Gate. Progress tiek atjaunināts, kad partijas ir pabeigtas.",
+      "importingLabel": "Importētie produkti",
+      "importingNote": "Tiek importēti produkti no Shopify. Kopējais skaits būs zināms, kad imports būs pabeigts.",
+      "retrying": "Pārbaudē radās problēma, un tā tiks atkārtota. Pabeigtais darbs tiek saglabāts.",
+      "retryingHeading": "Auditā radās problēma"
     },
     "metricsCard": {
       "activeAlertsHeading": "Aktīvie brīdinājumi",
@@ -1454,5 +1460,113 @@
     "label": "Precīza svītrkoda atbilstība",
     "help": "Varianta pārbaudītais svītrkods atbilst Safety Gate ierakstam. Pirms lēmuma pieņemšanas pārbaudiet modeli un skarto partiju."
   },
-  "ownerTestAccess": "Īpašnieka atļauta testēšana — maksas plāns nav nepieciešams"
+  "ownerTestAccess": "Īpašnieka atļauta testēšana — maksas plāns nav nepieciešams",
+  "catalogOverview": {
+    "coverage": "{{checked}} no {{total}}",
+    "coverageHelp": "Daži produkti ir jauni vai ir mainījušies kopš pēdējās pārbaudes. Atveriet sarakstu, lai redzētu, kas vēl jāpārbauda.",
+    "currentProducts": "Produkti ar pašreizējo rezultātu",
+    "initialAudit": "Sākotnējā kataloga pārbaude",
+    "lastCheck": "Pēdējā veiksmīgā kataloga pārbaude",
+    "monitoring": {
+      "delayed": "Pārbaudes termiņš nokavēts",
+      "enabled": "Darbojas automātiski",
+      "failed": "Pēdējā pārbaude neizdevās",
+      "paused": "Apturēts",
+      "preview": "Izstrādes priekšskatījums",
+      "processing": "Pārbaude notiek",
+      "unknown": "Darbība nav apstiprināta",
+      "unverified": "Plāna verifikācija nav pieejama"
+    },
+    "monitoringHelp": {
+      "delayed": "Pēdējā automātiskā pārbaude notika pirms vairāk nekā 48 stundām. Ja statuss saglabājas, sazinieties ar atbalsta dienestu.",
+      "failed": "Jūsu pēdējie veiksmīgie rezultāti joprojām ir pieejami. Ja nākamā pārbaude arī neizdodas, sazinieties ar atbalsta dienestu.",
+      "paused": "Izvēlieties aktīvu Shopify plānu, lai atsāktu automātiskās pārbaudes.",
+      "preview": "Plānotajām pārbaudēm nepieciešams verificēts Shopify plāns.",
+      "processing": "Pārbaude ir rindā vai notiek. Rezultāti parādīsies, kad tā būs pabeigta.",
+      "unknown": "Nav reģistrēta pabeigta automātiskā pārbaude. Ja šī statusa atsvaidzināšana nepalīdz, sazinieties ar atbalsta dienestu.",
+      "unverified": "Atsvaidziniet, lai verificētu savu Shopify plānu. Ja statuss saglabājas, sazinieties ar atbalsta dienestu."
+    },
+    "monitoringRun": "Pārbaudīt jaunus vai atjauninātus Safety Gate brīdinājumus",
+    "noActionHelp": "Jūsu pašreizējais katalogs ir aptverts, un nav iespējamu atbilstību, kas gaidītu jūsu pārskatīšanu.",
+    "noCompletedCheck": "Nav reģistrēta pabeigta kataloga pārbaude",
+    "purpose": "ZeroRecall pārbauda jūsu Shopify katalogu pret ES <portalLink>Safety Gate</portalLink> brīdinājumiem un parāda, kuras iespējamās atbilstības ir jāpārskata.",
+    "refreshStatus": "Atsvaidzināt uzraudzības statusu",
+    "reviewHelp": "Salīdziniet savu produktu ar oficiālo brīdinājumu, pēc tam ierakstiet savu lēmumu.",
+    "reviewNext": "Pārskatīt nākamo atbilstību"
+  },
+  "findingOverview": {
+    "matches": "Kas atbilst",
+    "missing": "Trūkst informācijas: {{fields}}.",
+    "noConfirmedIdentifiers": "Nav apstiprinātu atbilstošu identifikatoru.",
+    "officialRisk": "Risks Safety Gate brīdinājumā",
+    "riskUnavailable": "Informācija par risku nav pieejama šajā saglabātajā brīdinājumā.",
+    "saveFailed": "Lēmumu nevarēja saglabāt. Mēģiniet vēlreiz.",
+    "verify": "Kas jāpārbauda",
+    "verifyApplicability": "Pārbaudiet, vai oficiālais brīdinājums attiecas uz jūsu produktu."
+  },
+  "pendingCoverage": {
+    "automaticCount_few": "{{count}} produktiem ir automātiskās pārbaudes rindā.",
+    "automaticCount_many": "{{count}} produktiem ir automātiskās pārbaudes rindā.",
+    "automaticCount_one": "{{count}} produktam ir automātiskā pārbaude rindā.",
+    "automaticCount_other": "{{count}} produktiem ir automātiskās pārbaudes rindā.",
+    "automaticCount_plural": "{{count}} produktiem ir automātiskās pārbaudes rindā.",
+    "automaticCount_zero": "{{count}} produktiem ir automātiskās pārbaudes rindā.",
+    "automaticOnly": "ZeroRecall automātiski pārbauda šos produktus. Nav nepieciešama nekāda darbība.",
+    "batchResult": "Pārbaudes pabeigtas: {{checked}}. Neizdevušās pārbaudes: {{failed}}.",
+    "checkBatch_few": "Pārbaudīt {{count}} produktus",
+    "checkBatch_many": "Pārbaudīt {{count}} produktus",
+    "checkBatch_one": "Pārbaudīt {{count}} produktu",
+    "checkBatch_other": "Pārbaudīt {{count}} produktus",
+    "checkBatch_plural": "Pārbaudīt {{count}} produktus",
+    "checkBatch_zero": "Pārbaudīt {{count}} produktus",
+    "complete": "Katrā pašreizējā Shopify produkta versijā ir saglabāts rezultāts.",
+    "current": "Pašreizējie rezultāti {{checked}} no {{total}} produktiem.",
+    "empty": "Produkti parādās šeit pēc tam, kad tos pievienojat Shopify.",
+    "emptyTitle": "Vēl nav produktu, ko pārbaudīt",
+    "filters": "Meklēt un filtrēt",
+    "manualHelp": "Pārbaudiet produktus tagad, ja ZeroRecall nav apstiprinājis automātisko pārbaudi.",
+    "pendingTab": "Gaida pārbaudi",
+    "planRequired": "Lai pārbaudītu atlikušos produktus, ir nepieciešams aktīvs Shopify plāns.",
+    "planUnconfirmed": "Automātiskās pārbaudes nav apstiprinātas atlikušajiem produktiem. Pārbaudiet sava plāna statusu uzraudzības iestatījumos.",
+    "row": {
+      "automatic": "Automātiskā pārbaude rindā vai notiek",
+      "planRequired": "Nepieciešams aktīvs Shopify plāns",
+      "planUnconfirmed": "Automātiskā pārbaude un plāna statuss nav apstiprināts",
+      "unconfirmed": "Nav apstiprināta automātiskā pārbaude"
+    },
+    "title_few": "{{count}} produkti gaida pārbaudi",
+    "title_many": "{{count}} produkti gaida pārbaudi",
+    "title_one": "{{count}} produkts gaida pārbaudi",
+    "title_other": "{{count}} produkti gaida pārbaudi",
+    "title_plural": "{{count}} produkti gaida pārbaudi",
+    "title_zero": "{{count}} produkti gaida pārbaudi",
+    "viewAll": "Skatīt visus produktus"
+  },
+  "reviewOverview": {
+    "closed": "Slēgts (atrisināts vai noraidīts)",
+    "current": "Pašreizējie atklājumi",
+    "decisions": "Ierakstītie lēmumi",
+    "emptyDecisions": "Vēl nav ierakstītu lēmumu.",
+    "filters": "Filtri",
+    "open": "Atvērtie atklājumi",
+    "report": "Šajā pārskatā atklātie fakti"
+  },
+  "settingsOverview": {
+    "active": "Aktīvs",
+    "activePlan": "Aktīvs Shopify plāns",
+    "delivery": {
+      "paused": "Piegāde ir apturēta, līdz uzraudzības piekļuve ir aktīva.",
+      "unconfirmed": "E-pasta piegādes statuss nav apstiprināts."
+    },
+    "editEmail": "Rediģēt e-pasta preferences",
+    "mondayEmail": "Pirmdienas kopsavilkums",
+    "noActivePlan": "Nav aktīva plāna",
+    "off": "Izslēgts",
+    "on": "Ieslēgts",
+    "planUnverified": "Plāns nav verificēts",
+    "previousPlan": "Pēdējais verificētais plāns: {{plan}}",
+    "recipient": "Nosūtīts uz {{email}}",
+    "testAccess": "Īpašnieka testa piekļuve",
+    "weeklyHelp": "Nosūtīts pirmdienās ar jūsu uzraudzības statusu un atvērtajiem atklājumiem."
+  }
 }

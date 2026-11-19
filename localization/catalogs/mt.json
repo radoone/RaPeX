@@ -486,6 +486,11 @@
     "state_resolved": "Issolvi",
     "state_dismissed": "Mormi",
     "state_unknown": "Iċċekkja l-app għall-istatus attwali",
-    "entire_public_catalog": "Il-katalgu pubbliku kollu"
+    "entire_public_catalog": "Il-katalgu pubbliku kollu",
+    "weekly_new_period": "Maħluqa matul dan il-perjodu",
+    "weekly_open_snapshot": "Miftuħa bħalissa, inklużi perjodi preċedenti",
+    "new_products_checked": "Prodotti ġodda ċċekkjati",
+    "safety_gate_records_imported": "Rekords ġodda importati f’RAPEX",
+    "weekly_new_products_explanation": "Il-prodotti ġodda ċċekkjati ġew miżjuda mal-monitoraġġ u ċċekkjati b’suċċess matul dan il-perjodu. Kull prodott jingħadd darba biss."
   }
 }

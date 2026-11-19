@@ -109,9 +109,21 @@ export const AnalysisMatchesSchema = functionsAi.defineSchema(
     textSimilarity: z.number().min(0).max(100),
     imageSimilarity: z.number().min(0).max(100).optional(),
     identityAssessment: z.enum(["same_model", "distinctive_visual", "uncertain"]),
+    identityConflict: z.boolean().describe("Actual incompatible construction/dimensions, not just a different local brand or listing code"),
+    visualEvidence: z.array(z.string().min(1).max(200)).max(3).describe("Distinctive matching details seen in BOTH products; empty without comparable photos"),
     reason: z.string().min(1).max(1500),
   })).max(12),
 );
+
+/** Keep model identifiers inside this request's authoritative candidate set. */
+export function createCandidateAnalysisSchema(alertIds: string[]) {
+  const ids = [...new Set(alertIds)];
+  if (!ids.length || ids.some(id => !id.trim())) throw new Error("Missing analysis candidates");
+  // Bound the provider's response grammar to the actual number of candidates.
+  return z.array(AnalysisMatchesSchema.element.extend({
+    alertId: z.enum(ids as [string, ...string[]]),
+  })).max(Math.min(12, ids.length));
+}
 
 export const SafetyCheckResultSchema = functionsAi.defineSchema(
   "SafetyCheckResult",

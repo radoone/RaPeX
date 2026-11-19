@@ -486,6 +486,11 @@
     "state_resolved": "Išspręsta",
     "state_dismissed": "Atmesta",
     "state_unknown": "Patikrinkite programėlę, kad sužinotumėte dabartinę būseną",
-    "entire_public_catalog": "Visas viešas katalogas"
+    "entire_public_catalog": "Visas viešas katalogas",
+    "weekly_new_period": "Sukurti šiuo laikotarpiu",
+    "weekly_open_snapshot": "Dabar atviri, įskaitant ankstesnius laikotarpius",
+    "new_products_checked": "Nauji patikrinti produktai",
+    "safety_gate_records_imported": "Nauji į RAPEX importuoti įrašai",
+    "weekly_new_products_explanation": "Nauji patikrinti produktai šiuo laikotarpiu buvo įtraukti į stebėseną ir sėkmingai patikrinti. Kiekvienas produktas skaičiuojamas tik vieną kartą."
   }
 }

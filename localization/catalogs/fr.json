@@ -486,6 +486,11 @@
     "state_resolved": "Résolu",
     "state_dismissed": "Ignoré",
     "state_unknown": "Vérifiez l'application pour le statut actuel",
-    "entire_public_catalog": "Tout le catalogue public"
+    "entire_public_catalog": "Tout le catalogue public",
+    "weekly_new_period": "Créés pendant cette période",
+    "weekly_open_snapshot": "Ouverts actuellement, y compris les périodes précédentes",
+    "new_products_checked": "Nouveaux produits contrôlés",
+    "safety_gate_records_imported": "Nouveaux enregistrements RAPEX importés",
+    "weekly_new_products_explanation": "Les nouveaux produits contrôlés ont été ajoutés au suivi et contrôlés avec succès pendant cette période. Chaque produit est compté une seule fois."
   }
 }

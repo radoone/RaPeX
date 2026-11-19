@@ -152,6 +152,10 @@ async function saveEntitlement(
   shop: string,
   entitlement: Awaited<ReturnType<typeof readEntitlement>>,
 ) {
+  // A failed lookup is not a Shopify cancellation. Keep the verified finite
+  // snapshot for background workers while the current request fails closed.
+  if (!entitlement.verified) return false;
+
   try {
     const existing = await db.safetySetting.findUnique({ where: { shop } });
     await db.safetySetting.upsert({
@@ -280,13 +284,6 @@ export async function getBillingStatus(
     };
   } catch (error) {
     console.error("Error checking billing status:", error);
-    await saveEntitlement(shop, {
-      active: false,
-      verified: false,
-      planHandle: null,
-      cancelAtEndOfCycle: false,
-      validUntil: null,
-    });
     return {
       hasActivePayment: false,
       freeScanUsed,

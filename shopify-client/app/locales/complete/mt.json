@@ -626,7 +626,13 @@
       "progress": "Importati {{imported}} minn {{fetched}} prodotti; imqabbla {{scanned}} prodotti b' {{alerts}} twissijiet ta' Safety Gate s'issa.",
       "stepAudit": "3. Ipprepara traċċa tal-awditjar tal-GPSR u status ta' konformità",
       "stepImport": "1. Importa prodotti minn Shopify",
-      "stepScan": "2. Qabbel mad-database ta' Safety Gate (aktar minn 35,000 rekord)"
+      "stepScan": "2. Qabbel mad-database ta' Safety Gate (aktar minn 35,000 rekord)",
+      "checkingLabel": "Prodotti vverifikati",
+      "checkingNote": "Qed nivverifikaw il-katalogu importat kontra Safety Gate. L-aġġornamenti tal-progress jidhru hekk kif il-lottijiet jintemmu.",
+      "importingLabel": "Prodotti importati",
+      "importingNote": "Qed nimportaw prodotti minn Shopify. It-total ikun magħruf meta l-importazzjoni tintemm.",
+      "retrying": "Il-verifika ltaqgħet ma' problema u se terġa' tipprova. Ix-xogħol komplut jinżamm.",
+      "retryingHeading": "L-awditjar iltaqa' ma' problema"
     },
     "metricsCard": {
       "activeAlertsHeading": "Twissijiet Attivi",
@@ -1454,5 +1460,113 @@
     "label": "Qbil eżatt tal-barcode",
     "help": "Il-barcode ivvalidat ta’ varjant jaqbel mar-rekord ta’ Safety Gate. Ivverifika l-mudell u l-lott affettwat qabel tiddeċiedi."
   },
-  "ownerTestAccess": "Ittestjar awtorizzat mis-sid — mhu meħtieġ l-ebda pjan bi ħlas"
+  "ownerTestAccess": "Ittestjar awtorizzat mis-sid — mhu meħtieġ l-ebda pjan bi ħlas",
+  "catalogOverview": {
+    "coverage": "{{checked}} minn {{total}}",
+    "coverageHelp": "Xi prodotti huma ġodda jew inbidlu mill-aħħar verifika tagħhom. Iftaħ il-lista biex tara x'għad irid jiġi vverifikat.",
+    "currentProducts": "Prodotti b'riżultat attwali",
+    "initialAudit": "Verifika inizjali tal-katalogu",
+    "lastCheck": "L-aħħar verifika tal-katalogu b'suċċess",
+    "monitoring": {
+      "delayed": "Verifika skaduta",
+      "enabled": "Qed jaħdem awtomatikament",
+      "failed": "L-aħħar verifika falliet",
+      "paused": "Pawżat",
+      "preview": "Previżjoni tal-iżvilupp",
+      "processing": "Verifika fil-progress",
+      "unknown": "Attività mhux ikkonfermata",
+      "unverified": "Verifika tal-pjan mhux disponibbli"
+    },
+    "monitoringHelp": {
+      "delayed": "L-aħħar verifika awtomatika kienet aktar minn 48 siegħa ilu. Jekk l-istatus jippersisti, ikkuntattja l-appoġġ.",
+      "failed": "Ir-riżultati tal-aħħar suċċess tiegħek għadhom disponibbli. Jekk il-verifika li jmiss tfalli wkoll, ikkuntattja l-appoġġ.",
+      "paused": "Agħżel pjan attiv ta' Shopify biex terġa' tibda l-verifiki awtomatiċi.",
+      "preview": "Il-verifiki skedati jeħtieġu pjan ta' Shopify ivverifikat.",
+      "processing": "Il-verifika hija fil-kju jew qed taħdem. Ir-riżultati jidhru meta titlesta.",
+      "unknown": "M'hemm l-ebda verifika awtomatika kompluta rreġistrata. Jekk it-tiġdid ta' dan l-istatus ma jgħinx, ikkuntattja l-appoġġ.",
+      "unverified": "Aġġorna biex tivverifika l-pjan tiegħek ta' Shopify. Jekk l-istatus jippersisti, ikkuntattja l-appoġġ."
+    },
+    "monitoringRun": "Iċċekkja għal twissijiet ġodda jew aġġornati ta' Safety Gate",
+    "noActionHelp": "Il-katalogu attwali tiegħek huwa kopert u l-ebda taqbila possibbli ma qed tistenna r-reviżjoni tiegħek.",
+    "noCompletedCheck": "L-ebda verifika tal-katalogu kompluta rreġistrata",
+    "purpose": "ZeroRecall jivverifika l-katalogu tiegħek ta' Shopify kontra t-twissijiet ta' <portalLink>Safety Gate</portalLink> tal-UE u jurik liema taqbiliet possibbli jeħtieġu reviżjoni.",
+    "refreshStatus": "Aġġorna l-istatus tal-monitoraġġ",
+    "reviewHelp": "Qabbel il-prodott tiegħek mat-twissija uffiċjali, imbagħad irreġistra d-deċiżjoni tiegħek.",
+    "reviewNext": "Irrevedi t-taqbila li jmiss"
+  },
+  "findingOverview": {
+    "matches": "X'jaqbel",
+    "missing": "Informazzjoni nieqsa: {{fields}}.",
+    "noConfirmedIdentifiers": "L-ebda identifikatur li jaqbel ma ġie kkonfermat.",
+    "officialRisk": "Riskju fl-avviż ta' Safety Gate",
+    "riskUnavailable": "Id-dettalji tar-riskju mhumiex disponibbli f'dan l-avviż issejvjat.",
+    "saveFailed": "Id-deċiżjoni ma setgħetx tiġi ssejvjata. Erġa' pprova.",
+    "verify": "X'għandek tivverifika",
+    "verifyApplicability": "Iċċekkja li l-avviż uffiċjali japplika għall-prodott tiegħek."
+  },
+  "pendingCoverage": {
+    "automaticCount_few": "{{count}} prodotti għandhom kontrolli awtomatiċi fil-kju.",
+    "automaticCount_many": "{{count}} prodotti għandhom kontrolli awtomatiċi fil-kju.",
+    "automaticCount_one": "{{count}} prodott għandu kontroll awtomatiku fil-kju.",
+    "automaticCount_other": "{{count}} prodotti għandhom kontrolli awtomatiċi fil-kju.",
+    "automaticCount_plural": "{{count}} prodotti għandhom kontrolli awtomatiċi fil-kju.",
+    "automaticCount_two": "{{count}} prodotti għandhom kontrolli awtomatiċi fil-kju.",
+    "automaticOnly": "ZeroRecall qed jiċċekkja dawn il-prodotti awtomatikament. M'hemmx bżonn azzjoni.",
+    "batchResult": "Kontrolli kompluti: {{checked}}. Kontrolli falluti: {{failed}}.",
+    "checkBatch_few": "Iċċekkja {{count}} prodotti",
+    "checkBatch_many": "Iċċekkja {{count}} prodotti",
+    "checkBatch_one": "Iċċekkja {{count}} prodott",
+    "checkBatch_other": "Iċċekkja {{count}} prodotti",
+    "checkBatch_plural": "Iċċekkja {{count}} prodotti",
+    "checkBatch_two": "Iċċekkja {{count}} prodotti",
+    "complete": "Kull verżjoni kurrenti tal-prodott ta' Shopify għandha riżultat salvat.",
+    "current": "Riżultati kurrenti għal {{checked}} minn {{total}} prodotti.",
+    "empty": "Il-prodotti jidhru hawn wara li żżidhom f'Shopify.",
+    "emptyTitle": "Għad m'hemmx prodotti x'jiġu ċċekkjati",
+    "filters": "Fittex u ffiltra",
+    "manualHelp": "Iċċekkja l-prodotti issa jekk ZeroRecall m'għandux kontroll awtomatiku kkonfermat.",
+    "pendingTab": "Qed jistenna kontroll",
+    "planRequired": "Pjan attiv ta' Shopify huwa meħtieġ biex jiġu ċċekkjati l-prodotti li fadal.",
+    "planUnconfirmed": "Il-kontrolli awtomatiċi mhumiex ikkonfermati għall-prodotti li fadal. Iċċekkja l-istatus tal-pjan tiegħek fis-Settings tal-Monitoraġġ.",
+    "row": {
+      "automatic": "Kontroll awtomatiku fil-kju jew għaddej",
+      "planRequired": "Pjan attiv ta' Shopify huwa meħtieġ",
+      "planUnconfirmed": "Kontroll awtomatiku u status tal-pjan mhux ikkonfermati",
+      "unconfirmed": "L-ebda kontroll awtomatiku kkonfermat"
+    },
+    "title_few": "{{count}} prodotti qed jistennew kontroll",
+    "title_many": "{{count}} prodotti qed jistennew kontroll",
+    "title_one": "{{count}} prodott qed jistenna kontroll",
+    "title_other": "{{count}} prodotti qed jistennew kontroll",
+    "title_plural": "{{count}} prodotti qed jistennew kontroll",
+    "title_two": "{{count}} prodotti qed jistennew kontroll",
+    "viewAll": "Ara l-prodotti kollha"
+  },
+  "reviewOverview": {
+    "closed": "Magħluqa (solvuti jew miċħuda)",
+    "current": "Sejbiet attwali",
+    "decisions": "Deċiżjonijiet irreġistrati",
+    "emptyDecisions": "Għad m'hemmx deċiżjonijiet irreġistrati.",
+    "filters": "Filtri",
+    "open": "Sejbiet miftuħa",
+    "report": "Sejbiet f'dan ir-rapport"
+  },
+  "settingsOverview": {
+    "active": "Attiv",
+    "activePlan": "Pjan attiv ta' Shopify",
+    "delivery": {
+      "paused": "Il-kunsinna hija waqfa sakemm l-aċċess għall-monitoraġġ ikun attiv.",
+      "unconfirmed": "L-istatus tal-kunsinna tal-email mhuwiex ikkonfermat."
+    },
+    "editEmail": "Editja l-preferenzi tal-email",
+    "mondayEmail": "Sommarju tat-Tnejn",
+    "noActivePlan": "Ebda pjan attiv",
+    "off": "Mitfi",
+    "on": "Mixgħul",
+    "planUnverified": "Pjan mhux ivverifikat",
+    "previousPlan": "L-aħħar pjan ivverifikat: {{plan}}",
+    "recipient": "Mibgħut lil {{email}}",
+    "testAccess": "Aċċess għall-ittestjar tas-sid",
+    "weeklyHelp": "Mibgħut nhar ta' Tnejn bl-istatus tal-monitoraġġ tiegħek u sejbiet miftuħa."
+  }
 }

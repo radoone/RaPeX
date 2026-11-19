@@ -96,6 +96,9 @@ describe("production billing verification", () => {
         billingVerified: false,
         canPerformScan: false,
       });
+      const gate = await requireActiveBilling({}, "example.myshopify.com", { admin });
+      expect(gate?.headers.get("Location")).toContain("billingError=1");
+      expect(upsert).not.toHaveBeenCalled();
     }
   });
   it("does not grant access when entitlement persistence fails", async () => {

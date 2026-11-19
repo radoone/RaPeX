@@ -7,7 +7,8 @@ import { embedTexts, embedImage, buildEmbeddingText } from '../lib/safety-gate-e
 import { retrieveAlertsForVector, retrieveAlertsByGtins } from '../lib/safety-gate-checker-retrieval.js';
 import { checkProductAgainstAlerts } from '../lib/safety-gate-checker.js';
 import { mapBounded } from '../lib/matching-work.js';
-import { MATCHING_THRESHOLDS, AI_CONFIG } from '../lib/safety-gate-config.js';
+import { MATCHING_THRESHOLDS, AI_CONFIG, RAG_CANDIDATE_LIMITS, MATCHER_POLICY_VERSION } from '../lib/safety-gate-config.js';
+import { selectRagCandidates } from '../lib/candidate-selection.js';
 
 const [mode, input, output] = process.argv.slice(2);
 if (!['prepare', 'predict', 'api'].includes(mode) || !input || !output) throw Error('Usage: node scripts/verify-identity-pairs.mjs prepare fixture.json NEW.json | predict retrieval.json NEW.json | api retrieval.json NEW.json');
@@ -48,14 +49,18 @@ if (mode === 'prepare') {
         const old = group.candidates[at];
         const pictures = data.fields.pictures || [];
         const matched = [...new Set(hits.map(hit => hit.imageUrl).filter(url => pictures.includes(url)))];
-        const candidate = { id: doc.id, meta: data.meta, fields: { ...data.fields, pictures: [...matched, ...pictures.filter(url => !matched.includes(url))] }, source: 'retriever', distance: Math.min(old?.distance ?? Infinity, hits[0].distance), matchedImageUrls: matched };
+        const candidate = { id: doc.id, meta: data.meta, fields: { ...data.fields, pictures: [...matched, ...pictures.filter(url => !matched.includes(url))] }, source: 'retriever', distance: Math.min(old?.distance ?? Infinity, hits[0].distance), textDistance: old?.textDistance, imageDistance: hits[0].distance, matchedImageUrls: matched };
         if (at < 0) group.candidates.push(candidate); else group.candidates[at] = candidate;
       }
     }
     group.candidates.sort((a, b) => (a.distance ?? Infinity) - (b.distance ?? Infinity));
   });
   for (const group of groups) if (group.exact.length) group.candidates = group.exact;
-  save({ at: new Date().toISOString(), fixture, groups, config: { textLimit: 12, imageLimitPerPhoto: 6, ...MATCHING_THRESHOLDS }, evidence: { eanFirst: true, textEmbeddingBatchSize: texts.length, distinctImageEmbeddings: urls.length, source: 'live Firestore KNN; no forced candidate injection' } });
+  for (const group of groups) {
+    group.retrievedCandidates = group.candidates;
+    group.candidates = selectRagCandidates(group.candidates, new Set(group.exact.map(alert => alert.id)));
+  }
+  save({ at: new Date().toISOString(), fixture, groups, config: { textLimit: 12, imageLimitPerPhoto: 6, selectedLimits: RAG_CANDIDATE_LIMITS, matcherPolicy: MATCHER_POLICY_VERSION, ...MATCHING_THRESHOLDS }, evidence: { eanFirst: true, textEmbeddingBatchSize: texts.length, distinctImageEmbeddings: urls.length, source: 'live Firestore KNN; no forced candidate injection' } });
   console.log(JSON.stringify({ groups: groups.length, batchEmbeddings: texts.length, pairs: fixture.pairs.length, retrievedPairs: fixture.pairs.filter(pair => groups.find(g => g.key === fingerprint(pair.product)).candidates.some(a => a.id === pair.alert.id)).length }));
 } else {
   const prepared = read(input), calls = [];

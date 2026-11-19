@@ -35,3 +35,12 @@ export function partnerEntitlement(
     validUntil: active ? validUntil : null,
   };
 }
+
+/** Shopify exposes the plan handle in the subscription response. */
+export function displayShopifyPlan(handle: string | null | undefined): string | null {
+  const name = handle?.trim().replace(/[-_]+/g, " ").trim();
+  if (!name) return null;
+  if (name.toLowerCase() === "shopify test") return "Review test";
+  if (name.toLowerCase() === "zerorecall pro") return "ZeroRecall Pro";
+  return name[0].toUpperCase() + name.slice(1);
+}

@@ -340,8 +340,8 @@ export async function runWeeklyClearSummaries(end = new Date()): Promise<{ sent:
   const { start } = weeklyWindow(end);
   const merchants = await db.collection(FIRESTORE_COLLECTIONS.merchants).get();
   const safetyGateRecords = (await db.collection(FIRESTORE_COLLECTIONS.alerts)
-    .where("meta.alert_date", ">=", Timestamp.fromDate(start))
-    .where("meta.alert_date", "<", Timestamp.fromDate(end))
+    .where("meta.ingested_at", ">=", Timestamp.fromDate(start))
+    .where("meta.ingested_at", "<", Timestamp.fromDate(end))
     .count().get()).data().count;
   let sent = 0;
   let skipped = 0;
@@ -371,13 +371,20 @@ export async function runWeeklyClearSummaries(end = new Date()): Promise<{ sent:
         : null;
     const monitoringComplete = monitorState.lastMonitorStatus === "SUCCESS" &&
       Boolean(lastSuccessfulRun && lastSuccessfulRun >= start && lastSuccessfulRun <= end);
-    const [newFindingsCount, openFindingsCount, productsCount, checksCount] = await Promise.all([
+    const [newFindingsCount, openFindingsCount, productsCount, checksCount, newProductsCheckedCount] = await Promise.all([
       newFindings,
       openFindings,
       merchant.ref.collection(FIRESTORE_COLLECTIONS.subProducts).count().get(),
       merchant.ref.collection(FIRESTORE_COLLECTIONS.subChecks)
         .where("createdAt", ">=", Timestamp.fromDate(start))
         .where("createdAt", "<", Timestamp.fromDate(end))
+        .count().get(),
+      // One document per product: repeated checks do not increase this count.
+      merchant.ref.collection(FIRESTORE_COLLECTIONS.subProducts)
+        .where("createdAt", ">=", Timestamp.fromDate(start))
+        .where("createdAt", "<", Timestamp.fromDate(end))
+        .where("lastCheckedAt", ">=", Timestamp.fromDate(start))
+        .where("lastCheckedAt", "<", Timestamp.fromDate(end))
         .count().get(),
     ]);
     try {
@@ -395,6 +402,7 @@ export async function runWeeklyClearSummaries(end = new Date()): Promise<{ sent:
         openPreview?.docs.map(doc => ({ id: doc.id, data: doc.data() })) || []);
       const content = buildWeeklyContent(settings.notificationLanguage, shop, start, end, {
         products: productsCount.data().count,
+        newProductsChecked: newProductsCheckedCount.data().count,
         checks: checksCount.data().count,
         safetyGateRecords,
         newFindings: newFindingsCount.data().count,

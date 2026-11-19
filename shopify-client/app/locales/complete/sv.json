@@ -612,7 +612,13 @@
       "progress": "Importerade {{imported}} av {{fetched}} produkter; jämförde {{scanned}} produkter med {{alerts}} Safety Gate-varningar hittills.",
       "stepAudit": "3. Förbered GPSR-revisionsspår och efterlevnadsstatus",
       "stepImport": "1. Importera produkter från Shopify",
-      "stepScan": "2. Jämför med Safety Gate-databasen (över 35 000 poster)"
+      "stepScan": "2. Jämför med Safety Gate-databasen (över 35 000 poster)",
+      "checkingLabel": "Kontrollerade produkter",
+      "checkingNote": "Kontrollerar den importerade katalogen mot Safety Gate. Förloppet uppdateras när batchar är klara.",
+      "importingLabel": "Importerade produkter",
+      "importingNote": "Importerar produkter från Shopify. Totalsumman blir känd när importen är klar.",
+      "retrying": "Kontrollen stötte på ett problem och kommer att försöka igen. Slutfört arbete behålls.",
+      "retryingHeading": "Granskningen stötte på ett problem"
     },
     "metricsCard": {
       "activeAlertsHeading": "Aktiva varningar",
@@ -1438,5 +1444,110 @@
     "label": "Exakt streckkodsmatchning",
     "help": "En variants validerade streckkod matchar Safety Gate-posten. Kontrollera modellen och det berörda partiet innan du fattar beslut."
   },
-  "ownerTestAccess": "Test godkänt av ägaren — ingen prisplan krävs"
+  "ownerTestAccess": "Test godkänt av ägaren — ingen prisplan krävs",
+  "catalogOverview": {
+    "coverage": "{{checked}} av {{total}}",
+    "coverageHelp": "Vissa produkter är nya eller har ändrats sedan den senaste kontrollen. Öppna listan för att se vad som fortfarande behöver kontrolleras.",
+    "currentProducts": "Produkter med ett aktuellt resultat",
+    "initialAudit": "Initial katalogkontroll",
+    "lastCheck": "Senaste lyckade katalogkontrollen",
+    "monitoring": {
+      "delayed": "Kontroll försenad",
+      "enabled": "Körs automatiskt",
+      "failed": "Senaste kontrollen misslyckades",
+      "paused": "Pausad",
+      "preview": "Utvecklingsförhandsvisning",
+      "processing": "Kontroll pågår",
+      "unknown": "Aktivitet obekräftad",
+      "unverified": "Planverifiering ej tillgänglig"
+    },
+    "monitoringHelp": {
+      "delayed": "Den senaste automatiska kontrollen var för mer än 48 timmar sedan. Om statusen kvarstår, kontakta supporten.",
+      "failed": "Dina senaste lyckade resultat är fortfarande tillgängliga. Om nästa kontroll också misslyckas, kontakta supporten.",
+      "paused": "Välj en aktiv Shopify-plan för att återuppta automatiska kontroller.",
+      "preview": "Schemalagda kontroller kräver en verifierad Shopify-plan.",
+      "processing": "Kontrollen står i kö eller körs. Resultaten visas när den är klar.",
+      "unknown": "Ingen slutförd automatisk kontroll finns registrerad. Om uppdatering av denna status inte hjälper, kontakta supporten.",
+      "unverified": "Uppdatera för att verifiera din Shopify-plan. Om statusen kvarstår, kontakta supporten."
+    },
+    "monitoringRun": "Sök efter nya eller uppdaterade Safety Gate-varningar",
+    "noActionHelp": "Din nuvarande katalog är täckt och inga möjliga matchningar väntar på din granskning.",
+    "noCompletedCheck": "Ingen slutförd katalogkontroll registrerad",
+    "purpose": "ZeroRecall kontrollerar din Shopify-katalog mot EU:s <portalLink>Safety Gate</portalLink>-varningar och visar dig vilka möjliga matchningar som behöver granskas.",
+    "refreshStatus": "Uppdatera övervakningsstatus",
+    "reviewHelp": "Jämför din produkt med den officiella varningen och registrera sedan ditt beslut.",
+    "reviewNext": "Granska nästa matchning"
+  },
+  "findingOverview": {
+    "matches": "Vad som matchar",
+    "missing": "Saknad information: {{fields}}.",
+    "noConfirmedIdentifiers": "Inga matchande identifierare bekräftade.",
+    "officialRisk": "Risk i Safety Gate-varningen",
+    "riskUnavailable": "Riskdetaljer är inte tillgängliga i denna sparade varning.",
+    "saveFailed": "Beslutet kunde inte sparas. Försök igen.",
+    "verify": "Vad som ska verifieras",
+    "verifyApplicability": "Kontrollera att den officiella varningen gäller din produkt."
+  },
+  "pendingCoverage": {
+    "automaticCount_few": "{{count}} produkter har automatiska kontroller i kö.",
+    "automaticCount_many": "{{count}} produkter har automatiska kontroller i kö.",
+    "automaticCount_one": "{{count}} produkt har en automatisk kontroll i kö.",
+    "automaticCount_other": "{{count}} produkter har automatiska kontroller i kö.",
+    "automaticCount_plural": "{{count}} produkter har automatiska kontroller i kö.",
+    "automaticOnly": "ZeroRecall kontrollerar dessa produkter automatiskt. Ingen åtgärd krävs.",
+    "batchResult": "Kontroller slutförda: {{checked}}. Misslyckade kontroller: {{failed}}.",
+    "checkBatch_few": "Kontrollera {{count}} produkter",
+    "checkBatch_many": "Kontrollera {{count}} produkter",
+    "checkBatch_one": "Kontrollera {{count}} produkt",
+    "checkBatch_other": "Kontrollera {{count}} produkter",
+    "checkBatch_plural": "Kontrollera {{count}} produkter",
+    "complete": "Varje aktuell Shopify-produktversion har ett sparat resultat.",
+    "current": "Aktuella resultat för {{checked}} av {{total}} produkter.",
+    "empty": "Produkter visas här när du har lagt till dem i Shopify.",
+    "emptyTitle": "Inga produkter att kontrollera ännu",
+    "filters": "Sök och filtrera",
+    "manualHelp": "Kontrollera produkter nu om ZeroRecall inte har någon automatisk kontroll bekräftad.",
+    "pendingTab": "Väntar på en kontroll",
+    "planRequired": "En aktiv Shopify-plan krävs för att kontrollera återstående produkter.",
+    "planUnconfirmed": "Automatiska kontroller är obekräftade för återstående produkter. Kontrollera din planstatus i Övervakningsinställningar.",
+    "row": {
+      "automatic": "Automatisk kontroll köad eller pågår",
+      "planRequired": "En aktiv Shopify-plan krävs",
+      "planUnconfirmed": "Automatisk kontroll och planstatus obekräftad",
+      "unconfirmed": "Ingen automatisk kontroll bekräftad"
+    },
+    "title_few": "{{count}} produkter väntar på en kontroll",
+    "title_many": "{{count}} produkter väntar på en kontroll",
+    "title_one": "{{count}} produkt väntar på en kontroll",
+    "title_other": "{{count}} produkter väntar på en kontroll",
+    "title_plural": "{{count}} produkter väntar på en kontroll",
+    "viewAll": "Visa alla produkter"
+  },
+  "reviewOverview": {
+    "closed": "Stängd (löst eller avfärdat)",
+    "current": "Aktuella resultat",
+    "decisions": "Registrerade beslut",
+    "emptyDecisions": "Inga beslut har registrerats ännu.",
+    "filters": "Filter",
+    "open": "Öppna resultat",
+    "report": "Resultat i den här rapporten"
+  },
+  "settingsOverview": {
+    "active": "Aktiv",
+    "activePlan": "Aktiv Shopify-plan",
+    "delivery": {
+      "paused": "Leveransen är pausad tills övervakningsåtkomst är aktiv.",
+      "unconfirmed": "E-postleveransstatus är obekräftad."
+    },
+    "editEmail": "Redigera e-postinställningar",
+    "mondayEmail": "Måndagssammanfattning",
+    "noActivePlan": "Ingen aktiv plan",
+    "off": "Av",
+    "on": "På",
+    "planUnverified": "Planen overifierad",
+    "previousPlan": "Senast verifierade plan: {{plan}}",
+    "recipient": "Skickas till {{email}}",
+    "testAccess": "Ägarens teståtkomst",
+    "weeklyHelp": "Skickas på måndagar med din övervakningsstatus och öppna resultat."
+  }
 }

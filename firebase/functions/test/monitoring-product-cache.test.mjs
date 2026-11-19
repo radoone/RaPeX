@@ -54,7 +54,7 @@ test('retained facts are bounded by count and bytes, and never shared between pa
 });
 
 test('owning loader projects only matcher facts and fences, with a shop-scoped batch read', async () => {
-  const expected = ['shop', 'productId', 'productTitle', 'productHandle', 'name', 'category', 'description', 'imageUrl', 'imageUrls', 'brand', 'model', 'barcodes', 'sourceUpdatedAt', 'deletedAt'];
+  const expected = ['shop', 'productId', 'productTitle', 'productHandle', 'name', 'category', 'description', 'imageUrl', 'imageUrls', 'brand', 'model', 'barcodes', 'sourceUpdatedAt', 'deletedAt', 'safetyCoverage'];
   assert.deepEqual(MONITORING_PRODUCT_FIELDS, expected);
   let calls = 0;
   const db = {

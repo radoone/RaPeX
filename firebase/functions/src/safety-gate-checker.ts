@@ -1,15 +1,18 @@
 import { loadFirstSuccessful, mapBounded, memoizeBounded } from "./matching-work.js";
 import { createHash } from "node:crypto";
+import { withProductSafetyCoverage } from "./product-safety-coverage.js";
+import { capturePairCacheInstallation, readPairMatchResults, writePairMatchResults, mergeSafetyResults } from "./product-pair-cache.js";
 import { findBarcodeMatches, normalizeProductBarcodes } from "./product-barcodes.js";
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import { vertexAI } from "@genkit-ai/google-genai";
 import { isPermanentProviderFailure, runAnalysisAttempts } from "./analysis-attempts.js";
 import { type Part } from "genkit";
 import { db, functionsAi } from "./firebase-admin.js";
-import { AI_CONFIG, FIRESTORE_COLLECTIONS } from "./safety-gate-config.js";
+import { AI_CONFIG, FIRESTORE_COLLECTIONS, MATCHER_POLICY_VERSION } from "./safety-gate-config.js";
 import {
   AnalysisPromptInputSchema,
   AnalysisMatchesSchema,
+  createCandidateAnalysisSchema,
   ProductInputSchema,
   type AnalysisPromptInput,
   type ProductInput,
@@ -25,6 +28,7 @@ import {
 } from "./safety-gate-checker-media.js";
 import {
   retrieveAlertsWithRag,
+  retrieveAlertsByGtins,
 } from "./safety-gate-checker-retrieval.js";
 import {
   buildComparisonPrompt,
@@ -104,7 +108,7 @@ function buildMatchCacheKey(product: ProductInput, alerts: NormalizedAlert[]): {
   const productFingerprint = buildProductFingerprint(product);
   const alertSignature = buildAlertSignature(alerts);
   const docId = hashValue({
-    reliabilityVersion: 6,
+    reliabilityVersion: MATCHER_POLICY_VERSION,
     shop,
     productId,
     productFingerprint,
@@ -262,13 +266,14 @@ async function buildPromptParts(
 }
 
 async function analyzeProductMatches(product: ProductInput, alerts: NormalizedAlert[], comparisonPrompt: string, loadMedia: (url: string) => Promise<EncodedImage | null>) {
+  const outputSchema = createCandidateAnalysisSchema(alerts.map(alert => alert.id));
   const promptInput = await buildPromptParts(product, alerts, loadMedia);
   promptInput.comparisonPrompt = comparisonPrompt;
   const attempts = [
-    { model: AI_CONFIG.primaryModel, promptType: "multimodal", label: "2.5-flash multimodal" },
-    { model: AI_CONFIG.primaryModel, promptType: "text", label: "2.5-flash text-only" },
-    { model: AI_CONFIG.fallbackModel, promptType: "multimodal", label: "2.5-flash-lite multimodal" },
-    { model: AI_CONFIG.fallbackModel, promptType: "text", label: "2.5-flash-lite text-only" },
+    { model: AI_CONFIG.primaryModel, promptType: "multimodal", label: "3.1-flash-lite multimodal" },
+    { model: AI_CONFIG.primaryModel, promptType: "text", label: "3.1-flash-lite text-only" },
+    { model: AI_CONFIG.fallbackModel, promptType: "multimodal", label: "3.5-flash-lite multimodal" },
+    { model: AI_CONFIG.fallbackModel, promptType: "text", label: "3.5-flash-lite text-only" },
   ] as const;
 
   return runAnalysisAttempts(attempts, async (attempt, abortSignal) => {
@@ -295,7 +300,17 @@ async function analyzeProductMatches(product: ProductInput, alerts: NormalizedAl
       ...renderedPrompt,
       messages: attempt.promptType === "text" ? renderedPrompt.messages : appendMediaMessages(renderedPrompt.messages ?? [], input),
       model: vertexAI.model(attempt.model),
+      config: { ...renderedPrompt.config, location: "global" },
       abortSignal,
+      output: { format: "json", schema: outputSchema },
+    });
+    console.info("Safety Gate model usage", {
+      shop: product.shop || null,
+      model: attempt.model,
+      inputTokens: response.usage?.inputTokens ?? null,
+      outputTokens: response.usage?.outputTokens ?? null,
+      thoughtsTokens: response.usage?.thoughtsTokens ?? null,
+      cachedContentTokens: response.usage?.cachedContentTokens ?? null,
     });
     return { response, analysis };
   }, (attempt, error) => {
@@ -334,9 +349,11 @@ export async function checkProductAgainstAlerts(
       recommendation: "A validated product barcode matches a Safety Gate alert. Review the affected variant, model and batch before deciding.",
       analysis: { ...base.analysis, candidateAlertsConsidered: candidateAlerts.length } };
   }
-  if (candidateAlerts.length > 12) {
+  // Vertex rejects complex response schemas containing too many long candidate
+  // IDs. Keep the enum (and strict identity validation) but bound each request.
+  if (candidateAlerts.length > 4) {
     const chunks: NormalizedAlert[][] = [];
-    for (let offset = 0; offset < candidateAlerts.length; offset += 12) chunks.push(candidateAlerts.slice(offset, offset + 12));
+    for (let offset = 0; offset < candidateAlerts.length; offset += 4) chunks.push(candidateAlerts.slice(offset, offset + 4));
     const batches = await mapBounded(chunks, 2, (chunk) => checkProductAgainstAlerts(product, chunk, loadMedia));
     const warnings = batches.flatMap((result) => result.warnings);
     return {
@@ -352,9 +369,21 @@ export async function checkProductAgainstAlerts(
     return createNoAlertsResult(productImageCount);
   }
 
+  const pairInstallation = await capturePairCacheInstallation(db, product);
   const cachedResult = await readCachedMatchResult(product, candidateAlerts);
   if (cachedResult) {
+    await writePairMatchResults(db, product, candidateAlerts, cachedResult, pairInstallation);
     return cachedResult;
+  }
+
+  const pairHits = await readPairMatchResults(db, product, candidateAlerts, pairInstallation);
+  if (pairHits.length) {
+    console.info("Using stored Safety Gate pair results", { shop: product.shop, productId: product.productId, pairs: pairHits.length });
+    const completed = new Set(pairHits.map(hit => hit.alertId));
+    const missing = candidateAlerts.filter(alert => !completed.has(alert.id));
+    const results = pairHits.map(hit => hit.result);
+    if (missing.length) results.push(await checkProductAgainstAlerts(product, missing, loadMedia));
+    return mergeSafetyResults(results, candidateAlerts.length);
   }
 
   const comparisonPrompt = buildComparisonPrompt(product, candidateAlerts);
@@ -376,6 +405,7 @@ export async function checkProductAgainstAlerts(
   const matches = parseAnalysisMatches(analysisResult.response);
   const result = buildSafetyCheckResult(matches, candidateAlerts, analysisResult.analysis, product);
   await writeCachedMatchResult(product, candidateAlerts, result);
+  await writePairMatchResults(db, product, candidateAlerts, result, pairInstallation);
   return result;
 }
 
@@ -387,8 +417,20 @@ export const checkProductSafety = functionsAi.defineFlow(
   },
   async (product) => {
     console.log("Checking product safety:", product.name);
-    const candidateAlerts = await retrieveAlertsWithRag(product);
-    return checkProductAgainstAlerts(product, candidateAlerts);
+    return withProductSafetyCoverage(db, product, async () => {
+      const candidateAlerts = await retrieveAlertsWithRag(product);
+      return checkProductAgainstAlerts(product, candidateAlerts);
+    }, async (publicResult) => {
+      // Storefront JSON often omits barcodes. Its full similarity result can be
+      // reused while Admin-only GTIN evidence is checked independently.
+      const exactAlerts = await retrieveAlertsByGtins(product);
+      if (!exactAlerts.length) return publicResult;
+      const exactResult = await checkProductAgainstAlerts(product, exactAlerts);
+      const result = mergeSafetyResults([publicResult, exactResult],
+        publicResult.analysis.candidateAlertsConsidered + exactAlerts.length);
+      result.warnings.sort((a, b) => Number(b.matchBasis === "gtin") - Number(a.matchBasis === "gtin"));
+      return result;
+    });
   },
 );
 

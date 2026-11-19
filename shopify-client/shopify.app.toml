@@ -2,7 +2,7 @@
 
 client_id = "0f8c446d88af9f13ac49947a87c47207"
 name = "ZeroRecall"
-application_url = "https://safety-gate-shopify-29849753697.europe-west1.run.app"
+application_url = "https://zerorecall-29849753697.europe-west1.run.app"
 embedded = true
 handle = "safety-gate-monitor-eu"
 
@@ -12,12 +12,27 @@ automatically_update_urls_on_dev = true
 [webhooks]
 api_version = "2026-07"
 
+[[webhooks.subscriptions]]
+compliance_topics = ["customers/data_request"]
+uri = "https://zerorecall-29849753697.europe-west1.run.app/webhooks/customers/data_request"
+
+[[webhooks.subscriptions]]
+compliance_topics = ["customers/redact"]
+uri = "https://zerorecall-29849753697.europe-west1.run.app/webhooks/customers/redact"
+
+[[webhooks.subscriptions]]
+compliance_topics = ["shop/redact"]
+uri = "https://zerorecall-29849753697.europe-west1.run.app/webhooks/shop/redact"
+
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
 scopes = "read_products"
 
 [auth]
-redirect_urls = ["https://safety-gate-shopify-29849753697.europe-west1.run.app/auth/callback", "https://safety-gate-shopify-29849753697.europe-west1.run.app/auth/shopify/callback", "https://safety-gate-shopify-29849753697.europe-west1.run.app/api/auth/callback"]
+redirect_urls = ["https://zerorecall-29849753697.europe-west1.run.app/auth/callback", "https://zerorecall-29849753697.europe-west1.run.app/auth/shopify/callback", "https://zerorecall-29849753697.europe-west1.run.app/api/auth/callback"]
 
 [pos]
 embedded = false
+
+[app_preferences]
+url = "https://zerorecall-29849753697.europe-west1.run.app/app/settings"

@@ -486,6 +486,11 @@
     "state_resolved": "Ratkaistu",
     "state_dismissed": "Hylätty",
     "state_unknown": "Tarkista sovelluksesta nykyinen tila",
-    "entire_public_catalog": "Koko julkinen tuoteluettelo"
+    "entire_public_catalog": "Koko julkinen tuoteluettelo",
+    "weekly_new_period": "Luotu tällä ajanjaksolla",
+    "weekly_open_snapshot": "Avoinna nyt, myös aiemmilta ajanjaksoilta",
+    "new_products_checked": "Uudet tarkistetut tuotteet",
+    "safety_gate_records_imported": "Uudet RAPEXiin tuodut tietueet",
+    "weekly_new_products_explanation": "Uudet tarkistetut tuotteet on lisätty seurantaan ja tarkistettu onnistuneesti tällä ajanjaksolla. Kukin tuote lasketaan vain kerran."
   }
 }

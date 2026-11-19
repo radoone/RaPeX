@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { catalogCheckStates } from "../app/services/catalog-state";
+import { catalogCheckStates, pendingAutomaticProductIds } from "../app/services/catalog-state";
 import { monitoringState } from "../app/services/monitoring-state";
 import {
+  officialRiskDetails,
   officialSource,
   parseEvidence,
   isWaitingForSupplier,
@@ -11,6 +12,7 @@ import {
 import {
   reviewFilters,
   matchesReviewFilters,
+  summarizeReviewStatuses,
 } from "../app/services/review-records";
 import { exclusionPreview } from "../app/services/exclusion-preview";
 import { getAlertDecisionTransition } from "../app/services/alert-decision";
@@ -232,4 +234,45 @@ describe("report scope and exclusions", () => {
     );
     expect(formatActorId(undefined, "merchant")).toBe("merchant");
   });
+});
+
+it("keeps a legacy market withdrawal out of the official risk description", () => {
+  const danger = "Category of measure(s): Withdrawal of the product from the market";
+  const risk = "The phthalate may harm the health of children.";
+  expect(officialRiskDetails({ danger, risk_legal_provision: risk + "\r\n\r\nAccording to the REACH Regulation..." }))
+    .toEqual({ danger: risk, measures: danger });
+  expect(officialRiskDetails({ danger, risk_legal_provision: "The product does not comply with the regulation." }))
+    .toEqual({ danger: "", measures: danger });
+  expect(officialRiskDetails({ danger: risk, measures: "Withdrawal" }))
+    .toEqual({ danger: risk, measures: "Withdrawal" });
+});
+
+it("recognizes only a live automatic job for the current product version and installation", () => {
+  const now = Date.parse("2026-11-18T10:00:00Z");
+  const version = "2026-11-18T09:30:00Z";
+  const products = ["queued", "changed", "old-installation", "exhausted", "stalled", "completed"].map(id => ({ id, updatedAt: version }));
+  const job = { sourceUpdatedAt: version, createdAt: now - 60_000, updatedAt: now - 60_000 };
+  expect(pendingAutomaticProductIds(products, [
+    { ...job, productId: "queued", status: "queued" },
+    { ...job, productId: "changed", status: "processing", sourceUpdatedAt: "2026-11-18T08:00:00Z" },
+    { ...job, productId: "old-installation", status: "queued", createdAt: now - 120_000 },
+    { ...job, productId: "exhausted", status: "retrying", attemptCount: 8 },
+    { ...job, productId: "stalled", status: "processing", updatedAt: now - 34 * 60_000 },
+    { ...job, productId: "completed", status: "completed" },
+  ], now, now - 90_000)).toEqual(["queued"]);
+});
+
+it("keeps supplier waits separate and filters both kinds of closed findings", () => {
+  const records = [
+    { status: "active" },
+    { status: "active", resolutionType: "contacted_supplier" },
+    { status: "resolved" },
+    { status: "dismissed" },
+  ];
+  expect(summarizeReviewStatuses(records)).toEqual({ needsReview: 1, waiting: 1, closed: 2 });
+  const filters = { from: "", to: "", status: "" };
+  expect(records.filter(record => matchesReviewFilters(record, { ...filters, status: "active" }))).toHaveLength(2);
+  expect(records.filter(record => matchesReviewFilters(record, { ...filters, status: "needs_review" }))).toEqual([records[0]]);
+  expect(records.filter(record => matchesReviewFilters(record, { ...filters, status: "waiting_for_supplier" }))).toEqual([records[1]]);
+  expect(records.filter(record => matchesReviewFilters(record, { ...filters, status: "closed" }))).toEqual(records.slice(2));
 });

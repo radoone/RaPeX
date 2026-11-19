@@ -47,13 +47,17 @@ export const FIRESTORE_COLLECTIONS = {
 } as const;
 
 export const AI_CONFIG = {
-  primaryModel: "gemini-2.5-flash",
-  fallbackModel: "gemini-2.5-flash-lite",
+  primaryModel: "gemini-3.1-flash-lite",
+  fallbackModel: "gemini-3.5-flash-lite",
   maxProductImages: 2,
   maxAlertImages: 4,
   matchCacheTtlDays: 30,
   checkHistoryTtlDays: 90,
 } as const;
+
+// One budget across every photo, not a new allowance for each image query.
+export const RAG_CANDIDATE_LIMITS = { text: 3, image: 3 } as const;
+export const MATCHER_POLICY_VERSION = 7;
 
 export const SAFETY_GATE_HEADERS = {
   accept: "application/json",

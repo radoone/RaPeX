@@ -18,10 +18,9 @@ Configure these server-side Shopify app values in the host's secret/environment 
 ```text
 FIREBASE_FUNCTIONS_BASE_URL=https://europe-west1-<project-id>.cloudfunctions.net
 SAFETY_GATE_API_KEY=<same environment-specific secret value>
-SHOPIFY_SESSION_STORAGE=firestore
 ```
 
-The hosted app service account needs access to the private `shopify_sessions` collection. Firebase workers also need Firestore access and `roles/cloudtasks.enqueuer` for task creation. Do not put API keys or Shopify offline access tokens in source control, public task documents, URLs, or browser code.
+The app and local dev runtimes both use Firestore (`shopify_sessions`) unconditionally for Shopify OAuth sessions, encrypted using `SHOPIFY_SESSION_ENCRYPTION_KEY`, `SAFETY_GATE_API_KEY`, or `SHOPIFY_API_SECRET`. Both the app service account and local ADC (`gcloud auth application-default login`) need Firestore access to `shopify_sessions`. Firebase workers also need Firestore access and `roles/cloudtasks.enqueuer` for task creation. Do not put API keys or Shopify offline access tokens in source control, public task documents, URLs, or browser code.
 
 ## Shopify events and background work
 

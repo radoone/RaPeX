@@ -1,3 +1,4 @@
+import { loadOfflineAccessToken as loadCurrentOfflineAccessToken } from "./shopify-offline-session.js";
 import { createDecipheriv, createHash } from "node:crypto";
 import { FieldValue, Timestamp, type DocumentReference } from "firebase-admin/firestore";
 import { getFunctions } from "firebase-admin/functions";
@@ -10,10 +11,10 @@ import { normalizeProductBarcodes } from "./product-barcodes.js";
 import { FIRESTORE_COLLECTIONS } from "./safety-gate-config.js";
 import type { MerchantProductUpsertInput, ProductCheckInput } from "./safety-gate-types.js";
 import { merchantCatalogAuditTaskId } from "./monitoring-task-id.js";
-import { runMerchantDeltaMonitoringForShop, upsertMerchantProductsBatch } from "./merchant-monitoring.js";
+import { runMerchantCatalogProductPage, upsertMerchantProductsBatch } from "./merchant-monitoring.js";
+import { verifiedPublicScanDomains } from "./public-scan-onboarding-cache.js";
 
 const PAGE_SIZE = 100;
-const ALERT_PAGE_SIZE = 500;
 const MAX_TASK_ATTEMPTS = 8;
 const AUDIT_RUNS = "initial_catalog_runs";
 const CATALOG_AUDIT_QUEUE = getFunctions().taskQueue<MerchantCatalogAuditTaskPayload>(
@@ -62,7 +63,7 @@ function authorized(request: RequestShape, response: ResponseShape): boolean {
 function toProductInput(node: Record<string, any>, shop: string): MerchantProductUpsertInput {
   const tags = Array.isArray(node.tags) ? node.tags.filter((tag: unknown): tag is string => typeof tag === "string") : [];
   const category = String(node.productType || tags.find((tag: string) => ["toys", "electronics", "clothing", "cosmetics", "food", "jewelry"].includes(tag.toLowerCase())) || "general").toLowerCase();
-  const description = String(node.description || node.descriptionHtml || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  const description = String(node.descriptionHtml || node.description || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
   const imageUrls = [...new Set([
     node.featuredImage?.url,
     ...(node.images?.nodes || []).map((image: any) => image?.url),
@@ -125,17 +126,12 @@ export function decryptStoredShopifyToken(stored: unknown): string {
 }
 
 async function loadOfflineAccessToken(shop: string): Promise<string> {
-  const sessions = await db.collection("shopify_sessions")
-    .where("shop", "==", shop)
-    .where("isOnline", "==", false)
-    .limit(1)
-    .get();
-  const token = sessions.docs[0]?.get("accessToken");
-  return decryptStoredShopifyToken(token);
+  return loadCurrentOfflineAccessToken(db, shop);
 }
 
 async function loadShopifyProductPage(shop: string, cursor: string | null): Promise<{
   products: MerchantProductUpsertInput[];
+  publicScanDomains: string[];
   hasNextPage: boolean;
   endCursor: string | null;
 }> {
@@ -146,6 +142,7 @@ async function loadShopifyProductPage(shop: string, cursor: string | null): Prom
     headers: { "Content-Type": "application/json", "X-Shopify-Access-Token": accessToken },
     body: JSON.stringify({
       query: `query InitialCatalogAudit($first: Int!, $after: String) {
+        shop { myshopifyDomain primaryDomain { host } }
         products(first: $first, after: $after, sortKey: UPDATED_AT, reverse: true) {
           pageInfo { hasNextPage endCursor }
           nodes {
@@ -166,11 +163,13 @@ async function loadShopifyProductPage(shop: string, cursor: string | null): Prom
   }
   const connection = payload.data?.products;
   if (!connection) throw new Error("Shopify did not return a catalog page");
+  const publicScanDomains = verifiedPublicScanDomains(shop, payload.data?.shop);
   const request = (query: string, variables: Record<string, unknown>) => requestShopifyBarcodes(shop, accessToken, query, variables);
   const products = await mapBounded(connection.nodes || [], 4, async (node: Record<string, any>) =>
     toProductInput({ ...node, barcodes: await completeShopifyBarcodes(node, request) }, shop));
   return {
     products,
+    publicScanDomains,
     hasNextPage: Boolean(connection.pageInfo?.hasNextPage),
     endCursor: typeof connection.pageInfo?.endCursor === "string" ? connection.pageInfo.endCursor : null,
   };
@@ -292,8 +291,9 @@ async function setRootProgress(shop: string, values: Record<string, unknown>, ru
 async function completeAudit(shop: string, run: DocumentReference): Promise<void> {
   const activityRef = merchantRef(shop).collection(FIRESTORE_COLLECTIONS.subActivityLogs).doc();
   await db.runTransaction(async (transaction) => {
-    const merchant = await transaction.get(merchantRef(shop));
+    const [merchant, audit] = await Promise.all([transaction.get(merchantRef(shop)), transaction.get(run)]);
     if (!merchant.exists || merchant.get("installationRetiredAt") || merchant.get("initialScanRunId") !== run.id) return;
+    if (!(audit.get("baselineAt") instanceof Timestamp)) throw new Error("Catalog baseline is missing");
     transaction.set(run, {
       status: "completed",
       completedAt: FieldValue.serverTimestamp(),
@@ -305,6 +305,9 @@ async function completeAudit(shop: string, run: DocumentReference): Promise<void
       initialScanCompletedAt: FieldValue.serverTimestamp(),
       freeScanUsed: true,
       freeScanCompletedAt: FieldValue.serverTimestamp(),
+      monitoringBaselineAt: audit.get("baselineAt"),
+      lastRapexChangeId: FieldValue.delete(),
+      lastRapexChangeAt: FieldValue.delete(),
       updatedAt: FieldValue.serverTimestamp(),
     }, { merge: true });
     transaction.set(activityRef, {
@@ -332,7 +335,7 @@ export async function handleMerchantCatalogAuditTask(payload: MerchantCatalogAud
     if (!merchant.exists || merchant.get("installationRetiredAt") || merchant.get("initialScanRunId") !== runId) return { kind: "finished" as const };
     if (!snapshot.exists) return { kind: "missing" as const };
     const data = snapshot.data() || {};
-    if (data.status === "completed" || data.status === "failed") return { kind: "finished" as const };
+    if (data.status === "completed" || data.status === "failed" || data.status === "cancelled") return { kind: "finished" as const };
     const current = stateTask(shop, runId, data);
     if (!current) return { kind: "invalid" as const };
     if (current.phase !== payload.phase || current.pageIndex !== payload.pageIndex) return { kind: "stale" as const, current };
@@ -368,7 +371,7 @@ export async function handleMerchantCatalogAuditTask(payload: MerchantCatalogAud
     if (payload.phase === "import") {
       const cursor = typeof data.cursor === "string" ? data.cursor : null;
       const page = await loadShopifyProductPage(shop, cursor);
-      if (page.products.length) await upsertMerchantProductsBatch(page.products);
+      if (page.products.length) await upsertMerchantProductsBatch(page.products, page.publicScanDomains);
       const fetched = Number(data.productsFetched || 0) + page.products.length;
       const imported = Number(data.productsImported || 0) + page.products.length;
       if (!page.products.length && fetched === 0) {
@@ -389,21 +392,15 @@ export async function handleMerchantCatalogAuditTask(payload: MerchantCatalogAud
         next = { shop, runId, phase: "monitor", pageIndex: 0 };
         await setRun({
           phase: next.phase, pageIndex: 0, cursor: FieldValue.delete(),
+          baselineAt: FieldValue.serverTimestamp(), catalogProductCursor: null,
           productsFetched: fetched, productsImported: imported, status: "queued",
           leaseExpiresAt: FieldValue.delete(), heartbeatAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp(),
         });
         await setRootProgress(shop, { initialScanStatus: "scanning", initialScanProductsFetched: fetched, initialScanProductsImported: imported }, runId);
       }
     } else {
-      const result = await runMerchantDeltaMonitoringForShop({
-        shop,
-        allHistory: payload.pageIndex === 0,
-        limit: ALERT_PAGE_SIZE,
-        triggerMode: "manual",
-        runId: `${runId}-monitor-${payload.pageIndex}`,
-        monitoringRunCollection: "initial_catalog_monitoring_pages",
-        checkpointScope: `catalog-${runId}`,
-      });
+      if (!(data.baselineAt instanceof Timestamp)) throw new Error("Catalog baseline is missing; restart the initial audit");
+      const result = await runMerchantCatalogProductPage(shop, runId, typeof data.catalogProductCursor === "string" ? data.catalogProductCursor : null);
       const alertsScanned = Number(data.rapexAlertsScanned || 0) + result.rapexAlertsScanned;
       const productsScanned = Number(data.productsScanned || 0) + result.productsScanned;
       const alertsCreated = Number(data.alertsCreated || 0) + result.alertsCreated;
@@ -412,13 +409,13 @@ export async function handleMerchantCatalogAuditTask(payload: MerchantCatalogAud
         await setRun({
           phase: next.phase, pageIndex: next.pageIndex, status: "queued",
           rapexAlertsScanned: alertsScanned, productsScanned, alertsCreated,
-          lastMonitorCheckpoint: result.checkpoint, leaseExpiresAt: FieldValue.delete(),
+          catalogProductCursor: result.lastProductId, leaseExpiresAt: FieldValue.delete(),
           heartbeatAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp(),
         });
       } else {
         await setRun({
           rapexAlertsScanned: alertsScanned, productsScanned, alertsCreated,
-          lastMonitorCheckpoint: result.checkpoint, leaseExpiresAt: FieldValue.delete(),
+          catalogProductCursor: result.lastProductId, leaseExpiresAt: FieldValue.delete(),
           heartbeatAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp(),
         });
         await completeAudit(shop, ref);

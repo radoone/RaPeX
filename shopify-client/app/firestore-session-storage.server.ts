@@ -1,3 +1,4 @@
+import { ensureOfflineSession, isShopifyOfflineReauthError } from "../../firebase/functions/src/shopify-offline-session";
 import { createCipheriv, createDecipheriv, createHash, randomBytes } from "node:crypto";
 import { Session } from "@shopify/shopify-api";
 import type { SessionStorage } from "@shopify/shopify-app-session-storage";
@@ -57,9 +58,11 @@ function asDate(value: unknown): Date | undefined {
 
 function toShopifySession(data: Record<string, unknown>): Session {
   const accessToken = decryptSessionAccessToken(data.accessToken);
+  const refreshToken = decryptSessionAccessToken(data.refreshToken);
   return new Session({
     ...data,
     ...(accessToken !== undefined ? { accessToken } : {}),
+    ...(refreshToken !== undefined ? { refreshToken } : {}),
     id: String(data.id || ""),
     shop: String(data.shop || ""),
     state: String(data.state || ""),
@@ -71,7 +74,7 @@ function toShopifySession(data: Record<string, unknown>): Session {
 
 /** Durable Shopify OAuth sessions for hosted app and task-worker runtimes. */
 export class FirestoreSessionStorage implements SessionStorage {
-  constructor(private readonly db: Firestore) {}
+  constructor(private readonly db: Firestore, private readonly rotateOfflineTokens = false) {}
 
   private sessionRef(id: string) {
     return this.db.collection(SESSION_COLLECTION).doc(encodeURIComponent(id));
@@ -82,12 +85,25 @@ export class FirestoreSessionStorage implements SessionStorage {
     await this.sessionRef(session.id).set({
       ...serialized,
       ...(serialized.accessToken ? { accessToken: encryptSessionAccessToken(serialized.accessToken) } : {}),
+      ...(serialized.refreshToken ? { refreshToken: encryptSessionAccessToken(serialized.refreshToken) } : {}),
       updatedAt: new Date(),
     });
     return true;
   }
 
   async loadSession(id: string): Promise<Session | undefined> {
+    if (this.rotateOfflineTokens && id.startsWith("offline_")) {
+      try {
+        const session = await ensureOfflineSession(this.db, id);
+        return session ? toShopifySession(session) : undefined;
+      } catch (error) {
+        if (isShopifyOfflineReauthError(error)) {
+          console.warn("Shopify offline session requires reauthorization; returning undefined for token exchange", { id });
+          return undefined;
+        }
+        throw error;
+      }
+    }
     const snapshot = await this.sessionRef(id).get();
     if (!snapshot.exists) return undefined;
     return toShopifySession(snapshot.data() || {});

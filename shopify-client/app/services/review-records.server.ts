@@ -3,7 +3,7 @@ import { firestore } from "../firestore.server";
 import { withOfficialReferences } from "./review-evidence.server";
 import { parseEvidence } from "./review-evidence";
 import { toIsoString } from "./monitoring-runs";
-import { type ReviewFilters, matchesReviewFilters, matchesReviewSearch, selectedDecisionEvents } from "./review-records";
+import { type ReviewFilters, matchesReviewFilters, matchesReviewSearch, selectedDecisionEvents, summarizeReviewStatuses } from "./review-records";
 export { reviewFilters } from "./review-records";
 export async function reviewRecords(
   shop: string,
@@ -80,10 +80,8 @@ export async function reviewRecords(
   return {
     records: previewLimit ? selected.slice(0, previewLimit) : selected,
     total: selected.length,
-    summary: {
-      active: selected.filter((alert) => alert.status === "active").length,
-      documented: selected.filter((alert) => alert.status === "resolved" || alert.status === "dismissed").length,
-    },
+    summary: summarizeReviewStatuses(selected),
+    shopSummary: summarizeReviewStatuses(alerts),
     scope: {
       from: timestamps[0] || null,
       to: timestamps.at(-1) || null,

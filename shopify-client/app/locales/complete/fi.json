@@ -612,7 +612,13 @@
       "progress": "Tuotu {{imported}} / {{fetched}} tuotetta; verrattu {{scanned}} tuotetta, joissa {{alerts}} Safety Gate -hälytystä tähän mennessä.",
       "stepAudit": "3. Valmistele GPSR-tarkastuspolku ja vaatimustenmukaisuustila",
       "stepImport": "1. Tuo tuotteet Shopifysta",
-      "stepScan": "2. Vertaa Safety Gate -tietokantaan (yli 35 000 tietuetta)"
+      "stepScan": "2. Vertaa Safety Gate -tietokantaan (yli 35 000 tietuetta)",
+      "checkingLabel": "Tarkistetut tuotteet",
+      "checkingNote": "Tuotujen tuotteiden katalogin tarkistaminen Safety Gatea vastaan. Edistyminen päivittyy erien valmistuessa.",
+      "importingLabel": "Tuodut tuotteet",
+      "importingNote": "Tuotteiden tuominen Shopifysta. Kokonaismäärä tiedetään, kun tuonti valmistuu.",
+      "retrying": "Tarkistuksessa ilmeni ongelma, ja se yritetään uudelleen. Valmistunut työ säilytetään.",
+      "retryingHeading": "Tarkastuksessa ilmeni ongelma"
     },
     "metricsCard": {
       "activeAlertsHeading": "Aktiiviset hälytykset",
@@ -1438,5 +1444,110 @@
     "label": "Viivakoodin täsmällinen vastaavuus",
     "help": "Tuoteversion tarkistettu viivakoodi vastaa Safety Gate -tietuetta. Tarkista malli ja kyseinen erä ennen päätöstä."
   },
-  "ownerTestAccess": "Omistajan hyväksymä testaus — maksullista tilausta ei tarvita"
+  "ownerTestAccess": "Omistajan hyväksymä testaus — maksullista tilausta ei tarvita",
+  "catalogOverview": {
+    "coverage": "{{checked}} / {{total}}",
+    "coverageHelp": "Jotkin tuotteet ovat uusia tai muuttuneet edellisen tarkistuksen jälkeen. Avaa luettelo nähdäksesi, mitä on vielä tarkistettava.",
+    "currentProducts": "Tuotteet, joilla on nykyinen tulos",
+    "initialAudit": "Katalogin alkutarkistus",
+    "lastCheck": "Viimeisin onnistunut katalogin tarkistus",
+    "monitoring": {
+      "delayed": "Tarkistus myöhässä",
+      "enabled": "Käynnissä automaattisesti",
+      "failed": "Viimeisin tarkistus epäonnistui",
+      "paused": "Keskeytetty",
+      "preview": "Kehityksen esikatselu",
+      "processing": "Tarkistus käynnissä",
+      "unknown": "Toiminta vahvistamaton",
+      "unverified": "Suunnitelman vahvistus ei saatavilla"
+    },
+    "monitoringHelp": {
+      "delayed": "Viimeisin automaattinen tarkistus tehtiin yli 48 tuntia sitten. Jos tila jatkuu, ota yhteyttä tukeen.",
+      "failed": "Viimeisimmät onnistuneet tulokset ovat edelleen saatavilla. Jos seuraavakin tarkistus epäonnistuu, ota yhteyttä tukeen.",
+      "paused": "Valitse aktiivinen Shopify-sopimus jatkaaksesi automaattisia tarkistuksia.",
+      "preview": "Ajastetut tarkistukset edellyttävät vahvistettua Shopify-sopimusta.",
+      "processing": "Tarkistus on jonossa tai käynnissä. Tulokset näkyvät, kun se valmistuu.",
+      "unknown": "Tietueissa ei ole yhtään suoritettua automaattista tarkistusta. Jos tilan päivittäminen ei auta, ota yhteyttä tukeen.",
+      "unverified": "Päivitä vahvistaaksesi Shopify-sopimuksesi. Jos tila jatkuu, ota yhteyttä tukeen."
+    },
+    "monitoringRun": "Tarkista uudet tai päivitetyt Safety Gate -hälytykset",
+    "noActionHelp": "Nykyinen katalogisi on katettu, eikä mahdollisia osumia odota tarkistustasi.",
+    "noCompletedCheck": "Tietueissa ei ole yhtään suoritettua katalogin tarkistusta",
+    "purpose": "ZeroRecall tarkistaa Shopify-katalogisi EU:n <portalLink>Safety Gate</portalLink> -hälytyksiä vastaan ja näyttää, mitkä mahdolliset osumat vaativat tarkistusta.",
+    "refreshStatus": "Päivitä seurannan tila",
+    "reviewHelp": "Vertaa tuotettasi viralliseen hälytykseen ja kirjaa sitten päätöksesi.",
+    "reviewNext": "Tarkista seuraava osuma"
+  },
+  "findingOverview": {
+    "matches": "Mitkä täsmäävät",
+    "missing": "Puuttuvat tiedot: {{fields}}.",
+    "noConfirmedIdentifiers": "Vastaavia tunnisteita ei vahvistettu.",
+    "officialRisk": "Riski Safety Gate -hälytyksessä",
+    "riskUnavailable": "Riskitiedot eivät ole saatavilla tässä tallennetussa hälytyksessä.",
+    "saveFailed": "Päätöstä ei voitu tallentaa. Yritä uudelleen.",
+    "verify": "Mitä tarkistetaan",
+    "verifyApplicability": "Tarkista, että virallinen hälytys koskee tuotettasi."
+  },
+  "pendingCoverage": {
+    "automaticCount_few": "{{count}} tuotteella on automaattisia tarkistuksia jonossa.",
+    "automaticCount_many": "{{count}} tuotteella on automaattisia tarkistuksia jonossa.",
+    "automaticCount_one": "{{count}} tuotteella on automaattinen tarkistus jonossa.",
+    "automaticCount_other": "{{count}} tuotteella on automaattisia tarkistuksia jonossa.",
+    "automaticCount_plural": "{{count}} tuotteella on automaattisia tarkistuksia jonossa.",
+    "automaticOnly": "ZeroRecall tarkistaa nämä tuotteet automaattisesti. Toimenpiteitä ei tarvita.",
+    "batchResult": "Tarkistukset valmiina: {{checked}}. Epäonnistuneet tarkistukset: {{failed}}.",
+    "checkBatch_few": "Tarkista {{count}} tuotetta",
+    "checkBatch_many": "Tarkista {{count}} tuotetta",
+    "checkBatch_one": "Tarkista {{count}} tuote",
+    "checkBatch_other": "Tarkista {{count}} tuotetta",
+    "checkBatch_plural": "Tarkista {{count}} tuotetta",
+    "complete": "Jokaisella nykyisellä Shopify-tuoteversiolla on tallennettu tulos.",
+    "current": "Nykyiset tulokset {{checked}}/{{total}} tuotteesta.",
+    "empty": "Tuotteet näkyvät täällä, kun olet lisännyt ne Shopifyhin.",
+    "emptyTitle": "Ei tarkistettavia tuotteita vielä",
+    "filters": "Haku ja suodatus",
+    "manualHelp": "Tarkista tuotteet nyt, jos ZeroRecallilla ei ole vahvistettua automaattista tarkistusta.",
+    "pendingTab": "Odottaa tarkistusta",
+    "planRequired": "Aktiivinen Shopify-sopimus vaaditaan jäljellä olevien tuotteiden tarkistamiseen.",
+    "planUnconfirmed": "Automaattisia tarkistuksia ei ole vahvistettu jäljellä oleville tuotteille. Tarkista sopimuksesi tila Valvonta-asetuksista.",
+    "row": {
+      "automatic": "Automaattinen tarkistus jonossa tai käynnissä",
+      "planRequired": "Aktiivinen Shopify-sopimus vaaditaan",
+      "planUnconfirmed": "Automaattinen tarkistus ja sopimuksen tila vahvistamatta",
+      "unconfirmed": "Automaattista tarkistusta ei ole vahvistettu"
+    },
+    "title_few": "{{count}} tuotetta odottaa tarkistusta",
+    "title_many": "{{count}} tuotetta odottaa tarkistusta",
+    "title_one": "{{count}} tuote odottaa tarkistusta",
+    "title_other": "{{count}} tuotetta odottaa tarkistusta",
+    "title_plural": "{{count}} tuotetta odottaa tarkistusta",
+    "viewAll": "Näytä kaikki tuotteet"
+  },
+  "reviewOverview": {
+    "closed": "Suljettu (ratkaistu tai hylätty)",
+    "current": "Nykyiset havainnot",
+    "decisions": "Tallennetut päätökset",
+    "emptyDecisions": "Päätöksiä ei ole vielä tallennettu.",
+    "filters": "Suodattimet",
+    "open": "Avoimet havainnot",
+    "report": "Havainnot tässä raportissa"
+  },
+  "settingsOverview": {
+    "active": "Aktiivinen",
+    "activePlan": "Aktiivinen Shopify-sopimus",
+    "delivery": {
+      "paused": "Toimitus on keskeytetty, kunnes valvonnan käyttöoikeus on aktiivinen.",
+      "unconfirmed": "Sähköpostin toimitustila on vahvistamaton."
+    },
+    "editEmail": "Muokkaa sähköpostiasetuksia",
+    "mondayEmail": "Maanantain yhteenveto",
+    "noActivePlan": "Ei aktiivista sopimusta",
+    "off": "Pois päältä",
+    "on": "Päällä",
+    "planUnverified": "Sopimusta ei vahvistettu",
+    "previousPlan": "Viimeksi vahvistettu sopimus: {{plan}}",
+    "recipient": "Lähetetty osoitteeseen {{email}}",
+    "testAccess": "Omistajan testikäyttö",
+    "weeklyHelp": "Lähetetään maanantaisin valvontatilasi ja avoimien löydösten kanssa."
+  }
 }

@@ -8,6 +8,7 @@ import { AlertBadge } from "./AlertBadge";
 import { StatusBadge } from "./StatusBadge";
 import type { ResolutionType } from "./AlertTable";
 import {
+  officialRiskDetails,
   officialSource,
   isWaitingForSupplier,
 } from "../services/review-evidence";
@@ -37,6 +38,8 @@ interface AlertDetailModalProps {
   onReactivate?: (alertId: string) => void;
   isLoading?: boolean;
   openOnMount?: boolean;
+  waitForDecisionSave?: boolean;
+  decisionSaveFailed?: boolean;
 }
 
 export function AlertDetailModal({
@@ -48,8 +51,10 @@ export function AlertDetailModal({
   onReactivate,
   isLoading = false,
   openOnMount = false,
+  waitForDecisionSave = false,
+  decisionSaveFailed = false,
 }: AlertDetailModalProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [isHydrated, setIsHydrated] = useState(false);
   const [lightbox, setLightbox] = useState<{ images: string[]; index: number; title: string } | null>(null);
   const selectedImage = lightbox?.images[lightbox.index] || null;
@@ -239,6 +244,22 @@ export function AlertDetailModal({
     },
   ];
 
+  const matchingFields = identifierRows.filter(row => row.status === "match").map(row => row.label);
+  const differentFields = identifierRows.filter(row => row.status === "mismatch").map(row => row.label);
+  const missingFields = identifierRows.filter(row => row.status === "unspecified").map(row => row.label);
+  const rawRiskLevel = fields.level || fields.alert_level || fields.risk_level;
+  const officialRiskLevel = typeof rawRiskLevel === "string" || typeof rawRiskLevel === "number"
+    ? String(rawRiskLevel)
+    : "";
+  const rawRiskTypes = fields.riskType || fields.alert_type;
+  const officialRiskTypes = typeof rawRiskTypes === "string"
+    ? [...new Set(rawRiskTypes.split(",").map(type => type.trim()).filter(Boolean))]
+    : [];
+  const { danger: officialDanger } = officialRiskDetails(fields);
+  const hasOfficialRisk = Boolean(officialRiskLevel || officialRiskTypes.length || officialDanger);
+  const closeWhenSubmitted = canRecordDecision && !waitForDecisionSave;
+  const listFormat = new Intl.ListFormat(i18n.language);
+
   // A completed check without a finding has no source record or review decision.
   if (isSafe && warnings.length === 0 && !alert.id) {
     return (
@@ -288,13 +309,9 @@ export function AlertDetailModal({
                 {t("analysis.reviewLayout.possibleMatch")}
               </div>
               <h2 className="review-modal__title">{alert.productTitle}</h2>
-              <p className="review-modal__intro">
-                {isActive
-                  ? isSafe
-                    ? t("analysis.sections.whatHappenedSafe")
-                    : t("analysis.sections.whatHappenedRisk")
-                  : t("analysis.sections.whatHappenedReviewed")}
-              </p>
+              {!isActive && (
+                <p className="review-modal__intro">{t("analysis.sections.whatHappenedReviewed")}</p>
+              )}
             </div>
             <div className="review-modal__badges">
               {isWaitingForSupplier(alert) ? (
@@ -302,32 +319,52 @@ export function AlertDetailModal({
               ) : (
                 <StatusBadge status={alert.status} />
               )}
-              {alert.riskLevel && (
-                <AlertBadge alertLevel={alert.riskLevel} showSeverity />
+              {isActive && (
+                <button
+                  type="button"
+                  className="review-modal__jump"
+                  onClick={() => document.getElementById(`${modalId}-decision`)?.focus()}
+                >
+                  {t("workspace.chooseOutcomeLink")}
+                </button>
               )}
             </div>
           </div>
 
-          {isActive && (
-            <div className="review-modal__steps">
-              {t("experience.reviewSteps")}{" "}
-              <button
-                type="button"
-                className="review-modal__jump"
-                onClick={() =>
-                  document.getElementById(`${modalId}-decision`)?.focus()
-                }
-              >
-                {t("workspace.chooseOutcomeLink")}
-              </button>
-            </div>
-          )}
-          {primaryWarning?.matchBasis === "gtin" && (
-            <section className="review-modal__section">
-              <s-badge tone="warning">{t("barcodeMatch.label")}</s-badge>
-              <p>{t("barcodeMatch.help")}</p>
+          <div className="review-evidence-summary">
+            <section>
+              <h3>{t("findingOverview.matches")}</h3>
+              <p>{matchingFields.length ? listFormat.format(matchingFields) : t("findingOverview.noConfirmedIdentifiers")}</p>
+              {primaryWarning?.matchBasis === "gtin" && <p>{t("barcodeMatch.help")}</p>}
             </section>
-          )}
+            <section>
+              <h3>{t("findingOverview.verify")}</h3>
+              {differentFields.length > 0 && (
+                <p>{t("workspace.differentIdentifiers", { fields: listFormat.format(differentFields) })}</p>
+              )}
+              {missingFields.length > 0 && (
+                <p>{t("findingOverview.missing", { fields: listFormat.format(missingFields) })}</p>
+              )}
+              <p>{t("findingOverview.verifyApplicability")}</p>
+            </section>
+            <section>
+              <h3>{t("findingOverview.officialRisk")}</h3>
+              {hasOfficialRisk ? (
+                <>
+                  <div className="review-evidence-summary__risk">
+                    {officialRiskLevel && <AlertBadge alertLevel={officialRiskLevel} showSeverity />}
+                    {officialRiskTypes.map(type => <AlertBadge key={type} alertType={type} />)}
+                  </div>
+                  {officialDanger && <p className="review-evidence-summary__danger">{officialDanger}</p>}
+                </>
+              ) : <p>{t("findingOverview.riskUnavailable")}</p>}
+              {safetyUrl && (
+                <s-link href={safetyUrl} target="_blank">
+                  {t("analysis.viewOnSafetyGate")}
+                </s-link>
+              )}
+            </section>
+          </div>
           <div className="review-modal__body-grid">
             <section
               className="review-modal__section"
@@ -380,14 +417,8 @@ export function AlertDetailModal({
                       {t("analysis.alertNumber", { number: caseNumber })}
                     </span>
                   )}
-                  {safetyUrl ? (
-                    <s-link href={safetyUrl} target="_blank">
-                      {t("analysis.viewOnSafetyGate")}
-                    </s-link>
-                  ) : (
-                    <span className="admin-helper">
-                      {t("workspace.sourceMissing")}
-                    </span>
+                  {!safetyUrl && (
+                    <span className="admin-helper">{t("workspace.sourceMissing")}</span>
                   )}
                   {!caseNumber && (
                     <span className="admin-helper">
@@ -398,48 +429,6 @@ export function AlertDetailModal({
               </div>
             </div>
 
-            <section
-              className="review-evidence-summary"
-              aria-label={t("workspace.whyMatch")}
-            >
-              <h3>{t("workspace.whyMatch")}</h3>
-              <p>{t("workspace.matchNeedsVerification")}</p>
-              {identifierRows.some((row) => row.status === "match") && (
-                <p>
-                  {t("workspace.matchingIdentifiers", {
-                    fields: identifierRows
-                      .filter((row) => row.status === "match")
-                      .map((row) => row.label)
-                      .join(", "),
-                  })}
-                </p>
-              )}
-              {identifierRows.some((row) => row.status === "mismatch") && (
-                <p>
-                  {t("workspace.differentIdentifiers", {
-                    fields: identifierRows
-                      .filter((row) => row.status === "mismatch")
-                      .map((row) => row.label)
-                      .join(", "),
-                  })}
-                </p>
-              )}
-              {identifierRows.some((row) => row.status === "unspecified") && (
-                <p className="admin-note">
-                  {t(identifierRows.every(row => row.status === "unspecified") ? "workspace.unconfirmedIdentifiers" : "workspace.missingIdentifiers")}
-                </p>
-              )}
-              {(fields.danger ||
-                fields.alert_description ||
-                fields.risk_legal_provision) && (
-                <p>
-                  <strong>{t("workspace.sourceRisk")}: </strong>
-                  {fields.danger ||
-                    fields.alert_description ||
-                    fields.risk_legal_provision}
-                </p>
-              )}
-            </section>
             <div style={{ marginTop: "16px" }}>
               <div
                 className="review-modal__section-heading"
@@ -551,6 +540,9 @@ export function AlertDetailModal({
                 <p className="review-modal__decision-prompt">
                   {t("workspace.reviewPrompt")}
                 </p>
+                {decisionSaveFailed && (
+                  <p role="alert" className="review-modal__required-note">{t("findingOverview.saveFailed")}</p>
+                )}
                 <details className="advanced-settings-disclosure">
                   <summary>{t("responseGuide.title")}</summary>
                   <p>{t("responseGuide.intro")}</p>
@@ -756,8 +748,8 @@ export function AlertDetailModal({
             disabled={!canRecordDecision || isLoading}
             loading={isLoading || undefined}
             onClick={recordDecision}
-            commandFor={canRecordDecision ? modalId : undefined}
-            command={canRecordDecision ? "--hide" : undefined}
+            commandFor={closeWhenSubmitted ? modalId : undefined}
+            command={closeWhenSubmitted ? "--hide" : undefined}
           >
             {t("actions.recordDecision")}
           </s-button>
@@ -776,6 +768,7 @@ export function AlertDetailModal({
           </s-button>
         )}
         <s-button
+          id={`${modalId}-close`}
           slot="secondary-actions"
           variant="secondary"
           commandFor={modalId}
@@ -888,10 +881,8 @@ function WarningCard({
     fields.country_of_origin;
   const alertLevel = fields.level || fields.alert_level || fields.risk_level;
   const alertType = fields.riskType || fields.alert_type;
-  const dangerDescription = fields.danger || fields.alert_description;
+  const { danger: dangerDescription, measures: measuresDescription } = officialRiskDetails(fields);
   const productDescription = fields.description || fields.product_description;
-  const measuresDescription =
-    fields.measures || fields.technical_defect || fields.measures_country;
 
   // Determine card border color based on similarity
   const borderColor =

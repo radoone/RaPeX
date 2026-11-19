@@ -6,8 +6,11 @@ import { isAuthorizedApiKey } from "./api-auth.js";
 import { publicHttpsAgent, validatePublicImageUrl } from "./public-image.js";
 import { checkProductAgainstAlerts } from "./safety-gate-checker.js";
 import type { ProductInput, SafetyCheckResult } from "./safety-gate-checker.schemas.js";
-import { buildEmbeddingText, embedTexts } from "./safety-gate-embeddings.js";
-import { retrieveAlertsByGtins, retrieveAlertsForVector } from "./safety-gate-checker-retrieval.js";
+import { buildEmbeddingText, embedTexts, embedImage } from "./safety-gate-embeddings.js";
+import { PUBLIC_SCAN_TEXT_SPEC, compatiblePublicScanVector } from "./public-scan-onboarding-cache.js";
+import { retrieveAlertsWithRag } from "./safety-gate-checker-retrieval.js";
+import { PUBLIC_SCAN_COVERAGE_POLICY, publicScanCoverageFingerprint } from "./public-scan-coverage.js";
+import { productGtins } from "./product-barcodes.js";
 import type { NormalizedAlert } from "./safety-gate-checker.types.js";
 
 type RequestShape = {
@@ -163,6 +166,8 @@ interface CachedProductVector {
   vector: number[];
   embeddingText?: string;
   sourceUpdatedAt?: string;
+  imageUrl?: string;
+  imageVector?: number[];
 }
 
 async function loadCachedProductVectors(
@@ -182,14 +187,17 @@ async function loadCachedProductVectors(
     const chunkIds = productIds.slice(i, i + CHUNK_SIZE);
     const docRefs = chunkIds.map((id) => productsCol.doc(encodeURIComponent(id)));
     try {
-      const snapshots = await db.getAll(...docRefs);
+      const snapshots = await db.getAll(...docRefs, { fieldMask: [
+        "productId", "embeddingText", "vector_text", "expireAt", "embeddingModel", "embeddingDimensions", "embeddingInputVersion",
+        "sourceUpdatedAt", "imageUrl", "vector_image", "imageEmbeddingModel",
+      ] });
       const refreshBatch = db.batch();
       let refreshCount = 0;
       for (let j = 0; j < snapshots.length; j++) {
         const snap = snapshots[j];
         if (snap.exists) {
           const data = snap.data();
-          const vector = asVectorArray(data?.vector_text);
+          const vector = compatiblePublicScanVector(data || {}, chunkIds[j], data?.embeddingText || "");
           if (vector && vector.length > 0) {
             refreshBatch.set(docRefs[j], { expireAt: Timestamp.fromMillis(Date.now() + PUBLIC_SCAN_RETENTION_MS) }, { merge: true });
             refreshCount += 1;
@@ -197,6 +205,8 @@ async function loadCachedProductVectors(
               vector,
               embeddingText: data?.embeddingText,
               sourceUpdatedAt: data?.sourceUpdatedAt,
+              imageUrl: data?.imageUrl,
+              imageVector: data?.imageEmbeddingModel === "vertexai/multimodalembedding@001" ? asVectorArray(data?.vector_image) : undefined,
             });
           }
         }
@@ -248,7 +258,12 @@ async function saveProductVectors(
           imageUrl: item.pInput.imageUrl || null,
           imageUrls: item.pInput.imageUrls || [],
           embeddingText: item.embeddingText,
+          ...PUBLIC_SCAN_TEXT_SPEC,
           vector_text: FieldValue.vector(item.vector),
+          // A changed text payload may also change the primary image. Do not
+          // leave an old image vector labelled with a newly written image URL.
+          vector_image: FieldValue.delete(),
+          imageEmbeddingModel: FieldValue.delete(),
           sourceUpdatedAt: item.sourceUpdatedAt || null,
           updatedAt: FieldValue.serverTimestamp(),
           expireAt: Timestamp.fromMillis(Date.now() + PUBLIC_SCAN_RETENTION_MS),
@@ -313,6 +328,7 @@ function shopifyRawToProductInput(raw: any, shop: string): ProductInput {
     brand,
     shop,
     productId: String(raw.id || raw.handle || ""),
+    ...(typeof raw.updated_at === "string" ? { sourceUpdatedAt: raw.updated_at } : {}),
     barcodes: (Array.isArray(raw.variants) ? raw.variants : []).flatMap((variant: any) =>
       typeof variant.barcode === "string" && variant.barcode.trim()
         ? [{ barcode: variant.barcode.trim(), variantId: String(variant.id), variantTitle: String(variant.title || "") }]
@@ -471,13 +487,12 @@ export async function scanPublicCatalogProducts(domain: string, rawProducts: any
   for (let i = 0; i < productInputs.length; i++) {
     const p = productInputs[i];
     const text = embeddingTexts[i];
-    const raw = rawProducts[i];
-    const prodId = p.productId || String(raw?.id || raw?.handle || i);
+    const prodId = p.productId || String(rawProducts[i]?.id || rawProducts[i]?.handle || i);
     const cached = cachedMap.get(prodId);
 
     if (
       cached &&
-      (cached.embeddingText === text || (raw.updated_at && cached.sourceUpdatedAt === raw.updated_at))
+      cached.embeddingText === text
     ) {
       allVectors[i] = cached.vector;
     } else {
@@ -557,12 +572,26 @@ export async function scanPublicCatalogProducts(domain: string, rawProducts: any
     }
   }
 
-  // 4. Fast Firestore KNN Retrieval to filter candidates (Cosine Distance <= 0.22)
+  // Same text/image/identifier shortlist as merchant checks; embeddings stay batched.
+  const imageVectors: Array<number[] | undefined> = new Array(productInputs.length);
+  for (let start = 0; start < productInputs.length; start += 4) {
+    await Promise.all(productInputs.slice(start, start + 4).map(async (product, offset) => {
+      if (!product.imageUrl) return;
+      const cached = cachedMap.get(product.productId || "");
+      imageVectors[start + offset] = cached?.imageUrl === product.imageUrl && cached.imageVector?.length === 1408
+        ? cached.imageVector : await embedImage(product.imageUrl);
+    }));
+  }
+  // Server read time BEFORE retrieval ensures later source changes invalidate transfer.
+  const coverageAnchor = await db.collection("rapex_leads").doc(encodeURIComponent(domain)).get();
+  const fullResults = new Map<string, SafetyCheckResult>();
+
+  // 4. Fast Firestore KNN retrieval with the shared merchant limits and thresholds.
   logger.info(`Running fast Firestore vector nearest-neighbor search for candidate alerts...`);
   await progress(domain, {
     stage: "vector_search",
     percent: 65,
-    message: `Vektorové KNN vyhľadávanie v 32 000 Safety Gate záznamoch pre ${productInputs.length} produktov...`,
+    message: `Vektorové vyhľadávanie v Safety Gate databáze pre ${productInputs.length} produktov...`,
   });
 
   const candidatePairs: Array<{
@@ -580,14 +609,15 @@ export async function scanPublicCatalogProducts(domain: string, rawProducts: any
         const vector = allVectors[globalIdx];
         if (!vector || vector.length === 0) throw new Error("Scan incomplete: product embedding is missing");
 
-        const [exact, similar] = await Promise.all([retrieveAlertsByGtins(pInput), retrieveAlertsForVector(vector, 6)]);
-        const candidateAlerts = [...new Map([...exact, ...similar].map((alert) => [alert.id, alert])).values()];
+        const candidateAlerts = await retrieveAlertsWithRag(pInput, { textVector: vector, imageVector: imageVectors[globalIdx] });
         if (candidateAlerts.length > 0) {
           candidatePairs.push({
             productInput: pInput,
             raw: rawProducts[globalIdx],
             candidateAlerts,
           });
+        } else {
+          fullResults.set(pInput.productId!, await checkProductAgainstAlerts({ ...pInput, shop: undefined }, []));
         }
       })
     );
@@ -614,9 +644,10 @@ export async function scanPublicCatalogProducts(domain: string, rawProducts: any
       chunk.map(async (candidate) => {
         try {
           const checkResult = await checkProductAgainstAlerts(
-            candidate.productInput,
+            { ...candidate.productInput, shop: undefined },
             candidate.candidateAlerts
           );
+          fullResults.set(candidate.productInput.productId!, checkResult);
 
           const filteredWarnings = checkResult.warnings.filter(
             (w) => w.matchBasis === "gtin" || w.identityAssessment === "uncertain" || (w.overallSimilarity || 0) >= similarityThreshold
@@ -647,6 +678,34 @@ export async function scanPublicCatalogProducts(domain: string, rawProducts: any
 
   if (candidateCheckFailures > 0) {
     throw new Error(`Scan incomplete: ${candidateCheckFailures} candidate product check(s) failed`);
+  }
+
+  // Persist unfiltered successful coverage, including products without matches.
+  // Lead/report display thresholds do not change what can be reused at install.
+  // Ten bounded results stay below Firestore's 10 MiB commit limit even when
+  // each result approaches the per-document guard below.
+  for (let start = 0; start < productInputs.length; start += 10) {
+    const batch = db.batch();
+    productInputs.slice(start, start + 10).forEach((product, offset) => {
+      const result = fullResults.get(product.productId!);
+      if (!result) throw new Error("Scan incomplete: missing product coverage");
+      const resultJson = JSON.stringify(result);
+      if (Buffer.byteLength(resultJson) > 850_000) throw new Error("Public product coverage exceeds document limit");
+      const imageVector = imageVectors[start + offset];
+      batch.set(db.collection("rapex_leads").doc(encodeURIComponent(domain)).collection("products").doc(encodeURIComponent(product.productId!)), {
+        safetyCoverage: {
+          policy: PUBLIC_SCAN_COVERAGE_POLICY, fingerprint: publicScanCoverageFingerprint(product),
+          similarityFingerprint: publicScanCoverageFingerprint({ ...product, barcodes: [] }),
+          identifierFree: productGtins(product.barcodes).length === 0,
+          coveredThrough: coverageAnchor.readTime, resultJson, completedAt: FieldValue.serverTimestamp(),
+        },
+        vector_image: imageVector?.length ? FieldValue.vector(imageVector) : FieldValue.delete(),
+        imageEmbeddingModel: imageVector?.length ? "vertexai/multimodalembedding@001" : FieldValue.delete(),
+        ...(product.imageUrl ? { imageUrl: product.imageUrl } : {}),
+        expireAt: Timestamp.fromMillis(Date.now() + PUBLIC_SCAN_RETENTION_MS),
+      }, { merge: true });
+    });
+    await batch.commit();
   }
 
   // 6. Compute score and save lead document in Firestore

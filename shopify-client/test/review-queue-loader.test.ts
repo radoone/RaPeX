@@ -1,14 +1,15 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { loader } from "../app/routes/app.alerts";
+import { action, loader } from "../app/routes/app.alerts";
 
-const { findMany, count, admin } = vi.hoisted(() => ({
+const { findMany, count, admin, recordDecisions } = vi.hoisted(() => ({
   findMany: vi.fn(),
   count: vi.fn(),
   admin: vi.fn(),
+  recordDecisions: vi.fn(),
 }));
 vi.mock("../app/shopify.server", () => ({ authenticate: { admin } }));
 vi.mock("../app/merchant-db.server", () => ({
-  default: { safetyAlert: { findMany, count } },
+  default: { safetyAlert: { findMany, count, recordDecisions } },
 }));
 vi.mock("../app/services/review-evidence.server", () => ({
   withOfficialReferences: async (records: any[]) => records,
@@ -81,5 +82,40 @@ describe("review queue pagination", () => {
       skip: 25,
       take: 25,
     });
+  });
+});
+
+describe("saving a review decision", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    admin.mockResolvedValue({ session: { shop: "example.myshopify.com", id: "actor" } });
+    recordDecisions.mockResolvedValue({ count: 1 });
+  });
+
+  const save = async () => {
+    const request = new Request("https://example.com/app/alerts", {
+      method: "POST",
+      body: new URLSearchParams({ action: "resolve", alertId: "current", resolutionType: "contacted_supplier" }),
+    });
+    return (await action({ request } as never)).data;
+  };
+
+  it("offers the highest-priority eligible match only after saving", async () => {
+    findMany.mockResolvedValue([
+      { id: "current", status: "active", riskLevel: "Serious" },
+      { id: "waiting", status: "active", reviewState: "waiting_for_supplier", riskLevel: "Serious" },
+      { id: "low", status: "active", riskLevel: "Low" },
+      { id: "next", status: "active", riskLevel: "High" },
+    ]);
+    expect(await save()).toEqual({ success: true, reviewedAlertId: "current", nextMatchId: "next" });
+    expect(recordDecisions).toHaveBeenCalledBefore(findMany);
+    expect(findMany).toHaveBeenCalledWith(expect.objectContaining({
+      where: { shop: "example.myshopify.com", status: "active" },
+    }));
+  });
+
+  it("confirms the decision without a next button if only the saved match remains", async () => {
+    findMany.mockResolvedValue([{ id: "current", status: "active" }]);
+    expect(await save()).toEqual({ success: true, reviewedAlertId: "current", nextMatchId: null });
   });
 });

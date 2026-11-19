@@ -26,6 +26,26 @@ export function officialSource(fields: Record<string, any>) {
   }
   return { caseNumber, url };
 }
+/** Some historical Safety Gate records contain measures in the danger field. */
+export function officialRiskDetails(fields: Record<string, unknown>) {
+  const text = (value: unknown) => typeof value === "string" ? value.trim() : "";
+  const danger = text(fields.danger) || text(fields.alert_description);
+  const measures = text(fields.measures) || text(fields.technical_defect) || text(fields.measures_country);
+  const legacyMeasures = danger && (
+    danger === measures ||
+    /category of measure\(s\)|type of economic operator to whom the measure|^measures (?:ordered|taken)/i.test(danger)
+  );
+  if (!legacyMeasures) return { danger, measures };
+
+  // For legacy combined risk and legal text, use the paragraph before the legal citation.
+  const [riskParagraph, legalParagraph] = text(fields.risk_legal_provision).split(/\r?\n\s*\r?\n/);
+  const containsRisk = /\b(?:risk|harm|hazard|may cause|can cause|exposure)\b/i.test(riskParagraph);
+  return {
+    danger: containsRisk && legalParagraph ? riskParagraph : "",
+    measures: danger,
+  };
+}
+
 export function parseEvidence(checkResult?: string | null) {
   try {
     const parsed = checkResult ? JSON.parse(checkResult) : {};

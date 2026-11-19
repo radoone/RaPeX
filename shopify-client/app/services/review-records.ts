@@ -1,3 +1,5 @@
+import { isWaitingForSupplier } from "./review-evidence";
+
 export type ReviewFilters = { from: string; to: string; status: string; dateBasis?: "findings" | "decisions"; query?: string; timeZone?: string };
 export function reviewFilters(url: URL): ReviewFilters {
   const date = (key: string) => {
@@ -12,7 +14,7 @@ export function reviewFilters(url: URL): ReviewFilters {
   return {
     from: date("from"),
     to: date("to"),
-    status: ["active", "resolved", "dismissed"].includes(status) ? status : "",
+    status: ["active", "needs_review", "waiting_for_supplier", "closed", "resolved", "dismissed"].includes(status) ? status : "",
     dateBasis: url.searchParams.get("dateBasis") === "decisions" ? "decisions" as const : "findings" as const,
     query: (url.searchParams.get("q") || "").trim().slice(0, 200),
     timeZone: validTimeZone(url.searchParams.get("timeZone") || "Europe/Bratislava"),
@@ -43,12 +45,33 @@ export function selectedDecisionEvents(record: Record<string, any>, filters: Rev
   return (record.decisions || []).filter((event: any) => matchesReviewDate(event.createdAt, filters) && matchesReviewSearch(record, filters.query, event));
 }
 
+type ReviewStatus = {
+  status: string;
+  reviewState?: string;
+  resolutionType?: string | null;
+};
+
+function isClosed(record: ReviewStatus): boolean {
+  return record.status === "resolved" || record.status === "dismissed";
+}
+
+export function summarizeReviewStatuses(records: ReviewStatus[]) {
+  const summary = { needsReview: 0, waiting: 0, closed: 0 };
+  for (const record of records) {
+    if (isClosed(record)) summary.closed++;
+    else if (isWaitingForSupplier(record)) summary.waiting++;
+    else if (record.status === "active") summary.needsReview++;
+  }
+  return summary;
+}
+
 export function matchesReviewFilters(
-  record: { status: string; createdAt?: Date | string | null },
+  record: ReviewStatus & { createdAt?: Date | string | null },
   filters: ReviewFilters,
 ) {
-  return (
-    (!filters.status || record.status === filters.status) &&
-    matchesReviewDate(record.createdAt, filters)
-  );
+  const statusMatches = !filters.status || filters.status === record.status ||
+    (filters.status === "closed" && isClosed(record)) ||
+    (filters.status === "waiting_for_supplier" && isWaitingForSupplier(record)) ||
+    (filters.status === "needs_review" && record.status === "active" && !isWaitingForSupplier(record));
+  return statusMatches && matchesReviewDate(record.createdAt, filters);
 }

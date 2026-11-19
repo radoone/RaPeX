@@ -612,7 +612,13 @@
       "progress": "Uvezeno {{imported}} od {{fetched}} proizvoda; uspoređeno {{scanned}} proizvoda s {{alerts}} upozorenja Safety Gatea do sada.",
       "stepAudit": "3. Pripremite GPSR revizijski trag i status usklađenosti",
       "stepImport": "1. Uvezite proizvode iz Shopifyja",
-      "stepScan": "2. Usporedite s bazom podataka Safety Gate (35.000+ zapisa)"
+      "stepScan": "2. Usporedite s bazom podataka Safety Gate (35.000+ zapisa)",
+      "checkingLabel": "Provjereni proizvodi",
+      "checkingNote": "Provjera uvezenog kataloga u odnosu na Safety Gate. Napredak se ažurira kako se serije završavaju.",
+      "importingLabel": "Uvezeni proizvodi",
+      "importingNote": "Uvoz proizvoda iz Shopifyja. Ukupan broj bit će poznat kada uvoz završi.",
+      "retrying": "Provjera je naišla na problem i pokušat će ponovno. Dovršeni rad je zadržan.",
+      "retryingHeading": "Revizija je naišla na problem"
     },
     "metricsCard": {
       "activeAlertsHeading": "Aktivna upozorenja",
@@ -1438,5 +1444,110 @@
     "label": "Točno podudaranje crtičnog koda",
     "help": "Potvrđeni crtični kod varijante podudara se sa zapisom Safety Gate. Provjerite model i zahvaćenu seriju prije odluke."
   },
-  "ownerTestAccess": "Testiranje uz odobrenje vlasnika — nije potreban plaćeni plan"
+  "ownerTestAccess": "Testiranje uz odobrenje vlasnika — nije potreban plaćeni plan",
+  "catalogOverview": {
+    "coverage": "{{checked}} od {{total}}",
+    "coverageHelp": "Neki su proizvodi novi ili su se promijenili od posljednje provjere. Otvorite popis da biste vidjeli što još treba provjeriti.",
+    "currentProducts": "Proizvodi s trenutnim rezultatom",
+    "initialAudit": "Početna provjera kataloga",
+    "lastCheck": "Posljednja uspješna provjera kataloga",
+    "monitoring": {
+      "delayed": "Provjera kasni",
+      "enabled": "Pokreće se automatski",
+      "failed": "Posljednja provjera nije uspjela",
+      "paused": "Pauzirano",
+      "preview": "Pregled razvoja",
+      "processing": "Provjera u tijeku",
+      "unknown": "Aktivnost nepotvrđena",
+      "unverified": "Provjera plana nije dostupna"
+    },
+    "monitoringHelp": {
+      "delayed": "Posljednja automatska provjera bila je prije više od 48 sati. Ako status potraje, obratite se podršci.",
+      "failed": "Vaši posljednji uspješni rezultati i dalje su dostupni. Ako sljedeća provjera također ne uspije, obratite se podršci.",
+      "paused": "Odaberite aktivni Shopify plan za nastavak automatskih provjera.",
+      "preview": "Zakazane provjere zahtijevaju provjereni Shopify plan.",
+      "processing": "Provjera je u redu čekanja ili se izvodi. Rezultati se prikazuju kada završi.",
+      "unknown": "Nema zabilježene dovršene automatske provjere. Ako osvježavanje ovog statusa ne pomogne, obratite se podršci.",
+      "unverified": "Osvježite za provjeru vašeg Shopify plana. Ako status potraje, obratite se podršci."
+    },
+    "monitoringRun": "Provjerite ima li novih ili ažuriranih Safety Gate upozorenja",
+    "noActionHelp": "Vaš trenutni katalog je pokriven i nema mogućih podudaranja koja čekaju vašu recenziju.",
+    "noCompletedCheck": "Nema zabilježene dovršene provjere kataloga",
+    "purpose": "ZeroRecall provjerava vaš Shopify katalog u odnosu na <portalLink>EU Safety Gate</portalLink> upozorenja i prikazuje vam koja moguća podudaranja trebaju pregled.",
+    "refreshStatus": "Osvježi status nadzora",
+    "reviewHelp": "Usporedite svoj proizvod sa službenim upozorenjem, a zatim zabilježite svoju odluku.",
+    "reviewNext": "Pregledaj sljedeće podudaranje"
+  },
+  "findingOverview": {
+    "matches": "Što se podudara",
+    "missing": "Nedostaju podaci: {{fields}}.",
+    "noConfirmedIdentifiers": "Nema potvrđenih podudarnih identifikatora.",
+    "officialRisk": "Rizik u upozorenju Safety Gate",
+    "riskUnavailable": "Pojedinosti o riziku nisu dostupne u ovom spremljenom upozorenju.",
+    "saveFailed": "Odluka nije mogla biti spremljena. Pokušajte ponovno.",
+    "verify": "Što provjeriti",
+    "verifyApplicability": "Provjerite odnosi li se službeno upozorenje na vaš proizvod."
+  },
+  "pendingCoverage": {
+    "automaticCount_few": "{{count}} proizvoda ima automatske provjere u redu čekanja.",
+    "automaticCount_many": "{{count}} proizvoda ima automatske provjere u redu čekanja.",
+    "automaticCount_one": "{{count}} proizvod ima automatsku provjeru u redu čekanja.",
+    "automaticCount_other": "{{count}} proizvoda ima automatske provjere u redu čekanja.",
+    "automaticCount_plural": "{{count}} proizvoda ima automatske provjere u redu čekanja.",
+    "automaticOnly": "ZeroRecall automatski provjerava ove proizvode. Nije potrebna nikakva radnja.",
+    "batchResult": "Provjere dovršene: {{checked}}. Neuspjele provjere: {{failed}}.",
+    "checkBatch_few": "Provjerite {{count}} proizvoda",
+    "checkBatch_many": "Provjerite {{count}} proizvoda",
+    "checkBatch_one": "Provjerite {{count}} proizvod",
+    "checkBatch_other": "Provjerite {{count}} proizvoda",
+    "checkBatch_plural": "Provjerite {{count}} proizvoda",
+    "complete": "Svaka trenutačna verzija Shopify proizvoda ima spremljen rezultat.",
+    "current": "Trenutačni rezultati za {{checked}} od {{total}} proizvoda.",
+    "empty": "Proizvodi se ovdje pojavljuju nakon što ih dodate u Shopify.",
+    "emptyTitle": "Još nema proizvoda za provjeru",
+    "filters": "Pretraživanje i filtriranje",
+    "manualHelp": "Provjerite proizvode sada ako ZeroRecall nema potvrđenu automatsku provjeru.",
+    "pendingTab": "Čeka se provjera",
+    "planRequired": "Za provjeru preostalih proizvoda potreban je aktivan Shopify plan.",
+    "planUnconfirmed": "Automatske provjere nisu potvrđene za preostale proizvode. Provjerite status svog plana u Postavkama nadzora.",
+    "row": {
+      "automatic": "Automatska provjera u redu čekanja ili u tijeku",
+      "planRequired": "Potreban je aktivan Shopify plan",
+      "planUnconfirmed": "Automatska provjera i status plana nisu potvrđeni",
+      "unconfirmed": "Nema potvrđene automatske provjere"
+    },
+    "title_few": "{{count}} proizvoda čeka provjeru",
+    "title_many": "{{count}} proizvoda čeka provjeru",
+    "title_one": "{{count}} proizvod čeka provjeru",
+    "title_other": "{{count}} proizvoda čeka provjeru",
+    "title_plural": "{{count}} proizvoda čeka provjeru",
+    "viewAll": "Prikaži sve proizvode"
+  },
+  "reviewOverview": {
+    "closed": "Zatvoreno (riješeno ili odbačeno)",
+    "current": "Trenutačni nalazi",
+    "decisions": "Zabilježene odluke",
+    "emptyDecisions": "Još nema zabilježenih odluka.",
+    "filters": "Filtri",
+    "open": "Otvoreni nalazi",
+    "report": "Nalazi u ovom izvješću"
+  },
+  "settingsOverview": {
+    "active": "Aktivno",
+    "activePlan": "Aktivni Shopify plan",
+    "delivery": {
+      "paused": "Dostava je pauzirana dok se ne aktivira pristup nadzoru.",
+      "unconfirmed": "Status dostave e-pošte je nepotvrđen."
+    },
+    "editEmail": "Uredi postavke e-pošte",
+    "mondayEmail": "Ponedjeljni sažetak",
+    "noActivePlan": "Nema aktivnog plana",
+    "off": "Isključeno",
+    "on": "Uključeno",
+    "planUnverified": "Plan nije potvrđen",
+    "previousPlan": "Posljednji potvrđeni plan: {{plan}}",
+    "recipient": "Poslano na {{email}}",
+    "testAccess": "Vlasnički testni pristup",
+    "weeklyHelp": "Šalje se ponedjeljkom sa statusom vašeg nadzora i otvorenim nalazima."
+  }
 }

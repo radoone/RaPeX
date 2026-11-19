@@ -24,6 +24,7 @@ import {
 } from "../services/review-evidence";
 import { localizeRisk } from "../components/AlertBadge";
 import { monitoringEvidence } from "../services/monitoring-evidence.server";
+import { ReviewStatusSummary, reviewStatusOptions } from "../components/ReviewStatusSummary";
 
 export const headers = (headersArgs: any) => {
   return boundary.headers(headersArgs);
@@ -45,17 +46,18 @@ export default function AuditReportPage() {
   const navigate = useNavigate();
   const [exporting, setExporting] = useState(false);
   const [exportFailed, setExportFailed] = useState(false);
-  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+  const [download, setDownload] = useState<{ url: string; query: string } | null>(null);
   useEffect(
     () => () => {
-      if (downloadUrl) URL.revokeObjectURL(downloadUrl);
+      if (download) URL.revokeObjectURL(download.url);
     },
-    [downloadUrl],
+    [download],
   );
-  const { active, documented } = summary;
+  const hasFilters = Boolean(filters.from || filters.to || filters.status || filters.query);
   const filterQuery = new URLSearchParams(
     Object.entries({ ...filters, lang: i18n.resolvedLanguage || i18n.language }).filter(([, value]) => typeof value === "string" && value).map(([key, value]) => [key, String(value)]),
   ).toString();
+  const downloadUrl = download?.query === filterQuery ? download.url : null;
 
   async function downloadReport() {
     if (exporting) return;
@@ -74,7 +76,7 @@ export default function AuditReportPage() {
       const blob = await response.blob();
       if (blob.size === 0) throw new Error("Audit report was empty");
       const objectUrl = URL.createObjectURL(blob);
-      setDownloadUrl(objectUrl);
+      setDownload({ url: objectUrl, query: filterQuery });
       const anchor = document.createElement("a");
       anchor.href = objectUrl;
       anchor.download = `safety-gate-audit-report-${new Date().toISOString().slice(0, 10)}.csv`;
@@ -109,6 +111,9 @@ export default function AuditReportPage() {
       >
         {t("auditReport.viewHistory")}
       </s-button>
+      <s-button slot="secondary-actions" variant="tertiary" onClick={() => window.print()}>
+        {t("workspace.print")}
+      </s-button>
       <div className="admin-stack">
         {exportFailed ? (
           <s-banner tone="critical" heading={t("errors.apiError")}>
@@ -116,28 +121,15 @@ export default function AuditReportPage() {
           </s-banner>
         ) : null}
         <AdminCard className="admin-card">
-          <h2 className="admin-card__title">{t("monitorEvidence.title")}</h2>
-          <p className="admin-card__description">{t("monitorEvidence.explanation")}</p>
-          <dl className="audit-monitoring-facts">
-            <div><dt>{t("monitorEvidence.initialStatus")}</dt><dd>{monitoring.initialStatus ? t(`monitorEvidence.states.${monitoring.initialStatus}`, { defaultValue: t("monitorEvidence.unknown") }) : t("monitorEvidence.unknown")}</dd></div>
-            <div><dt>{t("monitorEvidence.imported")}</dt><dd>{monitoring.importedProducts === null ? t("monitorEvidence.unknown") : new Intl.NumberFormat(i18n.resolvedLanguage || i18n.language).format(monitoring.importedProducts)}</dd></div>
-            <div><dt>{t("monitorEvidence.monitorStatus")}</dt><dd>{monitoring.monitorStatus ? t(`monitorEvidence.states.${monitoring.monitorStatus}`, { defaultValue: t("monitorEvidence.unknown") }) : t("monitorEvidence.unknown")}</dd></div>
-            <div><dt>{t("monitorEvidence.monitorEnded")}</dt><dd>{monitoring.monitorEndedAt ? <LocalDateTime value={monitoring.monitorEndedAt} locale={i18n.resolvedLanguage || i18n.language} /> : t("monitorEvidence.unknown")}</dd></div>
-            <div><dt>{t("monitorEvidence.sourceStatus")}</dt><dd>{monitoring.sourceStatus ? t(`monitorEvidence.states.${monitoring.sourceStatus}`, { defaultValue: t("monitorEvidence.unknown") }) : t("monitorEvidence.unknown")}</dd></div>
-            <div><dt>{t("monitorEvidence.sourceEnded")}</dt><dd>{monitoring.sourceEndedAt ? <LocalDateTime value={monitoring.sourceEndedAt} locale={i18n.resolvedLanguage || i18n.language} /> : t("monitorEvidence.unknown")}</dd></div>
-          </dl>
-          <p>{t("monitorEvidence.limit")}</p>
-        </AdminCard>
-        <AdminCard className="admin-card">
           <div className="admin-card__header">
             <div>
-              <p className="admin-eyebrow">{t("auditReport.eyebrow")}</p>
-              <h2 className="admin-card__title">{t("auditReport.heading")}</h2>
-              <p className="admin-card__description">
-                {t("workspace.exportHelp")}
-              </p>
+              <h2 className="admin-card__title">{t("reviewOverview.report")}</h2>
             </div>
+            {summary.needsReview + summary.waiting > 0 && (
+              <s-link href="/app/alerts?status=active">{t("workspace.goReview")}</s-link>
+            )}
           </div>
+          <ReviewStatusSummary title={t("reviewOverview.report")} counts={summary} />
           <p>
             <strong>
               {t("workspace.shop")}: {shop}
@@ -150,49 +142,46 @@ export default function AuditReportPage() {
                   i18n.language.split(/[-_]/)[0] === "en"
                     ? "en-GB"
                     : i18n.language,
-                  { timeZone: "UTC" },
+                  { timeZone: filters.timeZone },
                 ),
                 to: new Date(scope.to).toLocaleDateString(
                   i18n.language.split(/[-_]/)[0] === "en"
                     ? "en-GB"
                     : i18n.language,
-                  { timeZone: "UTC" },
+                  { timeZone: filters.timeZone },
                 ),
               })}
             </p>
           )}
-          <Form method="get" className="report-filters">
-            <label>
-              {t("workspace.findingFrom")}
-              <input type="date" name="from" defaultValue={filters.from} />
-            </label>
-            <label>
-              {t("workspace.findingTo")}
-              <input type="date" name="to" defaultValue={filters.to} />
-            </label>
-            <label>
-              {t("workspace.status")}
-              <select name="status" defaultValue={filters.status}>
-                <option value="">{t("workspace.all")}</option>
-                {["active", "resolved", "dismissed"].map((value) => (
-                  <option key={value} value={value}>
-                    {t(
-                      value === "active"
-                        ? "status.needsReview"
-                        : `status.${value}`,
-                    )}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <s-button type="submit">{t("workspace.apply")}</s-button>
-          </Form>
-          <s-button variant="secondary" onClick={() => window.print()}>
-            {t("workspace.print")}
-          </s-button>
-          <p className="admin-helper">
-            {t("workspace.historyLimit", { count: 100 })}
-          </p>
+          <details className="review-filters-disclosure" open={hasFilters || undefined}>
+            <summary>{t("reviewOverview.filters")}</summary>
+            <Form method="get" className="report-filters" key={filterQuery}>
+              {filters.timeZone && <input type="hidden" name="timeZone" value={filters.timeZone} />}
+              {filters.query && <input type="hidden" name="q" value={filters.query} />}
+              <label>
+                {t("workspace.findingFrom")}
+                <input type="date" name="from" defaultValue={filters.from} />
+              </label>
+              <label>
+                {t("workspace.findingTo")}
+                <input type="date" name="to" defaultValue={filters.to} />
+              </label>
+              <label>
+                {t("workspace.status")}
+                <select name="status" defaultValue={filters.status}>
+                  <option value="">{t("workspace.all")}</option>
+                  {reviewStatusOptions.map(([value, label]) => (
+                    <option key={value} value={value}>{t(label)}</option>
+                  ))}
+                </select>
+              </label>
+              <s-button type="submit">{t("workspace.applyFilters")}</s-button>
+              {hasFilters && <s-link href="/app/audit-report">{t("workspace.clearFilters")}</s-link>}
+            </Form>
+          </details>
+          {total > records.length && (
+            <p className="admin-helper">{t("workspace.historyLimit", { count: 100 })}</p>
+          )}
           {downloadUrl ? (
             <p role="status">
               {t("workspace.exportReady")}
@@ -204,23 +193,6 @@ export default function AuditReportPage() {
               </a>
             </p>
           ) : null}
-          <div
-            className="audit-report-summary"
-            aria-label={t("auditReport.summaryLabel")}
-          >
-            <div>
-              <span>{t("auditReport.total")}</span>
-              <strong>{total}</strong>
-            </div>
-            <div>
-              <span>{t("auditReport.needsReview")}</span>
-              <strong>{active}</strong>
-            </div>
-            <div>
-              <span>{t("workspace.documentedFindings")}</span>
-              <strong>{documented}</strong>
-            </div>
-          </div>
           <p className="audit-report-generated">
             <LocalDateTime
               value={generatedAt}
@@ -263,6 +235,7 @@ export default function AuditReportPage() {
                         </s-link>
                       </s-table-cell>
                       <s-table-cell>
+                        <s-badge tone={record.status === "active" ? "warning" : "subdued"}>
                         {isWaitingForSupplier(record)
                           ? t("workspace.waiting")
                           : t(
@@ -270,6 +243,7 @@ export default function AuditReportPage() {
                                 ? "status.needsReview"
                                 : `status.${record.status}`,
                             )}
+                        </s-badge>
                       </s-table-cell>
                       <s-table-cell>
                         <p>{localizeRisk(record.riskLevel, t)}</p>
@@ -281,8 +255,6 @@ export default function AuditReportPage() {
                         ) : (
                           <p>{t("workspace.sourceMissing")}</p>
                         )}
-                        <p>{t("workspace.matchNeedsVerification")}</p>
-                        {record.sourceRisk && <p><strong>{t("workspace.sourceRisk")}: </strong>{record.sourceRisk}</p>}
                       </s-table-cell>
                       <s-table-cell>
                         <p>{t(!record.resolutionType && record.decisions.length ? "workspace.reopened" : decisionKey(record.resolutionType))}</p>
@@ -315,6 +287,19 @@ export default function AuditReportPage() {
             </div>
           )}
         </AdminCard>
+        <AdminCard className="admin-card">
+          <h2 className="admin-card__title">{t("monitorEvidence.title")}</h2>
+          <dl className="audit-monitoring-facts">
+            <div><dt>{t("monitorEvidence.initialStatus")}</dt><dd>{monitoring.initialStatus ? t(`monitorEvidence.states.${monitoring.initialStatus}`, { defaultValue: t("monitorEvidence.unknown") }) : t("monitorEvidence.unknown")}</dd></div>
+            <div><dt>{t("monitorEvidence.imported")}</dt><dd>{monitoring.importedProducts === null ? t("monitorEvidence.unknown") : new Intl.NumberFormat(i18n.resolvedLanguage || i18n.language).format(monitoring.importedProducts)}</dd></div>
+            <div><dt>{t("monitorEvidence.monitorStatus")}</dt><dd>{monitoring.monitorStatus ? t(`monitorEvidence.states.${monitoring.monitorStatus}`, { defaultValue: t("monitorEvidence.unknown") }) : t("monitorEvidence.unknown")}</dd></div>
+            <div><dt>{t("monitorEvidence.monitorEnded")}</dt><dd>{monitoring.monitorEndedAt ? <LocalDateTime value={monitoring.monitorEndedAt} locale={i18n.resolvedLanguage || i18n.language} /> : t("monitorEvidence.unknown")}</dd></div>
+            <div><dt>{t("monitorEvidence.sourceStatus")}</dt><dd>{monitoring.sourceStatus ? t(`monitorEvidence.states.${monitoring.sourceStatus}`, { defaultValue: t("monitorEvidence.unknown") }) : t("monitorEvidence.unknown")}</dd></div>
+            <div><dt>{t("monitorEvidence.sourceEnded")}</dt><dd>{monitoring.sourceEndedAt ? <LocalDateTime value={monitoring.sourceEndedAt} locale={i18n.resolvedLanguage || i18n.language} /> : t("monitorEvidence.unknown")}</dd></div>
+          </dl>
+          <p>{t("monitorEvidence.limit")}</p>
+        </AdminCard>
+        <p className="admin-helper">{t("workspace.exportHelp")}</p>
       </div>
     </s-page>
   );

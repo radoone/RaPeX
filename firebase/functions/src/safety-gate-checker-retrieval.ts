@@ -16,6 +16,7 @@ import {
 } from "./safety-gate-checker-media.js";
 import type { NormalizedAlert } from "./safety-gate-checker.types.js";
 import { buildEmbeddingText } from "./safety-gate-embeddings.js";
+import { selectRagCandidates } from "./candidate-selection.js";
 
 export const ALERT_LOOKBACK_DAYS = 365;
 
@@ -84,8 +85,10 @@ async function getCachedMerchantProductVectors(product: ProductInput): Promise<{
   };
 }
 
-async function retrieveAlertsFromCachedVectors(product: ProductInput): Promise<NormalizedAlert[] | null> {
-  const cachedVectors = await getCachedMerchantProductVectors(product);
+async function retrieveAlertsFromCachedVectors(product: ProductInput, suppliedVectors?: {
+  textVector?: number[]; imageVector?: number[];
+}): Promise<NormalizedAlert[] | null> {
+  const cachedVectors = suppliedVectors ?? await getCachedMerchantProductVectors(product);
   if (!cachedVectors?.textVector?.length && !cachedVectors?.imageVector?.length) {
     return null;
   }
@@ -104,7 +107,7 @@ for (const document of docs) {
             ...document.data(),
             distance: document.get("distance"),
           },
-        } as DocumentData);
+        } as DocumentData, "text");
         if (!normalized || seen.has(normalized.id) || (normalized.distance != null && normalized.distance > MATCHING_THRESHOLDS.textDistance)) {
           continue;
         }
@@ -123,7 +126,7 @@ for (const document of docs) {
             ...document.data(),
             distance: document.get("distance"),
           },
-        } as DocumentData);
+        } as DocumentData, "image");
         if (!normalized || (normalized.distance != null && normalized.distance > MATCHING_THRESHOLDS.imageDistance)) {
           continue;
         }
@@ -170,7 +173,9 @@ function mergeImageRecall(candidates: NormalizedAlert[], image: NormalizedAlert)
   const imageUrls = (image.distance ?? Infinity) < (existing.distance ?? Infinity)
     ? [...(image.matchedImageUrls || []), ...(existing.matchedImageUrls || [])]
     : [...(existing.matchedImageUrls || []), ...(image.matchedImageUrls || [])];
-  candidates[index] = { ...existing, ...(Number.isFinite(distance) ? { distance } : {}), matchedImageUrls: [...new Set(imageUrls)] };
+  candidates[index] = { ...existing, ...(Number.isFinite(distance) ? { distance } : {}),
+    imageDistance: Math.min(existing.imageDistance ?? Infinity, image.imageDistance ?? image.distance ?? Infinity),
+    matchedImageUrls: [...new Set(imageUrls)] };
 }
 
 function prioritizeRetrievedImages(alert: NormalizedAlert): NormalizedAlert {
@@ -228,7 +233,7 @@ function ensureImageRetriever(): RetrieverAction | null {
   return imageRetriever;
 }
 
-function normalizeRetrieverDocument(doc: DocumentData): NormalizedAlert | null {
+function normalizeRetrieverDocument(doc: DocumentData, channel?: "text" | "image"): NormalizedAlert | null {
   const metadata: any = (doc as any)?.metadata || {};
   const metaSection: any = metadata.meta || metadata;
   const fieldsSection: any = metadata.fields || {};
@@ -264,6 +269,8 @@ function normalizeRetrieverDocument(doc: DocumentData): NormalizedAlert | null {
       pictures: normalizePictures(fieldsSection),
     },
     distance: metadata.distance,
+    ...(channel === "text" ? { textDistance: metadata.distance } : {}),
+    ...(channel === "image" ? { imageDistance: metadata.distance } : {}),
     ...(typeof metadata.imageUrl === "string" ? { matchedImageUrls: [metadata.imageUrl] } : {}),
     source: "retriever",
   };
@@ -341,12 +348,15 @@ async function hydrateAlertsIfMissing(candidates: NormalizedAlert[]): Promise<No
   }).map(prioritizeRetrievedImages);
 }
 
-export async function retrieveAlertsWithRag(product: ProductInput): Promise<NormalizedAlert[]> {
+export async function retrieveAlertsWithRag(product: ProductInput, suppliedVectors?: {
+  textVector?: number[]; imageVector?: number[];
+}): Promise<NormalizedAlert[]> {
   const exactCandidates = await retrieveAlertsByGtins(product);
-  const cachedCandidates = await retrieveAlertsFromCachedVectors(product);
+  const cachedCandidates = await retrieveAlertsFromCachedVectors(product, suppliedVectors);
   // An empty successful KNN result is final; only missing vectors need embedding.
   if (cachedCandidates !== null) {
-    return hydrateAlertsIfMissing([...new Map([...exactCandidates, ...cachedCandidates].map((alert) => [alert.id, alert])).values()]);
+    const hydrated = await hydrateAlertsIfMissing([...new Map([...exactCandidates, ...cachedCandidates].map((alert) => [alert.id, alert])).values()]);
+    return selectRagCandidates(hydrated, new Set(exactCandidates.map(alert => alert.id)));
   }
 
   const candidates: NormalizedAlert[] = [...exactCandidates];
@@ -370,7 +380,7 @@ export async function retrieveAlertsWithRag(product: ProductInput): Promise<Norm
       });
 const result = await functionsAi.retrieve({retriever: activeTextRetriever, query: textQuery, options: {limit: RAG_TEXT_LIMIT}});
 for (const document of result || []) {
-        const normalized = normalizeRetrieverDocument(document);
+        const normalized = normalizeRetrieverDocument(document, "text");
         if (!normalized || seen.has(normalized.id) || (normalized.distance != null && normalized.distance > MATCHING_THRESHOLDS.textDistance)) {
           continue;
         }
@@ -390,7 +400,7 @@ for (const document of result || []) {
 
       const result = await functionsAi.retrieve({retriever: activeImageRetriever, query: {content: [{media: vertexInlineMedia}]}, options: {limit: RAG_IMAGE_LIMIT}});
 for (const document of result || []) {
-          const normalized = normalizeRetrieverDocument(document);
+          const normalized = normalizeRetrieverDocument(document, "image");
           if (!normalized || (normalized.distance != null && normalized.distance > MATCHING_THRESHOLDS.imageDistance)) {
             continue;
           }
@@ -410,7 +420,7 @@ for (const document of result || []) {
   });
 
   const hydrated = await hydrateAlertsIfMissing(candidates);
-  return hydrated;
+  return selectRagCandidates(hydrated, new Set(exactCandidates.map(alert => alert.id)));
 }
 
 /** Exact identifier recall is independent of vector distance and nearest-neighbour limits. */
@@ -458,7 +468,7 @@ export async function retrieveAlertsForVector(
           ...document.data(),
           distance: document.get("distance"),
         },
-      } as DocumentData);
+      } as DocumentData, "text");
 
       if (
         !normalized ||

@@ -99,12 +99,10 @@ Important Firestore-backed data:
 - merchant product snapshots
 - webhook error logs
 
-Prisma is used for Shopify auth sessions only:
+Shopify auth sessions are also stored exclusively in Firestore (encrypted at rest via `FirestoreSessionStorage`) in the server-only `shopify_sessions` collection so local dev, hosted Cloud Run instances, and Firebase workers share one canonical rotating credential pair:
 
-- `app/db.server.ts`
-- `prisma/schema.prisma`
-
-Because this app currently runs Prisma `6.19.3`, `prisma/schema.prisma` still needs an inline SQLite `url` even though `prisma.config.ts` also defines the datasource URL.
+- `app/firestore-session-storage.server.ts`
+- `app/shopify.server.ts`
 
 ## Checker Integration
 
@@ -148,7 +146,7 @@ The app requires a verified Shopify App Pricing subscription before merchants ca
 
 Firebase email notifications also need the public app handle set as `SHOPIFY_APP_HANDLE` in the Functions environment so alert emails can open the right Shopify Admin app page.
 
-The first catalog audit is queued to Firebase Cloud Tasks and continues after the Shopify request ends. The app mirrors the shop's offline session into the private Firestore `shopify_sessions` collection when it starts the job; the worker reads products in pages of 100, batches product text embeddings, and checks all indexed Safety Gate history in pages of 500. The task payload contains no Shopify token, and uninstall / `shop/redact` remove the mirrored session. Set `SHOPIFY_ADMIN_API_VERSION` to a supported stable Admin API version (currently `2026-07`) in Functions. The app itself also targets Shopify API `2026-07`.
+The first catalog audit is queued to Firebase Cloud Tasks and continues after the Shopify request ends. Both the web app and background workers read and rotate the shop's canonical offline session in the private Firestore `shopify_sessions` collection (`catalog-audit-session.server.ts` validates the active installation and offline session without overwriting rotated credentials); the worker reads products in pages of 100, batches product text embeddings, and checks all indexed Safety Gate history in pages of 500. The task payload contains no Shopify token, and uninstall / `shop/redact` remove the session. Set `SHOPIFY_ADMIN_API_VERSION` to a supported stable Admin API version (currently `2026-07`) in Functions. The app itself also targets Shopify API `2026-07`.
 
 Product create/update webhooks queue version-keyed Firebase tasks that perform the Safety Gate check away from the Shopify request. Delete webhooks queue lifecycle cleanup even when a subscription entitlement is no longer current; the worker marks the product and alerts as deleted and keeps check and decision history. These flows work with Shopify Admin closed once the app has registered the webhook subscriptions and the Cloud Run app host remains available. Reopen/authenticate the app after changing webhook registration so the server installs the current subscriptions. Automatic catalog reconciliation for a delete webhook Shopify never delivered is still pending.
 

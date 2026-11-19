@@ -7,6 +7,7 @@ import { selectMonitoringImages, prioritizeMonitoringImages } from '../lib/monit
 import { mapBounded, memoizeBounded } from '../lib/matching-work.js';
 import { prepareMonitoringShortlist, processMonitoringProducts } from '../lib/monitoring-work.js';
 import { loadSmallMonitoringCatalog } from '../lib/monitoring-small-catalog.js';
+import { productSafetyFingerprint } from '../lib/product-safety-coverage.js';
 import { createMonitoringProductCache, MONITORING_PRODUCT_FIELDS } from '../lib/monitoring-product-cache.js';
 import { canApplyProductVersion, installationKey, isProductChangeSupersededByDeletion } from '../lib/product-lifecycle.js';
 import { sourceFunction as fn, database, Timestamp, FieldValue, collections, logger } from './helpers/isolated-source.mjs';
@@ -35,20 +36,21 @@ test('model unavailability and malformed output fail closed; a valid empty list 
   assert.throws(() => buildSafetyCheckResult([{ alertId: 'invented', overallSimilarity: 90 }], [], analysis), /unknown candidate/);
 });
 
-test('13 eligible alerts are all evaluated in batches no larger than 12', async () => {
+test('13 eligible alerts are all evaluated in batches no larger than 4', async () => {
   const sizes = [];
   let checker;
   checker = fn('safety-gate-checker', 'checkProductAgainstAlerts', {
     mapBounded, memoizeBounded,
     getProductImageUrls: () => [],
     prepareImageMedia: async () => null, readCachedMatchResult: async () => null,
+    db: {}, capturePairCacheInstallation: async () => undefined, writePairMatchResults: async () => {}, readPairMatchResults: async () => [],
     buildComparisonPrompt: (_p, alerts) => { sizes.push(alerts.length); return ''; },
     analyzeProductMatches: async () => ({ response: { text: '[]' }, analysis }),
     parseAnalysisMatches, buildSafetyCheckResult, writeCachedMatchResult: async () => {}, createUnavailableAnalysisResult,
     checkProductAgainstAlerts: (...args) => checker(...args),
   });
   const result = await checker(input.product, Array.from({ length: 13 }, (_, i) => ({ id: String(i) })));
-  assert.deepEqual(sizes, [12, 1]);
+  assert.deepEqual(sizes, [4, 4, 4, 1]);
   assert.equal(result.analysis.candidateAlertsConsidered, 13);
 });
 
@@ -155,8 +157,8 @@ test('an in-flight product worker cannot recreate a purged tenant or its job', a
 
 function monitor(db, dateCandidates = [], check = async () => ({ isSafe: true, warnings: [], checkedAt: new Date().toISOString() })) {
   const normalize = fn('merchant-monitoring', 'normalizeAlertDate', { Timestamp });
-  return fn('merchant-monitoring', 'runMerchantDeltaMonitoringForShop', {
-    ...deps(db), prepareMonitoringShortlist, processMonitoringProducts,
+  const run = fn('merchant-monitoring', 'runMerchantDeltaMonitoringForShop', {
+    ...deps(db), prepareMonitoringShortlist, processMonitoringProducts, productSafetyFingerprint,
     loadSmallMonitoringCatalog,
     createMonitoringWorkStore: fn('monitoring-work', 'createMonitoringWorkStore', { ...deps(db), randomUUID: () => 'generation', Buffer }),
     getMonitorState: async () => db.rows.get(merchantPath), randomUUID: () => 'run',
@@ -173,6 +175,9 @@ function monitor(db, dateCandidates = [], check = async () => ({ isSafe: true, w
     monitoringRunRef: (_shop, id, collection = 'monitoring_runs') => db.doc(`${merchantPath}/${collection}/${id}`),
     FieldPath: { documentId: () => '__name__' },
   });
+  // These regression fixtures exercise explicit history/windowed page processing.
+  // Current-state baseline/journal-only behavior has its own coverage tests.
+  return params => run({ forceFullScan: true, ...params });
 }
 const candidate = i => ({ alert: { id: `A${i}`, meta: { alert_date: '2026-10-23T00:00:00Z', record_timestamp: String(i) }, fields: { pictures: [] } }, textVector: [1] });
 
@@ -241,12 +246,68 @@ test('history/windowed audits keep their checkpoint separate from daily monitori
 
 test('corrections to old publications are monitored through the change journal', async () => {
   const db = fixture(); let evaluated = 0;
+  db.rows.get(merchantPath).monitoringBaselineAt = Timestamp.fromMillis(1);
   db.rows.set('rapex_changes/2026-10-23_revision-A', { alertId: 'old-A', changedAt: Timestamp.now() });
   db.rows.set('rapex_alerts/old-A', { meta: { alert_date: '2020-01-01T00:00:00Z', record_timestamp: '2026-10-23T00:00:00Z' }, fields: {}, vector_text: FieldValue.vector([1]) });
-  await monitor(db, [], async (_p, alerts) => { evaluated += alerts.length; return { isSafe: true, warnings: [], checkedAt: new Date().toISOString() }; })({ shop });
+  await monitor(db, [], async (_p, alerts) => { evaluated += alerts.length; return { isSafe: true, warnings: [], checkedAt: new Date().toISOString() }; })({ shop, forceFullScan: false });
   assert.equal(evaluated, 1);
   assert.equal(db.rows.get(merchantPath).lastRapexChangeId, '2026-10-23_revision-A');
   assert.equal(db.rows.get(merchantPath).lastRapexAlertDocId, null);
+});
+
+test('delta requires a successful baseline and never silently starts a full history scan', async () => {
+  const db = fixture();
+  await assert.rejects(monitor(db, [], async () => { throw Error('unexpected model call'); })({ shop, forceFullScan: false }), /baseline/);
+  assert.equal([...db.rows.keys()].some(key => key.includes('/checks/')), false);
+});
+
+function journalAfter(db) {
+  const original = db.collection;
+  const starts = [];
+  db.collection = path => {
+    if (path !== 'rapex_changes') return original(path);
+    let after, cap = Infinity;
+    const query = { orderBy: () => query, startAfter: (...values) => { after = values; starts.push(values); return query; },
+      limit: n => { cap = n; return query; }, get: async () => {
+        const all = (await original(path).get()).docs;
+        const docs = all.filter(doc => !after || doc.get('changedAt') > after[0] ||
+          (doc.get('changedAt').valueOf() === after[0].valueOf() && after.length > 1 && doc.id > after[1])).slice(0, cap);
+        return { docs, size: docs.length, empty: !docs.length };
+      } };
+    return query;
+  };
+  return starts;
+}
+
+test('current-state baseline excludes historical imports even when an old change cursor remains', async () => {
+  const db = fixture(); const starts = journalAfter(db);
+  Object.assign(db.rows.get(merchantPath), { monitoringBaselineAt: Timestamp.fromMillis(2000), lastRapexChangeAt: Timestamp.fromMillis(1000), lastRapexChangeId: 'old' });
+  for (const [id, at] of [['old', 1500], ['new', 2500]]) {
+    db.rows.set(`rapex_changes/${id}`, { alertId: id, changedAt: Timestamp.fromMillis(at) });
+    db.rows.set(`rapex_alerts/${id}`, { meta: { alert_date: '2010-01-01' }, fields: {}, vector_text: FieldValue.vector([1]) });
+  }
+  const matched = [];
+  const summary = await monitor(db, [candidate('should-not-read-publication-pages')], async (_p, alerts) => {
+    matched.push(...alerts.map(a => a.id)); return { isSafe: true, warnings: [], checkedAt: new Date().toISOString() };
+  })({ shop, forceFullScan: false });
+  assert.equal(starts[0][0].toMillis(), 2000);
+  assert.equal(summary.mode, 'delta');
+  assert.equal(summary.window.strategy, 'since-last-check');
+  assert.equal(summary.window.checkpointDate, Timestamp.fromMillis(2000).toDate().toISOString());
+  assert.deepEqual(matched, ['new']);
+  assert.equal(db.rows.get(merchantPath).lastRapexChangeId, 'new');
+});
+
+test('a product already covering a journal change is not sent to AI again', async () => {
+  const db = fixture(); journalAfter(db);
+  db.rows.get(merchantPath).monitoringBaselineAt = Timestamp.fromMillis(1000);
+  const stored = db.rows.get(productPath);
+  stored.safetyCoverage = { fingerprint: productSafetyFingerprint(stored), installation: installationKey(db.rows.get(merchantPath)), coveredThrough: Timestamp.fromMillis(3000) };
+  db.rows.set('rapex_changes/new', { alertId: 'A', changedAt: Timestamp.fromMillis(2000) });
+  db.rows.set('rapex_alerts/A', { meta: {}, fields: {}, vector_text: FieldValue.vector([1]) });
+  const summary = await monitor(db, [], async () => { throw Error('unexpected repeat AI work'); })({ shop, forceFullScan: false });
+  assert.equal(summary.productsScanned, 0);
+  assert.equal(db.rows.get(merchantPath).lastRapexChangeId, 'new');
 });
 
 test('changed Safety Gate facts re-embed and publish a revision; unchanged imports reuse vectors', async () => {
@@ -292,14 +353,14 @@ test('global source retrieval keeps a bounded shortlist and propagates provider 
     retrieveAlertsFromCachedVectors: async () => null, ensureTextRetriever: () => ({}), ensureImageRetriever: () => null,
     buildEmbeddingText: () => 'Specific model', RAG_TEXT_LIMIT: 12, RAG_IMAGE_LIMIT: 6,
     getProductImageUrls: () => [], MATCHING_THRESHOLDS: { textDistance: .38 },
-    normalizeRetrieverDocument: doc => doc, hydrateAlertsIfMissing: async rows => rows,
+    normalizeRetrieverDocument: (doc, channel) => ({ ...doc, [`${channel}Distance`]: doc.distance }), hydrateAlertsIfMissing: async rows => rows,
     functionsAi: { retrieve: async ({ options }) => {
       calls++; if (broken) throw new Error('retrieval provider unavailable');
       return Array.from({ length: options.limit }, (_, id) => ({ id: String(id), distance: .1 }));
     } },
   });
   const rows = await retrieve(input.product);
-  assert.equal(rows.length, 12); assert.equal(calls, 1);
+  assert.equal(rows.length, 3); assert.equal(calls, 1);
   broken = true;
   await assert.rejects(retrieve(input.product), /provider unavailable/);
 });
@@ -326,6 +387,16 @@ test('global retrieval preserves official evidence and source revisions for cach
   assert.equal(first.fields.caseNumber, 'SR/12345/26');
   assert.equal(first.fields.type_numberOfModel, 'M1');
   assert.equal(first.fields.url, 'https://ec.europa.eu/safety-gate-alerts/record/A');
+  const text = normalize({ metadata: { id: 'A', distance: .12 } }, 'text');
+  const image = normalize({ metadata: { alertId: 'A', distance: .18, imageUrl: 'https://example.com/A.jpg' } }, 'image');
+  assert.equal(text.textDistance, .12);
+  assert.equal(text.imageDistance, undefined);
+  assert.equal(image.imageDistance, .18);
+  assert.equal(image.textDistance, undefined);
+  const merge = fn('safety-gate-checker-retrieval', 'mergeImageRecall');
+  const merged = [text]; merge(merged, image);
+  assert.equal(merged[0].textDistance, .12);
+  assert.equal(merged[0].imageDistance, .18);
   const signature = fn('safety-gate-checker', 'buildAlertSignature', { normalizePictures: fields => fields?.pictures || [], hashValue: value => createHash('sha256').update(JSON.stringify(value)).digest('hex') });
   assert.notEqual(signature([first]), signature([{ ...first, meta: { ...first.meta, record_timestamp: '2026-10-23' } }]));
 });

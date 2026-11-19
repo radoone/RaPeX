@@ -11,3 +11,5 @@ Select and independently label positives and hard negatives before running predi
 The report includes both per-mode coverage and a `commonCohort` containing only pairs with a boolean prediction in every mode. Use that cohort for direct mode comparisons. Zero denominators produce `null`, never fabricated perfect scores. Empty shared coverage is reported as zero pairs. Mode names use lowercase letters, digits, underscores or hyphens and begin with a letter. Surrounding whitespace does not make duplicate pair IDs distinct.
 
 The owner-requested fifteen-case identity regression, its public fixtures and actual vector-first execution are documented in [matcher-identity-15.md](matcher-identity-15.md). Its tuning cases must not be represented as an independent accuracy benchmark.
+
+The subsequent bounded-candidate patch, 22-pair live regression, preserved photo/risk context and cross-country rebranding rules are documented in [matcher-candidate-budget.md](matcher-candidate-budget.md).

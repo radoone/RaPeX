@@ -126,7 +126,7 @@ export function AlertTable({
             size="small"
             onClick={() => onStatusChange?.("active")}
           >
-            {t("alerts.table.tabs.active")}{" "}
+            {t("reviewOverview.open")}{" "}
             {stats?.active ? `(${stats.active})` : ""}
           </s-button>
           <s-button

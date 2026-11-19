@@ -1,7 +1,7 @@
 /** Facts needed by matching and version/deletion fences; search vectors stay on the server. */
 export const MONITORING_PRODUCT_FIELDS = [
   "shop", "productId", "productTitle", "productHandle", "name", "category", "description",
-  "imageUrl", "imageUrls", "brand", "model", "barcodes", "sourceUpdatedAt", "deletedAt",
+  "imageUrl", "imageUrls", "brand", "model", "barcodes", "sourceUpdatedAt", "deletedAt", "safetyCoverage",
 ];
 export type MonitoringProductHit = { id: string; sourceUpdatedAt: unknown };
 type ProductFacts = Record<string, unknown>;

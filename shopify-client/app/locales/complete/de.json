@@ -612,7 +612,13 @@
       "progress": "{{imported}} von {{fetched}} Produkten importiert; {{scanned}} Produkte verglichen mit bisher {{alerts}} Safety Gate-Warnungen.",
       "stepAudit": "3. GPSR-Prüfpfad und Compliance-Status vorbereiten",
       "stepImport": "1. Produkte von Shopify importieren",
-      "stepScan": "2. Mit Safety Gate-Datenbank vergleichen (über 35.000 Einträge)"
+      "stepScan": "2. Mit Safety Gate-Datenbank vergleichen (über 35.000 Einträge)",
+      "checkingLabel": "Geprüfte Produkte",
+      "checkingNote": "Der importierte Katalog wird mit Safety Gate abgeglichen. Der Fortschritt wird aktualisiert, sobald Batches abgeschlossen sind.",
+      "importingLabel": "Importierte Produkte",
+      "importingNote": "Produkte werden von Shopify importiert. Die Gesamtzahl ist bekannt, wenn der Import abgeschlossen ist.",
+      "retrying": "Bei der Überprüfung ist ein Problem aufgetreten und es wird erneut versucht. Abgeschlossene Arbeiten bleiben erhalten.",
+      "retryingHeading": "Bei der Prüfung ist ein Problem aufgetreten"
     },
     "metricsCard": {
       "activeAlertsHeading": "Aktive Warnungen",
@@ -1438,5 +1444,110 @@
     "label": "Exakte Barcode-Übereinstimmung",
     "help": "Der validierte Barcode einer Variante stimmt mit dem Safety Gate-Eintrag überein. Prüfen Sie vor Ihrer Entscheidung das Modell und die betroffene Charge."
   },
-  "ownerTestAccess": "Vom Inhaber genehmigter Test — kein Tarif erforderlich"
+  "ownerTestAccess": "Vom Inhaber genehmigter Test — kein Tarif erforderlich",
+  "catalogOverview": {
+    "coverage": "{{checked}} von {{total}}",
+    "coverageHelp": "Einige Produkte sind neu oder wurden seit der letzten Überprüfung geändert. Öffnen Sie die Liste, um zu sehen, was noch überprüft werden muss.",
+    "currentProducts": "Produkte mit einem aktuellen Ergebnis",
+    "initialAudit": "Erste Katalogprüfung",
+    "lastCheck": "Letzte erfolgreiche Katalogprüfung",
+    "monitoring": {
+      "delayed": "Überprüfung überfällig",
+      "enabled": "Wird automatisch ausgeführt",
+      "failed": "Letzte Überprüfung fehlgeschlagen",
+      "paused": "Pausiert",
+      "preview": "Entwicklungs-Vorschau",
+      "processing": "Überprüfung läuft",
+      "unknown": "Aktivität unbestätigt",
+      "unverified": "Planüberprüfung nicht verfügbar"
+    },
+    "monitoringHelp": {
+      "delayed": "Die letzte automatische Überprüfung war vor mehr als 48 Stunden. Wenn der Status bestehen bleibt, wenden Sie sich an den Support.",
+      "failed": "Ihre letzten erfolgreichen Ergebnisse sind weiterhin verfügbar. Wenn die nächste Überprüfung ebenfalls fehlschlägt, wenden Sie sich an den Support.",
+      "paused": "Wählen Sie einen aktiven Shopify-Plan, um automatische Überprüfungen fortzusetzen.",
+      "preview": "Geplante Überprüfungen erfordern einen verifizierten Shopify-Plan.",
+      "processing": "Die Überprüfung ist in der Warteschlange oder wird ausgeführt. Die Ergebnisse werden angezeigt, sobald sie abgeschlossen ist.",
+      "unknown": "Es ist keine abgeschlossene automatische Überprüfung registriert. Wenn das Aktualisieren dieses Status nicht hilft, wenden Sie sich an den Support.",
+      "unverified": "Aktualisieren Sie, um Ihren Shopify-Plan zu verifizieren. Wenn der Status bestehen bleibt, wenden Sie sich an den Support."
+    },
+    "monitoringRun": "Auf neue oder aktualisierte Safety Gate-Warnungen prüfen",
+    "noActionHelp": "Ihr aktueller Katalog ist abgedeckt und es warten keine möglichen Übereinstimmungen auf Ihre Überprüfung.",
+    "noCompletedCheck": "Keine abgeschlossene Katalogprüfung registriert",
+    "purpose": "ZeroRecall gleicht Ihren Shopify-Katalog mit <portalLink>EU Safety Gate</portalLink>-Warnungen ab und zeigt Ihnen, welche möglichen Übereinstimmungen überprüft werden müssen.",
+    "refreshStatus": "Überwachungsstatus aktualisieren",
+    "reviewHelp": "Vergleichen Sie Ihr Produkt mit der offiziellen Warnung und treffen Sie dann Ihre Entscheidung.",
+    "reviewNext": "Nächste Übereinstimmung überprüfen"
+  },
+  "findingOverview": {
+    "matches": "Was übereinstimmt",
+    "missing": "Fehlende Informationen: {{fields}}.",
+    "noConfirmedIdentifiers": "Keine übereinstimmenden Identifikatoren bestätigt.",
+    "officialRisk": "Risiko im Safety Gate-Alarm",
+    "riskUnavailable": "Risikodetails sind in diesem gespeicherten Alarm nicht verfügbar.",
+    "saveFailed": "Die Entscheidung konnte nicht gespeichert werden. Versuchen Sie es erneut.",
+    "verify": "Was zu überprüfen ist",
+    "verifyApplicability": "Überprüfen Sie, ob der offizielle Alarm für Ihr Produkt zutrifft."
+  },
+  "pendingCoverage": {
+    "automaticCount_few": "{{count}} Produkte haben automatische Überprüfungen in der Warteschlange.",
+    "automaticCount_many": "{{count}} Produkte haben automatische Überprüfungen in der Warteschlange.",
+    "automaticCount_one": "{{count}} Produkt hat eine automatische Überprüfung in der Warteschlange.",
+    "automaticCount_other": "{{count}} Produkte haben automatische Überprüfungen in der Warteschlange.",
+    "automaticCount_plural": "{{count}} Produkte haben automatische Überprüfungen in der Warteschlange.",
+    "automaticOnly": "ZeroRecall überprüft diese Produkte automatisch. Keine Aktion erforderlich.",
+    "batchResult": "Überprüfungen abgeschlossen: {{checked}}. Fehlgeschlagene Überprüfungen: {{failed}}.",
+    "checkBatch_few": "{{count}} Produkte überprüfen",
+    "checkBatch_many": "{{count}} Produkte überprüfen",
+    "checkBatch_one": "{{count}} Produkt überprüfen",
+    "checkBatch_other": "{{count}} Produkte überprüfen",
+    "checkBatch_plural": "{{count}} Produkte überprüfen",
+    "complete": "Jede aktuelle Shopify-Produktversion hat ein gespeichertes Ergebnis.",
+    "current": "Aktuelle Ergebnisse für {{checked}} von {{total}} Produkten.",
+    "empty": "Produkte erscheinen hier, nachdem Sie sie in Shopify hinzugefügt haben.",
+    "emptyTitle": "Noch keine Produkte zum Überprüfen",
+    "filters": "Suchen und filtern",
+    "manualHelp": "Überprüfen Sie Produkte jetzt, wenn ZeroRecall keine automatische Überprüfung bestätigt hat.",
+    "pendingTab": "Warten auf eine Überprüfung",
+    "planRequired": "Ein aktiver Shopify-Plan ist erforderlich, um die verbleibenden Produkte zu überprüfen.",
+    "planUnconfirmed": "Automatische Überprüfungen sind für die verbleibenden Produkte unbestätigt. Überprüfen Sie Ihren Planstatus in den Überwachungseinstellungen.",
+    "row": {
+      "automatic": "Automatische Überprüfung in Warteschlange oder in Bearbeitung",
+      "planRequired": "Ein aktiver Shopify-Plan ist erforderlich",
+      "planUnconfirmed": "Automatische Überprüfung und Planstatus unbestätigt",
+      "unconfirmed": "Keine automatische Überprüfung bestätigt"
+    },
+    "title_few": "{{count}} Produkte warten auf eine Überprüfung",
+    "title_many": "{{count}} Produkte warten auf eine Überprüfung",
+    "title_one": "{{count}} Produkt wartet auf eine Überprüfung",
+    "title_other": "{{count}} Produkte warten auf eine Überprüfung",
+    "title_plural": "{{count}} Produkte warten auf eine Überprüfung",
+    "viewAll": "Alle Produkte anzeigen"
+  },
+  "reviewOverview": {
+    "closed": "Geschlossen (gelöst oder abgewiesen)",
+    "current": "Aktuelle Ergebnisse",
+    "decisions": "Erfasste Entscheidungen",
+    "emptyDecisions": "Noch keine Entscheidungen erfasst.",
+    "filters": "Filter",
+    "open": "Offene Ergebnisse",
+    "report": "Ergebnisse in diesem Bericht"
+  },
+  "settingsOverview": {
+    "active": "Aktiv",
+    "activePlan": "Aktiver Shopify-Plan",
+    "delivery": {
+      "paused": "Die Zustellung ist pausiert, bis der Überwachungszugriff aktiv ist.",
+      "unconfirmed": "Der E-Mail-Zustellstatus ist unbestätigt."
+    },
+    "editEmail": "E-Mail-Einstellungen bearbeiten",
+    "mondayEmail": "Montagszusammenfassung",
+    "noActivePlan": "Kein aktiver Plan",
+    "off": "Aus",
+    "on": "An",
+    "planUnverified": "Plan unbestätigt",
+    "previousPlan": "Zuletzt verifizierter Plan: {{plan}}",
+    "recipient": "Gesendet an {{email}}",
+    "testAccess": "Testzugriff des Inhabers",
+    "weeklyHelp": "Wird montags mit Ihrem Überwachungsstatus und offenen Befunden gesendet."
+  }
 }

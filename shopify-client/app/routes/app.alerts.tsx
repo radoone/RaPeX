@@ -83,7 +83,7 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
     }),
     db.safetyAlert.findMany({
       where: { shop: session.shop, status: "active" },
-      select: { riskLevel: true, checkResult: true },
+      select: { status: true, reviewState: true, resolutionType: true, riskLevel: true, checkResult: true },
       take: 100,
     }),
   ]);
@@ -205,6 +205,7 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
     : [];
 
   const criticalActiveAlerts = activeAlertRiskSample.filter((alert: any) => {
+    if (isWaitingForSupplier(alert)) return false;
     try {
       const parsed = alert.checkResult ? JSON.parse(alert.checkResult) : null;
       const warning = Array.isArray(parsed?.warnings)
@@ -313,7 +314,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       resolutionType,
       notes,
     });
-    return json({ success: true });
   } catch (error) {
     return json(
       {
@@ -326,6 +326,25 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       { status: 400 },
     );
   }
+  if (!alertIdsJson && action !== "reactivate") {
+    const activeFindings = await db.safetyAlert.findMany({
+      where: { shop: session.shop, status: "active" },
+      select: { id: true, status: true, reviewState: true, resolutionType: true, createdAt: true, riskLevel: true, checkResult: true },
+    }).catch(error => {
+      console.error("Could not check for the next finding", error);
+      return [];
+    });
+    const nextFinding = activeFindings
+      .filter(alert => alert.id !== ids[0] && !isWaitingForSupplier(alert))
+      .sort(compareReviewPriority)[0];
+    return json({
+      success: true,
+      reviewedAlertId: ids[0],
+      nextMatchId: (nextFinding?.id as string | undefined) || null,
+    });
+  }
+
+  return json({ success: true, reviewedAlertId: null, nextMatchId: null });
 };
 
 export function ErrorBoundary() {
@@ -368,6 +387,10 @@ export default function AlertsPage() {
   const { t } = useTranslation();
   const shopify = useAppBridge();
 
+  const [submittedAlertId, setSubmittedAlertId] = useState<string | null>(null);
+  const reviewReceipt = fetcher.state === "idle" && fetcher.data && "reviewedAlertId" in fetcher.data && fetcher.data.reviewedAlertId
+    ? fetcher.data
+    : null;
   const [searchValue, setSearchValue] = useState(filters.search || "");
   const [statusFilter, setStatusFilter] = useState<string[]>(
     filters.status || [],
@@ -431,6 +454,7 @@ export default function AlertsPage() {
       resolutionType?: string,
       notes?: string,
     ) => {
+      setSubmittedAlertId(alertId);
       fetcher.submit(
         {
           action,
@@ -446,6 +470,7 @@ export default function AlertsPage() {
 
   const handleBulkAction = useCallback(
     (alertIds: string[], action: string, resolutionType?: string) => {
+      setSubmittedAlertId(null);
       fetcher.submit(
         {
           action,
@@ -465,26 +490,29 @@ export default function AlertsPage() {
   }, [filters]);
 
   useEffect(() => {
-    if (fetcher.data?.success) {
+    if (reviewReceipt?.reviewedAlertId) {
+      document.getElementById(`alert-detail-${reviewReceipt.reviewedAlertId}-close`)?.click();
+      document.getElementById("decision-saved")?.focus();
+    } else if (fetcher.state === "idle" && fetcher.data?.success) {
       shopify.toast.show(t("alerts.toasts.updated"));
     }
-  }, [fetcher.data, shopify, t]);
+  }, [fetcher.data, fetcher.state, reviewReceipt, shopify, t]);
 
-  const nextAlert = alerts.find((alert: any) => alert.status === "active");
+  const nextAlert = alerts.find((alert: any) => alert.status === "active" && !isWaitingForSupplier(alert));
 
   return (
     <s-page size="large" className="page-shell" suppressHydrationWarning>
       <s-heading slot="title" size="large" suppressHydrationWarning>
         {t("alerts.title")}
       </s-heading>
-      {stats.active > 0 && nextAlert ? (
+      {!reviewReceipt && (stats.active > 0 && nextAlert ? (
         <s-button
           slot="primary-action"
           variant="primary"
           commandFor={`alert-detail-${nextAlert.id}`}
           suppressHydrationWarning
         >
-          {t("workspace.reviewNext", { title: nextAlert.productTitle })}
+          {t("catalogOverview.reviewNext")}
         </s-button>
       ) : (
         <s-button
@@ -495,7 +523,7 @@ export default function AlertsPage() {
         >
           {t("actions.checkOneProduct")}
         </s-button>
-      )}
+      ))}
       <s-button
         slot="secondary-actions"
         variant="secondary"
@@ -514,7 +542,23 @@ export default function AlertsPage() {
       </s-button>
 
       <div className="admin-stack">
-        {stats.active > 0 && (
+        {reviewReceipt && (
+          <div id="decision-saved" tabIndex={-1} role="status">
+            <s-banner tone="success" heading={t("analysis.decisionRecorded")}>
+              {reviewReceipt.nextMatchId && (
+                <s-button
+                  variant="primary"
+                  href={`/app/alerts?status=active&open=${encodeURIComponent(reviewReceipt.nextMatchId)}`}
+                  onClick={() => fetcher.reset()}
+                >
+                  {t("catalogOverview.reviewNext")}
+                </s-button>
+              )}
+            </s-banner>
+          </div>
+        )}
+
+        {stats.active > 0 && !statusFilter.includes("waiting_for_supplier") && (
           <s-banner
             tone={stats.criticalActive > 0 ? "critical" : "warning"}
             heading={
@@ -522,14 +566,10 @@ export default function AlertsPage() {
                 ? t("dashboard.admin.status.reviewNeeded.criticalTitle", {
                     count: stats.criticalActive,
                   })
-                : t("alerts.admin.warningBannerTitle", { count: stats.active })
+                : t("reviewOverview.open")
             }
           >
-            <s-text>
-              {stats.criticalActive > 0
-                ? t("workspace.reviewPrompt")
-                : t("alerts.admin.warningBannerDescription")}
-            </s-text>
+            {stats.criticalActive > 0 && <s-text>{t("workspace.reviewPrompt")}</s-text>}
             {filters.sortBy === "priority" && (
               <p>{t("workspace.priorityHelp")}</p>
             )}
@@ -537,23 +577,6 @@ export default function AlertsPage() {
         )}
 
         <AdminCard className="admin-card">
-          <div className="admin-card__header">
-            <div>
-              <h2 className="admin-card__title">{t("alerts.subtitle")}</h2>
-              <p className="admin-card__description">
-                {t("alerts.admin.queueDescription")}
-              </p>
-            </div>
-            <div className="admin-inline-meta">
-              <s-badge tone={stats.active > 0 ? "critical" : "success"}>
-                {t("alerts.meta.active", { count: stats.active })}
-              </s-badge>
-              <s-badge tone="info">
-                {t("alerts.meta.total", { count: stats.total })}
-              </s-badge>
-            </div>
-          </div>
-
           <AlertTable
             alerts={alerts}
             onViewDetails={() => {}}
@@ -641,7 +664,9 @@ export default function AlertsPage() {
             handleAlertAction(id, "resolve", resolutionType, notes)
           }
           onReactivate={(id) => handleAlertAction(id, "reactivate")}
-          isLoading={fetcher.state === "submitting"}
+          waitForDecisionSave
+          decisionSaveFailed={alert.id === submittedAlertId && fetcher.state === "idle" && fetcher.data?.success === false}
+          isLoading={fetcher.state !== "idle"}
         />
       ))}
     </s-page>

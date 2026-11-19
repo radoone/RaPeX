@@ -486,6 +486,11 @@
     "state_resolved": "Réitithe",
     "state_dismissed": "Díbheite",
     "state_unknown": "Seiceáil an aip le haghaidh an stádais reatha",
-    "entire_public_catalog": "An chatalóg phoiblí iomlán"
+    "entire_public_catalog": "An chatalóg phoiblí iomlán",
+    "weekly_new_period": "Cruthaithe sa tréimhse seo",
+    "weekly_open_snapshot": "Ar oscailt anois, lena n-áirítear tréimhsí roimhe seo",
+    "new_products_checked": "Táirgí nua seiceáilte",
+    "safety_gate_records_imported": "Taifid nua iompórtáilte go RAPEX",
+    "weekly_new_products_explanation": "Is táirgí iad na táirgí nua seiceáilte a cuireadh leis an monatóireacht agus a seiceáladh go rathúil sa tréimhse seo. Ní chomhairtear gach táirge ach uair amháin."
   }
 }

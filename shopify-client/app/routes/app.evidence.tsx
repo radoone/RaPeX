@@ -23,6 +23,7 @@ import {
   isWaitingForSupplier,
 } from "../services/review-evidence";
 import { localizeRisk } from "../components/AlertBadge";
+import { ReviewStatusSummary, reviewStatusOptions } from "../components/ReviewStatusSummary";
 export const headers = boundary.headers;
 export const loader = async ({ request, url }: LoaderFunctionArgs) => {
   const { session } = await authenticate.admin(request);
@@ -34,7 +35,7 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
   });
 };
 export default function EvidencePage() {
-  const { records, total, view, filters, summary } =
+  const { records, total, view, filters, shopSummary } =
     useLoaderData<typeof loader>();
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -45,18 +46,25 @@ export default function EvidencePage() {
   const [exporting, setExporting] = useState(false);
   const [exportFailed, setExportFailed] = useState(false);
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
-  const [timeZone, setTimeZone] = useState(filters.timeZone || "Europe/Bratislava");
+  const timeZone = filters.timeZone || "Europe/Bratislava";
+  const hasFilters = Boolean(filters.from || filters.to || filters.status || filters.query);
   useEffect(() => {
     setSearch(filters.query || ""); setStatus(filters.status || "");
     setFromDate(filters.from || ""); setToDate(filters.to || "");
-    setTimeZone(filters.timeZone || "Europe/Bratislava");
   }, [filters]);
 
   const queryFor = (targetView = view, clear = false) => {
     const values = clear ? { view: targetView } : { view: targetView, dateBasis: targetView, from: fromDate, to: toDate, status, q: search, timeZone };
     return new URLSearchParams(Object.entries(values).filter(([, value]) => value)).toString();
   };
-  const applyFilters = () => navigate(`/app/evidence?${queryFor()}`);
+  const applyFilters = () => {
+    setDownloadUrl(null);
+    navigate(`/app/evidence?${queryFor()}`);
+  };
+  const clearFilters = () => {
+    setDownloadUrl(null);
+    navigate(`/app/evidence?${queryFor(view, true)}`);
+  };
 
   useEffect(
     () => () => {
@@ -137,102 +145,87 @@ export default function EvidencePage() {
           </s-banner>
         ) : null}
         <AdminCard className="admin-card">
+          <div className="admin-card__header">
+            <h2 className="admin-card__title">{t("reviewOverview.current")}</h2>
+            {shopSummary.needsReview + shopSummary.waiting > 0 && (
+              <s-link href="/app/alerts?status=active">{t("workspace.goReview")}</s-link>
+            )}
+          </div>
+          <ReviewStatusSummary title={t("reviewOverview.current")} counts={shopSummary} />
+        </AdminCard>
+
+        <AdminCard className="admin-card">
           <div
             className="admin-card__header"
             style={{ marginBottom: "12px" }}
           >
             <div>
-              <h2 className="admin-card__title">{t("evidence.heading")}</h2>
-              <p className="admin-card__description">
-                {t(view === "decisions" ? "workspace.decisionExportHelp" : "workspace.exportHelp")}
-              </p>
+              <h2 className="admin-card__title">{t(view === "decisions" ? "reviewOverview.decisions" : "workspace.findings")}</h2>
             </div>
             <div className="admin-actions">
               <s-button
                 variant={view === "decisions" ? "secondary" : "tertiary"}
-                onClick={() => navigate(`/app/evidence?${queryFor("decisions")}`)}
+                onClick={() => { setDownloadUrl(null); navigate(`/app/evidence?${queryFor("decisions")}`); }}
               >
-                {t("workspace.history")}{view === "decisions" ? ` (${events.length})` : ""}
+                {t("workspace.history")}
               </s-button>
               <s-button
                 variant={view === "findings" ? "secondary" : "tertiary"}
-                onClick={() => navigate(`/app/evidence?${queryFor("findings")}`)}
+                onClick={() => { setDownloadUrl(null); navigate(`/app/evidence?${queryFor("findings")}`); }}
               >
-                {t("workspace.findings")}{view === "findings" ? ` (${findings.length})` : ""}
+                {t("workspace.findings")}
               </s-button>
             </div>
           </div>
 
-          <div
-            className="audit-report-summary"
-            aria-label={t("auditReport.summaryLabel")}
-            style={{ marginTop: "8px", marginBottom: "16px" }}
-          >
-            <div>
-              <span>{t("auditReport.total")}</span>
-              <strong>{total}</strong>
-            </div>
-            <div>
-              <span>{t("auditReport.needsReview")}</span>
-              <strong>{summary.active}</strong>
-            </div>
-            <div>
-              <span>{t("workspace.documentedFindings")}</span>
-              <strong>{summary.documented}</strong>
-            </div>
-          </div>
-
-          <Form method="get" className="admin-toolbar evidence-toolbar" onSubmit={event => { event.preventDefault(); applyFilters(); }}>
-            <input type="hidden" name="view" value={view} />
-            <s-text-field
-              label={t("evidence.filters.searchLabel")}
-              placeholder={t("evidence.filters.searchPlaceholder")}
-              value={search}
-              onInput={(event: any) =>
-                setSearch(event.currentTarget.value || "")
-              }
-            />
-            <s-select
-              label={t("workspace.currentFindingStatus")}
-              name="status"
-              value={status}
-              onChange={(event: any) => setStatus(event.currentTarget.value)}
-            >
-              <s-option value="">{t("workspace.all")}</s-option>
-              {["active", "resolved", "dismissed"].map((value) => (
-                <s-option key={value} value={value}>
-                  {t(
-                    value === "active"
-                      ? "status.needsReview"
-                      : `status.${value}`,
-                  )}
-                </s-option>
-              ))}
-            </s-select>
-            <div className="report-filters" style={{ margin: 0 }}>
-              <label>
-                {t(view === "decisions" ? "workspace.decisionFrom" : "workspace.findingFrom")}
-                <input
-                  type="date"
-                  name="from"
-                  value={fromDate}
-                  onChange={(e) => setFromDate(e.currentTarget.value)}
-                />
-              </label>
-              <label>
-                {t(view === "decisions" ? "workspace.decisionTo" : "workspace.findingTo")}
-                <input
-                  type="date"
-                  name="to"
-                  value={toDate}
-                  onChange={(e) => setToDate(e.currentTarget.value)}
-                />
-              </label>
-            </div>
-            <s-button variant="secondary" onClick={applyFilters}>{t("workspace.applyFilters")}</s-button>
-            <s-button variant="tertiary" onClick={() => navigate(`/app/evidence?${queryFor(view, true)}`)}>{t("workspace.clearFilters")}</s-button>
-          </Form>
-          <p className="admin-helper">{t("workspace.dateFilterTimezone", { timeZone })}</p>
+          <details className="review-filters-disclosure" open={hasFilters || undefined}>
+            <summary>{t("pendingCoverage.filters")}</summary>
+            <Form method="get" className="admin-toolbar evidence-toolbar" onSubmit={event => { event.preventDefault(); applyFilters(); }}>
+              <input type="hidden" name="view" value={view} />
+              <s-text-field
+                label={t("evidence.filters.searchLabel")}
+                placeholder={t("evidence.filters.searchPlaceholder")}
+                value={search}
+                onInput={(event: any) =>
+                  setSearch(event.currentTarget.value || "")
+                }
+              />
+              <s-select
+                label={t("workspace.currentFindingStatus")}
+                name="status"
+                value={status}
+                onChange={(event: any) => setStatus(event.currentTarget.value)}
+              >
+                <s-option value="">{t("workspace.all")}</s-option>
+                {reviewStatusOptions.map(([value, label]) => (
+                  <s-option key={value} value={value}>{t(label)}</s-option>
+                ))}
+              </s-select>
+              <div className="report-filters" style={{ margin: 0 }}>
+                <label>
+                  {t(view === "decisions" ? "workspace.decisionFrom" : "workspace.findingFrom")}
+                  <input
+                    type="date"
+                    name="from"
+                    value={fromDate}
+                    onChange={(e) => setFromDate(e.currentTarget.value)}
+                  />
+                </label>
+                <label>
+                  {t(view === "decisions" ? "workspace.decisionTo" : "workspace.findingTo")}
+                  <input
+                    type="date"
+                    name="to"
+                    value={toDate}
+                    onChange={(e) => setToDate(e.currentTarget.value)}
+                  />
+                </label>
+              </div>
+              <s-button variant="secondary" onClick={applyFilters}>{t("workspace.applyFilters")}</s-button>
+              {hasFilters && <s-button variant="tertiary" onClick={clearFilters}>{t("workspace.clearFilters")}</s-button>}
+            </Form>
+            <p className="admin-helper">{t("workspace.dateFilterTimezone", { timeZone })}</p>
+          </details>
           {downloadUrl ? (
             <p role="status" className="admin-helper">
               {t("workspace.exportReady")}{" "}
@@ -244,23 +237,14 @@ export default function EvidencePage() {
               </a>
             </p>
           ) : null}
-          <p className="admin-helper">
-            {t("workspace.historyLimit", { count: 100 })}{" "}
-            {t("workspace.findingCount", { count: total })}
-          </p>
-          <div role="status" className="admin-helper">
-            {view === "decisions"
-              ? t("workspace.eventCount", { count: events.length })
-              : t("evidence.records", { count: findings.length })}
-          </div>
+          {total > records.length && (
+            <p className="admin-helper">{t("workspace.historyLimit", { count: 100 })}</p>
+          )}
           {view === "decisions" ? (
             events.length === 0 ? (
               <div className="admin-empty-state">
-                <p>{t(filters.from || filters.to || filters.status || filters.query ? "workspace.noFilteredDecisions" : "workspace.noDecisions")}</p>
-                <s-button onClick={() => navigate(`/app/evidence?${queryFor(view, true)}`)}>{t("workspace.clearFilters")}</s-button>
-                <s-button href="/app/alerts?status=active">
-                  {t("workspace.goReview")}
-                </s-button>
+                <p>{t(hasFilters ? "workspace.noFilteredDecisions" : "reviewOverview.emptyDecisions")}</p>
+                {hasFilters && <s-button onClick={clearFilters}>{t("workspace.clearFilters")}</s-button>}
               </div>
             ) : (
               <div className="decision-event-list">
@@ -299,6 +283,11 @@ export default function EvidencePage() {
                 ))}
               </div>
             )
+          ) : findings.length === 0 ? (
+            <div className="admin-empty-state">
+              <p>{t("workspace.reportEmpty")}</p>
+              {hasFilters && <s-button onClick={clearFilters}>{t("workspace.clearFilters")}</s-button>}
+            </div>
           ) : (
             <s-table accessibilityLabel={t("workspace.findings")}>
               <s-table-header-row>
@@ -308,7 +297,6 @@ export default function EvidencePage() {
                 <s-table-header listSlot="inline">
                   {t("workspace.status")}
                 </s-table-header>
-                <s-table-header>{t("workspace.whyMatch")}</s-table-header>
                 <s-table-header>{t("workspace.outcome")}</s-table-header>
               </s-table-header-row>
               <s-table-body>
@@ -340,10 +328,6 @@ export default function EvidencePage() {
                             )}
                       </s-badge>
                       <p>{localizeRisk(record.riskLevel, t)}</p>
-                    </s-table-cell>
-                    <s-table-cell>
-                      <p>{t("workspace.matchNeedsVerification")}</p>
-                      {record.sourceRisk && <p><strong>{t("workspace.sourceRisk")}: </strong>{record.sourceRisk}</p>}
                     </s-table-cell>
                     <s-table-cell>
                       {t(!record.resolutionType && record.decisions.length ? "workspace.reopened" : decisionKey(record.resolutionType))}

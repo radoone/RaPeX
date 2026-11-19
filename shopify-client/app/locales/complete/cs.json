@@ -612,7 +612,13 @@
       "progress": "Importováno {{imported}} z {{fetched}} produktů; porovnáno {{scanned}} produktů s {{alerts}} upozorněními Safety Gate dosud.",
       "stepAudit": "3. Připravte auditní stopu GPSR a stav shody",
       "stepImport": "1. Importujte produkty ze Shopify",
-      "stepScan": "2. Porovnejte s databází Safety Gate (více než 35 000 záznamů)"
+      "stepScan": "2. Porovnejte s databází Safety Gate (více než 35 000 záznamů)",
+      "checkingLabel": "Zkontrolované produkty",
+      "checkingNote": "Kontroluje se importovaný katalog proti Safety Gate. Pokrok se aktualizuje po dokončení dávek.",
+      "importingLabel": "Importované produkty",
+      "importingNote": "Importují se produkty z Shopify. Celkový počet bude znám po dokončení importu.",
+      "retrying": "Při kontrole došlo k problému a bude se opakovat. Dokončená práce je zachována.",
+      "retryingHeading": "Při auditu došlo k problému"
     },
     "metricsCard": {
       "activeAlertsHeading": "Aktivní upozornění",
@@ -1438,5 +1444,110 @@
     "label": "Přesná shoda čárového kódu",
     "help": "Ověřený čárový kód varianty se shoduje se záznamem Safety Gate. Před rozhodnutím ověřte model a dotčenou šarži."
   },
-  "ownerTestAccess": "Testování povolené vlastníkem — cenový plán není vyžadován"
+  "ownerTestAccess": "Testování povolené vlastníkem — cenový plán není vyžadován",
+  "catalogOverview": {
+    "coverage": "{{checked}} z {{total}}",
+    "coverageHelp": "Některé produkty jsou nové nebo se změnily od poslední kontroly. Otevřete seznam a podívejte se, co ještě potřebuje zkontrolovat.",
+    "currentProducts": "Produkty s aktuálním výsledkem",
+    "initialAudit": "Počáteční kontrola katalogu",
+    "lastCheck": "Poslední úspěšná kontrola katalogu",
+    "monitoring": {
+      "delayed": "Kontrola po termínu",
+      "enabled": "Běží automaticky",
+      "failed": "Poslední kontrola selhala",
+      "paused": "Pozastaveno",
+      "preview": "Náhled vývoje",
+      "processing": "Kontrola probíhá",
+      "unknown": "Aktivita nepotvrzena",
+      "unverified": "Ověření plánu není k dispozici"
+    },
+    "monitoringHelp": {
+      "delayed": "Poslední automatická kontrola proběhla před více než 48 hodinami. Pokud stav přetrvává, kontaktujte podporu.",
+      "failed": "Vaše poslední úspěšné výsledky jsou stále k dispozici. Pokud i další kontrola selže, kontaktujte podporu.",
+      "paused": "Vyberte aktivní plán Shopify pro obnovení automatických kontrol.",
+      "preview": "Plánované kontroly vyžadují ověřený plán Shopify.",
+      "processing": "Kontrola je ve frontě nebo probíhá. Výsledky se zobrazí po jejím dokončení.",
+      "unknown": "Není zaznamenána žádná dokončená automatická kontrola. Pokud obnovení tohoto stavu nepomůže, kontaktujte podporu.",
+      "unverified": "Obnovte pro ověření vašeho plánu Shopify. Pokud stav přetrvává, kontaktujte podporu."
+    },
+    "monitoringRun": "Zkontrolovat nové nebo aktualizované výstrahy Safety Gate",
+    "noActionHelp": "Váš aktuální katalog je pokryt a žádné možné shody nečekají na vaši kontrolu.",
+    "noCompletedCheck": "Není zaznamenána žádná dokončená kontrola katalogu",
+    "purpose": "ZeroRecall kontroluje váš katalog Shopify proti výstrahám <portalLink>EU Safety Gate</portalLink> a ukazuje vám, které možné shody potřebují kontrolu.",
+    "refreshStatus": "Obnovit stav monitorování",
+    "reviewHelp": "Porovnejte svůj produkt s oficiální výstrahou a poté zaznamenejte své rozhodnutí.",
+    "reviewNext": "Zkontrolovat další shodu"
+  },
+  "findingOverview": {
+    "matches": "Co se shoduje",
+    "missing": "Chybějící informace: {{fields}}.",
+    "noConfirmedIdentifiers": "Nebyly potvrzeny žádné shodné identifikátory.",
+    "officialRisk": "Riziko v upozornění Safety Gate",
+    "riskUnavailable": "Podrobnosti o riziku nejsou v tomto uloženém upozornění k dispozici.",
+    "saveFailed": "Rozhodnutí se nepodařilo uložit. Zkuste to znovu.",
+    "verify": "Co ověřit",
+    "verifyApplicability": "Zkontrolujte, zda se oficiální upozornění vztahuje na váš produkt."
+  },
+  "pendingCoverage": {
+    "automaticCount_few": "{{count}} produktů má automatické kontroly ve frontě.",
+    "automaticCount_many": "{{count}} produktů má automatické kontroly ve frontě.",
+    "automaticCount_one": "{{count}} produkt má automatickou kontrolu ve frontě.",
+    "automaticCount_other": "{{count}} produktů má automatické kontroly ve frontě.",
+    "automaticCount_plural": "{{count}} produktů má automatické kontroly ve frontě.",
+    "automaticOnly": "ZeroRecall tyto produkty kontroluje automaticky. Není potřeba žádná akce.",
+    "batchResult": "Kontroly dokončeny: {{checked}}. Neúspěšné kontroly: {{failed}}.",
+    "checkBatch_few": "Zkontrolovat {{count}} produktů",
+    "checkBatch_many": "Zkontrolovat {{count}} produktů",
+    "checkBatch_one": "Zkontrolovat {{count}} produkt",
+    "checkBatch_other": "Zkontrolovat {{count}} produktů",
+    "checkBatch_plural": "Zkontrolovat {{count}} produktů",
+    "complete": "Každá aktuální verze produktu Shopify má uložený výsledek.",
+    "current": "Aktuální výsledky pro {{checked}} z {{total}} produktů.",
+    "empty": "Produkty se zde zobrazí poté, co je přidáte v Shopify.",
+    "emptyTitle": "Zatím žádné produkty ke kontrole",
+    "filters": "Hledat a filtrovat",
+    "manualHelp": "Zkontrolujte produkty nyní, pokud ZeroRecall nemá potvrzenou automatickou kontrolu.",
+    "pendingTab": "Čeká na kontrolu",
+    "planRequired": "Pro kontrolu zbývajících produktů je vyžadován aktivní plán Shopify.",
+    "planUnconfirmed": "Automatické kontroly nejsou pro zbývající produkty potvrzeny. Zkontrolujte stav svého plánu v nastavení monitorování.",
+    "row": {
+      "automatic": "Automatická kontrola ve frontě nebo probíhá",
+      "planRequired": "Je vyžadován aktivní plán Shopify",
+      "planUnconfirmed": "Automatická kontrola a stav plánu nepotvrzeny",
+      "unconfirmed": "Automatická kontrola nepotvrzena"
+    },
+    "title_few": "{{count}} produktů čeká na kontrolu",
+    "title_many": "{{count}} produktů čeká na kontrolu",
+    "title_one": "{{count}} produkt čeká na kontrolu",
+    "title_other": "{{count}} produktů čeká na kontrolu",
+    "title_plural": "{{count}} produktů čeká na kontrolu",
+    "viewAll": "Zobrazit všechny produkty"
+  },
+  "reviewOverview": {
+    "closed": "Uzavřeno (vyřešeno nebo zamítnuto)",
+    "current": "Aktuální zjištění",
+    "decisions": "Zaznamenaná rozhodnutí",
+    "emptyDecisions": "Zatím nebyla zaznamenána žádná rozhodnutí.",
+    "filters": "Filtry",
+    "open": "Otevřená zjištění",
+    "report": "Zjištění v této zprávě"
+  },
+  "settingsOverview": {
+    "active": "Aktivní",
+    "activePlan": "Aktivní plán Shopify",
+    "delivery": {
+      "paused": "Doručování je pozastaveno, dokud nebude aktivní přístup k monitorování.",
+      "unconfirmed": "Stav doručení e-mailu je nepotvrzen."
+    },
+    "editEmail": "Upravit předvolby e-mailu",
+    "mondayEmail": "Pondělní souhrn",
+    "noActivePlan": "Žádný aktivní plán",
+    "off": "Vypnuto",
+    "on": "Zapnuto",
+    "planUnverified": "Plán neověřen",
+    "previousPlan": "Poslední ověřený plán: {{plan}}",
+    "recipient": "Odesláno na {{email}}",
+    "testAccess": "Přístup k testování vlastníka",
+    "weeklyHelp": "Odesíláno v pondělí se stavem monitorování a otevřenými zjištěními."
+  }
 }

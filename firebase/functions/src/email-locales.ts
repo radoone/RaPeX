@@ -87,7 +87,12 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_resolved": "Resolved",
     "state_dismissed": "Dismissed",
     "state_unknown": "Check the app for the current status",
-    "entire_public_catalog": "Entire public catalog"
+    "entire_public_catalog": "Entire public catalog",
+    "weekly_new_period": "Created during this period",
+    "weekly_open_snapshot": "Open now, including earlier periods",
+    "new_products_checked": "New products checked",
+    "safety_gate_records_imported": "New RAPEX records imported",
+    "weekly_new_products_explanation": "New products checked counts products added to monitoring and successfully checked during this period, once per product."
   },
   "bg": {
     "serious": "Сериозен",
@@ -176,7 +181,12 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_resolved": "Разрешено",
     "state_dismissed": "Отхвърлено",
     "state_unknown": "Проверете приложението за текущия статус",
-    "entire_public_catalog": "Целият публичен каталог"
+    "entire_public_catalog": "Целият публичен каталог",
+    "weekly_new_period": "Създадени през този период",
+    "weekly_open_snapshot": "Отворени сега, включително от предходни периоди",
+    "new_products_checked": "Нови проверени продукти",
+    "safety_gate_records_imported": "Нови записи, импортирани в RAPEX",
+    "weekly_new_products_explanation": "Новите проверени продукти са добавени към наблюдението и успешно проверени през този период. Всеки продукт се брои само веднъж."
   },
   "cs": {
     "serious": "Vážné",
@@ -265,7 +275,12 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_resolved": "Vyřešeno",
     "state_dismissed": "Zamítnuto",
     "state_unknown": "Zkontrolujte aplikaci pro aktuální stav",
-    "entire_public_catalog": "Celý veřejný katalog"
+    "entire_public_catalog": "Celý veřejný katalog",
+    "weekly_new_period": "Vytvořené během tohoto období",
+    "weekly_open_snapshot": "Otevřené nyní, i ze starších období",
+    "new_products_checked": "Nové zkontrolované produkty",
+    "safety_gate_records_imported": "Nové záznamy importované do RAPEX",
+    "weekly_new_products_explanation": "Nové zkontrolované produkty jsou produkty přidané do monitoringu a úspěšně zkontrolované během tohoto období. Každý produkt se počítá pouze jednou."
   },
   "da": {
     "serious": "Alvorlig",
@@ -354,7 +369,12 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_resolved": "Løst",
     "state_dismissed": "Afvist",
     "state_unknown": "Tjek appen for den aktuelle status",
-    "entire_public_catalog": "Hele det offentlige katalog"
+    "entire_public_catalog": "Hele det offentlige katalog",
+    "weekly_new_period": "Oprettet i denne periode",
+    "weekly_open_snapshot": "Åbne nu, inklusive tidligere perioder",
+    "new_products_checked": "Nye kontrollerede produkter",
+    "safety_gate_records_imported": "Nye poster importeret til RAPEX",
+    "weekly_new_products_explanation": "Nye kontrollerede produkter er tilføjet til overvågning og kontrolleret i denne periode. Hvert produkt tælles kun én gang."
   },
   "de": {
     "serious": "Ernsthaft",
@@ -443,7 +463,12 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_resolved": "Gelöst",
     "state_dismissed": "Abgelehnt",
     "state_unknown": "Überprüfen Sie die App für den aktuellen Status",
-    "entire_public_catalog": "Gesamter öffentlicher Katalog"
+    "entire_public_catalog": "Gesamter öffentlicher Katalog",
+    "weekly_new_period": "In diesem Zeitraum erstellt",
+    "weekly_open_snapshot": "Derzeit offen, auch aus früheren Zeiträumen",
+    "new_products_checked": "Neue geprüfte Produkte",
+    "safety_gate_records_imported": "Neue importierte RAPEX-Einträge",
+    "weekly_new_products_explanation": "Neue geprüfte Produkte wurden in diesem Zeitraum zur Überwachung hinzugefügt und erfolgreich geprüft. Jedes Produkt wird nur einmal gezählt."
   },
   "el": {
     "serious": "Σοβαρός",
@@ -532,7 +557,12 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_resolved": "Επιλύθηκε",
     "state_dismissed": "Απορρίφθηκε",
     "state_unknown": "Ελέγξτε την εφαρμογή για την τρέχουσα κατάσταση",
-    "entire_public_catalog": "Ολόκληρος ο δημόσιος κατάλογος"
+    "entire_public_catalog": "Ολόκληρος ο δημόσιος κατάλογος",
+    "weekly_new_period": "Δημιουργήθηκαν σε αυτή την περίοδο",
+    "weekly_open_snapshot": "Ανοιχτά τώρα, και από προηγούμενες περιόδους",
+    "new_products_checked": "Νέα ελεγμένα προϊόντα",
+    "safety_gate_records_imported": "Νέες εγγραφές που εισήχθησαν στο RAPEX",
+    "weekly_new_products_explanation": "Τα νέα ελεγμένα προϊόντα προστέθηκαν στην παρακολούθηση και ελέγχθηκαν επιτυχώς σε αυτή την περίοδο. Κάθε προϊόν μετράται μόνο μία φορά."
   },
   "es": {
     "serious": "Grave",
@@ -621,7 +651,12 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_resolved": "Resuelto",
     "state_dismissed": "Descartado",
     "state_unknown": "Consulte la aplicación para conocer el estado actual",
-    "entire_public_catalog": "Todo el catálogo público"
+    "entire_public_catalog": "Todo el catálogo público",
+    "weekly_new_period": "Creados durante este período",
+    "weekly_open_snapshot": "Abiertos ahora, incluidos períodos anteriores",
+    "new_products_checked": "Nuevos productos comprobados",
+    "safety_gate_records_imported": "Nuevos registros importados a RAPEX",
+    "weekly_new_products_explanation": "Los nuevos productos comprobados se añadieron a la supervisión y se comprobaron correctamente durante este período. Cada producto se cuenta una sola vez."
   },
   "et": {
     "serious": "Tõsine",
@@ -710,7 +745,12 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_resolved": "Lahendatud",
     "state_dismissed": "Tagasi lükatud",
     "state_unknown": "Kontrolli rakendusest praegust olekut",
-    "entire_public_catalog": "Kogu avalik kataloog"
+    "entire_public_catalog": "Kogu avalik kataloog",
+    "weekly_new_period": "Loodud sellel perioodil",
+    "weekly_open_snapshot": "Praegu avatud, sealhulgas varasematest perioodidest",
+    "new_products_checked": "Uued kontrollitud tooted",
+    "safety_gate_records_imported": "RAPEXisse imporditud uued kirjed",
+    "weekly_new_products_explanation": "Uued kontrollitud tooted on sellel perioodil seiresse lisatud ja edukalt kontrollitud tooted. Iga toodet loendatakse üks kord."
   },
   "fi": {
     "serious": "Vakava",
@@ -799,7 +839,12 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_resolved": "Ratkaistu",
     "state_dismissed": "Hylätty",
     "state_unknown": "Tarkista sovelluksesta nykyinen tila",
-    "entire_public_catalog": "Koko julkinen tuoteluettelo"
+    "entire_public_catalog": "Koko julkinen tuoteluettelo",
+    "weekly_new_period": "Luotu tällä ajanjaksolla",
+    "weekly_open_snapshot": "Avoinna nyt, myös aiemmilta ajanjaksoilta",
+    "new_products_checked": "Uudet tarkistetut tuotteet",
+    "safety_gate_records_imported": "Uudet RAPEXiin tuodut tietueet",
+    "weekly_new_products_explanation": "Uudet tarkistetut tuotteet on lisätty seurantaan ja tarkistettu onnistuneesti tällä ajanjaksolla. Kukin tuote lasketaan vain kerran."
   },
   "fr": {
     "serious": "Grave",
@@ -888,7 +933,12 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_resolved": "Résolu",
     "state_dismissed": "Ignoré",
     "state_unknown": "Vérifiez l'application pour le statut actuel",
-    "entire_public_catalog": "Tout le catalogue public"
+    "entire_public_catalog": "Tout le catalogue public",
+    "weekly_new_period": "Créés pendant cette période",
+    "weekly_open_snapshot": "Ouverts actuellement, y compris les périodes précédentes",
+    "new_products_checked": "Nouveaux produits contrôlés",
+    "safety_gate_records_imported": "Nouveaux enregistrements RAPEX importés",
+    "weekly_new_products_explanation": "Les nouveaux produits contrôlés ont été ajoutés au suivi et contrôlés avec succès pendant cette période. Chaque produit est compté une seule fois."
   },
   "ga": {
     "serious": "Tromchúiseach",
@@ -977,7 +1027,12 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_resolved": "Réitithe",
     "state_dismissed": "Díbheite",
     "state_unknown": "Seiceáil an aip le haghaidh an stádais reatha",
-    "entire_public_catalog": "An chatalóg phoiblí iomlán"
+    "entire_public_catalog": "An chatalóg phoiblí iomlán",
+    "weekly_new_period": "Cruthaithe sa tréimhse seo",
+    "weekly_open_snapshot": "Ar oscailt anois, lena n-áirítear tréimhsí roimhe seo",
+    "new_products_checked": "Táirgí nua seiceáilte",
+    "safety_gate_records_imported": "Taifid nua iompórtáilte go RAPEX",
+    "weekly_new_products_explanation": "Is táirgí iad na táirgí nua seiceáilte a cuireadh leis an monatóireacht agus a seiceáladh go rathúil sa tréimhse seo. Ní chomhairtear gach táirge ach uair amháin."
   },
   "hr": {
     "serious": "Ozbiljno",
@@ -1066,7 +1121,12 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_resolved": "Riješeno",
     "state_dismissed": "Odbijeno",
     "state_unknown": "Provjerite aplikaciju za trenutni status",
-    "entire_public_catalog": "Cijeli javni katalog"
+    "entire_public_catalog": "Cijeli javni katalog",
+    "weekly_new_period": "Nastali u ovom razdoblju",
+    "weekly_open_snapshot": "Trenutačno otvoreni, uključujući ranija razdoblja",
+    "new_products_checked": "Novi provjereni proizvodi",
+    "safety_gate_records_imported": "Novi zapisi uvezeni u RAPEX",
+    "weekly_new_products_explanation": "Novi provjereni proizvodi dodani su u praćenje i uspješno provjereni u ovom razdoblju. Svaki se proizvod broji samo jednom."
   },
   "hu": {
     "serious": "Súlyos",
@@ -1155,7 +1215,12 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_resolved": "Megoldva",
     "state_dismissed": "Elvetve",
     "state_unknown": "Ellenőrizze az alkalmazásban az aktuális állapotot",
-    "entire_public_catalog": "A teljes nyilvános katalógus"
+    "entire_public_catalog": "A teljes nyilvános katalógus",
+    "weekly_new_period": "Ebben az időszakban létrehozva",
+    "weekly_open_snapshot": "Jelenleg nyitott, korábbi időszakokból is",
+    "new_products_checked": "Új ellenőrzött termékek",
+    "safety_gate_records_imported": "Új importált RAPEX-rekordok",
+    "weekly_new_products_explanation": "Az új ellenőrzött termékeket ebben az időszakban adták a figyeléshez és sikeresen ellenőrizték. Minden termék csak egyszer számít."
   },
   "it": {
     "serious": "Grave",
@@ -1244,7 +1309,12 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_resolved": "Risolto",
     "state_dismissed": "Ignorato",
     "state_unknown": "Controlla l'app per lo stato attuale",
-    "entire_public_catalog": "Intero catalogo pubblico"
+    "entire_public_catalog": "Intero catalogo pubblico",
+    "weekly_new_period": "Creati in questo periodo",
+    "weekly_open_snapshot": "Aperti ora, inclusi i periodi precedenti",
+    "new_products_checked": "Nuovi prodotti controllati",
+    "safety_gate_records_imported": "Nuovi record importati in RAPEX",
+    "weekly_new_products_explanation": "I nuovi prodotti controllati sono stati aggiunti al monitoraggio e controllati con successo in questo periodo. Ogni prodotto viene contato una sola volta."
   },
   "lt": {
     "serious": "Rimta",
@@ -1333,7 +1403,12 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_resolved": "Išspręsta",
     "state_dismissed": "Atmesta",
     "state_unknown": "Patikrinkite programėlę, kad sužinotumėte dabartinę būseną",
-    "entire_public_catalog": "Visas viešas katalogas"
+    "entire_public_catalog": "Visas viešas katalogas",
+    "weekly_new_period": "Sukurti šiuo laikotarpiu",
+    "weekly_open_snapshot": "Dabar atviri, įskaitant ankstesnius laikotarpius",
+    "new_products_checked": "Nauji patikrinti produktai",
+    "safety_gate_records_imported": "Nauji į RAPEX importuoti įrašai",
+    "weekly_new_products_explanation": "Nauji patikrinti produktai šiuo laikotarpiu buvo įtraukti į stebėseną ir sėkmingai patikrinti. Kiekvienas produktas skaičiuojamas tik vieną kartą."
   },
   "lv": {
     "serious": "Nopietns",
@@ -1422,7 +1497,12 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_resolved": "Atrisināts",
     "state_dismissed": "Atcelts",
     "state_unknown": "Pārbaudiet lietotni, lai uzzinātu pašreizējo statusu",
-    "entire_public_catalog": "Viss publiskais katalogs"
+    "entire_public_catalog": "Viss publiskais katalogs",
+    "weekly_new_period": "Izveidoti šajā periodā",
+    "weekly_open_snapshot": "Pašlaik atvērti, arī no iepriekšējiem periodiem",
+    "new_products_checked": "Jauni pārbaudītie produkti",
+    "safety_gate_records_imported": "Jauni RAPEX importētie ieraksti",
+    "weekly_new_products_explanation": "Jaunie pārbaudītie produkti šajā periodā ir pievienoti uzraudzībai un veiksmīgi pārbaudīti. Katrs produkts tiek skaitīts tikai vienu reizi."
   },
   "mt": {
     "serious": "Serju",
@@ -1511,7 +1591,12 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_resolved": "Issolvi",
     "state_dismissed": "Mormi",
     "state_unknown": "Iċċekkja l-app għall-istatus attwali",
-    "entire_public_catalog": "Il-katalgu pubbliku kollu"
+    "entire_public_catalog": "Il-katalgu pubbliku kollu",
+    "weekly_new_period": "Maħluqa matul dan il-perjodu",
+    "weekly_open_snapshot": "Miftuħa bħalissa, inklużi perjodi preċedenti",
+    "new_products_checked": "Prodotti ġodda ċċekkjati",
+    "safety_gate_records_imported": "Rekords ġodda importati f’RAPEX",
+    "weekly_new_products_explanation": "Il-prodotti ġodda ċċekkjati ġew miżjuda mal-monitoraġġ u ċċekkjati b’suċċess matul dan il-perjodu. Kull prodott jingħadd darba biss."
   },
   "nl": {
     "serious": "Ernstig",
@@ -1600,7 +1685,12 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_resolved": "Opgelost",
     "state_dismissed": "Genegeerd",
     "state_unknown": "Controleer de app voor de huidige status",
-    "entire_public_catalog": "De volledige openbare catalogus"
+    "entire_public_catalog": "De volledige openbare catalogus",
+    "weekly_new_period": "Aangemaakt in deze periode",
+    "weekly_open_snapshot": "Nu open, inclusief eerdere perioden",
+    "new_products_checked": "Nieuwe gecontroleerde producten",
+    "safety_gate_records_imported": "Nieuwe RAPEX-records geïmporteerd",
+    "weekly_new_products_explanation": "Nieuwe gecontroleerde producten zijn in deze periode aan de monitoring toegevoegd en succesvol gecontroleerd. Elk product telt één keer mee."
   },
   "pl": {
     "serious": "Poważne",
@@ -1689,7 +1779,12 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_resolved": "Rozwiązane",
     "state_dismissed": "Odrzucone",
     "state_unknown": "Sprawdź aplikację, aby poznać aktualny status",
-    "entire_public_catalog": "Cały publiczny katalog"
+    "entire_public_catalog": "Cały publiczny katalog",
+    "weekly_new_period": "Utworzone w tym okresie",
+    "weekly_open_snapshot": "Obecnie otwarte, także z wcześniejszych okresów",
+    "new_products_checked": "Nowe sprawdzone produkty",
+    "safety_gate_records_imported": "Nowe rekordy zaimportowane do RAPEX",
+    "weekly_new_products_explanation": "Nowe sprawdzone produkty dodano do monitorowania i pomyślnie sprawdzono w tym okresie. Każdy produkt jest liczony tylko raz."
   },
   "pt": {
     "serious": "Grave",
@@ -1778,7 +1873,12 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_resolved": "Resolvido",
     "state_dismissed": "Ignorado",
     "state_unknown": "Verifique a aplicação para o estado atual",
-    "entire_public_catalog": "Todo o catálogo público"
+    "entire_public_catalog": "Todo o catálogo público",
+    "weekly_new_period": "Criados neste período",
+    "weekly_open_snapshot": "Atualmente abertos, incluindo períodos anteriores",
+    "new_products_checked": "Novos produtos verificados",
+    "safety_gate_records_imported": "Novos registos importados para RAPEX",
+    "weekly_new_products_explanation": "Os novos produtos verificados foram adicionados à monitorização e verificados com êxito neste período. Cada produto é contado apenas uma vez."
   },
   "ro": {
     "serious": "Serios",
@@ -1867,7 +1967,12 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_resolved": "Rezolvat",
     "state_dismissed": "Ignorat",
     "state_unknown": "Verificați aplicația pentru starea curentă",
-    "entire_public_catalog": "Întregul catalog public"
+    "entire_public_catalog": "Întregul catalog public",
+    "weekly_new_period": "Create în această perioadă",
+    "weekly_open_snapshot": "Deschise acum, inclusiv din perioade anterioare",
+    "new_products_checked": "Produse noi verificate",
+    "safety_gate_records_imported": "Înregistrări noi importate în RAPEX",
+    "weekly_new_products_explanation": "Produsele noi verificate au fost adăugate la monitorizare și verificate cu succes în această perioadă. Fiecare produs este numărat o singură dată."
   },
   "sk": {
     "serious": "Závažná",
@@ -1956,7 +2061,12 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_resolved": "Vyriešené",
     "state_dismissed": "Zamietnuté",
     "state_unknown": "Aktuálny stav nájdete v aplikácii",
-    "entire_public_catalog": "Celý verejný katalóg"
+    "entire_public_catalog": "Celý verejný katalóg",
+    "weekly_new_period": "Vytvorené počas tohto obdobia",
+    "weekly_open_snapshot": "Otvorené teraz, aj zo starších období",
+    "new_products_checked": "Nové skontrolované produkty",
+    "safety_gate_records_imported": "Nové záznamy importované do RAPEX",
+    "weekly_new_products_explanation": "Nové skontrolované produkty sú produkty pridané do monitoringu a úspešne skontrolované počas tohto obdobia. Každý produkt sa počíta iba raz."
   },
   "sl": {
     "serious": "Resno",
@@ -2045,7 +2155,12 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_resolved": "Rešeno",
     "state_dismissed": "Zavrnjeno",
     "state_unknown": "Preverite aplikacijo za trenutni status",
-    "entire_public_catalog": "Celoten javni katalog"
+    "entire_public_catalog": "Celoten javni katalog",
+    "weekly_new_period": "Ustvarjene v tem obdobju",
+    "weekly_open_snapshot": "Trenutno odprte, tudi iz prejšnjih obdobij",
+    "new_products_checked": "Novi preverjeni izdelki",
+    "safety_gate_records_imported": "Novi zapisi, uvoženi v RAPEX",
+    "weekly_new_products_explanation": "Novi preverjeni izdelki so bili v tem obdobju dodani v spremljanje in uspešno preverjeni. Vsak izdelek se šteje samo enkrat."
   },
   "sv": {
     "serious": "Allvarlig",
@@ -2134,6 +2249,11 @@ export const EMAIL_LOCALES: Record<string, Record<string, string>> = {
     "state_resolved": "Löst",
     "state_dismissed": "Avfärdad",
     "state_unknown": "Kontrollera appen för aktuell status",
-    "entire_public_catalog": "Hela den offentliga katalogen"
+    "entire_public_catalog": "Hela den offentliga katalogen",
+    "weekly_new_period": "Skapade under denna period",
+    "weekly_open_snapshot": "Öppna nu, även från tidigare perioder",
+    "new_products_checked": "Nya kontrollerade produkter",
+    "safety_gate_records_imported": "Nya poster importerade till RAPEX",
+    "weekly_new_products_explanation": "Nya kontrollerade produkter har lagts till i övervakningen och kontrollerats under denna period. Varje produkt räknas bara en gång."
   }
 };

@@ -612,7 +612,13 @@
       "progress": "Importate {{imported}} din {{fetched}} produse; comparate {{scanned}} produse cu {{alerts}} alerte Safety Gate până acum.",
       "stepAudit": "3. Pregătește istoricul auditului GPSR și starea de conformitate",
       "stepImport": "1. Importă produse din Shopify",
-      "stepScan": "2. Compară cu baza de date Safety Gate (peste 35.000 de înregistrări)"
+      "stepScan": "2. Compară cu baza de date Safety Gate (peste 35.000 de înregistrări)",
+      "checkingLabel": "Produse verificate",
+      "checkingNote": "Se verifică catalogul importat în raport cu Safety Gate. Progresul se actualizează pe măsură ce loturile se finalizează.",
+      "importingLabel": "Produse importate",
+      "importingNote": "Se importă produse din Shopify. Totalul va fi cunoscut la finalizarea importului.",
+      "retrying": "Verificarea a întâmpinat o problemă și va reîncerca. Lucrările finalizate sunt păstrate.",
+      "retryingHeading": "Auditul a întâmpinat o problemă"
     },
     "metricsCard": {
       "activeAlertsHeading": "Alerte active",
@@ -1438,5 +1444,110 @@
     "label": "Potrivire exactă a codului de bare",
     "help": "Codul de bare validat al unei variante corespunde înregistrării Safety Gate. Verificați modelul și lotul afectat înainte de a decide."
   },
-  "ownerTestAccess": "Testare autorizată de proprietar — nu este necesar un plan tarifar"
+  "ownerTestAccess": "Testare autorizată de proprietar — nu este necesar un plan tarifar",
+  "catalogOverview": {
+    "coverage": "{{checked}} din {{total}}",
+    "coverageHelp": "Unele produse sunt noi sau s-au modificat de la ultima verificare. Deschideți lista pentru a vedea ce mai trebuie verificat.",
+    "currentProducts": "Produse cu un rezultat actual",
+    "initialAudit": "Verificare inițială a catalogului",
+    "lastCheck": "Ultima verificare reușită a catalogului",
+    "monitoring": {
+      "delayed": "Verificare întârziată",
+      "enabled": "Rulează automat",
+      "failed": "Ultima verificare a eșuat",
+      "paused": "Pauză",
+      "preview": "Previzualizare dezvoltare",
+      "processing": "Verificare în curs",
+      "unknown": "Activitate neconfirmată",
+      "unverified": "Verificarea planului nu este disponibilă"
+    },
+    "monitoringHelp": {
+      "delayed": "Ultima verificare automată a fost acum mai mult de 48 de ore. Dacă starea persistă, contactați asistența.",
+      "failed": "Ultimele rezultate reușite sunt încă disponibile. Dacă și următoarea verificare eșuează, contactați asistența.",
+      "paused": "Alegeți un plan Shopify activ pentru a relua verificările automate.",
+      "preview": "Verificările programate necesită un plan Shopify verificat.",
+      "processing": "Verificarea este în așteptare sau în curs de desfășurare. Rezultatele apar la finalizare.",
+      "unknown": "Nu există nicio verificare automată finalizată înregistrată. Dacă reîmprospătarea acestei stări nu ajută, contactați asistența.",
+      "unverified": "Reîmprospătați pentru a vă verifica planul Shopify. Dacă starea persistă, contactați asistența."
+    },
+    "monitoringRun": "Verificați dacă există alerte Safety Gate noi sau actualizate",
+    "noActionHelp": "Catalogul dvs. actual este acoperit și nu există posibile potriviri care să aștepte revizuirea dvs.",
+    "noCompletedCheck": "Nicio verificare a catalogului finalizată înregistrată",
+    "purpose": "ZeroRecall verifică catalogul dvs. Shopify în raport cu alertele <portalLink>EU Safety Gate</portalLink> și vă arată ce posibile potriviri necesită revizuire.",
+    "refreshStatus": "Reîmprospătați starea monitorizării",
+    "reviewHelp": "Comparați produsul dvs. cu alerta oficială, apoi înregistrați decizia.",
+    "reviewNext": "Revizuiți următoarea potrivire"
+  },
+  "findingOverview": {
+    "matches": "Ce se potrivește",
+    "missing": "Informații lipsă: {{fields}}.",
+    "noConfirmedIdentifiers": "Nu au fost confirmați identificatori corespunzători.",
+    "officialRisk": "Risc în alerta Safety Gate",
+    "riskUnavailable": "Detaliile despre risc nu sunt disponibile în această alertă salvată.",
+    "saveFailed": "Decizia nu a putut fi salvată. Încearcă din nou.",
+    "verify": "Ce trebuie verificat",
+    "verifyApplicability": "Verifică dacă alerta oficială se aplică produsului tău."
+  },
+  "pendingCoverage": {
+    "automaticCount_few": "{{count}} produse au verificări automate în coadă.",
+    "automaticCount_many": "{{count}} produse au verificări automate în coadă.",
+    "automaticCount_one": "{{count}} produs are o verificare automată în coadă.",
+    "automaticCount_other": "{{count}} produse au verificări automate în coadă.",
+    "automaticCount_plural": "{{count}} produse au verificări automate în coadă.",
+    "automaticOnly": "ZeroRecall verifică automat aceste produse. Nu este necesară nicio acțiune.",
+    "batchResult": "Verificări finalizate: {{checked}}. Verificări eșuate: {{failed}}.",
+    "checkBatch_few": "Verifică {{count}} produse",
+    "checkBatch_many": "Verifică {{count}} produse",
+    "checkBatch_one": "Verifică {{count}} produs",
+    "checkBatch_other": "Verifică {{count}} produse",
+    "checkBatch_plural": "Verifică {{count}} produse",
+    "complete": "Fiecare versiune curentă de produs Shopify are un rezultat salvat.",
+    "current": "Rezultate curente pentru {{checked}} din {{total}} produse.",
+    "empty": "Produsele apar aici după ce le adăugați în Shopify.",
+    "emptyTitle": "Niciun produs de verificat încă",
+    "filters": "Căutare și filtrare",
+    "manualHelp": "Verifică produsele acum dacă ZeroRecall nu a confirmat nicio verificare automată.",
+    "pendingTab": "Așteaptă o verificare",
+    "planRequired": "Este necesar un plan Shopify activ pentru a verifica produsele rămase.",
+    "planUnconfirmed": "Verificările automate sunt neconfirmate pentru produsele rămase. Verifică starea planului tău în Setări monitorizare.",
+    "row": {
+      "automatic": "Verificare automată în coadă sau în curs",
+      "planRequired": "Este necesar un plan Shopify activ",
+      "planUnconfirmed": "Verificare automată și stare plan neconfirmate",
+      "unconfirmed": "Nicio verificare automată confirmată"
+    },
+    "title_few": "{{count}} produse așteaptă o verificare",
+    "title_many": "{{count}} produse așteaptă o verificare",
+    "title_one": "{{count}} produs așteaptă o verificare",
+    "title_other": "{{count}} produse așteaptă o verificare",
+    "title_plural": "{{count}} produse așteaptă o verificare",
+    "viewAll": "Vezi toate produsele"
+  },
+  "reviewOverview": {
+    "closed": "Închis (rezolvat sau ignorat)",
+    "current": "Constatări curente",
+    "decisions": "Decizii înregistrate",
+    "emptyDecisions": "Nu s-au înregistrat decizii încă.",
+    "filters": "Filtre",
+    "open": "Constatări deschise",
+    "report": "Constatări în acest raport"
+  },
+  "settingsOverview": {
+    "active": "Activ",
+    "activePlan": "Plan Shopify activ",
+    "delivery": {
+      "paused": "Livrarea este întreruptă până când accesul la monitorizare este activ.",
+      "unconfirmed": "Starea livrării e-mailului este neconfirmată."
+    },
+    "editEmail": "Editează preferințele de e-mail",
+    "mondayEmail": "Rezumat de luni",
+    "noActivePlan": "Niciun plan activ",
+    "off": "Dezactivat",
+    "on": "Activat",
+    "planUnverified": "Plan neverificat",
+    "previousPlan": "Ultimul plan verificat: {{plan}}",
+    "recipient": "Trimis la {{email}}",
+    "testAccess": "Acces de testare proprietar",
+    "weeklyHelp": "Trimis lunea cu starea monitorizării și constatările deschise."
+  }
 }

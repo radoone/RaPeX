@@ -612,7 +612,13 @@
       "progress": "{{imported}} van {{fetched}} producten geïmporteerd; {{scanned}} producten vergeleken met tot nu toe {{alerts}} Safety Gate-alerts.",
       "stepAudit": "3. GPSR-auditspoor en nalevingsstatus voorbereiden",
       "stepImport": "1. Producten importeren uit Shopify",
-      "stepScan": "2. Vergelijken met Safety Gate-database (35.000+ records)"
+      "stepScan": "2. Vergelijken met Safety Gate-database (35.000+ records)",
+      "checkingLabel": "Gecontroleerde producten",
+      "checkingNote": "De geïmporteerde catalogus wordt gecontroleerd op Safety Gate. De voortgang wordt bijgewerkt naarmate batches worden voltooid.",
+      "importingLabel": "Geïmporteerde producten",
+      "importingNote": "Producten importeren uit Shopify. Het totaal is bekend wanneer de import is voltooid.",
+      "retrying": "De controle is op een probleem gestuit en zal opnieuw proberen. Voltooid werk blijft behouden.",
+      "retryingHeading": "De audit is op een probleem gestuit"
     },
     "metricsCard": {
       "activeAlertsHeading": "Actieve waarschuwingen",
@@ -1438,5 +1444,110 @@
     "label": "Exacte barcode-overeenkomst",
     "help": "De gevalideerde barcode van een variant komt overeen met het Safety Gate-record. Controleer het model en de betrokken partij voordat u beslist."
   },
-  "ownerTestAccess": "Testen met toestemming van de eigenaar — geen abonnement vereist"
+  "ownerTestAccess": "Testen met toestemming van de eigenaar — geen abonnement vereist",
+  "catalogOverview": {
+    "coverage": "{{checked}} van {{total}}",
+    "coverageHelp": "Sommige producten zijn nieuw of gewijzigd sinds de laatste controle. Open de lijst om te zien wat nog gecontroleerd moet worden.",
+    "currentProducts": "Producten met een huidig resultaat",
+    "initialAudit": "Initiële cataloguscontrole",
+    "lastCheck": "Laatste succesvolle cataloguscontrole",
+    "monitoring": {
+      "delayed": "Controle te laat",
+      "enabled": "Draait automatisch",
+      "failed": "Laatste controle mislukt",
+      "paused": "Gepauzeerd",
+      "preview": "Ontwikkelingsvoorbeeld",
+      "processing": "Controle bezig",
+      "unknown": "Activiteit onbevestigd",
+      "unverified": "Planverificatie niet beschikbaar"
+    },
+    "monitoringHelp": {
+      "delayed": "De laatste automatische controle was meer dan 48 uur geleden. Als de status aanhoudt, neem dan contact op met de ondersteuning.",
+      "failed": "Uw laatst succesvolle resultaten zijn nog steeds beschikbaar. Als de volgende controle ook mislukt, neem dan contact op met de ondersteuning.",
+      "paused": "Kies een actief Shopify-abonnement om automatische controles te hervatten.",
+      "preview": "Geplande controles vereisen een geverifieerd Shopify-abonnement.",
+      "processing": "De controle staat in de wachtrij of is bezig. Resultaten verschijnen wanneer deze is voltooid.",
+      "unknown": "Er is geen voltooide automatische controle geregistreerd. Als het vernieuwen van deze status niet helpt, neem dan contact op met de ondersteuning.",
+      "unverified": "Vernieuw om uw Shopify-abonnement te verifiëren. Als de status aanhoudt, neem dan contact op met de ondersteuning."
+    },
+    "monitoringRun": "Controleren op nieuwe of bijgewerkte Safety Gate-waarschuwingen",
+    "noActionHelp": "Uw huidige catalogus is gedekt en er wachten geen mogelijke overeenkomsten op uw beoordeling.",
+    "noCompletedCheck": "Geen voltooide cataloguscontrole geregistreerd",
+    "purpose": "ZeroRecall controleert uw Shopify-catalogus op <portalLink>EU Safety Gate</portalLink>-waarschuwingen en toont u welke mogelijke overeenkomsten beoordeeld moeten worden.",
+    "refreshStatus": "Monitoringstatus vernieuwen",
+    "reviewHelp": "Vergelijk uw product met de officiële waarschuwing en leg vervolgens uw beslissing vast.",
+    "reviewNext": "Volgende overeenkomst beoordelen"
+  },
+  "findingOverview": {
+    "matches": "Wat overeenkomt",
+    "missing": "Ontbrekende informatie: {{fields}}.",
+    "noConfirmedIdentifiers": "Geen overeenkomende identificatiegegevens bevestigd.",
+    "officialRisk": "Risico in de Safety Gate-melding",
+    "riskUnavailable": "Risicodetails zijn niet beschikbaar in deze opgeslagen melding.",
+    "saveFailed": "De beslissing kon niet worden opgeslagen. Probeer het opnieuw.",
+    "verify": "Wat te controleren",
+    "verifyApplicability": "Controleer of de officiële melding van toepassing is op uw product."
+  },
+  "pendingCoverage": {
+    "automaticCount_few": "{{count}} producten hebben automatische controles in de wachtrij.",
+    "automaticCount_many": "{{count}} producten hebben automatische controles in de wachtrij.",
+    "automaticCount_one": "{{count}} product heeft een automatische controle in de wachtrij.",
+    "automaticCount_other": "{{count}} producten hebben automatische controles in de wachtrij.",
+    "automaticCount_plural": "{{count}} producten hebben automatische controles in de wachtrij.",
+    "automaticOnly": "ZeroRecall controleert deze producten automatisch. Geen actie vereist.",
+    "batchResult": "Controles voltooid: {{checked}}. Mislukte controles: {{failed}}.",
+    "checkBatch_few": "Controleer {{count}} producten",
+    "checkBatch_many": "Controleer {{count}} producten",
+    "checkBatch_one": "Controleer {{count}} product",
+    "checkBatch_other": "Controleer {{count}} producten",
+    "checkBatch_plural": "Controleer {{count}} producten",
+    "complete": "Elke huidige Shopify-productversie heeft een opgeslagen resultaat.",
+    "current": "Huidige resultaten voor {{checked}} van de {{total}} producten.",
+    "empty": "Producten verschijnen hier nadat je ze hebt toegevoegd in Shopify.",
+    "emptyTitle": "Nog geen producten om te controleren",
+    "filters": "Zoeken en filteren",
+    "manualHelp": "Controleer producten nu als ZeroRecall geen automatische controle heeft bevestigd.",
+    "pendingTab": "Wachten op een controle",
+    "planRequired": "Een actief Shopify-abonnement is vereist om de resterende producten te controleren.",
+    "planUnconfirmed": "Automatische controles zijn onbevestigd voor de resterende producten. Controleer de status van je abonnement in de Monitoringinstellingen.",
+    "row": {
+      "automatic": "Automatische controle in de wachtrij of bezig",
+      "planRequired": "Een actief Shopify-abonnement is vereist",
+      "planUnconfirmed": "Automatische controle en abonnementsstatus onbevestigd",
+      "unconfirmed": "Geen automatische controle bevestigd"
+    },
+    "title_few": "{{count}} producten wachten op een controle",
+    "title_many": "{{count}} producten wachten op een controle",
+    "title_one": "{{count}} product wacht op een controle",
+    "title_other": "{{count}} producten wachten op een controle",
+    "title_plural": "{{count}} producten wachten op een controle",
+    "viewAll": "Alle producten bekijken"
+  },
+  "reviewOverview": {
+    "closed": "Gesloten (opgelost of afgewezen)",
+    "current": "Huidige bevindingen",
+    "decisions": "Vastgelegde beslissingen",
+    "emptyDecisions": "Nog geen beslissingen vastgelegd.",
+    "filters": "Filters",
+    "open": "Openstaande bevindingen",
+    "report": "Bevindingen in dit rapport"
+  },
+  "settingsOverview": {
+    "active": "Actief",
+    "activePlan": "Actief Shopify-abonnement",
+    "delivery": {
+      "paused": "Levering is gepauzeerd totdat de monitoringtoegang actief is.",
+      "unconfirmed": "De status van e-mailbezorging is onbevestigd."
+    },
+    "editEmail": "E-mailvoorkeuren bewerken",
+    "mondayEmail": "Maandagoverzicht",
+    "noActivePlan": "Geen actief abonnement",
+    "off": "Uit",
+    "on": "Aan",
+    "planUnverified": "Abonnement niet geverifieerd",
+    "previousPlan": "Laatst geverifieerd abonnement: {{plan}}",
+    "recipient": "Verzonden naar {{email}}",
+    "testAccess": "Testtoegang eigenaar",
+    "weeklyHelp": "Wordt op maandag verzonden met uw monitoringstatus en openstaande bevindingen."
+  }
 }

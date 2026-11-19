@@ -17,6 +17,8 @@ export type AlertEmailDetails = {
 };
 export type WeeklyEmailMetrics = {
   products: number;
+  /** Distinct products added to monitoring and successfully checked within the period. */
+  newProductsChecked?: number | null;
   checks: number;
   safetyGateRecords: number;
   newFindings: number;
@@ -86,6 +88,7 @@ function note(title: string, text: string, warning = false): string {
 function shell(options: {
   language: string; title: string; preheader: string; status: string; warning?: boolean;
   body: string; action: string; url: string; earlyAction?: boolean; after?: string; settingsUrl?: string; footerText?: string;
+  intro?: string; repeatAction?: boolean;
 }): string {
   const language = normalizeEmailLanguage(options.language);
   const actionUrl = httpsUrl(options.url);
@@ -94,7 +97,7 @@ function shell(options: {
   const actionButton = `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:24px"><tr><td bgcolor="${GREEN}" align="center" style="border-radius:8px;mso-padding-alt:18px 24px"><a class="button" href="${escapeEmailHtml(actionUrl)}" style="display:block;padding:18px 24px;font-family:${FONT};font-size:16px;line-height:1.4;font-weight:700;color:#ffffff;text-decoration:none;border-radius:8px">${escapeEmailHtml(options.action)}</a></td></tr></table>`;
   return `<!doctype html>
 <html lang="${normalizeEmailLanguage(language)}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>${escapeEmailHtml(options.title)}</title>
-<style>body,table,td,a{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}table{mso-table-lspace:0pt;mso-table-rspace:0pt}img{border:0;outline:none;text-decoration:none}a:focus{outline:2px solid #315e4b;outline-offset:3px}@media only screen and (max-width:600px){.outer{padding:24px 18px!important}.headline{font-size:32px!important}.stack{display:block!important;width:100%!important;box-sizing:border-box!important}.photo{max-width:180px!important;width:100%!important}.photo-cell{padding:0 0 18px!important}.button{display:block!important}}</style></head>
+<style>body,table,td,a{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}table{mso-table-lspace:0pt;mso-table-rspace:0pt}img{border:0;outline:none;text-decoration:none}a:focus{outline:2px solid #315e4b;outline-offset:3px}@media only screen and (max-width:600px){.outer{padding:24px 18px!important}.headline{font-size:32px!important}.stack{display:block!important;width:100%!important;box-sizing:border-box!important}.photo{max-width:180px!important;width:100%!important}.photo-cell{padding:0 0 18px!important}.button{display:block!important}.weekly-stat{display:block!important;width:100%!important;padding:12px 0!important;border-bottom:1px solid #dedfd8}.weekly-stat-number{display:inline-block!important;width:40%!important;vertical-align:middle}.weekly-stat-label{display:inline-block!important;width:58%!important;vertical-align:middle}}</style></head>
 <body style="margin:0;padding:0;background:#faf9f5;color:#1c2822;font-family:${FONT}">
 <div style="display:none;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all">${escapeEmailHtml(options.preheader)}</div>
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" bgcolor="#faf9f5"><tr><td class="outer" align="center" style="padding:40px 28px">
@@ -103,9 +106,10 @@ function shell(options: {
 <p style="margin:0 0 38px"><a href="${escapeEmailHtml(marketingUrl(language))}" style="font-family:${FONT};font-size:23px;letter-spacing:-1px;font-weight:700;color:#1c2822;text-decoration:none">ZeroRecall</a></p>
 <p style="margin:0 0 24px"><span style="display:inline-block;border-radius:24px;padding:10px 16px;background:${options.warning ? "#fff0df" : "#e8efe7"};color:${options.warning ? "#93421f" : GREEN};font-size:13px;font-weight:700;line-height:1.4">${escapeEmailHtml(options.status)}</span></p>
 <h1 class="headline" style="margin:0 0 26px;font-size:44px;letter-spacing:-1.5px;line-height:1.12;font-weight:700;color:#15251d">${escapeEmailHtml(options.title)}</h1>
+${options.intro || ""}
 ${options.earlyAction ? actionButton : ""}
 ${options.body}
-${actionButton}
+${options.earlyAction && options.repeatAction === false ? "" : actionButton}
 ${options.after || ""}
 <p style="margin:24px 0 0;font-size:12px;line-height:1.6;color:#68726b">${emailText(language, "if_the_button_does_not_work_open_this_link")}<br><a href="${escapeEmailHtml(actionUrl)}" style="color:${GREEN};overflow-wrap:anywhere;word-break:break-all">${escapeEmailHtml(actionUrl)}</a></p>
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:28px;border-top:1px solid #d9ddd4"><tr><td style="padding-top:20px;font-size:12px;line-height:1.8;color:#68726b">
@@ -159,6 +163,39 @@ function formatDate(date: Date, language: string): string {
   return new Intl.DateTimeFormat(normalizeEmailLanguage(language), { dateStyle: "medium", timeZone: "Europe/Bratislava" }).format(date);
 }
 
+/** Independent counts on one zero-based scale; open findings are not a subset of this week's new findings. */
+function weeklyFindingsChart(language: string, metrics: WeeklyEmailMetrics): string {
+  const maximum = Math.max(metrics.newFindings, metrics.openFindings, 1);
+  const magnitude = 10 ** Math.floor(Math.log10(maximum));
+  const scale = Math.ceil(maximum / magnitude) * magnitude;
+  const number = (value: number) => new Intl.NumberFormat(language).format(value);
+  const bars: Array<[string, string, number, string]> = [
+    [emailText(language, "new_findings"), emailText(language, "weekly_new_period"), metrics.newFindings, GREEN],
+    [emailText(language, "open_findings"), emailText(language, "weekly_open_snapshot"), metrics.openFindings, "#a34f2c"],
+  ];
+  return `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="table-layout:fixed">${bars.map(([label, description, count, color]) => {
+    const width = Math.min(100, Math.max(0, count / scale * 100));
+    return `<tr><td style="padding:0 0 24px"><table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td valign="bottom" style="padding-right:16px;overflow-wrap:anywhere"><p style="margin:0 0 4px;font-size:16px;line-height:1.4;font-weight:700">${escapeEmailHtml(label)}</p><p style="margin:0;font-size:13px;line-height:1.5;color:#606a64">${escapeEmailHtml(description)}</p></td><td align="right" valign="bottom" style="font-size:32px;line-height:1.2;font-weight:700;font-variant-numeric:tabular-nums;color:${color};white-space:nowrap">${escapeEmailHtml(number(count))}</td></tr></table><table aria-hidden="true" role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:12px;table-layout:fixed;background:#e5e7df" bgcolor="#e5e7df"><tr>${width > 0 ? `<td width="${width}%" height="14" bgcolor="${color}" style="width:${width}%;height:14px;font-size:0;line-height:14px;background:${color}">&nbsp;</td>` : ""}${width < 100 ? `<td width="${100 - width}%" height="14" style="height:14px;font-size:0;line-height:14px">&nbsp;</td>` : ""}</tr></table></td></tr>`;
+  }).join("")}<tr aria-hidden="true"><td style="padding:0 0 20px"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="font-size:12px;line-height:1;color:#606a64"><tr><td>0</td><td align="right">${escapeEmailHtml(number(scale))}</td></tr></table></td></tr></table>`;
+}
+
+function weeklyActivity(language: string, metrics: WeeklyEmailMetrics): string {
+  const statistics: Array<[string, number | null]> = [
+    [emailText(language, "monitored_products"), metrics.products],
+    [emailText(language, "checks_completed"), metrics.checks],
+  ];
+  const cells = statistics.map(([label, value]) => `<td class="weekly-stat" width="50%" valign="top" style="padding:20px 16px 20px 0;overflow-wrap:anywhere"><p class="weekly-stat-number" style="margin:0;font-size:${value === null ? 20 : 28}px;line-height:1.4;font-weight:700;font-variant-numeric:tabular-nums">${escapeEmailHtml(value === null ? emailText(language, "not_available") : new Intl.NumberFormat(language).format(value))}</p><p class="weekly-stat-label" style="margin:0;font-size:13px;line-height:1.5;color:#606a64">${escapeEmailHtml(label)}</p></td>`);
+  return `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:28px;border-top:1px solid #dedfd8;table-layout:fixed"><tr>${cells.join("")}</tr></table><p style="margin:12px 0 0;font-size:13px;line-height:1.6;color:#606a64">${escapeEmailHtml(emailText(language, "last_successful_run"))}: <strong style="color:#1c2822">${escapeEmailHtml(metrics.lastSuccessfulRun ? formatDate(metrics.lastSuccessfulRun, language) : emailText(language, "not_confirmed"))}</strong></p>`;
+}
+
+function weeklyGrowth(language: string, metrics: WeeklyEmailMetrics): string {
+  const rows: Array<[string, number | null]> = [
+    [emailText(language, "safety_gate_records_imported"), metrics.safetyGateRecords],
+    [emailText(language, "new_products_checked"), metrics.newProductsChecked ?? null],
+  ];
+  return `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" bgcolor="#edf2ec" style="margin:0 0 32px;table-layout:fixed;background:#edf2ec;border-radius:12px">${rows.map(([label, count], index) => `<tr><td width="35%" valign="middle" style="padding:24px 0 24px 24px;${index ? "border-top:1px solid #d6e1d5;" : ""}font-size:48px;line-height:1.1;font-weight:700;font-variant-numeric:tabular-nums;color:${GREEN};overflow-wrap:anywhere">${count === null ? `<span aria-label="${escapeEmailHtml(emailText(language, "not_available"))}">—</span>` : escapeEmailHtml(new Intl.NumberFormat(language).format(count))}</td><td valign="middle" style="padding:24px;${index ? "border-top:1px solid #d6e1d5;" : ""}font-size:18px;line-height:1.5;font-weight:700;color:${GREEN};overflow-wrap:anywhere">${escapeEmailHtml(label)}${count === null ? `<p style="margin:4px 0 0;font-size:13px;line-height:1.5;font-weight:400">${escapeEmailHtml(emailText(language, "not_available"))}</p>` : ""}</td></tr>`).join("")}</table>`;
+}
+
 export function renderWeeklyEmail(language: string, shop: string, start: Date, end: Date, metrics: WeeklyEmailMetrics, url: string, settingsUrl: string): EmailContent {
   language = normalizeEmailLanguage(language);
   const title = metrics.monitoringComplete ? (emailText(language, "your_week_in_review")) : (emailText(language, "monitoring_was_incomplete"));
@@ -174,13 +211,14 @@ export function renderWeeklyEmail(language: string, shop: string, start: Date, e
   const period = `${formatDate(start, language)} – ${formatDate(end, language)}`;
   const rows: Array<[string, string]> = [
     [emailText(language, "monitored_products"), String(metrics.products)],
+    [emailText(language, "new_products_checked"), metrics.newProductsChecked == null ? emailText(language, "not_available") : String(metrics.newProductsChecked)],
     [emailText(language, "checks_completed"), String(metrics.checks)],
-    [emailText(language, "new_safety_gate_records"), String(metrics.safetyGateRecords)],
+    [emailText(language, "safety_gate_records_imported"), String(metrics.safetyGateRecords)],
     [emailText(language, "new_findings"), String(metrics.newFindings)],
     [emailText(language, "open_findings"), String(metrics.openFindings)],
     [emailText(language, "last_successful_run"), metrics.lastSuccessfulRun ? formatDate(metrics.lastSuccessfulRun, language) : (emailText(language, "not_confirmed"))],
   ];
-  const caveat = emailText(language, "catalog_products_and_completed_checks_are_different_measures_z");
+  const caveat = `${emailText(language, "weekly_new_products_explanation")} ${emailText(language, "catalog_products_and_completed_checks_are_different_measures_z")}`;
   const findings = (metrics.findings || []).slice(0, 5);
   const stateLabels = { needs_review: emailText(language, "state_needs_review"), waiting_for_supplier: emailText(language, "state_waiting_for_supplier"), resolved: emailText(language, "state_resolved"), dismissed: emailText(language, "state_dismissed"), unknown: emailText(language, "state_unknown") };
   const reviewGuidance = emailText(language, "compare_the_model_brand_and_batch_with_the_official_record_sav");
@@ -197,7 +235,7 @@ export function renderWeeklyEmail(language: string, shop: string, start: Date, e
   }).join("\n\n");
   return {
     subject: `ZeroRecall: ${metrics.monitoringComplete ? (emailText(language, "weekly_monitoring_summary")) : title} – ${shop}`,
-    htmlContent: shell({ language, title, status, earlyAction: true, warning: !metrics.monitoringComplete || metrics.newFindings > 0 || hasOpenFindings, preheader: `${shop} · ${status}`, body: `<div style="padding-top:16px">${paragraph(`${shop} · ${period}`)}</div>` + (hasOpenFindings ? note(emailText(language, "open_findings"), String(metrics.openFindings), true) : "") + paragraph(summary) + facts(rows) + findingList, action: emailText(language, "open_dashboard"), url: actionUrl, settingsUrl, after: note(emailText(language, "how_to_read_this_summary"), caveat) }),
+    htmlContent: shell({ language, title, status, earlyAction: true, repeatAction: findings.length > 0, warning: !metrics.monitoringComplete || metrics.newFindings > 0 || hasOpenFindings, preheader: `${shop} · ${status}`, intro: `<p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#606a64;overflow-wrap:anywhere">${escapeEmailHtml(shop)}<br>${escapeEmailHtml(period)}</p>` + (!metrics.monitoringComplete ? paragraph(summary) : "") + weeklyGrowth(language, metrics) + weeklyFindingsChart(language, metrics) + (metrics.monitoringComplete ? paragraph(summary) : ""), body: weeklyActivity(language, metrics) + findingList, action: emailText(language, "open_dashboard"), url: actionUrl, settingsUrl, after: note(emailText(language, "how_to_read_this_summary"), caveat) }),
     textContent: `${title}\n${shop}\n${summary}\n${hasOpenFindings ? `${emailText(language, "open_findings")}: ${metrics.openFindings}\n` : ""}${actionUrl}\n${period}\n${rows.map(([label, value]) => `${label}: ${value}`).join("\n")}${findingText ? `\n\n${emailText(language, "selected_findings_up_to_5")}\n${findingText}` : ""}\n\n${caveat}\n\n${actionUrl}${plainFooter(language, settingsUrl)}`,
   };
 }

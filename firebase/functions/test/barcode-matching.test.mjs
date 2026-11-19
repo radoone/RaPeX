@@ -32,6 +32,7 @@ function checker(extra = {}) {
   check = fn('safety-gate-checker', 'checkProductAgainstAlerts', {
     getProductImageUrls: () => [], prepareImageMedia: async () => null,
     buildSafetyCheckResult, createNoAlertsResult,
+    db: {}, capturePairCacheInstallation: async () => undefined, writePairMatchResults: async () => {}, readPairMatchResults: async () => [],
     readCachedMatchResult: async () => { throw Error('Unexpected model/cache work'); },
     checkProductAgainstAlerts: (...args) => check(...args), ...extra,
   });
@@ -71,7 +72,7 @@ test('manual retrieval retains exact candidates outside the cached vector shortl
   const order = [];
   const retrieve = fn('safety-gate-checker-retrieval', 'retrieveAlertsWithRag', {
     retrieveAlertsByGtins: async () => { order.push('gtin'); return [exact]; },
-    retrieveAlertsFromCachedVectors: async () => { order.push('vectors'); return [exact, { ...alert, id: 'B' }]; }, hydrateAlertsIfMissing: async x => x,
+    retrieveAlertsFromCachedVectors: async () => { order.push('vectors'); return [exact, { ...alert, id: 'B', textDistance: .1 }]; }, hydrateAlertsIfMissing: async x => x,
   });
   assert.deepEqual((await retrieve(product)).map(a => a.id), ['A', 'B']);
   assert.deepEqual(order, ['gtin', 'vectors']);

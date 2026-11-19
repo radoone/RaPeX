@@ -612,7 +612,13 @@
       "progress": "Importuota {{imported}} iš {{fetched}} produktų; palyginta {{scanned}} produktų su {{alerts}} „Safety Gate“ įspėjimais iki šiol.",
       "stepAudit": "3. Paruoškite GPSR audito seką ir atitikties būseną",
       "stepImport": "1. Importuoti produktus iš „Shopify“",
-      "stepScan": "2. Palyginti su „Safety Gate“ duomenų baze (daugiau nei 35 000 įrašų)"
+      "stepScan": "2. Palyginti su „Safety Gate“ duomenų baze (daugiau nei 35 000 įrašų)",
+      "checkingLabel": "Patikrinti produktai",
+      "checkingNote": "Tikrinamas importuotas katalogas pagal Safety Gate. Eiga atnaujinama, kai baigiami paketai.",
+      "importingLabel": "Importuoti produktai",
+      "importingNote": "Importuojami produktai iš Shopify. Bendra suma bus žinoma, kai importavimas bus baigtas.",
+      "retrying": "Patikrinimas susidūrė su problema ir bus pakartotas. Baigtas darbas išsaugomas.",
+      "retryingHeading": "Auditas susidūrė su problema"
     },
     "metricsCard": {
       "activeAlertsHeading": "Aktyvūs įspėjimai",
@@ -1438,5 +1444,110 @@
     "label": "Tikslus brūkšninio kodo atitikmuo",
     "help": "Patikrintas varianto brūkšninis kodas atitinka Safety Gate įrašą. Prieš nuspręsdami patikrinkite modelį ir paveiktą partiją."
   },
-  "ownerTestAccess": "Savininko patvirtintas testavimas — mokamas planas nereikalingas"
+  "ownerTestAccess": "Savininko patvirtintas testavimas — mokamas planas nereikalingas",
+  "catalogOverview": {
+    "coverage": "{{checked}} iš {{total}}",
+    "coverageHelp": "Kai kurie produktai yra nauji arba pasikeitė nuo paskutinio patikrinimo. Atidarykite sąrašą, kad pamatytumėte, ką dar reikia patikrinti.",
+    "currentProducts": "Produktai su dabartiniu rezultatu",
+    "initialAudit": "Pradinis katalogo patikrinimas",
+    "lastCheck": "Paskutinis sėkmingas katalogo patikrinimas",
+    "monitoring": {
+      "delayed": "Patikrinimas vėluoja",
+      "enabled": "Vykdoma automatiškai",
+      "failed": "Paskutinis patikrinimas nepavyko",
+      "paused": "Pristabdyta",
+      "preview": "Kūrimo peržiūra",
+      "processing": "Vyksta patikrinimas",
+      "unknown": "Veikla nepatvirtinta",
+      "unverified": "Plano patvirtinimas nepasiekiamas"
+    },
+    "monitoringHelp": {
+      "delayed": "Paskutinis automatinis patikrinimas buvo atliktas daugiau nei prieš 48 valandas. Jei būsena išlieka, susisiekite su palaikymo komanda.",
+      "failed": "Jūsų paskutiniai sėkmingi rezultatai vis dar pasiekiami. Jei kitas patikrinimas taip pat nepavyks, susisiekite su palaikymo komanda.",
+      "paused": "Pasirinkite aktyvų Shopify planą, kad atnaujintumėte automatinius patikrinimus.",
+      "preview": "Suplanuotiems patikrinimams reikalingas patvirtintas Shopify planas.",
+      "processing": "Patikrinimas yra eilėje arba vykdomas. Rezultatai bus rodomi, kai jis bus baigtas.",
+      "unknown": "Nėra įrašyto baigto automatinio patikrinimo. Jei atnaujinus šią būseną nepadeda, susisiekite su palaikymo komanda.",
+      "unverified": "Atnaujinkite, kad patvirtintumėte savo Shopify planą. Jei būsena išlieka, susisiekite su palaikymo komanda."
+    },
+    "monitoringRun": "Patikrinkite, ar nėra naujų ar atnaujintų Safety Gate įspėjimų",
+    "noActionHelp": "Jūsų dabartinis katalogas yra apdorotas ir nėra galimų atitikmenų, laukiančių jūsų peržiūros.",
+    "noCompletedCheck": "Nėra įrašyto baigto katalogo patikrinimo",
+    "purpose": "ZeroRecall patikrina jūsų Shopify katalogą pagal ES <portalLink>Safety Gate</portalLink> įspėjimus ir parodo, kuriuos galimus atitikmenis reikia peržiūrėti.",
+    "refreshStatus": "Atnaujinti stebėjimo būseną",
+    "reviewHelp": "Palyginkite savo produktą su oficialiu įspėjimu, tada užregistruokite savo sprendimą.",
+    "reviewNext": "Peržiūrėti kitą atitikmenį"
+  },
+  "findingOverview": {
+    "matches": "Kas atitinka",
+    "missing": "Trūksta informacijos: {{fields}}.",
+    "noConfirmedIdentifiers": "Nėra patvirtintų atitinkančių identifikatorių.",
+    "officialRisk": "Rizika „Safety Gate“ įspėjime",
+    "riskUnavailable": "Išsami rizika nepasiekiama šiame išsaugotame įspėjime.",
+    "saveFailed": "Sprendimo išsaugoti nepavyko. Bandykite dar kartą.",
+    "verify": "Ką patikrinti",
+    "verifyApplicability": "Patikrinkite, ar oficialus įspėjimas taikomas jūsų produktui."
+  },
+  "pendingCoverage": {
+    "automaticCount_few": "{{count}} produktai laukia automatinio patikrinimo eilėje.",
+    "automaticCount_many": "{{count}} produktai laukia automatinio patikrinimo eilėje.",
+    "automaticCount_one": "{{count}} produktas laukia automatinio patikrinimo eilėje.",
+    "automaticCount_other": "{{count}} produktai laukia automatinio patikrinimo eilėje.",
+    "automaticCount_plural": "{{count}} produktai laukia automatinio patikrinimo eilėje.",
+    "automaticOnly": "„ZeroRecall“ automatiškai tikrina šiuos produktus. Jokių veiksmų nereikia.",
+    "batchResult": "Patikrinimai baigti: {{checked}}. Nepavykę patikrinimai: {{failed}}.",
+    "checkBatch_few": "Patikrinti {{count}} produktus",
+    "checkBatch_many": "Patikrinti {{count}} produktus",
+    "checkBatch_one": "Patikrinti {{count}} produktą",
+    "checkBatch_other": "Patikrinti {{count}} produktus",
+    "checkBatch_plural": "Patikrinti {{count}} produktus",
+    "complete": "Kiekviena dabartinė „Shopify“ produkto versija turi išsaugotą rezultatą.",
+    "current": "Dabartiniai rezultatai: {{checked}} iš {{total}} produktų.",
+    "empty": "Produktai čia atsiras, kai juos pridėsite „Shopify“.",
+    "emptyTitle": "Kol kas nėra produktų, kuriuos reikėtų patikrinti",
+    "filters": "Ieškoti ir filtruoti",
+    "manualHelp": "Patikrinkite produktus dabar, jei „ZeroRecall“ neturi patvirtinto automatinio patikrinimo.",
+    "pendingTab": "Laukiama patikrinimo",
+    "planRequired": "Norint patikrinti likusius produktus, reikalingas aktyvus „Shopify“ planas.",
+    "planUnconfirmed": "Automatinių patikrinimų statusas likusiems produktams nepatvirtintas. Patikrinkite savo plano būseną stebėjimo nustatymuose.",
+    "row": {
+      "automatic": "Automatinis patikrinimas eilėje arba vykdomas",
+      "planRequired": "Reikalingas aktyvus „Shopify“ planas",
+      "planUnconfirmed": "Automatinis patikrinimas ir plano būsena nepatvirtinti",
+      "unconfirmed": "Automatinis patikrinimas nepatvirtintas"
+    },
+    "title_few": "{{count}} produktai laukia patikrinimo",
+    "title_many": "{{count}} produktai laukia patikrinimo",
+    "title_one": "{{count}} produktas laukia patikrinimo",
+    "title_other": "{{count}} produktai laukia patikrinimo",
+    "title_plural": "{{count}} produktai laukia patikrinimo",
+    "viewAll": "Peržiūrėti visus produktus"
+  },
+  "reviewOverview": {
+    "closed": "Uždaryta (išspręsta arba atmesta)",
+    "current": "Dabartinės išvados",
+    "decisions": "Įrašyti sprendimai",
+    "emptyDecisions": "Dar nėra įrašytų sprendimų.",
+    "filters": "Filtrai",
+    "open": "Atviros išvados",
+    "report": "Šios ataskaitos išvados"
+  },
+  "settingsOverview": {
+    "active": "Aktyvus",
+    "activePlan": "Aktyvus „Shopify“ planas",
+    "delivery": {
+      "paused": "Pristatymas pristabdytas, kol bus aktyvi stebėjimo prieiga.",
+      "unconfirmed": "El. pašto pristatymo būsena nepatvirtinta."
+    },
+    "editEmail": "Redaguoti el. pašto nuostatas",
+    "mondayEmail": "Pirmadienio suvestinė",
+    "noActivePlan": "Nėra aktyvaus plano",
+    "off": "Išjungta",
+    "on": "Įjungta",
+    "planUnverified": "Planas nepatvirtintas",
+    "previousPlan": "Paskutinis patvirtintas planas: {{plan}}",
+    "recipient": "Išsiųsta adresu {{email}}",
+    "testAccess": "Savininko bandomoji prieiga",
+    "weeklyHelp": "Siunčiama pirmadieniais su jūsų stebėjimo būsena ir atvirais radiniais."
+  }
 }

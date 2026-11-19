@@ -486,6 +486,11 @@
     "state_resolved": "Lahendatud",
     "state_dismissed": "Tagasi lükatud",
     "state_unknown": "Kontrolli rakendusest praegust olekut",
-    "entire_public_catalog": "Kogu avalik kataloog"
+    "entire_public_catalog": "Kogu avalik kataloog",
+    "weekly_new_period": "Loodud sellel perioodil",
+    "weekly_open_snapshot": "Praegu avatud, sealhulgas varasematest perioodidest",
+    "new_products_checked": "Uued kontrollitud tooted",
+    "safety_gate_records_imported": "RAPEXisse imporditud uued kirjed",
+    "weekly_new_products_explanation": "Uued kontrollitud tooted on sellel perioodil seiresse lisatud ja edukalt kontrollitud tooted. Iga toodet loendatakse üks kord."
   }
 }

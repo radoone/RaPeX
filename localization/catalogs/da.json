@@ -486,6 +486,11 @@
     "state_resolved": "Løst",
     "state_dismissed": "Afvist",
     "state_unknown": "Tjek appen for den aktuelle status",
-    "entire_public_catalog": "Hele det offentlige katalog"
+    "entire_public_catalog": "Hele det offentlige katalog",
+    "weekly_new_period": "Oprettet i denne periode",
+    "weekly_open_snapshot": "Åbne nu, inklusive tidligere perioder",
+    "new_products_checked": "Nye kontrollerede produkter",
+    "safety_gate_records_imported": "Nye poster importeret til RAPEX",
+    "weekly_new_products_explanation": "Nye kontrollerede produkter er tilføjet til overvågning og kontrolleret i denne periode. Hvert produkt tælles kun én gang."
   }
 }

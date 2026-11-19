@@ -486,6 +486,11 @@
     "state_resolved": "Resolved",
     "state_dismissed": "Dismissed",
     "state_unknown": "Check the app for the current status",
-    "entire_public_catalog": "Entire public catalog"
+    "entire_public_catalog": "Entire public catalog",
+    "weekly_new_period": "Created during this period",
+    "weekly_open_snapshot": "Open now, including earlier periods",
+    "new_products_checked": "New products checked",
+    "safety_gate_records_imported": "New RAPEX records imported",
+    "weekly_new_products_explanation": "New products checked counts products added to monitoring and successfully checked during this period, once per product."
   }
 }

@@ -11,7 +11,13 @@ function models(value: unknown): string[] {
 /** Only explicit model fields/labels are identifiers; never guess from a category or title. */
 export function explicitProductModel(product: ProductInput): string {
   if (models(product.model).length) return product.model!;
-  return product.description.match(/\bmodel\s*:\s*([^\n.]{1,250})/i)?.[1]?.trim() || "";
+  const labelled = product.description.match(/\bmodel\s*:\s*([^\n]{1,250})/i)?.[1]
+    ?.split(/\.(?=\s+(?:TEST\b|[A-Z][a-z])|\s*$)/)[0]?.trim();
+  if (labelled) return labelled;
+  // Only accept an unpunctuated label when it is followed by an actual
+  // alphanumeric code; ordinary phrases such as "model train" are not IDs.
+  const code = product.description.match(/\bmodel\s+([\p{L}\p{N}][\p{L}\p{N}/_-]{1,79})(?=[\s.,;]|$)/iu)?.[1] || "";
+  return /\p{L}/u.test(code) && /\p{N}/u.test(code) ? code : "";
 }
 
 export function compareExplicitModels(product: ProductInput, alert: NormalizedAlert): "equal" | "different" | "variant" | "unknown" {
@@ -33,4 +39,15 @@ export function sharesExplicitBrand(product: ProductInput, alert: NormalizedAler
     .filter(part => part.length >= 2);
   const left = aliases(product.brand), right = aliases(alert.fields?.brand || alert.fields?.product_brand);
   return left.some(brand => right.includes(brand));
+}
+
+/** A branded named line can remain reviewable even without a model number. */
+export function sharesDistinctiveBrandedName(product: ProductInput, alert: NormalizedAlert): boolean {
+  if (!sharesExplicitBrand(product, alert)) return false;
+  const normalize = (value: unknown) => String(value || "").normalize("NFKC")
+    .toLocaleLowerCase("en").replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+  const sourceName = normalize(alert.fields?.name || alert.fields?.product_name);
+  const words = sourceName.split(/\s+/).filter(Boolean);
+  if (sourceName.length < 8 || words.length < 2 || /^(unknown|not specified|unspecified)$/.test(sourceName)) return false;
+  return ` ${normalize(product.name)} `.includes(` ${sourceName} `);
 }

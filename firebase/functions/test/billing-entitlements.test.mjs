@@ -20,13 +20,18 @@ test('scheduled renewal works without Admin session; provider outage preserves o
  const old={collection:db.collection,transaction:db.runTransaction,fetch:global.fetch};
  const env={...process.env};
  Object.assign(process.env,{SHOPIFY_PARTNER_ORG_ID:'123',SHOPIFY_PARTNER_API_TOKEN:'unit-test-placeholder',SHOPIFY_APP_GID:'gid://shopify/App/1'});
- let state={shopifyShopId:shop,monitoringEntitled:true,subscriptionValidUntil:Timestamp.fromMillis(Date.now()-1000)};
+ const checkoutVerifiedAt=Timestamp.fromMillis(Date.now()-2000);
+ let state={shopifyShopId:shop,monitoringEntitled:true,billingVerifiedAt:checkoutVerifiedAt,subscriptionValidUntil:Timestamp.fromMillis(Date.now()-1000)};
  const ref={};const snap=()=>({id:'example.myshopify.com',ref,exists:true,get:key=>state[key]});
  const query={where(){return this;},orderBy(){return this;},limit(n){assert.equal(n,100);return this;},get:async()=>({docs:[snap()],size:1})};
  db.collection=()=>query;db.runTransaction=async fn=>fn({get:async()=>snap(),update:(_ref,value)=>{state={...state,...value};}});
  try{
   global.fetch=async()=>({ok:true,json:async()=>({data:{activeSubscription:contract}})});
   assert.deepEqual(await refreshShopifyEntitlements(),{verified:1,failed:0});assert.ok(state.subscriptionValidUntil.toMillis()>Date.now());
+  assert.equal(state.billingMonitoringFirstVerifiedAt, checkoutVerifiedAt);
+  state.billingVerifiedAt=Timestamp.now();
+  assert.deepEqual(await refreshShopifyEntitlements(),{verified:1,failed:0});
+  assert.equal(state.billingMonitoringFirstVerifiedAt, checkoutVerifiedAt);
   const expiry=state.subscriptionValidUntil;
   global.fetch=async()=>{throw new Error('network unavailable');};
   assert.deepEqual(await refreshShopifyEntitlements(),{verified:0,failed:1});assert.equal(state.subscriptionValidUntil,expiry);assert.equal(state.billingRefreshErrorCode,'verification_failed');

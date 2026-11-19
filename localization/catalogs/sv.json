@@ -486,6 +486,11 @@
     "state_resolved": "Löst",
     "state_dismissed": "Avfärdad",
     "state_unknown": "Kontrollera appen för aktuell status",
-    "entire_public_catalog": "Hela den offentliga katalogen"
+    "entire_public_catalog": "Hela den offentliga katalogen",
+    "weekly_new_period": "Skapade under denna period",
+    "weekly_open_snapshot": "Öppna nu, även från tidigare perioder",
+    "new_products_checked": "Nya kontrollerade produkter",
+    "safety_gate_records_imported": "Nya poster importerade till RAPEX",
+    "weekly_new_products_explanation": "Nya kontrollerade produkter har lagts till i övervakningen och kontrollerats under denna period. Varje produkt räknas bara en gång."
   }
 }

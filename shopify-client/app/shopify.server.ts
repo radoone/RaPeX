@@ -5,16 +5,12 @@ import {
   DeliveryMethod,
   shopifyApp,
 } from "@shopify/shopify-app-react-router/server";
-import { PrismaSessionStorage } from "@shopify/shopify-app-session-storage-prisma";
-import prisma from "./db.server";
 import { POLARIS_URL } from "./polaris";
 import { FirestoreSessionStorage } from "./firestore-session-storage.server";
 import { firestore } from "./firestore.server";
 import { FieldValue } from "firebase-admin/firestore";
 
-const configuredSessionStorage = process.env.SHOPIFY_SESSION_STORAGE === "firestore"
-  ? new FirestoreSessionStorage(firestore)
-  : new PrismaSessionStorage(prisma);
+const configuredSessionStorage = new FirestoreSessionStorage(firestore, true);
 
 export const SHOPIFY_BILLING_TEST = process.env.SHOPIFY_BILLING_TEST !== "false";
 export const SHOPIFY_APP_HANDLE = process.env.SHOPIFY_APP_HANDLE || "";
@@ -36,6 +32,7 @@ const shopify = shopifyApp({
   authPathPrefix: "/auth",
   sessionStorage: configuredSessionStorage,
   distribution: AppDistribution.AppStore,
+  future: { expiringOfflineAccessTokens: true },
   hooks: {
     afterAuth: async ({ session }) => {
       await ensureShopifyWebhooksRegistered(session);

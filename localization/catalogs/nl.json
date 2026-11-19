@@ -486,6 +486,11 @@
     "state_resolved": "Opgelost",
     "state_dismissed": "Genegeerd",
     "state_unknown": "Controleer de app voor de huidige status",
-    "entire_public_catalog": "De volledige openbare catalogus"
+    "entire_public_catalog": "De volledige openbare catalogus",
+    "weekly_new_period": "Aangemaakt in deze periode",
+    "weekly_open_snapshot": "Nu open, inclusief eerdere perioden",
+    "new_products_checked": "Nieuwe gecontroleerde producten",
+    "safety_gate_records_imported": "Nieuwe RAPEX-records geïmporteerd",
+    "weekly_new_products_explanation": "Nieuwe gecontroleerde producten zijn in deze periode aan de monitoring toegevoegd en succesvol gecontroleerd. Elk product telt één keer mee."
   }
 }

@@ -55,11 +55,15 @@ export type NormalizedAlert = {
     [key: string]: any;
   };
   distance?: number;
+  textDistance?: number;
+  imageDistance?: number;
   matchedImageUrls?: string[];
   source?: "retriever" | "recent";
 };
 
 export type AnalysisMatchCandidate = {
+  identityConflict?: boolean;
+  visualEvidence?: string[];
   identityAssessment?: "same_model" | "distinctive_visual" | "uncertain";
   alertId?: string;
   overallSimilarity?: number;

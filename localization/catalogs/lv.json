@@ -486,6 +486,11 @@
     "state_resolved": "Atrisināts",
     "state_dismissed": "Atcelts",
     "state_unknown": "Pārbaudiet lietotni, lai uzzinātu pašreizējo statusu",
-    "entire_public_catalog": "Viss publiskais katalogs"
+    "entire_public_catalog": "Viss publiskais katalogs",
+    "weekly_new_period": "Izveidoti šajā periodā",
+    "weekly_open_snapshot": "Pašlaik atvērti, arī no iepriekšējiem periodiem",
+    "new_products_checked": "Jauni pārbaudītie produkti",
+    "safety_gate_records_imported": "Jauni RAPEX importētie ieraksti",
+    "weekly_new_products_explanation": "Jaunie pārbaudītie produkti šajā periodā ir pievienoti uzraudzībai un veiksmīgi pārbaudīti. Katrs produkts tiek skaitīts tikai vienu reizi."
   }
 }

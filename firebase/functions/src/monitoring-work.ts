@@ -17,7 +17,7 @@ export type MonitoringPageSeed = {
   hasMore: boolean;
   rapexAlertsScanned: number;
   checkpoint: { lastRapexAlertDate: string | null; lastRapexRecordTimestamp: string | null; lastRapexAlertDocId: string | null };
-  changeCursor: { id: string; changedAt: string } | null;
+  changeCursor: { id: string; changedAt: string; seconds?: number; nanoseconds?: number } | null;
 };
 export type MonitoringPreparedPage = { seed: MonitoringPageSeed; items: MonitoringProductWork[] };
 

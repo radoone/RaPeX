@@ -8,7 +8,7 @@ import type {
   NormalizedAlert,
   SafetyCheckAnalysis,
 } from "./safety-gate-checker.types.js";
-import { compareExplicitModels, explicitProductModel, sharesExplicitBrand } from "./product-model-identity.js";
+import { compareExplicitModels, explicitProductModel, sharesExplicitBrand, sharesDistinctiveBrandedName } from "./product-model-identity.js";
 
 type AnalysisResponseShape = {
   output?: unknown;
@@ -223,7 +223,10 @@ export function parseAnalysisMatches(
     typeof value.alertId !== "string" || !value.alertId.trim() ||
     !Number.isFinite(value.textSimilarity ?? value.overallSimilarity) ||
     (value.imageSimilarity != null && !Number.isFinite(value.imageSimilarity)) ||
-    !["same_model", "distinctive_visual", "uncertain"].includes(value.identityAssessment))) {
+    !["same_model", "distinctive_visual", "uncertain"].includes(value.identityAssessment) ||
+    typeof value.identityConflict !== "boolean" ||
+    !Array.isArray(value.visualEvidence) || value.visualEvidence.length > 3 ||
+    value.visualEvidence.some((detail: unknown) => typeof detail !== "string" || !detail.trim() || detail.length > 200))) {
     throw new Error("Invalid Safety Gate match structure; retry the check");
   }
   return parsed as AnalysisMatchCandidate[];
@@ -401,18 +404,33 @@ export function buildSafetyCheckResult(
         throw new Error("Safety Gate model referenced an unknown candidate; retry the check");
       }
 
+      if (match.identityConflict === true) return null;
       const modelIdentity = product ? compareExplicitModels(product, alert) : "unknown";
-      if (modelIdentity === "different") return null;
       const comparedPhoto = analysis.productImagesUsed > 0 &&
         (analysis.comparedImageAlertIds?.includes(alert.id) ?? analysis.alertImagesUsed > 0);
+      const visualEvidence = new Set((match.visualEvidence || []).map(detail => detail.trim().toLocaleLowerCase("en")));
+      const distinctivePhoto = comparedPhoto && (match.imageSimilarity ?? 0) >= 90 && visualEvidence.size >= 2;
+      const sameBrand = product ? sharesExplicitBrand(product, alert) : false;
+      // Local names and model codes may differ for an identical rebranded product.
+      // Their mismatch needs actual distinctive visual evidence, not a generic shape.
+      if (modelIdentity === "different" && !distinctivePhoto) return null;
       let identityAssessment = match.identityAssessment || "uncertain";
-      if (identityAssessment === "same_model" && product && modelIdentity === "unknown") {
+      if (identityAssessment === "same_model" && product && !(modelIdentity === "equal" && sameBrand)) {
         // A model read only from the photographs is visual evidence, not an
         // independently supplied structured merchant identifier.
-        identityAssessment = comparedPhoto && (match.imageSimilarity ?? 0) >= 90 ? "distinctive_visual" : "uncertain";
+        identityAssessment = distinctivePhoto ? "distinctive_visual" : "uncertain";
       }
+      if (modelIdentity === "different" && distinctivePhoto) identityAssessment = "distinctive_visual";
       if (modelIdentity === "variant" ||
-        (identityAssessment === "distinctive_visual" && !comparedPhoto)) identityAssessment = "uncertain";
+        (identityAssessment === "distinctive_visual" && !distinctivePhoto)) identityAssessment = "uncertain";
+
+      // Category resemblance, fragments of a barcode, and a model's unsupported
+      // uncertainty are not identity evidence. Keep unresolved same-brand
+      // model families, specific branded names, and distinctive photo comparisons.
+      // Validated GTIN matches are handled independently before this path.
+      if (product && identityAssessment === "uncertain" && !distinctivePhoto &&
+        !(sameBrand && (modelIdentity === "equal" || modelIdentity === "variant")) &&
+        !sharesDistinctiveBrandedName(product, alert)) return null;
 
       const alertDetails = buildAlertDetails(alert);
       const alertType = alertDetails.fields.alert_type;

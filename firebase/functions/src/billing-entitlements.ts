@@ -49,7 +49,20 @@ export async function refreshShopifyEntitlements(): Promise<{ verified: number; 
         await db.runTransaction(async transaction => {
           const current = await transaction.get(merchant.ref);
           if (!current.exists || current.get("shopifyShopId") !== shopId) return;
-          transaction.update(merchant.ref, { ...entitlement, billingVerifiedAt: FieldValue.serverTimestamp(), billingRefreshAfter: Timestamp.fromMillis(Date.now() + 60 * 60_000), billingRefreshErrorCode: FieldValue.delete() });
+          const firstVerifiedAt = current.get("billingMonitoringFirstVerifiedAt");
+          const previousVerification = current.get("billingVerifiedAt");
+          const firstMonitoringVerification = current.get("monitoringEntitled") === true && firstVerifiedAt instanceof Timestamp
+            ? firstVerifiedAt
+            : current.get("monitoringEntitled") === true && previousVerification instanceof Timestamp
+              ? previousVerification
+              : FieldValue.serverTimestamp();
+          transaction.update(merchant.ref, {
+            ...entitlement,
+            billingMonitoringFirstVerifiedAt: entitlement.monitoringEntitled ? firstMonitoringVerification : FieldValue.delete(),
+            billingVerifiedAt: FieldValue.serverTimestamp(),
+            billingRefreshAfter: Timestamp.fromMillis(Date.now() + 60 * 60_000),
+            billingRefreshErrorCode: FieldValue.delete(),
+          });
         });
         verified++;
       } catch {

@@ -486,6 +486,11 @@
     "state_resolved": "Riješeno",
     "state_dismissed": "Odbijeno",
     "state_unknown": "Provjerite aplikaciju za trenutni status",
-    "entire_public_catalog": "Cijeli javni katalog"
+    "entire_public_catalog": "Cijeli javni katalog",
+    "weekly_new_period": "Nastali u ovom razdoblju",
+    "weekly_open_snapshot": "Trenutačno otvoreni, uključujući ranija razdoblja",
+    "new_products_checked": "Novi provjereni proizvodi",
+    "safety_gate_records_imported": "Novi zapisi uvezeni u RAPEX",
+    "weekly_new_products_explanation": "Novi provjereni proizvodi dodani su u praćenje i uspješno provjereni u ovom razdoblju. Svaki se proizvod broji samo jednom."
   }
 }

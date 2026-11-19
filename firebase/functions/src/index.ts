@@ -51,7 +51,7 @@ export const merchantCatalogReconciliationTask = onTaskDispatched({
   region: "europe-west1", memory: "512MiB", timeoutSeconds: 1200, maxInstances: 5,
   rateLimits: { maxConcurrentDispatches: 4, maxDispatchesPerSecond: 1 },
   retryConfig: { maxAttempts: 8, maxRetrySeconds: 24 * 60 * 60, minBackoffSeconds: 60, maxBackoffSeconds: 600, maxDoublings: 4 },
-  secrets: ["SAFETY_GATE_API_KEY"],
+  secrets: ["SAFETY_GATE_API_KEY", "SHOPIFY_API_SECRET"],
 }, async request => { await handleCatalogReconciliationTask(request.data, request.context.retryCount); });
 
 // --- Scheduled Function ---
@@ -299,7 +299,7 @@ export const shopifyProductChangeTask = onTaskDispatched(
       maxBackoffSeconds: 600,
       maxDoublings: 4,
     },
-    secrets: ["GOOGLE_API_KEY", "SAFETY_GATE_API_KEY"],
+    secrets: ["GOOGLE_API_KEY", "SAFETY_GATE_API_KEY", "SHOPIFY_API_SECRET"],
   },
   async (request) => {
     await handleShopifyProductChangeTask(request.data, request.context.retryCount);
@@ -320,7 +320,7 @@ export const merchantCatalogAuditTask = onTaskDispatched(
       maxBackoffSeconds: 600,
       maxDoublings: 4,
     },
-    secrets: ["GOOGLE_API_KEY", "SAFETY_GATE_API_KEY"],
+    secrets: ["GOOGLE_API_KEY", "SAFETY_GATE_API_KEY", "SHOPIFY_API_SECRET"],
   },
   async (request) => {
     await handleMerchantCatalogAuditTask(request.data, request.context.retryCount);
@@ -465,7 +465,20 @@ export const notifyFreeScanOwner = onDocumentCreated(
 
 // Refresh verified Partner contracts even when merchants leave Shopify Admin closed.
 export const refreshShopifyBillingEntitlements = onSchedule(
-  { region: "europe-west1", schedule: "every 60 minutes", timeoutSeconds: 540, maxInstances: 1, serviceAccount: "safety-gate-shopify-runtime@rapex-99a2c.iam.gserviceaccount.com", secrets: ["SHOPIFY_PARTNER_API_TOKEN"] },
+  {
+    region: "europe-west1",
+    schedule: "every 60 minutes",
+    timeoutSeconds: 540,
+    maxInstances: 1,
+    // Retry transient Cloud Run admission failures after the instance has time to start.
+    retryCount: 2,
+    minBackoffSeconds: 60,
+    maxBackoffSeconds: 120,
+    maxDoublings: 1,
+    maxRetrySeconds: 1200,
+    serviceAccount: "safety-gate-shopify-runtime@rapex-99a2c.iam.gserviceaccount.com",
+    secrets: ["SHOPIFY_PARTNER_API_TOKEN"],
+  },
   async () => {
     const { refreshShopifyEntitlements } = await import("./billing-entitlements.js");
     logger.info("Scheduled billing verification completed", await refreshShopifyEntitlements());
