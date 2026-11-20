@@ -1475,7 +1475,8 @@
       "preview": "Izstrādes priekšskatījums",
       "processing": "Pārbaude notiek",
       "unknown": "Darbība nav apstiprināta",
-      "unverified": "Plāna verifikācija nav pieejama"
+      "unverified": "Plāna verifikācija nav pieejama",
+      "starting": "Gaida pirmo automātisko pārbaudi"
     },
     "monitoringHelp": {
       "delayed": "Pēdējā automātiskā pārbaude notika pirms vairāk nekā 48 stundām. Ja statuss saglabājas, sazinieties ar atbalsta dienestu.",
@@ -1492,7 +1493,19 @@
     "purpose": "ZeroRecall pārbauda jūsu Shopify katalogu pret ES <portalLink>Safety Gate</portalLink> brīdinājumiem un parāda, kuras iespējamās atbilstības ir jāpārskata.",
     "refreshStatus": "Atsvaidzināt uzraudzības statusu",
     "reviewHelp": "Salīdziniet savu produktu ar oficiālo brīdinājumu, pēc tam ierakstiet savu lēmumu.",
-    "reviewNext": "Pārskatīt nākamo atbilstību"
+    "reviewNext": "Pārskatīt nākamo atbilstību",
+    "activityQuiet": "Šajās pārbaudēs nebija jaunu vai atjauninātu Safety Gate ierakstu, ko salīdzināt.",
+    "activityRecords": "Šajās pārbaudēs izskatītie Safety Gate ieraksti",
+    "activityRuns": "Pabeigtās uzraudzības pārbaudes",
+    "activityTitle": "Uzraudzība pēdējās 30 dienās",
+    "auditBackground": "Varat aizvērt šo lapu. Pārbaude turpinās fonā. Kad tā pabeigta, rezultātus skatiet ZeroRecall.",
+    "auditTitle": "Notiek sākotnējā kataloga pārbaude",
+    "emailDisabled": "E-pasta paziņojumi par jaunām iespējamām atbilstībām ir izslēgti vai tiem nav adresāta. To var mainīt iestatījumos.",
+    "emailEnabled": "E-pasta paziņojumi par jaunām iespējamām atbilstībām ir ieslēgti. Pārbaudes turpinās arī jūsu prombūtnē.",
+    "firstResultCount": "Produkti pārbaudīti pret ES Safety Gate: {{checked}}.",
+    "firstResultNoMatches": "Šajā pārbaudē netika atrasti jauni iespējamie atbilstības gadījumi.",
+    "firstResultTitle": "Sākotnējā kataloga pārbaude pabeigta",
+    "resultBoundary": "Pārbaude Safety Gate neapliecina preces drošumu."
   },
   "findingOverview": {
     "matches": "Kas atbilst",
@@ -1567,6 +1580,14 @@
     "previousPlan": "Pēdējais verificētais plāns: {{plan}}",
     "recipient": "Nosūtīts uz {{email}}",
     "testAccess": "Īpašnieka testa piekļuve",
-    "weeklyHelp": "Nosūtīts pirmdienās ar jūsu uzraudzības statusu un atvērtajiem atklājumiem."
+    "weeklyHelp": "Nosūtīts pirmdienās ar jūsu uzraudzības statusu un atvērtajiem atklājumiem.",
+    "cancelError": {
+      "failed": "Mēs nevarējām apstiprināt izmaiņas ar Shopify. Atsvaidziniet lapu un pārbaudiet savu plānu.",
+      "ownerRequired": "Palūdziet veikala īpašniekam izslēgt atjaunošanu."
+    },
+    "cancellationPending": "Shopify apstiprināja jūsu pieprasījumu. Atsvaidziniet šo lapu, lai redzētu atjaunināto plānu.",
+    "endsOn": "Atjaunošana ir izslēgta. Uzraudzība beidzas {{date}}.",
+    "stopRenewal": "Izslēgt atjaunošanu",
+    "stopRenewalHelp": "Veikala īpašnieks var izslēgt atjaunošanu. Uzraudzība turpināsies līdz {{date}}. Jūsu saglabātie rezultāti paliks pieejami."
   }
 }

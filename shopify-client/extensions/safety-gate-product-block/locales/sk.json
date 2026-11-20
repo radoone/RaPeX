@@ -1,12 +1,12 @@
 {
   "runCheck": "Spustiť kontrolu",
-  "openReview": "Otvoriť preverenie",
+  "openReview": "Preveriť nález Safety Gate",
   "close": "Zavrieť",
   "again": "Skontrolovať znova",
   "done": "Hotovo",
   "checking": "Prebieha kontrola…",
   "needsReview": "Vyžaduje preverenie",
-  "noMatch": "Nenašla sa pravdepodobná zhoda",
+  "noMatch": "Nenašla sa zhoda",
   "resolved": "Rozhodnutie zaznamenané",
   "unchecked": "Neskontrolované",
   "checkFailed": "Kontrola produktu zlyhala",
@@ -17,6 +17,9 @@
   "details": "Odporúčanie a podrobnosti",
   "reason": "Dôvod",
   "checked": "Posledná kontrola",
-  "risk": "Úroveň rizika",
-  "name": "Safety Gate"
+  "risk": "Riziko v oficiálnom upozornení",
+  "name": "Safety Gate",
+  "noMatchHelp": "Kontrola v Safety Gate nepotvrdzuje bezpečnosť produktu.",
+  "waiting": "Čaká na dodávateľa",
+  "changed": "Zmenené od poslednej kontroly"
 }

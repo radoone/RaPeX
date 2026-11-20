@@ -1459,7 +1459,8 @@
       "preview": "Aperçu du développement",
       "processing": "Vérification en cours",
       "unknown": "Activité non confirmée",
-      "unverified": "Vérification du plan indisponible"
+      "unverified": "Vérification du plan indisponible",
+      "starting": "Première vérification automatique en attente"
     },
     "monitoringHelp": {
       "delayed": "La dernière vérification automatique remonte à plus de 48 heures. Si le statut persiste, contactez le support.",
@@ -1476,7 +1477,19 @@
     "purpose": "ZeroRecall vérifie votre catalogue Shopify par rapport aux alertes <portalLink>EU Safety Gate</portalLink> et vous indique les correspondances possibles qui nécessitent un examen.",
     "refreshStatus": "Actualiser le statut de surveillance",
     "reviewHelp": "Comparez votre produit avec l'alerte officielle, puis enregistrez votre décision.",
-    "reviewNext": "Examiner la correspondance suivante"
+    "reviewNext": "Examiner la correspondance suivante",
+    "activityQuiet": "Ces vérifications n’ont trouvé aucune fiche Safety Gate nouvelle ou mise à jour à comparer.",
+    "activityRecords": "Fiches Safety Gate prises en compte dans ces vérifications",
+    "activityRuns": "Vérifications de suivi terminées",
+    "activityTitle": "Suivi des 30 derniers jours",
+    "auditBackground": "Vous pouvez fermer cette page. La vérification continue en arrière-plan. Une fois terminée, retrouvez les résultats dans ZeroRecall.",
+    "auditTitle": "Première vérification du catalogue en cours",
+    "emailDisabled": "Les e-mails sur les nouvelles correspondances possibles sont désactivés ou sans destinataire. Vous pouvez modifier cela dans les paramètres.",
+    "emailEnabled": "Les e-mails sur les nouvelles correspondances possibles sont activés. Les vérifications continuent en votre absence.",
+    "firstResultCount": "Produits vérifiés par rapport à Safety Gate de l'UE : {{checked}}.",
+    "firstResultNoMatches": "Cette vérification n'a trouvé aucune nouvelle correspondance possible.",
+    "firstResultTitle": "Vérification initiale du catalogue terminée",
+    "resultBoundary": "Une vérification dans Safety Gate ne certifie pas la sécurité du produit."
   },
   "findingOverview": {
     "matches": "Correspondances",
@@ -1548,6 +1561,14 @@
     "previousPlan": "Dernier forfait vérifié: {{plan}}",
     "recipient": "Envoyé à {{email}}",
     "testAccess": "Accès test du propriétaire",
-    "weeklyHelp": "Envoyé le lundi avec votre statut de surveillance et les résultats ouverts."
+    "weeklyHelp": "Envoyé le lundi avec votre statut de surveillance et les résultats ouverts.",
+    "cancelError": {
+      "failed": "Nous n'avons pas pu confirmer le changement avec Shopify. Actualisez la page et vérifiez votre forfait.",
+      "ownerRequired": "Demandez au propriétaire de la boutique de désactiver le renouvellement."
+    },
+    "cancellationPending": "Shopify a accepté votre demande. Actualisez cette page pour voir le forfait mis à jour.",
+    "endsOn": "Le renouvellement est désactivé. La surveillance se termine le {{date}}.",
+    "stopRenewal": "Désactiver le renouvellement",
+    "stopRenewalHelp": "Le propriétaire de la boutique peut désactiver le renouvellement. La surveillance se poursuit jusqu'au {{date}}. Vos résultats enregistrés restent disponibles."
   }
 }

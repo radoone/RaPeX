@@ -28,7 +28,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         : null,
     productsFetched: Number(data.initialScanProductsFetched || 0),
     productsImported: Number(data.initialScanProductsImported || 0),
-    productsScanned: Number(data.initialScanProductsScanned || 0),
+    productsScanned: Number(run?.get("productsScanned") ?? data.initialScanProductsScanned ?? 0),
     alertsScanned: Number(data.initialScanAlertsScanned || 0),
     failureCode:
       typeof data.initialScanFailureCode === "string"

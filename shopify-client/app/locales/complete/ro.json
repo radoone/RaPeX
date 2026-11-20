@@ -1459,7 +1459,8 @@
       "preview": "Previzualizare dezvoltare",
       "processing": "Verificare în curs",
       "unknown": "Activitate neconfirmată",
-      "unverified": "Verificarea planului nu este disponibilă"
+      "unverified": "Verificarea planului nu este disponibilă",
+      "starting": "Prima verificare automată este în așteptare"
     },
     "monitoringHelp": {
       "delayed": "Ultima verificare automată a fost acum mai mult de 48 de ore. Dacă starea persistă, contactați asistența.",
@@ -1476,7 +1477,19 @@
     "purpose": "ZeroRecall verifică catalogul dvs. Shopify în raport cu alertele <portalLink>EU Safety Gate</portalLink> și vă arată ce posibile potriviri necesită revizuire.",
     "refreshStatus": "Reîmprospătați starea monitorizării",
     "reviewHelp": "Comparați produsul dvs. cu alerta oficială, apoi înregistrați decizia.",
-    "reviewNext": "Revizuiți următoarea potrivire"
+    "reviewNext": "Revizuiți următoarea potrivire",
+    "activityQuiet": "La aceste verificări nu au existat înregistrări Safety Gate noi sau actualizate de comparat.",
+    "activityRecords": "Înregistrări Safety Gate luate în considerare la aceste verificări",
+    "activityRuns": "Verificări de monitorizare finalizate",
+    "activityTitle": "Monitorizarea din ultimele 30 de zile",
+    "auditBackground": "Poți închide această pagină. Verificarea continuă în fundal. După finalizare, revino în ZeroRecall pentru a vedea rezultatele.",
+    "auditTitle": "Verificarea inițială a catalogului este în curs",
+    "emailDisabled": "E-mailurile pentru noi potriviri posibile sunt dezactivate sau nu au destinatar. Poți modifica acest lucru în Setări.",
+    "emailEnabled": "E-mailurile pentru noi potriviri posibile sunt activate. Verificările continuă în absența ta.",
+    "firstResultCount": "Produse verificate în raport cu EU Safety Gate: {{checked}}.",
+    "firstResultNoMatches": "Această verificare nu a găsit nicio nouă potrivire posibilă.",
+    "firstResultTitle": "Verificarea inițială a catalogului este finalizată",
+    "resultBoundary": "O verificare în Safety Gate nu certifică siguranța produsului."
   },
   "findingOverview": {
     "matches": "Ce se potrivește",
@@ -1548,6 +1561,14 @@
     "previousPlan": "Ultimul plan verificat: {{plan}}",
     "recipient": "Trimis la {{email}}",
     "testAccess": "Acces de testare proprietar",
-    "weeklyHelp": "Trimis lunea cu starea monitorizării și constatările deschise."
+    "weeklyHelp": "Trimis lunea cu starea monitorizării și constatările deschise.",
+    "cancelError": {
+      "failed": "Nu am putut confirma modificarea cu Shopify. Reîmprospătați pagina și verificați-vă planul.",
+      "ownerRequired": "Solicitați proprietarului magazinului să dezactiveze reînnoirea."
+    },
+    "cancellationPending": "Shopify a acceptat solicitarea dvs. Reîmprospătați această pagină pentru a vedea planul actualizat.",
+    "endsOn": "Reînnoirea este dezactivată. Monitorizarea se încheie la {{date}}.",
+    "stopRenewal": "Dezactivați reînnoirea",
+    "stopRenewalHelp": "Proprietarul magazinului poate dezactiva reînnoirea. Monitorizarea continuă până la {{date}}. Rezultatele salvate rămân disponibile."
   }
 }

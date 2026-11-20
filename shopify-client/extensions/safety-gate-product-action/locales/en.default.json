@@ -1,12 +1,12 @@
 {
   "runCheck": "Run check",
-  "openReview": "Open review",
+  "openReview": "Review Safety Gate finding",
   "close": "Close",
   "again": "Check again",
   "done": "Done",
   "checking": "Checking…",
   "needsReview": "Needs review",
-  "noMatch": "No likely match detected",
+  "noMatch": "No match found",
   "resolved": "Decision recorded",
   "unchecked": "Not checked",
   "checkFailed": "Product safety check failed",
@@ -17,6 +17,12 @@
   "details": "Recommendation & details",
   "reason": "Reason",
   "checked": "Last checked",
-  "risk": "Risk level",
-  "name": "Run Safety Gate check"
+  "risk": "Risk in the official alert",
+  "name": "Run Safety Gate check",
+  "noMatchHelp": "A Safety Gate check cannot certify product safety.",
+  "waiting": "Waiting for supplier",
+  "viewPlans": "View Shopify plans",
+  "planRequired": "Choose an active Shopify plan to run product checks.",
+  "retry": "Retry check",
+  "excluded": "This product was skipped by your manual check exclusion rules."
 }

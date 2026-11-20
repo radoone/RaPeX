@@ -94,7 +94,7 @@ async function fetchActivePartnerSubscription(
           cancelAtEndOfCycle
           trialEndsAt
           currentBillingCycle { endTime }
-          items { handle price { active } }
+          items { handle }
         }
       }`,
         variables: { appId: SHOPIFY_APP_GID, shopId },
@@ -106,7 +106,7 @@ async function fetchActivePartnerSubscription(
     data?: { activeSubscription?: Subscription | null };
     errors?: unknown[];
   };
-  if (!response.ok || payload.errors?.length || !payload.data) {
+  if (!response.ok || payload.errors?.length || !payload.data || !("activeSubscription" in payload.data)) {
     throw new Error("Shopify Partner API could not verify the subscription.");
   }
   return { subscription: payload.data.activeSubscription || null, shopId };

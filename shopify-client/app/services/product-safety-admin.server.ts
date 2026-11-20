@@ -1,4 +1,6 @@
 import db from "../merchant-db.server";
+import { checkCoversCurrentProductVersion } from "./catalog-coverage";
+import { isWaitingForSupplier } from "./review-evidence";
 import { completeProductBarcodeVariants } from "./shopify-product-barcodes.server";
 import type { ProductData } from "./safety-gate-product-data";
 import {
@@ -42,9 +44,10 @@ type SafetyCheckRecord = {
   isSafe: boolean;
   checkedAt: Date;
   createdAt: Date;
+  sourceUpdatedAt?: string | null;
 };
 
-export type ProductSafetyState = "unchecked" | "safe" | "unsafe" | "resolved" | "needs-review";
+export type ProductSafetyState = "unchecked" | "changed" | "safe" | "unsafe" | "resolved" | "needs-review" | "waiting-for-supplier";
 
 export interface ProductSafetyStatusPayload {
   productId: string;
@@ -67,6 +70,15 @@ export interface RunProductSafetyCheckResult {
   alertId: string | null;
   result: SafetyCheckResult;
   status: ProductSafetyStatusPayload;
+}
+
+export function productSafetyReviewUrl(shop: string, alertId: string | null, appHandle: string) {
+  if (!appHandle || !alertId) return null;
+  const store = encodeURIComponent(shop.replace(/\.myshopify\.com$/i, ""));
+  const handle = encodeURIComponent(appHandle);
+  const url = new URL(`https://admin.shopify.com/store/${store}/apps/${handle}/app/alerts`);
+  url.searchParams.set("open", alertId);
+  return url.toString();
 }
 
 function normalizeProductId(rawProductId: string): string {
@@ -139,6 +151,7 @@ function buildStatusPayload(input: {
   activeAlert: SafetyAlertRecord | null;
   latestAlert: SafetyAlertRecord | null;
   latestCheck: SafetyCheckRecord | null;
+  productUpdatedAt?: string;
 }): ProductSafetyStatusPayload {
   const { productId, activeAlert, latestAlert, latestCheck } = input;
   const activeResult = parseCheckResult(activeAlert?.checkResult);
@@ -147,7 +160,7 @@ function buildStatusPayload(input: {
   if (activeAlert) {
     return {
       productId,
-      state: "unsafe",
+      state: isWaitingForSupplier(activeAlert) ? "waiting-for-supplier" : "unsafe",
       statusMessage: "Potential Safety Gate match detected.",
       checkedAt: isoOrNull(latestCheck?.checkedAt) ?? isoOrNull(activeAlert.updatedAt),
       alertId: activeAlert.id,
@@ -159,6 +172,25 @@ function buildStatusPayload(input: {
       recommendation: activeResult?.recommendation ?? null,
       resolutionType: activeAlert.resolutionType ?? null,
       topReason: getTopReason(activeResult),
+    };
+  }
+
+  if (latestCheck && input.productUpdatedAt &&
+      !checkCoversCurrentProductVersion(latestCheck, input.productUpdatedAt)) {
+    return {
+      productId,
+      state: "changed",
+      statusMessage: "Product changed since its last Safety Gate check.",
+      checkedAt: isoOrNull(latestCheck.checkedAt),
+      alertId: null,
+      alertStatus: null,
+      alertType: null,
+      riskLevel: null,
+      warningsCount: 0,
+      overallSimilarity: null,
+      recommendation: null,
+      resolutionType: null,
+      topReason: null,
     };
   }
 
@@ -263,9 +295,9 @@ async function fetchLatestSafetyRecords(shop: string, productId: string) {
   };
 }
 
-export async function getProductSafetyStatus(shop: string, productId: string): Promise<ProductSafetyStatusPayload> {
+export async function getProductSafetyStatus(shop: string, productId: string, productUpdatedAt?: string): Promise<ProductSafetyStatusPayload> {
   const records = await fetchLatestSafetyRecords(shop, productId);
-  return buildStatusPayload(records);
+  return buildStatusPayload({ ...records, productUpdatedAt });
 }
 
 export async function runProductSafetyCheck(input: {

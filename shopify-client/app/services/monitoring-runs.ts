@@ -1,6 +1,7 @@
 export type MonitoringRunSummary = {
   id: string;
   status: string;
+  hasMore?: boolean;
   updatedAt: string | null;
   productsScanned: number;
   rapexAlertsScanned: number;
@@ -25,14 +26,41 @@ function toCount(value: unknown): number {
   return typeof value === "number" && Number.isFinite(value) && value > 0 ? Math.floor(value) : 0;
 }
 
+export function summarizeMonitoringActivity(rows: Record<string, unknown>[], since: number) {
+  if (rows.length > 100) return null;
+  const completed = rows.filter(row => {
+    const date = toIsoString(row.completedAt ?? row.updatedAt);
+    return row.status === "completed" && date !== null && Date.parse(date) > since;
+  });
+  if (!completed.length) return null;
+  const records = completed.map(row => monitoringCount(row, "rapexAlertsScanned"));
+  return {
+    completedRuns: completed.length,
+    recordsConsidered: records.every(count => count !== null)
+      ? records.reduce<number>((sum, count) => sum + (count ?? 0), 0)
+      : null,
+  };
+}
+
+function monitoringCount(data: Record<string, unknown>, key: string): number | null {
+  const result = data.result as Record<string, unknown> | undefined;
+  const summary = data.completedSummary as Record<string, unknown> | undefined;
+  const value = result?.[key] ?? summary?.[key] ?? data[key];
+  return typeof value === "number" && Number.isSafeInteger(value) && value >= 0 ? value : null;
+}
+
 export function summarizeMonitoringRun(id: string, data: Record<string, unknown>): MonitoringRunSummary {
+  const result = data.result as Record<string, unknown> | undefined;
+  const completedSummary = data.completedSummary as Record<string, unknown> | undefined;
+  const hasMore = result?.hasMore ?? completedSummary?.hasMore;
   return {
     id,
     status: typeof data.status === "string" ? data.status : "unknown",
-    updatedAt: toIsoString(data.updatedAt || data.queuedAt || data.createdAt),
-    productsScanned: toCount(data.productsScanned),
-    rapexAlertsScanned: toCount(data.rapexAlertsScanned),
-    alertsCreated: toCount(data.alertsCreated),
+    updatedAt: toIsoString((data.status === "completed" && data.completedAt) || data.updatedAt || data.queuedAt || data.createdAt),
+    ...(typeof hasMore === "boolean" ? { hasMore } : {}),
+    productsScanned: monitoringCount(data, "productsScanned") ?? toCount(data.productsScanned),
+    rapexAlertsScanned: monitoringCount(data, "rapexAlertsScanned") ?? toCount(data.rapexAlertsScanned),
+    alertsCreated: monitoringCount(data, "alertsCreated") ?? toCount(data.alertsCreated),
     attemptCount: toCount(data.attemptCount),
   };
 }

@@ -1459,7 +1459,8 @@
       "preview": "Ontwikkelingsvoorbeeld",
       "processing": "Controle bezig",
       "unknown": "Activiteit onbevestigd",
-      "unverified": "Planverificatie niet beschikbaar"
+      "unverified": "Planverificatie niet beschikbaar",
+      "starting": "Eerste automatische controle in afwachting"
     },
     "monitoringHelp": {
       "delayed": "De laatste automatische controle was meer dan 48 uur geleden. Als de status aanhoudt, neem dan contact op met de ondersteuning.",
@@ -1476,7 +1477,19 @@
     "purpose": "ZeroRecall controleert uw Shopify-catalogus op <portalLink>EU Safety Gate</portalLink>-waarschuwingen en toont u welke mogelijke overeenkomsten beoordeeld moeten worden.",
     "refreshStatus": "Monitoringstatus vernieuwen",
     "reviewHelp": "Vergelijk uw product met de officiële waarschuwing en leg vervolgens uw beslissing vast.",
-    "reviewNext": "Volgende overeenkomst beoordelen"
+    "reviewNext": "Volgende overeenkomst beoordelen",
+    "activityQuiet": "Bij deze controles waren er geen nieuwe of bijgewerkte Safety Gate-meldingen om te vergelijken.",
+    "activityRecords": "Safety Gate-meldingen meegenomen in deze controles",
+    "activityRuns": "Voltooide monitoringcontroles",
+    "activityTitle": "Monitoring in de afgelopen 30 dagen",
+    "auditBackground": "Je kunt deze pagina sluiten. De controle gaat op de achtergrond door. Bekijk de resultaten in ZeroRecall zodra de controle klaar is.",
+    "auditTitle": "Eerste cataloguscontrole bezig",
+    "emailDisabled": "E-mails over nieuwe mogelijke overeenkomsten staan uit of hebben geen ontvanger. Je kunt dit wijzigen in Instellingen.",
+    "emailEnabled": "E-mails over nieuwe mogelijke overeenkomsten staan aan. De controles gaan door terwijl je weg bent.",
+    "firstResultCount": "Producten gecontroleerd aan de hand van EU Safety Gate: {{checked}}.",
+    "firstResultNoMatches": "Deze controle heeft geen nieuwe mogelijke overeenkomsten gevonden.",
+    "firstResultTitle": "Eerste cataloguscontrole voltooid",
+    "resultBoundary": "Een controle in Safety Gate bevestigt de veiligheid van een product niet."
   },
   "findingOverview": {
     "matches": "Wat overeenkomt",
@@ -1548,6 +1561,14 @@
     "previousPlan": "Laatst geverifieerd abonnement: {{plan}}",
     "recipient": "Verzonden naar {{email}}",
     "testAccess": "Testtoegang eigenaar",
-    "weeklyHelp": "Wordt op maandag verzonden met uw monitoringstatus en openstaande bevindingen."
+    "weeklyHelp": "Wordt op maandag verzonden met uw monitoringstatus en openstaande bevindingen.",
+    "cancelError": {
+      "failed": "We konden de wijziging niet bevestigen met Shopify. Vernieuw de pagina en controleer je abonnement.",
+      "ownerRequired": "Vraag de winkeleigenaar om de verlenging uit te schakelen."
+    },
+    "cancellationPending": "Shopify heeft je verzoek geaccepteerd. Vernieuw deze pagina om het bijgewerkte abonnement te zien.",
+    "endsOn": "Verlenging is uitgeschakeld. Monitoring eindigt op {{date}}.",
+    "stopRenewal": "Verlenging uitschakelen",
+    "stopRenewalHelp": "De winkeleigenaar kan de verlenging uitschakelen. Monitoring gaat door tot en met {{date}}. Je opgeslagen resultaten blijven beschikbaar."
   }
 }

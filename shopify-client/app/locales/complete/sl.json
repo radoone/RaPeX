@@ -1475,7 +1475,8 @@
       "preview": "Predogled razvoja",
       "processing": "Preverjanje v teku",
       "unknown": "Dejavnost ni potrjena",
-      "unverified": "Preverjanje načrta ni na voljo"
+      "unverified": "Preverjanje načrta ni na voljo",
+      "starting": "Prvo samodejno preverjanje je na čakanju"
     },
     "monitoringHelp": {
       "delayed": "Zadnje samodejno preverjanje je bilo pred več kot 48 urami. Če stanje ostaja enako, se obrnite na podporo.",
@@ -1492,7 +1493,19 @@
     "purpose": "ZeroRecall preverja vaš katalog Shopify glede na opozorila <portalLink>EU Safety Gate</portalLink> in vam pokaže, katera možna ujemanja potrebujejo pregled.",
     "refreshStatus": "Osveži stanje spremljanja",
     "reviewHelp": "Primerjajte svoj izdelek z uradnim opozorilom, nato zabeležite svojo odločitev.",
-    "reviewNext": "Preglej naslednje ujemanje"
+    "reviewNext": "Preglej naslednje ujemanje",
+    "activityQuiet": "V teh preverjanjih ni bilo novih ali posodobljenih zapisov Safety Gate za primerjavo.",
+    "activityRecords": "Zapisi Safety Gate, upoštevani v teh preverjanjih",
+    "activityRuns": "Dokončana preverjanja spremljanja",
+    "activityTitle": "Spremljanje v zadnjih 30 dneh",
+    "auditBackground": "To stran lahko zaprete. Preverjanje se nadaljuje v ozadju. Po zaključku si rezultate oglejte v ZeroRecall.",
+    "auditTitle": "Začetno preverjanje kataloga poteka",
+    "emailDisabled": "E-poštna obvestila o novih možnih ujemanjih so izklopljena ali nimajo prejemnika. To lahko spremenite v nastavitvah.",
+    "emailEnabled": "E-poštna obvestila o novih možnih ujemanjih so vklopljena. Preverjanja se nadaljujejo tudi v vaši odsotnosti.",
+    "firstResultCount": "Izdelki, preverjeni glede na EU Safety Gate: {{checked}}.",
+    "firstResultNoMatches": "To preverjanje ni našlo novih možnih ujemanja.",
+    "firstResultTitle": "Začetno preverjanje kataloga je končano",
+    "resultBoundary": "Preverjanje v Safety Gate ne potrjuje varnosti izdelka."
   },
   "findingOverview": {
     "matches": "Kaj se ujema",
@@ -1567,6 +1580,14 @@
     "previousPlan": "Zadnji preverjeni načrt: {{plan}}",
     "recipient": "Poslano na {{email}}",
     "testAccess": "Lastnikov testni dostop",
-    "weeklyHelp": "Poslano ob ponedeljkih s statusom spremljanja in odprtimi ugotovitvami."
+    "weeklyHelp": "Poslano ob ponedeljkih s statusom spremljanja in odprtimi ugotovitvami.",
+    "cancelError": {
+      "failed": "Spremembe nismo mogli potrditi pri Shopifyju. Osvežite stran in preverite svoj načrt.",
+      "ownerRequired": "Prosite lastnika trgovine, naj izklopi podaljšanje."
+    },
+    "cancellationPending": "Shopify je sprejel vašo zahtevo. Osvežite to stran, da si ogledate posodobljen načrt.",
+    "endsOn": "Podaljšanje je izklopljeno. Spremljanje se konča {{date}}.",
+    "stopRenewal": "Izklopi podaljšanje",
+    "stopRenewalHelp": "Lastnik trgovine lahko izklopi podaljšanje. Spremljanje se nadaljuje do {{date}}. Vaši shranjeni rezultati ostanejo na voljo."
   }
 }

@@ -3,6 +3,14 @@ const sk = {
     translation: {
       workspace: workspaceCopy.sk,
       settingsOverview: {
+        stopRenewal: "Vypnúť obnovenie",
+        stopRenewalHelp: "Obnovenie môže vypnúť vlastník obchodu. Monitoring bude pokračovať do {{date}}. Uložené výsledky zostanú dostupné.",
+        endsOn: "Obnovenie je vypnuté. Monitoring sa skončí {{date}}.",
+        cancellationPending: "Shopify prijal vašu požiadavku. Obnovte stránku a skontrolujte stav plánu.",
+        cancelError: {
+          ownerRequired: "Požiadajte vlastníka obchodu, aby vypol obnovenie.",
+          failed: "Zmenu sa nepodarilo potvrdiť v Shopify. Obnovte stránku a skontrolujte stav plánu.",
+        },
         "testAccess": "Testovací prístup vlastníka",
         "planUnverified": "Plán neoverený",
         "activePlan": "Aktívny plán Shopify",
@@ -69,6 +77,18 @@ const sk = {
         saveFailed: "Rozhodnutie sa nepodarilo uložiť. Skúste to znova.",
       },
       catalogOverview: {
+        firstResultTitle: "Úvodná kontrola katalógu je dokončená",
+        firstResultCount: "Počet produktov skontrolovaných v databáze EÚ Safety Gate: {{checked}}.",
+        firstResultNoMatches: "Pri tejto kontrole sa nenašli nové možné zhody.",
+        activityTitle: "Monitoring za posledných 30 dní",
+        activityRuns: "Dokončené kontroly monitoringu",
+        activityRecords: "Záznamy Safety Gate spracované v týchto kontrolách",
+        activityQuiet: "Pri týchto kontrolách neboli na porovnanie žiadne nové ani aktualizované záznamy Safety Gate.",
+        emailEnabled: "E-maily o nových možných zhodách sú zapnuté. Kontroly pokračujú aj počas vašej neprítomnosti.",
+        emailDisabled: "E-maily o nových možných zhodách sú vypnuté alebo nemajú príjemcu. Zmeniť to môžete v nastaveniach.",
+        auditTitle: "Prebieha úvodná kontrola katalógu",
+        auditBackground: "Túto stránku môžete zatvoriť. Kontrola pokračuje na pozadí. Výsledky si po dokončení pozriete v ZeroRecall.",
+        resultBoundary: "Kontrola v Safety Gate nepotvrdzuje bezpečnosť produktu.",
         purpose: "ZeroRecall porovnáva váš katalóg v Shopify s upozorneniami <portalLink>EÚ Safety Gate</portalLink> a ukáže vám možné zhody na preverenie.",
         lastCheck: "Posledná úspešná kontrola katalógu",
         noCompletedCheck: "Zatiaľ bez záznamu o dokončenej kontrole katalógu",
@@ -82,6 +102,7 @@ const sk = {
         noActionHelp: "Aktuálne verzie produktov sú skontrolované a žiadna možná zhoda nečaká na preverenie.",
         refreshStatus: "Obnoviť stav monitoringu",
         monitoring: {
+          starting: "Čaká sa na prvú automatickú kontrolu",
           enabled: "Prebieha automaticky",
           processing: "Kontrola prebieha",
           unknown: "Činnosť nepotvrdená",

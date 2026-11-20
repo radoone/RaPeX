@@ -1475,7 +1475,8 @@
       "preview": "Previżjoni tal-iżvilupp",
       "processing": "Verifika fil-progress",
       "unknown": "Attività mhux ikkonfermata",
-      "unverified": "Verifika tal-pjan mhux disponibbli"
+      "unverified": "Verifika tal-pjan mhux disponibbli",
+      "starting": "Qed nistennew l-ewwel verifika awtomatika"
     },
     "monitoringHelp": {
       "delayed": "L-aħħar verifika awtomatika kienet aktar minn 48 siegħa ilu. Jekk l-istatus jippersisti, ikkuntattja l-appoġġ.",
@@ -1492,7 +1493,19 @@
     "purpose": "ZeroRecall jivverifika l-katalogu tiegħek ta' Shopify kontra t-twissijiet ta' <portalLink>Safety Gate</portalLink> tal-UE u jurik liema taqbiliet possibbli jeħtieġu reviżjoni.",
     "refreshStatus": "Aġġorna l-istatus tal-monitoraġġ",
     "reviewHelp": "Qabbel il-prodott tiegħek mat-twissija uffiċjali, imbagħad irreġistra d-deċiżjoni tiegħek.",
-    "reviewNext": "Irrevedi t-taqbila li jmiss"
+    "reviewNext": "Irrevedi t-taqbila li jmiss",
+    "activityQuiet": "F’dawn il-verifiki ma kien hemm l-ebda rekord ġdid jew aġġornat ta’ Safety Gate x’jitqabbel.",
+    "activityRecords": "Rekords ta’ Safety Gate ikkunsidrati f’dawn il-verifiki",
+    "activityRuns": "Verifiki ta’ monitoraġġ kompluti",
+    "activityTitle": "Monitoraġġ fl-aħħar 30 jum",
+    "auditBackground": "Tista’ tagħlaq din il-paġna. Il-verifika tkompli fl-isfond. Erġa’ iftaħ ZeroRecall biex tara r-riżultati meta tintemm.",
+    "auditTitle": "L-ewwel verifika tal-katalgu għaddejja",
+    "emailDisabled": "L-emails għal tqabbil ġdid possibbli huma mitfija jew m’għandhomx riċevitur. Tista’ tibdel dan fis-Settings.",
+    "emailEnabled": "L-emails għal tqabbil ġdid possibbli huma mixgħula. Il-verifiki jkomplu anke meta ma tkunx hemm.",
+    "firstResultCount": "Prodotti vverifikati kontra l-EU Safety Gate: {{checked}}.",
+    "firstResultNoMatches": "Din il-verifika ma sabet l-ebda taqbila ġdida possibbli.",
+    "firstResultTitle": "Verifika inizjali tal-katalogu kompluta",
+    "resultBoundary": "Verifika f’Safety Gate ma tiċċertifikax is-sikurezza tal-prodott."
   },
   "findingOverview": {
     "matches": "X'jaqbel",
@@ -1567,6 +1580,14 @@
     "previousPlan": "L-aħħar pjan ivverifikat: {{plan}}",
     "recipient": "Mibgħut lil {{email}}",
     "testAccess": "Aċċess għall-ittestjar tas-sid",
-    "weeklyHelp": "Mibgħut nhar ta' Tnejn bl-istatus tal-monitoraġġ tiegħek u sejbiet miftuħa."
+    "weeklyHelp": "Mibgħut nhar ta' Tnejn bl-istatus tal-monitoraġġ tiegħek u sejbiet miftuħa.",
+    "cancelError": {
+      "failed": "Ma stajniex nikkonfermaw il-bidla ma' Shopify. Aġġorna l-paġna u ċċekkja l-pjan tiegħek.",
+      "ownerRequired": "Staqsi lis-sid tal-ħanut biex jitfi t-tiġdid."
+    },
+    "cancellationPending": "Shopify aċċetta t-talba tiegħek. Aġġorna din il-paġna biex tara l-pjan aġġornat.",
+    "endsOn": "It-tiġdid huwa mitfi. Il-monitoraġġ jintemm fid-data {{date}}.",
+    "stopRenewal": "Itfi t-tiġdid",
+    "stopRenewalHelp": "Is-sid tal-ħanut jista' jitfi t-tiġdid. Il-monitoraġġ ikompli sa {{date}}. Ir-riżultati ssejvjati tiegħek jibqgħu disponibbli."
   }
 }

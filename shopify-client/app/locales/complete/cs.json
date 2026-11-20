@@ -1459,7 +1459,8 @@
       "preview": "Náhled vývoje",
       "processing": "Kontrola probíhá",
       "unknown": "Aktivita nepotvrzena",
-      "unverified": "Ověření plánu není k dispozici"
+      "unverified": "Ověření plánu není k dispozici",
+      "starting": "Čeká se na první automatickou kontrolu"
     },
     "monitoringHelp": {
       "delayed": "Poslední automatická kontrola proběhla před více než 48 hodinami. Pokud stav přetrvává, kontaktujte podporu.",
@@ -1476,7 +1477,19 @@
     "purpose": "ZeroRecall kontroluje váš katalog Shopify proti výstrahám <portalLink>EU Safety Gate</portalLink> a ukazuje vám, které možné shody potřebují kontrolu.",
     "refreshStatus": "Obnovit stav monitorování",
     "reviewHelp": "Porovnejte svůj produkt s oficiální výstrahou a poté zaznamenejte své rozhodnutí.",
-    "reviewNext": "Zkontrolovat další shodu"
+    "reviewNext": "Zkontrolovat další shodu",
+    "activityQuiet": "Při těchto kontrolách nebyly k porovnání žádné nové ani aktualizované záznamy Safety Gate.",
+    "activityRecords": "Záznamy Safety Gate zohledněné v těchto kontrolách",
+    "activityRuns": "Dokončené kontroly monitoringu",
+    "activityTitle": "Monitoring za posledních 30 dní",
+    "auditBackground": "Tuto stránku můžete zavřít. Kontrola pokračuje na pozadí. Po dokončení najdete výsledky v ZeroRecall.",
+    "auditTitle": "Probíhá úvodní kontrola katalogu",
+    "emailDisabled": "E-maily o nových možných shodách jsou vypnuté nebo nemají příjemce. Změnit to můžete v nastavení.",
+    "emailEnabled": "E-maily o nových možných shodách jsou zapnuté. Kontroly pokračují i během vaší nepřítomnosti.",
+    "firstResultCount": "Produkty zkontrolované proti EU Safety Gate: {{checked}}.",
+    "firstResultNoMatches": "Tato kontrola nenašla žádné nové možné shody.",
+    "firstResultTitle": "Počáteční kontrola katalogu dokončena",
+    "resultBoundary": "Kontrola v Safety Gate nepotvrzuje bezpečnost produktu."
   },
   "findingOverview": {
     "matches": "Co se shoduje",
@@ -1548,6 +1561,14 @@
     "previousPlan": "Poslední ověřený plán: {{plan}}",
     "recipient": "Odesláno na {{email}}",
     "testAccess": "Přístup k testování vlastníka",
-    "weeklyHelp": "Odesíláno v pondělí se stavem monitorování a otevřenými zjištěními."
+    "weeklyHelp": "Odesíláno v pondělí se stavem monitorování a otevřenými zjištěními.",
+    "cancelError": {
+      "failed": "Změnu se nepodařilo potvrdit u Shopify. Obnovte stránku a zkontrolujte svůj plán.",
+      "ownerRequired": "Požádejte vlastníka obchodu, aby vypnul obnovení."
+    },
+    "cancellationPending": "Shopify vaši žádost přijal. Obnovte tuto stránku, abyste viděli aktualizovaný plán.",
+    "endsOn": "Obnovení je vypnuto. Monitorování končí {{date}}.",
+    "stopRenewal": "Vypnout obnovení",
+    "stopRenewalHelp": "Vlastník obchodu může vypnout obnovení. Monitorování pokračuje do {{date}}. Vaše uložené výsledky zůstanou k dispozici."
   }
 }

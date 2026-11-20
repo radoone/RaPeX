@@ -41,13 +41,6 @@ export default function App() {
         <Link to="/app/evidence">{t('workspace.history')}</Link>
         <Link to="/app/settings">{t('nav.settings')}</Link>
       </NavMenu>
-      {!billingStatus.developmentBypass && billingStatus.billingVerified && !billingStatus.hasActivePayment && !billingStatus.freeScanUsed && (
-        <div style={{ padding: "0 var(--s-space-400)", maxWidth: "1200px", margin: "12px auto 0" }}>
-          <s-banner tone="info" heading={t("billing.freeScanAvailableHeading")}>
-            <s-text>{t("billing.freeScanAvailableDescription")}</s-text>
-          </s-banner>
-        </div>
-      )}
       {billingStatus.ownerTestAccess && <s-banner tone="info" heading={t("ownerTestAccess")} />}
       <Outlet />
     </>

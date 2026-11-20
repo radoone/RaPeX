@@ -1,7 +1,7 @@
 /** @jsxImportSource preact */
 import "@shopify/ui-extensions/preact";
 import { render } from "preact";
-import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
+import { useCallback, useEffect, useState } from "preact/hooks";
 
 const ACTION_HANDLE = "safety-gate-product-action";
 
@@ -29,15 +29,15 @@ function Extension() {
       const payload = await response.json();
 
       if (!response.ok) {
-        throw new Error(payload.error || translate("loadFailed"));
+        throw new Error(translate("loadFailed"));
       }
 
       if (!isCancelled?.()) {
         setStatus(payload);
       }
-    } catch (loadError) {
+    } catch {
       if (!isCancelled?.()) {
-        setError(loadError instanceof Error ? loadError.message : translate("loadFailed"));
+        setError(translate("loadFailed"));
       }
     }
   }, [productId]);
@@ -84,35 +84,27 @@ function Extension() {
     };
   }, [productId, loadStatus]);
 
-  const summary = useMemo(() => {
-    if (error) {
-      return translate("unavailable");
-    }
-
-    if (!status) {
-      return translate("loading");
-    }
-
-    return labelForState(status.state);
-  }, [error, status]);
-
   return (
     <s-admin-block title="Safety Gate">
       <s-box padding="base">
         <s-stack direction="block" gap="base">
-          {status ? <StatusBadge status={status} /> : null}
-          <s-text>{summary}</s-text>
-          {status ? <StatusDetails status={status} /> : null}
-          {error ? <s-text tone="critical">{error}</s-text> : null}
+          {error ? (
+            <s-banner tone="warning">{error}</s-banner>
+          ) : status ? (
+            <>
+              <StatusBadge status={status} />
+              <StatusDetails status={status} />
+            </>
+          ) : <s-text>{translate("loading")}</s-text>}
           <s-stack direction="inline" gap="base">
-            <s-button disabled={!productId} onClick={() => navigation.navigate(`extension:${ACTION_HANDLE}`)}>
-              {translate("runCheck")}
-            </s-button>
-            {status?.alertId ? (
-              <s-button variant="secondary" onClick={() => navigation.navigate("/app/alerts?status=active")}>
+            {!error && status?.reviewUrl ? (
+              <s-button variant="primary" href={status.reviewUrl} target="_blank">
                 {translate("openReview")}
               </s-button>
             ) : null}
+            <s-button disabled={!productId} onClick={() => navigation.navigate(`extension:${ACTION_HANDLE}`)}>
+              {translate(status?.checkedAt ? "again" : "runCheck")}
+            </s-button>
           </s-stack>
         </s-stack>
       </s-box>
@@ -122,8 +114,8 @@ function Extension() {
 
 function StatusBadge({ status }) {
   const tone = status.state === "unsafe"
-    ? "critical"
-    : status.state === "safe" || status.state === "resolved"
+    ? "warning"
+    : status.state === "resolved"
       ? "success"
       : status.state === "unchecked"
         ? "info"
@@ -138,6 +130,7 @@ function StatusDetails({ status }) {
       {status.checkedAt ? (
         <s-text>{translate("checked")}: {new Date(status.checkedAt).toLocaleString()}</s-text>
       ) : null}
+      {status.state === "safe" ? <s-text>{translate("noMatchHelp")}</s-text> : null}
       {status.topReason ? <s-paragraph lineClamp={2}>{translate("reason")}: {status.topReason}</s-paragraph> : null}
       {status.riskLevel ? <s-text>{translate("risk")}: {status.riskLevel}</s-text> : null}
     </s-stack>
@@ -148,6 +141,10 @@ function labelForState(state) {
   switch (state) {
     case "unsafe":
       return translate("needsReview");
+    case "changed":
+      return translate("changed");
+    case "waiting-for-supplier":
+      return translate("waiting");
     case "safe":
       return translate("noMatch");
     case "resolved":

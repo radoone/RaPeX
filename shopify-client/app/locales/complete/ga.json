@@ -1475,7 +1475,8 @@
       "preview": "Réamhamharc forbartha",
       "processing": "Seiceáil ar siúl",
       "unknown": "Gníomhaíocht neamhdheimhnithe",
-      "unverified": "Fíorú plean neamh-infhaighte"
+      "unverified": "Fíorú plean neamh-infhaighte",
+      "starting": "An chéad seiceáil uathoibríoch ar feitheamh"
     },
     "monitoringHelp": {
       "delayed": "Bhí an seiceáil uathoibríoch dheireanach níos mó ná 48 uair an chloig ó shin. Má mhaireann an stádas, déan teagmháil le tacaíocht.",
@@ -1492,7 +1493,19 @@
     "purpose": "Seiceálann ZeroRecall do chatalóg Shopify i gcoinne foláirimh <portalLink>Safety Gate</portalLink> an AE agus taispeánann sé duit cé na meaitseálacha féideartha a dteastaíonn athbhreithniú uathu.",
     "refreshStatus": "Athnuaigh stádas monatóireachta",
     "reviewHelp": "Déan comparáid idir do tháirge agus an foláireamh oifigiúil, ansin taifead do chinneadh.",
-    "reviewNext": "Athbhreithnigh an chéad mheaitseáil eile"
+    "reviewNext": "Athbhreithnigh an chéad mheaitseáil eile",
+    "activityQuiet": "Ní raibh aon taifead Safety Gate nua ná nuashonraithe le cur i gcomparáid sna seiceálacha seo.",
+    "activityRecords": "Taifid Safety Gate a cuireadh san áireamh sna seiceálacha seo",
+    "activityRuns": "Seiceálacha monatóireachta críochnaithe",
+    "activityTitle": "Monatóireacht le 30 lá anuas",
+    "auditBackground": "Is féidir leat an leathanach seo a dhúnadh. Leanann an tseiceáil ar aghaidh sa chúlra. Fill ar ZeroRecall chun na torthaí a fheiceáil nuair a bheidh sí críochnaithe.",
+    "auditTitle": "Tá an chéad seiceáil catalóige ar siúl",
+    "emailDisabled": "Tá ríomhphoist faoi mheaitseálacha féideartha nua múchta nó níl faighteoir acu. Is féidir leat é sin a athrú sna Socruithe.",
+    "emailEnabled": "Tá ríomhphoist faoi mheaitseálacha féideartha nua ar siúl. Leanann na seiceálacha ar aghaidh agus tú as láthair.",
+    "firstResultCount": "Táirgí seiceáilte i gcoinne Geata Sábháilteachta an AE: {{checked}}.",
+    "firstResultNoMatches": "Níor aimsigh an seiceáil seo aon mheaitseálacha nua féideartha.",
+    "firstResultTitle": "Seiceáil tosaigh an chatalóige críochnaithe",
+    "resultBoundary": "Ní dheimhníonn seiceáil Safety Gate sábháilteacht táirge."
   },
   "findingOverview": {
     "matches": "Cad a mheaitseálann",
@@ -1567,6 +1580,14 @@
     "previousPlan": "An plean deimhnithe deireanach: {{plan}}",
     "recipient": "Seolta chuig {{email}}",
     "testAccess": "Rochtain tástála an úinéara",
-    "weeklyHelp": "Seoltar é Dé Luain le do stádas monatóireachta agus torthaí oscailte."
+    "weeklyHelp": "Seoltar é Dé Luain le do stádas monatóireachta agus torthaí oscailte.",
+    "cancelError": {
+      "failed": "Níorbh fhéidir linn an t-athrú a dhearbhú le Shopify. Athnuaigh an leathanach agus seiceáil do phlean.",
+      "ownerRequired": "Iarr ar úinéir an tsiopa an athnuachan a mhúchadh."
+    },
+    "cancellationPending": "Ghlac Shopify le d'iarratas. Athnuaigh an leathanach seo chun an plean nuashonraithe a fheiceáil.",
+    "endsOn": "Tá an athnuachan múchta. Críochnaíonn an monatóireacht ar {{date}}.",
+    "stopRenewal": "Múch an athnuachan",
+    "stopRenewalHelp": "Is féidir le húinéir an tsiopa an athnuachan a mhúchadh. Leanann an monatóireacht ar aghaidh go dtí {{date}}. Fanann do thorthaí sábháilte ar fáil."
   }
 }

@@ -8,8 +8,6 @@ import {
   useLoaderData,
   useNavigation,
   useRevalidator,
-  useRouteError,
-  isRouteErrorResponse,
 } from "react-router";
 import { data as json } from "react-router";
 import { Trans, useTranslation } from "react-i18next";
@@ -30,7 +28,7 @@ import {
 } from "../services/safety-gate-checker.server";
 import { catalogCheckStates } from "../services/catalog-state";
 import { monitoringState } from "../services/monitoring-state";
-import { getRecentMonitoringRuns } from "../services/monitoring-runs.server";
+import { getMonitoringActivity, getRecentMonitoringRuns } from "../services/monitoring-runs.server";
 import { toIsoString } from "../services/monitoring-runs";
 import { mirrorOfflineSessionForCatalogAudit } from "../services/catalog-audit-session.server";
 
@@ -149,15 +147,30 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const monitorState = monitorStateSnapshot.exists
     ? monitorStateSnapshot.data()
     : null;
-  const recentMonitoringRuns = await getRecentMonitoringRuns(
-    session.shop,
-  ).catch((error) => {
-    console.error("Could not load recent Safety Gate monitoring runs", {
-      shop: session.shop,
-      error,
-    });
-    return [];
-  });
+  const observedAt = Date.now();
+  const lastAuditAt = toIsoString(monitorState?.initialScanCompletedAt);
+  const auditRunId = monitorState?.initialScanRunId;
+  const auditRunPromise = lastAuditAt && typeof auditRunId === "string" && auditRunId && !auditRunId.includes("/")
+    ? monitorStateSnapshot.ref.collection("initial_catalog_runs").doc(auditRunId).get().catch(() => null)
+    : null;
+  const [recentMonitoringRuns, monitoringActivity, auditRun] = await Promise.all([
+    getRecentMonitoringRuns(session.shop).catch((error) => {
+      console.error("Could not load recent Safety Gate monitoring runs", { shop: session.shop, error });
+      return [];
+    }),
+    getMonitoringActivity(session.shop, observedAt, lastAuditAt).catch((error) => {
+      console.error("Could not load Safety Gate monitoring activity", { shop: session.shop, error });
+      return null;
+    }),
+    auditRunPromise,
+  ]);
+  const auditCheckedProducts = auditRun?.get("productsScanned");
+  const auditImportedProducts = auditRun?.get("productsImported");
+  const firstAudit = auditRun?.get("status") === "completed" &&
+    Number.isSafeInteger(auditCheckedProducts) && auditCheckedProducts > 0 &&
+    Number.isSafeInteger(auditImportedProducts) && auditCheckedProducts === auditImportedProducts
+    ? { checked: auditCheckedProducts as number, noNewMatches: auditRun.get("alertsCreated") === 0 }
+    : null;
 
   let settings = storedSettings;
   if (
@@ -254,13 +267,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   }).length;
 
   const lastMonitoringAt =
-    recentMonitoringRuns.find((run) => run.status === "completed" && run.updatedAt)
+    recentMonitoringRuns.find((run) => run.status === "completed" && run.hasMore !== true && run.updatedAt)
       ?.updatedAt ||
     (monitorState?.lastMonitorStatus === "SUCCESS"
       ? toIsoString(monitorState.lastMonitorRunEnd)
       : null);
-  const lastAuditAt = toIsoString(monitorState?.initialScanCompletedAt);
-
   const defaultSettings: Partial<SafetySettingRecord> & {
     onboardingCompleted: boolean;
   } = {
@@ -288,10 +299,16 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     settings: resolvedSettings,
     billingStatus,
     recentMonitoringRuns,
-    observedAt: Date.now(),
+    observedAt,
+    monitoringActivity,
+    alertEmailEnabled: Boolean(
+      (resolvedSettings.immediateAlertEmails ?? resolvedSettings.emailNotifications) &&
+      resolvedSettings.notificationEmail?.trim(),
+    ),
     lastMonitorStatus: monitorState?.lastMonitorStatus || null,
     lastMonitoringAt,
     lastAuditAt,
+    firstAudit,
   });
 };
 
@@ -504,14 +521,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export function ErrorBoundary() {
-  const error = useRouteError();
   const { t } = useTranslation();
 
-  const title = isRouteErrorResponse(error)
-    ? `${error.status} ${error.statusText}`
-    : error instanceof Error
-      ? error.message
-      : t("common.unknown");
 
   return (
     <s-page suppressHydrationWarning>
@@ -520,7 +531,6 @@ export function ErrorBoundary() {
       </s-heading>
       <div className="admin-stack" style={{ marginTop: "var(--s-space-400)" }}>
         <s-banner tone="critical" heading={t("errors.pageLoadFailed")}>
-          <s-text>{title}</s-text>
           <div style={{ marginTop: "var(--s-space-200)" }}>
             <s-button
               onClick={() => window.location.reload()}
@@ -543,9 +553,12 @@ export default function Index() {
     billingStatus,
     lastMonitoringAt,
     lastAuditAt,
+    firstAudit,
     lastMonitorStatus,
     recentMonitoringRuns,
     observedAt,
+    monitoringActivity,
+    alertEmailEnabled,
   } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<ActionResponse>();
   const progressFetcher = useFetcher<CatalogAuditProgress>();
@@ -561,34 +574,38 @@ export default function Index() {
     ? lastMonitorStatus
     : recentMonitoringRuns[0]?.status || lastMonitorStatus;
   const automaticStatus = monitoringState(
-    billingStatus, latestMonitoringStatus, observedAt, lastMonitoringAt,
+    billingStatus, latestMonitoringStatus, observedAt, lastMonitoringAt, lastAuditAt,
   );
   const lastCheckWasAudit = Boolean(lastAuditAt && (!lastMonitoringAt || lastAuditAt > lastMonitoringAt));
   const lastCatalogCheckAt = lastCheckWasAudit ? lastAuditAt : lastMonitoringAt;
   const monitoringNeedsRefresh = automaticStatus === "unknown" || automaticStatus === "unverified";
   const pricingPlansUrl = automaticStatus === "paused" ? billingStatus.pricingPlansUrl : null;
+  const number = new Intl.NumberFormat(i18n.language);
+  const canRetryAudit = Boolean(billingStatus.ownerTestAccess || billingStatus.developmentBypass ||
+    (billingStatus.billingVerified && (billingStatus.hasActivePayment || !settings.freeScanUsed)));
+  const automaticChecksExpected = ["enabled", "processing", "starting"].includes(automaticStatus);
   const monitoringActionHref =
-    automaticStatus === "enabled" || automaticStatus === "processing" || monitoringNeedsRefresh
+    automaticChecksExpected || monitoringNeedsRefresh
       ? null
       : pricingPlansUrl || "/app/settings";
   const monitoringActionLabel = t(pricingPlansUrl ? "billingRedirect.openPricingPlans" : "settings.title");
   const dashboardState =
     stats.activeAlerts > 0
       ? "review-needed"
-      : stats.totalProducts === 0
-        ? "empty"
-        : stats.uncheckedProducts > 0
-          ? "coverage-incomplete"
-          : automaticStatus === "enabled"
-            ? "no-action-needed"
-            : "monitoring-problem";
+      : ["paused", "unverified"].includes(automaticStatus)
+        ? "monitoring-problem"
+        : stats.totalProducts === 0
+          ? "empty"
+          : stats.uncheckedProducts > 0
+            ? "coverage-incomplete"
+            : automaticChecksExpected
+              ? "no-action-needed"
+              : "monitoring-problem";
   const summary = {
     "review-needed": {
       tone: stats.criticalActiveAlerts > 0 ? "critical" : "warning",
       title: t("dashboard.admin.status.reviewNeeded.title", { count: stats.activeAlerts }),
-      description: stats.criticalActiveAlerts > 0
-        ? t("dashboard.admin.status.reviewNeeded.criticalDescription")
-        : t("catalogOverview.reviewHelp"),
+      description: t("catalogOverview.reviewHelp"),
       actionHref: nextReviewAlertId
         ? `/app/alerts?status=active&open=${encodeURIComponent(nextReviewAlertId)}`
         : "/app/alerts?status=active",
@@ -612,6 +629,7 @@ export default function Index() {
       tone: "success",
       title: t("dashboard.admin.status.noActionNeeded.title"),
       description: t("catalogOverview.noActionHelp"),
+      showScopeNote: true,
       actionHref: null,
       actionLabel: "",
     },
@@ -619,14 +637,16 @@ export default function Index() {
       tone: "info",
       title: t("dashboard.admin.status.noActionNeeded.emptyCatalogTitle"),
       description: t("dashboard.admin.status.noActionNeeded.emptyCatalogDescription"),
-      actionHref: null,
-      actionLabel: "",
+      actionHref: "shopify:admin/products",
+      actionLabel: t("pendingCoverage.viewAll"),
     },
   }[dashboardState];
   const hasAutoStartedScan = useRef(false);
   const refreshedAfterAudit = useRef(false);
   const [retryRequested, setRetryRequested] = useState(false);
   const loadAuditProgress = progressFetcher.load;
+  const startsFirstAudit = stats.totalProducts > 0 && stats.uncheckedProducts > 0 &&
+    canRetryAudit && !settings.initialScanStatus && !fetcher.data;
   useEffect(() => {
     // Start first-run protection without asking the merchant to discover a
     // secondary dashboard action. Paid stores may retry an interrupted first
@@ -639,9 +659,7 @@ export default function Index() {
       Boolean(billingStatus?.developmentBypass || billingStatus?.ownerTestAccess) ||
       Boolean(
         billingStatus?.billingVerified &&
-        (billingStatus.hasActivePayment ||
-          !settings?.freeScanUsed ||
-          completedWithoutChecks),
+        (billingStatus.hasActivePayment || !settings?.freeScanUsed),
       );
     const isScanNeeded =
       stats.totalProducts > 0 &&
@@ -719,7 +737,7 @@ export default function Index() {
   }, [scanStatus, settings?.initialScanStatus, revalidator]);
 
   const isScanning =
-    isSubmitting || fetcher.state !== "idle" || scanStatus === "scanning";
+    startsFirstAudit || isSubmitting || fetcher.state !== "idle" || scanStatus === "scanning";
 
   useEffect(() => {
     if (fetcher.data) {
@@ -749,6 +767,21 @@ export default function Index() {
   const auditTotal = auditIsChecking ? auditProgress.productsImported : 0;
   const auditChecked = Math.min(auditProgress?.productsScanned || 0, auditTotal);
 
+  const purpose = (
+    <p className="catalog-overview__purpose">
+      <Trans
+        i18nKey="catalogOverview.purpose"
+        components={{
+          portalLink: <a
+            href="https://ec.europa.eu/safety-gate-alerts/screen/home"
+            target="_blank"
+            rel="noopener noreferrer"
+          />,
+        }}
+      />
+    </p>
+  );
+
   return (
     <s-page size="large" className="page-shell" suppressHydrationWarning>
       <s-heading slot="title" size="large" suppressHydrationWarning>
@@ -756,98 +789,84 @@ export default function Index() {
       </s-heading>
 
       <div className="admin-stack">
-        <AdminCard className="admin-card admin-stack catalog-overview">
-          <p className="catalog-overview__purpose">
-            <Trans
-              i18nKey="catalogOverview.purpose"
-              components={{
-                portalLink: <a
-                  href="https://ec.europa.eu/safety-gate-alerts/screen/home"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                />,
-              }}
-            />
-          </p>
-          <dl className="catalog-overview__facts">
-            <div>
-              <dt>{t("catalogOverview.lastCheck")}</dt>
-              <dd>
-                {lastCatalogCheckAt ? (
-                  <LocalDateTime
-                    value={lastCatalogCheckAt}
-                    format={(date) => new Intl.DateTimeFormat(i18n.language === "en" ? "en-GB" : i18n.language, {
-                      dateStyle: "medium",
-                      timeStyle: "short",
-                    }).format(date)}
-                  />
-                ) : t("catalogOverview.noCompletedCheck")}
-              </dd>
-              {lastCatalogCheckAt && (
-                <dd className="catalog-overview__detail">{t(lastCheckWasAudit ? "catalogOverview.initialAudit" : "catalogOverview.monitoringRun")}</dd>
-              )}
-            </div>
-            <div>
-              <dt>{t("catalogOverview.currentProducts")}</dt>
-              <dd>{t("catalogOverview.coverage", { checked: stats.checkedProducts, total: stats.totalProducts })}</dd>
-              {stats.uncheckedProducts > 0 && dashboardState !== "coverage-incomplete" && (
-                <dd className="catalog-overview__detail">
-                  <s-link href={remainingCatalogHref}>
-                    {t("workspace.viewRemainingProducts", { count: stats.uncheckedProducts })}
-                  </s-link>
-                </dd>
-              )}
-            </div>
-            <div>
-              <dt>{t("workspace.monitoringLabel")}</dt>
-              <dd>
-                <s-badge tone={automaticStatus === "enabled" ? "success" : automaticStatus === "processing" ? "info" : "warning"}>
-                  {t(`catalogOverview.monitoring.${automaticStatus}`)}
-                </s-badge>
-              </dd>
-              {dashboardState !== "monitoring-problem" && automaticStatus !== "enabled" && (
-                <dd className="catalog-overview__detail">{t(`catalogOverview.monitoringHelp.${automaticStatus}`)}</dd>
-              )}
-              {dashboardState !== "monitoring-problem" && monitoringActionHref && (
-                <dd className="catalog-overview__detail">
-                  <s-link href={monitoringActionHref} target={pricingPlansUrl ? "_top" : undefined}>
-                    {monitoringActionLabel}
-                  </s-link>
-                </dd>
-              )}
-              {dashboardState !== "monitoring-problem" && monitoringNeedsRefresh && (
-                <dd className="catalog-overview__detail">
+        {!isScanning && scanStatus === "completed" && firstAudit && stats.activeAlerts === 0 && (
+          <s-banner tone="info" heading={t("catalogOverview.firstResultTitle")}>
+            <s-stack gap="small">
+              <s-text>{t("catalogOverview.firstResultCount", { checked: number.format(firstAudit.checked) })}</s-text>
+              {firstAudit.noNewMatches && <s-text>{t("catalogOverview.firstResultNoMatches")}</s-text>}
+              <s-text>{t("catalogOverview.resultBoundary")}</s-text>
+              <s-link href="/app/manual-check#product-catalogue">{t("pendingCoverage.viewAll")}</s-link>
+            </s-stack>
+          </s-banner>
+        )}
+        {!isScanning && (scanStatus !== "failed" || stats.activeAlerts > 0) &&
+          !(scanStatus === "completed" && firstAudit && dashboardState === "no-action-needed" && lastCheckWasAudit) && (
+          <s-banner tone={summary.tone} heading={summary.title}>
+            <s-stack gap="small">
+              <s-text>{summary.description}</s-text>
+              {"showScopeNote" in summary && <s-text>{t("catalogOverview.resultBoundary")}</s-text>}
+              {summary.actionHref && (
+                <div>
                   <s-button
-                    variant="tertiary"
-                    loading={revalidator.state !== "idle"}
-                    onClick={() => revalidator.revalidate()}
+                    variant="primary"
+                    href={summary.actionHref}
+                    target={dashboardState === "monitoring-problem" && pricingPlansUrl ? "_top" : undefined}
                   >
+                    {summary.actionLabel}
+                  </s-button>
+                </div>
+              )}
+              {dashboardState === "monitoring-problem" && monitoringNeedsRefresh && (
+                <div>
+                  <s-button variant="primary" loading={revalidator.state !== "idle"} onClick={() => revalidator.revalidate()}>
                     {t("catalogOverview.refreshStatus")}
                   </s-button>
-                </dd>
+                </div>
               )}
-            </div>
-          </dl>
-        </AdminCard>
+            </s-stack>
+          </s-banner>
+        )}
+        {!isScanning && scanStatus === "failed" && (
+          <s-banner tone="warning" heading={t("dashboard.liveScan.failedHeading")}>
+            <s-stack gap="small">
+              <s-text>{t("dashboard.liveScan.failedDescription")}</s-text>
+              <div>
+                {canRetryAudit ? (
+                  <s-button
+                    variant="primary"
+                    onClick={() => {
+                      setRetryRequested(true);
+                      fetcher.submit({ action: "importCatalogAndMonitor" }, { method: "POST" });
+                    }}
+                  >
+                    {t("actions.retry")}
+                  </s-button>
+                ) : pricingPlansUrl ? (
+                  <s-button variant="primary" href={pricingPlansUrl} target="_top">
+                    {t("billingRedirect.openPricingPlans")}
+                  </s-button>
+                ) : monitoringNeedsRefresh && (
+                  <s-button variant="secondary" loading={revalidator.state !== "idle"} onClick={() => revalidator.revalidate()}>
+                    {t("catalogOverview.refreshStatus")}
+                  </s-button>
+                )}
+              </div>
+            </s-stack>
+          </s-banner>
+        )}
         {/* Live Scan Progress Card when scan is active */}
         {isScanning && (
           <section className="live-scan-card" aria-live="polite">
             <div className="live-scan-header">
               <div>
-                <p
-                  className="admin-eyebrow"
-                  style={{ margin: 0, color: "#008060" }}
-                >
-                  {t("dashboard.liveScan.eyebrow")}
-                </p>
                 <h3
                   style={{
-                    margin: "4px 0 0",
+                    margin: 0,
                     fontSize: "18px",
                     fontWeight: 600,
                   }}
                 >
-                  {t("dashboard.liveScan.heading")}
+                  {t("catalogOverview.auditTitle")}
                 </h3>
               </div>
               <span className="live-scan-badge">
@@ -855,6 +874,7 @@ export default function Index() {
                 {t("dashboard.liveScan.inProgress")}
               </span>
             </div>
+            {purpose}
             <p
               style={{
                 margin: "6px 0 0",
@@ -863,7 +883,7 @@ export default function Index() {
                 maxWidth: "75ch",
               }}
             >
-              {t("dashboard.liveScan.description")}
+              {t("catalogOverview.auditBackground")}
             </p>
             {auditProgress?.runStatus === "retrying" ? (
               <div className="live-scan-retry" role="status">
@@ -903,7 +923,7 @@ export default function Index() {
                     <s-spinner size="small" />
                   )}
                 </span>
-                <span>{t("dashboard.liveScan.stepImport")}</span>
+                <span>{t("dashboard.liveScan.importingLabel")}</span>
               </div>
               <div
                 className={`live-scan-step ${progressFetcher.data?.phase === "monitor" ? "live-scan-step--active" : ""}`}
@@ -915,64 +935,115 @@ export default function Index() {
                     "2"
                   )}
                 </span>
-                <span>{t("dashboard.liveScan.stepScan")}</span>
-              </div>
-              <div className="live-scan-step">
-                <span className="live-scan-step-icon live-scan-step-icon--pending">
-                  3
-                </span>
-                <span style={{ color: "var(--text-subdued)" }}>
-                  {t("dashboard.liveScan.stepAudit")}
-                </span>
+                <span>{t("dashboard.liveScan.checkingLabel")}</span>
               </div>
             </div>
           </section>
         )}
 
-        {!isScanning ? (
-          <>
-            <s-banner tone={summary.tone} heading={summary.title}>
-              <s-stack gap="small">
-                <s-text>{summary.description}</s-text>
-                {summary.actionHref && (
+        {!isScanning && <AdminCard className="admin-card admin-stack catalog-overview">
+          {purpose}
+          <dl className="catalog-overview__facts">
+            <div>
+              <dt>{t("catalogOverview.lastCheck")}</dt>
+              <dd>
+                {lastCatalogCheckAt ? (
+                  <LocalDateTime
+                    value={lastCatalogCheckAt}
+                    format={(date) => new Intl.DateTimeFormat(i18n.language === "en" ? "en-GB" : i18n.language, {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    }).format(date)}
+                  />
+                ) : t("catalogOverview.noCompletedCheck")}
+              </dd>
+              {lastCatalogCheckAt && (
+                <dd className="catalog-overview__detail">{t(lastCheckWasAudit ? "catalogOverview.initialAudit" : "catalogOverview.monitoringRun")}</dd>
+              )}
+            </div>
+            <div>
+              <dt>{t("catalogOverview.currentProducts")}</dt>
+              <dd>{t("catalogOverview.coverage", { checked: stats.checkedProducts, total: stats.totalProducts })}</dd>
+              {stats.totalProducts > 0 && !isScanning && scanStatus !== "failed" && dashboardState !== "coverage-incomplete" && (
+                <dd className="catalog-overview__detail">
+                  <s-link href={stats.uncheckedProducts > 0 ? remainingCatalogHref : "/app/manual-check?coverage=all#product-catalogue"}>
+                    {stats.uncheckedProducts > 0
+                      ? t("workspace.viewRemainingProducts", { count: stats.uncheckedProducts })
+                      : t("nav.catalogCoverage")}
+                  </s-link>
+                </dd>
+              )}
+            </div>
+            <div>
+              <dt>{t("workspace.monitoringLabel")}</dt>
+              <dd>
+                <s-badge tone={automaticStatus === "enabled" ? "success" : automaticChecksExpected ? "info" : "warning"}>
+                  {t(`catalogOverview.monitoring.${automaticStatus}`)}
+                </s-badge>
+              </dd>
+              {dashboardState !== "monitoring-problem" && dashboardState !== "empty" && !["enabled", "starting"].includes(automaticStatus) &&
+                (automaticStatus !== "unknown" || (!isScanning && scanStatus !== "failed")) && (
+                <dd className="catalog-overview__detail">{t(`catalogOverview.monitoringHelp.${automaticStatus}`)}</dd>
+              )}
+              {dashboardState !== "monitoring-problem" && monitoringActionHref && (
+                <dd className="catalog-overview__detail">
+                  <s-link href={monitoringActionHref} target={pricingPlansUrl ? "_top" : undefined}>
+                    {monitoringActionLabel}
+                  </s-link>
+                </dd>
+              )}
+              {dashboardState !== "monitoring-problem" && dashboardState !== "empty" && monitoringNeedsRefresh &&
+                !isScanning && scanStatus !== "failed" && (
+                <dd className="catalog-overview__detail">
+                  <s-button
+                    variant="tertiary"
+                    loading={revalidator.state !== "idle"}
+                    onClick={() => revalidator.revalidate()}
+                  >
+                    {t("catalogOverview.refreshStatus")}
+                  </s-button>
+                </dd>
+              )}
+            </div>
+          </dl>
+        </AdminCard>}
+        {!isScanning && scanStatus !== "failed" && (monitoringActivity || automaticChecksExpected) && (
+          <s-section heading={t(monitoringActivity ? "catalogOverview.activityTitle" : "workspace.monitoringLabel")}>
+            <s-stack gap="small">
+              {monitoringActivity && (
+                <dl className="catalog-overview__facts">
                   <div>
-                    <s-button
-                      variant="primary"
-                      href={summary.actionHref}
-                      target={dashboardState === "monitoring-problem" && pricingPlansUrl ? "_top" : undefined}
-                    >
-                      {summary.actionLabel}
-                    </s-button>
+                    <dt>{t("catalogOverview.activityRuns")}</dt>
+                    <dd>{number.format(monitoringActivity.completedRuns)}</dd>
                   </div>
-                )}
-                {dashboardState === "monitoring-problem" && monitoringNeedsRefresh && (
-                  <div>
-                    <s-button variant="primary" loading={revalidator.state !== "idle"} onClick={() => revalidator.revalidate()}>
-                      {t("catalogOverview.refreshStatus")}
-                    </s-button>
-                  </div>
+                  {monitoringActivity.recordsConsidered !== null && (
+                    <div>
+                      <dt>{t("catalogOverview.activityRecords")}</dt>
+                      <dd>{number.format(monitoringActivity.recordsConsidered)}</dd>
+                    </div>
+                  )}
+                </dl>
+              )}
+              {monitoringActivity?.recordsConsidered === 0 && (
+                <s-text>{t("catalogOverview.activityQuiet")}</s-text>
+              )}
+              {automaticChecksExpected && (
+                <s-text>{t(alertEmailEnabled ? "catalogOverview.emailEnabled" : "catalogOverview.emailDisabled")}</s-text>
+              )}
+              <s-stack direction="inline" gap="base" wrap>
+                <s-link href="/app/settings">{t("settingsAdmin.notifications.enabledTitle")}</s-link>
+                {billingStatus.pricingPlansUrl && !pricingPlansUrl && (
+                  <s-link href="/app/settings#subscription">
+                    {t("billing.managePlanButton")}
+                  </s-link>
                 )}
               </s-stack>
-            </s-banner>
-            {scanStatus === "failed" && (
-              <s-banner
-                tone="warning"
-                heading={t("dashboard.liveScan.failedHeading")}
-              >
-                <s-text>{t("dashboard.liveScan.failedDescription")}</s-text>
-                <div style={{ marginTop: "var(--s-space-200)" }}>
-                  <s-button
-                    variant="secondary"
-                    onClick={() => {
-                      setRetryRequested(true);
-                      fetcher.submit({ action: "importCatalogAndMonitor" }, { method: "POST" });
-                    }}
-                  >
-                    {t("actions.retry")}
-                  </s-button>
-                </div>
-              </s-banner>
-            )}
+            </s-stack>
+          </s-section>
+        )}
+
+        {!isScanning ? (
+          <>
             <s-stack direction="inline" gap="base" wrap>
               <s-link href="/app/audit-report">{t("workspace.reportTitle")}</s-link>
               {stats.waitingForSupplier > 0 && (

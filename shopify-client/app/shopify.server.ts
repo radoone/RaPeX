@@ -11,6 +11,12 @@ import { firestore } from "./firestore.server";
 import { FieldValue } from "firebase-admin/firestore";
 
 const configuredSessionStorage = new FirestoreSessionStorage(firestore, true);
+const SHOP_WEBHOOK_PATHS = {
+  PRODUCTS_CREATE: "/webhooks/products/create",
+  PRODUCTS_UPDATE: "/webhooks/products/update",
+  PRODUCTS_DELETE: "/webhooks/products/delete",
+  APP_UNINSTALLED: "/webhooks/app/uninstalled",
+} as const;
 
 export const SHOPIFY_BILLING_TEST = process.env.SHOPIFY_BILLING_TEST !== "false";
 export const SHOPIFY_APP_HANDLE = process.env.SHOPIFY_APP_HANDLE || "";
@@ -41,19 +47,19 @@ const shopify = shopifyApp({
   webhooks: {
     PRODUCTS_CREATE: {
       deliveryMethod: DeliveryMethod.Http,
-      callbackUrl: "/webhooks/products/create",
+      callbackUrl: SHOP_WEBHOOK_PATHS.PRODUCTS_CREATE,
     },
     PRODUCTS_UPDATE: {
       deliveryMethod: DeliveryMethod.Http,
-      callbackUrl: "/webhooks/products/update",
+      callbackUrl: SHOP_WEBHOOK_PATHS.PRODUCTS_UPDATE,
     },
     PRODUCTS_DELETE: {
       deliveryMethod: DeliveryMethod.Http,
-      callbackUrl: "/webhooks/products/delete",
+      callbackUrl: SHOP_WEBHOOK_PATHS.PRODUCTS_DELETE,
     },
     APP_UNINSTALLED: {
       deliveryMethod: DeliveryMethod.Http,
-      callbackUrl: "/webhooks/app/uninstalled",
+      callbackUrl: SHOP_WEBHOOK_PATHS.APP_UNINSTALLED,
     },
     // GDPR mandatory webhooks
     CUSTOMERS_DATA_REQUEST: {
@@ -75,11 +81,27 @@ const shopify = shopifyApp({
 });
 
 const WEBHOOK_REGISTRATION_VERSION = "product-events-2026-07-v2";
+const pendingWebhookRegistrations = new Map<string, Promise<void>>();
 
 /** Register app-managed subscriptions after OAuth and restore them on existing sessions. */
 export async function ensureShopifyWebhooksRegistered(
   session: Parameters<typeof shopify.registerWebhooks>[0]["session"],
 ): Promise<void> {
+  const pending = pendingWebhookRegistrations.get(session.shop);
+  if (pending) return pending;
+
+  const registration = registerShopWebhooks(session);
+  pendingWebhookRegistrations.set(session.shop, registration);
+  try {
+    await registration;
+  } finally {
+    pendingWebhookRegistrations.delete(session.shop);
+  }
+}
+
+async function registerShopWebhooks(
+  session: Parameters<typeof shopify.registerWebhooks>[0]["session"],
+) {
   const merchantRef = firestore.collection("merchants").doc(encodeURIComponent(session.shop));
   const merchantSnapshot = await merchantRef.get();
   if (merchantSnapshot.get("webhookRegistrationVersion") === WEBHOOK_REGISTRATION_VERSION) return;
@@ -88,7 +110,25 @@ export async function ensureShopifyWebhooksRegistered(
   if (!registrations) throw new Error("Shopify did not confirm webhook registration");
   const failures = Object.values(registrations || {}).flat().filter((result) => !result.success);
   if (failures.length > 0) {
-    throw new Error(`Shopify webhook registration failed for ${failures.length} subscription(s)`);
+    // Another instance can register the same shop's topics concurrently.
+    // Confirm the destinations in Shopify before recording successful setup.
+    const { admin } = await shopify.unauthenticated.admin(session.shop);
+    const response = await admin.graphql(`query VerifyShopWebhooks {
+      webhookSubscriptions(first: 100, topics: [PRODUCTS_CREATE, PRODUCTS_UPDATE, PRODUCTS_DELETE, APP_UNINSTALLED]) {
+        nodes { topic uri }
+      }
+    }`);
+    const payload = await response.json() as {
+      errors?: unknown[];
+      data?: { webhookSubscriptions?: { nodes?: Array<{ topic: string; uri: string }> } };
+    };
+    const nodes = payload.data?.webhookSubscriptions?.nodes ?? [];
+    const matches = Object.entries(SHOP_WEBHOOK_PATHS).every(([topic, path]) =>
+      nodes.some((node) => node.topic === topic && node.uri === new URL(path, process.env.SHOPIFY_APP_URL).href),
+    );
+    if (!response.ok || payload.errors?.length || !matches) {
+      throw new Error(`Shopify webhook registration failed for ${failures.length} subscription(s)`);
+    }
   }
   await merchantRef.set({
     shop: session.shop,

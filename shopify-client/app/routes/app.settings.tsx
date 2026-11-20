@@ -4,6 +4,7 @@ import { data as json, redirect } from "react-router";
 import {
   useActionData,
   useLoaderData,
+  useFetcher,
   useNavigation,
   useRevalidator,
   Form,
@@ -18,6 +19,8 @@ import { LanguageSwitcher } from "../components";
 import { MonitoringStatus } from "../components/MonitoringStatus";
 import { exclusionPreview } from "../services/exclusion-preview";
 import { getBillingStatus } from "../services/billing.server";
+import { cancelSubscription } from "../services/cancel-subscription.server";
+import { SHOPIFY_BILLING_MODE } from "../shopify.server";
 import { EU_LANGUAGES } from "../locales/languages";
 import { firestore } from "../firestore.server";
 import { getRecentMonitoringRuns } from "../services/monitoring-runs.server";
@@ -66,7 +69,9 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
       monitor.monitoringEntitled === true &&
       entitlementExpiry && Date.parse(entitlementExpiry) > observedAt
     ) ? "eligible" : "paused";
-  const automaticMonitoring = monitoringState(billingStatus, latestRunStatus, observedAt, lastMonitoringAt);
+  const automaticMonitoring = monitoringState(
+    billingStatus, latestRunStatus, observedAt, lastMonitoringAt, toIsoString(monitor?.initialScanCompletedAt),
+  );
 
   let settings = await db.safetySetting.findUnique({
     where: { shop: session.shop },
@@ -171,6 +176,7 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
       excludeTypes: null,
     },
     billingStatus,
+    supportsCancellation: SHOPIFY_BILLING_MODE === "app-pricing",
     lastMonitoringAt,
     automaticMonitoring,
     emailDelivery,
@@ -179,8 +185,23 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const { session } = await authenticate.admin(request);
+  const { session, sessionToken, billing, admin } = await authenticate.admin(request);
   const formData = await request.formData();
+  if (formData.get("intent") === "stop-renewal") {
+    const status = await getBillingStatus(billing, session.shop, admin);
+    if (status.cancelAtEndOfCycle || (status.billingVerified && !status.hasActivePayment)) {
+      return json({ cancellation: "accepted" as const });
+    }
+    if (!sessionToken?.sub || !status.billingVerified || !status.hasActivePayment || !status.validUntil) {
+      return json({ cancellation: "failed" as const }, { status: 409 });
+    }
+    try {
+      const cancellation = await cancelSubscription(request, session.shop, sessionToken.sub);
+      return json({ cancellation }, { status: cancellation === "accepted" ? 200 : cancellation === "ownerRequired" ? 403 : 502 });
+    } catch {
+      return json({ cancellation: "failed" as const }, { status: 502 });
+    }
+  }
 
   const threshold = Number(formData.get("similarityThreshold"));
   const similarityThreshold = Number.isFinite(threshold)
@@ -271,9 +292,10 @@ export function ErrorBoundary() {
 }
 
 export default function Settings() {
-  const { settings, billingStatus, catalog, saved, lastMonitoringAt, automaticMonitoring, emailDelivery, lastVerifiedPlan } =
+  const { settings, billingStatus, catalog, saved, lastMonitoringAt, automaticMonitoring, emailDelivery, lastVerifiedPlan, supportsCancellation } =
     useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
+  const cancellation = useFetcher<typeof action>();
   const navigation = useNavigation();
   const revalidator = useRevalidator();
   const { t, i18n } = useTranslation();
@@ -321,6 +343,12 @@ export default function Settings() {
   const refreshStatusAvailable = automaticMonitoring === "unknown" || automaticMonitoring === "unverified";
   const planButtonLabel = planVerified && !billingStatus.hasActivePayment
     ? t("billingRedirect.openPricingPlans") : t("billing.managePlanButton");
+  const planEnd = billingStatus.validUntil && new Intl.DateTimeFormat(i18n.language, {
+    dateStyle: "medium",
+    timeZone: "UTC",
+  }).format(new Date(billingStatus.validUntil));
+  const cancelResult = cancellation.data && "cancellation" in cancellation.data ? cancellation.data.cancellation : null;
+  const cancellationScheduled = planVerified && billingStatus.hasActivePayment && billingStatus.cancelAtEndOfCycle && planEnd;
 
   return (
     <s-page size="large" className="page-shell">
@@ -328,7 +356,7 @@ export default function Settings() {
       <div className="admin-stack">
         <AdminCard className="admin-card">
           <div className="settings-overview">
-            <section className="settings-overview__panel">
+            <section id="subscription" className="settings-overview__panel">
               <h2>{t("billing.statusLabel")}</h2>
               <div className="settings-overview__plan">
                 <strong>{planName}</strong>
@@ -344,6 +372,27 @@ export default function Settings() {
               )}
               {billingStatus.pricingPlansUrl && (
                 <s-link href={billingStatus.pricingPlansUrl} target="_top">{planButtonLabel}</s-link>
+              )}
+              {cancellationScheduled ? (
+                <p className="admin-helper" role="status">{t("settingsOverview.endsOn", { date: planEnd })}</p>
+              ) : supportsCancellation && planVerified && billingStatus.hasActivePayment && planEnd && (
+                <>
+                  {cancelResult === "accepted" ? (
+                    <p className="admin-helper" role="status">{t("settingsOverview.cancellationPending")}</p>
+                  ) : (
+                    <details>
+                      <summary>{t("settingsOverview.stopRenewal")}</summary>
+                      <p className="admin-helper">{t("settingsOverview.stopRenewalHelp", { date: planEnd })}</p>
+                      <cancellation.Form method="post">
+                        <input type="hidden" name="intent" value="stop-renewal" />
+                        <s-button type="submit" loading={cancellation.state !== "idle"} disabled={cancellation.state !== "idle"}>
+                          {t("settingsOverview.stopRenewal")}
+                        </s-button>
+                      </cancellation.Form>
+                      {cancelResult && <p role="alert" className="admin-helper">{t(`settingsOverview.cancelError.${cancelResult}`)}</p>}
+                    </details>
+                  )}
+                </>
               )}
             </section>
             <MonitoringStatus state={automaticMonitoring} lastSuccess={lastMonitoringAt} />

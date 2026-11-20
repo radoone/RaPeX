@@ -159,6 +159,8 @@ export async function checkExclusions(shop: string, productData: ProductData): P
   return { shouldSkip: false };
 }
 
+export class ProductCheckExcludedError extends Error {}
+
 export async function checkProductSafety(
   productData: ProductData,
   similarityThreshold?: number,
@@ -172,20 +174,7 @@ export async function checkProductSafety(
     const exclusion = await checkExclusions(cacheMetadata.shop, productData);
     if (exclusion.shouldSkip) {
       console.info(`Skipping Safety Gate check for ${productData.name} on shop ${cacheMetadata.shop}: ${exclusion.reason}`);
-      return {
-        isSafe: true,
-        warnings: [],
-        recommendation: exclusion.reason || "Skipped by merchant settings",
-        checkedAt: new Date().toISOString(),
-        analysis: {
-          mode: "text-only",
-          scoringMode: "text-only",
-          productImagesProvided: 0,
-          productImagesUsed: 0,
-          alertImagesUsed: 0,
-          candidateAlertsConsidered: 0
-        }
-      };
+      throw new ProductCheckExcludedError(exclusion.reason || "Skipped by merchant settings");
     }
   }
 

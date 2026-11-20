@@ -1459,7 +1459,8 @@
       "preview": "Entwicklungs-Vorschau",
       "processing": "Überprüfung läuft",
       "unknown": "Aktivität unbestätigt",
-      "unverified": "Planüberprüfung nicht verfügbar"
+      "unverified": "Planüberprüfung nicht verfügbar",
+      "starting": "Erste automatische Prüfung steht aus"
     },
     "monitoringHelp": {
       "delayed": "Die letzte automatische Überprüfung war vor mehr als 48 Stunden. Wenn der Status bestehen bleibt, wenden Sie sich an den Support.",
@@ -1476,7 +1477,19 @@
     "purpose": "ZeroRecall gleicht Ihren Shopify-Katalog mit <portalLink>EU Safety Gate</portalLink>-Warnungen ab und zeigt Ihnen, welche möglichen Übereinstimmungen überprüft werden müssen.",
     "refreshStatus": "Überwachungsstatus aktualisieren",
     "reviewHelp": "Vergleichen Sie Ihr Produkt mit der offiziellen Warnung und treffen Sie dann Ihre Entscheidung.",
-    "reviewNext": "Nächste Übereinstimmung überprüfen"
+    "reviewNext": "Nächste Übereinstimmung überprüfen",
+    "activityQuiet": "Bei diesen Prüfungen lagen keine neuen oder aktualisierten Safety-Gate-Einträge zum Abgleich vor.",
+    "activityRecords": "Bei diesen Prüfungen berücksichtigte Safety-Gate-Einträge",
+    "activityRuns": "Abgeschlossene Überwachungsprüfungen",
+    "activityTitle": "Überwachung in den letzten 30 Tagen",
+    "auditBackground": "Sie können diese Seite schließen. Die Prüfung läuft im Hintergrund weiter. Nach Abschluss finden Sie die Ergebnisse in ZeroRecall.",
+    "auditTitle": "Erste Katalogprüfung läuft",
+    "emailDisabled": "E-Mails zu neuen möglichen Treffern sind deaktiviert oder es fehlt eine Empfängeradresse. Das können Sie in den Einstellungen ändern.",
+    "emailEnabled": "E-Mails zu neuen möglichen Treffern sind aktiviert. Die Prüfungen laufen auch in Ihrer Abwesenheit weiter.",
+    "firstResultCount": "Produkte, die mit dem EU Safety Gate abgeglichen wurden: {{checked}}.",
+    "firstResultNoMatches": "Diese Überprüfung ergab keine neuen möglichen Übereinstimmungen.",
+    "firstResultTitle": "Erste Katalogprüfung abgeschlossen",
+    "resultBoundary": "Eine Prüfung in Safety Gate bestätigt nicht die Sicherheit eines Produkts."
   },
   "findingOverview": {
     "matches": "Was übereinstimmt",
@@ -1548,6 +1561,14 @@
     "previousPlan": "Zuletzt verifizierter Plan: {{plan}}",
     "recipient": "Gesendet an {{email}}",
     "testAccess": "Testzugriff des Inhabers",
-    "weeklyHelp": "Wird montags mit Ihrem Überwachungsstatus und offenen Befunden gesendet."
+    "weeklyHelp": "Wird montags mit Ihrem Überwachungsstatus und offenen Befunden gesendet.",
+    "cancelError": {
+      "failed": "Wir konnten die Änderung bei Shopify nicht bestätigen. Aktualisieren Sie die Seite und überprüfen Sie Ihren Plan.",
+      "ownerRequired": "Bitten Sie den Shop-Inhaber, die Verlängerung zu deaktivieren."
+    },
+    "cancellationPending": "Shopify hat Ihre Anfrage akzeptiert. Aktualisieren Sie diese Seite, um den aktualisierten Plan anzuzeigen.",
+    "endsOn": "Verlängerung ist deaktiviert. Die Überwachung endet am {{date}}.",
+    "stopRenewal": "Verlängerung deaktivieren",
+    "stopRenewalHelp": "Der Shop-Inhaber kann die Verlängerung deaktivieren. Die Überwachung wird bis zum {{date}} fortgesetzt. Ihre gespeicherten Ergebnisse bleiben verfügbar."
   }
 }

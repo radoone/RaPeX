@@ -2,15 +2,15 @@ import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import * as logger from "firebase-functions/logger";
 import { db } from "./firebase-admin.js";
 
-type Subscription = { shop?: { id?: string }; currentBillingCycle?: { endTime?: string }; trialEndsAt?: string; cancelAtEndOfCycle?: boolean; items?: Array<{ handle?: string; price?: { active?: boolean } }> };
+type Subscription = { shop?: { id?: string }; currentBillingCycle?: { endTime?: string }; trialEndsAt?: string; cancelAtEndOfCycle?: boolean; items?: Array<{ handle?: string }> };
 export function parsePartnerEntitlement(subscription: Subscription | null, shopId: string, now = Date.now()) {
   if (subscription && subscription.shop?.id !== shopId) throw new Error("Subscription tenant mismatch");
-  const items = subscription?.items?.filter(item => item.price?.active === true) || [];
+  const planHandle = subscription?.items?.find(item => item.handle?.trim())?.handle || null;
   const end = Date.parse(subscription?.currentBillingCycle?.endTime || subscription?.trialEndsAt || "");
-  const active = Boolean(subscription && items.length && Number.isFinite(end) && end > now);
+  const active = Boolean(subscription && planHandle && Number.isFinite(end) && end > now);
   return {
     subscriptionStatus: active ? "active" : "inactive", monitoringEntitled: active,
-    planHandle: active ? items.map(item => item.handle).find(Boolean) || null : null,
+    planHandle: active ? planHandle : null,
     subscriptionPeriodEnd: active ? Timestamp.fromMillis(end) : null,
     subscriptionValidUntil: active ? Timestamp.fromMillis(Math.min(end, now + 24 * 60 * 60_000)) : null,
     cancelAtEndOfCycle: Boolean(subscription?.cancelAtEndOfCycle),
@@ -40,7 +40,7 @@ export async function refreshShopifyEntitlements(): Promise<{ verified: number; 
         if (typeof shopId !== "string" || !/^gid:\/\/shopify\/Shop\/\d+$/.test(shopId)) throw new Error("Missing verified shop identity");
         const response = await fetch(`https://partners.shopify.com/${encodeURIComponent(org)}/api/${encodeURIComponent(process.env.SHOPIFY_PARTNER_API_VERSION || "2026-07")}/graphql.json`, {
           method: "POST", headers: { "Content-Type": "application/json", "X-Shopify-Access-Token": token },
-          body: JSON.stringify({ query: "query($appId: ID!, $shopId: ID!) { activeSubscription(appId:$appId, shopId:$shopId) { shop { id } cancelAtEndOfCycle trialEndsAt currentBillingCycle { endTime } items { handle price { active } } } }", variables: { appId, shopId } }),
+          body: JSON.stringify({ query: "query($appId: ID!, $shopId: ID!) { activeSubscription(appId:$appId, shopId:$shopId) { shop { id } cancelAtEndOfCycle trialEndsAt currentBillingCycle { endTime } items { handle } } }", variables: { appId, shopId } }),
           signal: globalThis.AbortSignal.timeout(10_000),
         });
         const payload = await response.json() as { data?: { activeSubscription?: Subscription | null }; errors?: unknown[] };

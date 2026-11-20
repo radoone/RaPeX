@@ -1459,7 +1459,8 @@
       "preview": "Kehityksen esikatselu",
       "processing": "Tarkistus käynnissä",
       "unknown": "Toiminta vahvistamaton",
-      "unverified": "Suunnitelman vahvistus ei saatavilla"
+      "unverified": "Suunnitelman vahvistus ei saatavilla",
+      "starting": "Ensimmäinen automaattinen tarkistus odottaa"
     },
     "monitoringHelp": {
       "delayed": "Viimeisin automaattinen tarkistus tehtiin yli 48 tuntia sitten. Jos tila jatkuu, ota yhteyttä tukeen.",
@@ -1476,7 +1477,19 @@
     "purpose": "ZeroRecall tarkistaa Shopify-katalogisi EU:n <portalLink>Safety Gate</portalLink> -hälytyksiä vastaan ja näyttää, mitkä mahdolliset osumat vaativat tarkistusta.",
     "refreshStatus": "Päivitä seurannan tila",
     "reviewHelp": "Vertaa tuotettasi viralliseen hälytykseen ja kirjaa sitten päätöksesi.",
-    "reviewNext": "Tarkista seuraava osuma"
+    "reviewNext": "Tarkista seuraava osuma",
+    "activityQuiet": "Näissä tarkistuksissa ei ollut uusia tai päivitettyjä Safety Gate -tietueita vertailtavaksi.",
+    "activityRecords": "Näissä tarkistuksissa käsitellyt Safety Gate -tietueet",
+    "activityRuns": "Valmistuneet seurantatarkistukset",
+    "activityTitle": "Seuranta viimeisten 30 päivän aikana",
+    "auditBackground": "Voit sulkea sivun. Tarkistus jatkuu taustalla. Kun se on valmis, palaa ZeroRecalliin katsomaan tulokset.",
+    "auditTitle": "Luettelon ensimmäinen tarkistus on käynnissä",
+    "emailDisabled": "Sähköpostit uusista mahdollisista vastaavuuksista eivät ole käytössä tai vastaanottaja puuttuu. Voit muuttaa asetusta asetuksissa.",
+    "emailEnabled": "Sähköpostit uusista mahdollisista vastaavuuksista ovat käytössä. Tarkistukset jatkuvat poissa ollessasi.",
+    "firstResultCount": "Tuotteet tarkistettu EU:n Safety Gate -järjestelmää vasten: {{checked}}.",
+    "firstResultNoMatches": "Tässä tarkistuksessa ei löytynyt uusia mahdollisia osumia.",
+    "firstResultTitle": "Alustava luettelon tarkistus valmis",
+    "resultBoundary": "Safety Gate -tarkistus ei todista tuotteen turvallisuutta."
   },
   "findingOverview": {
     "matches": "Mitkä täsmäävät",
@@ -1548,6 +1561,14 @@
     "previousPlan": "Viimeksi vahvistettu sopimus: {{plan}}",
     "recipient": "Lähetetty osoitteeseen {{email}}",
     "testAccess": "Omistajan testikäyttö",
-    "weeklyHelp": "Lähetetään maanantaisin valvontatilasi ja avoimien löydösten kanssa."
+    "weeklyHelp": "Lähetetään maanantaisin valvontatilasi ja avoimien löydösten kanssa.",
+    "cancelError": {
+      "failed": "Emme voineet vahvistaa muutosta Shopifyn kanssa. Päivitä sivu ja tarkista tilauksesi.",
+      "ownerRequired": "Pyydä kaupan omistajaa poistamaan uusiminen käytöstä."
+    },
+    "cancellationPending": "Shopify hyväksyi pyyntösi. Päivitä tämä sivu nähdäksesi päivitetyn tilauksen.",
+    "endsOn": "Uusiminen on pois päältä. Valvonta päättyy {{date}}.",
+    "stopRenewal": "Poista uusiminen käytöstä",
+    "stopRenewalHelp": "Kaupan omistaja voi poistaa uusimisen käytöstä. Valvonta jatkuu {{date}} asti. Tallennetut tulokset pysyvät saatavilla."
   }
 }

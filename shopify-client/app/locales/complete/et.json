@@ -1459,7 +1459,8 @@
       "preview": "Arenduse eelvaade",
       "processing": "Kontroll käib",
       "unknown": "Tegevus kinnitamata",
-      "unverified": "Plaani kinnitamine pole saadaval"
+      "unverified": "Plaani kinnitamine pole saadaval",
+      "starting": "Esimene automaatkontroll on ootel"
     },
     "monitoringHelp": {
       "delayed": "Viimane automaatne kontroll toimus rohkem kui 48 tundi tagasi. Kui olek püsib, võtke ühendust toega.",
@@ -1476,7 +1477,19 @@
     "purpose": "ZeroRecall kontrollib teie Shopify kataloogi EL-i <portalLink>Safety Gate</portalLink>'i hoiatuste vastu ja näitab teile, millised võimalikud vasted vajavad ülevaatamist.",
     "refreshStatus": "Värskenda jälgimise olekut",
     "reviewHelp": "Võrrelge oma toodet ametliku hoiatusega, seejärel salvestage oma otsus.",
-    "reviewNext": "Vaata järgmist vastet"
+    "reviewNext": "Vaata järgmist vastet",
+    "activityQuiet": "Nendes kontrollides polnud võrdlemiseks uusi ega uuendatud Safety Gate’i kirjeid.",
+    "activityRecords": "Nendes kontrollides arvesse võetud Safety Gate’i kirjed",
+    "activityRuns": "Lõpetatud seirekontrollid",
+    "activityTitle": "Seire viimase 30 päeva jooksul",
+    "auditBackground": "Võite selle lehe sulgeda. Kontroll jätkub taustal. Pärast kontrolli lõppu leiate tulemused ZeroRecallist.",
+    "auditTitle": "Kataloogi esmane kontroll on pooleli",
+    "emailDisabled": "Uute võimalike vastete e-kirjad on välja lülitatud või neil pole saajat. Saate seda seadetes muuta.",
+    "emailEnabled": "Uute võimalike vastete e-kirjad on sisse lülitatud. Kontrollid jätkuvad ka teie äraolekul.",
+    "firstResultCount": "Tooted kontrollitud ELi Safety Gate'i andmebaasi alusel: {{checked}}.",
+    "firstResultNoMatches": "See kontroll ei leidnud uusi võimalikke vasteid.",
+    "firstResultTitle": "Kataloogi esmane kontroll on lõpule viidud",
+    "resultBoundary": "Safety Gate’i kontroll ei tõenda toote ohutust."
   },
   "findingOverview": {
     "matches": "Mis sobib",
@@ -1548,6 +1561,14 @@
     "previousPlan": "Viimati kinnitatud pakett: {{plan}}",
     "recipient": "Saadetud aadressile {{email}}",
     "testAccess": "Omaniku testjuurdepääs",
-    "weeklyHelp": "Saadetakse esmaspäeviti koos teie jälgimisoleku ja avatud leidudega."
+    "weeklyHelp": "Saadetakse esmaspäeviti koos teie jälgimisoleku ja avatud leidudega.",
+    "cancelError": {
+      "failed": "Muudatust ei saanud Shopifyga kinnitada. Värskendage lehte ja kontrollige oma paketti.",
+      "ownerRequired": "Paluge poe omanikul uuendamine välja lülitada."
+    },
+    "cancellationPending": "Shopify aktsepteeris teie taotluse. Värskendage seda lehte, et näha uuendatud paketti.",
+    "endsOn": "Uuendamine on välja lülitatud. Jälgimine lõpeb {{date}}.",
+    "stopRenewal": "Lülita uuendamine välja",
+    "stopRenewalHelp": "Poe omanik saab uuendamise välja lülitada. Jälgimine jätkub kuni {{date}}. Teie salvestatud tulemused jäävad kättesaadavaks."
   }
 }

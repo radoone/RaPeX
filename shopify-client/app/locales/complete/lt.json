@@ -1459,7 +1459,8 @@
       "preview": "Kūrimo peržiūra",
       "processing": "Vyksta patikrinimas",
       "unknown": "Veikla nepatvirtinta",
-      "unverified": "Plano patvirtinimas nepasiekiamas"
+      "unverified": "Plano patvirtinimas nepasiekiamas",
+      "starting": "Laukiama pirmos automatinės patikros"
     },
     "monitoringHelp": {
       "delayed": "Paskutinis automatinis patikrinimas buvo atliktas daugiau nei prieš 48 valandas. Jei būsena išlieka, susisiekite su palaikymo komanda.",
@@ -1476,7 +1477,19 @@
     "purpose": "ZeroRecall patikrina jūsų Shopify katalogą pagal ES <portalLink>Safety Gate</portalLink> įspėjimus ir parodo, kuriuos galimus atitikmenis reikia peržiūrėti.",
     "refreshStatus": "Atnaujinti stebėjimo būseną",
     "reviewHelp": "Palyginkite savo produktą su oficialiu įspėjimu, tada užregistruokite savo sprendimą.",
-    "reviewNext": "Peržiūrėti kitą atitikmenį"
+    "reviewNext": "Peržiūrėti kitą atitikmenį",
+    "activityQuiet": "Per šias patikras nebuvo naujų arba atnaujintų „Safety Gate“ įrašų, kuriuos reikėtų palyginti.",
+    "activityRecords": "Per šias patikras įvertinti „Safety Gate“ įrašai",
+    "activityRuns": "Užbaigtos stebėsenos patikros",
+    "activityTitle": "Stebėsena per pastarąsias 30 dienų",
+    "auditBackground": "Galite užverti šį puslapį. Patikra tęsiama fone. Jai pasibaigus rezultatus rasite „ZeroRecall“.",
+    "auditTitle": "Vyksta pirminė katalogo patikra",
+    "emailDisabled": "El. laiškai apie naujus galimus atitikmenis išjungti arba nenurodytas gavėjas. Tai galite pakeisti nustatymuose.",
+    "emailEnabled": "El. laiškai apie naujus galimus atitikmenis įjungti. Patikros tęsiamos ir jums nesant.",
+    "firstResultCount": "Produktai, patikrinti pagal ES saugos vartus: {{checked}}.",
+    "firstResultNoMatches": "Šis patikrinimas nerado naujų galimų atitikmenų.",
+    "firstResultTitle": "Pradinis katalogo patikrinimas baigtas",
+    "resultBoundary": "Patikra „Safety Gate“ nepatvirtina gaminio saugos."
   },
   "findingOverview": {
     "matches": "Kas atitinka",
@@ -1548,6 +1561,14 @@
     "previousPlan": "Paskutinis patvirtintas planas: {{plan}}",
     "recipient": "Išsiųsta adresu {{email}}",
     "testAccess": "Savininko bandomoji prieiga",
-    "weeklyHelp": "Siunčiama pirmadieniais su jūsų stebėjimo būsena ir atvirais radiniais."
+    "weeklyHelp": "Siunčiama pirmadieniais su jūsų stebėjimo būsena ir atvirais radiniais.",
+    "cancelError": {
+      "failed": "Nepavyko patvirtinti pakeitimo su „Shopify“. Atnaujinkite puslapį ir patikrinkite savo planą.",
+      "ownerRequired": "Paprašykite parduotuvės savininko išjungti atnaujinimą."
+    },
+    "cancellationPending": "„Shopify“ priėmė jūsų užklausą. Atnaujinkite šį puslapį, kad pamatytumėte atnaujintą planą.",
+    "endsOn": "Atnaujinimas išjungtas. Stebėjimas baigiasi {{date}}.",
+    "stopRenewal": "Išjungti atnaujinimą",
+    "stopRenewalHelp": "Parduotuvės savininkas gali išjungti atnaujinimą. Stebėjimas tęsiamas iki {{date}}. Jūsų išsaugoti rezultatai lieka pasiekiami."
   }
 }

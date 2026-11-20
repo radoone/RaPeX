@@ -1459,7 +1459,8 @@
       "preview": "Fejlesztői előnézet",
       "processing": "Ellenőrzés folyamatban",
       "unknown": "Tevékenység meg nem erősítve",
-      "unverified": "Terv ellenőrzése nem elérhető"
+      "unverified": "Terv ellenőrzése nem elérhető",
+      "starting": "Az első automatikus ellenőrzésre vár"
     },
     "monitoringHelp": {
       "delayed": "Az utolsó automatikus ellenőrzés több mint 48 órája történt. Ha az állapot továbbra is fennáll, lépjen kapcsolatba az ügyfélszolgálattal.",
@@ -1476,7 +1477,19 @@
     "purpose": "A ZeroRecall összehasonlítja az Ön Shopify katalógusát az <portalLink>EU Safety Gate</portalLink> riasztásaival, és megmutatja, mely lehetséges egyezéseket kell felülvizsgálni.",
     "refreshStatus": "Ellenőrzési állapot frissítése",
     "reviewHelp": "Hasonlítsa össze termékét a hivatalos riasztással, majd rögzítse döntését.",
-    "reviewNext": "Következő egyezés felülvizsgálata"
+    "reviewNext": "Következő egyezés felülvizsgálata",
+    "activityQuiet": "Ezekben az ellenőrzésekben nem volt összehasonlítandó új vagy frissített Safety Gate-bejegyzés.",
+    "activityRecords": "Az ellenőrzésekben figyelembe vett Safety Gate-bejegyzések",
+    "activityRuns": "Befejezett automatikus ellenőrzések",
+    "activityTitle": "Az elmúlt 30 nap figyelése",
+    "auditBackground": "Bezárhatja ezt az oldalt. Az ellenőrzés a háttérben folytatódik. Ha elkészült, az eredményeket a ZeroRecallban találja.",
+    "auditTitle": "A katalógus első ellenőrzése folyamatban",
+    "emailDisabled": "Az új lehetséges egyezésekről szóló e-mailek ki vannak kapcsolva vagy nincs címzettjük. Ezt a Beállításokban módosíthatja.",
+    "emailEnabled": "Az új lehetséges egyezésekről szóló e-mailek be vannak kapcsolva. Az ellenőrzések távollétében is folytatódnak.",
+    "firstResultCount": "Termékek ellenőrizve az EU Safety Gate adatbázisában: {{checked}}.",
+    "firstResultNoMatches": "Ez az ellenőrzés nem talált új lehetséges egyezéseket.",
+    "firstResultTitle": "Kezdeti katalógusellenőrzés befejezve",
+    "resultBoundary": "A Safety Gate-ellenőrzés nem igazolja a termék biztonságosságát."
   },
   "findingOverview": {
     "matches": "Egyezések",
@@ -1548,6 +1561,14 @@
     "previousPlan": "Utolsó ellenőrzött csomag: {{plan}}",
     "recipient": "Elküldve a következő címre: {{email}}",
     "testAccess": "Tulajdonosi teszthozzáférés",
-    "weeklyHelp": "Hétfőnként küldjük el a felügyeleti állapotoddal és a nyitott megállapításokkal."
+    "weeklyHelp": "Hétfőnként küldjük el a felügyeleti állapotoddal és a nyitott megállapításokkal.",
+    "cancelError": {
+      "failed": "Nem tudtuk megerősíteni a változást a Shopify-jal. Frissítse az oldalt, és ellenőrizze a csomagját.",
+      "ownerRequired": "Kérje meg az üzlet tulajdonosát, hogy kapcsolja ki a megújítást."
+    },
+    "cancellationPending": "A Shopify elfogadta a kérését. Frissítse ezt az oldalt a frissített csomag megtekintéséhez.",
+    "endsOn": "A megújítás ki van kapcsolva. A felügyelet ekkor ér véget: {{date}}.",
+    "stopRenewal": "Megújítás kikapcsolása",
+    "stopRenewalHelp": "Az üzlet tulajdonosa kikapcsolhatja a megújítást. A felügyelet {{date}}-ig folytatódik. A mentett eredmények továbbra is elérhetők maradnak."
   }
 }

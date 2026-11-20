@@ -178,6 +178,10 @@ export function AlertDetailModal({
     typeof primaryWarning?.imageSimilarity === "number"
       ? primaryWarning.imageSimilarity
       : null;
+  const scoringMode =
+    primaryWarning?.scoreBreakdown?.scoringMode ?? parsed?.analysis?.scoringMode;
+  const imageLed = scoringMode === "image-first" && imageSimilarity !== null;
+  const textOnly = parsed?.analysis?.mode === "text-only";
   const isActive = alert.status === "active";
   const isDismissOutcome =
     selectedOutcome === "false_positive" ||
@@ -272,7 +276,7 @@ export function AlertDetailModal({
       >
         <div className="review-modal">
           <h2 className="review-modal__title">{alert.productTitle}</h2>
-          <p>{t("analysis.sections.whatHappenedSafe")}</p>
+          <p>{t("analysis.sections.whatHappenedSafe")} {t("catalogOverview.resultBoundary")}</p>
           <s-link
             href={`https://${alert.shop}/admin/products/${alert.productId}`}
             target="_blank"
@@ -336,6 +340,12 @@ export function AlertDetailModal({
               <h3>{t("findingOverview.matches")}</h3>
               <p>{matchingFields.length ? listFormat.format(matchingFields) : t("findingOverview.noConfirmedIdentifiers")}</p>
               {primaryWarning?.matchBasis === "gtin" && <p>{t("barcodeMatch.help")}</p>}
+              {primaryWarning?.matchBasis !== "gtin" && (imageLed || textOnly) && (
+                <p>
+                  <strong>{t("analysis.whyThisMatched")}</strong><br />
+                  {t(imageLed ? "analysis.imageDominated" : "manualCheck.banners.textOnlyDescription")}
+                </p>
+              )}
             </section>
             <section>
               <h3>{t("findingOverview.verify")}</h3>

@@ -3,6 +3,14 @@ const en = {
     translation: {
       workspace: workspaceCopy.en,
       settingsOverview: {
+        stopRenewal: "Turn off renewal",
+        stopRenewalHelp: "The store owner can turn off renewal. Monitoring continues through {{date}}. Your saved results stay available.",
+        endsOn: "Renewal is off. Monitoring ends on {{date}}.",
+        cancellationPending: "Shopify accepted your request. Refresh this page to see the updated plan.",
+        cancelError: {
+          ownerRequired: "Ask the store owner to turn off renewal.",
+          failed: "We couldn't confirm the change with Shopify. Refresh the page and check your plan.",
+        },
         "testAccess": "Owner test access",
         "planUnverified": "Plan unverified",
         "activePlan": "Active Shopify plan",
@@ -66,6 +74,18 @@ const en = {
         saveFailed: "The decision could not be saved. Try again.",
       },
       catalogOverview: {
+        firstResultTitle: "Initial catalog check complete",
+        firstResultCount: "Products checked against EU Safety Gate: {{checked}}.",
+        firstResultNoMatches: "This check found no new possible matches.",
+        activityTitle: "Monitoring activity in the last 30 days",
+        activityRuns: "Completed monitoring runs",
+        activityRecords: "Safety Gate records considered across these runs",
+        activityQuiet: "These runs found no new or updated Safety Gate records to compare.",
+        emailEnabled: "Email for new possible matches is on. Checks continue while you’re away.",
+        emailDisabled: "Email for new possible matches is off or has no recipient. You can update it in Settings.",
+        auditTitle: "Initial catalog check in progress",
+        auditBackground: "You can close this page. The check continues in the background. Return to ZeroRecall to see the results when it finishes.",
+        resultBoundary: "A Safety Gate check cannot certify product safety.",
         purpose: "ZeroRecall checks your Shopify catalog against <portalLink>EU Safety Gate</portalLink> alerts and shows you which possible matches need review.",
         lastCheck: "Last successful catalog check",
         noCompletedCheck: "No completed catalog check on record",
@@ -79,6 +99,7 @@ const en = {
         noActionHelp: "Your current catalog is covered and no possible matches are waiting for your review.",
         refreshStatus: "Refresh monitoring status",
         monitoring: {
+          starting: "First automatic check pending",
           enabled: "Running automatically",
           processing: "Check in progress",
           unknown: "Activity unconfirmed",

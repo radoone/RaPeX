@@ -1,69 +1,83 @@
 {
   "createdOn": "2026-11-01T10:02:43.104Z",
   "model": "gemini-2.5-flash",
-  "sourceSha256": "66583dac6546710cd14485fdde90da0a24aea4094ad3a43ced5bf3eb05994c73",
-  "sourceKeys": 1240,
+  "sourceSha256": "44199fdf3a0461165af789ad0845952ed362c524abe8e29314c6cf966434bc7f",
+  "sourceKeys": 1259,
   "scope": "Complete Shopify merchant UI, excluding stored product facts, identifiers and original Safety Gate records; response guide translations updated with Gemini 2.5 Flash; response guide and monitoring evidence translations updated with Gemini 2.5 Flash",
   "nativeSpeakerReview": "Not performed for every language",
   "locales": {
-    "bg": {
-      "keys": 1239,
-      "promptTokens": 30915,
-      "outputTokens": 24085,
-      "batches": 17,
+    "sk": {
+      "keys": 42,
+      "promptTokens": 503,
+      "outputTokens": 230,
+      "batches": 1,
       "extraPluralKeys": []
     },
     "cs": {
-      "keys": 1239,
+      "keys": 1258,
       "promptTokens": 33299,
       "outputTokens": 23441,
       "batches": 17,
       "extraPluralKeys": []
     },
-    "da": {
-      "keys": 1239,
-      "promptTokens": 32893,
-      "outputTokens": 22044,
-      "batches": 17,
-      "extraPluralKeys": []
-    },
-    "de": {
-      "keys": 1239,
-      "promptTokens": 35057,
-      "outputTokens": 21602,
-      "batches": 17,
-      "extraPluralKeys": []
-    },
-    "el": {
-      "keys": 1239,
-      "promptTokens": 33459,
-      "outputTokens": 29092,
-      "batches": 17,
-      "extraPluralKeys": []
-    },
     "es": {
-      "keys": 1239,
+      "keys": 1258,
       "promptTokens": 33299,
       "outputTokens": 19932,
       "batches": 17,
       "extraPluralKeys": []
     },
+    "da": {
+      "keys": 1258,
+      "promptTokens": 32893,
+      "outputTokens": 22044,
+      "batches": 17,
+      "extraPluralKeys": []
+    },
+    "bg": {
+      "keys": 1258,
+      "promptTokens": 30915,
+      "outputTokens": 24085,
+      "batches": 17,
+      "extraPluralKeys": []
+    },
+    "el": {
+      "keys": 1258,
+      "promptTokens": 33459,
+      "outputTokens": 29092,
+      "batches": 17,
+      "extraPluralKeys": []
+    },
     "fi": {
-      "keys": 1239,
+      "keys": 1258,
       "promptTokens": 32673,
       "outputTokens": 24826,
       "batches": 17,
       "extraPluralKeys": []
     },
     "fr": {
-      "keys": 1239,
+      "keys": 1258,
       "promptTokens": 35247,
       "outputTokens": 21037,
       "batches": 17,
       "extraPluralKeys": []
     },
-    "ga": {
+    "et": {
       "keys": 1258,
+      "promptTokens": 34055,
+      "outputTokens": 23845,
+      "batches": 17,
+      "extraPluralKeys": []
+    },
+    "hr": {
+      "keys": 1258,
+      "promptTokens": 32852,
+      "outputTokens": 23248,
+      "batches": 17,
+      "extraPluralKeys": []
+    },
+    "ga": {
+      "keys": 1277,
       "promptTokens": 34148,
       "outputTokens": 28984,
       "batches": 18,
@@ -89,36 +103,22 @@
         "pendingCoverage.title_two"
       ]
     },
-    "hr": {
-      "keys": 1239,
-      "promptTokens": 32852,
-      "outputTokens": 23248,
-      "batches": 17,
-      "extraPluralKeys": []
-    },
     "hu": {
-      "keys": 1239,
+      "keys": 1258,
       "promptTokens": 34450,
       "outputTokens": 25512,
       "batches": 17,
       "extraPluralKeys": []
     },
     "it": {
-      "keys": 1239,
+      "keys": 1258,
       "promptTokens": 37400,
       "outputTokens": 21407,
       "batches": 17,
       "extraPluralKeys": []
     },
-    "lt": {
-      "keys": 1239,
-      "promptTokens": 37400,
-      "outputTokens": 26470,
-      "batches": 17,
-      "extraPluralKeys": []
-    },
     "lv": {
-      "keys": 1258,
+      "keys": 1277,
       "promptTokens": 38330,
       "outputTokens": 27930,
       "batches": 18,
@@ -144,8 +144,36 @@
         "pendingCoverage.title_zero"
       ]
     },
-    "mt": {
+    "pt": {
       "keys": 1258,
+      "promptTokens": 37434,
+      "outputTokens": 19248,
+      "batches": 17,
+      "extraPluralKeys": []
+    },
+    "de": {
+      "keys": 1258,
+      "promptTokens": 35057,
+      "outputTokens": 21602,
+      "batches": 17,
+      "extraPluralKeys": []
+    },
+    "lt": {
+      "keys": 1258,
+      "promptTokens": 37400,
+      "outputTokens": 26470,
+      "batches": 17,
+      "extraPluralKeys": []
+    },
+    "nl": {
+      "keys": 1258,
+      "promptTokens": 37400,
+      "outputTokens": 22322,
+      "batches": 17,
+      "extraPluralKeys": []
+    },
+    "mt": {
+      "keys": 1277,
       "promptTokens": 38330,
       "outputTokens": 29082,
       "batches": 18,
@@ -171,43 +199,22 @@
         "pendingCoverage.title_two"
       ]
     },
-    "nl": {
-      "keys": 1239,
-      "promptTokens": 37400,
-      "outputTokens": 22322,
-      "batches": 17,
-      "extraPluralKeys": []
-    },
-    "pl": {
-      "keys": 1239,
-      "promptTokens": 37400,
-      "outputTokens": 21878,
-      "batches": 17,
-      "extraPluralKeys": []
-    },
-    "pt": {
-      "keys": 1239,
-      "promptTokens": 37434,
-      "outputTokens": 19248,
-      "batches": 17,
-      "extraPluralKeys": []
-    },
-    "sk": {
-      "keys": 14,
-      "promptTokens": 503,
-      "outputTokens": 230,
-      "batches": 1,
-      "extraPluralKeys": []
-    },
     "ro": {
-      "keys": 1239,
+      "keys": 1258,
       "promptTokens": 37400,
       "outputTokens": 22071,
       "batches": 17,
       "extraPluralKeys": []
     },
-    "sl": {
+    "pl": {
       "keys": 1258,
+      "promptTokens": 37400,
+      "outputTokens": 21878,
+      "batches": 17,
+      "extraPluralKeys": []
+    },
+    "sl": {
+      "keys": 1277,
       "promptTokens": 38330,
       "outputTokens": 24598,
       "batches": 18,
@@ -234,16 +241,9 @@
       ]
     },
     "sv": {
-      "keys": 1239,
+      "keys": 1258,
       "promptTokens": 37400,
       "outputTokens": 21736,
-      "batches": 17,
-      "extraPluralKeys": []
-    },
-    "et": {
-      "keys": 1239,
-      "promptTokens": 34055,
-      "outputTokens": 23845,
       "batches": 17,
       "extraPluralKeys": []
     }
@@ -294,5 +294,8 @@
       "source": "Manually authored in app/locales/gallery.ts; no model translation job was run for this addition."
     }
   ],
-  "updatedOn": "2026-11-18T15:37:02.794Z"
+  "updatedOn": "2026-11-18T15:37:02.794Z",
+  "copyUpdates": [
+    "2026-11-20: Monitoring activity, notification settings and catalog check status copy added in all 24 languages."
+  ]
 }

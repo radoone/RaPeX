@@ -1459,7 +1459,8 @@
       "preview": "Udviklingsforhåndsvisning",
       "processing": "Kontrol i gang",
       "unknown": "Aktivitet ubekræftet",
-      "unverified": "Planverifikation utilgængelig"
+      "unverified": "Planverifikation utilgængelig",
+      "starting": "Afventer første automatiske kontrol"
     },
     "monitoringHelp": {
       "delayed": "Den sidste automatiske kontrol var for mere end 48 timer siden. Hvis status fortsætter, kontakt support.",
@@ -1476,7 +1477,19 @@
     "purpose": "ZeroRecall kontrollerer dit Shopify-katalog mod <portalLink>EU Safety Gate</portalLink>-advarsler og viser dig, hvilke mulige match der skal gennemgås.",
     "refreshStatus": "Opdater overvågningsstatus",
     "reviewHelp": "Sammenlign dit produkt med den officielle advarsel, og registrer derefter din beslutning.",
-    "reviewNext": "Gennemgå næste match"
+    "reviewNext": "Gennemgå næste match",
+    "activityQuiet": "Der var ingen nye eller opdaterede Safety Gate-poster at sammenligne i disse kontroller.",
+    "activityRecords": "Safety Gate-poster gennemgået i disse kontroller",
+    "activityRuns": "Fuldførte kontroller",
+    "activityTitle": "Overvågning de seneste 30 dage",
+    "auditBackground": "Du kan lukke siden. Kontrollen fortsætter i baggrunden. Vend tilbage til ZeroRecall for at se resultaterne, når den er færdig.",
+    "auditTitle": "Det første katalogtjek er i gang",
+    "emailDisabled": "E-mail om nye mulige match er slået fra eller mangler en modtager. Du kan ændre det under Indstillinger.",
+    "emailEnabled": "E-mail om nye mulige match er slået til. Kontrollerne fortsætter, mens du er væk.",
+    "firstResultCount": "Produkter kontrolleret mod EU Safety Gate: {{checked}}.",
+    "firstResultNoMatches": "Denne kontrol fandt ingen nye mulige match.",
+    "firstResultTitle": "Indledende katalogkontrol afsluttet",
+    "resultBoundary": "En kontrol i Safety Gate dokumenterer ikke produktsikkerhed."
   },
   "findingOverview": {
     "matches": "Hvad der matcher",
@@ -1548,6 +1561,14 @@
     "previousPlan": "Sidst bekræftede plan: {{plan}}",
     "recipient": "Sendt til {{email}}",
     "testAccess": "Ejers testadgang",
-    "weeklyHelp": "Sendes om mandagen med din overvågningsstatus og åbne resultater."
+    "weeklyHelp": "Sendes om mandagen med din overvågningsstatus og åbne resultater.",
+    "cancelError": {
+      "failed": "Vi kunne ikke bekræfte ændringen med Shopify. Opdater siden, og tjek din plan.",
+      "ownerRequired": "Bed butiksejeren om at deaktivere fornyelse."
+    },
+    "cancellationPending": "Shopify har accepteret din anmodning. Opdater denne side for at se den opdaterede plan.",
+    "endsOn": "Fornyelse er deaktiveret. Overvågning slutter den {{date}}.",
+    "stopRenewal": "Deaktiver fornyelse",
+    "stopRenewalHelp": "Butiksejeren kan deaktivere fornyelse. Overvågning fortsætter til og med {{date}}. Dine gemte resultater forbliver tilgængelige."
   }
 }

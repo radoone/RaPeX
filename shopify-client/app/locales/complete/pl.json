@@ -1459,7 +1459,8 @@
       "preview": "Podgląd deweloperski",
       "processing": "Sprawdzanie w toku",
       "unknown": "Aktywność niepotwierdzona",
-      "unverified": "Weryfikacja planu niedostępna"
+      "unverified": "Weryfikacja planu niedostępna",
+      "starting": "Oczekiwanie na pierwszą automatyczną kontrolę"
     },
     "monitoringHelp": {
       "delayed": "Ostatnie automatyczne sprawdzenie miało miejsce ponad 48 godzin temu. Jeśli status się utrzymuje, skontaktuj się z pomocą techniczną.",
@@ -1476,7 +1477,19 @@
     "purpose": "ZeroRecall sprawdza Twój katalog Shopify pod kątem alertów <portalLink>EU Safety Gate</portalLink> i pokazuje, które możliwe dopasowania wymagają weryfikacji.",
     "refreshStatus": "Odśwież status monitorowania",
     "reviewHelp": "Porównaj swój produkt z oficjalnym alertem, a następnie zapisz swoją decyzję.",
-    "reviewNext": "Przejrzyj następne dopasowanie"
+    "reviewNext": "Przejrzyj następne dopasowanie",
+    "activityQuiet": "Podczas tych kontroli nie było nowych ani zaktualizowanych wpisów Safety Gate do porównania.",
+    "activityRecords": "Wpisy Safety Gate uwzględnione w tych kontrolach",
+    "activityRuns": "Zakończone kontrole monitoringu",
+    "activityTitle": "Monitorowanie w ciągu ostatnich 30 dni",
+    "auditBackground": "Możesz zamknąć tę stronę. Kontrola trwa w tle. Po zakończeniu wróć do ZeroRecall, aby zobaczyć wyniki.",
+    "auditTitle": "Trwa pierwsza kontrola katalogu",
+    "emailDisabled": "E-maile o nowych możliwych dopasowaniach są wyłączone lub nie mają odbiorcy. Możesz to zmienić w ustawieniach.",
+    "emailEnabled": "E-maile o nowych możliwych dopasowaniach są włączone. Kontrole trwają również podczas Twojej nieobecności.",
+    "firstResultCount": "Produkty sprawdzone pod kątem unijnego systemu Safety Gate: {{checked}}.",
+    "firstResultNoMatches": "To sprawdzenie nie wykryło żadnych nowych możliwych dopasowań.",
+    "firstResultTitle": "Wstępne sprawdzenie katalogu zakończone",
+    "resultBoundary": "Kontrola w Safety Gate nie potwierdza bezpieczeństwa produktu."
   },
   "findingOverview": {
     "matches": "Co pasuje",
@@ -1548,6 +1561,14 @@
     "previousPlan": "Ostatnio zweryfikowany plan: {{plan}}",
     "recipient": "Wysłano do {{email}}",
     "testAccess": "Dostęp testowy właściciela",
-    "weeklyHelp": "Wysyłane w poniedziałki ze statusem monitorowania i otwartymi ustaleniami."
+    "weeklyHelp": "Wysyłane w poniedziałki ze statusem monitorowania i otwartymi ustaleniami.",
+    "cancelError": {
+      "failed": "Nie udało się potwierdzić zmiany w Shopify. Odśwież stronę i sprawdź swój plan.",
+      "ownerRequired": "Poproś właściciela sklepu o wyłączenie odnawiania."
+    },
+    "cancellationPending": "Shopify zaakceptowało Twoje żądanie. Odśwież tę stronę, aby zobaczyć zaktualizowany plan.",
+    "endsOn": "Odnawianie jest wyłączone. Monitorowanie kończy się {{date}}.",
+    "stopRenewal": "Wyłącz odnawianie",
+    "stopRenewalHelp": "Właściciel sklepu może wyłączyć odnawianie. Monitorowanie będzie kontynuowane do {{date}}. Zapisane wyniki pozostaną dostępne."
   }
 }

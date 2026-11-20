@@ -12,11 +12,13 @@ function translate(key) {
 }
 
 function Extension() {
-  const { data, close, navigation } = shopify;
+  const { data, close } = shopify;
   const productId = data?.selected?.[0]?.id;
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
+  const [pricingUrl, setPricingUrl] = useState(null);
+  const [excluded, setExcluded] = useState(false);
 
   const notifyUpdate = useCallback(() => {
     try {
@@ -43,6 +45,9 @@ function Extension() {
     try {
       setRunning(true);
       setError("");
+      setResult(null);
+      setPricingUrl(null);
+      setExcluded(false);
 
       const response = await fetch("/api/product-safety-check", {
         method: "POST",
@@ -52,33 +57,39 @@ function Extension() {
       const payload = await response.json();
 
       if (!response.ok) {
-        throw new Error(payload.error || translate("checkFailed"));
+        if (payload.excluded) {
+          setExcluded(true);
+          return;
+        }
+        if (payload.pricingPlansUrl) {
+          setPricingUrl(payload.pricingPlansUrl);
+          return;
+        }
+        throw new Error(translate("checkFailed"));
       }
 
       setResult(payload);
       notifyUpdate();
-    } catch (runError) {
-      setError(runError instanceof Error ? runError.message : translate("checkFailed"));
+    } catch {
+      setError(translate("checkFailed"));
     } finally {
       setRunning(false);
     }
   }, [productId, running, notifyUpdate]);
 
   const hasResult = Boolean(result);
-  const isMatch = result?.status?.state === "unsafe" || result?.status?.state === "needs-review";
+  const reviewUrl = result?.reviewUrl;
 
   return (
     <s-admin-action heading={translate("name")} loading={running}>
       {hasResult ? (
-        isMatch ? (
+        reviewUrl ? (
           <>
             <s-button
               slot="primary-action"
               variant="primary"
-              onClick={() => {
-                close();
-                navigation?.navigate?.("/app/alerts?status=active");
-              }}
+              href={reviewUrl}
+              target="_blank"
             >
               {translate("openReview")}
             </s-button>
@@ -99,6 +110,15 @@ function Extension() {
             </s-button>
           </>
         )
+      ) : excluded ? (
+        <s-button slot="primary-action" variant="primary" onClick={close}>{translate("close")}</s-button>
+      ) : pricingUrl ? (
+        <>
+          <s-button slot="primary-action" variant="primary" href={pricingUrl} target="_blank">
+            {translate("viewPlans")}
+          </s-button>
+          <s-button slot="secondary-actions" onClick={close}>{translate("close")}</s-button>
+        </>
       ) : (
         <>
           <s-button
@@ -108,7 +128,7 @@ function Extension() {
             loading={running}
             onClick={runCheck}
           >
-            {running ? translate("checking") : translate("runCheck")}
+            {running ? translate("checking") : error ? translate("retry") : translate("runCheck")}
           </s-button>
           <s-button slot="secondary-actions" onClick={close}>{translate("close")}</s-button>
         </>
@@ -118,7 +138,9 @@ function Extension() {
           <s-text>
             {translate("description")}
           </s-text>
-          {error ? <s-text tone="critical">{error}</s-text> : null}
+          {error ? <s-banner tone="critical">{error}</s-banner> : null}
+          {excluded ? <s-banner tone="info">{translate("excluded")}</s-banner> : null}
+          {pricingUrl ? <s-banner tone="warning">{translate("planRequired")}</s-banner> : null}
           {result ? <ResultDetails result={result} /> : null}
         </s-stack>
       </s-box>
@@ -141,19 +163,19 @@ function ResultDetails({ result }) {
   });
 
   const stateTone = status.state === "unsafe" || status.state === "needs-review"
-    ? "critical"
-    : status.state === "safe" || status.state === "resolved"
+    ? "warning"
+    : status.state === "resolved"
       ? "success"
       : "info";
 
   const topReason = status.topReason || firstWarning?.reason;
-  const recommendation = result.result?.recommendation;
+
 
   return (
     <s-stack direction="block" gap="tight">
       <s-stack direction="inline" gap="small" blockAlign="center">
         <s-badge tone={stateTone}>{labelForState(status.state)}</s-badge>
-        {riskLevel ? <s-badge tone={status.state === "unsafe" ? "critical" : "warning"}>{`${translate("risk")}: ${riskLevel}`}</s-badge> : null}
+        {riskLevel ? <s-badge tone={"warning"}>{`${translate("risk")}: ${riskLevel}`}</s-badge> : null}
       </s-stack>
       {status.checkedAt ? (
         <s-text tone="subdued" size="small">
@@ -165,16 +187,7 @@ function ResultDetails({ result }) {
           <strong>{translate("reason")}:</strong> {topReason}
         </s-text>
       ) : null}
-      {recommendation ? (
-        <details style={{ marginTop: "6px" }}>
-          <summary style={{ cursor: "pointer", color: "var(--p-color-text-subdued, #616161)", fontSize: "13px", fontWeight: "500" }}>
-            {translate("details")}
-          </summary>
-          <s-box padding="small" background="bg-surface-subdued" borderRadius="base">
-            <s-text>{recommendation}</s-text>
-          </s-box>
-        </details>
-      ) : null}
+      {status.state === "safe" ? <s-text>{translate("noMatchHelp")}</s-text> : null}
     </s-stack>
   );
 }
@@ -184,6 +197,8 @@ function labelForState(state) {
     case "unsafe":
     case "needs-review":
       return translate("needsReview");
+    case "waiting-for-supplier":
+      return translate("waiting");
     case "safe":
       return translate("noMatch");
     case "resolved":

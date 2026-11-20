@@ -29,6 +29,10 @@ import {
 import { catalogCheckStates } from "../services/catalog-state";
 import { readAutomaticCatalogChecks } from "../services/catalog-check-queue.server";
 import { hasOwnerTestAccess } from "../services/owner-test-access.server";
+import { isWaitingForSupplier } from "../services/review-evidence";
+import { ProductCheckExcludedError } from "../services/safety-gate-checker.server";
+import { exclusionPreview } from "../services/exclusion-preview";
+import { shopifyProductToProductData } from "../services/safety-gate-product-data";
 
 type ShopifyCatalogProduct = {
   id: string;
@@ -65,6 +69,7 @@ async function fetchCatalogProductsForManualCheck(
               status
               vendor
               productType
+              tags
               featuredImage { url altText }
               images(first: 1) { nodes { url altText } }
               updatedAt
@@ -114,7 +119,19 @@ async function loadCoverage(shop: string, products: ShopifyCatalogProduct[], own
   const unconfirmed = pending.filter(product =>
     !automaticIds.has(product.id.replace("gid://shopify/Product/", ""))
   );
-  return { checks, productStates, pending, unconfirmed, automaticProductIds };
+  const manualExcluded = exclusionPreview(
+    products.map(product => {
+      const { brand, category } = shopifyProductToProductData(product);
+      return { id: product.id, vendor: brand, productType: category };
+    }),
+    String(merchant.get("excludeVendors") || ""),
+    String(merchant.get("excludeTypes") || ""),
+  );
+  const manualExcludedProductIds = new Set(manualExcluded.map(product => product.id.replace("gid://shopify/Product/", "")));
+  const manualCandidates = unconfirmed.filter(product =>
+    !manualExcludedProductIds.has(product.id.replace("gid://shopify/Product/", "")),
+  );
+  return { checks, productStates, pending, unconfirmed, automaticProductIds, manualCandidates, manualExcludedProductIds };
 }
 
 export const loader = async ({ request, url }: LoaderFunctionArgs) => {
@@ -135,7 +152,7 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
     p.id.replace("gid://shopify/Product/", ""),
   );
 
-  const { checks: productChecks, productStates, pending, unconfirmed, automaticProductIds } = await loadCoverage(
+  const { checks: productChecks, productStates, pending, unconfirmed, automaticProductIds, manualCandidates, manualExcludedProductIds } = await loadCoverage(
     session.shop, coverageCatalogProducts, Boolean(billingStatus.ownerTestAccess),
   );
 
@@ -233,6 +250,8 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
       uncheckedProductCount: pending.length,
       automaticCount: pending.length - unconfirmed.length,
       automaticProductIds,
+      manualCandidateCount: manualCandidates.length,
+      manualExcludedProductIds: [...manualExcludedProductIds],
     },
     billingStatus,
   });
@@ -281,6 +300,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         alertId: runResult.alertId,
       });
     } catch (error) {
+      if (error instanceof ProductCheckExcludedError) {
+        return json({ success: false, excluded: true }, { status: 422 });
+      }
       return json({
         success: false,
         error: error instanceof Error ? error.message : "Unknown error",
@@ -294,10 +316,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         fetchCatalogProductsForManualCheck(admin, Infinity),
         hasOwnerTestAccess(session.shop),
       ]);
-      const { unconfirmed } = await loadCoverage(session.shop, products, ownerTestAccess, true);
+      const { manualCandidates } = await loadCoverage(session.shop, products, ownerTestAccess, true);
       let checked = 0;
       let failed = 0;
-      for (const product of unconfirmed.slice(0, manualBatchSize)) {
+      for (const product of manualCandidates.slice(0, manualBatchSize)) {
         try {
           await runProductSafetyCheckForAdminProduct({
             admin,
@@ -437,7 +459,10 @@ export default function ManualCheckPage() {
   const [searchParams] = useSearchParams();
   const [tabFilter, setTabFilter] = useState<
     "all" | "unprotected" | "needs_review" | "safe"
-  >(() => searchParams.get("coverage") === "remaining" || coverage.uncheckedProductCount > 0 ? "unprotected" : "all");
+  >(() => search || searchParams.get("coverage") === "all"
+    ? "all"
+    : searchParams.get("coverage") === "remaining" || coverage.uncheckedProductCount > 0
+      ? "unprotected" : "all");
   const [shopifyStatusFilter, setShopifyStatusFilter] = useState("all");
   const dateLocale = i18n.language === "en" ? "en-GB" : i18n.language;
 
@@ -500,6 +525,7 @@ export default function ManualCheckPage() {
       const trimmedSearch = searchValue.trim();
       const currentSearch = search.trim();
       if (trimmedSearch !== currentSearch) {
+        if (trimmedSearch) setTabFilter("all");
         const params = new URLSearchParams();
         if (trimmedSearch) params.set("search", trimmedSearch);
         const query = params.toString();
@@ -526,20 +552,26 @@ export default function ManualCheckPage() {
 
   const mayCheckManually = billingStatus.ownerTestAccess || billingStatus.developmentBypass ||
     (billingStatus.billingVerified && billingStatus.hasActivePayment);
-  const manualCount = coverage.uncheckedProductCount - coverage.automaticCount;
+  const manualCount = coverage.manualCandidateCount;
+  const manualExcludedProductIds = new Set(coverage.manualExcludedProductIds);
   const manualBatchCount = Math.min(manualBatchSize, manualCount);
   const automaticProductIds = new Set(coverage.automaticProductIds);
   const noManualAccessKey = billingStatus.billingVerified ? "planRequired" : "planUnconfirmed";
   const coverageHelpKey = coverage.uncheckedProductCount === 0
     ? (totalProducts === 0 ? "empty" : "complete")
-    : manualCount === 0
+    : coverage.automaticCount === coverage.uncheckedProductCount
       ? "automaticOnly"
+      : manualCount === 0
+        ? null
       : mayCheckManually ? "manualHelp" : noManualAccessKey;
 
   const applySearch = useCallback(() => {
     const params = new URLSearchParams();
     const value = searchValue.trim();
-    if (value) params.set("search", value);
+    if (value) {
+      params.set("search", value);
+      setTabFilter("all");
+    }
     const query = params.toString();
     navigate(query ? `/app/manual-check?${query}` : "/app/manual-check");
   }, [navigate, searchValue]);
@@ -708,7 +740,10 @@ export default function ManualCheckPage() {
                   {t("pendingCoverage.automaticCount", { count: coverage.automaticCount })}
                 </p>
               )}
-              <p className="admin-card__description">{t(`pendingCoverage.${coverageHelpKey}`)}</p>
+              {coverageHelpKey && <p className="admin-card__description">{t(`pendingCoverage.${coverageHelpKey}`)}</p>}
+              {coverage.uncheckedProductCount > coverage.automaticCount + manualCount && (
+                <s-link href="/app/settings">{t("settingsAdmin.exclusions.title")}</s-link>
+              )}
             </div>
             {manualBatchCount > 0 && mayCheckManually && (
               <s-button
@@ -741,12 +776,21 @@ export default function ManualCheckPage() {
           <s-banner tone="critical" heading={t("manualCheck.banners.failedHeading")} />
         )}
 
+        {fetcher.data && "excluded" in fetcher.data && (
+          <s-banner tone="info" heading={t("manualCheck.catalogue.status.notChecked")}>
+            <s-link href="/app/settings">{t("settingsAdmin.exclusions.title")}</s-link>
+          </s-banner>
+        )}
         {fetcher.data && "error" in fetcher.data && fetcher.data.error && (
           <s-banner
             tone="critical"
             heading={t("manualCheck.banners.failedHeading")}
           >
-            <s-text>{(fetcher.data as any).error}</s-text>
+            {selectedProduct && (
+              <s-button variant="secondary" onClick={() => handleProductCheck(selectedProduct)} disabled={isLoading}>
+                {t("actions.retry")}
+              </s-button>
+            )}
           </s-banner>
         )}
 
@@ -789,7 +833,7 @@ export default function ManualCheckPage() {
         )}
 
         <AdminCard className="admin-card" id="product-catalogue">
-          <details className="catalog-coverage__filters" open={search ? true : undefined}>
+          <details className="catalog-coverage__filters" open>
             <summary>{t("pendingCoverage.filters")}</summary>
             <div className="catalog-coverage__filter-fields">
               <div
@@ -907,19 +951,22 @@ export default function ManualCheckPage() {
                   const existingAlert = alertsByProduct[productId];
                   const hasAlert = Boolean(existingAlert);
                   const hasActiveAlert = existingAlert?.status === "active";
+                  const waitingForSupplier = existingAlert && isWaitingForSupplier(existingAlert);
                   const isProductLoading =
                     isCheckingOneProduct && selectedProduct?.id === product.id;
 
                   const coverageState = productStates[productId]?.state;
                   const isPending = coverageState !== "current";
                   const isAutomatic = isPending && automaticProductIds.has(productId);
+                  const excludedFromManual = manualExcludedProductIds.has(productId);
                   const pendingStatus = isAutomatic ? "automatic" : mayCheckManually ? "unconfirmed" : noManualAccessKey;
-                  const currentStatusTone = coverageState === "unchecked" || coverageState === "changed"
+                  const currentStatusTone = isPending || waitingForSupplier
                     ? "warning"
-                    : hasActiveAlert ? "critical" : hasAlert ? "info" : "success";
+                    : hasActiveAlert ? "critical" : "info";
                   const currentStatusLabel = t(
                     coverageState === "unchecked" ? "manualCheck.catalogue.status.notChecked"
                       : coverageState === "changed" ? "workspace.changed"
+                        : waitingForSupplier ? "workspace.waiting"
                         : hasActiveAlert ? "manualCheck.catalogue.status.unsafe"
                           : hasAlert ? "manualCheck.catalogue.status.reviewed"
                             : productStates[productId]?.current?.isSafe
@@ -1025,7 +1072,10 @@ export default function ManualCheckPage() {
                               {t("actions.view")}
                             </s-button>
                           )}
-                          {mayCheckManually && !isAutomatic && (
+                          {mayCheckManually && !isAutomatic && excludedFromManual && (
+                            <s-link href="/app/settings">{t("settingsAdmin.exclusions.title")}</s-link>
+                          )}
+                          {mayCheckManually && !isAutomatic && !excludedFromManual && (
                             <s-button
                               size="small"
                               variant="secondary"

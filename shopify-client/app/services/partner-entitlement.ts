@@ -3,7 +3,7 @@ export type PartnerSubscription = {
   currentBillingCycle?: { endTime?: string | null } | null;
   trialEndsAt?: string | null;
   cancelAtEndOfCycle?: boolean;
-  items?: Array<{ handle?: string; price?: { active?: boolean } }>;
+  items?: Array<{ handle?: string }>;
 };
 export function partnerEntitlement(
   subscription: PartnerSubscription | null,
@@ -12,14 +12,15 @@ export function partnerEntitlement(
 ) {
   if (subscription && subscription.shop?.id !== shopId)
     throw new Error("Subscription shop does not match authenticated shop");
-  const items =
-    subscription?.items?.filter((item) => item.price?.active === true) || [];
+  // Shopify verifies the contract via activeSubscription. A superseded price
+  // or effective zero price can be inactive while the contract remains active.
+  const planHandle = subscription?.items?.find((item) => item.handle?.trim())?.handle || null;
   const value =
     subscription?.currentBillingCycle?.endTime || subscription?.trialEndsAt;
   const validUntil = value ? new Date(value) : null;
   const active = Boolean(
     subscription &&
-    items.length &&
+    planHandle &&
     validUntil &&
     Number.isFinite(validUntil.getTime()) &&
     validUntil.getTime() > now,
@@ -28,9 +29,7 @@ export function partnerEntitlement(
     shopifyShopId: shopId,
     active,
     verified: true,
-    planHandle: active
-      ? items.map((item) => item.handle).find(Boolean) || null
-      : null,
+    planHandle: active ? planHandle : null,
     cancelAtEndOfCycle: Boolean(subscription?.cancelAtEndOfCycle),
     validUntil: active ? validUntil : null,
   };

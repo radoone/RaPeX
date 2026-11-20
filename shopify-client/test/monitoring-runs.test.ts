@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { summarizeMonitoringRun, toIsoString } from "../app/services/monitoring-runs";
+import { summarizeMonitoringActivity, summarizeMonitoringRun, toIsoString } from "../app/services/monitoring-runs";
 
 describe("summarizeMonitoringRun", () => {
   it("serializes the dashboard's Firestore run timestamp and rejects invalid dates", () => {
@@ -41,5 +41,26 @@ describe("summarizeMonitoringRun", () => {
     expect(result.productsScanned).toBe(0);
     expect(result.alertsCreated).toBe(0);
     expect(result.attemptCount).toBe(1);
+  });
+});
+
+describe("summarizeMonitoringActivity", () => {
+  const since = Date.parse("2026-10-21T00:00:00Z");
+  const updatedAt = "2026-11-19T08:00:00Z";
+
+  it("uses completed run results, including explicit zero, and excludes failed and old runs", () => {
+    expect(summarizeMonitoringActivity([
+      { status: "completed", updatedAt, rapexAlertsScanned: 700, result: { rapexAlertsScanned: 0 } },
+      { status: "completed", updatedAt, completedSummary: { rapexAlertsScanned: 104 } },
+      { status: "failed", updatedAt, rapexAlertsScanned: 80 },
+      { status: "completed", updatedAt, completedAt: "2026-10-01T08:00:00Z", rapexAlertsScanned: 50 },
+    ], since)).toEqual({ completedRuns: 2, recordsConsidered: 104 });
+  });
+
+  it("never treats missing metrics, missing runs or truncated history as a verified zero", () => {
+    const row = { status: "completed", updatedAt };
+    expect(summarizeMonitoringActivity([row], since)).toEqual({ completedRuns: 1, recordsConsidered: null });
+    expect(summarizeMonitoringActivity([], since)).toBeNull();
+    expect(summarizeMonitoringActivity(Array(101).fill(row), since)).toBeNull();
   });
 });

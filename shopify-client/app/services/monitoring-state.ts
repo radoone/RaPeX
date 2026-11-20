@@ -11,6 +11,7 @@ export function monitoringState(
   status?: string | null,
   now = Date.now(),
   lastSuccess?: string | null,
+  initialCheckAt?: string | null,
 ) {
   if (!billing.ownerTestAccess) {
   if (billing.developmentBypass) return "preview";
@@ -31,7 +32,10 @@ export function monitoringState(
     ["IN_PROGRESS", "queued", "processing", "retrying"].includes(status || "")
   )
     return "processing";
-  if (lastSuccess === null) return "unknown";
+  if (lastSuccess === null) {
+    const auditTime = initialCheckAt ? Date.parse(initialCheckAt) : NaN;
+    return Number.isFinite(auditTime) && now - auditTime < 48 * 60 * 60_000 ? "starting" : "unknown";
+  }
   const completedAt = lastSuccess ? Date.parse(lastSuccess) : NaN;
   if (Number.isFinite(completedAt) && now - completedAt > 48 * 60 * 60_000)
     return "delayed";

@@ -23,13 +23,15 @@ describe("verified Partner contract", () => {
         ).active,
       ).toBe(false);
   });
-  it("does not grant access for absent contracts or missing/inactive prices", () => {
+  it("requires a contract and a current plan handle without relying on the price flag", () => {
     expect(partnerEntitlement(null, shop, now).active).toBe(false);
-    for (const price of [undefined, {}, { active: false }])
+    for (const handle of [undefined, "", " "])
       expect(
-        partnerEntitlement({ ...contract, items: [{ price }] }, shop, now)
+        partnerEntitlement({ ...contract, items: [{ handle }] }, shop, now)
           .active,
       ).toBe(false);
+    const freeTest = { ...contract, items: [{ handle: "journey-qa", price: { active: false, amount: "0.0" } }] };
+    expect(partnerEntitlement(freeTest, shop, now)).toMatchObject({ active: true, planHandle: "journey-qa" });
   });
   it("accepts a verified trial and paid access until end of a cancelling cycle", () => {
     expect(

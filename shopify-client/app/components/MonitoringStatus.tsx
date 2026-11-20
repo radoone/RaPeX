@@ -15,7 +15,7 @@ export function MonitoringStatus({
   return (
     <section className="settings-overview__panel">
       <h2>{t("workspace.monitoringLabel")}</h2>
-      <s-badge tone={state === "enabled" ? "success" : state === "processing" ? "info" : "warning"}>
+      <s-badge tone={state === "enabled" ? "success" : state === "processing" || state === "starting" ? "info" : "warning"}>
         {t(`catalogOverview.monitoring.${state}`)}
       </s-badge>
       <p className="admin-helper">

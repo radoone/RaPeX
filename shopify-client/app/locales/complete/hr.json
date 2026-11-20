@@ -1459,7 +1459,8 @@
       "preview": "Pregled razvoja",
       "processing": "Provjera u tijeku",
       "unknown": "Aktivnost nepotvrđena",
-      "unverified": "Provjera plana nije dostupna"
+      "unverified": "Provjera plana nije dostupna",
+      "starting": "Prva automatska provjera na čekanju"
     },
     "monitoringHelp": {
       "delayed": "Posljednja automatska provjera bila je prije više od 48 sati. Ako status potraje, obratite se podršci.",
@@ -1476,7 +1477,19 @@
     "purpose": "ZeroRecall provjerava vaš Shopify katalog u odnosu na <portalLink>EU Safety Gate</portalLink> upozorenja i prikazuje vam koja moguća podudaranja trebaju pregled.",
     "refreshStatus": "Osvježi status nadzora",
     "reviewHelp": "Usporedite svoj proizvod sa službenim upozorenjem, a zatim zabilježite svoju odluku.",
-    "reviewNext": "Pregledaj sljedeće podudaranje"
+    "reviewNext": "Pregledaj sljedeće podudaranje",
+    "activityQuiet": "U ovim provjerama nije bilo novih ni ažuriranih zapisa Safety Gatea za usporedbu.",
+    "activityRecords": "Zapisi Safety Gatea razmotreni u ovim provjerama",
+    "activityRuns": "Dovršene provjere praćenja",
+    "activityTitle": "Praćenje u posljednjih 30 dana",
+    "auditBackground": "Možete zatvoriti ovu stranicu. Provjera se nastavlja u pozadini. Kad završi, rezultate pogledajte u ZeroRecallu.",
+    "auditTitle": "Početna provjera kataloga je u tijeku",
+    "emailDisabled": "E-poruke o novim mogućim podudaranjima su isključene ili nemaju primatelja. To možete promijeniti u Postavkama.",
+    "emailEnabled": "E-poruke o novim mogućim podudaranjima su uključene. Provjere se nastavljaju i kad ste odsutni.",
+    "firstResultCount": "Proizvodi provjereni u odnosu na EU Safety Gate: {{checked}}.",
+    "firstResultNoMatches": "Ova provjera nije pronašla nova moguća podudaranja.",
+    "firstResultTitle": "Početna provjera kataloga dovršena",
+    "resultBoundary": "Provjera u sustavu Safety Gate ne potvrđuje sigurnost proizvoda."
   },
   "findingOverview": {
     "matches": "Što se podudara",
@@ -1548,6 +1561,14 @@
     "previousPlan": "Posljednji potvrđeni plan: {{plan}}",
     "recipient": "Poslano na {{email}}",
     "testAccess": "Vlasnički testni pristup",
-    "weeklyHelp": "Šalje se ponedjeljkom sa statusom vašeg nadzora i otvorenim nalazima."
+    "weeklyHelp": "Šalje se ponedjeljkom sa statusom vašeg nadzora i otvorenim nalazima.",
+    "cancelError": {
+      "failed": "Nismo mogli potvrditi promjenu sa Shopifyjem. Osvježite stranicu i provjerite svoj plan.",
+      "ownerRequired": "Zatražite od vlasnika trgovine da isključi obnovu."
+    },
+    "cancellationPending": "Shopify je prihvatio vaš zahtjev. Osvježite ovu stranicu da biste vidjeli ažurirani plan.",
+    "endsOn": "Obnova je isključena. Praćenje završava {{date}}.",
+    "stopRenewal": "Isključi obnovu",
+    "stopRenewalHelp": "Vlasnik trgovine može isključiti obnovu. Praćenje se nastavlja do {{date}}. Vaši spremljeni rezultati ostaju dostupni."
   }
 }
