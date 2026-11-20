@@ -26,6 +26,23 @@ function toCount(value: unknown): number {
   return typeof value === "number" && Number.isFinite(value) && value > 0 ? Math.floor(value) : 0;
 }
 
+export function recentlyCheckedProductCount(
+  checks: ReadonlyArray<{ productId?: string | null; checkedAt?: Date | string | null }>,
+  observedAt: number,
+  baselineAt: string | null,
+): number | null {
+  if (!baselineAt) return null;
+  const since = Math.max(Date.parse(baselineAt), observedAt - 30 * 24 * 60 * 60_000);
+  const products = new Set<string>();
+  for (const check of checks) {
+    const time = check.checkedAt ? new Date(check.checkedAt).getTime() : NaN;
+    if (time > since && time <= observedAt && check.productId) {
+      products.add(check.productId.replace("gid://shopify/Product/", ""));
+    }
+  }
+  return products.size;
+}
+
 export function summarizeMonitoringActivity(rows: Record<string, unknown>[], since: number) {
   if (rows.length > 100) return null;
   const completed = rows.filter(row => {

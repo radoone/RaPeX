@@ -1448,12 +1448,12 @@
   "catalogOverview": {
     "coverage": "{{checked}} de {{total}}",
     "coverageHelp": "Algunos productos son nuevos o han cambiado desde su última verificación. Abre la lista para ver qué falta por verificar.",
-    "currentProducts": "Productos con un resultado actual",
+    "currentProducts": "Productos comprobados",
     "initialAudit": "Verificación inicial del catálogo",
     "lastCheck": "Última verificación exitosa del catálogo",
     "monitoring": {
       "delayed": "Verificación atrasada",
-      "enabled": "Ejecutándose automáticamente",
+      "enabled": "Activado · esperando la próxima comprobación",
       "failed": "La última verificación falló",
       "paused": "En pausa",
       "preview": "Vista previa de desarrollo",
@@ -1471,7 +1471,7 @@
       "unknown": "No hay registro de verificaciones automáticas completadas. Si actualizar este estado no ayuda, contacta con soporte.",
       "unverified": "Actualiza para verificar tu plan de Shopify. Si el estado persiste, contacta con soporte."
     },
-    "monitoringRun": "Buscar alertas nuevas o actualizadas de Safety Gate",
+    "monitoringRun": "Monitorización de Safety Gate",
     "noActionHelp": "Tu catálogo actual está cubierto y no hay posibles coincidencias esperando tu revisión.",
     "noCompletedCheck": "No hay registro de verificaciones de catálogo completadas",
     "purpose": "ZeroRecall verifica tu catálogo de Shopify con las alertas de <portalLink>Safety Gate</portalLink> de la UE y te muestra qué posibles coincidencias necesitan revisión.",
@@ -1479,7 +1479,7 @@
     "reviewHelp": "Compara tu producto con la alerta oficial y luego registra tu decisión.",
     "reviewNext": "Revisar siguiente coincidencia",
     "activityQuiet": "En estas comprobaciones no hubo registros nuevos ni actualizados de Safety Gate que comparar.",
-    "activityRecords": "Registros de Safety Gate considerados en estas comprobaciones",
+    "activityRecords": "Registros de Safety Gate analizados",
     "activityRuns": "Comprobaciones completadas",
     "activityTitle": "Monitorización en los últimos 30 días",
     "auditBackground": "Puedes cerrar esta página. La comprobación continúa en segundo plano. Vuelve a ZeroRecall para ver los resultados cuando termine.",

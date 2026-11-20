@@ -15,14 +15,14 @@ vi.mock("../app/services/billing.server", () => ({
 vi.mock("../app/firestore.server", () => ({ firestore: {} }));
 vi.mock("../app/services/monitoring-runs.server", () => ({ getRecentMonitoringRuns: vi.fn() }));
 import { action } from "../app/routes/app.settings";
-function request(email: string) {
-  return new Request("https://example.com/app/settings", {
+function request(email: string, notificationLanguage = "sk") {
+  return new Request("https://example.com/app/settings?locale=de-DE", {
     method: "POST",
     body: new URLSearchParams({
       notificationEmail: email,
       immediateAlertEmails: "true",
       weeklySummaryEmails: "true",
-      notificationLanguage: "sk",
+      notificationLanguage,
       similarityThreshold: "70",
       autoDraftHighRisk: "false",
       excludeVendors: "Example",
@@ -54,6 +54,7 @@ describe("settings form validation", () => {
           immediateAlertEmails: true,
           weeklySummaryEmails: true,
           notificationLanguage: "sk",
+          notificationLanguageSource: "custom",
           excludeVendors: "Example",
         }),
       }),
@@ -61,5 +62,11 @@ describe("settings form validation", () => {
     expect((result as Response).headers.get("Location")).toBe(
       "/app/settings?saved=1",
     );
+  });
+  it("uses Shopify locale when notifications follow the application language", async () => {
+    await action({ request: request("owner@example.com", "app") } as never);
+    expect(upsert).toHaveBeenCalledWith(expect.objectContaining({
+      update: expect.objectContaining({ notificationLanguage: "de", notificationLanguageSource: "app" }),
+    }));
   });
 });

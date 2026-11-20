@@ -6,6 +6,7 @@ import {
   ScrollRestoration,
   isRouteErrorResponse,
   useLoaderData,
+  type LoaderFunctionArgs,
   useRouteError,
 } from "react-router";
 import { useEffect } from "react";
@@ -20,12 +21,12 @@ import themeStyles from "./styles/theme.css?url";
 export const links = () => [];
 
 
-export const loader = async () => {
-  return { apiKey: process.env.SHOPIFY_API_KEY || "" };
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  return { apiKey: process.env.SHOPIFY_API_KEY || "", shopifyLocale: new URL(request.url).searchParams.get("locale") || undefined };
 };
 
 export default function App() {
-  const { apiKey } = useLoaderData<typeof loader>();
+  const { apiKey, shopifyLocale } = useLoaderData<typeof loader>();
 
   // Sync document language so Polaris web components render localized copy.
   useEffect(() => {
@@ -34,7 +35,7 @@ export default function App() {
       document.documentElement.setAttribute("lang", lang);
     };
 
-    const savedLanguage = preferredInterfaceLanguage();
+    const savedLanguage = preferredInterfaceLanguage(shopifyLocale);
 
     if (
       savedLanguage &&
@@ -49,7 +50,7 @@ export default function App() {
     return () => {
       i18n.off("languageChanged", syncLang);
     };
-  }, []);
+  }, [shopifyLocale]);
 
   return (
     <html lang="en" suppressHydrationWarning>

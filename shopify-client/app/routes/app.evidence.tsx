@@ -113,8 +113,8 @@ export default function EvidencePage() {
   }
 
   return (
-    <s-page size="large" className="page-shell">
-      <s-heading slot="title">{t("workspace.history")}</s-heading>
+    <s-page inlineSize="large" className="page-shell" heading={t("workspace.history")}>
+
       <s-button
         slot="primary-action"
         variant="primary"
@@ -359,10 +359,8 @@ export function ErrorBoundary() {
       ? error.message
       : t("errors.unknown");
   return (
-    <s-page size="large">
-      <s-heading slot="title" size="large">
-        {t("evidence.title")}
-      </s-heading>
+    <s-page inlineSize="large" heading={t("evidence.title")}>
+
       <s-banner tone="critical" heading={t("errors.pageLoadFailed")}>
         <s-text>{message}</s-text>
         <s-button slot="secondary-actions" href="/app/evidence">

@@ -6,12 +6,15 @@ import {
   useLoaderData,
   useFetcher,
   useNavigation,
+  useBlocker,
+  useLocation,
   useRevalidator,
   Form,
   useRouteError,
   isRouteErrorResponse,
 } from "react-router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { SaveBar, useAppBridge } from "@shopify/app-bridge-react";
 import { useTranslation } from "react-i18next";
 import { authenticate } from "../shopify.server";
 import db from "../merchant-db.server";
@@ -22,16 +25,16 @@ import { getBillingStatus } from "../services/billing.server";
 import { cancelSubscription } from "../services/cancel-subscription.server";
 import { SHOPIFY_BILLING_MODE } from "../shopify.server";
 import { EU_LANGUAGES } from "../locales/languages";
+import { normalizeInterfaceLanguage, selectInterfaceLanguage } from "../services/interface-language";
+import { notificationLanguageSelection } from "../services/notification-language";
 import { firestore } from "../firestore.server";
 import { getRecentMonitoringRuns } from "../services/monitoring-runs.server";
 import { toIsoString } from "../services/monitoring-runs";
 import { monitoringState } from "../services/monitoring-state";
+import { plannedMonitoringAt } from "../services/monitoring-schedule";
 import { displayShopifyPlan } from "../services/partner-entitlement";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const SUPPORTED_LANGUAGES = new Set(
-  EU_LANGUAGES.map((language) => language.code),
-);
 
 async function getShopifyContactEmail(admin: any): Promise<string | null> {
   const response = await admin.graphql(`#graphql
@@ -69,9 +72,9 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
       monitor.monitoringEntitled === true &&
       entitlementExpiry && Date.parse(entitlementExpiry) > observedAt
     ) ? "eligible" : "paused";
-  const automaticMonitoring = monitoringState(
-    billingStatus, latestRunStatus, observedAt, lastMonitoringAt, toIsoString(monitor?.initialScanCompletedAt),
-  );
+  const initialAuditAt = toIsoString(monitor?.initialScanCompletedAt);
+  const automaticMonitoring = monitoringState(billingStatus, latestRunStatus, observedAt, lastMonitoringAt, initialAuditAt);
+  const nextCheck = plannedMonitoringAt(Boolean(toIsoString(monitor?.monitoringBaselineAt)), automaticMonitoring, observedAt);
 
   let settings = await db.safetySetting.findUnique({
     where: { shop: session.shop },
@@ -117,9 +120,6 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
               notificationEmailSource: "shopify" as const,
             }
           : {}),
-        ...(!settings?.notificationLanguage
-          ? { notificationLanguage: "en" }
-          : {}),
       },
       create: {
         shop: session.shop,
@@ -130,7 +130,6 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
         weeklySummaryEmails: true,
         notificationEmail: shopifyContactEmail,
         notificationEmailSource: "shopify",
-        notificationLanguage: "en",
         excludeVendors: null,
         excludeTypes: null,
       },
@@ -171,7 +170,6 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
       weeklySummaryEmails: true,
       notificationEmail: shopifyContactEmail,
       notificationEmailSource: "shopify",
-      notificationLanguage: "en",
       excludeVendors: null,
       excludeTypes: null,
     },
@@ -179,6 +177,8 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
     supportsCancellation: SHOPIFY_BILLING_MODE === "app-pricing",
     lastMonitoringAt,
     automaticMonitoring,
+    initialAuditCompleted: Boolean(initialAuditAt),
+    nextCheck,
     emailDelivery,
     lastVerifiedPlan: displayShopifyPlan(monitor?.planHandle),
   } as const);
@@ -215,12 +215,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const notificationEmail = String(formData.get("notificationEmail") || "")
     .trim()
     .toLowerCase();
-  const requestedLanguage = String(
-    formData.get("notificationLanguage") || "en",
+  const requestedLanguage = normalizeInterfaceLanguage(String(formData.get("notificationLanguage") || ""));
+  const appLanguage = selectInterfaceLanguage(
+    String(formData.get("appLanguage") || ""),
+    new URL(request.url).searchParams.get("locale") || undefined,
   );
-  const notificationLanguage = SUPPORTED_LANGUAGES.has(requestedLanguage as any)
-    ? requestedLanguage
-    : "en";
+  const notificationLanguage = requestedLanguage ?? appLanguage;
+  const notificationLanguageSource = requestedLanguage ? "custom" as const : "app" as const;
   if (emailNotifications && !EMAIL_PATTERN.test(notificationEmail)) {
     return json({ error: "invalid_notification_email" }, { status: 400 });
   }
@@ -238,6 +239,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       notificationEmail: notificationEmail || null,
       notificationEmailSource: "custom",
       notificationLanguage,
+      notificationLanguageSource,
       excludeVendors,
       excludeTypes,
     },
@@ -251,6 +253,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       notificationEmail: notificationEmail || null,
       notificationEmailSource: "custom",
       notificationLanguage,
+      notificationLanguageSource,
       excludeVendors,
       excludeTypes,
     },
@@ -270,10 +273,8 @@ export function ErrorBoundary() {
       : t("common.unknown");
 
   return (
-    <s-page suppressHydrationWarning>
-      <s-heading slot="title" size="large" suppressHydrationWarning>
-        {t("settings.title")}
-      </s-heading>
+    <s-page suppressHydrationWarning heading={t("settings.title")}>
+
       <div className="admin-stack" style={{ marginTop: "var(--s-space-400)" }}>
         <s-banner tone="critical" heading={t("errors.pageLoadFailed")}>
           <s-text>{title}</s-text>
@@ -292,11 +293,15 @@ export function ErrorBoundary() {
 }
 
 export default function Settings() {
-  const { settings, billingStatus, catalog, saved, lastMonitoringAt, automaticMonitoring, emailDelivery, lastVerifiedPlan, supportsCancellation } =
+  const { settings, billingStatus, catalog, saved, lastMonitoringAt, automaticMonitoring, initialAuditCompleted, nextCheck, emailDelivery, lastVerifiedPlan, supportsCancellation } =
     useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   const cancellation = useFetcher<typeof action>();
   const navigation = useNavigation();
+  const location = useLocation();
+  const shopify = useAppBridge();
+  const formRef = useRef<HTMLFormElement>(null);
+  const savingRef = useRef(false);
   const revalidator = useRevalidator();
   const { t, i18n } = useTranslation();
   const initial = {
@@ -306,17 +311,53 @@ export default function Settings() {
       settings.immediateAlertEmails ?? settings.emailNotifications ?? true,
     weekly: settings.weeklySummaryEmails ?? settings.emailNotifications ?? true,
     email: settings.notificationEmail || "",
-    language: settings.notificationLanguage || "en",
+    language: notificationLanguageSelection(settings),
     vendors: settings.excludeVendors || "",
     types: settings.excludeTypes || "",
   };
+  const appLanguage = selectInterfaceLanguage(i18n.resolvedLanguage || i18n.language);
   const savedValues = JSON.stringify(initial);
   const [values, setValues] = useState(initial);
   useEffect(() => {
+    // A rejected POST also changes the location key. Keep its draft so the
+    // merchant can correct the field instead of losing their other edits.
+    if (actionData && "error" in actionData) return;
     setValues(JSON.parse(savedValues) as typeof initial);
-  }, [savedValues]);
+  }, [savedValues, location.key, actionData]);
   const dirty = JSON.stringify(values) !== savedValues;
   const busy = navigation.state !== "idle";
+  const blocker = useBlocker(({ currentLocation, nextLocation }) =>
+    dirty && !savingRef.current && (
+      currentLocation.pathname !== nextLocation.pathname ||
+      currentLocation.search !== nextLocation.search ||
+      currentLocation.hash !== nextLocation.hash
+    ),
+  );
+  useEffect(() => {
+    if (!busy) savingRef.current = false;
+  }, [busy]);
+  useEffect(() => {
+    if (blocker.state !== "blocked") return;
+    let current = true;
+    // React Router navigation stays in the iframe, so ask Shopify's native
+    // save bar before continuing. Shopify handles its own Admin navigation.
+    void shopify.saveBar.leaveConfirmation().then(() => {
+      if (current) blocker.proceed();
+    }).catch(() => {
+      if (current) blocker.reset();
+    });
+    return () => { current = false; };
+  }, [blocker, shopify]);
+  useEffect(() => {
+    if (!dirty) return;
+    const preventUnsavedReload = (event: BeforeUnloadEvent) => {
+      if (savingRef.current) return;
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", preventUnsavedReload);
+    return () => window.removeEventListener("beforeunload", preventUnsavedReload);
+  }, [dirty]);
   const change = <K extends keyof typeof values>(
     key: K,
     value: (typeof values)[K],
@@ -351,8 +392,24 @@ export default function Settings() {
   const cancellationScheduled = planVerified && billingStatus.hasActivePayment && billingStatus.cancelAtEndOfCycle && planEnd;
 
   return (
-    <s-page size="large" className="page-shell">
-      <s-heading slot="title">{t("settings.title")}</s-heading>
+    <s-page inlineSize="large" className="page-shell" heading={t("settings.title")}>
+      <SaveBar id="settings-save-bar" open={dirty} discardConfirmation>
+        <button
+          type="button"
+          {...{ variant: "primary", loading: busy ? "" : undefined }}
+          disabled={busy}
+          onClick={() => formRef.current?.requestSubmit()}
+        >
+          {t("workspace.saveChanges")}
+        </button>
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => setValues(JSON.parse(savedValues) as typeof initial)}
+        >
+          {t("settingsUx.discard")}
+        </button>
+      </SaveBar>
       <div className="admin-stack">
         <AdminCard className="admin-card">
           <div className="settings-overview">
@@ -395,7 +452,12 @@ export default function Settings() {
                 </>
               )}
             </section>
-            <MonitoringStatus state={automaticMonitoring} lastSuccess={lastMonitoringAt} />
+            <MonitoringStatus
+              state={automaticMonitoring}
+              lastSuccess={lastMonitoringAt}
+              initialAuditCompleted={initialAuditCompleted}
+              nextCheck={nextCheck}
+            />
             <section className="settings-overview__panel">
               <h2>{t("settingsAdmin.notifications.enabledTitle")}</h2>
               <dl className="settings-overview__emails">
@@ -438,7 +500,12 @@ export default function Settings() {
             heading={t("settingsAdmin.notifications.invalidEmail")}
           />
         )}
-        <Form method="post" className="admin-stack">
+        <Form
+          ref={formRef}
+          method="post"
+          className="admin-stack"
+          onSubmit={() => { savingRef.current = true; }}
+        >
           <input
             type="hidden"
             name="similarityThreshold"
@@ -465,16 +532,9 @@ export default function Settings() {
             name="notificationLanguage"
             value={values.language}
           />
+          <input type="hidden" name="appLanguage" value={appLanguage} />
           <input type="hidden" name="excludeVendors" value={values.vendors} />
           <input type="hidden" name="excludeTypes" value={values.types} />
-          {dirty && (
-            <div className="settings-save-bar settings-save-bar--dirty">
-              <span role="status">{t("workspace.unsaved")}</span>
-              <s-button type="submit" variant="primary" disabled={busy} loading={busy}>
-                {t("workspace.saveChanges")}
-              </s-button>
-            </div>
-          )}
           <AdminCard className="admin-card">
             <details className="advanced-settings-disclosure" open={actionData && "error" in actionData ? true : undefined}>
               <summary>{t("settingsOverview.editEmail")}</summary>
@@ -515,18 +575,21 @@ export default function Settings() {
                     change("language", event.currentTarget.value)
                   }
                 >
+                  <s-option value="app">
+                    {t("workspace.appLanguage")} ({EU_LANGUAGES.find(language => language.code === appLanguage)?.label})
+                  </s-option>
                   {EU_LANGUAGES.map((language) => (
                     <s-option key={language.code} value={language.code}>
                       {language.label}
                     </s-option>
                   ))}
                 </s-select>
-                {i18n.language.split(/[-_]/)[0] !== values.language && (
+                {values.language !== "app" && appLanguage !== values.language && (
                   <p className="admin-helper" role="status">
                     {t("analysis.reviewLayout.languageDiffNote", {
                       appLang:
                         EU_LANGUAGES.find(
-                          (l) => l.code === i18n.language.split(/[-_]/)[0],
+                          (l) => l.code === appLanguage,
                         )?.label || i18n.language,
                       emailLang:
                         EU_LANGUAGES.find((l) => l.code === values.language)

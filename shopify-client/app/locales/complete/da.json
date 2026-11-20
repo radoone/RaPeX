@@ -1448,12 +1448,12 @@
   "catalogOverview": {
     "coverage": "{{checked}} af {{total}}",
     "coverageHelp": "Nogle produkter er nye eller er blevet ændret siden deres sidste kontrol. Åbn listen for at se, hvad der stadig skal kontrolleres.",
-    "currentProducts": "Produkter med et aktuelt resultat",
+    "currentProducts": "Kontrollerede produkter",
     "initialAudit": "Indledende katalogkontrol",
     "lastCheck": "Sidste vellykkede katalogkontrol",
     "monitoring": {
       "delayed": "Kontrol forsinket",
-      "enabled": "Kører automatisk",
+      "enabled": "Aktiveret · afventer næste kontrol",
       "failed": "Sidste kontrol mislykkedes",
       "paused": "Sat på pause",
       "preview": "Udviklingsforhåndsvisning",
@@ -1471,7 +1471,7 @@
       "unknown": "Ingen gennemført automatisk kontrol er registreret. Hvis opdatering af denne status ikke hjælper, kontakt support.",
       "unverified": "Opdater for at verificere din Shopify-plan. Hvis status fortsætter, kontakt support."
     },
-    "monitoringRun": "Søg efter nye eller opdaterede Safety Gate-advarsler",
+    "monitoringRun": "Overvågning af Safety Gate",
     "noActionHelp": "Dit nuværende katalog er dækket, og ingen mulige match venter på din gennemgang.",
     "noCompletedCheck": "Ingen gennemført katalogkontrol registreret",
     "purpose": "ZeroRecall kontrollerer dit Shopify-katalog mod <portalLink>EU Safety Gate</portalLink>-advarsler og viser dig, hvilke mulige match der skal gennemgås.",
@@ -1479,7 +1479,7 @@
     "reviewHelp": "Sammenlign dit produkt med den officielle advarsel, og registrer derefter din beslutning.",
     "reviewNext": "Gennemgå næste match",
     "activityQuiet": "Der var ingen nye eller opdaterede Safety Gate-poster at sammenligne i disse kontroller.",
-    "activityRecords": "Safety Gate-poster gennemgået i disse kontroller",
+    "activityRecords": "Behandlede Safety Gate-poster",
     "activityRuns": "Fuldførte kontroller",
     "activityTitle": "Overvågning de seneste 30 dage",
     "auditBackground": "Du kan lukke siden. Kontrollen fortsætter i baggrunden. Vend tilbage til ZeroRecall for at se resultaterne, når den er færdig.",

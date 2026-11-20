@@ -1,0 +1,31 @@
+/** New review choices retain the stored outcome values and historical labels. */
+const copy = {
+  en: ["Review selected findings", "Evidence does not confirm a match", "Confirmed different product", "Shared review note (optional; applies to every selected finding)", "Product photos: {{title}}", "Assess the match"],
+  bg: ["Преглед на избраните констатации", "Доказателствата не потвърждават съвпадение", "Потвърдено различен продукт", "Обща бележка (по избор; за всички избрани констатации)", "Снимки на продукта: {{title}}", "Оценка на съвпадението"],
+  cs: ["Posoudit vybrané nálezy", "Podklady nepotvrzují shodu", "Potvrzen jiný výrobek", "Společná poznámka (nepovinná; pro všechny vybrané nálezy)", "Fotografie výrobku: {{title}}", "Posoudit shodu"],
+  da: ["Gennemgå valgte fund", "Dokumentationen bekræfter ikke et match", "Bekræftet andet produkt", "Fælles bemærkning (valgfri; gælder alle valgte fund)", "Produktbilleder: {{title}}", "Vurder matchet"],
+  de: ["Ausgewählte Funde prüfen", "Die Belege bestätigen keine Übereinstimmung", "Anderes Produkt bestätigt", "Gemeinsame Prüfnotiz (optional; gilt für alle ausgewählten Funde)", "Produktfotos: {{title}}", "Übereinstimmung bewerten"],
+  el: ["Εξέταση επιλεγμένων ευρημάτων", "Τα στοιχεία δεν επιβεβαιώνουν αντιστοιχία", "Επιβεβαιωμένα διαφορετικό προϊόν", "Κοινή σημείωση ελέγχου (προαιρετική· για όλα τα επιλεγμένα ευρήματα)", "Φωτογραφίες προϊόντος: {{title}}", "Αξιολόγηση αντιστοιχίας"],
+  es: ["Revisar hallazgos seleccionados", "Las pruebas no confirman una coincidencia", "Producto diferente confirmado", "Nota de revisión compartida (opcional; se aplica a todos los hallazgos seleccionados)", "Fotos del producto: {{title}}", "Evaluar la coincidencia"],
+  et: ["Vaata valitud leide üle", "Tõendid ei kinnita vastet", "Kinnitatud erinev toode", "Ühine ülevaatuse märkus (valikuline; kõigile valitud leidudele)", "Toote fotod: {{title}}", "Hinda vastet"],
+  fi: ["Tarkista valitut havainnot", "Näyttö ei vahvista vastaavuutta", "Vahvistettu eri tuotteeksi", "Yhteinen tarkistusmerkintä (valinnainen; koskee kaikkia valittuja havaintoja)", "Tuotekuvat: {{title}}", "Arvioi vastaavuus"],
+  fr: ["Examiner les constats sélectionnés", "Les éléments ne confirment pas la correspondance", "Produit différent confirmé", "Note commune de vérification (facultative ; pour tous les constats sélectionnés)", "Photos du produit : {{title}}", "Évaluer la correspondance"],
+  ga: ["Athbhreithnigh na torthaí roghnaithe", "Ní dheimhníonn an fhianaise meaitseáil", "Deimhnithe gur táirge eile é", "Nóta comhroinnte athbhreithnithe (roghnach; do gach toradh roghnaithe)", "Grianghraif den táirge: {{title}}", "Déan measúnú ar an meaitseáil"],
+  hr: ["Pregledaj odabrane nalaze", "Dokazi ne potvrđuju podudaranje", "Potvrđeno da je proizvod različit", "Zajednička bilješka pregleda (neobavezno; za sve odabrane nalaze)", "Fotografije proizvoda: {{title}}", "Procijeni podudaranje"],
+  hu: ["Kijelölt találatok áttekintése", "A bizonyítékok nem igazolják az egyezést", "Igazoltan eltérő termék", "Közös felülvizsgálati megjegyzés (nem kötelező; minden kijelölt találathoz)", "Termékfotók: {{title}}", "Egyezés értékelése"],
+  it: ["Esamina i riscontri selezionati", "Le prove non confermano la corrispondenza", "Prodotto diverso confermato", "Nota di verifica condivisa (facoltativa; per tutti i riscontri selezionati)", "Foto del prodotto: {{title}}", "Valuta la corrispondenza"],
+  lt: ["Peržiūrėti pasirinktus radinius", "Įrodymai nepatvirtina atitikties", "Patvirtinta, kad tai kitas gaminys", "Bendra peržiūros pastaba (neprivaloma; visiems pasirinktiems radiniams)", "Gaminio nuotraukos: {{title}}", "Įvertinti atitiktį"],
+  lv: ["Pārskatīt atlasītos konstatējumus", "Pierādījumi neapstiprina atbilstību", "Apstiprināts atšķirīgs produkts", "Kopīga pārskatīšanas piezīme (neobligāta; visiem atlasītajiem konstatējumiem)", "Produkta fotoattēli: {{title}}", "Novērtēt atbilstību"],
+  mt: ["Irrevedi s-sejbiet magħżula", "L-evidenza ma tikkonfermax tqabbil", "Prodott differenti kkonfermat", "Nota komuni tar-reviżjoni (mhux obbligatorja; għas-sejbiet magħżula kollha)", "Ritratti tal-prodott: {{title}}", "Ivvaluta t-tqabbil"],
+  nl: ["Geselecteerde bevindingen beoordelen", "Het bewijs bevestigt geen overeenkomst", "Ander product bevestigd", "Gedeelde beoordelingsnotitie (optioneel; voor alle geselecteerde bevindingen)", "Productfoto’s: {{title}}", "Overeenkomst beoordelen"],
+  pl: ["Sprawdź wybrane ustalenia", "Dowody nie potwierdzają zgodności", "Potwierdzono inny produkt", "Wspólna notatka z weryfikacji (opcjonalna; dla wszystkich wybranych ustaleń)", "Zdjęcia produktu: {{title}}", "Oceń zgodność"],
+  pt: ["Analisar os resultados selecionados", "Os elementos não confirmam uma correspondência", "Produto diferente confirmado", "Nota de análise partilhada (opcional; para todos os resultados selecionados)", "Fotografias do produto: {{title}}", "Avaliar a correspondência"],
+  ro: ["Examinează constatările selectate", "Dovezile nu confirmă o potrivire", "Produs diferit confirmat", "Notă comună de verificare (opțională; pentru toate constatările selectate)", "Fotografii ale produsului: {{title}}", "Evaluează potrivirea"],
+  sk: ["Preveriť vybrané nálezy", "Podklady nepotvrdzujú zhodu", "Potvrdený odlišný produkt", "Spoločná poznámka (voliteľná; platí pre všetky vybrané nálezy)", "Fotografie produktu: {{title}}", "Posúdiť zhodu"],
+  sl: ["Preglej izbrane ugotovitve", "Dokazi ne potrjujejo ujemanja", "Potrjen drugačen izdelek", "Skupna opomba pregleda (neobvezna; za vse izbrane ugotovitve)", "Fotografije izdelka: {{title}}", "Oceni ujemanje"],
+  sv: ["Granska valda fynd", "Underlaget bekräftar ingen matchning", "Bekräftat annan produkt", "Gemensam granskningsanteckning (valfri; gäller alla valda fynd)", "Produktbilder: {{title}}", "Bedöm matchningen"],
+} as const;
+type ReviewUxCopy = { bulkTitle: string; insufficientEvidence: string; confirmedDifferent: string; sharedNote: string; imageDialog: string; groupEvidence: string };
+export const reviewUxCopy = Object.fromEntries(Object.entries(copy).map(([locale, values]) => [locale, {
+  bulkTitle: values[0], insufficientEvidence: values[1], confirmedDifferent: values[2], sharedNote: values[3], imageDialog: values[4], groupEvidence: values[5],
+}])) as Record<keyof typeof copy, ReviewUxCopy>;

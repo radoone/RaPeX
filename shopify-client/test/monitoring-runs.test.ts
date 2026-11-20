@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { summarizeMonitoringActivity, summarizeMonitoringRun, toIsoString } from "../app/services/monitoring-runs";
+import { recentlyCheckedProductCount, summarizeMonitoringActivity, summarizeMonitoringRun, toIsoString } from "../app/services/monitoring-runs";
 
 describe("summarizeMonitoringRun", () => {
   it("serializes the dashboard's Firestore run timestamp and rejects invalid dates", () => {
@@ -63,4 +63,14 @@ describe("summarizeMonitoringActivity", () => {
     expect(summarizeMonitoringActivity([], since)).toBeNull();
     expect(summarizeMonitoringActivity(Array(101).fill(row), since)).toBeNull();
   });
+});
+
+it("counts distinct products with recorded checks after the baseline and within 30 days", () => {
+  expect(recentlyCheckedProductCount([
+    { productId: "1", checkedAt: "2026-11-20T10:00:00Z" },
+    { productId: "gid://shopify/Product/1", checkedAt: "2026-11-19T10:00:00Z" },
+    { productId: "2", checkedAt: "2026-11-10T10:00:00Z" },
+    { productId: "3", checkedAt: "2026-11-01T10:00:00Z" },
+    { productId: "4", checkedAt: "2026-11-21T10:00:00Z" },
+  ], Date.parse("2026-11-20T12:00:00Z"), "2026-11-01T10:00:00Z")).toBe(2);
 });

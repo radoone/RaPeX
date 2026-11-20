@@ -2,6 +2,8 @@ import { useRef, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LocalDateTime, useHydrated } from "./LocalDateTime";
 import { localizeRisk } from "./AlertBadge";
+import { prepareBulkReview } from "../services/bulk-review";
+import { isWaitingForSupplier } from "../services/review-evidence";
 
 interface Alert {
   id: string;
@@ -31,17 +33,16 @@ export type ResolutionType =
 
 interface AlertTableProps {
   alerts: Alert[];
-  onViewDetails: (alert: Alert) => void;
-  onDismiss?: (alertId: string, resolutionType?: ResolutionType) => void;
-  onResolve?: (alertId: string, resolutionType?: ResolutionType) => void;
-  onReactivate?: (alertId: string) => void;
   onBulkAction?: (
     alertIds: string[],
     action: "resolve" | "dismiss",
     resolutionType?: ResolutionType,
+    notes?: string,
   ) => void;
   isLoading?: boolean;
-  showProductLink?: boolean;
+  /** Increment only after a bulk save succeeds, never when submitting. */
+  bulkSaveVersion?: number;
+  bulkSaveFailed?: boolean;
   modalIdPrefix?: string;
   // Filter props
   searchValue?: string;
@@ -53,17 +54,25 @@ interface AlertTableProps {
   onSortChange?: (sortBy: string, sortOrder: string) => void;
   stats?: {
     active: number;
+    waiting: number;
     resolved: number;
     dismissed: number;
     total: number;
+  };
+  pagination: {
+    hasPrevious: boolean;
+    hasNext: boolean;
+    onPrevious: () => void;
+    onNext: () => void;
   };
 }
 
 export function AlertTable({
   alerts,
-  onViewDetails,
   onBulkAction,
-  showProductLink = false,
+  isLoading = false,
+  bulkSaveVersion = 0,
+  bulkSaveFailed = false,
   modalIdPrefix = "alert-modal",
   searchValue = "",
   onSearchChange,
@@ -73,9 +82,25 @@ export function AlertTable({
   sortOrder = "desc",
   onSortChange,
   stats,
+  pagination,
 }: AlertTableProps) {
   const { t } = useTranslation();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [bulkOutcome, setBulkOutcome] = useState<ResolutionType | "">("");
+  const [bulkNote, setBulkNote] = useState("");
+  const submittedBulk = useRef(false);
+  const previousBulkSaveVersion = useRef(bulkSaveVersion);
+  const bulkModalId = `${modalIdPrefix}-bulk-confirmation`;
+  useEffect(() => {
+    if (previousBulkSaveVersion.current === bulkSaveVersion) return;
+    previousBulkSaveVersion.current = bulkSaveVersion;
+    if (!submittedBulk.current) return;
+    submittedBulk.current = false;
+    setSelectedIds([]);
+    setBulkOutcome("");
+    setBulkNote("");
+    (document.getElementById(bulkModalId) as (HTMLElement & { hideOverlay?: () => void }) | null)?.hideOverlay?.();
+  }, [bulkSaveVersion, bulkModalId]);
   // Bulk decisions must never include rows hidden by a changed filter.
   const visibleSelectedIds = selectedIds.filter((id) =>
     alerts.some((alert) => alert.id === id),
@@ -98,18 +123,12 @@ export function AlertTable({
     );
   };
 
-  const handleBulkResolve = (resolutionType?: ResolutionType) => {
-    if (onBulkAction && visibleSelectedIds.length > 0) {
-      onBulkAction(visibleSelectedIds, "resolve", resolutionType);
-      setSelectedIds([]);
-    }
-  };
-
-  const handleBulkDismiss = (resolutionType?: ResolutionType) => {
-    if (onBulkAction && visibleSelectedIds.length > 0) {
-      onBulkAction(visibleSelectedIds, "dismiss", resolutionType);
-      setSelectedIds([]);
-    }
+  const confirmBulkDecision = () => {
+    if (!onBulkAction || !bulkOutcome || !visibleSelectedIds.length || isLoading) return;
+    const decision = prepareBulkReview(alerts, selectedIds, bulkOutcome, bulkNote);
+    if (!decision) return;
+    submittedBulk.current = true;
+    onBulkAction(decision.ids, decision.action, decision.outcome, decision.notes);
   };
 
   return (
@@ -117,313 +136,212 @@ export function AlertTable({
       padding="none"
       accessibilityLabel={t("alerts.table.accessibilityLabel")}
     >
-      {/* Filters above table */}
-      <s-stack gap="small" style={{ paddingBottom: "var(--s-space-base)" }}>
-        {/* Tabs */}
-        <s-stack direction="inline" gap="none">
-          <s-button
-            variant={activeTab === "active" ? "secondary" : "tertiary"}
-            size="small"
-            onClick={() => onStatusChange?.("active")}
-          >
-            {t("reviewOverview.open")}{" "}
-            {stats?.active ? `(${stats.active})` : ""}
-          </s-button>
-          <s-button
-            variant={
-              activeTab === "waiting_for_supplier" ? "secondary" : "tertiary"
-            }
-            size="small"
-            onClick={() => onStatusChange?.("waiting_for_supplier")}
-          >
-            {t("workspace.waiting")}
-          </s-button>
-          <s-button
-            variant={activeTab === "all" ? "secondary" : "tertiary"}
-            size="small"
-            onClick={() => onStatusChange?.("")}
-          >
-            {t("alerts.table.tabs.all")} {stats ? `(${stats.total})` : ""}
-          </s-button>
-          <s-button
-            variant={activeTab === "resolved" ? "secondary" : "tertiary"}
-            size="small"
-            onClick={() => onStatusChange?.("resolved")}
-          >
-            {t("alerts.table.tabs.resolved")}{" "}
-            {stats?.resolved ? `(${stats.resolved})` : ""}
-          </s-button>
-          <s-button
-            variant={activeTab === "dismissed" ? "secondary" : "tertiary"}
-            size="small"
-            onClick={() => onStatusChange?.("dismissed")}
-          >
-            {t("alerts.table.tabs.dismissed")}{" "}
-            {stats?.dismissed ? `(${stats.dismissed})` : ""}
-          </s-button>
-        </s-stack>
+      <s-table
+        accessibilityLabel={t("alerts.table.accessibilityLabel")}
+        paginate={pagination.hasPrevious || pagination.hasNext}
+        hasPreviousPage={pagination.hasPrevious}
+        hasNextPage={pagination.hasNext}
+        onpreviouspage={pagination.onPrevious}
+        onnextpage={pagination.onNext}
+      >
+        <s-stack slot="filters" gap="small">
+          <div className="review-status-filters" role="group" aria-label={t("workspace.currentFindingStatus")}>
+            {[
+              ["active", "status.needsReview", stats?.active],
+              ["waiting_for_supplier", "workspace.waiting", stats?.waiting],
+              ["all", "alerts.table.tabs.all", stats?.total],
+              ["resolved", "alerts.table.tabs.resolved", stats?.resolved],
+              ["dismissed", "alerts.table.tabs.dismissed", stats?.dismissed],
+            ].map(([value, label, count]) => (
+              <button
+                key={value}
+                type="button"
+                className="review-status-filter"
+                aria-pressed={activeTab === value}
+                onClick={() => onStatusChange?.(value === "all" ? "" : String(value))}
+              >
+                {t(String(label))}{typeof count === "number" ? ` (${count})` : ""}
+              </button>
+            ))}
+          </div>
 
-        {/* Search and sort row */}
-        <s-grid gap="small-200" gridTemplateColumns="1fr auto">
-          <s-text-field
-            label={t("alerts.table.searchLabel")}
-            labelAccessibilityVisibility="exclusive"
-            icon="search"
-            placeholder={t("alerts.table.searchPlaceholder")}
-            value={searchValue}
-            onInput={(e: any) => onSearchChange?.(e.currentTarget.value || "")}
-          />
-          <s-button
-            variant="secondary"
-            accessibilityLabel={t("alerts.table.sort")}
-            commandFor="sort-actions-popover"
-          >
-            {t("alerts.table.sort")}
-          </s-button>
-          <s-popover id="sort-actions-popover">
-            <s-stack gap="none">
-              <s-box padding="small">
-                <s-choice-list
-                  label={t("alerts.table.sortBy")}
-                  labelAccessibilityVisibility="visible"
-                  name="sortBy"
-                  onChange={(event: any) =>
-                    onSortChange?.(
-                      event.currentTarget.values?.[0] || "priority",
-                      sortOrder,
-                    )
-                  }
-                >
-                  <s-choice value="priority" selected={sortBy === "priority"}>
-                    {t("workspace.priority")}
-                  </s-choice>
-                  <s-choice value="created" selected={sortBy === "created"}>
-                    {t("alerts.table.sortOptions.created")}
-                  </s-choice>
-                  <s-choice value="risk" selected={sortBy === "risk"}>
-                    {t("alerts.table.sortOptions.risk")}
-                  </s-choice>
-                  <s-choice value="name" selected={sortBy === "name"}>
-                    {t("alerts.table.sortOptions.name")}
-                  </s-choice>
-                </s-choice-list>
-              </s-box>
-              {sortBy !== "priority" && <s-divider />}
-              {sortBy !== "priority" && (
+          {/* Search and sort row */}
+          <s-grid gap="small-200" gridTemplateColumns="1fr auto">
+            <s-text-field
+              label={t("alerts.table.searchLabel")}
+              labelAccessibilityVisibility="exclusive"
+              icon="search"
+              placeholder={t("alerts.table.searchPlaceholder")}
+              value={searchValue}
+              onInput={(e: any) => onSearchChange?.(e.currentTarget.value || "")}
+            />
+            <s-button
+              variant="secondary"
+              accessibilityLabel={t("alerts.table.sort")}
+              commandFor="sort-actions-popover"
+            >
+              {t("alerts.table.sort")}
+            </s-button>
+            <s-popover id="sort-actions-popover">
+              <s-stack gap="none">
                 <s-box padding="small">
                   <s-choice-list
-                    label={t("alerts.table.order")}
+                    label={t("alerts.table.sortBy")}
                     labelAccessibilityVisibility="visible"
-                    name="sortOrder"
+                    name="sortBy"
                     onChange={(event: any) =>
                       onSortChange?.(
-                        sortBy,
-                        event.currentTarget.values?.[0] || "desc",
+                        event.currentTarget.values?.[0] || "priority",
+                        sortOrder,
                       )
                     }
                   >
-                    <s-choice value="desc" selected={sortOrder === "desc"}>
-                      {t("alerts.table.orderOptions.desc")}
+                    <s-choice value="priority" selected={sortBy === "priority"}>
+                      {t("workspace.priority")}
                     </s-choice>
-                    <s-choice value="asc" selected={sortOrder === "asc"}>
-                      {t("alerts.table.orderOptions.asc")}
+                    <s-choice value="created" selected={sortBy === "created"}>
+                      {t("alerts.table.sortOptions.created")}
+                    </s-choice>
+                    <s-choice value="risk" selected={sortBy === "risk"}>
+                      {t("alerts.table.sortOptions.risk")}
+                    </s-choice>
+                    <s-choice value="name" selected={sortBy === "name"}>
+                      {t("alerts.table.sortOptions.name")}
                     </s-choice>
                   </s-choice-list>
                 </s-box>
-              )}
-            </s-stack>
-          </s-popover>
-        </s-grid>
-      </s-stack>
-
-      <div
-        className="review-table-scroll"
-        role="region"
-        aria-label={t("alerts.table.accessibilityLabel")}
-      >
-        <s-table accessibilityLabel={t("alerts.table.accessibilityLabel")}>
-          <s-table-header-row>
-            <s-table-header>
-              <s-checkbox
-                accessibilityLabel={t("alerts.table.selectAll")}
-                checked={
-                  visibleSelectedIds.length === alerts.length &&
-                  alerts.length > 0
-                }
-                indeterminate={
-                  visibleSelectedIds.length > 0 &&
-                  visibleSelectedIds.length < alerts.length
-                }
-                onChange={toggleSelectAll}
-              />
-            </s-table-header>
-            <s-table-header listSlot="primary">
-              {t("alerts.table.headers.product")}
-            </s-table-header>
-            <s-table-header listSlot="inline">
-              {t("alerts.table.headers.status")}
-            </s-table-header>
-            <s-table-header listSlot="labeled">
-              {t("workspace.sourceRisk")}
-            </s-table-header>
-            <s-table-header listSlot="labeled">
-              {t("alerts.table.headers.detected")}
-            </s-table-header>
-            <s-table-header>{t("alerts.table.headers.actions")}</s-table-header>
-          </s-table-header-row>
-          <s-table-body>
-            {alerts.length === 0 ? (
-              <s-table-row>
-                <s-table-cell colSpan={6}>
-                  <s-box padding="large">
-                    <s-stack gap="small" align="center">
-                      <s-text fontWeight="semibold">
-                        {activeTab === "active" && !searchValue
-                          ? t("alerts.table.emptyAllClearTitle")
-                          : t("alerts.table.emptyFilteredTitle")}
-                      </s-text>
-                      <s-text tone="subdued">
-                        {activeTab === "active" && !searchValue
-                          ? t("workspace.emptyHelp")
-                          : t("alerts.table.emptyFilteredBody")}
-                      </s-text>
-                      <s-stack
-                        direction="inline"
-                        gap="small"
-                        justifyContent="center"
-                      >
-                        <s-button
-                          variant="primary"
-                          href="/app/manual-check#product-catalogue"
-                        >
-                          {t("actions.checkOneProduct")}
-                        </s-button>
-                        <s-button variant="secondary" href="/app/evidence">
-                          {t("actions.viewEvidence")}
-                        </s-button>
-                      </s-stack>
-                    </s-stack>
+                {sortBy !== "priority" && <s-divider />}
+                {sortBy !== "priority" && (
+                  <s-box padding="small">
+                    <s-choice-list
+                      label={t("alerts.table.order")}
+                      labelAccessibilityVisibility="visible"
+                      name="sortOrder"
+                      onChange={(event: any) =>
+                        onSortChange?.(
+                          sortBy,
+                          event.currentTarget.values?.[0] || "desc",
+                        )
+                      }
+                    >
+                      <s-choice value="desc" selected={sortOrder === "desc"}>
+                        {t("alerts.table.orderOptions.desc")}
+                      </s-choice>
+                      <s-choice value="asc" selected={sortOrder === "asc"}>
+                        {t("alerts.table.orderOptions.asc")}
+                      </s-choice>
+                    </s-choice-list>
                   </s-box>
-                </s-table-cell>
-              </s-table-row>
-            ) : (
-              alerts.map((alert) => (
-                <AlertRow
-                  key={alert.id}
-                  alert={alert}
-                  onViewDetails={onViewDetails}
-                  showProductLink={showProductLink}
-                  modalId={`${modalIdPrefix}-${alert.id}`}
-                  isSelected={visibleSelectedIds.includes(alert.id)}
-                  onSelect={(id) => toggleSelect(id)}
-                />
-              ))
-            )}
-          </s-table-body>
-        </s-table>
-      </div>
+                )}
+              </s-stack>
+            </s-popover>
+          </s-grid>
+        </s-stack>
 
-      {/* Floating Bulk Action Bar */}
-      {visibleSelectedIds.length > 0 && (
-        <div
-          className={`floating-bulk-actions ${visibleSelectedIds.length > 0 ? "is-visible" : ""}`}
-        >
-          <span>
-            {t("uxEnhancements.alerts.floating.selectedCount", {
-              count: visibleSelectedIds.length,
-            })}
-          </span>
-          <s-button
-            variant="secondary"
-            size="small"
-            commandFor="floating-bulk-resolve-popover"
-            style={{
-              backgroundColor: "#2c2c2e",
-              borderColor: "#3a3a3c",
-              color: "#ffffff",
-            }}
-          >
-            {t("uxEnhancements.alerts.floating.resolveSelected")}
+        <s-table-header-row>
+          <s-table-header>
+            <s-checkbox
+              accessibilityLabel={t("alerts.table.selectAll")}
+              checked={
+                visibleSelectedIds.length === alerts.length &&
+                alerts.length > 0
+              }
+              indeterminate={
+                visibleSelectedIds.length > 0 &&
+                visibleSelectedIds.length < alerts.length
+              }
+              disabled={isLoading || alerts.length === 0}
+              onChange={toggleSelectAll}
+            />
+          </s-table-header>
+          <s-table-header listSlot="primary">
+            {t("alerts.table.headers.product")}
+          </s-table-header>
+          <s-table-header listSlot="inline">
+            {t("alerts.table.headers.status")}
+          </s-table-header>
+          <s-table-header listSlot="labeled">
+            {t("findingOverview.officialRisk")}
+          </s-table-header>
+          <s-table-header listSlot="labeled">
+            {t("alerts.table.headers.detected")}
+          </s-table-header>
+          <s-table-header>{t("alerts.table.headers.actions")}</s-table-header>
+        </s-table-header-row>
+        <s-table-body>
+          {alerts.length === 0 ? (
+            <s-table-row>
+              <s-table-cell colSpan={6}>
+                <s-box padding="large">
+                  <s-stack gap="small" align="center">
+                    <s-text fontWeight="semibold">
+                      {activeTab === "active" && stats?.active === 0 && stats?.waiting === 0
+                        ? t("alerts.table.emptyAllClearTitle")
+                        : t("alerts.table.emptyFilteredTitle")}
+                    </s-text>
+                  </s-stack>
+                </s-box>
+              </s-table-cell>
+            </s-table-row>
+          ) : (
+            alerts.map((alert) => (
+              <AlertRow
+                key={alert.id}
+                alert={alert}
+                modalId={`${modalIdPrefix}-${alert.id}`}
+                isSelected={visibleSelectedIds.includes(alert.id)}
+                isLoading={isLoading}
+                onSelect={(id) => { if (!isLoading) toggleSelect(id); }}
+              />
+            ))
+          )}
+        </s-table-body>
+      </s-table>
+
+      {visibleSelectedIds.length > 0 && onBulkAction && (
+        <div className="floating-bulk-actions is-visible" role="region" aria-label={t("reviewUx.bulkTitle")}>
+          <span role="status">{t("uxEnhancements.alerts.floating.selectedCount", { count: visibleSelectedIds.length })}</span>
+          <s-button variant="secondary" commandFor={bulkModalId} command="--show" disabled={isLoading}>
+            {t("reviewUx.bulkTitle")}
           </s-button>
-          <s-button
-            variant="secondary"
-            size="small"
-            commandFor="floating-bulk-dismiss-popover"
-            style={{
-              backgroundColor: "#2c2c2e",
-              borderColor: "#3a3a3c",
-              color: "#ffffff",
-            }}
-          >
-            {t("uxEnhancements.alerts.floating.dismissSelected")}
-          </s-button>
-
-          <s-popover id="floating-bulk-resolve-popover">
-            <s-stack gap="none">
-              <s-box padding="small">
-                <s-text fontWeight="semibold" size="small">
-                  {t("resolveActions.menuLabel")}
-                </s-text>
-              </s-box>
-              <s-divider />
-              <s-box padding="small">
-                <s-stack gap="small-100">
-                  <s-button
-                    variant="tertiary"
-                    size="small"
-                    onClick={() => handleBulkResolve("match_not_confirmed")}
-                  >
-                    {t("workspace.matchNotConfirmed")}
-                  </s-button>
-                  <s-button
-                    variant="tertiary"
-                    size="small"
-                    onClick={() => handleBulkResolve("removed_from_sale")}
-                  >
-                    {t("resolveActions.removedFromSale")}
-                  </s-button>
-                  <s-button
-                    variant="tertiary"
-                    size="small"
-                    onClick={() => handleBulkResolve("modified_product")}
-                  >
-                    {t("resolveActions.modifiedProduct")}
-                  </s-button>
-                </s-stack>
-              </s-box>
-            </s-stack>
-          </s-popover>
-
-          <s-popover id="floating-bulk-dismiss-popover">
-            <s-stack gap="none">
-              <s-box padding="small">
-                <s-text fontWeight="semibold" size="small">
-                  {t("resolveActions.menuLabel")}
-                </s-text>
-              </s-box>
-              <s-divider />
-              <s-box padding="small">
-                <s-stack gap="small-100">
-                  <s-button
-                    variant="tertiary"
-                    size="small"
-                    onClick={() => handleBulkDismiss("false_positive")}
-                  >
-                    {t("resolveActions.falsePositive")}
-                  </s-button>
-                  <s-button
-                    variant="tertiary"
-                    size="small"
-                    onClick={() => handleBulkDismiss("not_my_product")}
-                  >
-                    {t("resolveActions.notMyProduct")}
-                  </s-button>
-                </s-stack>
-              </s-box>
-            </s-stack>
-          </s-popover>
         </div>
       )}
+      <s-modal id={bulkModalId} heading={t("reviewUx.bulkTitle")} size="base">
+        <s-stack gap="base">
+          <s-text>{t("uxEnhancements.alerts.floating.selectedCount", { count: visibleSelectedIds.length })}</s-text>
+          <ul className="bulk-review-products">
+            {alerts.filter(alert => visibleSelectedIds.includes(alert.id)).map(alert => <li key={alert.id}>{alert.productTitle}</li>)}
+          </ul>
+          <s-text>{t("workspace.resultHelp")}</s-text>
+          <s-select
+            label={t("analysis.reviewLayout.outcomeLabel")}
+            value={bulkOutcome}
+            disabled={isLoading}
+            onChange={(event: any) => setBulkOutcome(event.currentTarget.value)}
+          >
+            <s-option value="">{t("analysis.reviewLayout.chooseOutcome")}</s-option>
+            <s-option value="match_not_confirmed">{t("reviewUx.insufficientEvidence")}</s-option>
+            <s-option value="not_my_product">{t("reviewUx.confirmedDifferent")}</s-option>
+            <s-option value="removed_from_sale">{t("resolveActions.removedFromSale")}</s-option>
+            <s-option value="modified_product">{t("resolveActions.modifiedProduct")}</s-option>
+          </s-select>
+          <p className="admin-helper" role="status">{t(bulkOutcome ? `workspace.outcomeHelp.${bulkOutcome}` : "workspace.chooseOutcomeHelp")}</p>
+          <s-text-area
+            label={t("reviewUx.sharedNote")}
+            value={bulkNote}
+            disabled={isLoading}
+            onInput={(event: any) => setBulkNote(event.currentTarget.value || "")}
+          />
+          {bulkSaveFailed && !isLoading && <p role="alert">{t("findingOverview.saveFailed")}</p>}
+        </s-stack>
+        <s-button slot="primary-action" variant="primary" disabled={!bulkOutcome || !visibleSelectedIds.length || isLoading} loading={isLoading} onClick={confirmBulkDecision}>
+          {t("actions.recordDecision")}
+        </s-button>
+        <s-button slot="secondary-actions" variant="secondary" commandFor={bulkModalId} command="--hide" disabled={isLoading}>
+          {t("common.cancel")}
+        </s-button>
+      </s-modal>
+
     </s-section>
   );
 }
@@ -431,35 +349,21 @@ export function AlertTable({
 // Separate component for each row to handle event listeners properly
 function AlertRow({
   alert,
-  onViewDetails,
-  showProductLink,
   modalId,
   isSelected,
+  isLoading,
   onSelect,
 }: {
   alert: Alert;
-  onViewDetails: (alert: Alert) => void;
-  showProductLink: boolean;
   modalId: string;
   isSelected: boolean;
+  isLoading: boolean;
   onSelect: (id: string) => void;
 }) {
   const { t, i18n } = useTranslation();
-  const viewBtnRef = useRef<HTMLElement>(null);
 
   const dateLocale = i18n.language === "en" ? "en-GB" : i18n.language;
 
-  // View button handler
-  useEffect(() => {
-    const btn = viewBtnRef.current;
-    if (!btn) return;
-    const handleClick = () => onViewDetails(alert);
-    btn.addEventListener("click", handleClick);
-    return () => btn.removeEventListener("click", handleClick);
-  }, [alert, onViewDetails]);
-
-  const adminProductId =
-    alert.productId?.replace("gid://shopify/Product/", "") || "";
   const createdDate = new Date(alert.createdAt);
   const [observedAt] = useState(() => Date.now());
   const hydrated = useHydrated();
@@ -467,17 +371,14 @@ function AlertRow({
     count: alert.warningsCount,
   });
 
-  // Badge tones
-  const statusTone =
-    alert.status === "active"
-      ? "critical"
-      : alert.status === "resolved"
-        ? "success"
-        : "neutral";
-  const isSerious =
-    alert.riskLevel?.toLowerCase().includes("serious") ||
-    alert.riskLevel?.toLowerCase().includes("high");
-  const riskTone = isSerious && alert.status === "active" ? "critical" : "info";
+  const alertType = alert.alertType?.trim();
+  const hasAlertType = alertType && alertType.toLowerCase() !== "unknown";
+  const waiting = isWaitingForSupplier(alert);
+  const statusTone = alert.status === "active"
+    ? waiting ? "warning" : "critical"
+    : "neutral";
+  const isSerious = /serious|high|^[12]$/i.test(alert.riskLevel);
+  const riskTone = isSerious && alert.status === "active" ? "critical" : "neutral";
 
   return (
     <s-table-row selected={isSelected || undefined}>
@@ -487,6 +388,7 @@ function AlertRow({
             title: alert.productTitle,
           })}
           checked={isSelected}
+          disabled={isLoading}
           onChange={() => onSelect(alert.id)}
         />
       </s-table-cell>
@@ -537,9 +439,9 @@ function AlertRow({
             >
               <span>{alert.productTitle}</span>
             </s-clickable>
-            {alert.alertType && (
+            {hasAlertType && (
               <s-text tone="subdued" size="small">
-                {localizeRisk(alert.alertType, t)}
+                {localizeRisk(alertType, t)}
               </s-text>
             )}
           </div>
@@ -550,8 +452,7 @@ function AlertRow({
       <s-table-cell>
         <s-badge tone={statusTone}>
           {alert.status === "active"
-            ? alert.reviewState === "waiting_for_supplier" ||
-              alert.resolutionType === "contacted_supplier"
+            ? waiting
               ? t("resolveActions.contactPending")
               : t("status.needsReview")
             : alert.status === "resolved"
@@ -568,21 +469,8 @@ function AlertRow({
               {localizeRisk(alert.riskLevel, t)}
             </s-badge>
             {alert.matchBasis === "gtin" && <s-badge tone="warning">{t("barcodeMatch.label")}</s-badge>}
-            {alert.matchBasis !== "gtin" && alert.overallSimilarity && (
-              <s-tooltip
-                content={t("alerts.table.similarityTooltip", {
-                  score: alert.overallSimilarity,
-                })}
-              >
-                <s-text tone="subdued" size="small">
-                  ({alert.overallSimilarity}%)
-                </s-text>
-              </s-tooltip>
-            )}
           </s-stack>
-          <s-text tone="subdued" size="small">
-            {warningsLabel}
-          </s-text>
+          {alert.warningsCount > 1 && <s-text tone="subdued" size="small">{warningsLabel}</s-text>}
         </s-stack>
       </s-table-cell>
 
@@ -609,27 +497,19 @@ function AlertRow({
 
       {/* Actions Cell */}
       <s-table-cell>
-        <s-stack gap="small-200">
-          <s-button
-            ref={viewBtnRef}
-            size="small"
-            variant={alert.status === "active" ? "primary" : "secondary"}
-            accessibilityLabel={
-              alert.status === "active"
-                ? t("alerts.table.reviewProduct", { title: alert.productTitle })
-                : t("alerts.table.viewProduct", { title: alert.productTitle })
-            }
-            commandFor={modalId}
-            command="--show"
-          >
-            {t("workspace.compare")}
-          </s-button>
-          {showProductLink && adminProductId && (
-            <s-link href={`shopify:admin/products/${adminProductId}`}>
-              {t("workspace.viewShopify")}
-            </s-link>
-          )}
-        </s-stack>
+        <s-button
+          size="small"
+          variant="secondary"
+          accessibilityLabel={
+            alert.status === "active"
+              ? t("alerts.table.reviewProduct", { title: alert.productTitle })
+              : t("alerts.table.viewProduct", { title: alert.productTitle })
+          }
+          commandFor={modalId}
+          command="--show"
+        >
+          {t("workspace.compare")}
+        </s-button>
       </s-table-cell>
     </s-table-row>
   );
@@ -638,7 +518,7 @@ function AlertRow({
 // Format date as relative (Today, Yesterday, etc.)
 export function formatRelativeDate(
   date: Date | string | number,
-  t: (key: string, options?: Record<string, any>) => string,
+  t: (key: "dates.today" | "dates.yesterday") => string,
   locale: string,
 ): string {
   const parsedDate = date instanceof Date ? date : new Date(date);

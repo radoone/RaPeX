@@ -25,22 +25,26 @@ import {
 import { localizeRisk } from "../components/AlertBadge";
 import { monitoringEvidence } from "../services/monitoring-evidence.server";
 import { ReviewStatusSummary, reviewStatusOptions } from "../components/ReviewStatusSummary";
+import { checkLedger } from "../services/check-ledger.server";
+import { CheckLedger } from "../components/CheckLedger";
 
 export const headers = (headersArgs: any) => {
   return boundary.headers(headersArgs);
 };
 
-export const loader = async ({ request, url }: LoaderFunctionArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { session } = await authenticate.admin(request);
-  const [records, monitoring] = await Promise.all([
+  const url = new URL(request.url);
+  const [records, monitoring, ledger] = await Promise.all([
     reviewRecords(session.shop, { ...reviewFilters(url), dateBasis: "findings" }, 100),
     monitoringEvidence(session.shop),
+    checkLedger(session.shop, url),
   ]);
-  return json({ ...records, monitoring });
+  return json({ ...records, monitoring, ledger });
 };
 
 export default function AuditReportPage() {
-  const { records, generatedAt, total, shop, filters, summary, scope, monitoring } =
+  const { records, generatedAt, total, shop, filters, summary, scope, monitoring, ledger } =
     useLoaderData<typeof loader>();
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -91,10 +95,8 @@ export default function AuditReportPage() {
   }
 
   return (
-    <s-page size="large" className="page-shell">
-      <s-heading slot="title" size="large">
-        {t("workspace.reportTitle")}
-      </s-heading>
+    <s-page inlineSize="large" className="page-shell" heading={t("workspace.reportTitle")}>
+
       <s-button
         slot="primary-action"
         variant="primary"
@@ -102,7 +104,7 @@ export default function AuditReportPage() {
         loading={exporting}
         onClick={downloadReport}
       >
-        {t("auditReport.download")}
+        {t("checkLedger.findingDownload")}
       </s-button>
       <s-button
         slot="secondary-actions"
@@ -111,19 +113,20 @@ export default function AuditReportPage() {
       >
         {t("auditReport.viewHistory")}
       </s-button>
-      <s-button slot="secondary-actions" variant="tertiary" onClick={() => window.print()}>
+      <s-button slot="secondary-actions" variant="secondary" onClick={() => window.print()}>
         {t("workspace.print")}
       </s-button>
       <div className="admin-stack">
+        <CheckLedger ledger={ledger} />
         {exportFailed ? (
           <s-banner tone="critical" heading={t("errors.apiError")}>
-            <s-text>{t("actions.retry")}</s-text>
+            <s-button onClick={downloadReport} disabled={exporting} loading={exporting}>{t("actions.retry")}</s-button>
           </s-banner>
         ) : null}
         <AdminCard className="admin-card">
           <div className="admin-card__header">
             <div>
-              <h2 className="admin-card__title">{t("reviewOverview.report")}</h2>
+              <h2 className="admin-card__title">{t("checkLedger.findings")}</h2>
             </div>
             {summary.needsReview + summary.waiting > 0 && (
               <s-link href="/app/alerts?status=active">{t("workspace.goReview")}</s-link>
@@ -320,10 +323,8 @@ export function ErrorBoundary() {
       ? error.message
       : t("errors.unknown");
   return (
-    <s-page size="large">
-      <s-heading slot="title" size="large">
-        {t("workspace.reportTitle")}
-      </s-heading>
+    <s-page inlineSize="large" heading={t("workspace.reportTitle")}>
+
       <s-banner tone="critical" heading={t("errors.pageLoadFailed")}>
         <s-text>{message}</s-text>
         <s-button slot="secondary-actions" href="/app/audit-report">

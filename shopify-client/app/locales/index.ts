@@ -2,6 +2,10 @@ import { ownerTestAccessCopy } from "./owner-test-access";
 import { galleryCopy } from "./gallery";
 import { experienceCopy } from "./experience";
 import { barcodeMatchCopy } from "./barcode-match";
+import { reviewUxCopy } from "./review-ux";
+import { settingsUxCopy } from "./settings-ux";
+import { checkLedgerCopy } from "./check-ledger";
+import { catalogUxCopy } from "./catalog-ux";
 import bg from "./bg";
 import cs from "./cs";
 import da from "./da";
@@ -124,6 +128,10 @@ export const localizedResources = Object.fromEntries(
         ownerTestAccess: ownerTestAccessCopy[code],
         gallery: galleryCopy[code as keyof typeof galleryCopy],
         experience: experienceCopy[code as keyof typeof experienceCopy],
+        reviewUx: reviewUxCopy[code as keyof typeof reviewUxCopy],
+        settingsUx: settingsUxCopy[code as keyof typeof settingsUxCopy],
+        checkLedger: checkLedgerCopy[code as keyof typeof checkLedgerCopy],
+        catalogUx: catalogUxCopy[code as keyof typeof catalogUxCopy],
       }),
     },
   ]),

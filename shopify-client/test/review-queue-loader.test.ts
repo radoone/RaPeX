@@ -1,15 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { action, loader } from "../app/routes/app.alerts";
 
-const { findMany, count, admin, recordDecisions } = vi.hoisted(() => ({
+const { findMany, count, admin, recordDecisions, listDecisionEvents } = vi.hoisted(() => ({
   findMany: vi.fn(),
   count: vi.fn(),
   admin: vi.fn(),
   recordDecisions: vi.fn(),
+  listDecisionEvents: vi.fn(),
 }));
 vi.mock("../app/shopify.server", () => ({ authenticate: { admin } }));
 vi.mock("../app/merchant-db.server", () => ({
-  default: { safetyAlert: { findMany, count, recordDecisions } },
+  default: { safetyAlert: { findMany, count, recordDecisions, listDecisionEvents } },
 }));
 vi.mock("../app/services/review-evidence.server", () => ({
   withOfficialReferences: async (records: any[]) => records,
@@ -38,6 +39,15 @@ describe("review queue pagination", () => {
         createdAt: "2026-10-01",
       })),
       {
+        id: "waiting",
+        status: "active",
+        reviewState: "contacted_supplier",
+        productId: "3",
+        productTitle: "Supplier follow-up",
+        riskLevel: "Serious",
+        createdAt: "2026-10-01",
+      },
+      {
         id: "urgent",
         status: "active",
         productId: "2",
@@ -46,15 +56,18 @@ describe("review queue pagination", () => {
         createdAt: "2026-10-31",
       },
     ];
-    findMany.mockImplementation(async (options: any) =>
-      options.select
-        ? []
-        : records.slice(
-            options.skip || 0,
-            options.take ? (options.skip || 0) + options.take : undefined,
-          ),
+    findMany.mockImplementation(async ({ where, skip = 0, take }: any) => {
+      const matching = records.filter(record =>
+        (!where.id || where.id === record.id) &&
+        (!where.status || where.status === record.status),
+      );
+      return matching.slice(skip, take ? skip + take : undefined);
+    });
+    count.mockImplementation(async ({ where }: any) =>
+      records.filter(record => !where.status || where.status === record.status).length,
     );
-    count.mockResolvedValue(records.length);
+    listDecisionEvents.mockResolvedValue([]);
+
   });
   const load = async (query = "") => {
     const url = new URL(`https://example.com/app/alerts${query}`);
@@ -69,6 +82,8 @@ describe("review queue pagination", () => {
     expect(findMany.mock.calls[0][0]).not.toHaveProperty("take");
     expect(first.alerts[0].id).toBe("urgent");
     expect(first.alerts).toHaveLength(25);
+    expect(first.stats).toMatchObject({ active: 31, waiting: 1, total: 32 });
+    expect(first.nextReviewAlertId).toBe("urgent");
     expect(second.alerts).toHaveLength(6);
     expect(
       new Set([...first.alerts, ...second.alerts].map((alert) => alert.id))
@@ -76,13 +91,24 @@ describe("review queue pagination", () => {
     ).toBe(31);
   });
   it("retains explicit date sorting and database pagination", async () => {
-    await load("?sortBy=created&page=2");
+    await load("?view=all&sortBy=created&page=2");
     expect(findMany.mock.calls[0][0]).toMatchObject({
       orderBy: { createdAt: "desc" },
       skip: 25,
       take: 25,
     });
   });
+  it("opens linked supplier follow-ups without adding them to the decision queue", async () => {
+    const queue = await load("?open=waiting");
+    expect(queue.alerts.some(alert => alert.id === "waiting")).toBe(false);
+    expect(queue.linkedAlert.id).toBe("waiting");
+
+    const waiting = await load("?status=waiting_for_supplier");
+    expect(waiting.alerts.map(alert => alert.id)).toEqual(["waiting"]);
+    expect(waiting.pagination.totalCount).toBe(1);
+    expect(waiting.nextReviewAlertId).toBe("urgent");
+  });
+
 });
 
 describe("saving a review decision", () => {
@@ -100,22 +126,17 @@ describe("saving a review decision", () => {
     return (await action({ request } as never)).data;
   };
 
-  it("offers the highest-priority eligible match only after saving", async () => {
-    findMany.mockResolvedValue([
-      { id: "current", status: "active", riskLevel: "Serious" },
-      { id: "waiting", status: "active", reviewState: "waiting_for_supplier", riskLevel: "Serious" },
-      { id: "low", status: "active", riskLevel: "Low" },
-      { id: "next", status: "active", riskLevel: "High" },
-    ]);
-    expect(await save()).toEqual({ success: true, reviewedAlertId: "current", nextMatchId: "next" });
-    expect(recordDecisions).toHaveBeenCalledBefore(findMany);
-    expect(findMany).toHaveBeenCalledWith(expect.objectContaining({
-      where: { shop: "example.myshopify.com", status: "active" },
+  it("confirms the submitted decision after recording it", async () => {
+    expect(await save()).toEqual({ success: true, reviewedAlertId: "current" });
+    expect(recordDecisions).toHaveBeenCalledWith(expect.objectContaining({
+      shop: "example.myshopify.com",
+      alertIds: ["current"],
+      resolutionType: "contacted_supplier",
     }));
   });
 
-  it("confirms the decision without a next button if only the saved match remains", async () => {
-    findMany.mockResolvedValue([{ id: "current", status: "active" }]);
-    expect(await save()).toEqual({ success: true, reviewedAlertId: "current", nextMatchId: null });
+  it("does not confirm a failed decision", async () => {
+    recordDecisions.mockRejectedValue(new Error("Could not save"));
+    expect(await save()).toEqual({ success: false, error: "Could not save" });
   });
 });

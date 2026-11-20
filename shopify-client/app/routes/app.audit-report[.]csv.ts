@@ -9,8 +9,9 @@ import {
   reviewRecords,
   reviewFilters,
 } from "../services/review-records.server";
-export async function loader({ request, url }: LoaderFunctionArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const { session } = await authenticate.admin(request);
+  const url = new URL(request.url);
   const filters = reviewFilters(url);
   const language = url.searchParams.get("lang") || "en";
   const i18n = createInstance();
@@ -81,7 +82,7 @@ export async function loader({ request, url }: LoaderFunctionArgs) {
     headers: {
       "Content-Type": "text/csv; charset=utf-8",
       "Content-Length": String(Buffer.byteLength(csv)),
-      "Content-Disposition": `attachment; filename="zerorecall-checks-decisions-${generatedAt.slice(0, 10)}.csv"`,
+      "Content-Disposition": `attachment; filename="zerorecall-findings-decisions-${generatedAt.slice(0, 10)}.csv"`,
       "Cache-Control": "no-store",
     },
   });

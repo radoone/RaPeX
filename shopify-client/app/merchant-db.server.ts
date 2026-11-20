@@ -116,6 +116,7 @@ export type SafetySettingRecord = {
   weeklySummaryEmails?: boolean;
   notificationEmail?: string | null;
   notificationLanguage?: string;
+  notificationLanguageSource?: "app" | "custom";
   notificationEmailSource?: "shopify" | "custom";
   lastWeeklySummaryAt?: Date | null;
   subscriptionStatus?: "active" | "inactive" | "unknown";
@@ -853,6 +854,7 @@ const safetySetting = {
       weeklySummaryEmails: data.weeklySummaryEmails !== undefined ? Boolean(data.weeklySummaryEmails) : undefined,
       notificationEmail: data.notificationEmail !== undefined ? String(data.notificationEmail || "") : undefined,
       notificationLanguage: data.notificationLanguage !== undefined ? String(data.notificationLanguage || "en") : undefined,
+      notificationLanguageSource: data.notificationLanguageSource === "app" || data.notificationLanguageSource === "custom" ? data.notificationLanguageSource : undefined,
       notificationEmailSource: data.notificationEmailSource === "custom" ? "custom" : "shopify",
       lastWeeklySummaryAt: normalizeDate(data.lastWeeklySummaryAt),
       subscriptionStatus: data.subscriptionStatus === "active" || data.subscriptionStatus === "inactive" || data.subscriptionStatus === "unknown" ? data.subscriptionStatus : undefined,
@@ -900,6 +902,7 @@ const safetySetting = {
       weeklySummaryEmails: payload.weeklySummaryEmails !== undefined ? Boolean(payload.weeklySummaryEmails) : undefined,
       notificationEmail: payload.notificationEmail !== undefined ? String(payload.notificationEmail || "") : undefined,
       notificationLanguage: payload.notificationLanguage !== undefined ? String(payload.notificationLanguage || "en") : undefined,
+      notificationLanguageSource: payload.notificationLanguageSource === "app" || payload.notificationLanguageSource === "custom" ? payload.notificationLanguageSource : undefined,
       notificationEmailSource: payload.notificationEmailSource === "custom" ? "custom" : "shopify",
       lastWeeklySummaryAt: normalizeDate(payload.lastWeeklySummaryAt),
       subscriptionStatus: payload.subscriptionStatus === "active" || payload.subscriptionStatus === "inactive" || payload.subscriptionStatus === "unknown" ? payload.subscriptionStatus : undefined,

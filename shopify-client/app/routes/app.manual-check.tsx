@@ -27,6 +27,7 @@ import {
   requireActiveBilling,
 } from "../services/billing.server";
 import { catalogCheckStates } from "../services/catalog-state";
+import { matchesCatalogFilters, type CatalogCheckFilter, type CatalogFindingFilter } from "../services/catalog-filters";
 import { readAutomaticCatalogChecks } from "../services/catalog-check-queue.server";
 import { hasOwnerTestAccess } from "../services/owner-test-access.server";
 import { isWaitingForSupplier } from "../services/review-evidence";
@@ -222,8 +223,10 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
     // Store by productId - keep the most recent/active one
     if (
       !alertsByProduct[alert.productId] ||
-      (alert.status === "active" &&
-        alertsByProduct[alert.productId].status !== "active")
+      (alert.status === "active" && (
+        alertsByProduct[alert.productId].status !== "active" ||
+        (isWaitingForSupplier(alertsByProduct[alert.productId]) && !isWaitingForSupplier(alert))
+      ))
     ) {
       alertsByProduct[alert.productId] = transformedAlert;
     }
@@ -410,10 +413,8 @@ export function ErrorBoundary() {
   const { t } = useTranslation();
 
   return (
-    <s-page suppressHydrationWarning>
-      <s-heading slot="title" size="large" suppressHydrationWarning>
-        {t("manualCheck.title")}
-      </s-heading>
+    <s-page suppressHydrationWarning heading={t("manualCheck.title")}>
+
       <div className="admin-stack" style={{ marginTop: "var(--s-space-400)" }}>
         <s-banner tone="critical" heading={t("errors.pageLoadFailed")}>
           <s-text>{t("errors.apiError")}</s-text>
@@ -457,62 +458,26 @@ export default function ManualCheckPage() {
   const [searchValue, setSearchValue] = useState(search);
   const [visibleCount, setVisibleCount] = useState(50);
   const [searchParams] = useSearchParams();
-  const [tabFilter, setTabFilter] = useState<
-    "all" | "unprotected" | "needs_review" | "safe"
-  >(() => search || searchParams.get("coverage") === "all"
+  const [tabFilter, setTabFilter] = useState<CatalogCheckFilter>(() => search || searchParams.get("coverage") === "all"
     ? "all"
     : searchParams.get("coverage") === "remaining" || coverage.uncheckedProductCount > 0
-      ? "unprotected" : "all");
+      ? "pending" : "all");
+  const [findingFilter, setFindingFilter] = useState<CatalogFindingFilter>("all");
+  const [submittedDecisionId, setSubmittedDecisionId] = useState<string | null>(null);
   const [shopifyStatusFilter, setShopifyStatusFilter] = useState("all");
   const dateLocale = i18n.language === "en" ? "en-GB" : i18n.language;
 
   const filterCounts = useMemo(() => {
-    let unprotected = 0;
-    let needsReview = 0;
-    let safe = 0;
-    const scopedProducts = products.filter((product: any) => shopifyStatusFilter === "all" || product.status === shopifyStatusFilter);
-    scopedProducts.forEach((product: any) => {
-      const productId = product.id.replace("gid://shopify/Product/", "");
-      const existingAlert = alertsByProduct[productId];
-      const hasActiveAlert = existingAlert?.status === "active";
-      const isProtected = productStates[productId]?.state === "current";
+    const scoped = products.filter((product: any) => shopifyStatusFilter === "all" || product.status === shopifyStatusFilter);
+    const current = scoped.filter((product: any) => productStates[product.id.replace("gid://shopify/Product/", "")]?.state === "current").length;
+    return { all: scoped.length, current, pending: scoped.length - current };
+  }, [products, productStates, shopifyStatusFilter]);
 
-      if (!isProtected) unprotected++;
-      if (hasActiveAlert) needsReview++;
-      if (
-        isProtected &&
-        productStates[productId]?.current?.isSafe &&
-        !hasActiveAlert
-      )
-        safe++;
-    });
-    return { all: scopedProducts.length, unprotected, needsReview, safe };
-  }, [products, alertsByProduct, productStates, shopifyStatusFilter]);
-
-  const filteredProducts = useMemo(() => {
-    return products.filter((product: any) => {
-      if (shopifyStatusFilter !== "all" && product.status !== shopifyStatusFilter) return false;
-      const productId = product.id.replace("gid://shopify/Product/", "");
-      const existingAlert = alertsByProduct[productId];
-      const hasActiveAlert = existingAlert?.status === "active";
-      const isProtected = productStates[productId]?.state === "current";
-
-      if (tabFilter === "unprotected") {
-        return !isProtected;
-      }
-      if (tabFilter === "needs_review") {
-        return hasActiveAlert;
-      }
-      if (tabFilter === "safe") {
-        return Boolean(
-          isProtected &&
-          productStates[productId]?.current?.isSafe &&
-          !hasActiveAlert,
-        );
-      }
-      return true;
-    });
-  }, [products, alertsByProduct, productStates, tabFilter, shopifyStatusFilter]);
+  const filteredProducts = useMemo(() => products.filter((product: any) => {
+    if (shopifyStatusFilter !== "all" && product.status !== shopifyStatusFilter) return false;
+    const id = product.id.replace("gid://shopify/Product/", "");
+    return matchesCatalogFilters(productStates[id]?.state, alertsByProduct[id], tabFilter, findingFilter);
+  }), [products, productStates, alertsByProduct, tabFilter, findingFilter, shopifyStatusFilter]);
 
   // Synchronize searchValue with URL parameter when it changes (e.g., cleared/updated externally)
   useEffect(() => {
@@ -650,22 +615,28 @@ export default function ManualCheckPage() {
   // Handle resolve/dismiss completion - navigate to alerts if successful
   useEffect(() => {
     if (
-      resolveFetcher.data &&
+      resolveFetcher.state === "idle" && resolveFetcher.data &&
       "success" in resolveFetcher.data &&
       resolveFetcher.data.success
     ) {
+      if (submittedDecisionId) {
+        for (const modalId of [`manual-alert-${submittedDecisionId}`, "manual-check-result-modal"]) {
+          (document.getElementById(modalId) as (HTMLElement & { hideOverlay?: () => void }) | null)?.hideOverlay?.();
+        }
+        setSubmittedDecisionId(null);
+        shopify.toast.show(t("alerts.toasts.updated"));
+      }
       setShowResult(false);
       setCheckResult(null);
       setCurrentAlertId(null);
       setSelectedProduct(null);
-      // Optionally navigate to alerts page to see the resolved alert
-      // navigate('/app/alerts');
     }
-  }, [resolveFetcher.data]);
+  }, [resolveFetcher.data, resolveFetcher.state, submittedDecisionId, shopify, t]);
 
   // Handle resolve action
   const handleResolve = useCallback(
     (alertId: string, resolutionType?: ResolutionType, notes?: string) => {
+      setSubmittedDecisionId(alertId);
       resolveFetcher.submit(
         {
           action: "resolve",
@@ -682,6 +653,7 @@ export default function ManualCheckPage() {
   // Handle dismiss action
   const handleDismiss = useCallback(
     (alertId: string, resolutionType?: ResolutionType, notes?: string) => {
+      setSubmittedDecisionId(alertId);
       resolveFetcher.submit(
         {
           action: "dismiss",
@@ -698,6 +670,7 @@ export default function ManualCheckPage() {
   // Handle reactivate action
   const handleReactivate = useCallback(
     (alertId: string) => {
+      setSubmittedDecisionId(alertId);
       resolveFetcher.submit(
         {
           action: "reactivate",
@@ -710,10 +683,8 @@ export default function ManualCheckPage() {
   );
 
   return (
-    <s-page size="large" className="page-shell" suppressHydrationWarning>
-      <s-heading slot="title" size="large" suppressHydrationWarning>
-        {t("manualCheck.title")}
-      </s-heading>
+    <s-page inlineSize="large" className="page-shell" suppressHydrationWarning heading={t("manualCheck.title")}>
+
       <s-button
         slot="secondary-actions"
         variant="secondary"
@@ -732,9 +703,6 @@ export default function ManualCheckPage() {
                   ? t("pendingCoverage.title", { count: coverage.uncheckedProductCount })
                   : t(totalProducts === 0 ? "pendingCoverage.emptyTitle" : "manualCheck.coverage.completeTitle")}
               </h2>
-              <p className="admin-card__description">
-                {t("pendingCoverage.current", { checked: coverage.checkedProductCount, total: totalProducts })}
-              </p>
               {coverage.automaticCount > 0 && manualCount > 0 && (
                 <p className="admin-card__description">
                   {t("pendingCoverage.automaticCount", { count: coverage.automaticCount })}
@@ -773,7 +741,10 @@ export default function ManualCheckPage() {
           </s-banner>
         )}
         {fetcher.data && "pendingCheckFailed" in fetcher.data && (
-          <s-banner tone="critical" heading={t("manualCheck.banners.failedHeading")} />
+          <s-banner tone="critical" heading={t("manualCheck.banners.failedHeading")}>
+            <s-text>{t("catalogUx.failedHelp")}</s-text>
+            <s-button onClick={handleCheckPendingProducts} disabled={isLoading}>{t("actions.retry")}</s-button>
+          </s-banner>
         )}
 
         {fetcher.data && "excluded" in fetcher.data && (
@@ -786,6 +757,7 @@ export default function ManualCheckPage() {
             tone="critical"
             heading={t("manualCheck.banners.failedHeading")}
           >
+            <s-text>{t("catalogUx.failedHelp")}</s-text>
             {selectedProduct && (
               <s-button variant="secondary" onClick={() => handleProductCheck(selectedProduct)} disabled={isLoading}>
                 {t("actions.retry")}
@@ -836,12 +808,9 @@ export default function ManualCheckPage() {
           <details className="catalog-coverage__filters" open>
             <summary>{t("pendingCoverage.filters")}</summary>
             <div className="catalog-coverage__filter-fields">
-              <div
-                style={{
-                  display: "flex",
-                  gap: "var(--s-space-200)",
-                  width: "100%",
-                }}
+              <form
+                className="catalog-coverage__search"
+                onSubmit={(event) => { event.preventDefault(); applySearch(); }}
               >
                 <div style={{ flex: 1 }}>
                   <s-text-field
@@ -852,6 +821,9 @@ export default function ManualCheckPage() {
                     onInput={(event: any) =>
                       setSearchValue(event.currentTarget.value || "")
                     }
+                    onKeyDown={(event: React.KeyboardEvent) => {
+                      if (event.key === "Enter") { event.preventDefault(); applySearch(); }
+                    }}
                   />
                 </div>
                 <div className="admin-actions">
@@ -870,7 +842,7 @@ export default function ManualCheckPage() {
                     </s-button>
                   )}
                 </div>
-              </div>
+              </form>
 
               <s-select label={t("workspace.productStatus")} value={shopifyStatusFilter} onChange={(event: any) => { setShopifyStatusFilter(event.currentTarget.value); setTabFilter("all"); }}>
                 <s-option value="all">{t("workspace.productStatusAll")}</s-option>
@@ -880,42 +852,25 @@ export default function ManualCheckPage() {
               </s-select>
             </div>
           </details>
-          <div className="catalog-coverage__tabs">
-            <s-stack direction="inline" gap="small" blockAlign="center" wrap>
-              <s-clickable-chip
-                selected={tabFilter === "unprotected" || undefined}
-                onClick={() => setTabFilter("unprotected")}
-              >
-                {t("pendingCoverage.pendingTab")} ({filterCounts.unprotected})
-              </s-clickable-chip>
-              <s-clickable-chip
-                selected={tabFilter === "all" || undefined}
-                onClick={() => setTabFilter("all")}
-              >
-                {t("manualCheck.filters.all", { count: filterCounts.all })}
-              </s-clickable-chip>
-              {filterCounts.needsReview > 0 && (
-                <s-clickable-chip
-                  selected={tabFilter === "needs_review" || undefined}
-                  onClick={() => setTabFilter("needs_review")}
-                >
-                  {t("manualCheck.filters.needsReview", {
-                    count: filterCounts.needsReview,
-                  })}
-                </s-clickable-chip>
-              )}
-              <s-clickable-chip
-                selected={tabFilter === "safe" || undefined}
-                onClick={() => setTabFilter("safe")}
-              >
-                {t("manualCheck.filters.safe", { count: filterCounts.safe })}
-              </s-clickable-chip>
-            </s-stack>
+          <div className="catalog-coverage__state-filters">
+            <s-select label={t("catalogUx.checkStatus")} value={tabFilter}
+              onChange={(event: any) => { setTabFilter(event.currentTarget.value); setVisibleCount(50); }}>
+              <s-option value="all">{t("alerts.table.tabs.all")} ({filterCounts.all})</s-option>
+              <s-option value="pending">{t("pendingCoverage.pendingTab")} ({filterCounts.pending})</s-option>
+              <s-option value="current">{t("catalogUx.current")} ({filterCounts.current})</s-option>
+            </s-select>
+            <s-select label={t("catalogUx.findingStatus")} value={findingFilter}
+              onChange={(event: any) => { setFindingFilter(event.currentTarget.value); setVisibleCount(50); }}>
+              <s-option value="all">{t("alerts.table.tabs.all")}</s-option>
+              <s-option value="active">{t("status.needsReview")}</s-option>
+              <s-option value="waiting">{t("workspace.waiting")}</s-option>
+              <s-option value="closed">{t("reviewOverview.closed")}</s-option>
+            </s-select>
           </div>
-
+          <p className="admin-helper">{t("catalogUx.scope")} <s-link href="/app/alerts">{t("actions.reviewAlerts")}</s-link></p>
           {filteredProducts.length === 0 ? (
             <div className="admin-empty-state">
-              {tabFilter === "unprotected" && coverage.uncheckedProductCount === 0 ? (
+              {tabFilter === "pending" && coverage.uncheckedProductCount === 0 ? (
                 <s-button onClick={() => setTabFilter("all")}>{t("pendingCoverage.viewAll")}</s-button>
               ) : (
                 <>
@@ -933,8 +888,9 @@ export default function ManualCheckPage() {
                   {t("manualCheck.catalogue.columns.product")}
                 </s-table-header>
                 <s-table-header listSlot="inline">
-                  {t("manualCheck.catalogue.columns.status")}
+                  {t("catalogUx.checkStatus")}
                 </s-table-header>
+                <s-table-header>{t("catalogUx.findingStatus")}</s-table-header>
                 <s-table-header>
                   {t("manualCheck.catalogue.columns.action")}
                 </s-table-header>
@@ -947,7 +903,7 @@ export default function ManualCheckPage() {
                   );
                   const checkHistory = checksByProduct[productId];
                   const hasPreviousCheck = Boolean(checkHistory?.totalChecks);
-                  const lastCheck = checkHistory?.checkedAt;
+                  const lastCheck = productStates[productId]?.current?.checkedAt || productStates[productId]?.latest?.checkedAt;
                   const existingAlert = alertsByProduct[productId];
                   const hasAlert = Boolean(existingAlert);
                   const hasActiveAlert = existingAlert?.status === "active";
@@ -960,18 +916,13 @@ export default function ManualCheckPage() {
                   const isAutomatic = isPending && automaticProductIds.has(productId);
                   const excludedFromManual = manualExcludedProductIds.has(productId);
                   const pendingStatus = isAutomatic ? "automatic" : mayCheckManually ? "unconfirmed" : noManualAccessKey;
-                  const currentStatusTone = isPending || waitingForSupplier
-                    ? "warning"
-                    : hasActiveAlert ? "critical" : "info";
+                  const currentStatusTone = isPending ? "warning" : "info";
                   const currentStatusLabel = t(
                     coverageState === "unchecked" ? "manualCheck.catalogue.status.notChecked"
                       : coverageState === "changed" ? "workspace.changed"
-                        : waitingForSupplier ? "workspace.waiting"
-                        : hasActiveAlert ? "manualCheck.catalogue.status.unsafe"
-                          : hasAlert ? "manualCheck.catalogue.status.reviewed"
-                            : productStates[productId]?.current?.isSafe
-                              ? "manualCheck.catalogue.status.safe"
-                              : "status.needsReview"
+                        : productStates[productId]?.current?.isSafe === true ? "workspace.noMatch"
+                          : productStates[productId]?.current?.isSafe === false ? "workspace.possibleMatch"
+                            : "catalogUx.current",
                   );
                   return (
                     <s-table-row key={product.id}>
@@ -1057,6 +1008,11 @@ export default function ManualCheckPage() {
                       </s-table-cell>
 
                       <s-table-cell>
+                        {hasAlert ? <s-badge tone={hasActiveAlert ? "warning" : "info"}>
+                          {t(waitingForSupplier ? "workspace.waiting" : hasActiveAlert ? "status.needsReview" : existingAlert.status === "dismissed" ? "alerts.table.tabs.dismissed" : "alerts.table.tabs.resolved")}
+                        </s-badge> : "—"}
+                      </s-table-cell>
+                      <s-table-cell>
                         <div className="admin-actions">
                           {hasAlert && !isProductLoading && (
                             <s-button
@@ -1134,7 +1090,9 @@ export default function ManualCheckPage() {
             handleDismiss(id, resolutionType, notes)
           }
           onReactivate={(id) => handleReactivate(id)}
-          isLoading={resolveFetcher.state === "submitting"}
+          waitForDecisionSave
+          decisionSaveFailed={submittedDecisionId === alert.id && resolveFetcher.state === "idle" && resolveFetcher.data?.success === false}
+          isLoading={resolveFetcher.state !== "idle"}
         />
       ))}
 
@@ -1192,7 +1150,9 @@ export default function ManualCheckPage() {
               onResolve={currentAlertId ? handleResolve : undefined}
               onDismiss={currentAlertId ? handleDismiss : undefined}
               onReactivate={currentAlertId ? handleReactivate : undefined}
-              isLoading={resolveFetcher.state === "submitting"}
+              waitForDecisionSave
+              decisionSaveFailed={Boolean(currentAlertId) && submittedDecisionId === currentAlertId && resolveFetcher.state === "idle" && resolveFetcher.data?.success === false}
+              isLoading={resolveFetcher.state !== "idle"}
             />
           );
         })()}
