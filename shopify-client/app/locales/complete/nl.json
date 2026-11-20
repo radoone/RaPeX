@@ -1480,6 +1480,7 @@
     "reviewNext": "Volgende overeenkomst beoordelen",
     "activityQuiet": "Bij deze controles waren er geen nieuwe of bijgewerkte Safety Gate-meldingen om te vergelijken.",
     "activityRecords": "Verwerkte Safety Gate-meldingen",
+    "recordsSinceCheck": "Nieuwe Safety Gate-meldingen sinds de laatste controle",
     "activityRuns": "Voltooide controles",
     "activityTitle": "Monitoring in de afgelopen 30 dagen",
     "auditBackground": "Je kunt deze pagina sluiten. De controle gaat op de achtergrond door. Bekijk de resultaten in ZeroRecall zodra de controle klaar is.",

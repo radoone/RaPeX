@@ -1,7 +1,7 @@
 {
   "createdOn": "2026-11-01T10:02:43.104Z",
   "model": "gemini-2.5-flash",
-  "sourceSha256": "f073ea517d6858de4405b05b5573000a25791e5c6541eec81cec9569a99ab30c",
+  "sourceSha256": "2f3ea3a548daa30ad355d520fb844020491cce680e8cf143df7a0a5ade17a8da",
   "sourceKeys": 1310,
   "scope": "Complete Shopify merchant UI, excluding stored product facts, identifiers and original Safety Gate records; response guide translations updated with Gemini 2.5 Flash; response guide and monitoring evidence translations updated with Gemini 2.5 Flash",
   "nativeSpeakerReview": "Not performed for every language",

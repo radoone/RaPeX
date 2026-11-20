@@ -1480,6 +1480,7 @@
     "reviewNext": "Revisar siguiente coincidencia",
     "activityQuiet": "En estas comprobaciones no hubo registros nuevos ni actualizados de Safety Gate que comparar.",
     "activityRecords": "Registros de Safety Gate analizados",
+    "recordsSinceCheck": "Nuevos registros de Safety Gate desde la última comprobación",
     "activityRuns": "Comprobaciones completadas",
     "activityTitle": "Monitorización en los últimos 30 días",
     "auditBackground": "Puedes cerrar esta página. La comprobación continúa en segundo plano. Vuelve a ZeroRecall para ver los resultados cuando termine.",

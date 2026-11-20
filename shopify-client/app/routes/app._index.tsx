@@ -241,6 +241,19 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     (monitorState?.lastMonitorStatus === "SUCCESS"
       ? toIsoString(monitorState.lastMonitorRunEnd)
       : null);
+  const lastCatalogCheckAt = lastAuditAt && (!lastMonitoringAt || lastAuditAt > lastMonitoringAt)
+    ? lastAuditAt : lastMonitoringAt;
+  const newSourceRecords = lastCatalogCheckAt
+    ? await firestore.collection("rapex_alerts")
+        .where("meta.ingested_at", ">", new Date(lastCatalogCheckAt))
+        .where("meta.ingested_at", "<=", new Date(observedAt))
+        .count().get()
+        .then(snapshot => snapshot.data().count)
+        .catch(error => {
+          console.warn("Could not count newly imported Safety Gate records", error);
+          return null;
+        })
+    : null;
   const defaultSettings: Partial<SafetySettingRecord> & {
     onboardingCompleted: boolean;
   } = {
@@ -285,6 +298,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     lastMonitorStatus: monitorState?.lastMonitorStatus || null,
     lastMonitoringAt,
     lastAuditAt,
+    newSourceRecords,
     hasMonitoringBaseline,
     firstAudit,
   });
@@ -530,6 +544,7 @@ export default function Index() {
     billingStatus,
     lastMonitoringAt,
     lastAuditAt,
+    newSourceRecords,
     hasMonitoringBaseline,
     firstAudit,
     lastMonitorStatus,
@@ -579,11 +594,28 @@ export default function Index() {
           ? "empty"
           : stats.uncheckedProducts > 0
             ? "coverage-incomplete"
-            : automaticChecksExpected
-              ? (stats.waitingForSupplier > 0 ? "waiting-for-supplier" : "no-action-needed")
-              : "monitoring-problem";
+            : !automaticChecksExpected
+              ? "monitoring-problem"
+              : stats.waitingForSupplier > 0
+                ? "waiting-for-supplier"
+                : automaticStatus === "starting" || automaticStatus === "processing"
+                  ? "monitoring-pending"
+                  : "no-action-needed";
   const summary = {
-    "coverage-incomplete": null,
+    "coverage-incomplete": {
+      tone: "warning",
+      title: t("pendingCoverage.title", { count: stats.uncheckedProducts }),
+      description: null,
+      actionHref: "#pending-catalog-products",
+      actionLabel: t("pendingCoverage.pendingTab"),
+    },
+    "monitoring-pending": {
+      tone: "warning",
+      title: t(`catalogOverview.monitoring.${automaticStatus}`),
+      description: null,
+      actionHref: null,
+      actionLabel: "",
+    },
     "review-needed": {
       tone: "critical",
       title: t("dashboard.admin.status.reviewNeeded.title", { count: stats.activeAlerts }),
@@ -748,7 +780,9 @@ export default function Index() {
   const auditChecked = Math.min(auditProgress?.productsScanned || 0, auditTotal);
   const showFirstAuditResult = scanStatus === "completed" && lastCheckWasAudit &&
     firstAudit && stats.activeAlerts === 0;
-  const firstAuditClear = dashboardState === "no-action-needed";
+  const firstAuditClear = stats.uncheckedProducts === 0 && stats.waitingForSupplier === 0;
+  const firstAuditIsSummary = showFirstAuditResult &&
+    (dashboardState === "no-action-needed" || dashboardState === "monitoring-pending");
 
   const purpose = (
     <p className="catalog-overview__purpose">
@@ -771,19 +805,25 @@ export default function Index() {
 
       <div className="admin-stack">
         {!isScanning && showFirstAuditResult && firstAudit && (
-          <s-banner tone={firstAuditClear ? "success" : "info"} heading={t("catalogOverview.firstResultTitle")}>
+          <s-banner
+            tone={firstAuditIsSummary ? summary.tone : "info"}
+            heading={firstAuditIsSummary && dashboardState === "monitoring-pending" ? summary.title : t("catalogOverview.firstResultTitle")}
+          >
             <s-stack direction="inline" gap="small" alignItems="center" wrap>
+              {firstAuditIsSummary && dashboardState === "monitoring-pending" && (
+                <s-text>{t("catalogOverview.firstResultTitle")}</s-text>
+              )}
               <s-text>
                 {t("catalogOverview.currentProducts")} · <strong>{number.format(firstAudit.checked)}</strong>
               </s-text>
               {firstAudit.noNewMatches && <s-badge tone="neutral">{t("workspace.noMatch")}</s-badge>}
-              {firstAuditClear && <s-badge tone="success">{t("dashboard.admin.status.noActionNeeded.title")}</s-badge>}
+              {firstAuditClear && <s-badge tone="neutral">{t("dashboard.admin.status.noActionNeeded.title")}</s-badge>}
               <s-link href="/app/manual-check#product-catalogue">{t("nav.catalogCoverage")}</s-link>
             </s-stack>
           </s-banner>
         )}
         {!isScanning && summary && (scanStatus !== "failed" || stats.activeAlerts > 0) &&
-          !(showFirstAuditResult && dashboardState === "no-action-needed") && (
+          !firstAuditIsSummary && (
           <s-banner tone={summary.tone} heading={summary.title}>
             <s-stack gap="small">
               {summary.description && <s-text>{summary.description}</s-text>}
@@ -989,7 +1029,9 @@ export default function Index() {
                     <dd className="catalog-overview__detail"><NextMonitoringCheck value={nextAutomaticCheckAt} /></dd>
                   )}
                   {lastCatalogCheckAt && (
-                    <dd className="catalog-overview__detail">{t(lastCheckWasAudit ? "catalogOverview.initialAudit" : "catalogOverview.monitoringRun")}</dd>
+                    <dd className="catalog-overview__detail">
+                      {t("catalogOverview.recordsSinceCheck")} <strong>{newSourceRecords === null ? "—" : number.format(newSourceRecords)}</strong>
+                    </dd>
                   )}
                 </div>
                 <div>

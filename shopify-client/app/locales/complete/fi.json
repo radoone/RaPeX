@@ -1480,6 +1480,7 @@
     "reviewNext": "Tarkista seuraava osuma",
     "activityQuiet": "Näissä tarkistuksissa ei ollut uusia tai päivitettyjä Safety Gate -tietueita vertailtavaksi.",
     "activityRecords": "Käsitellyt Safety Gate -tietueet",
+    "recordsSinceCheck": "Uudet Safety Gate -tietueet edellisen tarkistuksen jälkeen",
     "activityRuns": "Valmiit tarkistukset",
     "activityTitle": "Seuranta viimeisten 30 päivän aikana",
     "auditBackground": "Voit sulkea sivun. Tarkistus jatkuu taustalla. Kun se on valmis, palaa ZeroRecalliin katsomaan tulokset.",

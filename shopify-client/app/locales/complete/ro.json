@@ -1480,6 +1480,7 @@
     "reviewNext": "Revizuiți următoarea potrivire",
     "activityQuiet": "La aceste verificări nu au existat înregistrări Safety Gate noi sau actualizate de comparat.",
     "activityRecords": "Înregistrări Safety Gate analizate",
+    "recordsSinceCheck": "Înregistrări noi Safety Gate de la ultima verificare",
     "activityRuns": "Verificări finalizate",
     "activityTitle": "Monitorizarea din ultimele 30 de zile",
     "auditBackground": "Poți închide această pagină. Verificarea continuă în fundal. După finalizare, revino în ZeroRecall pentru a vedea rezultatele.",

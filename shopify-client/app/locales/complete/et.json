@@ -1480,6 +1480,7 @@
     "reviewNext": "Vaata järgmist vastet",
     "activityQuiet": "Nendes kontrollides polnud võrdlemiseks uusi ega uuendatud Safety Gate’i kirjeid.",
     "activityRecords": "Töödeldud Safety Gate’i kirjed",
+    "recordsSinceCheck": "Uued Safety Gate’i kirjed pärast viimast kontrolli",
     "activityRuns": "Lõpetatud kontrollid",
     "activityTitle": "Seire viimase 30 päeva jooksul",
     "auditBackground": "Võite selle lehe sulgeda. Kontroll jätkub taustal. Pärast kontrolli lõppu leiate tulemused ZeroRecallist.",

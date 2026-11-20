@@ -1480,6 +1480,7 @@
     "reviewNext": "Rivedi la prossima corrispondenza",
     "activityQuiet": "In questi controlli non c’erano schede Safety Gate nuove o aggiornate da confrontare.",
     "activityRecords": "Segnalazioni Safety Gate esaminate",
+    "recordsSinceCheck": "Nuove segnalazioni Safety Gate dall’ultimo controllo",
     "activityRuns": "Controlli completati",
     "activityTitle": "Monitoraggio negli ultimi 30 giorni",
     "auditBackground": "Puoi chiudere questa pagina. Il controllo prosegue in background. Al termine, torna su ZeroRecall per vedere i risultati.",

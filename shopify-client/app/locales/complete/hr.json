@@ -1480,6 +1480,7 @@
     "reviewNext": "Pregledaj sljedeće podudaranje",
     "activityQuiet": "U ovim provjerama nije bilo novih ni ažuriranih zapisa Safety Gatea za usporedbu.",
     "activityRecords": "Obrađeni zapisi sustava Safety Gate",
+    "recordsSinceCheck": "Novi zapisi sustava Safety Gate od posljednje provjere",
     "activityRuns": "Dovršene provjere",
     "activityTitle": "Praćenje u posljednjih 30 dana",
     "auditBackground": "Možete zatvoriti ovu stranicu. Provjera se nastavlja u pozadini. Kad završi, rezultate pogledajte u ZeroRecallu.",

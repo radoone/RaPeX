@@ -1480,6 +1480,7 @@
     "reviewNext": "Következő egyezés felülvizsgálata",
     "activityQuiet": "Ezekben az ellenőrzésekben nem volt összehasonlítandó új vagy frissített Safety Gate-bejegyzés.",
     "activityRecords": "Feldolgozott Safety Gate-bejegyzések",
+    "recordsSinceCheck": "Új Safety Gate-bejegyzések az utolsó ellenőrzés óta",
     "activityRuns": "Befejezett ellenőrzések",
     "activityTitle": "Az elmúlt 30 nap figyelése",
     "auditBackground": "Bezárhatja ezt az oldalt. Az ellenőrzés a háttérben folytatódik. Ha elkészült, az eredményeket a ZeroRecallban találja.",

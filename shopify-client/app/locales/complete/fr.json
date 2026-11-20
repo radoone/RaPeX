@@ -1480,6 +1480,7 @@
     "reviewNext": "Examiner la correspondance suivante",
     "activityQuiet": "Ces vérifications n’ont trouvé aucune fiche Safety Gate nouvelle ou mise à jour à comparer.",
     "activityRecords": "Fiches Safety Gate examinées",
+    "recordsSinceCheck": "Nouvelles fiches Safety Gate depuis la dernière vérification",
     "activityRuns": "Vérifications terminées",
     "activityTitle": "Suivi des 30 derniers jours",
     "auditBackground": "Vous pouvez fermer cette page. La vérification continue en arrière-plan. Une fois terminée, retrouvez les résultats dans ZeroRecall.",

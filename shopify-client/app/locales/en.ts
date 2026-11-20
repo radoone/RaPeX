@@ -80,6 +80,7 @@ const en = {
         activityTitle: "Monitoring activity in the last 30 days",
         activityRuns: "Completed checks",
         activityRecords: "Safety Gate records considered",
+        recordsSinceCheck: "New Safety Gate records since the last check",
         activityQuiet: "These runs found no new or updated Safety Gate records to compare.",
         emailEnabled: "Email for new possible matches is on. Checks continue while you’re away.",
         emailDisabled: "Email for new possible matches is off or has no recipient. You can update it in Settings.",

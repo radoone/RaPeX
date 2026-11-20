@@ -1480,6 +1480,7 @@
     "reviewNext": "Nächste Übereinstimmung überprüfen",
     "activityQuiet": "Bei diesen Prüfungen lagen keine neuen oder aktualisierten Safety-Gate-Einträge zum Abgleich vor.",
     "activityRecords": "Verarbeitete Safety Gate-Einträge",
+    "recordsSinceCheck": "Neue Safety Gate-Einträge seit der letzten Prüfung",
     "activityRuns": "Abgeschlossene Prüfungen",
     "activityTitle": "Überwachung in den letzten 30 Tagen",
     "auditBackground": "Sie können diese Seite schließen. Die Prüfung läuft im Hintergrund weiter. Nach Abschluss finden Sie die Ergebnisse in ZeroRecall.",

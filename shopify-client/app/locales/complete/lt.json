@@ -1480,6 +1480,7 @@
     "reviewNext": "Peržiūrėti kitą atitikmenį",
     "activityQuiet": "Per šias patikras nebuvo naujų arba atnaujintų „Safety Gate“ įrašų, kuriuos reikėtų palyginti.",
     "activityRecords": "Išnagrinėti „Safety Gate“ įrašai",
+    "recordsSinceCheck": "Nauji „Safety Gate“ įrašai nuo paskutinės patikros",
     "activityRuns": "Atliktos patikros",
     "activityTitle": "Stebėsena per pastarąsias 30 dienų",
     "auditBackground": "Galite užverti šį puslapį. Patikra tęsiama fone. Jai pasibaigus rezultatus rasite „ZeroRecall“.",

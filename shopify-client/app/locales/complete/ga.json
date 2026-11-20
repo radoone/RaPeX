@@ -1496,6 +1496,7 @@
     "reviewNext": "Athbhreithnigh an chéad mheaitseáil eile",
     "activityQuiet": "Ní raibh aon taifead Safety Gate nua ná nuashonraithe le cur i gcomparáid sna seiceálacha seo.",
     "activityRecords": "Taifid Safety Gate scrúdaithe",
+    "recordsSinceCheck": "Taifid nua Safety Gate ó rinneadh an tseiceáil dheireanach",
     "activityRuns": "Seiceálacha críochnaithe",
     "activityTitle": "Monatóireacht le 30 lá anuas",
     "auditBackground": "Is féidir leat an leathanach seo a dhúnadh. Leanann an tseiceáil ar aghaidh sa chúlra. Fill ar ZeroRecall chun na torthaí a fheiceáil nuair a bheidh sí críochnaithe.",

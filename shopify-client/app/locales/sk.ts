@@ -83,6 +83,7 @@ const sk = {
         activityTitle: "Monitoring za posledných 30 dní",
         activityRuns: "Dokončené kontroly",
         activityRecords: "Spracované záznamy Safety Gate",
+        recordsSinceCheck: "Nové záznamy Safety Gate od poslednej kontroly",
         activityQuiet: "Pri týchto kontrolách neboli na porovnanie žiadne nové ani aktualizované záznamy Safety Gate.",
         emailEnabled: "E-maily o nových možných zhodách sú zapnuté. Kontroly pokračujú aj počas vašej neprítomnosti.",
         emailDisabled: "E-maily o nových možných zhodách sú vypnuté alebo nemajú príjemcu. Zmeniť to môžete v nastaveniach.",

@@ -1480,6 +1480,7 @@
     "reviewNext": "Przejrzyj następne dopasowanie",
     "activityQuiet": "Podczas tych kontroli nie było nowych ani zaktualizowanych wpisów Safety Gate do porównania.",
     "activityRecords": "Przeanalizowane wpisy Safety Gate",
+    "recordsSinceCheck": "Nowe wpisy Safety Gate od ostatniego sprawdzenia",
     "activityRuns": "Zakończone kontrole",
     "activityTitle": "Monitorowanie w ciągu ostatnich 30 dni",
     "auditBackground": "Możesz zamknąć tę stronę. Kontrola trwa w tle. Po zakończeniu wróć do ZeroRecall, aby zobaczyć wyniki.",

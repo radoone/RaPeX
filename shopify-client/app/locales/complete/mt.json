@@ -1496,6 +1496,7 @@
     "reviewNext": "Irrevedi t-taqbila li jmiss",
     "activityQuiet": "F’dawn il-verifiki ma kien hemm l-ebda rekord ġdid jew aġġornat ta’ Safety Gate x’jitqabbel.",
     "activityRecords": "Rekords ta’ Safety Gate eżaminati",
+    "recordsSinceCheck": "Rekords ġodda ta’ Safety Gate mill-aħħar kontroll",
     "activityRuns": "Kontrolli kompluti",
     "activityTitle": "Monitoraġġ fl-aħħar 30 jum",
     "auditBackground": "Tista’ tagħlaq din il-paġna. Il-verifika tkompli fl-isfond. Erġa’ iftaħ ZeroRecall biex tara r-riżultati meta tintemm.",

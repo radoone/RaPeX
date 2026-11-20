@@ -1496,6 +1496,7 @@
     "reviewNext": "Preglej naslednje ujemanje",
     "activityQuiet": "V teh preverjanjih ni bilo novih ali posodobljenih zapisov Safety Gate za primerjavo.",
     "activityRecords": "Obdelani zapisi Safety Gate",
+    "recordsSinceCheck": "Novi zapisi Safety Gate od zadnjega preverjanja",
     "activityRuns": "Opravljena preverjanja",
     "activityTitle": "Spremljanje v zadnjih 30 dneh",
     "auditBackground": "To stran lahko zaprete. Preverjanje se nadaljuje v ozadju. Po zaključku si rezultate oglejte v ZeroRecall.",

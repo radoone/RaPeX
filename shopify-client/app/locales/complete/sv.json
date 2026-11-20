@@ -1480,6 +1480,7 @@
     "reviewNext": "Granska nästa matchning",
     "activityQuiet": "I dessa kontroller fanns inga nya eller uppdaterade Safety Gate-poster att jämföra.",
     "activityRecords": "Granskade Safety Gate-poster",
+    "recordsSinceCheck": "Nya Safety Gate-poster sedan förra kontrollen",
     "activityRuns": "Slutförda kontroller",
     "activityTitle": "Bevakning de senaste 30 dagarna",
     "auditBackground": "Du kan stänga den här sidan. Kontrollen fortsätter i bakgrunden. När den är klar hittar du resultaten i ZeroRecall.",

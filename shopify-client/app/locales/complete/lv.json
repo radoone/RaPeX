@@ -1496,6 +1496,7 @@
     "reviewNext": "Pārskatīt nākamo atbilstību",
     "activityQuiet": "Šajās pārbaudēs nebija jaunu vai atjauninātu Safety Gate ierakstu, ko salīdzināt.",
     "activityRecords": "Apstrādātie Safety Gate ieraksti",
+    "recordsSinceCheck": "Jauni Safety Gate ieraksti kopš pēdējās pārbaudes",
     "activityRuns": "Pabeigtās pārbaudes",
     "activityTitle": "Uzraudzība pēdējās 30 dienās",
     "auditBackground": "Varat aizvērt šo lapu. Pārbaude turpinās fonā. Kad tā pabeigta, rezultātus skatiet ZeroRecall.",

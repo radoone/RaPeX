@@ -1480,6 +1480,7 @@
     "reviewNext": "Gennemgå næste match",
     "activityQuiet": "Der var ingen nye eller opdaterede Safety Gate-poster at sammenligne i disse kontroller.",
     "activityRecords": "Behandlede Safety Gate-poster",
+    "recordsSinceCheck": "Nye Safety Gate-poster siden sidste kontrol",
     "activityRuns": "Fuldførte kontroller",
     "activityTitle": "Overvågning de seneste 30 dage",
     "auditBackground": "Du kan lukke siden. Kontrollen fortsætter i baggrunden. Vend tilbage til ZeroRecall for at se resultaterne, når den er færdig.",

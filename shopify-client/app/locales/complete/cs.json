@@ -1480,6 +1480,7 @@
     "reviewNext": "Zkontrolovat další shodu",
     "activityQuiet": "Při těchto kontrolách nebyly k porovnání žádné nové ani aktualizované záznamy Safety Gate.",
     "activityRecords": "Zpracované záznamy Safety Gate",
+    "recordsSinceCheck": "Nové záznamy Safety Gate od poslední kontroly",
     "activityRuns": "Dokončené kontroly",
     "activityTitle": "Monitoring za posledních 30 dní",
     "auditBackground": "Tuto stránku můžete zavřít. Kontrola pokračuje na pozadí. Po dokončení najdete výsledky v ZeroRecall.",
