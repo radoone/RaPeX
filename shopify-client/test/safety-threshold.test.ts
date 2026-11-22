@@ -1,5 +1,8 @@
 import { expect, it, vi } from "vitest";
 vi.mock("../app/merchant-db.server", () => ({ default: {} }));
+vi.mock("../app/services/catalog-audit-session.server", () => ({
+  mirrorOfflineSessionForCatalogAudit: vi.fn(),
+}));
 import { applySimilarityThreshold, type SafetyCheckResult } from "../app/services/safety-gate-checker.server";
 
 it("keeps identifier hits and unresolved identity warnings even above the similarity threshold", () => {

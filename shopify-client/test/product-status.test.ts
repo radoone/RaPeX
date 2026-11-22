@@ -6,6 +6,9 @@ const db = vi.hoisted(() => ({
   safetySetting: { findUnique: vi.fn() },
 }));
 vi.mock("../app/merchant-db.server", () => ({ default: db }));
+vi.mock("../app/services/catalog-audit-session.server", () => ({
+  mirrorOfflineSessionForCatalogAudit: vi.fn(),
+}));
 
 import { getProductSafetyStatus, productSafetyReviewUrl } from "../app/services/product-safety-admin.server";
 import { checkProductSafety, ProductCheckExcludedError } from "../app/services/safety-gate-checker.server";

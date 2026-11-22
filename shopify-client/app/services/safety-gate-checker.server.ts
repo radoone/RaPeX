@@ -1,4 +1,5 @@
 import merchantDb from "../merchant-db.server";
+import { mirrorOfflineSessionForCatalogAudit } from "./catalog-audit-session.server";
 import { shopifyProductToProductData, type ProductData } from "./safety-gate-product-data";
 
 const FIREBASE_FUNCTIONS_BASE_URL =
@@ -303,7 +304,6 @@ export async function queueShopifyProductChange(input: {
   similarityThreshold: number;
 }): Promise<void> {
   if (input.product.barcodesComplete === false) {
-    const { mirrorOfflineSessionForCatalogAudit } = await import("./catalog-audit-session.server");
     await mirrorOfflineSessionForCatalogAudit(input.shop);
   }
   const response = await fetch(`${FIREBASE_FUNCTIONS_BASE_URL}/startShopifyProductChangeAPI`, {
