@@ -20,7 +20,7 @@ describe("summarizeMonitoringRun", () => {
       id: "daily-1",
       status: "completed",
       updatedAt: "2026-09-30T01:00:00.000Z",
-      productsScanned: 4,
+      productsScanned: null,
       rapexAlertsScanned: 0,
       alertsCreated: 2,
       attemptCount: 0,
@@ -28,7 +28,7 @@ describe("summarizeMonitoringRun", () => {
     expect(result).not.toHaveProperty("lastError");
   });
 
-  it("falls back to queued time and bounds malformed counts", () => {
+  it("falls back to queued time and treats unavailable counts as unknown", () => {
     const result = summarizeMonitoringRun("queued-1", {
       status: "queued",
       queuedAt: "2026-09-30T02:00:00Z",
@@ -38,8 +38,8 @@ describe("summarizeMonitoringRun", () => {
     });
 
     expect(result.updatedAt).toBe("2026-09-30T02:00:00.000Z");
-    expect(result.productsScanned).toBe(0);
-    expect(result.alertsCreated).toBe(0);
+    expect(result.productsScanned).toBeNull();
+    expect(result.alertsCreated).toBeNull();
     expect(result.attemptCount).toBe(1);
   });
 });

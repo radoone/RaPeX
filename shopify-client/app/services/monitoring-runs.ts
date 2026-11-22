@@ -3,9 +3,9 @@ export type MonitoringRunSummary = {
   status: string;
   hasMore?: boolean;
   updatedAt: string | null;
-  productsScanned: number;
+  productsScanned: number | null;
   rapexAlertsScanned: number;
-  alertsCreated: number;
+  alertsCreated: number | null;
   attemptCount: number;
 };
 
@@ -75,9 +75,9 @@ export function summarizeMonitoringRun(id: string, data: Record<string, unknown>
     status: typeof data.status === "string" ? data.status : "unknown",
     updatedAt: toIsoString((data.status === "completed" && data.completedAt) || data.updatedAt || data.queuedAt || data.createdAt),
     ...(typeof hasMore === "boolean" ? { hasMore } : {}),
-    productsScanned: monitoringCount(data, "productsScanned") ?? toCount(data.productsScanned),
+    productsScanned: monitoringCount(data, "productsScanned"),
     rapexAlertsScanned: monitoringCount(data, "rapexAlertsScanned") ?? toCount(data.rapexAlertsScanned),
-    alertsCreated: monitoringCount(data, "alertsCreated") ?? toCount(data.alertsCreated),
+    alertsCreated: monitoringCount(data, "alertsCreated"),
     attemptCount: toCount(data.attemptCount),
   };
 }

@@ -1,8 +1,8 @@
 {
   "createdOn": "2026-11-01T10:02:43.104Z",
   "model": "gemini-2.5-flash",
-  "sourceSha256": "2f3ea3a548daa30ad355d520fb844020491cce680e8cf143df7a0a5ade17a8da",
-  "sourceKeys": 1310,
+  "sourceSha256": "1f042ca469b6dfed9fc07d722258e75b97276f1db0f2937a648456b00f5bffdd",
+  "sourceKeys": 1331,
   "scope": "Complete Shopify merchant UI, excluding stored product facts, identifiers and original Safety Gate records; response guide translations updated with Gemini 2.5 Flash; response guide and monitoring evidence translations updated with Gemini 2.5 Flash",
   "nativeSpeakerReview": "Not performed for every language",
   "locales": {
@@ -14,70 +14,70 @@
       "extraPluralKeys": []
     },
     "cs": {
-      "keys": 1258,
+      "keys": 1279,
       "promptTokens": 33299,
       "outputTokens": 23441,
       "batches": 17,
       "extraPluralKeys": []
     },
     "es": {
-      "keys": 1258,
+      "keys": 1279,
       "promptTokens": 33299,
       "outputTokens": 19932,
       "batches": 17,
       "extraPluralKeys": []
     },
     "da": {
-      "keys": 1258,
+      "keys": 1279,
       "promptTokens": 32893,
       "outputTokens": 22044,
       "batches": 17,
       "extraPluralKeys": []
     },
     "bg": {
-      "keys": 1258,
+      "keys": 1279,
       "promptTokens": 30915,
       "outputTokens": 24085,
       "batches": 17,
       "extraPluralKeys": []
     },
     "el": {
-      "keys": 1258,
+      "keys": 1279,
       "promptTokens": 33459,
       "outputTokens": 29092,
       "batches": 17,
       "extraPluralKeys": []
     },
     "fi": {
-      "keys": 1258,
+      "keys": 1279,
       "promptTokens": 32673,
       "outputTokens": 24826,
       "batches": 17,
       "extraPluralKeys": []
     },
     "fr": {
-      "keys": 1258,
+      "keys": 1279,
       "promptTokens": 35247,
       "outputTokens": 21037,
       "batches": 17,
       "extraPluralKeys": []
     },
     "et": {
-      "keys": 1258,
+      "keys": 1279,
       "promptTokens": 34055,
       "outputTokens": 23845,
       "batches": 17,
       "extraPluralKeys": []
     },
     "hr": {
-      "keys": 1258,
+      "keys": 1279,
       "promptTokens": 32852,
       "outputTokens": 23248,
       "batches": 17,
       "extraPluralKeys": []
     },
     "ga": {
-      "keys": 1277,
+      "keys": 1298,
       "promptTokens": 34148,
       "outputTokens": 28984,
       "batches": 18,
@@ -104,21 +104,21 @@
       ]
     },
     "hu": {
-      "keys": 1258,
+      "keys": 1279,
       "promptTokens": 34450,
       "outputTokens": 25512,
       "batches": 17,
       "extraPluralKeys": []
     },
     "it": {
-      "keys": 1258,
+      "keys": 1279,
       "promptTokens": 37400,
       "outputTokens": 21407,
       "batches": 17,
       "extraPluralKeys": []
     },
     "lv": {
-      "keys": 1277,
+      "keys": 1298,
       "promptTokens": 38330,
       "outputTokens": 27930,
       "batches": 18,
@@ -145,35 +145,35 @@
       ]
     },
     "pt": {
-      "keys": 1258,
+      "keys": 1279,
       "promptTokens": 37434,
       "outputTokens": 19248,
       "batches": 17,
       "extraPluralKeys": []
     },
     "de": {
-      "keys": 1258,
+      "keys": 1279,
       "promptTokens": 35057,
       "outputTokens": 21602,
       "batches": 17,
       "extraPluralKeys": []
     },
     "lt": {
-      "keys": 1258,
+      "keys": 1279,
       "promptTokens": 37400,
       "outputTokens": 26470,
       "batches": 17,
       "extraPluralKeys": []
     },
     "nl": {
-      "keys": 1258,
+      "keys": 1279,
       "promptTokens": 37400,
       "outputTokens": 22322,
       "batches": 17,
       "extraPluralKeys": []
     },
     "mt": {
-      "keys": 1277,
+      "keys": 1298,
       "promptTokens": 38330,
       "outputTokens": 29082,
       "batches": 18,
@@ -200,21 +200,21 @@
       ]
     },
     "ro": {
-      "keys": 1258,
+      "keys": 1279,
       "promptTokens": 37400,
       "outputTokens": 22071,
       "batches": 17,
       "extraPluralKeys": []
     },
     "pl": {
-      "keys": 1258,
+      "keys": 1279,
       "promptTokens": 37400,
       "outputTokens": 21878,
       "batches": 17,
       "extraPluralKeys": []
     },
     "sl": {
-      "keys": 1277,
+      "keys": 1298,
       "promptTokens": 38330,
       "outputTokens": 24598,
       "batches": 18,
@@ -241,7 +241,7 @@
       ]
     },
     "sv": {
-      "keys": 1258,
+      "keys": 1279,
       "promptTokens": 37400,
       "outputTokens": 21736,
       "batches": 17,

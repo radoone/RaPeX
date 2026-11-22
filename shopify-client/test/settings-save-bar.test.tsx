@@ -108,6 +108,14 @@ beforeEach(() => {
 });
 
 describe("native settings save bar", () => {
+  it("shows a warning when enabled emails have no recipient", () => {
+    state.loader.settings = { ...(state.loader.settings as object), notificationEmail: "" };
+    const warning = find(render(), element =>
+      element.type === "s-banner" && element.props.heading === "settingsAdmin.notifications.noRecipientHeading",
+    );
+    expect(warning.props.tone).toBe("warning");
+  });
+
   it.each(Object.entries({
     threshold: "85", priority: true, immediate: false, weekly: true,
     email: "other@example.com", language: "de", vendors: "Other", types: "Toy",

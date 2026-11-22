@@ -59,7 +59,8 @@ describe("review queue pagination", () => {
     findMany.mockImplementation(async ({ where, skip = 0, take }: any) => {
       const matching = records.filter(record =>
         (!where.id || where.id === record.id) &&
-        (!where.status || where.status === record.status),
+        (!where.status || where.status === record.status) &&
+        (!where.riskLevel || where.riskLevel === record.riskLevel || where.riskLevel.in?.includes(record.riskLevel)),
       );
       return matching.slice(skip, take ? skip + take : undefined);
     });
@@ -97,6 +98,14 @@ describe("review queue pagination", () => {
       skip: 25,
       take: 25,
     });
+  });
+  it("filters historical Safety Gate severity labels without changing the shop queue totals", async () => {
+    const result = await load("?riskLevel=serious");
+    expect(result.alerts.map(alert => alert.id)).toEqual(["urgent"]);
+    expect(result.stats).toMatchObject({ active: 31, waiting: 1 });
+    expect(findMany.mock.calls[0][0].where.riskLevel.in).toEqual(expect.arrayContaining([
+      "serious", "Serious", "Serious risk",
+    ]));
   });
   it("opens linked supplier follow-ups without adding them to the decision queue", async () => {
     const queue = await load("?open=waiting");

@@ -41,18 +41,23 @@ export function MonitoringStatus({
 }) {
   const { t, i18n } = useTranslation();
   const monitorNeedsAction = state === "failed" || state === "delayed";
+  const completedCheckFormat = new Intl.DateTimeFormat(i18n.language, {
+    dateStyle: "medium",
+    timeStyle: "short",
+    timeZone: monitoringTimeZone,
+  });
 
   return (
     <section className="settings-overview__panel">
       <h2>{t("workspace.monitoringLabel")}</h2>
       <s-badge tone={state === "enabled" ? "success" : state === "processing" || state === "starting" ? "info" : "warning"}>
-        {t(`catalogOverview.monitoring.${state}`)}
+        {t(state === "enabled" ? "settingsOverview.on" : `catalogOverview.monitoring.${state}`)}
       </s-badge>
       <p className="admin-helper">
         {lastSuccess ? (
           <>
             {t("workspace.lastSuccess")}{" "}
-            <LocalDateTime value={lastSuccess} locale={i18n.language} />
+            <LocalDateTime value={lastSuccess} locale={i18n.language} format={completedCheckFormat.format} />
           </>
         ) : t("workspace.neverRun")}
       </p>

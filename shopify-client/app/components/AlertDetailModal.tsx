@@ -4,6 +4,7 @@ import { imageUrls, warningImages } from "../services/product-images";
 import { ReviewImageGallery, type OpenGallery } from "./ReviewImageGallery";
 import { useTranslation } from "react-i18next";
 import { AlertBadge } from "./AlertBadge";
+import { LocalDateTime } from "./LocalDateTime";
 import { StatusBadge } from "./StatusBadge";
 import type { ResolutionType } from "./AlertTable";
 import {
@@ -38,6 +39,7 @@ interface AlertDetailModalProps {
   onReactivate?: (alertId: string) => void;
   isLoading?: boolean;
   openOnMount?: boolean;
+  inline?: boolean;
   waitForDecisionSave?: boolean;
   decisionSaveFailed?: boolean;
 }
@@ -51,6 +53,7 @@ export function AlertDetailModal({
   onReactivate,
   isLoading = false,
   openOnMount = false,
+  inline = false,
   waitForDecisionSave = false,
   decisionSaveFailed = false,
 }: AlertDetailModalProps) {
@@ -88,9 +91,9 @@ export function AlertDetailModal({
     if (!isHydrated) return;
     const modal = document.getElementById(modalId);
     modal?.addEventListener("show", loadPhotos);
-    if (openOnMount) loadPhotos();
+    if (openOnMount || inline) loadPhotos();
     return () => modal?.removeEventListener("show", loadPhotos);
-  }, [isHydrated, loadPhotos, modalId, openOnMount]);
+  }, [inline, isHydrated, loadPhotos, modalId, openOnMount]);
   const openGallery: OpenGallery = (images, index, title) => setLightbox({ images, index, title });
   const moveLightbox = (step: number) => setLightbox(current => current && ({
     ...current, index: (current.index + step + current.images.length) % current.images.length,
@@ -162,7 +165,7 @@ export function AlertDetailModal({
     return () => btn.removeEventListener("click", handleClick);
   }, [alert, onReactivate]);
 
-  if (!alert || !isHydrated) return null;
+  if (!alert || (!inline && !isHydrated)) return null;
 
   const warnings: any[] = Array.isArray(parsed?.warnings)
     ? parsed.warnings
@@ -187,6 +190,8 @@ export function AlertDetailModal({
     fields.product_model ||
     fields.model;
   const { caseNumber, url: safetyUrl } = officialSource(fields);
+  const publishedAt = fields.alert_date || primaryWarning?.alertDetails?.meta?.alert_date;
+  const notifyingCountry = fields.notifyingCountry || fields.alert_country || fields.notifying_country;
   const isSafe = parsed?.isSafe === true;
   const overallSimilarity =
     typeof primaryWarning?.overallSimilarity === "number"
@@ -278,8 +283,8 @@ export function AlertDetailModal({
   const officialRiskTypes = typeof rawRiskTypes === "string"
     ? [...new Set(rawRiskTypes.split(",").map(type => type.trim()).filter(Boolean))]
     : [];
-  const { danger: officialDanger } = officialRiskDetails(fields);
-  const hasOfficialRisk = Boolean(officialRiskLevel || officialRiskTypes.length || officialDanger);
+  const { danger: officialDanger, measures } = officialRiskDetails(fields);
+  const hasOfficialRisk = Boolean(officialRiskLevel || officialRiskTypes.length || officialDanger || measures);
   const closeWhenSubmitted = canRecordDecision && !waitForDecisionSave;
   const listFormat = new Intl.ListFormat(i18n.language);
 
@@ -315,17 +320,31 @@ export function AlertDetailModal({
     );
   }
 
+  const ReviewContainer = inline ? "s-section" : "s-modal";
+  const recordButton = (
+    <s-button
+      slot={inline ? undefined : "primary-action"}
+      variant="primary"
+      disabled={!canRecordDecision || isLoading}
+      loading={isLoading || undefined}
+      onClick={recordDecision}
+      commandFor={!inline && closeWhenSubmitted ? modalId : undefined}
+      command={!inline && closeWhenSubmitted ? "--hide" : undefined}
+    >
+      {t("actions.recordDecision")}
+    </s-button>
+  );
   return (
     <>
-      <s-modal
+      <ReviewContainer
         id={modalId}
-        heading={t("analysis.modalHeading")}
+        heading={inline ? undefined : t("analysis.modalHeading")}
         accessibilityLabel={t("analysis.modalAccessibilityLabel", {
           title: alert.productTitle,
         })}
-        size="large"
+        size={inline ? undefined : "large"}
       >
-        <div className="review-modal">
+        <div className={inline ? "review-modal review-page" : "review-modal"}>
           <div className="review-modal__summary">
             <div>
               <h2 className="review-modal__title">{alert.productTitle}</h2>
@@ -355,6 +374,94 @@ export function AlertDetailModal({
 
           <div className="review-modal__body-grid">
             <div className="review-modal__evidence-column">
+              <section
+                className="review-modal__section"
+              aria-label={t("analysis.reviewLayout.compareHeading")}
+            >
+            <div className="review-modal__section-heading">
+              <h3>{t("analysis.reviewLayout.compareHeading")}</h3>
+              <span>{t("analysis.reviewLayout.compareHint")}</span>
+            </div>
+            <div className="review-modal__comparison">
+              <div className="review-modal__product-card">
+                <span className="review-modal__card-label">
+                  {t("analysis.yourProduct")}
+                </span>
+                <ReviewImageGallery images={merchantPictures} title={alert.productTitle} onOpen={openGallery} />
+                {photoLoading && <p role="status">{t("common.loading")}</p>}
+                {photoRequestFailed && <div role="status">
+                  <p>{t("gallery.loadError")}</p>
+                  <s-button onClick={() => { requestedPhotos.current = null; loadPhotos(); }}>{t("actions.retry")}</s-button>
+                </div>}
+                <div className="review-modal__card-details">
+                  <strong>{alert.productTitle}</strong>
+                  {alert.productSku && <span>SKU {alert.productSku}</span>}
+                  {(alert.productVendor || alert.productType) && (
+                    <span>
+                      {[alert.productVendor, alert.productType]
+                        .filter(Boolean)
+                        .join(" · ")}
+                    </span>
+                  )}
+                  <s-link
+                    href={`https://${alert.shop}/admin/products/${productId}`}
+                    target="_blank"
+                  >
+                    {t("analysis.editInShopify")}
+                  </s-link>
+                </div>
+              </div>
+              <div className="review-modal__product-card review-modal__product-card--safety">
+                <span className="review-modal__card-label">Safety Gate</span>
+                <ReviewImageGallery images={pictures} title={safetyTitle} onOpen={openGallery} />
+                <div className="review-modal__card-details">
+                  <strong>{safetyTitle}</strong>
+                  {officialRiskLevel && <AlertBadge alertLevel={officialRiskLevel} showSeverity />}
+                  {(safetyBrand || safetyModel) && (
+                    <span>
+                      {[safetyBrand, safetyModel].filter(Boolean).join(" · ")}
+                    </span>
+                  )}
+                  {caseNumber && (
+                    <span>
+                      {t("analysis.alertNumber", { number: caseNumber })}
+                    </span>
+                  )}
+                  {notifyingCountry && <span>{t("analysis.fields.notifyingCountry")} · {notifyingCountry}</span>}
+                  {publishedAt && (
+                    <span>
+                      {t("analysis.fields.alertDate")} ·{" "}
+                      <LocalDateTime value={publishedAt} format={new Intl.DateTimeFormat(i18n.language, { dateStyle: "medium", timeZone: "UTC" }).format} />
+                    </span>
+                  )}
+                  {safetyUrl ? (
+                    <s-link href={safetyUrl} target="_blank">{t("analysis.viewOnSafetyGate")}</s-link>
+                  ) : <span className="admin-helper">{t("workspace.sourceMissing")}</span>}
+                  {!caseNumber && (
+                    <span className="admin-helper">
+                      {t("workspace.referenceMissing")}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+              </section>
+              {primaryWarning?.matchBasis !== "gtin" && (overallSimilarity !== null || imageSimilarity !== null) && (
+                <section className="review-score">
+                  <h3>{t("redesign.aiSimilarity")}</h3>
+                  <p>{t("workspace.scoreHelp")}</p>
+                  <div className="review-modal__points">
+                    {overallSimilarity !== null && (
+                      <strong>{t("analysis.overallMatchShort", { count: overallSimilarity })}</strong>
+                    )}
+                    {imageSimilarity !== null && (
+                      <span>{t("analysis.imageMatchShort", { count: imageSimilarity })}</span>
+                    )}
+                  </div>
+                  {primaryWarning.reason && <p>{primaryWarning.reason}</p>}
+                </section>
+              )}
               <div className="review-evidence-summary review-evidence-summary--compact">
             <section>
               <h3>{t("findingOverview.matches")}</h3>
@@ -396,77 +503,15 @@ export function AlertDetailModal({
                   </details> : <p>{officialDanger}</p>)}
                 </>
               ) : <p>{t("findingOverview.riskUnavailable")}</p>}
-              {safetyUrl && (
-                <s-link href={safetyUrl} target="_blank">
-                  {t("analysis.viewOnSafetyGate")}
-                </s-link>
+              {measures && (
+                <details className="review-evidence-risk-details">
+                  <summary>{t("redesign.officialMeasures")}</summary>
+                  <p>{measures}</p>
+                </details>
               )}
               </div>
             </section>
               </div>
-              <section
-                className="review-modal__section"
-              aria-label={t("analysis.reviewLayout.compareHeading")}
-            >
-            <div className="review-modal__section-heading">
-              <h3>{t("analysis.reviewLayout.compareHeading")}</h3>
-              <span>{t("analysis.reviewLayout.compareHint")}</span>
-            </div>
-            <div className="review-modal__comparison">
-              <div className="review-modal__product-card">
-                <span className="review-modal__card-label">
-                  {t("analysis.yourProduct")}
-                </span>
-                <ReviewImageGallery images={merchantPictures} title={alert.productTitle} onOpen={openGallery} />
-                {photoLoading && <p role="status">{t("common.loading")}</p>}
-                {photoRequestFailed && <div role="status">
-                  <p>{t("gallery.loadError")}</p>
-                  <s-button onClick={() => { requestedPhotos.current = null; loadPhotos(); }}>{t("actions.retry")}</s-button>
-                </div>}
-                <div className="review-modal__card-details">
-                  <strong>{alert.productTitle}</strong>
-                  {(alert.productVendor || alert.productType) && (
-                    <span>
-                      {[alert.productVendor, alert.productType]
-                        .filter(Boolean)
-                        .join(" · ")}
-                    </span>
-                  )}
-                  <s-link
-                    href={`https://${alert.shop}/admin/products/${alert.productId}`}
-                    target="_blank"
-                  >
-                    {t("analysis.editInShopify")}
-                  </s-link>
-                </div>
-              </div>
-              <div className="review-modal__product-card review-modal__product-card--safety">
-                <span className="review-modal__card-label">Safety Gate</span>
-                <ReviewImageGallery images={pictures} title={safetyTitle} onOpen={openGallery} />
-                <div className="review-modal__card-details">
-                  <strong>{safetyTitle}</strong>
-                  {(safetyBrand || safetyModel) && (
-                    <span>
-                      {[safetyBrand, safetyModel].filter(Boolean).join(" · ")}
-                    </span>
-                  )}
-                  {caseNumber && (
-                    <span>
-                      {t("analysis.alertNumber", { number: caseNumber })}
-                    </span>
-                  )}
-                  {!safetyUrl && (
-                    <span className="admin-helper">{t("workspace.sourceMissing")}</span>
-                  )}
-                  {!caseNumber && (
-                    <span className="admin-helper">
-                      {t("workspace.referenceMissing")}
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
-
             <div style={{ marginTop: "16px" }}>
               <div
                 className="review-modal__section-heading"
@@ -533,34 +578,9 @@ export function AlertDetailModal({
                 </tbody>
               </table>
             </div>
-              </section>
             </div>
 
           <div className="review-modal__final-row">
-            {primaryWarning?.matchBasis !== "gtin" && <details className="advanced-settings-disclosure">
-              <summary>{t("workspace.scoreDetails")}</summary>
-              <p>{t("workspace.scoreHelp")}</p>
-              <div className="review-modal__points">
-                <div>
-                  <strong>
-                    {t("analysis.overallMatchShort", {
-                      count: overallSimilarity || 0,
-                    })}
-                  </strong>
-                </div>
-                <div>
-                  <strong>{t("analysis.imageMatch")}</strong>
-                  <span>
-                    {imageSimilarity !== null
-                      ? t("analysis.imageMatchShort", {
-                          count: imageSimilarity,
-                        })
-                      : t("common.unknown")}
-                  </span>
-                </div>
-              </div>
-            </details>}
-
             {isActive ? (
               <section
                 className="review-modal__decision"
@@ -687,6 +707,7 @@ export function AlertDetailModal({
                 <p className="review-modal__decision-note">
                   {t("workspace.resultHelp")}
                 </p>
+                {inline && recordButton}
               </section>
             ) : (
               <div className="review-modal__recorded">
@@ -768,33 +789,22 @@ export function AlertDetailModal({
             </details>
           )}
         </div>
-        {isActive && (
-          <s-button
-            slot="primary-action"
-            variant="primary"
-            disabled={!canRecordDecision || isLoading}
-            loading={isLoading || undefined}
-            onClick={recordDecision}
-            commandFor={closeWhenSubmitted ? modalId : undefined}
-            command={closeWhenSubmitted ? "--hide" : undefined}
-          >
-            {t("actions.recordDecision")}
-          </s-button>
-        )}
+        {!inline && isActive && recordButton}
         {onReactivate && (alert.status === "dismissed" || alert.status === "resolved") && (
           <s-button
             ref={reactivateBtnRef}
             slot="secondary-actions"
             variant="secondary"
             icon="undo"
-            commandFor={modalId}
-            command="--hide"
+            commandFor={inline ? undefined : modalId}
+            command={inline ? undefined : "--hide"}
+            disabled={isLoading}
             loading={isLoading || undefined}
           >
             {t("actions.reactivate")}
           </s-button>
         )}
-        <s-button
+        {!inline && <s-button
           id={`${modalId}-close`}
           slot="secondary-actions"
           variant="secondary"
@@ -802,11 +812,11 @@ export function AlertDetailModal({
           command="--hide"
         >
           {t("common.cancel")}
-        </s-button>
-      </s-modal>
+        </s-button>}
+      </ReviewContainer>
 
       {/* Image Lightbox (top-layer dialog so it always appears above s-modal) */}
-      {typeof document !== "undefined" &&
+      {isHydrated &&
         createPortal(
           <dialog
             ref={lightboxDialogRef}
@@ -1083,8 +1093,7 @@ function WarningCard({
           >
             <s-stack gap="small-100">
               <s-text fontWeight="bold" tone="warning" size="small">
-                {t("analysis.measures") ||
-                  "Compulsory / Economic Operator Measures"}
+                {t("redesign.officialMeasures")}
               </s-text>
               <s-text size="small">{measuresDescription}</s-text>
             </s-stack>

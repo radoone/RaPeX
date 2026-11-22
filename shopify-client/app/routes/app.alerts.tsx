@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "react-router";
 import {
   useLoaderData,
+  useLocation,
   useFetcher,
   useNavigate,
   useRouteError,
@@ -16,6 +17,15 @@ import { withOfficialReferences } from "../services/review-evidence.server";
 import { isWaitingForSupplier } from "../services/review-evidence";
 import { compareReviewPriority } from "../services/review-priority";
 import { AlertTable, AlertDetailModal } from "../components";
+
+// Historic findings store either the normalized severity or the original Safety Gate label.
+const riskFilterAliases = new Map([
+  ["serious", ["Serious", "serious risk", "Serious risk", "1"]],
+  ["high", ["High", "high risk", "High risk", "2"]],
+  ["medium", ["Medium", "medium risk", "Medium risk", "3"]],
+  ["low", ["Low", "low risk", "Low risk", "4"]],
+  ["other risk", ["Other risk", "Other Risk"]],
+]);
 
 export const loader = async ({ request, url }: LoaderFunctionArgs) => {
   const { session, admin } = await authenticate.admin(request);
@@ -53,11 +63,8 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
   else if (statusFilters.length > 0)
     whereClause.status =
       statusFilters.length === 1 ? statusFilters[0] : { in: statusFilters };
-  if (riskLevelFilters.length > 0)
-    whereClause.riskLevel =
-      riskLevelFilters.length === 1
-        ? riskLevelFilters[0]
-        : { in: riskLevelFilters };
+  const riskValues = [...new Set(riskLevelFilters.flatMap(value => [value, ...(riskFilterAliases.get(value) ?? [])]))];
+  if (riskValues.length) whereClause.riskLevel = riskValues.length === 1 ? riskValues[0] : { in: riskValues };
   if (search) whereClause.productTitle = { contains: search };
 
   const reviewOnly = statusFilters.length === 1 && statusFilters[0] === "active";
@@ -119,12 +126,20 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
 
   const productImages: Record<string, string | null> = {};
   const productBrands: Record<string, string | null> = {};
+  const productSkus: Record<string, string> = {};
   if (productIds.length > 0) {
     try {
       const response = await admin.graphql(
         `#graphql
         query getProductImages($ids: [ID!]!) {
-          nodes(ids: $ids) { ... on Product { id vendor featuredImage { url } } }
+          nodes(ids: $ids) {
+            ... on Product {
+              id
+              vendor
+              featuredImage { url }
+              variants(first: 2) { nodes { sku } }
+            }
+          }
         }`,
         { variables: { ids: productIds } },
       );
@@ -136,6 +151,9 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
           productImages[node.id] = node.featuredImage?.url || null;
           productBrands[numericId] = node.vendor || null;
           productBrands[node.id] = node.vendor || null;
+          if (node.variants?.nodes?.length === 1 && node.variants.nodes[0].sku) {
+            productSkus[node.id] = productSkus[numericId] = node.variants.nodes[0].sku;
+          }
         }
       });
     } catch (error) {
@@ -158,7 +176,7 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
       if (warnings.length > 0) {
         const first = warnings[0];
         matchBasis = first.matchBasis || "similarity";
-        overallSimilarity = matchBasis === "gtin" ? null : first.overallSimilarity || null;
+        overallSimilarity = matchBasis === "gtin" ? null : first.overallSimilarity ?? null;
         alertType =
           first.alertType ||
           first.alertDetails?.fields?.alert_type ||
@@ -170,6 +188,7 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
         alertDetails = first.alertDetails || null;
         // Extract risk level from checkResult (more reliable than DB field for older records)
         riskLevelFromResult =
+          first.alertDetails?.fields?.level ||
           first.alertDetails?.fields?.alert_level ||
           first.alertDetails?.fields?.risk_level ||
           first.riskLevel ||
@@ -190,8 +209,9 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
       alertDetails,
       overallSimilarity,
       matchBasis,
-      riskLevel: effectiveRiskLevel,
+      riskLevel: String(effectiveRiskLevel),
       brand: productBrands[alert.productId] || alert.brand || null,
+      productSku: productSkus[alert.productId] || null,
       productImage:
         productImages[alert.productId] ||
         productImages[`gid://shopify/Product/${alert.productId}`] ||
@@ -316,7 +336,7 @@ export function ErrorBoundary() {
       : t("common.unknown");
 
   return (
-    <s-page suppressHydrationWarning heading={t("alerts.title")}>
+    <s-page suppressHydrationWarning heading={t("redesign.potentialMatches")}>
 
       <div className="admin-stack" style={{ marginTop: "var(--s-space-400)" }}>
         <s-banner tone="critical" heading={t("errors.pageLoadFailed")}>
@@ -340,6 +360,16 @@ export default function AlertsPage() {
     useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
   const navigate = useNavigate();
+  const location = useLocation();
+  const queueParams = new URLSearchParams(location.search);
+  queueParams.delete("open");
+  const queueHref = queueParams.size ? `/app/alerts?${queueParams}` : "/app/alerts";
+  const reviewHref = (id: string) => {
+    const params = new URLSearchParams(queueParams);
+    params.set("open", id);
+    return `/app/alerts?${params}`;
+  };
+  const selectedAlert = alerts.find(alert => alert.id === filters.openAlertId) ?? linkedAlert;
   const { t } = useTranslation();
   const shopify = useAppBridge();
 
@@ -351,7 +381,7 @@ export default function AlertsPage() {
     ? fetcher.data
     : null;
   const searchTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  useEffect(() => () => clearTimeout(searchTimeout.current), []);
+  useEffect(() => () => clearTimeout(searchTimeout.current), [location.key]);
   const [searchValue, setSearchValue] = useState(filters.search || "");
   const [statusFilter, setStatusFilter] = useState<string[]>(
     filters.status || [],
@@ -464,7 +494,6 @@ export default function AlertsPage() {
 
   useEffect(() => {
     if (reviewReceipt?.reviewedAlertId) {
-      document.getElementById(`alert-detail-${reviewReceipt.reviewedAlertId}-close`)?.click();
       document.getElementById("decision-saved")?.focus();
     } else if (fetcher.state === "idle" && fetcher.data?.success) {
       shopify.toast.show(t("alerts.toasts.updated"));
@@ -474,15 +503,54 @@ export default function AlertsPage() {
   const needsDecision = stats.active > 0;
   const hasOpenFindings = needsDecision || stats.waiting > 0;
   const queueTone = needsDecision ? "critical" : hasOpenFindings ? "warning" : "success";
-  const nextAlertVisible = alerts.some(alert => alert.id === nextAlertId);
   const queueHeading = needsDecision
     ? t("dashboard.admin.status.reviewNeeded.title", { count: stats.active })
     : stats.waiting > 0
       ? `${t("workspace.waiting")} (${stats.waiting})`
       : t("dashboard.admin.status.noActionNeeded.title");
 
+  if (filters.openAlertId) {
+    const decisionSaved = reviewReceipt?.reviewedAlertId === selectedAlert?.id && Boolean(reviewReceipt);
+    const decisionFailed = submittedAlertId === selectedAlert?.id && fetcher.state === "idle" && fetcher.data?.success === false;
+    return (
+      <s-page inlineSize="large" heading={t("redesign.matchReview")}>
+        <s-link href={queueHref}>{t("redesign.potentialMatches")}</s-link>
+        {decisionSaved && (
+          <div id="decision-saved" tabIndex={-1} role="status">
+            <s-banner tone="success" heading={t("analysis.decisionRecorded")}>
+              {nextAlertId && nextAlertId !== selectedAlert?.id && (
+                <s-link href={`/app/alerts?status=active&open=${encodeURIComponent(nextAlertId)}`}>{t("catalogOverview.reviewNext")}</s-link>
+              )}
+            </s-banner>
+          </div>
+        )}
+        {decisionFailed && selectedAlert?.status !== "active" && (
+          <s-banner tone="critical" heading={t("findingOverview.saveFailed")} />
+        )}
+        {selectedAlert ? (
+          <AlertDetailModal
+            key={selectedAlert.id}
+            inline
+            alert={{ ...selectedAlert, shop: selectedAlert.shop || shop }}
+            decisionHistory={decisionHistory}
+            modalId={`alert-detail-${selectedAlert.id}`}
+            onDismiss={(id, outcome, notes) => handleAlertAction(id, "dismiss", outcome, notes)}
+            onResolve={(id, outcome, notes) => handleAlertAction(id, "resolve", outcome, notes)}
+            onReactivate={id => handleAlertAction(id, "reactivate")}
+            decisionSaveFailed={decisionFailed}
+            isLoading={fetcher.state !== "idle"}
+          />
+        ) : (
+          <s-banner tone="warning" heading={t("errors.pageLoadFailed")}>
+            <s-link href={queueHref}>{t("redesign.potentialMatches")}</s-link>
+          </s-banner>
+        )}
+      </s-page>
+    );
+  }
+
   return (
-    <s-page inlineSize="large" className="page-shell" suppressHydrationWarning heading={t("alerts.title")}>
+    <s-page inlineSize="large" className="page-shell" suppressHydrationWarning heading={t("redesign.potentialMatches")}>
       {!hasOpenFindings && (
         <s-button
           slot="primary-action"
@@ -526,16 +594,8 @@ export default function AlertsPage() {
                 {nextAlertId && (
                   <s-button
                     variant="primary"
-                    commandFor={nextAlertVisible ? `alert-detail-${nextAlertId}` : undefined}
-                    command={nextAlertVisible ? "--show" : undefined}
+                    href={reviewHref(nextAlertId)}
                     disabled={fetcher.state !== "idle"}
-                    onClick={() => {
-                      clearTimeout(searchTimeout.current);
-                      if (reviewReceipt) fetcher.reset();
-                      if (!nextAlertVisible) {
-                        navigate(`/app/alerts?status=active&open=${encodeURIComponent(nextAlertId)}`);
-                      }
-                    }}
                   >
                     {t("catalogOverview.reviewNext")}
                   </s-button>
@@ -552,6 +612,7 @@ export default function AlertsPage() {
           bulkSaveVersion={bulkSaveVersion}
           bulkSaveFailed={bulkSaveFailed}
           modalIdPrefix="alert-detail"
+          reviewHref={reviewHref}
           searchValue={searchValue}
           onSearchChange={(value) => {
             setSearchValue(value);
@@ -559,6 +620,11 @@ export default function AlertsPage() {
             searchTimeout.current = setTimeout(() => applyFilters({ search: value }), 300);
           }}
           statusFilter={statusFilter}
+          riskLevelFilter={riskLevelFilter}
+          onRiskLevelChange={riskLevel => {
+            setRiskLevelFilter(riskLevel);
+            applyFilters({ riskLevel });
+          }}
           onStatusChange={(status) => {
             const newFilter = status ? [status] : [];
             setStatusFilter(newFilter);
@@ -580,28 +646,6 @@ export default function AlertsPage() {
         />
       </div>
 
-      {/* Render a modal for each alert - s-modal uses commandFor to open */}
-      {(linkedAlert ? [...alerts, linkedAlert] : alerts).map((alert) => (
-        <AlertDetailModal
-          key={alert.id}
-          alert={{ ...alert, shop: alert.shop || shop }}
-          decisionHistory={
-            alert.id === filters.openAlertId ? decisionHistory : []
-          }
-          modalId={`alert-detail-${alert.id}`}
-          openOnMount={alert.id === filters.openAlertId}
-          onDismiss={(id, resolutionType, notes) =>
-            handleAlertAction(id, "dismiss", resolutionType, notes)
-          }
-          onResolve={(id, resolutionType, notes) =>
-            handleAlertAction(id, "resolve", resolutionType, notes)
-          }
-          onReactivate={(id) => handleAlertAction(id, "reactivate")}
-          waitForDecisionSave
-          decisionSaveFailed={alert.id === submittedAlertId && fetcher.state === "idle" && fetcher.data?.success === false}
-          isLoading={fetcher.state !== "idle"}
-        />
-      ))}
     </s-page>
   );
 }

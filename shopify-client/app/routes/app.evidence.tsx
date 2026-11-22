@@ -7,11 +7,15 @@ import {
   isRouteErrorResponse,
   useLoaderData,
   useNavigate,
+  useRevalidator,
   useRouteError,
 } from "react-router";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { boundary } from "@shopify/shopify-app-react-router/server";
+import { firestore } from "../firestore.server";
+import { getRecentMonitoringRuns } from "../services/monitoring-runs.server";
+import { summarizeMonitoringRun } from "../services/monitoring-runs";
 import { authenticate } from "../shopify.server";
 import {
   reviewRecords,
@@ -27,7 +31,34 @@ import { ReviewStatusSummary, reviewStatusOptions } from "../components/ReviewSt
 export const headers = boundary.headers;
 export const loader = async ({ request, url }: LoaderFunctionArgs) => {
   const { session } = await authenticate.admin(request);
-  const view = url.searchParams.get("view") === "findings" ? "findings" : "decisions";
+  const requestedView = url.searchParams.get("view");
+  if (requestedView === "scans") {
+    try {
+      const merchant = firestore.collection("merchants").doc(encodeURIComponent(session.shop));
+      const [monitoring, settings] = await Promise.all([
+        getRecentMonitoringRuns(session.shop, 5),
+        merchant.get(),
+      ]);
+      const auditId = settings.get("initialScanRunId");
+      const audit = typeof auditId === "string" && auditId && !auditId.includes("/")
+        ? await merchant.collection("initial_catalog_runs").doc(auditId).get()
+        : null;
+      const auditData = audit?.data();
+      const runs = monitoring.map(run => ({ ...run, type: "monitoring" as const }));
+      return json({
+        view: "scans" as const,
+        runs: [
+          ...runs,
+          ...(auditData ? [{ ...summarizeMonitoringRun(auditId, auditData), type: "initial" as const }] : []),
+        ].sort((left, right) => (right.updatedAt ?? "").localeCompare(left.updatedAt ?? "")),
+        failed: false,
+      });
+    } catch (error) {
+      console.warn("Could not load scan history", { shop: session.shop, error });
+      return json({ view: "scans" as const, runs: [], failed: true });
+    }
+  }
+  const view = requestedView === "findings" ? "findings" as const : "decisions" as const;
   const filters = { ...reviewFilters(url), dateBasis: view as "findings" | "decisions" };
   return json({
     ...(await reviewRecords(session.shop, filters, 100)),
@@ -35,8 +66,80 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
   });
 };
 export default function EvidencePage() {
-  const { records, total, view, filters, shopSummary } =
-    useLoaderData<typeof loader>();
+  const data = useLoaderData<typeof loader>();
+  return data.view === "scans" ? <ScanHistory data={data} /> : <EvidenceRecords data={data} />;
+}
+
+function HistoryLinks({ scans }: { scans: boolean }) {
+  const { t } = useTranslation();
+  return (
+    <s-stack direction="inline" gap="base" alignItems="center" wrap>
+      {scans ? <s-text fontWeight="semibold">{t("redesign.scans")}</s-text> :
+        <s-link href="/app/evidence?view=scans">{t("redesign.scans")}</s-link>}
+      {scans ? <s-link href="/app/evidence">{t("workspace.history")}</s-link> :
+        <s-text fontWeight="semibold">{t("workspace.history")}</s-text>}
+    </s-stack>
+  );
+}
+
+type HistoryData = Awaited<ReturnType<typeof loader>>["data"];
+
+function ScanHistory({ data }: { data: Extract<HistoryData, { view: "scans" }> }) {
+  const { t, i18n } = useTranslation();
+  const revalidator = useRevalidator();
+  const number = new Intl.NumberFormat(i18n.language);
+  return (
+    <s-page inlineSize="large" heading={t("redesign.scanHistory")}>
+      <s-stack gap="base">
+        <s-stack direction="inline" gap="base" justifyContent="space-between" alignItems="center" wrap>
+          <HistoryLinks scans />
+          <s-button href="/app/audit-report" variant="secondary">{t("workspace.reportTitle")}</s-button>
+        </s-stack>
+        {data.failed ? (
+          <s-banner tone="warning" heading={t("errors.pageLoadFailed")}>
+            <s-button onClick={() => revalidator.revalidate()} loading={revalidator.state !== "idle"}>{t("actions.retry")}</s-button>
+          </s-banner>
+        ) : (
+          <s-section heading={t("redesign.recentScans")}>
+            {data.runs.length ? (
+              <s-table>
+                <s-table-header-row>
+                  <s-table-header listSlot="primary">{t("redesign.scanDate")}</s-table-header>
+                  <s-table-header listSlot="inline">{t("alerts.table.headers.status")}</s-table-header>
+                  <s-table-header listSlot="labeled">{t("redesign.scanType")}</s-table-header>
+                  <s-table-header listSlot="labeled" format="numeric">{t("redesign.productsScanned")}</s-table-header>
+                  <s-table-header listSlot="labeled" format="numeric">{t("redesign.potentialMatches")}</s-table-header>
+                </s-table-header-row>
+                <s-table-body>
+                  {data.runs.map(run => {
+                    const status = run.status === "running" || run.status === "importing" || run.status === "scanning"
+                      ? "processing" : run.status;
+                    const statusKey = ["queued", "processing", "retrying", "completed", "failed", "enqueue_failed", "skipped_unentitled"].includes(status)
+                      ? status : "unknown";
+                    const tone = statusKey === "completed" ? "success"
+                      : statusKey === "failed" || statusKey === "enqueue_failed" ? "critical" : "info";
+                    return (
+                      <s-table-row key={`${run.type}-${run.id}`}>
+                        <s-table-cell>{run.updatedAt ? <LocalDateTime value={run.updatedAt} locale={i18n.language} /> : "—"}</s-table-cell>
+                        <s-table-cell><s-badge tone={tone}>{t(`dashboard.admin.monitoringRunStatus.${statusKey}`)}</s-badge></s-table-cell>
+                        <s-table-cell>{t(run.type === "initial" ? "redesign.initialScan" : "dashboard.admin.monitoringRunsTitle")}</s-table-cell>
+                        <s-table-cell>{status === "completed" && run.productsScanned != null ? number.format(run.productsScanned) : "—"}</s-table-cell>
+                        <s-table-cell>{status === "completed" && run.alertsCreated != null ? number.format(run.alertsCreated) : "—"}</s-table-cell>
+                      </s-table-row>
+                    );
+                  })}
+                </s-table-body>
+              </s-table>
+            ) : <s-text tone="subdued">{t("redesign.noScans")}</s-text>}
+          </s-section>
+        )}
+      </s-stack>
+    </s-page>
+  );
+}
+
+function EvidenceRecords({ data }: { data: Exclude<HistoryData, { view: "scans" }> }) {
+  const { records, total, view, filters, shopSummary } = data;
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [search, setSearch] = useState(filters.query || "");
@@ -139,6 +242,7 @@ export default function EvidencePage() {
         {t("workspace.reportTitle")}
       </s-button>
       <div className="admin-stack">
+        <HistoryLinks scans={false} />
         {exportFailed ? (
           <s-banner tone="critical" heading={t("errors.apiError")}>
             <s-text>{t("actions.retry")}</s-text>

@@ -3,13 +3,14 @@ import { useTranslation } from "react-i18next";
 import { LocalDateTime, useHydrated } from "./LocalDateTime";
 import { localizeRisk } from "./AlertBadge";
 import { prepareBulkReview } from "../services/bulk-review";
-import { isWaitingForSupplier } from "../services/review-evidence";
+import { isWaitingForSupplier, officialSource } from "../services/review-evidence";
 
 interface Alert {
   id: string;
   productId?: string;
   productTitle: string;
   productImage?: string | null;
+  productSku?: string | null;
   riskLevel: string;
   alertType?: string;
   riskDescription?: string;
@@ -44,6 +45,9 @@ interface AlertTableProps {
   bulkSaveVersion?: number;
   bulkSaveFailed?: boolean;
   modalIdPrefix?: string;
+  reviewHref: (id: string) => string;
+  riskLevelFilter?: string[];
+  onRiskLevelChange?: (riskLevels: string[]) => void;
   // Filter props
   searchValue?: string;
   onSearchChange?: (value: string) => void;
@@ -74,6 +78,9 @@ export function AlertTable({
   bulkSaveVersion = 0,
   bulkSaveFailed = false,
   modalIdPrefix = "alert-modal",
+  reviewHref,
+  riskLevelFilter = [],
+  onRiskLevelChange,
   searchValue = "",
   onSearchChange,
   statusFilter = [],
@@ -166,7 +173,7 @@ export function AlertTable({
           </div>
 
           {/* Search and sort row */}
-          <s-grid gap="small-200" gridTemplateColumns="1fr auto">
+          <div className="match-list-toolbar">
             <s-text-field
               label={t("alerts.table.searchLabel")}
               labelAccessibilityVisibility="exclusive"
@@ -175,6 +182,25 @@ export function AlertTable({
               value={searchValue}
               onInput={(e: any) => onSearchChange?.(e.currentTarget.value || "")}
             />
+            <s-button variant="secondary" commandFor="risk-filter-popover">
+              {t("findingOverview.officialRisk")}{riskLevelFilter.length ? ` (${riskLevelFilter.length})` : ""}
+            </s-button>
+            <s-popover id="risk-filter-popover">
+              <s-box padding="base">
+                <s-choice-list
+                  label={t("findingOverview.officialRisk")}
+                  name="riskLevel"
+                  multiple
+                  onChange={(event: any) => onRiskLevelChange?.(event.currentTarget.values ?? [])}
+                >
+                  {Array.from(new Set(["serious", "high", "medium", "low", "other risk", ...riskLevelFilter])).map(value => (
+                    <s-choice key={value} value={value} selected={riskLevelFilter.includes(value)}>
+                      {localizeRisk(value, t)}
+                    </s-choice>
+                  ))}
+                </s-choice-list>
+              </s-box>
+            </s-popover>
             <s-button
               variant="secondary"
               accessibilityLabel={t("alerts.table.sort")}
@@ -235,7 +261,7 @@ export function AlertTable({
                 )}
               </s-stack>
             </s-popover>
-          </s-grid>
+          </div>
         </s-stack>
 
         <s-table-header-row>
@@ -260,9 +286,11 @@ export function AlertTable({
           <s-table-header listSlot="inline">
             {t("alerts.table.headers.status")}
           </s-table-header>
+          <s-table-header listSlot="labeled">{t("redesign.aiSimilarity")}</s-table-header>
           <s-table-header listSlot="labeled">
             {t("findingOverview.officialRisk")}
           </s-table-header>
+          <s-table-header listSlot="labeled">{t("redesign.safetyGateReference")}</s-table-header>
           <s-table-header listSlot="labeled">
             {t("alerts.table.headers.detected")}
           </s-table-header>
@@ -271,7 +299,7 @@ export function AlertTable({
         <s-table-body>
           {alerts.length === 0 ? (
             <s-table-row>
-              <s-table-cell colSpan={6}>
+              <s-table-cell colSpan={8}>
                 <s-box padding="large">
                   <s-stack gap="small" align="center">
                     <s-text fontWeight="semibold">
@@ -288,7 +316,7 @@ export function AlertTable({
               <AlertRow
                 key={alert.id}
                 alert={alert}
-                modalId={`${modalIdPrefix}-${alert.id}`}
+                href={reviewHref(alert.id)}
                 isSelected={visibleSelectedIds.includes(alert.id)}
                 isLoading={isLoading}
                 onSelect={(id) => { if (!isLoading) toggleSelect(id); }}
@@ -349,13 +377,13 @@ export function AlertTable({
 // Separate component for each row to handle event listeners properly
 function AlertRow({
   alert,
-  modalId,
+  href,
   isSelected,
   isLoading,
   onSelect,
 }: {
   alert: Alert;
-  modalId: string;
+  href: string;
   isSelected: boolean;
   isLoading: boolean;
   onSelect: (id: string) => void;
@@ -378,7 +406,8 @@ function AlertRow({
     ? waiting ? "warning" : "critical"
     : "neutral";
   const isSerious = /serious|high|^[12]$/i.test(alert.riskLevel);
-  const riskTone = isSerious && alert.status === "active" ? "critical" : "neutral";
+  const riskTone = isSerious ? "critical" : "neutral";
+  const source = officialSource((alert.alertDetails as { fields?: Record<string, unknown> } | null)?.fields ?? {});
 
   return (
     <s-table-row selected={isSelected || undefined}>
@@ -396,49 +425,18 @@ function AlertRow({
       {/* Product Cell - Shopify style */}
       <s-table-cell>
         <div className="review-product">
-          {alert.productImage ? (
-            <s-clickable
-              commandFor={modalId}
-              command="--show"
-              accessibilityLabel={t("alerts.table.thumbnailLabel", {
-                title: alert.productTitle,
-              })}
-              border="base"
-              borderRadius="base"
-              overflow="hidden"
-              inlineSize="40px"
-              blockSize="40px"
-            >
-              <s-image objectFit="cover" src={alert.productImage} />
-            </s-clickable>
-          ) : (
-            <s-box
-              background="bg-surface-secondary"
-              borderRadius="base"
-              inlineSize="40px"
-              blockSize="40px"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <s-text tone="subdued" size="small">
-                📦
-              </s-text>
-            </s-box>
-          )}
+          <s-thumbnail src={alert.productImage || undefined} size="small" alt="" />
           <div className="review-product__content">
-            <s-clickable
+            <s-link
               className="review-product__name"
-              commandFor={modalId}
-              command="--show"
+              href={href}
               accessibilityLabel={t("workspace.compareProduct", {
                 title: alert.productTitle,
               })}
             >
               <span>{alert.productTitle}</span>
-            </s-clickable>
+            </s-link>
+            {alert.productSku && <s-text tone="subdued" size="small">SKU {alert.productSku}</s-text>}
             {hasAlertType && (
               <s-text tone="subdued" size="small">
                 {localizeRisk(alertType, t)}
@@ -461,6 +459,13 @@ function AlertRow({
         </s-badge>
       </s-table-cell>
 
+      <s-table-cell>
+        {alert.matchBasis === "gtin"
+          ? <s-badge>{t("barcodeMatch.label")}</s-badge>
+          : typeof alert.overallSimilarity === "number"
+            ? t("redesign.percent", { value: alert.overallSimilarity })
+            : "—"}
+      </s-table-cell>
       {/* Risk Cell */}
       <s-table-cell>
         <s-stack gap="small-100">
@@ -468,10 +473,15 @@ function AlertRow({
             <s-badge tone={riskTone}>
               {localizeRisk(alert.riskLevel, t)}
             </s-badge>
-            {alert.matchBasis === "gtin" && <s-badge tone="warning">{t("barcodeMatch.label")}</s-badge>}
           </s-stack>
           {alert.warningsCount > 1 && <s-text tone="subdued" size="small">{warningsLabel}</s-text>}
         </s-stack>
+      </s-table-cell>
+
+      <s-table-cell>
+        {source.url && source.caseNumber
+          ? <s-link href={source.url} target="_blank">{source.caseNumber}</s-link>
+          : source.caseNumber || "—"}
       </s-table-cell>
 
       {/* Date Cell */}
@@ -505,10 +515,9 @@ function AlertRow({
               ? t("alerts.table.reviewProduct", { title: alert.productTitle })
               : t("alerts.table.viewProduct", { title: alert.productTitle })
           }
-          commandFor={modalId}
-          command="--show"
+          href={href}
         >
-          {t("workspace.compare")}
+          {t(alert.status === "active" ? "redesign.review" : "workspace.compare")}
         </s-button>
       </s-table-cell>
     </s-table-row>

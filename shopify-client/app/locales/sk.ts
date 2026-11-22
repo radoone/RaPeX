@@ -1,6 +1,29 @@
 import { workspaceCopy } from "./workspace";
 const sk = {
     translation: {
+      redesign: {
+        overview: "Prehľad",
+        potentialMatches: "Potenciálne zhody",
+        productsScanned: "Skontrolované produkty",
+        lastScan: "Posledná kontrola",
+        scanHistory: "História kontrol",
+        aiSimilarity: "Podobnosť podľa AI",
+        review: "Skontrolovať",
+        viewAllMatches: "Zobraziť všetky zhody",
+        matchReview: "Kontrola zhody",
+        safetyGateReference: "Referencia Safety Gate",
+        officialMeasures: "Oficiálne opatrenia",
+        scans: "Kontroly",
+        scanDate: "Dátum a čas",
+        scanType: "Typ kontroly",
+        initialScan: "Prvá kontrola katalógu",
+        noScans: "Zatiaľ nie sú zaznamenané žiadne kontroly.",
+        notifications: "E-mailové upozornenia",
+        matching: "Zhody a výnimky",
+        recentScans: "Nedávne kontroly",
+        runDelta: "Skontrolovať nové hlásenia Safety Gate",
+        percent: "{{value}}%",
+      },
       workspace: workspaceCopy.sk,
       settingsOverview: {
         stopRenewal: "Vypnúť obnovenie",

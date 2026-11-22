@@ -34,22 +34,7 @@ import { monitoringState } from "../services/monitoring-state";
 import { plannedMonitoringAt } from "../services/monitoring-schedule";
 import { displayShopifyPlan } from "../services/partner-entitlement";
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-async function getShopifyContactEmail(admin: any): Promise<string | null> {
-  const response = await admin.graphql(`#graphql
-    query notificationContactEmail {
-      shop { contactEmail email }
-    }
-  `);
-  const payload = await response.json();
-  const value = String(
-    payload.data?.shop?.contactEmail || payload.data?.shop?.email || "",
-  )
-    .trim()
-    .toLowerCase();
-  return EMAIL_PATTERN.test(value) ? value : null;
-}
+import { getShopifyNotificationEmail, notificationEmailPattern } from "../services/shopify-notification-email.server";
 
 export const loader = async ({ request, url }: LoaderFunctionArgs) => {
   const { admin, billing, session } = await authenticate.admin(request);
@@ -85,24 +70,18 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
   );
   const fallbackDefault = Number.isFinite(envDefault) ? envDefault : 70;
 
-  const shopifyContactEmail = await getShopifyContactEmail(admin).catch(
-    (error) => {
-      console.warn(
-        "Could not load Shopify contact email for notifications",
-        error,
-      );
-      return null;
-    },
-  );
+  const shopifyContactEmail = !settings?.notificationEmail?.trim() && settings?.notificationEmailSource !== "custom"
+    ? await getShopifyNotificationEmail(admin)
+    : null;
 
   if (
     !settings ||
     settings.emailNotifications === undefined ||
     settings.immediateAlertEmails === undefined ||
     settings.weeklySummaryEmails === undefined ||
-    !settings.notificationEmail
+    shopifyContactEmail
   ) {
-    settings = await db.safetySetting.upsert({
+    const initialized = await db.safetySetting.upsert({
       where: { shop: session.shop },
       update: {
         ...(settings?.emailNotifications === undefined
@@ -114,7 +93,7 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
         ...(settings?.weeklySummaryEmails === undefined
           ? { weeklySummaryEmails: settings?.emailNotifications !== false }
           : {}),
-        ...(!settings?.notificationEmail && shopifyContactEmail
+        ...(shopifyContactEmail
           ? {
               notificationEmail: shopifyContactEmail,
               notificationEmailSource: "shopify" as const,
@@ -134,6 +113,8 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
         excludeTypes: null,
       },
     });
+    // The upsert result contains only values written by that operation.
+    settings = await db.safetySetting.findUnique({ where: { shop: session.shop } }) ?? initialized;
   }
 
   const catalog: Array<{
@@ -222,7 +203,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   );
   const notificationLanguage = requestedLanguage ?? appLanguage;
   const notificationLanguageSource = requestedLanguage ? "custom" as const : "app" as const;
-  if (emailNotifications && !EMAIL_PATTERN.test(notificationEmail)) {
+  if (emailNotifications && !notificationEmailPattern.test(notificationEmail)) {
     return json({ error: "invalid_notification_email" }, { status: 400 });
   }
   const excludeVendors = (formData.get("excludeVendors") as string) || null;
@@ -392,7 +373,7 @@ export default function Settings() {
   const cancellationScheduled = planVerified && billingStatus.hasActivePayment && billingStatus.cancelAtEndOfCycle && planEnd;
 
   return (
-    <s-page inlineSize="large" className="page-shell" heading={t("settings.title")}>
+    <s-page inlineSize="base" className="page-shell" heading={t("settings.title")}>
       <SaveBar id="settings-save-bar" open={dirty} discardConfirmation>
         <button
           type="button"
@@ -472,13 +453,15 @@ export default function Settings() {
                   </div>
                 ))}
               </dl>
-              {sendsEmail && initial.email && (
+              {sendsEmail && initial.email.trim() && (
                 <p className="admin-helper">{t("settingsOverview.recipient", { email: initial.email })}</p>
               )}
-              {sendsEmail && !initial.email && (
-                <p className="admin-helper">{t("settingsAdmin.notifications.noRecipientDescription")}</p>
+              {sendsEmail && !initial.email.trim() && (
+                <s-banner tone="warning" heading={t("settingsAdmin.notifications.noRecipientHeading")}>
+                  <s-text>{t("settingsAdmin.notifications.noRecipientDescription")}</s-text>
+                </s-banner>
               )}
-              {sendsEmail && initial.email && emailDelivery !== "eligible" && (
+              {sendsEmail && initial.email.trim() && emailDelivery !== "eligible" && (
                 <p className="admin-helper">{t(`settingsOverview.delivery.${emailDelivery}`)}</p>
               )}
             </section>
@@ -535,9 +518,7 @@ export default function Settings() {
           <input type="hidden" name="appLanguage" value={appLanguage} />
           <input type="hidden" name="excludeVendors" value={values.vendors} />
           <input type="hidden" name="excludeTypes" value={values.types} />
-          <AdminCard className="admin-card">
-            <details className="advanced-settings-disclosure" open={actionData && "error" in actionData ? true : undefined}>
-              <summary>{t("settingsOverview.editEmail")}</summary>
+          <s-section heading={t("redesign.notifications")}>
               <div className="admin-stack">
                 <s-checkbox
                   label={t("settingsAdmin.notifications.immediateTitle")}
@@ -598,17 +579,11 @@ export default function Settings() {
                   </p>
                 )}
               </div>
-            </details>
-          </AdminCard>
-          <AdminCard className="admin-card">
-            <details className="advanced-settings-disclosure">
-              <summary>{t("workspace.appLanguage")}</summary>
-              <LanguageSwitcher />
-            </details>
-          </AdminCard>
-          <AdminCard className="admin-card">
-            <details className="advanced-settings-disclosure">
-              <summary>{t("workspace.settingsAdvanced")}</summary>
+          </s-section>
+          <s-section heading={t("workspace.appLanguage")}>
+            <LanguageSwitcher />
+          </s-section>
+          <s-section heading={t("redesign.matching")}>
               <div className="admin-stack">
                 <p className="admin-helper">{t("workspace.balancedHelp")}</p>
                 <div
@@ -657,40 +632,43 @@ export default function Settings() {
                 <p className="admin-helper">
                   {t("settingsAdmin.automation.autoDraftDescription")}
                 </p>
-                <h3>{t("settingsAdmin.exclusions.title")}</h3>
-                <p>{t("workspace.excludeHelp")}</p>
-                <s-text-field
-                  label={t("settingsAdmin.exclusions.vendorsTitle")}
-                  value={values.vendors}
-                  onInput={(event: any) =>
-                    change("vendors", event.currentTarget.value)
-                  }
-                  helpText={t("settingsAdmin.exclusions.vendorsDescription")}
-                />
-                <s-text-field
-                  label={t("settingsAdmin.exclusions.typesTitle")}
-                  value={values.types}
-                  onInput={(event: any) =>
-                    change("types", event.currentTarget.value)
-                  }
-                  helpText={t("settingsAdmin.exclusions.typesDescription")}
-                />
-                <p role="status">
-                  {t("workspace.excluded", {
-                    count: excluded.length,
-                    total: catalog.length,
-                  })}
-                </p>
-                {excluded.length > 0 && (
-                  <ul>
-                    {excluded.slice(0, 10).map((product) => (
-                      <li key={product.id}>{product.title}</li>
-                    ))}
-                  </ul>
-                )}
+                <details className="advanced-settings-disclosure">
+                  <summary>{t("settingsAdmin.exclusions.title")}</summary>
+                  <s-stack gap="base">
+                    <p>{t("workspace.excludeHelp")}</p>
+                    <s-text-field
+                      label={t("settingsAdmin.exclusions.vendorsTitle")}
+                      value={values.vendors}
+                      onInput={(event: any) =>
+                        change("vendors", event.currentTarget.value)
+                      }
+                      helpText={t("settingsAdmin.exclusions.vendorsDescription")}
+                    />
+                    <s-text-field
+                      label={t("settingsAdmin.exclusions.typesTitle")}
+                      value={values.types}
+                      onInput={(event: any) =>
+                        change("types", event.currentTarget.value)
+                      }
+                      helpText={t("settingsAdmin.exclusions.typesDescription")}
+                    />
+                    <p role="status">
+                      {t("workspace.excluded", {
+                        count: excluded.length,
+                        total: catalog.length,
+                      })}
+                    </p>
+                    {excluded.length > 0 && (
+                      <ul>
+                        {excluded.slice(0, 10).map((product) => (
+                          <li key={product.id}>{product.title}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </s-stack>
+                </details>
               </div>
-            </details>
-          </AdminCard>
+          </s-section>
         </Form>
       </div>
     </s-page>

@@ -1,6 +1,29 @@
 import { workspaceCopy } from "./workspace";
 const en = {
     translation: {
+      redesign: {
+        overview: "Overview",
+        potentialMatches: "Potential matches",
+        productsScanned: "Products scanned",
+        lastScan: "Last scan",
+        scanHistory: "Scan history",
+        aiSimilarity: "AI similarity",
+        review: "Review",
+        viewAllMatches: "View all matches",
+        matchReview: "Match review",
+        safetyGateReference: "Safety Gate reference",
+        officialMeasures: "Official measures",
+        scans: "Scans",
+        scanDate: "Date and time",
+        scanType: "Scan type",
+        initialScan: "Initial catalog scan",
+        noScans: "No scan runs have been recorded yet.",
+        notifications: "Email notifications",
+        matching: "Matching and exclusions",
+        recentScans: "Recent scans",
+        runDelta: "Check for new Safety Gate alerts",
+        percent: "{{value}}%",
+      },
       workspace: workspaceCopy.en,
       settingsOverview: {
         stopRenewal: "Turn off renewal",

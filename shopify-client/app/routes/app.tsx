@@ -17,28 +17,20 @@ export const headers = (headersArgs: any) => {
 export const loader = async ({ request }: { request: Request }) => {
   const { billing, session, admin } = await authenticate.admin(request);
   await ensureShopifyWebhooksRegistered(session);
-  const [billingStatus, activeAlerts, catalogTotal] = await Promise.all([
+  const [billingStatus, activeAlerts] = await Promise.all([
     getBillingStatus(billing, session.shop, admin),
     db.safetyAlert.findMany({
       where: { shop: session.shop, status: "active" },
       select: { status: true, reviewState: true, resolutionType: true },
     }),
-    admin.graphql(`#graphql
-      query sidebarCatalogCount {
-        productsCount(limit: null) { count precision }
-      }
-    `).then(response => response.json()).then(payload => {
-      const count = payload.data?.productsCount;
-      return count?.precision === "EXACT" && Number.isSafeInteger(count.count) ? Number(count.count) : null;
-    }).catch(() => null),
   ]);
   const activeAlertsCount = activeAlerts.filter(alert => !isWaitingForSupplier(alert)).length;
   const shopifyLocale = new URL(request.url).searchParams.get("locale") || undefined;
-  return json({ activeAlertsCount, catalogTotal, billingStatus, shopifyLocale });
+  return json({ activeAlertsCount, billingStatus, shopifyLocale });
 };
 
 export default function App() {
-  const { activeAlertsCount, catalogTotal, billingStatus, shopifyLocale } = useLoaderData<typeof loader>();
+  const { activeAlertsCount, billingStatus, shopifyLocale } = useLoaderData<typeof loader>();
   const { t, i18n } = useTranslation();
   const numbers = new Intl.NumberFormat(i18n.resolvedLanguage || i18n.language);
 
@@ -67,14 +59,14 @@ export default function App() {
   return (
     <>
       <NavMenu>
-        <Link to="/app" rel="home">{t('nav.dashboard')}</Link>
+        <Link to="/app" rel="home">{t("redesign.overview")}</Link>
         <Link to="/app/alerts">
-          {t('nav.safetyAlerts')} {activeAlertsCount > 0 ? `(${numbers.format(activeAlertsCount)})` : ''}
+          {t("redesign.potentialMatches")} {activeAlertsCount > 0 ? `(${numbers.format(activeAlertsCount)})` : ''}
         </Link>
         <Link to="/app/manual-check">
-          {t("nav.catalogCoverage")}{catalogTotal != null ? ` (${numbers.format(catalogTotal)})` : ""}
+          {t("nav.catalogCoverage")}
         </Link>
-        <Link to="/app/evidence">{t('workspace.history')}</Link>
+        <Link to="/app/evidence?view=scans">{t("redesign.scanHistory")}</Link>
         <Link to="/app/settings">{t('nav.settings')}</Link>
       </NavMenu>
       {billingStatus.ownerTestAccess && <s-banner tone="info" heading={t("ownerTestAccess")} />}
