@@ -137,10 +137,24 @@ async function registerShopWebhooks(
   }, { merge: true });
 }
 
+const requestAdminAuth = new WeakMap<
+  Request,
+  ReturnType<typeof shopify.authenticate.admin>
+>();
+
 export default shopify;
 export const apiVersion = ApiVersion.July26;
 export const addDocumentResponseHeaders = shopify.addDocumentResponseHeaders;
-export const authenticate = shopify.authenticate;
+export const authenticate = {
+  ...shopify.authenticate,
+  admin: ((request: Request) => {
+    const existing = requestAdminAuth.get(request);
+    if (existing) return existing;
+    const pending = shopify.authenticate.admin(request);
+    requestAdminAuth.set(request, pending);
+    return pending;
+  }) as typeof shopify.authenticate.admin,
+};
 export const unauthenticated = shopify.unauthenticated;
 export const login = shopify.login;
 export const registerWebhooks = shopify.registerWebhooks;

@@ -1,8 +1,9 @@
 import { AdminCard } from "../components/AdminCard";
 import { LocalDateTime } from "../components/LocalDateTime";
-import { useState, useCallback, useEffect, useMemo } from "react";
+import { Suspense, useState, useCallback, useEffect, useMemo } from "react";
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "react-router";
 import {
+  Await,
   useLoaderData,
   useFetcher,
   useNavigate,
@@ -15,6 +16,7 @@ import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
 import db from "../merchant-db.server";
 import { withOfficialReferences } from "../services/review-evidence.server";
+import { normalizeInterfaceLanguage } from "../services/interface-language";
 import { firestore } from "../firestore.server";
 import { runProductSafetyCheckForAdminProduct } from "../services/product-safety-admin.server";
 import { AlertDetailModal } from "../components";
@@ -136,7 +138,18 @@ async function loadCoverage(shop: string, products: ShopifyCatalogProduct[], own
 }
 
 export const loader = async ({ request, url }: LoaderFunctionArgs) => {
-  const { admin, billing, session } = await authenticate.admin(request);
+  const context = await authenticate.admin(request);
+  const shopifyLocale = normalizeInterfaceLanguage(url.searchParams.get("locale"));
+  return {
+    data: loadManualCheckPage(context, url),
+    shopifyLocale,
+  };
+};
+
+async function loadManualCheckPage(
+  { admin, billing, session }: Awaited<ReturnType<typeof authenticate.admin>>,
+  url: URL,
+) {
   const billingStatus = await getBillingStatus(billing, session.shop, admin);
   const search = url.searchParams.get("search")?.trim() || "";
 
@@ -240,7 +253,7 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
     entry.totalChecks++;
   }
 
-  return json({
+  return {
     products,
     checksByProduct,
     alertsByProduct,
@@ -257,8 +270,8 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
       manualExcludedProductIds: [...manualExcludedProductIds],
     },
     billingStatus,
-  });
-};
+  };
+}
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const { admin, billing, session } = await authenticate.admin(request);
@@ -433,6 +446,42 @@ export function ErrorBoundary() {
 }
 
 export default function ManualCheckPage() {
+  const { data, shopifyLocale } = useLoaderData<typeof loader>();
+  const { t } = useTranslation();
+  return (
+    <Suspense fallback={
+      <s-page inlineSize="large" className="page-shell" suppressHydrationWarning heading={t("manualCheck.title", { lng: shopifyLocale })}>
+        <div aria-hidden="true" className="overview-loading" style={{ marginTop: "var(--s-space-300)" }}>
+          <section className="overview-monitor overview-monitor--loading">
+            <div className="overview-loading__lines">
+              <span />
+              <span />
+            </div>
+          </section>
+          <section className="overview-findings">
+            <div className="overview-loading__rows">
+              {[0, 1, 2, 3, 4].map(index => (
+                <div key={index} className="overview-loading__row">
+                  <span className="overview-loading__thumb" />
+                  <div className="overview-loading__lines">
+                    <span />
+                    <span />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
+      </s-page>
+    }>
+      <Await resolve={data}>
+        {(resolved: Awaited<ReturnType<typeof loadManualCheckPage>>) => <ManualCheckContent data={resolved} />}
+      </Await>
+    </Suspense>
+  );
+}
+
+function ManualCheckContent({ data }: { data: Awaited<ReturnType<typeof loadManualCheckPage>> }) {
   const {
     products,
     checksByProduct,
@@ -443,7 +492,7 @@ export default function ManualCheckPage() {
     coverage,
     productStates,
     billingStatus,
-  } = useLoaderData<typeof loader>();
+  } = data;
   const fetcher = useFetcher<typeof action>();
   const resolveFetcher = useFetcher<typeof action>();
   const navigate = useNavigate();

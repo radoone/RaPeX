@@ -9,7 +9,7 @@ import {
   type LoaderFunctionArgs,
   useRouteError,
 } from "react-router";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { AppProvider } from "@shopify/shopify-app-react-router/react";
 import { POLARIS_URL } from "./polaris";
 import i18n, { changeMerchantLanguage } from "./i18n";
@@ -27,15 +27,27 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export default function App() {
   const { apiKey, shopifyLocale } = useLoaderData<typeof loader>();
+  const lastShopifyLocale = useRef<string | undefined>(undefined);
+
+  // Load the Inter font stylesheet without blocking first paint.
+  useEffect(() => {
+    const href = "https://cdn.shopify.com/static/fonts/inter/v4/styles.css";
+    if (document.querySelector(`link[rel="stylesheet"][href="${href}"]`)) return;
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = href;
+    document.head.appendChild(link);
+  }, []);
 
   // Sync document language so Polaris web components render localized copy.
   useEffect(() => {
+    if (shopifyLocale) lastShopifyLocale.current = shopifyLocale;
     const syncLang = () => {
       const lang = i18n.resolvedLanguage || i18n.language || "en";
       document.documentElement.setAttribute("lang", lang);
     };
 
-    const savedLanguage = preferredInterfaceLanguage(shopifyLocale);
+    const savedLanguage = preferredInterfaceLanguage(shopifyLocale || lastShopifyLocale.current);
 
     if (
       savedLanguage &&
@@ -59,7 +71,7 @@ export default function App() {
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <meta name="shopify-api-key" content={apiKey} />
         <link rel="preconnect" href="https://cdn.shopify.com/" />
-        <link rel="stylesheet" href="https://cdn.shopify.com/static/fonts/inter/v4/styles.css" />
+        <link rel="preload" as="style" href="https://cdn.shopify.com/static/fonts/inter/v4/styles.css" />
         <link rel="stylesheet" href={themeStyles} />
         <Meta />
         <Links />
@@ -92,7 +104,7 @@ export function ErrorBoundary() {
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <title>ZeroRecall</title>
         <link rel="preconnect" href="https://cdn.shopify.com/" />
-        <link rel="stylesheet" href="https://cdn.shopify.com/static/fonts/inter/v4/styles.css" />
+        <link rel="preload" as="style" href="https://cdn.shopify.com/static/fonts/inter/v4/styles.css" />
         <link rel="stylesheet" href={themeStyles} />
         <Meta />
         <Links />

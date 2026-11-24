@@ -236,7 +236,25 @@ export async function hasCurrentMonitoringEntitlement(
   );
 }
 
+const pendingBillingStatus = new Map<string, Promise<BillingStatus>>();
+
 export async function getBillingStatus(
+  billing: unknown,
+  shop: string,
+  admin?: AdminApi,
+): Promise<BillingStatus> {
+  const existing = pendingBillingStatus.get(shop);
+  if (existing) return existing;
+  const pending = loadBillingStatus(billing, shop, admin).finally(() => {
+    if (pendingBillingStatus.get(shop) === pending) {
+      pendingBillingStatus.delete(shop);
+    }
+  });
+  pendingBillingStatus.set(shop, pending);
+  return pending;
+}
+
+async function loadBillingStatus(
   billing: unknown,
   shop: string,
   admin?: AdminApi,

@@ -1,6 +1,7 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import { Suspense, useState, useCallback, useEffect, useRef } from "react";
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "react-router";
 import {
+  Await,
   Link,
   useLoaderData,
   useLocation,
@@ -18,6 +19,7 @@ import db from "../merchant-db.server";
 import { withOfficialReferences } from "../services/review-evidence.server";
 import { isWaitingForSupplier } from "../services/review-evidence";
 import { compareReviewPriority } from "../services/review-priority";
+import { normalizeInterfaceLanguage } from "../services/interface-language";
 import { AlertTable, AlertDetailModal } from "../components";
 
 // Historic findings store either the normalized severity or the original Safety Gate label.
@@ -33,6 +35,19 @@ export const headers = boundary.headers;
 
 export const loader = async ({ request, url }: LoaderFunctionArgs) => {
   const { session, admin } = await authenticate.admin(request);
+  const shopifyLocale = normalizeInterfaceLanguage(url.searchParams.get("locale"));
+  return {
+    data: loadAlertsPage(session.shop, admin, url),
+    shopifyLocale,
+  };
+};
+
+async function loadAlertsPage(
+  shop: string,
+  admin: Awaited<ReturnType<typeof authenticate.admin>>["admin"],
+  url: URL,
+) {
+  const session = { shop };
 
   const openAlertId = url.searchParams.get("open") || null;
   const page = Math.max(
@@ -230,7 +245,7 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
       })
     : [];
 
-  return json({
+  return {
     alerts: alerts.slice(0, visibleCount),
     linkedAlert: alerts[visibleCount] ?? null,
     decisionHistory,
@@ -259,8 +274,8 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
       total: activeFindings.length + resolvedCount + dismissedCount,
     },
     shop: session.shop,
-  });
-};
+  };
+}
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const { session } = await authenticate.admin(request);
@@ -366,8 +381,43 @@ export function ErrorBoundary() {
 }
 
 export default function AlertsPage() {
-  const { alerts, linkedAlert, decisionHistory, nextReviewAlertId: nextAlertId, pagination, filters, stats, shop } =
-    useLoaderData<typeof loader>();
+  const { data, shopifyLocale } = useLoaderData<typeof loader>();
+  const { t } = useTranslation();
+  return (
+    <Suspense fallback={
+      <s-page inlineSize="large" className="page-shell" suppressHydrationWarning heading={t("redesign.potentialMatches", { lng: shopifyLocale })}>
+        <div aria-hidden="true" className="overview-loading" style={{ marginTop: "var(--s-space-300)" }}>
+          <section className="overview-monitor overview-monitor--loading">
+            <div className="overview-loading__lines">
+              <span />
+              <span />
+            </div>
+          </section>
+          <section className="overview-findings">
+            <div className="overview-loading__rows">
+              {[0, 1, 2, 3, 4].map(index => (
+                <div key={index} className="overview-loading__row">
+                  <span className="overview-loading__thumb" />
+                  <div className="overview-loading__lines">
+                    <span />
+                    <span />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
+      </s-page>
+    }>
+      <Await resolve={data}>
+        {(resolved: Awaited<ReturnType<typeof loadAlertsPage>>) => <AlertsContent data={resolved} />}
+      </Await>
+    </Suspense>
+  );
+}
+
+function AlertsContent({ data }: { data: Awaited<ReturnType<typeof loadAlertsPage>> }) {
+  const { alerts, linkedAlert, decisionHistory, nextReviewAlertId: nextAlertId, pagination, filters, stats, shop } = data;
   const fetcher = useFetcher<typeof action>();
   const navigate = useNavigate();
   const location = useLocation();
