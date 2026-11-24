@@ -49,8 +49,8 @@ export const FIRESTORE_COLLECTIONS = {
 export const AI_CONFIG = {
   primaryModel: "gemini-3.1-flash-lite",
   fallbackModel: "gemini-3.5-flash-lite",
-  maxProductImages: 2,
-  maxAlertImages: 4,
+  maxProductImages: 3,
+  maxAlertImages: 8,
   matchCacheTtlDays: 30,
   checkHistoryTtlDays: 90,
 } as const;
