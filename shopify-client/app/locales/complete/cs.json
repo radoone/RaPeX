@@ -798,7 +798,7 @@
       "actions": {
         "checkAgain": "Zkontrolovat znovu",
         "checkAgainForProduct": "Zkontrolovat {{title}} znovu",
-        "checkSafety": "Zkontrolovat bezpečnost",
+        "checkSafety": "Zkontrolovat produkt",
         "checkSafetyForProduct": "Zkontrolovat bezpečnost pro {{title}}",
         "viewForProduct": "Zobrazit zaznamenaný nález pro {{title}}"
       },
@@ -1594,5 +1594,24 @@
     "endsOn": "Obnovení je vypnuto. Monitorování končí {{date}}.",
     "stopRenewal": "Vypnout obnovení",
     "stopRenewalHelp": "Vlastník obchodu může vypnout obnovení. Monitorování pokračuje do {{date}}. Vaše uložené výsledky zůstanou k dispozici."
-  }
+  },
+  "afterConfirmation": "Zjištění zůstává otevřené, dokud nezaznamenáte akci.",
+  "caseNumberCopied": "Číslo upozornění zkopírováno",
+  "confirmMatch": "Potvrzuji, že se jedná o stejný produkt",
+  "confirmationHelp": "Potvrďte shodu pomocí modelu, čárového kódu, čísla šarže nebo jiného důkazu.",
+  "confirmationNote": "Důkaz pro potvrzení shody",
+  "copyCaseNumber": "Kopírovat číslo upozornění",
+  "copyCaseNumberFailed": "Číslo upozornění se nepodařilo zkopírovat.",
+  "decisionDestination": "Uloženo do {{status}}.",
+  "fullCatalogScope": "Aktuální katalog",
+  "historicalMonitoringScope": "Historická upozornění Safety Gate",
+  "loadingOverview": "Načítání přehledu…",
+  "loadingPage": "Načítání stránky…",
+  "manualMonitoring": "Manuální monitoring",
+  "matchConfirmed": "Shoda produktu potvrzena",
+  "monitoringScope": "Nová nebo změněná upozornění Safety Gate",
+  "scanScope": "Rozsah",
+  "scheduledMonitoring": "Automatický monitoring",
+  "viewDecisionDestination": "Přejít do {{status}}",
+  "viewExternalSource": "Otevřít Safety Gate na nové kartě"
 }

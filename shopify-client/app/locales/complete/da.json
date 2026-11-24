@@ -798,7 +798,7 @@
       "actions": {
         "checkAgain": "Tjek igen",
         "checkAgainForProduct": "Tjek {{title}} igen",
-        "checkSafety": "Tjek sikkerhed",
+        "checkSafety": "Tjek produkt",
         "checkSafetyForProduct": "Tjek sikkerhed for {{title}}",
         "viewForProduct": "Se registreret fund for {{title}}"
       },
@@ -1594,5 +1594,24 @@
     "endsOn": "Fornyelse er deaktiveret. Overvågning slutter den {{date}}.",
     "stopRenewal": "Deaktiver fornyelse",
     "stopRenewalHelp": "Butiksejeren kan deaktivere fornyelse. Overvågning fortsætter til og med {{date}}. Dine gemte resultater forbliver tilgængelige."
-  }
+  },
+  "afterConfirmation": "Fundet forbliver åbent, indtil du registrerer en handling.",
+  "caseNumberCopied": "Advarselsnummer kopieret",
+  "confirmMatch": "Jeg bekræfter, at dette er det samme produkt",
+  "confirmationHelp": "Bekræft matchet ved hjælp af model, stregkode, batchnummer eller andet bevis.",
+  "confirmationNote": "Bevis for bekræftelse af match",
+  "copyCaseNumber": "Kopiér advarselsnummer",
+  "copyCaseNumberFailed": "Kunne ikke kopiere advarselsnummeret.",
+  "decisionDestination": "Gemt i {{status}}.",
+  "fullCatalogScope": "Nuværende katalog",
+  "historicalMonitoringScope": "Historiske Safety Gate-advarsler",
+  "loadingOverview": "Indlæser oversigt…",
+  "loadingPage": "Indlæser side…",
+  "manualMonitoring": "Manuel overvågning",
+  "matchConfirmed": "Produktmatch bekræftet",
+  "monitoringScope": "Nye eller ændrede Safety Gate-advarsler",
+  "scanScope": "Omfang",
+  "scheduledMonitoring": "Automatisk overvågning",
+  "viewDecisionDestination": "Gå til {{status}}",
+  "viewExternalSource": "Åbn Safety Gate i en ny fane"
 }

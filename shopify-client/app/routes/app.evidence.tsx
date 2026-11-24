@@ -107,6 +107,7 @@ function ScanHistory({ data }: { data: Extract<HistoryData, { view: "scans" }> }
                   <s-table-header listSlot="primary">{t("redesign.scanDate")}</s-table-header>
                   <s-table-header listSlot="inline">{t("alerts.table.headers.status")}</s-table-header>
                   <s-table-header listSlot="labeled">{t("redesign.scanType")}</s-table-header>
+                  <s-table-header listSlot="labeled">{t("scanScope")}</s-table-header>
                   <s-table-header listSlot="labeled" format="numeric">{t("redesign.productsScanned")}</s-table-header>
                   <s-table-header listSlot="labeled" format="numeric">{t("redesign.potentialMatches")}</s-table-header>
                 </s-table-header-row>
@@ -118,11 +119,18 @@ function ScanHistory({ data }: { data: Extract<HistoryData, { view: "scans" }> }
                       ? status : "unknown";
                     const tone = statusKey === "completed" ? "success"
                       : statusKey === "failed" || statusKey === "enqueue_failed" ? "critical" : "info";
+                    const type = run.type === "initial" ? "redesign.initialScan" : run.triggerMode === "scheduled"
+                      ? "scheduledMonitoring" : run.triggerMode === "manual" ? "manualMonitoring" : "dashboard.admin.monitoringRunsTitle";
+                    const scope = run.type === "initial" ? t("fullCatalogScope") : run.scope === "since-last-check"
+                      ? t("monitoringScope") : run.scope === "last-days" && run.days
+                        ? new Intl.NumberFormat(i18n.language, { style: "unit", unit: "day", unitDisplay: "long" }).format(run.days)
+                        : run.scope === "full-lookback" ? t("historicalMonitoringScope") : "—";
                     return (
                       <s-table-row key={`${run.type}-${run.id}`}>
                         <s-table-cell>{run.updatedAt ? <LocalDateTime value={run.updatedAt} locale={i18n.language} /> : "—"}</s-table-cell>
                         <s-table-cell><s-badge tone={tone}>{t(`dashboard.admin.monitoringRunStatus.${statusKey}`)}</s-badge></s-table-cell>
-                        <s-table-cell>{t(run.type === "initial" ? "redesign.initialScan" : "dashboard.admin.monitoringRunsTitle")}</s-table-cell>
+                        <s-table-cell>{t(type)}</s-table-cell>
+                        <s-table-cell>{scope}</s-table-cell>
                         <s-table-cell>{status === "completed" && run.productsScanned != null ? number.format(run.productsScanned) : "—"}</s-table-cell>
                         <s-table-cell>{status === "completed" && run.alertsCreated != null ? number.format(run.alertsCreated) : "—"}</s-table-cell>
                       </s-table-row>

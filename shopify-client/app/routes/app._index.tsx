@@ -1,8 +1,10 @@
 import { LocalDateTime } from "../components/LocalDateTime";
-import { useEffect, useRef, useState } from "react";
+import { normalizeInterfaceLanguage } from "../services/interface-language";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { randomUUID } from "node:crypto";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
 import {
+  Await,
   Link,
   useFetcher,
   useLoaderData,
@@ -30,7 +32,7 @@ import { catalogCheckStates } from "../services/catalog-state";
 import { monitoringState } from "../services/monitoring-state";
 import { monitoringTimeZone, plannedMonitoringAt } from "../services/monitoring-schedule";
 import { NextMonitoringCheck } from "../components/MonitoringStatus";
-import { getMonitoringActivity, getRecentMonitoringRuns } from "../services/monitoring-runs.server";
+import { getMonitoringActivity, getRecentMonitoringRuns, recordManualMonitoringRun } from "../services/monitoring-runs.server";
 import { recentlyCheckedProductCount, toIsoString } from "../services/monitoring-runs";
 import { mirrorOfflineSessionForCatalogAudit } from "../services/catalog-audit-session.server";
 import { getShopifyNotificationEmail } from "../services/shopify-notification-email.server";
@@ -120,14 +122,21 @@ async function fetchCurrentCatalogProducts(admin: any): Promise<DashboardProduct
 }
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { billing, session, admin } = await authenticate.admin(request);
-  const billingStatus = await getBillingStatus(billing, session.shop, admin);
+  const context = await authenticate.admin(request);
+  const shopifyLocale = normalizeInterfaceLanguage(new URL(request.url).searchParams.get("locale"));
+  return { overview: loadOverview(context), shopifyLocale };
+};
+
+async function loadOverview({ billing, session, admin }: Awaited<ReturnType<typeof authenticate.admin>>) {
+  const billingStatusPromise = getBillingStatus(billing, session.shop, admin);
 
   const [
     recentAlerts,
     checkedProductIds,
     storedSettings,
     currentCatalogProducts,
+    billingStatus,
+    monitorStateSnapshot,
   ] = await Promise.all([
     db.safetyAlert.findMany({
       where: { shop: session.shop, status: "active" },
@@ -142,14 +151,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       where: { shop: session.shop },
     }),
     fetchCurrentCatalogProducts(admin),
+    billingStatusPromise,
+    firestore.collection("merchants").doc(encodeURIComponent(session.shop)).get(),
   ]);
 
   const pendingReview = recentAlerts.filter(alert => !isWaitingForSupplier(alert));
   pendingReview.sort(compareReviewPriority);
-  const monitorStateSnapshot = await firestore
-    .collection("merchants")
-    .doc(encodeURIComponent(session.shop))
-    .get();
   const monitorState = monitorStateSnapshot.exists
     ? monitorStateSnapshot.data()
     : null;
@@ -284,7 +291,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       console.warn("Could not load dashboard finding products", { shop: session.shop, error });
     }
   }
-  return json({
+  return {
     stats: {
       activeAlerts: pendingReview.length,
       waitingForSupplier: recentAlerts.length - pendingReview.length,
@@ -329,8 +336,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     newSourceRecords,
     hasMonitoringBaseline,
     firstAudit,
-  });
-};
+  };
+}
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const { billing, session, admin } = await authenticate.admin(request);
@@ -455,6 +462,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     if (billingRedirect) return billingRedirect as never;
 
     try {
+      const merchant = await firestore.collection("merchants").doc(encodeURIComponent(session.shop)).get().catch(error => {
+        console.warn("Could not read merchant before recording manual monitoring", error);
+        return null;
+      });
       const monitoring = await runMerchantDeltaMonitoring(session.shop, {
         forceFullScan: includeAlreadyChecked,
         limit: 300,
@@ -472,6 +483,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             ? monitoringDays
             : undefined,
       });
+
+      if (merchant?.exists) {
+        await recordManualMonitoringRun(merchant, monitoring).catch(error => {
+          console.warn("Could not record completed manual monitoring in scan history", error);
+        });
+      }
 
       const results: BulkCheckResults = {
         processed: monitoring.productsScanned,
@@ -564,6 +581,23 @@ export function ErrorBoundary() {
 }
 
 export default function Index() {
+  const { overview, shopifyLocale } = useLoaderData<typeof loader>();
+  const { t } = useTranslation();
+  return (
+    <Suspense fallback={
+      <div className="overview-loading" aria-busy="true">
+        <h1>{t("redesign.overview", { lng: shopifyLocale })}</h1>
+        <p role="status">{t("loadingOverview", { lng: shopifyLocale })}</p>
+      </div>
+    }>
+      <Await resolve={overview}>
+        {(data: Awaited<ReturnType<typeof loadOverview>>) => <Overview data={data} />}
+      </Await>
+    </Suspense>
+  );
+}
+
+function Overview({ data }: { data: Awaited<ReturnType<typeof loadOverview>> }) {
   const {
     stats,
     pendingProductPreview,
@@ -581,7 +615,7 @@ export default function Index() {
     monitoringActivity,
     recentCheckedProducts,
     alertEmailEnabled,
-  } = useLoaderData<typeof loader>();
+  } = data;
   const fetcher = useFetcher<ActionResponse>();
   const monitoringFetcher = useFetcher<ActionResponse>();
   const progressFetcher = useFetcher<CatalogAuditProgress>();
@@ -614,8 +648,6 @@ export default function Index() {
     hourCycle: "h23",
     timeZone: monitoringTimeZone,
   });
-  const recordsConsidered = monitoringActivity?.recordsConsidered;
-  const monitoringPeriod = new Intl.NumberFormat(i18n.language, { style: "unit", unit: "day", unitDisplay: "long" }).format(30);
   const canRetryAudit = Boolean(billingStatus.ownerTestAccess || billingStatus.developmentBypass ||
     (billingStatus.billingVerified && (billingStatus.hasActivePayment || !settings.freeScanUsed)));
   const automaticChecksExpected = ["enabled", "processing", "starting"].includes(automaticStatus);
@@ -872,12 +904,11 @@ export default function Index() {
               <s-button
                 variant="primary"
                 icon="play"
-                accessibilityLabel={t("redesign.runDelta")}
                 disabled={isScanning || automaticStatus === "processing" || monitoringFetcher.state !== "idle"}
                 loading={monitoringFetcher.state !== "idle"}
                 onClick={() => monitoringFetcher.submit({ action: "bulkCheck", monitoringMode: "since-last-check" }, { method: "POST" })}
               >
-                {t("status.runCheck")}
+                {t("redesign.runDelta")}
               </s-button>
             ) : (
               <s-button variant="primary" icon="search" href="/app/manual-check">{t("actions.checkOneProduct")}</s-button>
@@ -891,12 +922,6 @@ export default function Index() {
             <div>
               <div className="overview-metric-value">{number.format(stats.checkedProducts)}</div>
               <div>{t("redesign.productsScanned")}</div>
-              {recordsConsidered != null && (
-                <div className="overview-metric-context">
-                  <strong>{number.format(recordsConsidered)}</strong> {t("catalogOverview.activityRecords")}
-                  <span title={t("catalogOverview.activityTitle")}> ({monitoringPeriod})</span>
-                </div>
-              )}
             </div>
           </div>
           <div className="overview-metric">
@@ -943,6 +968,57 @@ export default function Index() {
             </div>
           </section>
         )}
+        {!isScanning && (
+          <s-section>
+            <details className="overview-activity">
+              <summary>{t("catalogOverview.activityTitle")}</summary>
+              <dl className="catalog-overview__facts">
+                <div>
+                  <dt>{t("nav.catalogCoverage")}</dt>
+                  {stats.totalProducts > 0 && (
+                    <dd className="catalog-overview__detail">
+                      <s-link href={stats.uncheckedProducts > 0 ? "#pending-catalog-products" : "/app/manual-check?coverage=all#product-catalogue"}>
+                        {stats.uncheckedProducts > 0
+                          ? `${t("pendingCoverage.pendingTab")} (${number.format(stats.uncheckedProducts)})`
+                          : t("nav.catalogCoverage")}
+                      </s-link>
+                    </dd>
+                  )}
+                </div>
+                {lastCatalogCheckAt && (
+                  <div>
+                    <dt>{t("catalogOverview.recordsSinceCheck")}</dt>
+                    <dd>{newSourceRecords == null ? "—" : number.format(newSourceRecords)}</dd>
+                  </div>
+                )}
+                {monitoringActivity && (
+                  <div>
+                    <dt>{t("catalogOverview.activityRuns")}</dt>
+                    <dd>{number.format(monitoringActivity.completedRuns)}</dd>
+                  </div>
+                )}
+                {recentCheckedProducts !== null && (
+                  <div>
+                    <dt>{t("catalogOverview.currentProducts")}</dt>
+                    <dd>{number.format(recentCheckedProducts)}</dd>
+                  </div>
+                )}
+                {monitoringActivity && (
+                  <div>
+                    <dt>{t("catalogOverview.activityRecords")}</dt>
+                    <dd>{monitoringActivity.recordsConsidered == null ? "—" : number.format(monitoringActivity.recordsConsidered)}</dd>
+                  </div>
+                )}
+              </dl>
+              <div className="overview-activity__links">
+                <s-link href="/app/settings">{t("settingsAdmin.notifications.enabledTitle")}</s-link>
+                <s-badge tone={alertEmailEnabled ? "info" : "neutral"}>{t(alertEmailEnabled ? "settingsOverview.on" : "settingsOverview.off")}</s-badge>
+                {billingStatus.pricingPlansUrl && <s-link href="/app/settings#subscription">{t("billing.managePlanButton")}</s-link>}
+              </div>
+            </details>
+          </s-section>
+        )}
+
         {!isScanning && showFirstAuditResult && firstAudit && (
           <s-banner
             tone={firstAuditIsSummary ? summary.tone : "info"}
@@ -1164,57 +1240,6 @@ export default function Index() {
             </div>
           ) : <p className="overview-findings__empty">{t("alerts.table.emptyAllClearTitle")}</p>}
         </section>
-
-        {!isScanning && (
-          <s-section>
-            <details className="overview-activity">
-              <summary>{t("catalogOverview.activityTitle")}</summary>
-              <dl className="catalog-overview__facts">
-                <div>
-                  <dt>{t("nav.catalogCoverage")}</dt>
-                  {stats.totalProducts > 0 && (
-                    <dd className="catalog-overview__detail">
-                      <s-link href={stats.uncheckedProducts > 0 ? "#pending-catalog-products" : "/app/manual-check?coverage=all#product-catalogue"}>
-                        {stats.uncheckedProducts > 0
-                          ? `${t("pendingCoverage.pendingTab")} (${number.format(stats.uncheckedProducts)})`
-                          : t("nav.catalogCoverage")}
-                      </s-link>
-                    </dd>
-                  )}
-                </div>
-                {lastCatalogCheckAt && (
-                  <div>
-                    <dt>{t("catalogOverview.recordsSinceCheck")}</dt>
-                    <dd>{newSourceRecords == null ? "—" : number.format(newSourceRecords)}</dd>
-                  </div>
-                )}
-                {monitoringActivity && (
-                  <div>
-                    <dt>{t("catalogOverview.activityRuns")}</dt>
-                    <dd>{number.format(monitoringActivity.completedRuns)}</dd>
-                  </div>
-                )}
-                {recentCheckedProducts !== null && (
-                  <div>
-                    <dt>{t("catalogOverview.currentProducts")}</dt>
-                    <dd>{number.format(recentCheckedProducts)}</dd>
-                  </div>
-                )}
-                {monitoringActivity && (
-                  <div>
-                    <dt>{t("catalogOverview.activityRecords")}</dt>
-                    <dd>{monitoringActivity.recordsConsidered == null ? "—" : number.format(monitoringActivity.recordsConsidered)}</dd>
-                  </div>
-                )}
-              </dl>
-              <div className="overview-activity__links">
-                <s-link href="/app/settings">{t("settingsAdmin.notifications.enabledTitle")}</s-link>
-                <s-badge tone={alertEmailEnabled ? "info" : "neutral"}>{t(alertEmailEnabled ? "settingsOverview.on" : "settingsOverview.off")}</s-badge>
-                {billingStatus.pricingPlansUrl && <s-link href="/app/settings#subscription">{t("billing.managePlanButton")}</s-link>}
-              </div>
-            </details>
-          </s-section>
-        )}
 
         {!isScanning && pendingProductPreview.length > 0 && (
           <div id="pending-catalog-products">

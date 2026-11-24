@@ -1,8 +1,7 @@
-import { Link, Outlet, isRouteErrorResponse, useLoaderData, useRouteError } from "react-router";
+import { Await, Link, Outlet, isRouteErrorResponse, useLoaderData, useNavigation, useRouteError } from "react-router";
 import { NavMenu } from "@shopify/app-bridge-react";
-import { data as json } from "react-router";
 import { useTranslation } from "react-i18next";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { authenticate, ensureShopifyWebhooksRegistered } from "../shopify.server";
 import db from "../merchant-db.server";
@@ -16,22 +15,24 @@ export const headers = (headersArgs: any) => {
 
 export const loader = async ({ request }: { request: Request }) => {
   const { billing, session, admin } = await authenticate.admin(request);
-  await ensureShopifyWebhooksRegistered(session);
-  const [billingStatus, activeAlerts] = await Promise.all([
-    getBillingStatus(billing, session.shop, admin),
-    db.safetyAlert.findMany({
-      where: { shop: session.shop, status: "active" },
-      select: { status: true, reviewState: true, resolutionType: true },
-    }),
-  ]);
-  const activeAlertsCount = activeAlerts.filter(alert => !isWaitingForSupplier(alert)).length;
   const shopifyLocale = new URL(request.url).searchParams.get("locale") || undefined;
-  return json({ activeAlertsCount, billingStatus, shopifyLocale });
+  const billingStatus = getBillingStatus(billing, session.shop, admin);
+  const activeAlertsCount = db.safetyAlert.findMany({
+    where: { shop: session.shop, status: "active" },
+    select: { status: true, reviewState: true, resolutionType: true },
+  }).then(alerts => alerts.filter(alert => !isWaitingForSupplier(alert)).length);
+  const webhookRegistration = ensureShopifyWebhooksRegistered(session);
+  return {
+    activeAlertsCount,
+    shopifyLocale,
+    ready: Promise.all([billingStatus, webhookRegistration]).then(([status]) => status),
+  };
 };
 
 export default function App() {
-  const { activeAlertsCount, billingStatus, shopifyLocale } = useLoaderData<typeof loader>();
+  const { activeAlertsCount, ready, shopifyLocale } = useLoaderData<typeof loader>();
   const { t, i18n } = useTranslation();
+  const navigation = useNavigation();
   const numbers = new Intl.NumberFormat(i18n.resolvedLanguage || i18n.language);
 
   useEffect(() => {
@@ -61,7 +62,12 @@ export default function App() {
       <NavMenu>
         <Link to="/app" rel="home">{t("redesign.overview")}</Link>
         <Link to="/app/alerts">
-          {t("redesign.potentialMatches")} {activeAlertsCount > 0 ? `(${numbers.format(activeAlertsCount)})` : ''}
+          {t("redesign.potentialMatches")}
+          <Suspense fallback={null}>
+            <Await resolve={activeAlertsCount} errorElement={null}>
+              {(count: number) => count > 0 ? ` (${numbers.format(count)})` : null}
+            </Await>
+          </Suspense>
         </Link>
         <Link to="/app/manual-check">
           {t("nav.catalogCoverage")}
@@ -69,7 +75,15 @@ export default function App() {
         <Link to="/app/evidence?view=scans">{t("redesign.scanHistory")}</Link>
         <Link to="/app/settings">{t('nav.settings')}</Link>
       </NavMenu>
-      {billingStatus.ownerTestAccess && <s-banner tone="info" heading={t("ownerTestAccess")} />}
+      <Suspense fallback={null}>
+        <Await resolve={ready}>
+          {(billingStatus: Awaited<ReturnType<typeof getBillingStatus>>) =>
+            billingStatus.ownerTestAccess ? <s-banner tone="info" heading={t("ownerTestAccess")} /> : null}
+        </Await>
+      </Suspense>
+      {navigation.state === "loading" && (
+        <div className="app-navigation-progress" role="status">{t("loadingPage")}</div>
+      )}
       <Outlet />
     </>
   );

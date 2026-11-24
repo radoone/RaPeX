@@ -798,7 +798,7 @@
       "actions": {
         "checkAgain": "Tarkista uudelleen",
         "checkAgainForProduct": "Tarkista {{title}} uudelleen",
-        "checkSafety": "Tarkista turvallisuus",
+        "checkSafety": "Tarkista tuote",
         "checkSafetyForProduct": "Tarkista tuotteen {{title}} turvallisuus",
         "viewForProduct": "Näytä tallennettu löydös tuotteelle {{title}}"
       },
@@ -1594,5 +1594,24 @@
     "endsOn": "Uusiminen on pois päältä. Valvonta päättyy {{date}}.",
     "stopRenewal": "Poista uusiminen käytöstä",
     "stopRenewalHelp": "Kaupan omistaja voi poistaa uusimisen käytöstä. Valvonta jatkuu {{date}} asti. Tallennetut tulokset pysyvät saatavilla."
-  }
+  },
+  "afterConfirmation": "Havainto pysyy avoimena, kunnes kirjaat toimenpiteen.",
+  "caseNumberCopied": "Hälytyksen numero kopioitu",
+  "confirmMatch": "Vahvistan, että kyseessä on sama tuote",
+  "confirmationHelp": "Vahvista vastaavuus mallin, viivakoodin, eränumeron tai muun todisteen perusteella.",
+  "confirmationNote": "Todisteet vastaavuuden vahvistamiseksi",
+  "copyCaseNumber": "Kopioi hälytyksen numero",
+  "copyCaseNumberFailed": "Hälytyksen numeron kopiointi epäonnistui.",
+  "decisionDestination": "Tallennettu kohteeseen {{status}}.",
+  "fullCatalogScope": "Nykyinen tuoteluettelo",
+  "historicalMonitoringScope": "Historialliset Safety Gate -hälytykset",
+  "loadingOverview": "Ladataan yleisnäkymää…",
+  "loadingPage": "Ladataan sivua…",
+  "manualMonitoring": "Manuaalinen seuranta",
+  "matchConfirmed": "Tuotevastaavuus vahvistettu",
+  "monitoringScope": "Uudet tai muuttuneet Safety Gate -hälytykset",
+  "scanScope": "Laajuus",
+  "scheduledMonitoring": "Automaattinen seuranta",
+  "viewDecisionDestination": "Siirry kohteeseen {{status}}",
+  "viewExternalSource": "Avaa Safety Gate uudessa välilehdessä"
 }

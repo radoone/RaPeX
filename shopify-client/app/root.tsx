@@ -61,8 +61,6 @@ export default function App() {
         <link rel="preconnect" href="https://cdn.shopify.com/" />
         <link rel="stylesheet" href="https://cdn.shopify.com/static/fonts/inter/v4/styles.css" />
         <link rel="stylesheet" href={themeStyles} />
-        <script src="https://cdn.shopify.com/shopifycloud/app-bridge.js"></script>
-        <script src={POLARIS_URL}></script>
         <Meta />
         <Links />
       </head>

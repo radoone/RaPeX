@@ -798,7 +798,7 @@
       "actions": {
         "checkAgain": "Verifică din nou",
         "checkAgainForProduct": "Verifică din nou {{title}}",
-        "checkSafety": "Verifică siguranța",
+        "checkSafety": "Verificați produsul",
         "checkSafetyForProduct": "Verifică siguranța pentru {{title}}",
         "viewForProduct": "Vezi constatarea înregistrată pentru {{title}}"
       },
@@ -1594,5 +1594,24 @@
     "endsOn": "Reînnoirea este dezactivată. Monitorizarea se încheie la {{date}}.",
     "stopRenewal": "Dezactivați reînnoirea",
     "stopRenewalHelp": "Proprietarul magazinului poate dezactiva reînnoirea. Monitorizarea continuă până la {{date}}. Rezultatele salvate rămân disponibile."
-  }
+  },
+  "afterConfirmation": "Constatarea rămâne deschisă până când înregistrați o acțiune.",
+  "caseNumberCopied": "Numărul alertei a fost copiat",
+  "confirmMatch": "Confirm că acesta este același produs",
+  "confirmationHelp": "Confirmați potrivirea folosind un model, cod de bare, număr de lot sau alte dovezi.",
+  "confirmationNote": "Dovezi pentru confirmarea potrivirii",
+  "copyCaseNumber": "Copiați numărul alertei",
+  "copyCaseNumberFailed": "Nu s-a putut copia numărul alertei.",
+  "decisionDestination": "Salvat în {{status}}.",
+  "fullCatalogScope": "Catalog curent",
+  "historicalMonitoringScope": "Alerte istorice Safety Gate",
+  "loadingOverview": "Se încarcă prezentarea generală…",
+  "loadingPage": "Se încarcă pagina…",
+  "manualMonitoring": "Monitorizare manuală",
+  "matchConfirmed": "Potrivirea produsului a fost confirmată",
+  "monitoringScope": "Alerte noi sau modificate Safety Gate",
+  "scanScope": "Domeniu de aplicare",
+  "scheduledMonitoring": "Monitorizare automată",
+  "viewDecisionDestination": "Accesați {{status}}",
+  "viewExternalSource": "Deschideți Safety Gate într-o filă nouă"
 }

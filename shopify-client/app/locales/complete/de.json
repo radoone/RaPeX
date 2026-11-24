@@ -798,7 +798,7 @@
       "actions": {
         "checkAgain": "Erneut prüfen",
         "checkAgainForProduct": "{{title}} erneut prüfen",
-        "checkSafety": "Sicherheit prüfen",
+        "checkSafety": "Produkt prüfen",
         "checkSafetyForProduct": "Sicherheit für {{title}} prüfen",
         "viewForProduct": "Aufgezeichnetes Ergebnis für {{title}} anzeigen"
       },
@@ -1594,5 +1594,24 @@
     "endsOn": "Verlängerung ist deaktiviert. Die Überwachung endet am {{date}}.",
     "stopRenewal": "Verlängerung deaktivieren",
     "stopRenewalHelp": "Der Shop-Inhaber kann die Verlängerung deaktivieren. Die Überwachung wird bis zum {{date}} fortgesetzt. Ihre gespeicherten Ergebnisse bleiben verfügbar."
-  }
+  },
+  "afterConfirmation": "Der Befund bleibt offen, bis Sie eine Maßnahme erfassen.",
+  "caseNumberCopied": "Warnmeldungsnummer kopiert",
+  "confirmMatch": "Ich bestätige, dass es sich um dasselbe Produkt handelt",
+  "confirmationHelp": "Bestätigen Sie die Übereinstimmung anhand eines Modells, Barcodes, einer Chargennummer oder anderer Nachweise.",
+  "confirmationNote": "Nachweis zur Bestätigung der Übereinstimmung",
+  "copyCaseNumber": "Warnmeldungsnummer kopieren",
+  "copyCaseNumberFailed": "Warnmeldungsnummer konnte nicht kopiert werden.",
+  "decisionDestination": "Gespeichert unter {{status}}.",
+  "fullCatalogScope": "Aktueller Katalog",
+  "historicalMonitoringScope": "Historische Safety Gate-Warnmeldungen",
+  "loadingOverview": "Übersicht wird geladen…",
+  "loadingPage": "Seite wird geladen…",
+  "manualMonitoring": "Manuelle Überwachung",
+  "matchConfirmed": "Produktübereinstimmung bestätigt",
+  "monitoringScope": "Neue oder geänderte Safety Gate-Warnmeldungen",
+  "scanScope": "Umfang",
+  "scheduledMonitoring": "Automatische Überwachung",
+  "viewDecisionDestination": "Zu {{status}} gehen",
+  "viewExternalSource": "Safety Gate in neuem Tab öffnen"
 }

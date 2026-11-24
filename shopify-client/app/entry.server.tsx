@@ -5,7 +5,7 @@ import { ServerRouter, type EntryContext } from "react-router";
 import { isbot } from "isbot";
 import { addDocumentResponseHeaders } from "./shopify.server";
 
-export const streamTimeout = 5000;
+export const streamTimeout = 15_000;
 
 export default async function handleRequest(
   request: Request,
@@ -49,8 +49,7 @@ export default async function handleRequest(
       }
     );
 
-    // Automatically timeout the React renderer after 6 seconds, which ensures
-    // React has enough time to flush down the rejected boundary contents
+    // Give React time to flush rejected boundaries after the data stream times out.
     setTimeout(abort, streamTimeout + 1000);
   });
 }

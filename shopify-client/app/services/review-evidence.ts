@@ -99,6 +99,7 @@ export function decisionKey(type?: string | null) {
   const keys: Record<string, string> = {
     verified_safe: "resolveActions.verifiedSafe",
     match_not_confirmed: "workspace.matchNotConfirmed",
+    match_confirmed: "matchConfirmed",
     removed_from_sale: "resolveActions.removedFromSale",
     modified_product: "resolveActions.modifiedProduct",
     contacted_supplier: "resolveActions.contactedSupplier",

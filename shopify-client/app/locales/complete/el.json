@@ -798,7 +798,7 @@
       "actions": {
         "checkAgain": "Έλεγχος ξανά",
         "checkAgainForProduct": "Έλεγχος {{title}} ξανά",
-        "checkSafety": "Έλεγχος ασφάλειας",
+        "checkSafety": "Έλεγχος προϊόντος",
         "checkSafetyForProduct": "Έλεγχος ασφάλειας για {{title}}",
         "viewForProduct": "Προβολή καταγεγραμμένου ευρήματος για {{title}}"
       },
@@ -1594,5 +1594,24 @@
     "endsOn": "Η ανανέωση είναι απενεργοποιημένη. Η παρακολούθηση λήγει στις {{date}}.",
     "stopRenewal": "Απενεργοποίηση ανανέωσης",
     "stopRenewalHelp": "Ο κάτοχος του καταστήματος μπορεί να απενεργοποιήσει την ανανέωση. Η παρακολούθηση συνεχίζεται έως τις {{date}}. Τα αποθηκευμένα αποτελέσματά σας παραμένουν διαθέσιμα."
-  }
+  },
+  "afterConfirmation": "Το εύρημα παραμένει ανοιχτό μέχρι να καταγράψετε μια ενέργεια.",
+  "caseNumberCopied": "Ο αριθμός ειδοποίησης αντιγράφηκε",
+  "confirmMatch": "Επιβεβαιώνω ότι πρόκειται για το ίδιο προϊόν",
+  "confirmationHelp": "Επιβεβαιώστε την αντιστοίχιση χρησιμοποιώντας μοντέλο, barcode, αριθμό παρτίδας ή άλλα αποδεικτικά στοιχεία.",
+  "confirmationNote": "Αποδεικτικά στοιχεία για την επιβεβαίωση της αντιστοίχισης",
+  "copyCaseNumber": "Αντιγραφή αριθμού ειδοποίησης",
+  "copyCaseNumberFailed": "Δεν ήταν δυνατή η αντιγραφή του αριθμού ειδοποίησης.",
+  "decisionDestination": "Αποθηκεύτηκε στο {{status}}.",
+  "fullCatalogScope": "Τρέχων κατάλογος",
+  "historicalMonitoringScope": "Ιστορικές ειδοποιήσεις Safety Gate",
+  "loadingOverview": "Φόρτωση επισκόπησης…",
+  "loadingPage": "Φόρτωση σελίδας…",
+  "manualMonitoring": "Χειροκίνητη παρακολούθηση",
+  "matchConfirmed": "Η αντιστοίχιση προϊόντος επιβεβαιώθηκε",
+  "monitoringScope": "Νέες ή τροποποιημένες ειδοποιήσεις Safety Gate",
+  "scanScope": "Πεδίο εφαρμογής",
+  "scheduledMonitoring": "Αυτόματη παρακολούθηση",
+  "viewDecisionDestination": "Μετάβαση στο {{status}}",
+  "viewExternalSource": "Άνοιγμα του Safety Gate σε νέα καρτέλα"
 }

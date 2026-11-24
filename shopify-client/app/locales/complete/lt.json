@@ -798,7 +798,7 @@
       "actions": {
         "checkAgain": "Patikrinti dar kartą",
         "checkAgainForProduct": "Patikrinti „{{title}}“ dar kartą",
-        "checkSafety": "Patikrinti saugumą",
+        "checkSafety": "Tikrinti produktą",
         "checkSafetyForProduct": "Patikrinti „{{title}}“ saugumą",
         "viewForProduct": "Peržiūrėti įrašytą radinį dėl {{title}}"
       },
@@ -1594,5 +1594,24 @@
     "endsOn": "Atnaujinimas išjungtas. Stebėjimas baigiasi {{date}}.",
     "stopRenewal": "Išjungti atnaujinimą",
     "stopRenewalHelp": "Parduotuvės savininkas gali išjungti atnaujinimą. Stebėjimas tęsiamas iki {{date}}. Jūsų išsaugoti rezultatai lieka pasiekiami."
-  }
+  },
+  "afterConfirmation": "Radinys lieka atviras, kol neužfiksuosite veiksmo.",
+  "caseNumberCopied": "Įspėjimo numeris nukopijuotas",
+  "confirmMatch": "Patvirtinu, kad tai tas pats produktas",
+  "confirmationHelp": "Patvirtinkite atitiktį naudodami modelį, brūkšninį kodą, partijos numerį ar kitus įrodymus.",
+  "confirmationNote": "Įrodymai atitikčiai patvirtinti",
+  "copyCaseNumber": "Kopijuoti įspėjimo numerį",
+  "copyCaseNumberFailed": "Nepavyko nukopijuoti įspėjimo numerio.",
+  "decisionDestination": "Išsaugota {{status}}.",
+  "fullCatalogScope": "Dabartinis katalogas",
+  "historicalMonitoringScope": "Istoriniai Safety Gate įspėjimai",
+  "loadingOverview": "Įkeliama apžvalga…",
+  "loadingPage": "Įkeliamas puslapis…",
+  "manualMonitoring": "Rankinė stebėsena",
+  "matchConfirmed": "Produkto atitiktis patvirtinta",
+  "monitoringScope": "Nauji arba pasikeitę Safety Gate įspėjimai",
+  "scanScope": "Apimtis",
+  "scheduledMonitoring": "Automatinė stebėsena",
+  "viewDecisionDestination": "Eiti į {{status}}",
+  "viewExternalSource": "Atidaryti Safety Gate naujame skirtuke"
 }

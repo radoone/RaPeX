@@ -798,7 +798,7 @@
       "actions": {
         "checkAgain": "Проверете отново",
         "checkAgainForProduct": "Проверете отново {{title}}",
-        "checkSafety": "Проверете безопасността",
+        "checkSafety": "Проверка на продукта",
         "checkSafetyForProduct": "Проверете безопасността за {{title}}",
         "viewForProduct": "Преглед на записаната находка за {{title}}"
       },
@@ -1594,5 +1594,24 @@
     "endsOn": "Подновяването е изключено. Мониторингът приключва на {{date}}.",
     "stopRenewal": "Изключване на подновяването",
     "stopRenewalHelp": "Собственикът на магазина може да изключи подновяването. Мониторингът продължава до {{date}}. Запазените ви резултати остават достъпни."
-  }
+  },
+  "afterConfirmation": "Сигналът остава отворен, докато не предприемете действие.",
+  "caseNumberCopied": "Номерът на сигнала е копиран",
+  "confirmMatch": "Потвърждавам, че това е същият продукт",
+  "confirmationHelp": "Потвърдете съответствието чрез модел, баркод, партиден номер или други доказателства.",
+  "confirmationNote": "Доказателство за потвърждаване на съответствието",
+  "copyCaseNumber": "Копирай номера на сигнала",
+  "copyCaseNumberFailed": "Неуспешно копиране на номера на сигнала.",
+  "decisionDestination": "Запазено в {{status}}.",
+  "fullCatalogScope": "Текущ каталог",
+  "historicalMonitoringScope": "Исторически сигнали от Safety Gate",
+  "loadingOverview": "Зареждане на прегледа…",
+  "loadingPage": "Зареждане на страницата…",
+  "manualMonitoring": "Ръчно наблюдение",
+  "matchConfirmed": "Съответствието на продукта е потвърдено",
+  "monitoringScope": "Нови или променени сигнали от Safety Gate",
+  "scanScope": "Обхват",
+  "scheduledMonitoring": "Автоматично наблюдение",
+  "viewDecisionDestination": "Към {{status}}",
+  "viewExternalSource": "Отвори Safety Gate в нов раздел"
 }

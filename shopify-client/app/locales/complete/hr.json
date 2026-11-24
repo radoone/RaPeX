@@ -798,7 +798,7 @@
       "actions": {
         "checkAgain": "Ponovno provjeri",
         "checkAgainForProduct": "Ponovno provjeri {{title}}",
-        "checkSafety": "Provjeri sigurnost",
+        "checkSafety": "Provjeri proizvod",
         "checkSafetyForProduct": "Provjeri sigurnost za {{title}}",
         "viewForProduct": "Prikaži zabilježeni nalaz za {{title}}"
       },
@@ -1594,5 +1594,24 @@
     "endsOn": "Obnova je isključena. Praćenje završava {{date}}.",
     "stopRenewal": "Isključi obnovu",
     "stopRenewalHelp": "Vlasnik trgovine može isključiti obnovu. Praćenje se nastavlja do {{date}}. Vaši spremljeni rezultati ostaju dostupni."
-  }
+  },
+  "afterConfirmation": "Nalaz ostaje otvoren dok ne zabilježite radnju.",
+  "caseNumberCopied": "Broj upozorenja kopiran",
+  "confirmMatch": "Potvrđujem da je ovo isti proizvod",
+  "confirmationHelp": "Potvrdite podudaranje koristeći model, crtični kod, broj serije ili drugi dokaz.",
+  "confirmationNote": "Dokaz za potvrdu podudaranja",
+  "copyCaseNumber": "Kopiraj broj upozorenja",
+  "copyCaseNumberFailed": "Nije bilo moguće kopirati broj upozorenja.",
+  "decisionDestination": "Spremljeno u {{status}}.",
+  "fullCatalogScope": "Trenutni katalog",
+  "historicalMonitoringScope": "Povijesna Safety Gate upozorenja",
+  "loadingOverview": "Učitavanje pregleda…",
+  "loadingPage": "Učitavanje stranice…",
+  "manualMonitoring": "Ručni nadzor",
+  "matchConfirmed": "Podudaranje proizvoda potvrđeno",
+  "monitoringScope": "Nova ili izmijenjena Safety Gate upozorenja",
+  "scanScope": "Opseg",
+  "scheduledMonitoring": "Automatski nadzor",
+  "viewDecisionDestination": "Idi na {{status}}",
+  "viewExternalSource": "Otvori Safety Gate u novoj kartici"
 }

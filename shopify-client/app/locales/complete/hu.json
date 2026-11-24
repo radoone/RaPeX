@@ -798,7 +798,7 @@
       "actions": {
         "checkAgain": "Ellenőrizze újra",
         "checkAgainForProduct": "Ellenőrizze újra a(z) {{title}} terméket",
-        "checkSafety": "Biztonság ellenőrzése",
+        "checkSafety": "Termék ellenőrzése",
         "checkSafetyForProduct": "Biztonság ellenőrzése a(z) {{title}} termékhez",
         "viewForProduct": "Rögzített találat megtekintése a következőhöz: {{title}}"
       },
@@ -1594,5 +1594,24 @@
     "endsOn": "A megújítás ki van kapcsolva. A felügyelet ekkor ér véget: {{date}}.",
     "stopRenewal": "Megújítás kikapcsolása",
     "stopRenewalHelp": "Az üzlet tulajdonosa kikapcsolhatja a megújítást. A felügyelet {{date}}-ig folytatódik. A mentett eredmények továbbra is elérhetők maradnak."
-  }
+  },
+  "afterConfirmation": "A találat nyitva marad, amíg nem rögzít egy műveletet.",
+  "caseNumberCopied": "Riasztási szám másolva",
+  "confirmMatch": "Megerősítem, hogy ez ugyanaz a termék",
+  "confirmationHelp": "Erősítse meg az egyezést modell, vonalkód, gyártási tétel száma vagy egyéb bizonyíték alapján.",
+  "confirmationNote": "Az egyezés megerősítésére szolgáló bizonyíték",
+  "copyCaseNumber": "Riasztási szám másolása",
+  "copyCaseNumberFailed": "A riasztási számot nem sikerült másolni.",
+  "decisionDestination": "Mentve ide: {{status}}.",
+  "fullCatalogScope": "Jelenlegi katalógus",
+  "historicalMonitoringScope": "Korábbi Safety Gate riasztások",
+  "loadingOverview": "Áttekintés betöltése…",
+  "loadingPage": "Oldal betöltése…",
+  "manualMonitoring": "Manuális ellenőrzés",
+  "matchConfirmed": "Termékegyezés megerősítve",
+  "monitoringScope": "Új vagy módosult Safety Gate riasztások",
+  "scanScope": "Hatókör",
+  "scheduledMonitoring": "Automatikus ellenőrzés",
+  "viewDecisionDestination": "Ugrás ide: {{status}}",
+  "viewExternalSource": "Safety Gate megnyitása új lapon"
 }

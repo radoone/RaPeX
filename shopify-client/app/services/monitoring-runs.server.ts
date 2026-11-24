@@ -1,5 +1,7 @@
+import { FieldValue } from "firebase-admin/firestore";
+import type { MerchantDeltaMonitoringResult } from "./safety-gate-checker.server";
 import { firestore } from "../firestore.server";
-import { summarizeMonitoringActivity, summarizeMonitoringRun, type MonitoringRunSummary } from "./monitoring-runs";
+import { summarizeMonitoringActivity, summarizeMonitoringRun, toIsoString, type MonitoringRunSummary } from "./monitoring-runs";
 
 export async function getMonitoringActivity(shop: string, observedAt: number, baselineAt: string | null) {
   if (!baselineAt) return null;
@@ -27,4 +29,34 @@ export async function getRecentMonitoringRuns(shop: string, limit = 3): Promise<
     .get();
 
   return snapshot.docs.map((document) => summarizeMonitoringRun(document.id, document.data()));
+}
+
+export async function recordManualMonitoringRun(
+  merchant: FirebaseFirestore.DocumentSnapshot,
+  result: MerchantDeltaMonitoringResult,
+) {
+  const run = merchant.ref.collection("monitoring_runs").doc();
+  await firestore.runTransaction(async transaction => {
+    const current = await transaction.get(merchant.ref);
+    if (!current.exists || current.get("installationRetiredAt") ||
+        toIsoString(current.get("createdAt")) !== toIsoString(merchant.get("createdAt"))) return;
+
+    const completedAt = FieldValue.serverTimestamp();
+    transaction.create(run, {
+      shop: result.shop,
+      runId: run.id,
+      status: "completed",
+      mode: result.mode,
+      triggerMode: "manual",
+      completedAt,
+      updatedAt: completedAt,
+      result: {
+        window: result.window,
+        productsScanned: result.productsScanned,
+        rapexAlertsScanned: result.rapexAlertsScanned,
+        alertsCreated: result.alertsCreated,
+        ...(typeof result.hasMore === "boolean" ? { hasMore: result.hasMore } : {}),
+      },
+    });
+  });
 }

@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "react-router";
 import {
+  Link,
   useLoaderData,
   useLocation,
   useFetcher,
@@ -11,6 +12,7 @@ import {
 import { data as json } from "react-router";
 import { useTranslation } from "react-i18next";
 import { useAppBridge } from "@shopify/app-bridge-react";
+import { boundary } from "@shopify/shopify-app-react-router/server";
 import { authenticate } from "../shopify.server";
 import db from "../merchant-db.server";
 import { withOfficialReferences } from "../services/review-evidence.server";
@@ -26,6 +28,8 @@ const riskFilterAliases = new Map([
   ["low", ["Low", "low risk", "Low risk", "4"]],
   ["other risk", ["Other risk", "Other Risk"]],
 ]);
+
+export const headers = boundary.headers;
 
 export const loader = async ({ request, url }: LoaderFunctionArgs) => {
   const { session, admin } = await authenticate.admin(request);
@@ -278,6 +282,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     );
   }
 
+  if (resolutionType === "match_confirmed" && (action !== "resolve" || alertIdsJson || !notes)) {
+    return json({ success: false, error: "Confirm one finding and include evidence" }, { status: 400 });
+  }
+
   if (action !== "resolve" && action !== "dismiss" && action !== "reactivate") {
     return json({ success: false, error: "Invalid action" }, { status: 400 });
   }
@@ -329,6 +337,8 @@ export function ErrorBoundary() {
   const error = useRouteError();
   const { t } = useTranslation();
 
+  if (isRouteErrorResponse(error) && error.status === 200) return boundary.error(error);
+
   const title = isRouteErrorResponse(error)
     ? `${error.status} ${error.statusText}`
     : error instanceof Error
@@ -361,8 +371,11 @@ export default function AlertsPage() {
   const fetcher = useFetcher<typeof action>();
   const navigate = useNavigate();
   const location = useLocation();
-  const queueParams = new URLSearchParams(location.search);
-  queueParams.delete("open");
+  const queueParams = new URLSearchParams();
+  const locationParams = new URLSearchParams(location.search);
+  for (const key of ["view", "status", "search", "riskLevel", "sortBy", "sortOrder", "page"]) {
+    for (const value of locationParams.getAll(key)) queueParams.append(key, value);
+  }
   const queueHref = queueParams.size ? `/app/alerts?${queueParams}` : "/app/alerts";
   const reviewHref = (id: string) => {
     const params = new URLSearchParams(queueParams);
@@ -376,7 +389,7 @@ export default function AlertsPage() {
   const bulkRequest = useRef(false);
   const [bulkSaveVersion, setBulkSaveVersion] = useState(0);
   const [bulkSaveFailed, setBulkSaveFailed] = useState(false);
-  const [submittedAlertId, setSubmittedAlertId] = useState<string | null>(null);
+  const [submittedReview, setSubmittedReview] = useState<{ alertId: string; locationKey: string } | null>(null);
   const reviewReceipt = fetcher.state === "idle" && fetcher.data && "reviewedAlertId" in fetcher.data && fetcher.data.reviewedAlertId
     ? fetcher.data
     : null;
@@ -446,7 +459,7 @@ export default function AlertsPage() {
       resolutionType?: string,
       notes?: string,
     ) => {
-      setSubmittedAlertId(alertId);
+      setSubmittedReview({ alertId, locationKey: location.key });
       fetcher.submit(
         {
           action,
@@ -457,14 +470,14 @@ export default function AlertsPage() {
         { method: "POST" },
       );
     },
-    [fetcher],
+    [fetcher, location.key],
   );
 
   const handleBulkAction = useCallback(
     (alertIds: string[], action: string, resolutionType?: string, notes?: string) => {
       bulkRequest.current = true;
       setBulkSaveFailed(false);
-      setSubmittedAlertId(null);
+      setSubmittedReview(null);
       fetcher.submit(
         {
           action,
@@ -510,16 +523,32 @@ export default function AlertsPage() {
       : t("dashboard.admin.status.noActionNeeded.title");
 
   if (filters.openAlertId) {
-    const decisionSaved = reviewReceipt?.reviewedAlertId === selectedAlert?.id && Boolean(reviewReceipt);
-    const decisionFailed = submittedAlertId === selectedAlert?.id && fetcher.state === "idle" && fetcher.data?.success === false;
+    const submittedHere = submittedReview?.locationKey === location.key && submittedReview.alertId === selectedAlert?.id;
+    const decisionSaved = submittedHere && reviewReceipt?.reviewedAlertId === selectedAlert?.id && Boolean(reviewReceipt);
+    const decisionFailed = submittedHere && fetcher.state === "idle" && fetcher.data?.success === false;
+    const destination = selectedAlert && (
+      isWaitingForSupplier(selectedAlert)
+        ? { status: "waiting_for_supplier", label: "workspace.waiting" }
+        : selectedAlert.status === "resolved"
+          ? { status: "resolved", label: "alerts.table.tabs.resolved" }
+          : selectedAlert.status === "dismissed"
+            ? { status: "dismissed", label: "alerts.table.tabs.dismissed" }
+            : null
+    );
+    const destinationLabel = destination && t(destination.label);
     return (
       <s-page inlineSize="large" heading={t("redesign.matchReview")}>
-        <s-link href={queueHref}>{t("redesign.potentialMatches")}</s-link>
+        <Link to={queueHref} className="review-queue-link">{t("redesign.potentialMatches")}</Link>
         {decisionSaved && (
           <div id="decision-saved" tabIndex={-1} role="status">
             <s-banner tone="success" heading={t("analysis.decisionRecorded")}>
-              {nextAlertId && nextAlertId !== selectedAlert?.id && (
-                <s-link href={`/app/alerts?status=active&open=${encodeURIComponent(nextAlertId)}`}>{t("catalogOverview.reviewNext")}</s-link>
+              {destination && destinationLabel && (
+                <s-stack gap="small">
+                  <s-text>{t("decisionDestination", { status: destinationLabel })}</s-text>
+                  <Link to={`/app/alerts?status=${destination.status}`} className="review-queue-link">
+                    {t("viewDecisionDestination", { status: destinationLabel })}
+                  </Link>
+                </s-stack>
               )}
             </s-banner>
           </div>
@@ -542,7 +571,7 @@ export default function AlertsPage() {
           />
         ) : (
           <s-banner tone="warning" heading={t("errors.pageLoadFailed")}>
-            <s-link href={queueHref}>{t("redesign.potentialMatches")}</s-link>
+            <Link to={queueHref} className="review-queue-link">{t("redesign.potentialMatches")}</Link>
           </s-banner>
         )}
       </s-page>

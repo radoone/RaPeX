@@ -1,6 +1,26 @@
 import { workspaceCopy } from "./workspace";
 const sk = {
     translation: {
+      loadingOverview: "Načítava sa prehľad…",
+      loadingPage: "Načítava sa stránka…",
+      confirmMatch: "Potvrdzujem, že ide o ten istý produkt",
+      matchConfirmed: "Zhoda produktu potvrdená",
+      confirmationHelp: "Uveďte model, čiarový kód, šaržu alebo iný podklad, podľa ktorého ste potvrdili zhodu.",
+      confirmationNote: "Podklad na potvrdenie zhody",
+      afterConfirmation: "Nález zostáva otvorený, kým nezaznamenáte opatrenie.",
+      decisionDestination: "Nález je v zozname {{status}}.",
+      viewDecisionDestination: "Otvoriť zoznam {{status}}",
+      manualMonitoring: "Ručný monitoring",
+      scheduledMonitoring: "Automatický monitoring",
+      monitoringScope: "Nové alebo zmenené hlásenia Safety Gate",
+      historicalMonitoringScope: "Historické hlásenia Safety Gate",
+      scanScope: "Rozsah",
+      fullCatalogScope: "Aktuálny katalóg",
+      viewExternalSource: "Otvoriť Safety Gate v novej karte",
+      copyCaseNumber: "Kopírovať číslo hlásenia",
+      caseNumberCopied: "Číslo hlásenia skopírované",
+      copyCaseNumberFailed: "Číslo hlásenia sa nepodarilo skopírovať.",
+
       redesign: {
         overview: "Prehľad",
         potentialMatches: "Potenciálne zhody",
@@ -944,7 +964,7 @@ const sk = {
           },
           "actions": {
             "checkAgain": "Skontrolovať znova",
-            "checkSafety": "Skontrolovať bezpečnosť",
+            "checkSafety": "Skontrolovať produkt",
             "viewForProduct": "Zobraziť zaznamenaný nález pre {{title}}",
             "checkAgainForProduct": "Znova skontrolovať {{title}}",
             "checkSafetyForProduct": "Skontrolovať bezpečnosť produktu {{title}}"

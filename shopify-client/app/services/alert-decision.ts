@@ -44,6 +44,19 @@ export function getAlertDecisionTransition(params: {
     };
   }
 
+  if (params.resolutionType === "match_confirmed") {
+    if (!notes) throw new Error("Evidence is required to confirm a product match");
+    return {
+      status: "active",
+      reviewState: "needs_review",
+      resolutionType: params.resolutionType,
+      resolvedAt: null,
+      dismissedAt: null,
+      dismissedBy: null,
+      notes,
+    };
+  }
+
   if (params.resolutionType === "contacted_supplier") {
     return {
       status: "active",

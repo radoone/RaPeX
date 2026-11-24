@@ -22,6 +22,18 @@ describe("getAlertDecisionTransition", () => {
     });
   });
 
+  it("records a confirmed identity without resolving the finding", () => {
+    const input = { action: "resolve", resolutionType: "match_confirmed", actorId: "session-1", now } as const;
+    expect(getAlertDecisionTransition({ ...input, notes: "  Same model and batch  " })).toMatchObject({
+      status: "active",
+      reviewState: "needs_review",
+      resolutionType: "match_confirmed",
+      resolvedAt: null,
+      notes: "Same model and batch",
+    });
+    expect(() => getAlertDecisionTransition({ ...input, notes: " " })).toThrow("Evidence is required");
+  });
+
   it("marks a completed merchant decision resolved", () => {
     const transition = getAlertDecisionTransition({
       action: "resolve",

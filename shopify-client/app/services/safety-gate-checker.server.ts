@@ -62,6 +62,7 @@ export interface SafetyCheckResult {
 export interface MerchantDeltaMonitoringResult {
   shop: string;
   mode: "delta" | "bootstrap" | "windowed";
+  hasMore?: boolean;
   window: {
     strategy: "since-last-check" | "last-days" | "full-lookback";
     days: number | null;

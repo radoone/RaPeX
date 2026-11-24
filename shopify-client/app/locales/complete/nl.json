@@ -798,7 +798,7 @@
       "actions": {
         "checkAgain": "Opnieuw controleren",
         "checkAgainForProduct": "Controleer {{title}} opnieuw",
-        "checkSafety": "Veiligheid controleren",
+        "checkSafety": "Product controleren",
         "checkSafetyForProduct": "Veiligheid controleren voor {{title}}",
         "viewForProduct": "Bekijk de geregistreerde bevinding voor {{title}}"
       },
@@ -1594,5 +1594,24 @@
     "endsOn": "Verlenging is uitgeschakeld. Monitoring eindigt op {{date}}.",
     "stopRenewal": "Verlenging uitschakelen",
     "stopRenewalHelp": "De winkeleigenaar kan de verlenging uitschakelen. Monitoring gaat door tot en met {{date}}. Je opgeslagen resultaten blijven beschikbaar."
-  }
+  },
+  "afterConfirmation": "De bevinding blijft openstaan totdat u een actie registreert.",
+  "caseNumberCopied": "Meldingsnummer gekopieerd",
+  "confirmMatch": "Ik bevestig dat dit hetzelfde product is",
+  "confirmationHelp": "Bevestig de match aan de hand van een model, barcode, batchnummer of ander bewijs.",
+  "confirmationNote": "Bewijs voor het bevestigen van de match",
+  "copyCaseNumber": "Meldingsnummer kopiëren",
+  "copyCaseNumberFailed": "Kon het meldingsnummer niet kopiëren.",
+  "decisionDestination": "Opgeslagen in {{status}}.",
+  "fullCatalogScope": "Huidige catalogus",
+  "historicalMonitoringScope": "Historische Safety Gate-meldingen",
+  "loadingOverview": "Overzicht laden…",
+  "loadingPage": "Pagina laden…",
+  "manualMonitoring": "Handmatige monitoring",
+  "matchConfirmed": "Productmatch bevestigd",
+  "monitoringScope": "Nieuwe of gewijzigde Safety Gate-meldingen",
+  "scanScope": "Bereik",
+  "scheduledMonitoring": "Automatische monitoring",
+  "viewDecisionDestination": "Ga naar {{status}}",
+  "viewExternalSource": "Open Safety Gate in een nieuw tabblad"
 }

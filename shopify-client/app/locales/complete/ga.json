@@ -813,7 +813,7 @@
       "actions": {
         "checkAgain": "Seiceáil arís",
         "checkAgainForProduct": "Seiceáil {{title}} arís",
-        "checkSafety": "Seiceáil sábháilteacht",
+        "checkSafety": "Seiceáil an táirge",
         "checkSafetyForProduct": "Seiceáil sábháilteacht do {{title}}",
         "viewForProduct": "Féach toradh taifeadta do {{title}}"
       },
@@ -1613,5 +1613,24 @@
     "endsOn": "Tá an athnuachan múchta. Críochnaíonn an monatóireacht ar {{date}}.",
     "stopRenewal": "Múch an athnuachan",
     "stopRenewalHelp": "Is féidir le húinéir an tsiopa an athnuachan a mhúchadh. Leanann an monatóireacht ar aghaidh go dtí {{date}}. Fanann do thorthaí sábháilte ar fáil."
-  }
+  },
+  "afterConfirmation": "Fanann an toradh oscailte go dtí go dtaifeadann tú gníomh.",
+  "caseNumberCopied": "Uimhir an fholáirimh cóipeáilte",
+  "confirmMatch": "Deimhním gurb é seo an táirge céanna",
+  "confirmationHelp": "Deimhnigh an meaitseáil ag baint úsáide as múnla, barrchód, uimhir bhaisce, nó fianaise eile.",
+  "confirmationNote": "Fianaise chun an meaitseáil a dhearbhú",
+  "copyCaseNumber": "Cóipeáil uimhir an fholáirimh",
+  "copyCaseNumberFailed": "Níorbh fhéidir uimhir an fholáirimh a chóipeáil.",
+  "decisionDestination": "Sábháilte chuig {{status}}.",
+  "fullCatalogScope": "Catalóg reatha",
+  "historicalMonitoringScope": "Foláirimh stairiúla ó Safety Gate",
+  "loadingOverview": "Ag luchtú an fhorbhreathnaithe…",
+  "loadingPage": "Ag luchtú an leathanaigh…",
+  "manualMonitoring": "Monatóireacht láimhe",
+  "matchConfirmed": "Táirge deimhnithe",
+  "monitoringScope": "Foláirimh nua nó athraithe ó Safety Gate",
+  "scanScope": "Scóip",
+  "scheduledMonitoring": "Monatóireacht uathoibríoch",
+  "viewDecisionDestination": "Téigh go {{status}}",
+  "viewExternalSource": "Oscail Safety Gate i gcluaisín nua"
 }

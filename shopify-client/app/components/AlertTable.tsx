@@ -24,6 +24,7 @@ interface Alert {
 // Resolution types for resolve/dismiss actions
 export type ResolutionType =
   | "match_not_confirmed"
+  | "match_confirmed"
   | "verified_safe" // Product verified as safe after review
   | "removed_from_sale" // Product removed from store
   | "modified_product" // Product modified to address safety concern

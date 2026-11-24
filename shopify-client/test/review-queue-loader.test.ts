@@ -144,6 +144,21 @@ describe("saving a review decision", () => {
     }));
   });
 
+  it("requires evidence and an individual finding to record a confirmation", async () => {
+    const submit = async (extra: Record<string, string>) => {
+      const request = new Request("https://example.com/app/alerts", {
+        method: "POST",
+        body: new URLSearchParams({ action: "resolve", alertId: "current", resolutionType: "match_confirmed", ...extra }),
+      });
+      return (await action({ request } as never)).data;
+    };
+    expect(await submit({ notes: " " })).toMatchObject({ success: false });
+    expect(await submit({ notes: "Same model", alertIds: '["current"]' })).toMatchObject({ success: false });
+    expect(recordDecisions).not.toHaveBeenCalled();
+    expect(await submit({ notes: "Same model" })).toMatchObject({ success: true, reviewedAlertId: "current" });
+    expect(recordDecisions).toHaveBeenCalledWith(expect.objectContaining({ resolutionType: "match_confirmed", notes: "Same model" }));
+  });
+
   it("does not confirm a failed decision", async () => {
     recordDecisions.mockRejectedValue(new Error("Could not save"));
     expect(await save()).toEqual({ success: false, error: "Could not save" });

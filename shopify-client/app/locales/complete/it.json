@@ -798,7 +798,7 @@
       "actions": {
         "checkAgain": "Controlla di nuovo",
         "checkAgainForProduct": "Controlla di nuovo {{title}}",
-        "checkSafety": "Controlla sicurezza",
+        "checkSafety": "Controlla prodotto",
         "checkSafetyForProduct": "Controlla sicurezza per {{title}}",
         "viewForProduct": "Visualizza il risultato registrato per {{title}}"
       },
@@ -1594,5 +1594,24 @@
     "endsOn": "Il rinnovo è disattivato. Il monitoraggio termina il {{date}}.",
     "stopRenewal": "Disattiva il rinnovo",
     "stopRenewalHelp": "Il titolare del negozio può disattivare il rinnovo. Il monitoraggio continua fino al {{date}}. I risultati salvati rimangono disponibili."
-  }
+  },
+  "afterConfirmation": "Il rilievo rimane aperto finché non viene registrata un'azione.",
+  "caseNumberCopied": "Numero avviso copiato",
+  "confirmMatch": "Confermo che si tratta dello stesso prodotto",
+  "confirmationHelp": "Conferma la corrispondenza utilizzando un modello, un codice a barre, un numero di lotto o altre prove.",
+  "confirmationNote": "Prove per la conferma della corrispondenza",
+  "copyCaseNumber": "Copia numero avviso",
+  "copyCaseNumberFailed": "Impossibile copiare il numero dell'avviso.",
+  "decisionDestination": "Salvato in {{status}}.",
+  "fullCatalogScope": "Catalogo attuale",
+  "historicalMonitoringScope": "Avvisi storici di Safety Gate",
+  "loadingOverview": "Caricamento panoramica…",
+  "loadingPage": "Caricamento pagina…",
+  "manualMonitoring": "Monitoraggio manuale",
+  "matchConfirmed": "Corrispondenza prodotto confermata",
+  "monitoringScope": "Nuovi avvisi o modifiche a Safety Gate",
+  "scanScope": "Ambito",
+  "scheduledMonitoring": "Monitoraggio automatico",
+  "viewDecisionDestination": "Vai a {{status}}",
+  "viewExternalSource": "Apri Safety Gate in una nuova scheda"
 }

@@ -798,7 +798,7 @@
       "actions": {
         "checkAgain": "Sprawdź ponownie",
         "checkAgainForProduct": "Sprawdź ponownie {{title}}",
-        "checkSafety": "Sprawdź bezpieczeństwo",
+        "checkSafety": "Sprawdź produkt",
         "checkSafetyForProduct": "Sprawdź bezpieczeństwo dla {{title}}",
         "viewForProduct": "Wyświetl zarejestrowany wynik dla {{title}}"
       },
@@ -1594,5 +1594,24 @@
     "endsOn": "Odnawianie jest wyłączone. Monitorowanie kończy się {{date}}.",
     "stopRenewal": "Wyłącz odnawianie",
     "stopRenewalHelp": "Właściciel sklepu może wyłączyć odnawianie. Monitorowanie będzie kontynuowane do {{date}}. Zapisane wyniki pozostaną dostępne."
-  }
+  },
+  "afterConfirmation": "Zgłoszenie pozostanie otwarte do momentu podjęcia działań.",
+  "caseNumberCopied": "Numer alertu skopiowany",
+  "confirmMatch": "Potwierdzam, że to ten sam produkt",
+  "confirmationHelp": "Potwierdź zgodność na podstawie modelu, kodu kreskowego, numeru partii lub innych dowodów.",
+  "confirmationNote": "Dowód potwierdzający zgodność",
+  "copyCaseNumber": "Skopiuj numer alertu",
+  "copyCaseNumberFailed": "Nie udało się skopiować numeru alertu.",
+  "decisionDestination": "Zapisano w {{status}}.",
+  "fullCatalogScope": "Aktualny katalog",
+  "historicalMonitoringScope": "Historyczne alerty Safety Gate",
+  "loadingOverview": "Ładowanie przeglądu…",
+  "loadingPage": "Ładowanie strony…",
+  "manualMonitoring": "Monitorowanie ręczne",
+  "matchConfirmed": "Zgodność produktu potwierdzona",
+  "monitoringScope": "Nowe lub zmienione alerty Safety Gate",
+  "scanScope": "Zakres",
+  "scheduledMonitoring": "Monitorowanie automatyczne",
+  "viewDecisionDestination": "Przejdź do {{status}}",
+  "viewExternalSource": "Otwórz Safety Gate w nowej karcie"
 }

@@ -1,6 +1,26 @@
 import { workspaceCopy } from "./workspace";
 const en = {
     translation: {
+      loadingOverview: "Loading the overview…",
+      loadingPage: "Loading page…",
+      confirmMatch: "I confirm this is the same product",
+      matchConfirmed: "Product match confirmed",
+      confirmationHelp: "Confirm the match using a model, barcode, batch number, or other evidence.",
+      confirmationNote: "Evidence for confirming the match",
+      afterConfirmation: "The finding stays open until you record an action.",
+      decisionDestination: "Saved to {{status}}.",
+      viewDecisionDestination: "Go to {{status}}",
+      manualMonitoring: "Manual monitoring",
+      scheduledMonitoring: "Automatic monitoring",
+      monitoringScope: "New or changed Safety Gate alerts",
+      historicalMonitoringScope: "Historical Safety Gate alerts",
+      scanScope: "Scope",
+      fullCatalogScope: "Current catalog",
+      viewExternalSource: "Open Safety Gate in a new tab",
+      copyCaseNumber: "Copy alert number",
+      caseNumberCopied: "Alert number copied",
+      copyCaseNumberFailed: "Could not copy the alert number.",
+
       redesign: {
         overview: "Overview",
         potentialMatches: "Potential matches",
@@ -963,7 +983,7 @@ const en = {
           },
           "actions": {
             "checkAgain": "Check again",
-            "checkSafety": "Check safety",
+            "checkSafety": "Check product",
             "viewForProduct": "View recorded finding for {{title}}",
             "checkAgainForProduct": "Check {{title}} again",
             "checkSafetyForProduct": "Check safety for {{title}}"

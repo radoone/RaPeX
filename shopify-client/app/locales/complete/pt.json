@@ -798,7 +798,7 @@
       "actions": {
         "checkAgain": "Verificar novamente",
         "checkAgainForProduct": "Verificar {{title}} novamente",
-        "checkSafety": "Verificar segurança",
+        "checkSafety": "Verificar produto",
         "checkSafetyForProduct": "Verificar segurança de {{title}}",
         "viewForProduct": "Ver ocorrência registada para {{title}}"
       },
@@ -1594,5 +1594,24 @@
     "endsOn": "A renovação está desativada. A monitorização termina em {{date}}.",
     "stopRenewal": "Desativar renovação",
     "stopRenewalHelp": "O proprietário da loja pode desativar a renovação. A monitorização continua até {{date}}. Os seus resultados guardados permanecem disponíveis."
-  }
+  },
+  "afterConfirmation": "A ocorrência permanece aberta até registar uma ação.",
+  "caseNumberCopied": "Número do alerta copiado",
+  "confirmMatch": "Confirmo que este é o mesmo produto",
+  "confirmationHelp": "Confirme a correspondência utilizando um modelo, código de barras, número de lote ou outra prova.",
+  "confirmationNote": "Prova para confirmar a correspondência",
+  "copyCaseNumber": "Copiar número do alerta",
+  "copyCaseNumberFailed": "Não foi possível copiar o número do alerta.",
+  "decisionDestination": "Guardado em {{status}}.",
+  "fullCatalogScope": "Catálogo atual",
+  "historicalMonitoringScope": "Alertas históricos do Safety Gate",
+  "loadingOverview": "A carregar a visão geral…",
+  "loadingPage": "A carregar página…",
+  "manualMonitoring": "Monitorização manual",
+  "matchConfirmed": "Correspondência de produto confirmada",
+  "monitoringScope": "Alertas novos ou alterados do Safety Gate",
+  "scanScope": "Âmbito",
+  "scheduledMonitoring": "Monitorização automática",
+  "viewDecisionDestination": "Ir para {{status}}",
+  "viewExternalSource": "Abrir Safety Gate num novo separador"
 }

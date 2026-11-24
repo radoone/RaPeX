@@ -798,7 +798,7 @@
       "actions": {
         "checkAgain": "Kontrollera igen",
         "checkAgainForProduct": "Kontrollera {{title}} igen",
-        "checkSafety": "Kontrollera säkerhet",
+        "checkSafety": "Kontrollera produkt",
         "checkSafetyForProduct": "Kontrollera säkerheten för {{title}}",
         "viewForProduct": "Visa registrerat fynd för {{title}}"
       },
@@ -1594,5 +1594,24 @@
     "endsOn": "Förnyelse är avstängd. Övervakningen avslutas den {{date}}.",
     "stopRenewal": "Stäng av förnyelse",
     "stopRenewalHelp": "Butiksägaren kan stänga av förnyelsen. Övervakningen fortsätter till och med {{date}}. Dina sparade resultat förblir tillgängliga."
-  }
+  },
+  "afterConfirmation": "Ärendet förblir öppet tills du registrerar en åtgärd.",
+  "caseNumberCopied": "Varningsnummer kopierat",
+  "confirmMatch": "Jag bekräftar att detta är samma produkt",
+  "confirmationHelp": "Bekräfta matchningen med hjälp av modell, streckkod, batchnummer eller annan dokumentation.",
+  "confirmationNote": "Underlag för att bekräfta matchningen",
+  "copyCaseNumber": "Kopiera varningsnummer",
+  "copyCaseNumberFailed": "Det gick inte att kopiera varningsnumret.",
+  "decisionDestination": "Sparad i {{status}}.",
+  "fullCatalogScope": "Nuvarande katalog",
+  "historicalMonitoringScope": "Historiska Safety Gate-varningar",
+  "loadingOverview": "Läser in översikten…",
+  "loadingPage": "Läser in sida…",
+  "manualMonitoring": "Manuell övervakning",
+  "matchConfirmed": "Produktmatchning bekräftad",
+  "monitoringScope": "Nya eller ändrade Safety Gate-varningar",
+  "scanScope": "Omfattning",
+  "scheduledMonitoring": "Automatisk övervakning",
+  "viewDecisionDestination": "Gå till {{status}}",
+  "viewExternalSource": "Öppna Safety Gate i en ny flik"
 }

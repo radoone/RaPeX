@@ -2,6 +2,9 @@ export type MonitoringRunSummary = {
   id: string;
   status: string;
   hasMore?: boolean;
+  triggerMode?: "scheduled" | "manual";
+  scope?: "since-last-check" | "last-days" | "full-lookback";
+  days?: number;
   updatedAt: string | null;
   productsScanned: number | null;
   rapexAlertsScanned: number;
@@ -70,7 +73,13 @@ export function summarizeMonitoringRun(id: string, data: Record<string, unknown>
   const result = data.result as Record<string, unknown> | undefined;
   const completedSummary = data.completedSummary as Record<string, unknown> | undefined;
   const hasMore = result?.hasMore ?? completedSummary?.hasMore;
+  const triggerMode = data.triggerMode;
+  const window = (result?.window ?? completedSummary?.window) as Record<string, unknown> | undefined;
+  const scope = window?.strategy ?? (triggerMode === "scheduled" && data.mode === "delta" ? "since-last-check" : undefined);
   return {
+    ...(triggerMode === "scheduled" || triggerMode === "manual" ? { triggerMode } : {}),
+    ...(scope === "since-last-check" || scope === "last-days" || scope === "full-lookback" ? { scope } : {}),
+    ...(typeof window?.days === "number" && window.days > 0 ? { days: window.days } : {}),
     id,
     status: typeof data.status === "string" ? data.status : "unknown",
     updatedAt: toIsoString((data.status === "completed" && data.completedAt) || data.updatedAt || data.queuedAt || data.createdAt),

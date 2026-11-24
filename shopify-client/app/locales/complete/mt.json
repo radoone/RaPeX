@@ -813,7 +813,7 @@
       "actions": {
         "checkAgain": "Iċċekkja mill-ġdid",
         "checkAgainForProduct": "Iċċekkja {{title}} mill-ġdid",
-        "checkSafety": "Iċċekkja s-sigurtà",
+        "checkSafety": "Iċċekkja l-prodott",
         "checkSafetyForProduct": "Iċċekkja s-sigurtà għal {{title}}",
         "viewForProduct": "Ara s-sejba rreġistrata għal {{title}}"
       },
@@ -1613,5 +1613,24 @@
     "endsOn": "It-tiġdid huwa mitfi. Il-monitoraġġ jintemm fid-data {{date}}.",
     "stopRenewal": "Itfi t-tiġdid",
     "stopRenewalHelp": "Is-sid tal-ħanut jista' jitfi t-tiġdid. Il-monitoraġġ ikompli sa {{date}}. Ir-riżultati ssejvjati tiegħek jibqgħu disponibbli."
-  }
+  },
+  "afterConfirmation": "Is-sejbien jibqa' miftuħ sakemm tirreġistra azzjoni.",
+  "caseNumberCopied": "In-numru tat-twissija ġie kkupjat",
+  "confirmMatch": "Nikkonferma li dan huwa l-istess prodott",
+  "confirmationHelp": "Ikkonferma l-qbil billi tuża mudell, barcode, numru tal-lott, jew evidenza oħra.",
+  "confirmationNote": "Evidenza għall-konferma tal-qbil",
+  "copyCaseNumber": "Ikkopja n-numru tat-twissija",
+  "copyCaseNumberFailed": "Ma setax jiġi kkupjat in-numru tat-twissija.",
+  "decisionDestination": "Issejvjat fi {{status}}.",
+  "fullCatalogScope": "Katalgu attwali",
+  "historicalMonitoringScope": "Twissijiet storiċi tas-Safety Gate",
+  "loadingOverview": "Qed jitgħabba l-ħarsa ġenerali…",
+  "loadingPage": "Qed titgħabba l-paġna…",
+  "manualMonitoring": "Monitoraġġ manwali",
+  "matchConfirmed": "Il-qbil tal-prodott ġie kkonfermat",
+  "monitoringScope": "Twissijiet ġodda jew mibdula tas-Safety Gate",
+  "scanScope": "Skop",
+  "scheduledMonitoring": "Monitoraġġ awtomatiku",
+  "viewDecisionDestination": "Mur fi {{status}}",
+  "viewExternalSource": "Iftaħ is-Safety Gate f'tab ġdida"
 }

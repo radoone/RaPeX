@@ -798,7 +798,7 @@
       "actions": {
         "checkAgain": "Vérifier à nouveau",
         "checkAgainForProduct": "Vérifier à nouveau {{title}}",
-        "checkSafety": "Vérifier la sécurité",
+        "checkSafety": "Vérifier le produit",
         "checkSafetyForProduct": "Vérifier la sécurité de {{title}}",
         "viewForProduct": "Afficher la constatation enregistrée pour {{title}}"
       },
@@ -1594,5 +1594,24 @@
     "endsOn": "Le renouvellement est désactivé. La surveillance se termine le {{date}}.",
     "stopRenewal": "Désactiver le renouvellement",
     "stopRenewalHelp": "Le propriétaire de la boutique peut désactiver le renouvellement. La surveillance se poursuit jusqu'au {{date}}. Vos résultats enregistrés restent disponibles."
-  }
+  },
+  "afterConfirmation": "Le signalement reste ouvert tant qu'aucune action n'est enregistrée.",
+  "caseNumberCopied": "Numéro d'alerte copié",
+  "confirmMatch": "Je confirme qu'il s'agit du même produit",
+  "confirmationHelp": "Confirmez la correspondance à l'aide d'un modèle, d'un code-barres, d'un numéro de lot ou de toute autre preuve.",
+  "confirmationNote": "Preuve de confirmation de la correspondance",
+  "copyCaseNumber": "Copier le numéro d'alerte",
+  "copyCaseNumberFailed": "Impossible de copier le numéro d'alerte.",
+  "decisionDestination": "Enregistré dans {{status}}.",
+  "fullCatalogScope": "Catalogue actuel",
+  "historicalMonitoringScope": "Alertes historiques Safety Gate",
+  "loadingOverview": "Chargement de la vue d'ensemble…",
+  "loadingPage": "Chargement de la page…",
+  "manualMonitoring": "Surveillance manuelle",
+  "matchConfirmed": "Correspondance produit confirmée",
+  "monitoringScope": "Nouvelles alertes ou alertes modifiées Safety Gate",
+  "scanScope": "Périmètre",
+  "scheduledMonitoring": "Surveillance automatique",
+  "viewDecisionDestination": "Accéder à {{status}}",
+  "viewExternalSource": "Ouvrir Safety Gate dans un nouvel onglet"
 }

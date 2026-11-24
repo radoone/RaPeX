@@ -635,6 +635,10 @@ const safetyAlert = {
         const alertRef = alertRefs[index];
         const before = snapshot.data() || {};
         const fromStatus = typeof before.status === "string" ? before.status : "active";
+        if (transition.resolutionType === "match_confirmed" && input.action === "resolve") {
+          if (fromStatus !== "active") throw new Error("Only open findings can be confirmed");
+          if (before.resolutionType === "match_confirmed" && before.notes === transition.notes) return;
+        }
         const fromReviewState = before.reviewState === "waiting_for_supplier" || before.reviewState === "resolved" || before.reviewState === "dismissed"
           ? before.reviewState
           : fromStatus === "resolved"

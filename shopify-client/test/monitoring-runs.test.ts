@@ -28,6 +28,16 @@ describe("summarizeMonitoringRun", () => {
     expect(result).not.toHaveProperty("lastError");
   });
 
+  it("preserves only recorded run origin and scope", () => {
+    expect(summarizeMonitoringRun("manual-1", {
+      triggerMode: "manual",
+      result: { window: { strategy: "last-days", days: 7 }, hasMore: true },
+    })).toMatchObject({ triggerMode: "manual", scope: "last-days", days: 7, hasMore: true });
+    expect(summarizeMonitoringRun("automatic-1", { triggerMode: "scheduled", mode: "delta" }))
+      .toMatchObject({ triggerMode: "scheduled", scope: "since-last-check" });
+    expect(summarizeMonitoringRun("legacy", { mode: "delta" })).not.toHaveProperty("triggerMode");
+  });
+
   it("falls back to queued time and treats unavailable counts as unknown", () => {
     const result = summarizeMonitoringRun("queued-1", {
       status: "queued",

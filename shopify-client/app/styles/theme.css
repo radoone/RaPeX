@@ -1839,7 +1839,33 @@ s-clickable s-icon {
   line-height: 1.4;
 }
 
+.review-modal__card-details > div,
 .review-modal__card-details span { color: var(--text-subdued); }
+
+.review-modal__card-metadata {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+@media (width > 650px) {
+  .review-modal__comparison > .review-modal__product-card {
+    display: grid;
+    grid-row: span 6;
+    grid-template-rows: subgrid;
+    align-items: start;
+  }
+
+  .review-modal__product-card > .review-modal__card-details {
+    display: grid;
+    grid-row: span 4;
+    grid-template-rows: subgrid;
+  }
+}
+
+@media (max-width: 650px) {
+  .review-modal__card-details > :empty { display: none; }
+}
 
 .review-modal__points {
   display: grid;
@@ -1919,11 +1945,13 @@ s-clickable s-icon {
 
 .review-modal__decision {
   display: grid;
-  gap: 12px;
-  padding: 16px;
-  border: 1px solid var(--border-subdued);
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid var(--p-color-border-info, #a1c5e2);
   border-radius: var(--radius-lg);
   background: var(--surface);
+  box-shadow: var(--shadow);
+  scroll-margin-block-start: 16px;
 }
 
 .review-modal__decision:focus-visible {
@@ -1931,32 +1959,15 @@ s-clickable s-icon {
   outline-offset: 2px;
 }
 
-.review-modal__decision-heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
+.review-modal__decision-footer {
+  display: grid;
   gap: 8px;
-}
-
-.review-modal__decision-heading h3 {
-  margin: 0;
-  font-size: 18px;
-  line-height: 1.25;
-}
-
-.review-modal__decision-prompt {
-  margin: 0;
-  color: var(--text);
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.4;
+  padding-block-start: 12px;
+  border-block-start: 1px solid var(--border);
 }
 
 .review-modal__decision-note {
   margin: 0;
-  padding-top: 8px;
-  border-top: 1px solid var(--border-subdued);
   color: var(--text-subdued);
   font-size: 12px;
   line-height: 1.4;
@@ -1969,8 +1980,28 @@ s-clickable s-icon {
   font-weight: 650;
 }
 
-.review-modal__recorded { display: grid; gap: 6px; }
+.review-modal__recorded {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface-subdued);
+  overflow-wrap: anywhere;
+}
+
+.review-modal__recorded-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+
+.review-modal__recorded-heading h3,
 .review-modal__recorded p { margin: 0; }
+.review-modal__recorded-heading h3 { font-size: 13px; }
+.review-modal__recorded-outcome { font-size: 14px; font-weight: 650; }
+.review-modal__recorded time { color: var(--text-subdued); font-size: 12px; }
 
 @media (max-width: 650px) {
   .review-modal__summary,
@@ -3214,7 +3245,7 @@ s-modal s-box[background="bg-surface-critical"] s-grid {
 }
 .admin-eyebrow { text-transform:none; letter-spacing:normal; font-size:12px; }
 .review-modal__title { font-size:20px; line-height:28px; font-weight:600; }
-.review-modal__section-heading h3, .review-modal__decision-heading h3 {
+.review-modal__section-heading h3 {
   font-size:14px;
   line-height:20px;
   font-weight:600;
@@ -3294,18 +3325,26 @@ s-modal s-box[background="bg-surface-critical"] s-grid {
 /* Complete photo galleries keep their thumbnail rails inside the comparison. */
 .review-gallery { min-width: 0; width: 100%; }
 .review-warning-grid { display: grid; grid-template-columns: minmax(0, 180px) minmax(0, 1fr); gap: 16px; }
-.review-gallery__navigation,
-.image-lightbox-navigation { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 8px; font-variant-numeric: tabular-nums; }
-.review-gallery__navigation button,
-.image-lightbox-navigation button { min-height: 36px; padding: 6px 10px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); font: inherit; cursor: pointer; }
-.review-gallery__navigation button:focus-visible,
-.review-gallery__thumbnails button:focus-visible,
-.image-lightbox-navigation button:focus-visible { outline: var(--focus); outline-offset: 2px; }
+.review-gallery__navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-block-start: 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.review-gallery__navigation > span {
+  min-inline-size: 3ch;
+  text-align: center;
+}
+
+.review-gallery__thumbnails button:focus-visible { outline: var(--focus); outline-offset: 2px; }
 .review-gallery__thumbnails { display: flex; gap: 6px; max-width: 100%; overflow-x: auto; padding: 6px 2px; scroll-snap-type: x proximity; }
 .review-gallery__thumbnails button { flex: 0 0 44px; height: 44px; padding: 3px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); cursor: pointer; scroll-snap-align: center; }
 .review-gallery__thumbnails button[aria-pressed="true"] { border-color: var(--text); outline: 1px solid var(--text); }
 .review-gallery__thumbnails img { width: 100%; height: 100%; display: block; object-fit: contain; }
-.image-lightbox-navigation { color: #fff; }
+.image-lightbox-content .review-gallery__navigation { color: #fff; }
 .image-lightbox-close { position: static; width: auto; margin: 0 0 8px auto; padding: 8px 12px; border-radius: var(--radius); font-size: 13px; line-height: 20px; }
 @media (max-width: 600px) {
   .review-warning-grid { grid-template-columns: minmax(0, 1fr); }
@@ -3575,16 +3614,6 @@ body:has(.overview-page) {
   overflow-wrap: anywhere;
 }
 
-.overview-metric-context {
-  margin-block-start: 6px;
-  font-size: 12px;
-  line-height: 1.45;
-}
-
-.overview-metric-context strong {
-  color: var(--text);
-}
-
 .overview-monitor {
   display: flex;
   align-items: center;
@@ -3742,4 +3771,30 @@ body:has(.overview-page) {
   .match-list-toolbar > s-text-field {
     grid-column: 1 / -1;
   }
+}
+
+.overview-loading {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.overview-loading h1 {
+  margin: 0 0 .5rem;
+  font-size: 2rem;
+}
+
+.app-navigation-progress {
+  position: fixed;
+  z-index: 10;
+  inset: auto 1rem 1rem auto;
+  padding: .5rem .875rem;
+  border: 1px solid #dedede;
+  border-radius: .5rem;
+  background: #fff;
+  color: #303030;
+}
+
+.review-queue-link {
+  color: var(--s-color-text-link, #005bd3);
 }

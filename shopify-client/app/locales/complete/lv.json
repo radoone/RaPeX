@@ -813,7 +813,7 @@
       "actions": {
         "checkAgain": "Pārbaudīt vēlreiz",
         "checkAgainForProduct": "Pārbaudīt {{title}} vēlreiz",
-        "checkSafety": "Pārbaudīt drošību",
+        "checkSafety": "Pārbaudīt produktu",
         "checkSafetyForProduct": "Pārbaudīt {{title}} drošību",
         "viewForProduct": "Skatīt ierakstīto atklājumu par {{title}}"
       },
@@ -1613,5 +1613,24 @@
     "endsOn": "Atjaunošana ir izslēgta. Uzraudzība beidzas {{date}}.",
     "stopRenewal": "Izslēgt atjaunošanu",
     "stopRenewalHelp": "Veikala īpašnieks var izslēgt atjaunošanu. Uzraudzība turpināsies līdz {{date}}. Jūsu saglabātie rezultāti paliks pieejami."
-  }
+  },
+  "afterConfirmation": "Atklājums paliek atvērts, līdz reģistrējat darbību.",
+  "caseNumberCopied": "Brīdinājuma numurs nokopēts",
+  "confirmMatch": "Apstiprinu, ka šis ir tas pats produkts",
+  "confirmationHelp": "Apstipriniet atbilstību, izmantojot modeli, svītrkodu, partijas numuru vai citus pierādījumus.",
+  "confirmationNote": "Pierādījumi atbilstības apstiprināšanai",
+  "copyCaseNumber": "Kopēt brīdinājuma numuru",
+  "copyCaseNumberFailed": "Neizdevās nokopēt brīdinājuma numuru.",
+  "decisionDestination": "Saglabāts {{status}}.",
+  "fullCatalogScope": "Pašreizējais katalogs",
+  "historicalMonitoringScope": "Vēsturiskie Safety Gate brīdinājumi",
+  "loadingOverview": "Notiek pārskata ielāde…",
+  "loadingPage": "Notiek lapas ielāde…",
+  "manualMonitoring": "Manuāla uzraudzība",
+  "matchConfirmed": "Produkta atbilstība apstiprināta",
+  "monitoringScope": "Jauni vai mainīti Safety Gate brīdinājumi",
+  "scanScope": "Darbības joma",
+  "scheduledMonitoring": "Automātiska uzraudzība",
+  "viewDecisionDestination": "Doties uz {{status}}",
+  "viewExternalSource": "Atvērt Safety Gate jaunā cilnē"
 }

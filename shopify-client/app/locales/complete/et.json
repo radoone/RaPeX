@@ -798,7 +798,7 @@
       "actions": {
         "checkAgain": "Kontrolli uuesti",
         "checkAgainForProduct": "Kontrolli toodet {{title}} uuesti",
-        "checkSafety": "Kontrolli ohutust",
+        "checkSafety": "Kontrolli toodet",
         "checkSafetyForProduct": "Kontrolli toote {{title}} ohutust",
         "viewForProduct": "Vaata salvestatud leidu toote {{title}} kohta"
       },
@@ -1594,5 +1594,24 @@
     "endsOn": "Uuendamine on välja lülitatud. Jälgimine lõpeb {{date}}.",
     "stopRenewal": "Lülita uuendamine välja",
     "stopRenewalHelp": "Poe omanik saab uuendamise välja lülitada. Jälgimine jätkub kuni {{date}}. Teie salvestatud tulemused jäävad kättesaadavaks."
-  }
+  },
+  "afterConfirmation": "Tulemus jääb avatuks, kuni olete toimingu salvestanud.",
+  "caseNumberCopied": "Teavituse number kopeeritud",
+  "confirmMatch": "Kinnitan, et tegemist on sama tootega",
+  "confirmationHelp": "Kinnitage vastavus mudeli, vöötkoodi, partii numbri või muu tõendusmaterjali alusel.",
+  "confirmationNote": "Tõendusmaterjal vastavuse kinnitamiseks",
+  "copyCaseNumber": "Kopeeri teavituse number",
+  "copyCaseNumberFailed": "Teavituse numbrit ei õnnestunud kopeerida.",
+  "decisionDestination": "Salvestatud asukohta {{status}}.",
+  "fullCatalogScope": "Praegune kataloog",
+  "historicalMonitoringScope": "Varasemad Safety Gate'i teavitused",
+  "loadingOverview": "Laadin ülevaadet…",
+  "loadingPage": "Laadin lehte…",
+  "manualMonitoring": "Käsitsi jälgimine",
+  "matchConfirmed": "Toote vastavus kinnitatud",
+  "monitoringScope": "Uued või muudetud Safety Gate'i teavitused",
+  "scanScope": "Ulatus",
+  "scheduledMonitoring": "Automaatne jälgimine",
+  "viewDecisionDestination": "Ava {{status}}",
+  "viewExternalSource": "Ava Safety Gate uuel vahelehel"
 }
