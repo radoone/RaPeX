@@ -2,8 +2,8 @@ import { AdminCard } from "../components/AdminCard";
 import { LocalDateTime } from "../components/LocalDateTime";
 import type { LoaderFunctionArgs } from "react-router";
 import {
+  Await,
   Form,
-  data as json,
   isRouteErrorResponse,
   useLoaderData,
   useNavigate,
@@ -11,7 +11,7 @@ import {
   useRouteError,
 } from "react-router";
 import { useTranslation } from "react-i18next";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { firestore } from "../firestore.server";
 import { getRecentMonitoringRuns } from "../services/monitoring-runs.server";
@@ -26,17 +26,27 @@ import {
   formatActorId,
   isWaitingForSupplier,
 } from "../services/review-evidence";
+import { normalizeInterfaceLanguage } from "../services/interface-language";
 import { localizeRisk } from "../components/AlertBadge";
 import { ReviewStatusSummary, reviewStatusOptions } from "../components/ReviewStatusSummary";
 export const headers = boundary.headers;
 export const loader = async ({ request, url }: LoaderFunctionArgs) => {
   const { session } = await authenticate.admin(request);
+  const shopifyLocale = normalizeInterfaceLanguage(url.searchParams.get("locale"));
   const requestedView = url.searchParams.get("view");
+  return {
+    data: loadEvidencePage(session.shop, url, requestedView),
+    requestedView,
+    shopifyLocale,
+  };
+};
+
+async function loadEvidencePage(shop: string, url: URL, requestedView: string | null) {
   if (requestedView === "scans") {
     try {
-      const merchant = firestore.collection("merchants").doc(encodeURIComponent(session.shop));
+      const merchant = firestore.collection("merchants").doc(encodeURIComponent(shop));
       const [monitoring, settings] = await Promise.all([
-        getRecentMonitoringRuns(session.shop, 5),
+        getRecentMonitoringRuns(shop, 5),
         merchant.get(),
       ]);
       const auditId = settings.get("initialScanRunId");
@@ -45,29 +55,59 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
         : null;
       const auditData = audit?.data();
       const runs = monitoring.map(run => ({ ...run, type: "monitoring" as const }));
-      return json({
+      return {
         view: "scans" as const,
         runs: [
           ...runs,
           ...(auditData ? [{ ...summarizeMonitoringRun(auditId, auditData), type: "initial" as const }] : []),
         ].sort((left, right) => (right.updatedAt ?? "").localeCompare(left.updatedAt ?? "")),
         failed: false,
-      });
+      };
     } catch (error) {
-      console.warn("Could not load scan history", { shop: session.shop, error });
-      return json({ view: "scans" as const, runs: [], failed: true });
+      console.warn("Could not load scan history", { shop, error });
+      return { view: "scans" as const, runs: [], failed: true };
     }
   }
   const view = requestedView === "findings" ? "findings" as const : "decisions" as const;
   const filters = { ...reviewFilters(url), dateBasis: view as "findings" | "decisions" };
-  return json({
-    ...(await reviewRecords(session.shop, filters, 100)),
+  return {
+    ...(await reviewRecords(shop, filters, 100)),
     view,
-  });
-};
+  };
+}
+
 export default function EvidencePage() {
-  const data = useLoaderData<typeof loader>();
-  return data.view === "scans" ? <ScanHistory data={data} /> : <EvidenceRecords data={data} />;
+  const { data, requestedView, shopifyLocale } = useLoaderData<typeof loader>();
+  const { t } = useTranslation();
+  const heading = requestedView === "scans"
+    ? t("redesign.scanHistory", { lng: shopifyLocale })
+    : t("workspace.history", { lng: shopifyLocale });
+  return (
+    <Suspense fallback={
+      <s-page inlineSize="large" className="page-shell" heading={heading} suppressHydrationWarning>
+        <div aria-hidden="true" className="overview-loading" style={{ marginTop: "var(--s-space-300)" }}>
+          <section className="overview-findings">
+            <div className="overview-loading__rows">
+              {[0, 1, 2, 3, 4].map(index => (
+                <div key={index} className="overview-loading__row">
+                  <div className="overview-loading__lines">
+                    <span />
+                    <span />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
+      </s-page>
+    }>
+      <Await resolve={data}>
+        {(resolved: HistoryData) =>
+          resolved.view === "scans" ? <ScanHistory data={resolved} /> : <EvidenceRecords data={resolved} />
+        }
+      </Await>
+    </Suspense>
+  );
 }
 
 function HistoryLinks({ scans }: { scans: boolean }) {
@@ -82,7 +122,7 @@ function HistoryLinks({ scans }: { scans: boolean }) {
   );
 }
 
-type HistoryData = Awaited<ReturnType<typeof loader>>["data"];
+type HistoryData = Awaited<ReturnType<typeof loadEvidencePage>>;
 
 function ScanHistory({ data }: { data: Extract<HistoryData, { view: "scans" }> }) {
   const { t, i18n } = useTranslation();

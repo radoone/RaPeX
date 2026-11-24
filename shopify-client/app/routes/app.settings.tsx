@@ -2,6 +2,7 @@ import { AdminCard } from "../components/AdminCard";
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "react-router";
 import { data as json, redirect } from "react-router";
 import {
+  Await,
   useActionData,
   useLoaderData,
   useFetcher,
@@ -13,15 +14,15 @@ import {
   useRouteError,
   isRouteErrorResponse,
 } from "react-router";
-import { useState, useEffect, useRef } from "react";
+import { Suspense, useState, useEffect, useRef } from "react";
 import { SaveBar, useAppBridge } from "@shopify/app-bridge-react";
 import { useTranslation } from "react-i18next";
 import { authenticate } from "../shopify.server";
-import db from "../merchant-db.server";
+import db, { safetySettingFromSnapshot } from "../merchant-db.server";
 import { LanguageSwitcher } from "../components";
 import { MonitoringStatus } from "../components/MonitoringStatus";
 import { exclusionPreview } from "../services/exclusion-preview";
-import { getBillingStatus } from "../services/billing.server";
+import { getBillingStatus, invalidateBillingStatusCache } from "../services/billing.server";
 import { cancelSubscription } from "../services/cancel-subscription.server";
 import { SHOPIFY_BILLING_MODE } from "../shopify.server";
 import { EU_LANGUAGES } from "../locales/languages";
@@ -37,7 +38,18 @@ import { displayShopifyPlan } from "../services/partner-entitlement";
 import { getShopifyNotificationEmail, notificationEmailPattern } from "../services/shopify-notification-email.server";
 
 export const loader = async ({ request, url }: LoaderFunctionArgs) => {
-  const { admin, billing, session } = await authenticate.admin(request);
+  const context = await authenticate.admin(request);
+  const shopifyLocale = normalizeInterfaceLanguage(url.searchParams.get("locale"));
+  return {
+    data: loadSettingsPage(context, url),
+    shopifyLocale,
+  };
+};
+
+async function loadSettingsPage(
+  { admin, billing, session }: Awaited<ReturnType<typeof authenticate.admin>>,
+  url: URL,
+) {
   const billingStatus = await getBillingStatus(billing, session.shop, admin);
   const [monitorSnapshot, runs] = await Promise.all([
     firestore.collection("merchants").doc(encodeURIComponent(session.shop)).get().catch(() => null),
@@ -61,9 +73,9 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
   const automaticMonitoring = monitoringState(billingStatus, latestRunStatus, observedAt, lastMonitoringAt, initialAuditAt);
   const nextCheck = plannedMonitoringAt(Boolean(toIsoString(monitor?.monitoringBaselineAt)), automaticMonitoring, observedAt);
 
-  let settings = await db.safetySetting.findUnique({
-    where: { shop: session.shop },
-  });
+  let settings = monitorSnapshot
+    ? safetySettingFromSnapshot(session.shop, monitorSnapshot)
+    : await db.safetySetting.findUnique({ where: { shop: session.shop } });
 
   const envDefault = Number(
     process.env.SAFETY_GATE_SIMILARITY_THRESHOLD || "0",
@@ -140,7 +152,7 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
       throw new Error("Shopify catalog cursor is missing");
     cursor = pageInfo.hasNextPage ? pageInfo.endCursor : null;
   } while (cursor);
-  return json({
+  return {
     catalog,
     saved: url.searchParams.get("saved") === "1",
     settings: settings || {
@@ -162,8 +174,8 @@ export const loader = async ({ request, url }: LoaderFunctionArgs) => {
     nextCheck,
     emailDelivery,
     lastVerifiedPlan: displayShopifyPlan(monitor?.planHandle),
-  } as const);
-};
+  } as const;
+}
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const { session, sessionToken, billing, admin } = await authenticate.admin(request);
@@ -178,6 +190,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
     try {
       const cancellation = await cancelSubscription(request, session.shop, sessionToken.sub);
+      if (cancellation === "accepted") invalidateBillingStatusCache(session.shop);
       return json({ cancellation }, { status: cancellation === "accepted" ? 200 : cancellation === "ownerRequired" ? 403 : 502 });
     } catch {
       return json({ cancellation: "failed" as const }, { status: 502 });
@@ -274,8 +287,32 @@ export function ErrorBoundary() {
 }
 
 export default function Settings() {
-  const { settings, billingStatus, catalog, saved, lastMonitoringAt, automaticMonitoring, initialAuditCompleted, nextCheck, emailDelivery, lastVerifiedPlan, supportsCancellation } =
-    useLoaderData<typeof loader>();
+  const { data, shopifyLocale } = useLoaderData<typeof loader>();
+  const { t } = useTranslation();
+  return (
+    <Suspense fallback={
+      <s-page inlineSize="base" className="page-shell" heading={t("settings.title", { lng: shopifyLocale })} suppressHydrationWarning>
+        <div aria-hidden="true" className="overview-loading" style={{ marginTop: "var(--s-space-300)" }}>
+          {[0, 1, 2].map(index => (
+            <section key={index} className="overview-monitor overview-monitor--loading">
+              <div className="overview-loading__lines">
+                <span />
+                <span />
+              </div>
+            </section>
+          ))}
+        </div>
+      </s-page>
+    }>
+      <Await resolve={data}>
+        {(resolved: Awaited<ReturnType<typeof loadSettingsPage>>) => <SettingsContent data={resolved} />}
+      </Await>
+    </Suspense>
+  );
+}
+
+function SettingsContent({ data }: { data: Awaited<ReturnType<typeof loadSettingsPage>> }) {
+  const { settings, billingStatus, catalog, saved, lastMonitoringAt, automaticMonitoring, initialAuditCompleted, nextCheck, emailDelivery, lastVerifiedPlan, supportsCancellation } = data;
   const actionData = useActionData<typeof action>();
   const cancellation = useFetcher<typeof action>();
   const navigation = useNavigation();

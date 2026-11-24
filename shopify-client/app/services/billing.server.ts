@@ -236,20 +236,45 @@ export async function hasCurrentMonitoringEntitlement(
   );
 }
 
+const BILLING_CACHE_TTL_MS = 30_000;
+const billingStatusCache = new Map<string, { status: BillingStatus; expiresAt: number }>();
 const pendingBillingStatus = new Map<string, Promise<BillingStatus>>();
+
+export function invalidateBillingStatusCache(shop: string) {
+  billingStatusCache.delete(shop);
+}
 
 export async function getBillingStatus(
   billing: unknown,
   shop: string,
   admin?: AdminApi,
 ): Promise<BillingStatus> {
+  if (process.env.NODE_ENV === "production") {
+    const cached = billingStatusCache.get(shop);
+    if (cached && cached.expiresAt > Date.now()) {
+      return cached.status;
+    }
+  }
   const existing = pendingBillingStatus.get(shop);
   if (existing) return existing;
-  const pending = loadBillingStatus(billing, shop, admin).finally(() => {
-    if (pendingBillingStatus.get(shop) === pending) {
-      pendingBillingStatus.delete(shop);
-    }
-  });
+  const pending = loadBillingStatus(billing, shop, admin)
+    .then((status) => {
+      if (
+        process.env.NODE_ENV === "production" &&
+        (status.billingVerified || status.ownerTestAccess || status.developmentBypass)
+      ) {
+        billingStatusCache.set(shop, {
+          status,
+          expiresAt: Date.now() + BILLING_CACHE_TTL_MS,
+        });
+      }
+      return status;
+    })
+    .finally(() => {
+      if (pendingBillingStatus.get(shop) === pending) {
+        pendingBillingStatus.delete(shop);
+      }
+    });
   pendingBillingStatus.set(shop, pending);
   return pending;
 }

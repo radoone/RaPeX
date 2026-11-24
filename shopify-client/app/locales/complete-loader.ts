@@ -1,7 +1,7 @@
 import { EU_LANGUAGES } from "./languages";
 
 // One language per chunk; the complete EU catalogs do not inflate the initial app bundle.
-const catalogs = import.meta.glob<Record<string, unknown>>(["./complete/*.json", "!./complete/manifest.json"], { import: "default" });
+const catalogs = import.meta.glob<Record<string, unknown>>(["./complete/*.json", "!./complete/manifest.json", "!./complete/en.json"], { import: "default" });
 const supported = new Set<string>(EU_LANGUAGES.map(language => language.code));
 const pending = new Map<string, Promise<Record<string, unknown>>>();
 
