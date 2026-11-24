@@ -585,10 +585,37 @@ export default function Index() {
   const { t } = useTranslation();
   return (
     <Suspense fallback={
-      <div className="overview-loading" aria-busy="true">
-        <h1>{t("redesign.overview", { lng: shopifyLocale })}</h1>
-        <p role="status">{t("loadingOverview", { lng: shopifyLocale })}</p>
-      </div>
+      <s-page inlineSize="large" className="overview-page" suppressHydrationWarning>
+        <div className="overview-layout">
+          <header className="overview-header">
+            <div>
+              <div className="overview-header__title">
+                <h1>{t("redesign.overview", { lng: shopifyLocale })}</h1>
+              </div>
+              <p className="catalog-overview__purpose" role="status">{t("loadingOverview", { lng: shopifyLocale })}</p>
+            </div>
+          </header>
+          <div aria-hidden="true" className="overview-loading">
+            <div className="overview-metrics">
+              {[0, 1, 2].map(index => (
+                <div key={index} className="overview-metric overview-loading__metric">
+                  <div className="overview-loading__lines">
+                    <span />
+                    <span />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <section className="overview-findings">
+              <div className="overview-loading__lines">
+                <span />
+                <span />
+                <span />
+              </div>
+            </section>
+          </div>
+        </div>
+      </s-page>
     }>
       <Await resolve={overview}>
         {(data: Awaited<ReturnType<typeof loadOverview>>) => <Overview data={data} />}
@@ -882,10 +909,11 @@ function Overview({ data }: { data: Awaited<ReturnType<typeof loadOverview>> }) 
     ? `dashboard.admin.monitoringRunStatus.${latestMonitoringStatus}`
     : `catalogOverview.monitoring.${automaticStatus}`);
   const monitoringActive = automaticStatus === "enabled";
-  const runCheckAvailable = hasMonitoringBaseline && (
+  const mayCheckManually = Boolean(
     (billingStatus.hasActivePayment && billingStatus.billingVerified) ||
     billingStatus.ownerTestAccess || billingStatus.developmentBypass
   );
+  const runCheckAvailable = hasMonitoringBaseline && mayCheckManually;
 
   return (
     <s-page inlineSize="large" className="overview-page" suppressHydrationWarning>
@@ -910,8 +938,10 @@ function Overview({ data }: { data: Awaited<ReturnType<typeof loadOverview>> }) 
               >
                 {t("redesign.runDelta")}
               </s-button>
-            ) : (
+            ) : mayCheckManually ? (
               <s-button variant="primary" icon="search" href="/app/manual-check">{t("actions.checkOneProduct")}</s-button>
+            ) : (
+              <s-button variant="primary" icon="product" href="/app/manual-check">{t("nav.catalogCoverage")}</s-button>
             )}
           </div>
         </header>
@@ -925,7 +955,7 @@ function Overview({ data }: { data: Awaited<ReturnType<typeof loadOverview>> }) 
             </div>
           </div>
           <div className="overview-metric">
-            <s-icon type="alert-triangle" tone={stats.activeAlerts ? "critical" : "neutral"} aria-hidden="true" />
+            <s-icon type="alert-triangle" tone={stats.activeAlerts ? "warning" : "neutral"} aria-hidden="true" />
             <div>
               <div className="overview-metric-value">{number.format(stats.activeAlerts)}</div>
               <div>{t("redesign.potentialMatches")}</div>
@@ -1217,7 +1247,7 @@ function Overview({ data }: { data: Awaited<ReturnType<typeof loadOverview>> }) 
                         <s-table-cell>
                           {finding.matchBasis === "gtin" ? <s-badge tone="info">{t("barcodeMatch.label")}</s-badge>
                             : finding.similarity == null ? "—" : (
-                              <s-badge tone={finding.similarity >= 90 ? "critical" : "warning"}>
+                              <s-badge tone="neutral">
                                 {t("redesign.percent", { value: finding.similarity })}
                               </s-badge>
                             )}

@@ -515,7 +515,7 @@ export default function AlertsPage() {
 
   const needsDecision = stats.active > 0;
   const hasOpenFindings = needsDecision || stats.waiting > 0;
-  const queueTone = needsDecision ? "critical" : hasOpenFindings ? "warning" : "success";
+  const queueTone = hasOpenFindings ? "warning" : "success";
   const queueHeading = needsDecision
     ? t("dashboard.admin.status.reviewNeeded.title", { count: stats.active })
     : stats.waiting > 0
@@ -586,7 +586,7 @@ export default function AlertsPage() {
           variant="primary"
           onClick={() => navigate("/app/manual-check")}
         >
-          {t("actions.checkOneProduct")}
+          {t("nav.catalogCoverage")}
         </s-button>
       )}
       <s-button

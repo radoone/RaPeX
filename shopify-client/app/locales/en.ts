@@ -734,6 +734,7 @@ const en = {
         "imageMatchShort": "{{count}}% image",
         "scoreHelper": "Overall match is the final review score. Image match reflects packaging similarity only.",
         "whyThisMatched": "Why this matched",
+        "originalReason": "View the original AI explanation",
         "imageDominated": "This match was scored with image-first weighting, so visual packaging similarity carried more weight than text mismatch.",
         "matchesHint": "Start with the top match card below and confirm visual packaging first, then model and brand details.",
         "primaryRiskFocus": "Primary risk focus: {{category}} at {{level}} level. Confirm this first before deciding.",

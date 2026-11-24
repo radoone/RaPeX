@@ -403,9 +403,7 @@ function AlertRow({
   const alertType = alert.alertType?.trim();
   const hasAlertType = alertType && alertType.toLowerCase() !== "unknown";
   const waiting = isWaitingForSupplier(alert);
-  const statusTone = alert.status === "active"
-    ? waiting ? "warning" : "critical"
-    : "neutral";
+  const statusTone = alert.status === "active" ? "warning" : "neutral";
   const isSerious = /serious|high|^[12]$/i.test(alert.riskLevel);
   const riskTone = isSerious ? "critical" : "neutral";
   const source = officialSource((alert.alertDetails as { fields?: Record<string, unknown> } | null)?.fields ?? {});

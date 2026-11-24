@@ -295,6 +295,7 @@
     },
     "textOnly": "Csak szöveges ellenőrzés",
     "viewOnSafetyGate": "Megtekintés a Safety Gate-en",
+    "originalReason": "Az AI eredeti indoklásának megtekintése",
     "whyThisMatched": "Miért egyezett ez?",
     "withImage": "Képekkel ellenőrizve",
     "yourProduct": "Az Ön Shopify terméke"

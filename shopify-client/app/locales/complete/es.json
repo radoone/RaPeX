@@ -295,6 +295,7 @@
     },
     "textOnly": "Verificación solo de texto",
     "viewOnSafetyGate": "Ver en Safety Gate",
+    "originalReason": "Ver la explicación original de la IA",
     "whyThisMatched": "Por qué coincidió esto",
     "withImage": "Verificado con imágenes",
     "yourProduct": "Su producto Shopify"

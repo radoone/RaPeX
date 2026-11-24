@@ -3774,14 +3774,30 @@ body:has(.overview-page) {
 }
 
 .overview-loading {
-  max-width: 76rem;
-  margin: 0 auto;
-  padding: 2rem 1.5rem;
+  display: grid;
+  gap: 16px;
 }
 
-.overview-loading h1 {
-  margin: 0 0 .5rem;
-  font-size: 2rem;
+.overview-loading__metric {
+  box-sizing: border-box;
+  grid-template-columns: 1fr;
+  min-height: 96px;
+}
+
+.overview-loading__lines {
+  display: grid;
+  gap: 8px;
+  width: min(100%, 12rem);
+}
+
+.overview-loading__lines > span {
+  height: 12px;
+  border-radius: 4px;
+  background: var(--s-color-bg-surface-secondary, #e9e9eb);
+}
+
+.overview-loading__lines > span:first-child {
+  width: 60%;
 }
 
 .app-navigation-progress {

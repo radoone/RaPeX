@@ -295,6 +295,7 @@
     },
     "textOnly": "Vain tekstin tarkistus",
     "viewOnSafetyGate": "Näytä Safety Gatessa",
+    "originalReason": "Näytä tekoälyn alkuperäinen perustelu",
     "whyThisMatched": "Miksi tämä täsmäsi",
     "withImage": "Tarkistettu kuvien kanssa",
     "yourProduct": "Shopify-tuotteesi"

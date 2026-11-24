@@ -715,6 +715,7 @@ const sk = {
         "imageMatchShort": "{{count}}% obrázok",
         "scoreHelper": "Celková zhoda je finálne skóre pre rozhodnutie. Zhoda obrázka vyjadruje len podobnosť obalu.",
         "whyThisMatched": "Prečo vznikla zhoda",
+        "originalReason": "Zobraziť pôvodné odôvodnenie AI",
         "imageDominated": "Táto zhoda bola skórovaná image-first vážením, takže vizuálna podobnosť obalu mala vyššiu váhu než textové rozdiely.",
         "matchesHint": "Začnite prvou kartou zhody nižšie. Najprv potvrďte podobnosť obalu, potom model a značku.",
         "primaryRiskFocus": "Hlavné riziko na kontrolu: {{category}} na úrovni {{level}}. Toto overte ako prvé.",

@@ -15,6 +15,7 @@ import {
 import { compareProductIdentifiers } from "../services/product-identifiers";
 import { openReviewModalWhenReady } from "../services/review-modal";
 import { fetchReviewPhotos } from "../services/review-photos";
+import { normalizeInterfaceLanguage } from "../services/interface-language";
 
 interface AlertDetailModalProps {
   alert: any;
@@ -301,6 +302,7 @@ export function AlertDetailModal({
   const hasOfficialRisk = Boolean(officialRiskLevel || officialRiskTypes.length || officialDanger || measures);
   const closeWhenSubmitted = canRecordDecision && !waitForDecisionSave;
   const listFormat = new Intl.ListFormat(i18n.language);
+  const showOriginalReasonOnDemand = normalizeInterfaceLanguage(i18n.resolvedLanguage || i18n.language) === "sk";
 
   // A completed check without a finding has no source record or review decision.
   if (isSafe && warnings.length === 0 && !alert.id) {
@@ -372,7 +374,7 @@ export function AlertDetailModal({
                 ) : isWaiting ? (
                   <s-badge tone="warning">{t("workspace.waiting")}</s-badge>
                 ) : (
-                  <s-badge tone="critical">{t("analysis.reviewLayout.actionNeeded")}</s-badge>
+                  <s-badge tone="warning">{t("analysis.reviewLayout.actionNeeded")}</s-badge>
                 )}
                 <s-button
                   variant={isWaiting ? "secondary" : "primary"}
@@ -485,7 +487,12 @@ export function AlertDetailModal({
                       <span>{t("analysis.imageMatchShort", { count: imageSimilarity })}</span>
                     )}
                   </div>
-                  {primaryWarning.reason && <p>{primaryWarning.reason}</p>}
+                  {primaryWarning?.reason && (showOriginalReasonOnDemand ? (
+                    <details className="review-evidence-risk-details">
+                      <summary>{t("analysis.originalReason")}</summary>
+                      <p>{primaryWarning.reason}</p>
+                    </details>
+                  ) : <p>{primaryWarning.reason}</p>)}
                 </section>
               )}
               <div className="review-evidence-summary review-evidence-summary--compact">

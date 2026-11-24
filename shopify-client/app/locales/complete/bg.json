@@ -295,6 +295,7 @@
     },
     "textOnly": "Само текстова проверка",
     "viewOnSafetyGate": "Преглед в Safety Gate",
+    "originalReason": "Преглед на оригиналната обосновка на ИИ",
     "whyThisMatched": "Защо това съвпадна",
     "withImage": "Проверено с изображения",
     "yourProduct": "Вашият Shopify продукт"
