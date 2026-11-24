@@ -59,7 +59,10 @@ export const dailyRapexDeltaLoader = onSchedule(
   {
     ...SCHEDULER_CONFIG,
     timeoutSeconds: 540,
-    memory: "1GiB",
+    memory: "2GiB",
+    retryCount: 3,
+    minBackoffSeconds: 60,
+    maxBackoffSeconds: 600,
     secrets: ["GOOGLE_API_KEY"],
   },
   async (event) => {
@@ -79,7 +82,7 @@ export const dailyRapexDeltaLoader = onSchedule(
 export const manualSafetyGateWeeklyLoader = onRequest(
   {
     region: "europe-west1",
-    memory: "1GiB",
+    memory: "2GiB",
     maxInstances: 1,
     timeoutSeconds: 540,
     secrets: ["GOOGLE_API_KEY", "SAFETY_GATE_API_KEY"],
@@ -403,7 +406,7 @@ export const brevoEmailWebhook = onRequest(
 export const checkProductSafetyAPI = onRequest(
   {
     region: "europe-west1",
-    memory: "512MiB",
+    memory: "1GiB",
     maxInstances: 15,
     timeoutSeconds: 240, // Allow both bounded multimodal matcher batches to complete
     invoker: "public", // Allow unauthenticated access at platform level; API key enforced in code

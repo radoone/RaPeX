@@ -1,5 +1,5 @@
 import axios from "axios";
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import * as logger from "firebase-functions/logger";
 import { db } from "./firebase-admin.js";
@@ -14,12 +14,92 @@ import {
 } from "./safety-gate-weekly-parser.js";
 import type { LoaderState } from "./safety-gate-types.js";
 import { extractGtins } from "./gtin.js";
+import {
+  patchVectorSnapshotIncremental,
+  type SnapshotRecord,
+} from "./safety-gate-vector-snapshot.js";
 
 const WEEKLY_REPORTS_LIST_URL =
   "https://ec.europa.eu/safety-gate-alerts/api/download/weeklyReport/list/xml/en";
 
 const USER_AGENT =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36";
+
+const WEEKLY_FETCH_TIMEOUT_MS = 60_000;
+const WEEKLY_FETCH_MAX_ATTEMPTS = 3;
+const WEEKLY_FETCH_BASE_DELAY_MS = 2_000;
+
+function isRetryableSafetyGateFetchError(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false;
+  const err = error as { code?: string; response?: { status?: number } };
+  const status = err.response?.status;
+  if (typeof status === "number") {
+    return status === 408 || status === 429 || status >= 500;
+  }
+  if (err.code) {
+    return [
+      "ECONNABORTED",
+      "ETIMEDOUT",
+      "ECONNRESET",
+      "ENOTFOUND",
+      "EAI_AGAIN",
+      "ECONNREFUSED",
+      "ERR_NETWORK",
+    ].includes(err.code);
+  }
+  return false;
+}
+
+export interface SafetyGateXmlFetchOptions {
+  timeoutMs?: number;
+  maxAttempts?: number;
+  baseDelayMs?: number;
+  fetcher?: (url: string, timeoutMs: number) => Promise<string>;
+  sleep?: (ms: number) => Promise<void>;
+}
+
+export async function fetchSafetyGateXmlWithRetry(
+  url: string,
+  options: SafetyGateXmlFetchOptions = {},
+): Promise<string> {
+  const timeoutMs = options.timeoutMs ?? WEEKLY_FETCH_TIMEOUT_MS;
+  const maxAttempts = Math.max(1, options.maxAttempts ?? WEEKLY_FETCH_MAX_ATTEMPTS);
+  const baseDelayMs = options.baseDelayMs ?? WEEKLY_FETCH_BASE_DELAY_MS;
+  const fetcher = options.fetcher ?? (async (targetUrl: string, timeout: number) => {
+    const response = await axios.get<string>(targetUrl, {
+      headers: {
+        "User-Agent": USER_AGENT,
+        Accept: "application/xml, text/xml, */*",
+      },
+      timeout,
+    });
+    return response.data;
+  });
+  const sleep = options.sleep ?? ((ms: number) => new Promise((resolve) => setTimeout(resolve, ms)));
+
+  let lastError: unknown;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      return await fetcher(url, timeoutMs);
+    } catch (error) {
+      lastError = error;
+      const shouldRetry = attempt < maxAttempts && isRetryableSafetyGateFetchError(error);
+      if (!shouldRetry) throw error;
+      const delayMs = baseDelayMs * 2 ** (attempt - 1);
+      logger.warn("Transient Safety Gate XML fetch failure; retrying", {
+        url,
+        attempt,
+        maxAttempts,
+        delayMs,
+        code: (error as { code?: string })?.code,
+        status: (error as { response?: { status?: number } })?.response?.status,
+        message: error instanceof Error ? error.message : String(error),
+      });
+      await sleep(delayMs);
+    }
+  }
+  throw lastError;
+}
 
 export function parseReportDate(dateStr: string): Date {
   if (!dateStr) return new Date();
@@ -102,34 +182,23 @@ export function buildWeeklyAlertFields(
   };
 }
 
-export async function fetchWeeklyReportsList(): Promise<SafetyGateWeeklyReportRef[]> {
+export async function fetchWeeklyReportsList(
+  options?: SafetyGateXmlFetchOptions,
+): Promise<SafetyGateWeeklyReportRef[]> {
   logger.info(`Fetching Safety Gate weekly reports list from ${WEEKLY_REPORTS_LIST_URL}`);
-  const response = await axios.get<string>(WEEKLY_REPORTS_LIST_URL, {
-    headers: {
-      "User-Agent": USER_AGENT,
-      Accept: "application/xml, text/xml, */*",
-    },
-    timeout: 30000,
-  });
-
-  return parseWeeklyReportsListXml(response.data);
+  const xml = await fetchSafetyGateXmlWithRetry(WEEKLY_REPORTS_LIST_URL, options);
+  return parseWeeklyReportsListXml(xml);
 }
 
 export async function fetchWeeklyReportDetail(
   reportUrl: string,
   year: number,
   week: number,
+  options?: SafetyGateXmlFetchOptions,
 ): Promise<SafetyGateWeeklyNotification[]> {
   logger.info(`Fetching weekly report detail for year ${year}, week ${week}: ${reportUrl}`);
-  const response = await axios.get<string>(reportUrl, {
-    headers: {
-      "User-Agent": USER_AGENT,
-      Accept: "application/xml, text/xml, */*",
-    },
-    timeout: 45000,
-  });
-
-  return parseWeeklyReportDetailXml(response.data, year, week);
+  const xml = await fetchSafetyGateXmlWithRetry(reportUrl, options);
+  return parseWeeklyReportDetailXml(xml, year, week);
 }
 
 async function findExistingAlertDocId(caseNumber: string): Promise<string | null> {
@@ -175,7 +244,14 @@ export interface WeeklySyncResult {
 
 export async function ingestWeeklyNotification(
   notification: SafetyGateWeeklyNotification,
-): Promise<{ created: boolean; updated: boolean; imagesEmbedded: number }> {
+): Promise<{
+  created: boolean;
+  updated: boolean;
+  imagesEmbedded: number;
+  textUpsert?: SnapshotRecord;
+  imageUpserts: SnapshotRecord[];
+  deletedImageDocIds: string[];
+}> {
   const alertDate = parseReportDate(notification.reportDate);
   const fields = buildWeeklyAlertFields(notification, alertDate);
 
@@ -197,6 +273,7 @@ export async function ingestWeeklyNotification(
   const contentChanged = previousHash !== contentHash;
   // A changed source must never keep an old text embedding.
   let vectorText = existingData?.vector_text as unknown;
+  let textUpsert: SnapshotRecord | undefined;
   if (!vectorText || contentChanged) {
     const textToEmbed = buildEmbeddingText({
       brand: notification.brand,
@@ -208,10 +285,12 @@ export async function ingestWeeklyNotification(
     const embedding = await embedText(textToEmbed);
     if (!embedding?.length) throw new Error(`Safety Gate text embedding unavailable: ${docId}`);
     vectorText = FieldValue.vector(embedding);
+    textUpsert = { docId, vector: embedding };
   }
 
   // Embed images
   let imagesEmbeddedCount = 0;
+  const imageUpserts: SnapshotRecord[] = [];
 
   if (notification.pictures.length > 0) {
     await mapBounded(
@@ -226,7 +305,8 @@ export async function ingestWeeklyNotification(
           const imgVector = await embedImage(imgUrl);
           if (imgVector?.length) {
             imagesEmbeddedCount++;
-            await imgDocRef.set({
+            const imageBatch = db.batch();
+            imageBatch.set(imgDocRef, {
               alertId: docId,
               imageUrl: imgUrl,
               imageIndex: index,
@@ -238,6 +318,18 @@ export async function ingestWeeklyNotification(
               },
               vector_image: FieldValue.vector(imgVector),
               updatedAt: FieldValue.serverTimestamp(),
+            });
+            // Image-only repairs must enter the same journal atomically, even
+            // if this notification later fails before its alert transaction.
+            imageBatch.set(db.collection("rapex_changes").doc(`image_${randomUUID()}`), {
+              alertId: docId, contentHash, changeType: "image_upsert", changedAt: FieldValue.serverTimestamp(),
+            });
+            await imageBatch.commit();
+            imageUpserts.push({
+              docId: imageDocId,
+              alertId: docId,
+              imageUrl: imgUrl,
+              vector: imgVector,
             });
           }
         }
@@ -276,15 +368,28 @@ export async function ingestWeeklyNotification(
       });
     }
   });
+  const deletedImageDocIds: string[] = [];
   const oldPictures = ((existingData?.fields as Record<string, unknown> | undefined)?.pictures || []) as string[];
   for (const url of oldPictures) {
-    if (!notification.pictures.includes(url)) await db.collection(FIRESTORE_COLLECTIONS.alertImages).doc(buildAlertImageDocId(docId, url)).delete();
+    if (!notification.pictures.includes(url)) {
+      const deletedImageDocId = buildAlertImageDocId(docId, url);
+      const imageBatch = db.batch();
+      imageBatch.delete(db.collection(FIRESTORE_COLLECTIONS.alertImages).doc(deletedImageDocId));
+      imageBatch.set(db.collection("rapex_changes").doc(`image_${randomUUID()}`), {
+        alertId: docId, contentHash, changeType: "image_delete", changedAt: FieldValue.serverTimestamp(),
+      });
+      await imageBatch.commit();
+      deletedImageDocIds.push(deletedImageDocId);
+    }
   }
 
   return {
     created: !existingDocId,
     updated: Boolean(existingDocId) && contentChanged,
     imagesEmbedded: imagesEmbeddedCount,
+    ...(textUpsert ? { textUpsert } : {}),
+    imageUpserts,
+    deletedImageDocIds,
   };
 }
 
@@ -348,6 +453,9 @@ export async function runSafetyGateWeeklyLoaderJob(options?: {
     let newAlertsCreated = 0;
     let alertsUpdated = 0;
     let imagesEmbedded = 0;
+    const textUpserts: SnapshotRecord[] = [];
+    const imageUpserts: SnapshotRecord[] = [];
+    const deletedImageDocIds: string[] = [];
     let latestYear = lastState.last_report_year || 2026;
     let latestWeek = lastState.last_report_week || 30;
     let latestAlertDate = lastState.last_alert_date?.toDate() || new Date("2026-08-01");
@@ -364,6 +472,9 @@ export async function runSafetyGateWeeklyLoaderJob(options?: {
           if (result.created) newAlertsCreated++;
           if (result.updated) alertsUpdated++;
           imagesEmbedded += result.imagesEmbedded;
+          if (result.textUpsert) textUpserts.push(result.textUpsert);
+          if (result.imageUpserts.length > 0) imageUpserts.push(...result.imageUpserts);
+          if (result.deletedImageDocIds.length > 0) deletedImageDocIds.push(...result.deletedImageDocIds);
 
           const notifDate = parseReportDate(notif.reportDate);
           if (notifDate > latestAlertDate) {
@@ -398,6 +509,19 @@ export async function runSafetyGateWeeklyLoaderJob(options?: {
       },
       { merge: true },
     );
+
+    try {
+      await patchVectorSnapshotIncremental({
+        textUpserts,
+        imageUpserts,
+        deletedImageDocIds,
+        coveredThrough: runStart.toDate(),
+      });
+    } catch (snapshotError) {
+      logger.warn("Failed to incrementally patch vector snapshot after weekly sync", {
+        error: snapshotError instanceof Error ? snapshotError.message : String(snapshotError),
+      });
+    }
 
     const summary: WeeklySyncResult = {
       reportsProcessed: targetReports.length,
