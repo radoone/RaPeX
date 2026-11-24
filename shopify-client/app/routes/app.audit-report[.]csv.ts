@@ -1,8 +1,8 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { authenticate } from "../shopify.server";
 import { createInstance } from "i18next";
-import { localizedResources } from "../locales";
-import { loadCompleteLocale } from "../locales/complete-loader";
+import { englishResources, loadLocaleBundle } from "../locales/client-loader";
+import { normalizeInterfaceLanguage } from "../services/interface-language";
 import { csvCell } from "../services/audit-csv";
 import { formatActorId } from "../services/review-evidence";
 import {
@@ -15,9 +15,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const filters = reviewFilters(url);
   const language = url.searchParams.get("lang") || "en";
   const i18n = createInstance();
-  const locale = Object.hasOwn(localizedResources, language) ? language : "en";
-  await i18n.init({ resources: structuredClone(localizedResources), lng: locale, fallbackLng: "en", interpolation: { escapeValue: false } });
-  const catalog = await loadCompleteLocale(locale);
+  const locale = normalizeInterfaceLanguage(language) || "en";
+  await i18n.init({ resources: structuredClone(englishResources), lng: locale, fallbackLng: "en", interpolation: { escapeValue: false } });
+  const catalog = await loadLocaleBundle(locale);
   if (catalog) i18n.addResourceBundle(locale, "translation", catalog, true, true);
   const t = i18n.t.bind(i18n);
   const { records, generatedAt } = await reviewRecords(
