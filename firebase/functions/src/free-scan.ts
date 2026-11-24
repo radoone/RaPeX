@@ -78,7 +78,7 @@ export function extractClientIp(request: HttpRequest): string | undefined {
   const xff = readHeader(request, "x-forwarded-for");
   if (xff) {
     const hops = xff.split(",").map((entry) => entry.trim()).filter(Boolean);
-    if (hops.length > 0) return hops[0];
+    if (hops.length > 0) return hops[hops.length - 1];
   }
   return request.ip || undefined;
 }
