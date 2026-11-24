@@ -3778,6 +3778,15 @@ body:has(.overview-page) {
   gap: 16px;
 }
 
+.overview-loading__pill {
+  display: inline-block;
+  width: 9.5rem;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--s-color-bg-surface-secondary, #e9e9eb);
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
 .overview-loading__metric {
   box-sizing: border-box;
   grid-template-columns: 1fr;
@@ -3794,21 +3803,47 @@ body:has(.overview-page) {
   height: 12px;
   border-radius: 4px;
   background: var(--s-color-bg-surface-secondary, #e9e9eb);
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
 }
 
 .overview-loading__lines > span:first-child {
   width: 60%;
 }
 
-.app-navigation-progress {
-  position: fixed;
-  z-index: 10;
-  inset: auto 1rem 1rem auto;
-  padding: .5rem .875rem;
-  border: 1px solid #dedede;
-  border-radius: .5rem;
-  background: #fff;
-  color: #303030;
+.overview-monitor--loading {
+  min-height: 76px;
+}
+
+.overview-monitor--loading .overview-loading__lines {
+  width: min(100%, 24rem);
+}
+
+.overview-loading__facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: 12px 16px;
+  padding-top: 12px;
+}
+
+.overview-loading__rows {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.overview-loading__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.overview-loading__thumb {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  border-radius: 8px;
+  background: var(--s-color-bg-surface-secondary, #e9e9eb);
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
 }
 
 .review-queue-link {

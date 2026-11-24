@@ -1,7 +1,7 @@
 import { Await, Link, Outlet, isRouteErrorResponse, useLoaderData, useNavigation, useRouteError } from "react-router";
-import { NavMenu } from "@shopify/app-bridge-react";
+import { NavMenu, useAppBridge } from "@shopify/app-bridge-react";
 import { useTranslation } from "react-i18next";
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { authenticate, ensureShopifyWebhooksRegistered } from "../shopify.server";
 import db from "../merchant-db.server";
@@ -33,7 +33,24 @@ export default function App() {
   const { activeAlertsCount, ready, shopifyLocale } = useLoaderData<typeof loader>();
   const { t, i18n } = useTranslation();
   const navigation = useNavigation();
+  const shopify = useAppBridge();
   const numbers = new Intl.NumberFormat(i18n.resolvedLanguage || i18n.language);
+  const [resolvedAlertsCount, setResolvedAlertsCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    shopify.loading(navigation.state === "loading");
+    return () => shopify.loading(false);
+  }, [navigation.state, shopify]);
+
+  useEffect(() => {
+    let current = true;
+    setResolvedAlertsCount(null);
+    void Promise.resolve(activeAlertsCount).then(
+      count => { if (current) setResolvedAlertsCount(count); },
+      () => { if (current) setResolvedAlertsCount(null); },
+    );
+    return () => { current = false; };
+  }, [activeAlertsCount]);
 
   useEffect(() => {
     let lastLanguage: string | undefined;
@@ -63,11 +80,7 @@ export default function App() {
         <Link to="/app" rel="home">{t("redesign.overview")}</Link>
         <Link to="/app/alerts">
           {t("redesign.potentialMatches")}
-          <Suspense fallback={null}>
-            <Await resolve={activeAlertsCount} errorElement={null}>
-              {(count: number) => count > 0 ? ` (${numbers.format(count)})` : null}
-            </Await>
-          </Suspense>
+          {resolvedAlertsCount && resolvedAlertsCount > 0 ? ` (${numbers.format(resolvedAlertsCount)})` : null}
         </Link>
         <Link to="/app/manual-check">
           {t("nav.catalogCoverage")}
@@ -81,9 +94,6 @@ export default function App() {
             billingStatus.ownerTestAccess ? <s-banner tone="info" heading={t("ownerTestAccess")} /> : null}
         </Await>
       </Suspense>
-      {navigation.state === "loading" && (
-        <div className="app-navigation-progress" role="status">{t("loadingPage")}</div>
-      )}
       <Outlet />
     </>
   );

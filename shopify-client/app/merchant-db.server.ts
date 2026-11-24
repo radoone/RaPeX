@@ -831,45 +831,52 @@ const webhookError = {
 // ============================================================================
 // 4. Safety Settings (merchants/{shop} document)
 // ============================================================================
+export function safetySettingFromSnapshot(
+  shop: string,
+  snapshot: { exists?: boolean; id?: string; data: () => Record<string, unknown> | undefined } | null | undefined,
+): SafetySettingRecord | null {
+  if (!snapshot || !snapshot.exists) {
+    return null;
+  }
+  const data = (snapshot.data() || {}) as Record<string, unknown>;
+  return {
+    id: snapshot.id || encodeURIComponent(shop),
+    shop: String(data.shop || shop),
+    similarityThreshold: Number(data.similarityThreshold || 0),
+    onboardingCompleted: data.onboardingCompleted !== undefined ? Boolean(data.onboardingCompleted) : undefined,
+    autoDraftHighRisk: data.autoDraftHighRisk !== undefined ? Boolean(data.autoDraftHighRisk) : undefined,
+    freeScanUsed: data.freeScanUsed !== undefined ? Boolean(data.freeScanUsed) : false,
+    freeScanCompletedAt: normalizeDate(data.freeScanCompletedAt),
+    initialScanStatus: data.initialScanStatus === "scanning" || data.initialScanStatus === "completed" || data.initialScanStatus === "failed"
+      ? data.initialScanStatus
+      : undefined,
+    initialScanStartedAt: normalizeDate(data.initialScanStartedAt),
+    excludeVendors: data.excludeVendors !== undefined ? String(data.excludeVendors || "") : undefined,
+    excludeTypes: data.excludeTypes !== undefined ? String(data.excludeTypes || "") : undefined,
+    emailNotifications: data.emailNotifications !== undefined ? Boolean(data.emailNotifications) : undefined,
+    immediateAlertEmails: data.immediateAlertEmails !== undefined ? Boolean(data.immediateAlertEmails) : undefined,
+    weeklySummaryEmails: data.weeklySummaryEmails !== undefined ? Boolean(data.weeklySummaryEmails) : undefined,
+    notificationEmail: data.notificationEmail !== undefined ? String(data.notificationEmail || "") : undefined,
+    notificationLanguage: data.notificationLanguage !== undefined ? String(data.notificationLanguage || "en") : undefined,
+    notificationLanguageSource: data.notificationLanguageSource === "app" || data.notificationLanguageSource === "custom" ? data.notificationLanguageSource : undefined,
+    notificationEmailSource: data.notificationEmailSource === "custom" ? "custom" : "shopify",
+    lastWeeklySummaryAt: normalizeDate(data.lastWeeklySummaryAt),
+    subscriptionStatus: data.subscriptionStatus === "active" || data.subscriptionStatus === "inactive" || data.subscriptionStatus === "unknown" ? data.subscriptionStatus : undefined,
+    planHandle: data.planHandle !== undefined ? String(data.planHandle || "") : undefined,
+    monitoringEntitled: data.monitoringEntitled !== undefined ? Boolean(data.monitoringEntitled) : undefined,
+    billingVerifiedAt: normalizeDate(data.billingVerifiedAt),
+    subscriptionValidUntil: normalizeDate(data.subscriptionValidUntil),
+    slackWebhookUrl: data.slackWebhookUrl !== undefined ? String(data.slackWebhookUrl || "") : undefined,
+    createdAt: normalizeDate(data.createdAt) || new Date(0),
+    updatedAt: normalizeDate(data.updatedAt) || new Date(0),
+  };
+}
+
 const safetySetting = {
   async findUnique(options: FindUniqueOptions): Promise<SafetySettingRecord | null> {
     const ref = getMerchantDocRef(options.where.shop);
     const snapshot = await withCredentialFallback(() => ref.get(), null as any);
-    if (!snapshot || !snapshot.exists) {
-      return null;
-    }
-    const data = (snapshot.data() || {}) as Record<string, unknown>;
-    return {
-      id: snapshot.id,
-      shop: String(data.shop || options.where.shop),
-      similarityThreshold: Number(data.similarityThreshold || 0),
-      onboardingCompleted: data.onboardingCompleted !== undefined ? Boolean(data.onboardingCompleted) : undefined,
-      autoDraftHighRisk: data.autoDraftHighRisk !== undefined ? Boolean(data.autoDraftHighRisk) : undefined,
-      freeScanUsed: data.freeScanUsed !== undefined ? Boolean(data.freeScanUsed) : false,
-      freeScanCompletedAt: normalizeDate(data.freeScanCompletedAt),
-      initialScanStatus: data.initialScanStatus === "scanning" || data.initialScanStatus === "completed" || data.initialScanStatus === "failed"
-        ? data.initialScanStatus
-        : undefined,
-      initialScanStartedAt: normalizeDate(data.initialScanStartedAt),
-      excludeVendors: data.excludeVendors !== undefined ? String(data.excludeVendors || "") : undefined,
-      excludeTypes: data.excludeTypes !== undefined ? String(data.excludeTypes || "") : undefined,
-      emailNotifications: data.emailNotifications !== undefined ? Boolean(data.emailNotifications) : undefined,
-      immediateAlertEmails: data.immediateAlertEmails !== undefined ? Boolean(data.immediateAlertEmails) : undefined,
-      weeklySummaryEmails: data.weeklySummaryEmails !== undefined ? Boolean(data.weeklySummaryEmails) : undefined,
-      notificationEmail: data.notificationEmail !== undefined ? String(data.notificationEmail || "") : undefined,
-      notificationLanguage: data.notificationLanguage !== undefined ? String(data.notificationLanguage || "en") : undefined,
-      notificationLanguageSource: data.notificationLanguageSource === "app" || data.notificationLanguageSource === "custom" ? data.notificationLanguageSource : undefined,
-      notificationEmailSource: data.notificationEmailSource === "custom" ? "custom" : "shopify",
-      lastWeeklySummaryAt: normalizeDate(data.lastWeeklySummaryAt),
-      subscriptionStatus: data.subscriptionStatus === "active" || data.subscriptionStatus === "inactive" || data.subscriptionStatus === "unknown" ? data.subscriptionStatus : undefined,
-      planHandle: data.planHandle !== undefined ? String(data.planHandle || "") : undefined,
-      monitoringEntitled: data.monitoringEntitled !== undefined ? Boolean(data.monitoringEntitled) : undefined,
-      billingVerifiedAt: normalizeDate(data.billingVerifiedAt),
-      subscriptionValidUntil: normalizeDate(data.subscriptionValidUntil),
-      slackWebhookUrl: data.slackWebhookUrl !== undefined ? String(data.slackWebhookUrl || "") : undefined,
-      createdAt: normalizeDate(data.createdAt) || new Date(0),
-      updatedAt: normalizeDate(data.updatedAt) || new Date(0),
-    };
+    return safetySettingFromSnapshot(options.where.shop, snapshot);
   },
 
   async upsert(options: UpsertOptions<Omit<SafetySettingRecord, "id" | "createdAt" | "updatedAt">>): Promise<SafetySettingRecord> {

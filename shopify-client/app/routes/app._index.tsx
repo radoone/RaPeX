@@ -1,5 +1,5 @@
-import { LocalDateTime } from "../components/LocalDateTime";
-import { normalizeInterfaceLanguage } from "../services/interface-language";
+import { useHydrated } from "../components/LocalDateTime";
+import { normalizeInterfaceLanguage, preferredInterfaceLanguage } from "../services/interface-language";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { randomUUID } from "node:crypto";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
@@ -8,14 +8,13 @@ import {
   Link,
   useFetcher,
   useLoaderData,
-  useNavigation,
   useRevalidator,
 } from "react-router";
 import { data as json } from "react-router";
 import { Trans, useTranslation } from "react-i18next";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
-import db, { type SafetySettingRecord } from "../merchant-db.server";
+import db, { safetySettingFromSnapshot, type SafetySettingRecord } from "../merchant-db.server";
 import { firestore } from "../firestore.server";
 import { AlertBadge } from "../components/AlertBadge";
 import { compareReviewPriority } from "../services/review-priority";
@@ -121,71 +120,102 @@ async function fetchCurrentCatalogProducts(admin: any): Promise<DashboardProduct
   return products;
 }
 
+type DashboardContext = Awaited<ReturnType<typeof authenticate.admin>>;
+type DashboardChecks = Promise<Parameters<typeof catalogCheckStates>[1]>;
+
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const context = await authenticate.admin(request);
   const shopifyLocale = normalizeInterfaceLanguage(new URL(request.url).searchParams.get("locale"));
-  return { overview: loadOverview(context), shopifyLocale };
+  const merchant = firestore.collection("merchants").doc(encodeURIComponent(context.session.shop)).get();
+  const summary = loadOverviewSummary(context.session.shop, merchant);
+  let checkedProducts: DashboardChecks | undefined;
+  const loadCheckedProducts = () => checkedProducts ??= db.safetyCheck.findMany({
+    where: { shop: context.session.shop },
+    orderBy: { checkedAt: "desc" },
+    select: { productId: true, checkedAt: true, sourceUpdatedAt: true },
+  });
+
+  return {
+    shopifyLocale,
+    summary,
+    access: summary.then(async ({ settings }) => {
+      const [billingStatus, initializedSettings] = await Promise.all([
+        getBillingStatus(context.billing, context.session.shop, context.admin),
+        initializeOverviewSettings(context, settings),
+      ]);
+      return { billingStatus, settings: initializedSettings };
+    }),
+    catalog: summary.then(() => loadOverviewCatalog(context.admin, loadCheckedProducts())),
+    history: summary.then(data => loadOverviewHistory(context.session.shop, merchant, loadCheckedProducts(), data)),
+    reviewProducts: summary.then(({ reviewPreview }) => loadOverviewReviewProducts(context.admin, reviewPreview)),
+  };
 };
 
-async function loadOverview({ billing, session, admin }: Awaited<ReturnType<typeof authenticate.admin>>) {
-  const billingStatusPromise = getBillingStatus(billing, session.shop, admin);
-
-  const [
-    recentAlerts,
-    checkedProductIds,
-    storedSettings,
-    currentCatalogProducts,
-    billingStatus,
-    monitorStateSnapshot,
-  ] = await Promise.all([
+async function loadOverviewSummary(
+  shop: string,
+  merchant: Promise<FirebaseFirestore.DocumentSnapshot>,
+) {
+  const [recentAlerts, monitorStateSnapshot, recentMonitoringRuns] = await Promise.all([
     db.safetyAlert.findMany({
-      where: { shop: session.shop, status: "active" },
+      where: { shop, status: "active" },
+      select: { id: true, productId: true, productTitle: true, status: true, reviewState: true,
+        resolutionType: true, riskLevel: true, createdAt: true, checkResult: true },
     }),
-    // Get list of already checked product IDs
-    db.safetyCheck.findMany({
-      where: { shop: session.shop },
-      orderBy: { checkedAt: "desc" },
-      select: { productId: true, checkedAt: true, sourceUpdatedAt: true },
+    merchant,
+    getRecentMonitoringRuns(shop).catch(error => {
+      console.error("Could not load recent Safety Gate monitoring runs", { shop, error });
+      return [];
     }),
-    db.safetySetting.findUnique({
-      where: { shop: session.shop },
-    }),
-    fetchCurrentCatalogProducts(admin),
-    billingStatusPromise,
-    firestore.collection("merchants").doc(encodeURIComponent(session.shop)).get(),
   ]);
-
+  const settings = safetySettingFromSnapshot(shop, monitorStateSnapshot);
   const pendingReview = recentAlerts.filter(alert => !isWaitingForSupplier(alert));
   pendingReview.sort(compareReviewPriority);
-  const monitorState = monitorStateSnapshot.exists
-    ? monitorStateSnapshot.data()
-    : null;
+  const monitorState = monitorStateSnapshot.data();
   const observedAt = Date.now();
   const lastAuditAt = toIsoString(monitorState?.initialScanCompletedAt);
   const hasMonitoringBaseline = Boolean(toIsoString(monitorState?.monitoringBaselineAt));
-  const auditRunId = monitorState?.initialScanRunId;
-  const auditRunPromise = lastAuditAt && typeof auditRunId === "string" && auditRunId && !auditRunId.includes("/")
-    ? monitorStateSnapshot.ref.collection("initial_catalog_runs").doc(auditRunId).get().catch(() => null)
+  const lastSavedRun = recentMonitoringRuns.find(run =>
+    run.status === "completed" && run.hasMore !== true && run.updatedAt,
+  );
+  const lastSavedRunAt = lastSavedRun?.updatedAt ?? null;
+  const lastCheckpointAt = monitorState?.lastMonitorStatus === "SUCCESS"
+    ? toIsoString(monitorState.lastMonitorRunEnd)
     : null;
-  const [recentMonitoringRuns, monitoringActivity, auditRun] = await Promise.all([
-    getRecentMonitoringRuns(session.shop).catch((error) => {
-      console.error("Could not load recent Safety Gate monitoring runs", { shop: session.shop, error });
-      return [];
-    }),
-    getMonitoringActivity(session.shop, observedAt, lastAuditAt).catch((error) => {
-      console.error("Could not load Safety Gate monitoring activity", { shop: session.shop, error });
-      return null;
-    }),
-    auditRunPromise,
-  ]);
-  const auditCheckedProducts = auditRun?.get("productsScanned");
-  const auditImportedProducts = auditRun?.get("productsImported");
-  const firstAudit = auditRun?.get("status") === "completed" &&
-    Number.isSafeInteger(auditCheckedProducts) && auditCheckedProducts > 0 &&
-    Number.isSafeInteger(auditImportedProducts) && auditCheckedProducts === auditImportedProducts
-    ? { checked: auditCheckedProducts as number, noNewMatches: auditRun.get("alertsCreated") === 0 }
-    : null;
+  const checkpointIsNewer = lastCheckpointAt && (!lastSavedRunAt || lastCheckpointAt > lastSavedRunAt);
+  const lastMonitoringAt = checkpointIsNewer ? lastCheckpointAt : lastSavedRunAt;
+  const lastCatalogCheckAt = lastAuditAt && (!lastMonitoringAt || lastAuditAt > lastMonitoringAt)
+    ? lastAuditAt : lastMonitoringAt;
 
+  return {
+    findingStats: {
+      activeAlerts: pendingReview.length,
+      waitingForSupplier: recentAlerts.length - pendingReview.length,
+    },
+    reviewPreview: pendingReview.slice(0, reviewPreviewLimit).map(alert => {
+      const evidence = parseEvidence(alert.checkResult);
+      return {
+        id: String(alert.id),
+        productId: String(alert.productId || "").replace("gid://shopify/Product/", ""),
+        productTitle: String(alert.productTitle || ""),
+        caseNumber: evidence.caseNumber,
+        sourceUrl: evidence.url,
+        riskLevel: evidence.riskLevel,
+        similarity: typeof evidence.overallSimilarity === "number" ? evidence.overallSimilarity : null,
+        matchBasis: evidence.matchBasis,
+      };
+    }),
+    settings,
+    lastMonitorStatus: monitorState?.lastMonitorStatus || null,
+    recentMonitoringRuns,
+    observedAt,
+    lastMonitoringAt,
+    lastAuditAt,
+    lastCatalogCheckAt,
+    hasMonitoringBaseline,
+  };
+}
+
+async function initializeOverviewSettings({ session, admin }: DashboardContext, storedSettings: SafetySettingRecord | null) {
   let settings = storedSettings;
   const shopifyEmail = !settings?.notificationEmail?.trim() && settings?.notificationEmailSource !== "custom"
     ? await getShopifyNotificationEmail(admin)
@@ -217,51 +247,81 @@ async function loadOverview({ billing, session, admin }: Awaited<ReturnType<type
     settings = await db.safetySetting.findUnique({ where: { shop: session.shop } }) ?? initialized;
   }
 
+  return settings;
+}
+
+async function loadOverviewCatalog(admin: DashboardContext["admin"], checkedProducts: DashboardChecks) {
+  const [currentCatalogProducts, checkedProductIds] = await Promise.all([
+    fetchCurrentCatalogProducts(admin),
+    checkedProducts,
+  ]);
   const totalProductsCount = currentCatalogProducts.length;
   const productStates = catalogCheckStates(currentCatalogProducts, checkedProductIds);
   const pendingProducts = currentCatalogProducts
     .filter(product => productStates[product.id].state !== "current")
     .sort((a, b) => (b.updatedAt ?? "").localeCompare(a.updatedAt ?? ""));
 
-  const lastSavedRun = recentMonitoringRuns.find(run =>
-    run.status === "completed" && run.hasMore !== true && run.updatedAt,
-  );
-  const lastSavedRunAt = lastSavedRun?.updatedAt ?? null;
-  const lastCheckpointAt = monitorState?.lastMonitorStatus === "SUCCESS"
-    ? toIsoString(monitorState.lastMonitorRunEnd)
-    : null;
-  const checkpointIsNewer = lastCheckpointAt && (!lastSavedRunAt || lastCheckpointAt > lastSavedRunAt);
-  const lastMonitoringAt = checkpointIsNewer ? lastCheckpointAt : lastSavedRunAt;
-  const lastCatalogCheckAt = lastAuditAt && (!lastMonitoringAt || lastAuditAt > lastMonitoringAt)
-    ? lastAuditAt : lastMonitoringAt;
-  const newSourceRecords = lastCatalogCheckAt
-    ? await firestore.collection("rapex_alerts")
-        .where("meta.ingested_at", ">", new Date(lastCatalogCheckAt))
-        .where("meta.ingested_at", "<=", new Date(observedAt))
-        .count().get()
-        .then(snapshot => snapshot.data().count)
-        .catch(error => {
-          console.warn("Could not count newly imported Safety Gate records", error);
-          return null;
-        })
-    : null;
-  const defaultSettings: Partial<SafetySettingRecord> & {
-    onboardingCompleted: boolean;
-  } = {
-    onboardingCompleted: true,
-    similarityThreshold: 70,
-    autoDraftHighRisk: false,
-    emailNotifications: true,
+  return {
+    totalProducts: totalProductsCount,
+    checkedProducts: totalProductsCount - pendingProducts.length,
+    uncheckedProducts: pendingProducts.length,
+    pendingProductPreview: pendingProducts.slice(0, pendingPreviewLimit).map(({ id, title }) => ({
+      id,
+      title,
+      changed: productStates[id].state === "changed",
+    })),
   };
+}
 
-  const resolvedSettings = {
-    ...(settings || defaultSettings),
-    onboardingCompleted: true,
-  } as SafetySettingRecord;
+async function loadOverviewHistory(
+  shop: string,
+  merchant: Promise<FirebaseFirestore.DocumentSnapshot>,
+  checkedProducts: DashboardChecks,
+  { lastAuditAt, lastCatalogCheckAt, observedAt }: Awaited<ReturnType<typeof loadOverviewSummary>>,
+) {
+  const monitorStateSnapshot = await merchant;
+  const auditRunId = monitorStateSnapshot.get("initialScanRunId");
+  const auditRunPromise = lastAuditAt && typeof auditRunId === "string" && auditRunId && !auditRunId.includes("/")
+    ? monitorStateSnapshot.ref.collection("initial_catalog_runs").doc(auditRunId).get().catch(() => null)
+    : null;
+  const [monitoringActivity, auditRun, newSourceRecords, checkedProductIds] = await Promise.all([
+    getMonitoringActivity(shop, observedAt, lastAuditAt).catch((error) => {
+      console.error("Could not load Safety Gate monitoring activity", { shop, error });
+      return null;
+    }),
+    auditRunPromise,
+    lastCatalogCheckAt ? firestore.collection("rapex_alerts")
+      .where("meta.ingested_at", ">", new Date(lastCatalogCheckAt))
+      .where("meta.ingested_at", "<=", new Date(observedAt))
+      .count().get()
+      .then(snapshot => snapshot.data().count)
+      .catch(error => {
+        console.warn("Could not count newly imported Safety Gate records", error);
+        return null;
+      }) : null,
+    checkedProducts,
+  ]);
+  const auditCheckedProducts = auditRun?.get("productsScanned");
+  const auditImportedProducts = auditRun?.get("productsImported");
+  const firstAudit = auditRun?.get("status") === "completed" &&
+    Number.isSafeInteger(auditCheckedProducts) && auditCheckedProducts > 0 &&
+    Number.isSafeInteger(auditImportedProducts) && auditCheckedProducts === auditImportedProducts
+    ? { checked: auditCheckedProducts as number, noNewMatches: auditRun.get("alertsCreated") === 0 }
+    : null;
 
-  const preview = pendingReview.slice(0, reviewPreviewLimit);
-  const previewProductIds = [...new Set(preview.map(alert => String(alert.productId || "")
-    .replace("gid://shopify/Product/", "")).filter(id => /^\d+$/.test(id)))];
+  return {
+    monitoringActivity,
+    newSourceRecords,
+    firstAudit,
+    recentCheckedProducts: recentlyCheckedProductCount(checkedProductIds, observedAt, lastAuditAt),
+  };
+}
+
+async function loadOverviewReviewProducts(
+  admin: DashboardContext["admin"],
+  preview: Awaited<ReturnType<typeof loadOverviewSummary>>["reviewPreview"],
+) {
+  const previewProductIds = [...new Set(preview.map(alert => alert.productId).filter(id => /^\d+$/.test(id)))];
   const previewProducts = new Map<string, { image: string | null; sku: string | null }>();
   if (previewProductIds.length) {
     try {
@@ -288,55 +348,10 @@ async function loadOverview({ billing, session, admin }: Awaited<ReturnType<type
         });
       }
     } catch (error) {
-      console.warn("Could not load dashboard finding products", { shop: session.shop, error });
+      console.warn("Could not load dashboard finding products", error);
     }
   }
-  return {
-    stats: {
-      activeAlerts: pendingReview.length,
-      waitingForSupplier: recentAlerts.length - pendingReview.length,
-      totalProducts: totalProductsCount,
-      checkedProducts: totalProductsCount - pendingProducts.length,
-      uncheckedProducts: pendingProducts.length,
-    },
-    pendingProductPreview: pendingProducts.slice(0, pendingPreviewLimit).map(({ id, title }) => ({
-      id,
-      title,
-      changed: productStates[id].state === "changed",
-    })),
-    reviewPreview: preview.map(alert => {
-      const evidence = parseEvidence(alert.checkResult);
-      const productId = String(alert.productId || "").replace("gid://shopify/Product/", "");
-      const product = previewProducts.get(`gid://shopify/Product/${productId}`);
-      return {
-        id: String(alert.id),
-        productTitle: String(alert.productTitle || ""),
-        productImage: product?.image ?? null,
-        productSku: product?.sku ?? null,
-        caseNumber: evidence.caseNumber,
-        sourceUrl: evidence.url,
-        riskLevel: evidence.riskLevel,
-        similarity: typeof evidence.overallSimilarity === "number" ? evidence.overallSimilarity : null,
-        matchBasis: evidence.matchBasis,
-      };
-    }),
-    settings: resolvedSettings,
-    billingStatus,
-    recentMonitoringRuns,
-    observedAt,
-    monitoringActivity,
-    recentCheckedProducts: recentlyCheckedProductCount(checkedProductIds, observedAt, lastAuditAt),
-    alertEmailEnabled: Boolean(
-      (resolvedSettings.immediateAlertEmails ?? resolvedSettings.emailNotifications) &&
-      resolvedSettings.notificationEmail?.trim(),
-    ),
-    lastMonitorStatus: monitorState?.lastMonitorStatus || null,
-    lastMonitoringAt,
-    lastAuditAt,
-    newSourceRecords,
-    hasMonitoringBaseline,
-    firstAudit,
-  };
+  return Object.fromEntries(previewProducts);
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -581,20 +596,13 @@ export function ErrorBoundary() {
 }
 
 export default function Index() {
-  const { overview, shopifyLocale } = useLoaderData<typeof loader>();
+  const { summary, shopifyLocale, ...sections } = useLoaderData<typeof loader>();
   const { t } = useTranslation();
   return (
     <Suspense fallback={
-      <s-page inlineSize="large" className="overview-page" suppressHydrationWarning>
+      <s-page inlineSize="large" heading={t("redesign.overview", { lng: shopifyLocale })} className="overview-page" suppressHydrationWarning>
         <div className="overview-layout">
-          <header className="overview-header">
-            <div>
-              <div className="overview-header__title">
-                <h1>{t("redesign.overview", { lng: shopifyLocale })}</h1>
-              </div>
-              <p className="catalog-overview__purpose" role="status">{t("loadingOverview", { lng: shopifyLocale })}</p>
-            </div>
-          </header>
+          <p className="catalog-overview__purpose" role="status">{t("loadingOverview", { lng: shopifyLocale })}</p>
           <div aria-hidden="true" className="overview-loading">
             <div className="overview-metrics">
               {[0, 1, 2].map(index => (
@@ -606,68 +614,113 @@ export default function Index() {
                 </div>
               ))}
             </div>
-            <section className="overview-findings">
+            <section className="overview-monitor overview-monitor--loading">
               <div className="overview-loading__lines">
                 <span />
                 <span />
+              </div>
+            </section>
+            <section className="overview-findings">
+              <div className="overview-loading__lines">
                 <span />
+              </div>
+              <div className="overview-loading__rows">
+                {[0, 1, 2].map(index => (
+                  <div key={index} className="overview-loading__row">
+                    <span className="overview-loading__thumb" />
+                    <div className="overview-loading__lines">
+                      <span />
+                      <span />
+                    </div>
+                  </div>
+                ))}
               </div>
             </section>
           </div>
         </div>
       </s-page>
     }>
-      <Await resolve={overview}>
-        {(data: Awaited<ReturnType<typeof loadOverview>>) => <Overview data={data} />}
+      <Await resolve={summary}>
+        {(data: Awaited<ReturnType<typeof loadOverviewSummary>>) => (
+          <Overview data={data} sections={sections} shopifyLocale={shopifyLocale} />
+        )}
       </Await>
     </Suspense>
   );
 }
 
-function Overview({ data }: { data: Awaited<ReturnType<typeof loadOverview>> }) {
+// Keep the summary mounted while the independent streams resolve or revalidate.
+function useOverviewSection<T>(promise: Promise<T>) {
+  const [result, setResult] = useState<{ promise: Promise<T>; value: T | null }>();
+  useEffect(() => {
+    let current = true;
+    void promise.then(
+      value => { if (current) setResult({ promise, value }); },
+      () => { if (current) setResult({ promise, value: null }); },
+    );
+    return () => { current = false; };
+  }, [promise]);
+  return result?.promise === promise ? result.value : undefined;
+}
+
+type OverviewSections = Omit<Awaited<ReturnType<typeof loader>>, "summary" | "shopifyLocale">;
+
+function Overview({ data, sections, shopifyLocale }: {
+  data: Awaited<ReturnType<typeof loadOverviewSummary>>;
+  sections: OverviewSections;
+  shopifyLocale?: string;
+}) {
   const {
-    stats,
-    pendingProductPreview,
+    findingStats,
     reviewPreview,
-    settings,
-    billingStatus,
     lastMonitoringAt,
     lastAuditAt,
-    newSourceRecords,
+    lastCatalogCheckAt,
     hasMonitoringBaseline,
-    firstAudit,
     lastMonitorStatus,
     recentMonitoringRuns,
     observedAt,
-    monitoringActivity,
-    recentCheckedProducts,
-    alertEmailEnabled,
   } = data;
+  const catalog = useOverviewSection(sections.catalog);
+  const history = useOverviewSection(sections.history);
+  const access = useOverviewSection(sections.access);
+  const reviewProducts = useOverviewSection(sections.reviewProducts);
+  const settings = access?.settings ?? data.settings;
+  const billingStatus = access?.billingStatus;
+  const stats = {
+    ...findingStats,
+    totalProducts: catalog?.totalProducts ?? 0,
+    checkedProducts: catalog?.checkedProducts ?? 0,
+    uncheckedProducts: catalog?.uncheckedProducts ?? 0,
+  };
+  const pendingProductPreview = catalog?.pendingProductPreview ?? [];
+  const firstAudit = history?.firstAudit;
+  const alertEmailEnabled = Boolean(
+    (settings?.immediateAlertEmails ?? settings?.emailNotifications) && settings?.notificationEmail?.trim(),
+  );
   const fetcher = useFetcher<ActionResponse>();
   const monitoringFetcher = useFetcher<ActionResponse>();
   const progressFetcher = useFetcher<CatalogAuditProgress>();
-  const navigation = useNavigation();
   const revalidator = useRevalidator();
   const shopify = useAppBridge();
-  const { t, i18n } = useTranslation();
-
-  const isLoading = navigation.state === "loading";
+  const hydrated = useHydrated();
+  const language = hydrated ? preferredInterfaceLanguage(shopifyLocale) : shopifyLocale || "en";
+  const { t } = useTranslation(undefined, { lng: language });
   const isSubmitting = fetcher.state === "submitting";
   const waitingFindingsHref = "/app/alerts?status=waiting_for_supplier";
   const remainingCatalogHref = "/app/manual-check?coverage=remaining#product-catalogue";
   const latestMonitoringStatus = recentMonitoringRuns[0]?.status === "completed"
     ? lastMonitorStatus
     : recentMonitoringRuns[0]?.status || lastMonitorStatus;
-  const automaticStatus = monitoringState(
-    billingStatus, latestMonitoringStatus, observedAt, lastMonitoringAt, lastAuditAt,
-  );
+  const automaticStatus = billingStatus
+    ? monitoringState(billingStatus, latestMonitoringStatus, observedAt, lastMonitoringAt, lastAuditAt)
+    : null;
   const lastCheckWasAudit = Boolean(lastAuditAt && (!lastMonitoringAt || lastAuditAt > lastMonitoringAt));
-  const lastCatalogCheckAt = lastCheckWasAudit ? lastAuditAt : lastMonitoringAt;
-  const nextAutomaticCheckAt = plannedMonitoringAt(hasMonitoringBaseline, automaticStatus, observedAt);
-  const monitoringNeedsRefresh = automaticStatus === "unknown" || automaticStatus === "unverified";
-  const pricingPlansUrl = automaticStatus === "paused" ? billingStatus.pricingPlansUrl : null;
-  const number = new Intl.NumberFormat(i18n.language);
-  const scanDateFormat = new Intl.DateTimeFormat(i18n.language, {
+  const nextAutomaticCheckAt = automaticStatus && plannedMonitoringAt(hasMonitoringBaseline, automaticStatus, observedAt);
+  const monitoringNeedsRefresh = access === null || automaticStatus === "unknown" || automaticStatus === "unverified";
+  const pricingPlansUrl = automaticStatus === "paused" ? billingStatus?.pricingPlansUrl : null;
+  const number = new Intl.NumberFormat(language);
+  const scanDateFormat = new Intl.DateTimeFormat(language, {
     day: "2-digit",
     month: "2-digit",
     hour: "2-digit",
@@ -675,9 +728,11 @@ function Overview({ data }: { data: Awaited<ReturnType<typeof loadOverview>> }) 
     hourCycle: "h23",
     timeZone: monitoringTimeZone,
   });
-  const canRetryAudit = Boolean(billingStatus.ownerTestAccess || billingStatus.developmentBypass ||
-    (billingStatus.billingVerified && (billingStatus.hasActivePayment || !settings.freeScanUsed)));
-  const automaticChecksExpected = ["enabled", "processing", "starting"].includes(automaticStatus);
+  const canRetryAudit = Boolean(billingStatus && (
+    billingStatus.ownerTestAccess || billingStatus.developmentBypass ||
+    (billingStatus.billingVerified && (billingStatus.hasActivePayment || !settings?.freeScanUsed))
+  ));
+  const automaticChecksExpected = automaticStatus === "enabled" || automaticStatus === "processing" || automaticStatus === "starting";
   const monitoringActionHref =
     automaticChecksExpected || monitoringNeedsRefresh
       ? null
@@ -686,9 +741,11 @@ function Overview({ data }: { data: Awaited<ReturnType<typeof loadOverview>> }) 
   const dashboardState =
     stats.activeAlerts > 0
       ? "review-needed"
-      : ["paused", "unverified"].includes(automaticStatus)
+      : automaticStatus === "paused" || automaticStatus === "unverified"
         ? "monitoring-problem"
-        : stats.totalProducts === 0
+        : !catalog || !automaticStatus
+          ? null
+          : stats.totalProducts === 0
           ? "empty"
           : stats.uncheckedProducts > 0
             ? "coverage-incomplete"
@@ -699,7 +756,7 @@ function Overview({ data }: { data: Awaited<ReturnType<typeof loadOverview>> }) 
                 : automaticStatus === "starting" || automaticStatus === "processing"
                   ? "monitoring-pending"
                   : "no-action-needed";
-  const summary = {
+  const summary = dashboardState && {
     "coverage-incomplete": {
       tone: "warning",
       title: t("pendingCoverage.title", { count: stats.uncheckedProducts }),
@@ -756,7 +813,7 @@ function Overview({ data }: { data: Awaited<ReturnType<typeof loadOverview>> }) 
   const [retryRequested, setRetryRequested] = useState(false);
   const loadAuditProgress = progressFetcher.load;
   const startsFirstAudit = stats.totalProducts > 0 && stats.uncheckedProducts > 0 &&
-    canRetryAudit && !settings.initialScanStatus && !fetcher.data;
+    canRetryAudit && !settings?.initialScanStatus && !fetcher.data;
   useEffect(() => {
     // Start first-run protection without asking the merchant to discover a
     // secondary dashboard action. Paid stores may retry an interrupted first
@@ -765,16 +822,10 @@ function Overview({ data }: { data: Awaited<ReturnType<typeof loadOverview>> }) 
       settings?.initialScanStatus === "completed" &&
       stats.totalProducts > 0 &&
       stats.checkedProducts === 0;
-    const canRetryInitialScan =
-      Boolean(billingStatus?.developmentBypass || billingStatus?.ownerTestAccess) ||
-      Boolean(
-        billingStatus?.billingVerified &&
-        (billingStatus.hasActivePayment || !settings?.freeScanUsed),
-      );
     const isScanNeeded =
       stats.totalProducts > 0 &&
       stats.uncheckedProducts > 0 &&
-      canRetryInitialScan &&
+      canRetryAudit &&
       settings?.initialScanStatus !== "scanning" &&
       settings?.initialScanStatus !== "failed" &&
       (settings?.initialScanStatus !== "completed" || completedWithoutChecks);
@@ -788,11 +839,7 @@ function Overview({ data }: { data: Awaited<ReturnType<typeof loadOverview>> }) 
       fetcher.submit({ action: "importCatalogAndMonitor" }, { method: "POST" });
     }
   }, [
-    billingStatus?.hasActivePayment,
-    billingStatus?.billingVerified,
-    billingStatus?.developmentBypass,
-    billingStatus?.ownerTestAccess,
-    settings?.freeScanUsed,
+    canRetryAudit,
     settings?.initialScanStatus,
     stats.totalProducts,
     stats.checkedProducts,
@@ -866,24 +913,11 @@ function Overview({ data }: { data: Awaited<ReturnType<typeof loadOverview>> }) 
     if (!result.success) shopify.toast.show(t("errors.apiError"), { isError: true });
   }, [monitoringFetcher.data, monitoringFetcher.state, shopify, t]);
 
-  if (isLoading) {
-    return (
-      <s-page suppressHydrationWarning>
-        <s-section>
-          <s-skeleton-text lines="3" />
-        </s-section>
-      </s-page>
-    );
-  }
-
-  // ═══════════════════════════════════════════════════════════════════════════
-  // STANDARD DASHBOARD VIEW (Direct access, zero onboarding blocker)
-  // ═══════════════════════════════════════════════════════════════════════════
   const auditProgress = progressFetcher.data;
   const auditIsChecking = auditProgress?.phase === "monitor";
   const auditTotal = auditIsChecking ? auditProgress.productsImported : 0;
   const auditChecked = Math.min(auditProgress?.productsScanned || 0, auditTotal);
-  const showFirstAuditResult = scanStatus === "completed" && lastCheckWasAudit &&
+  const showFirstAuditResult = catalog && scanStatus === "completed" && lastCheckWasAudit &&
     firstAudit && stats.activeAlerts === 0;
   const firstAuditClear = stats.uncheckedProducts === 0 && stats.waitingForSupplier === 0;
   const firstAuditIsSummary = showFirstAuditResult &&
@@ -892,6 +926,7 @@ function Overview({ data }: { data: Awaited<ReturnType<typeof loadOverview>> }) 
   const purpose = (
     <p className="catalog-overview__purpose">
       <Trans
+        t={t}
         i18nKey="catalogOverview.purpose"
         components={{
           portalLink: <a
@@ -909,48 +944,47 @@ function Overview({ data }: { data: Awaited<ReturnType<typeof loadOverview>> }) 
     ? `dashboard.admin.monitoringRunStatus.${latestMonitoringStatus}`
     : `catalogOverview.monitoring.${automaticStatus}`);
   const monitoringActive = automaticStatus === "enabled";
-  const mayCheckManually = Boolean(
+  const mayCheckManually = Boolean(billingStatus && (
     (billingStatus.hasActivePayment && billingStatus.billingVerified) ||
     billingStatus.ownerTestAccess || billingStatus.developmentBypass
-  );
+  ));
   const runCheckAvailable = hasMonitoringBaseline && mayCheckManually;
 
   return (
-    <s-page inlineSize="large" className="overview-page" suppressHydrationWarning>
+    <s-page inlineSize="large" heading={t("redesign.overview")} className="overview-page" suppressHydrationWarning>
+      {access !== undefined && (runCheckAvailable ? (
+        <s-button
+          slot="primary-action"
+          variant="primary"
+          icon="play"
+          disabled={isScanning || automaticStatus === "processing" || monitoringFetcher.state !== "idle"}
+          loading={monitoringFetcher.state !== "idle"}
+          onClick={() => monitoringFetcher.submit({ action: "bulkCheck", monitoringMode: "since-last-check" }, { method: "POST" })}
+        >
+          {t("redesign.runDelta")}
+        </s-button>
+      ) : mayCheckManually ? (
+        <s-button slot="primary-action" variant="primary" icon="search" href="/app/manual-check">
+          {t("actions.checkOneProduct")}
+        </s-button>
+      ) : null)}
       <div className="overview-layout">
-        <header className="overview-header">
-          <div>
-            <div className="overview-header__title">
-              <h1>{t("redesign.overview")}</h1>
-              {monitoringActive && !isScanning && <s-badge tone="success">{t("settingsOverview.active")}</s-badge>}
-            </div>
-            {purpose}
-          </div>
-          <div className="overview-actions">
-            <s-button href="/app/evidence?view=scans" variant="secondary" icon="calendar">{t("redesign.scanHistory")}</s-button>
-            {runCheckAvailable ? (
-              <s-button
-                variant="primary"
-                icon="play"
-                disabled={isScanning || automaticStatus === "processing" || monitoringFetcher.state !== "idle"}
-                loading={monitoringFetcher.state !== "idle"}
-                onClick={() => monitoringFetcher.submit({ action: "bulkCheck", monitoringMode: "since-last-check" }, { method: "POST" })}
-              >
-                {t("redesign.runDelta")}
-              </s-button>
-            ) : mayCheckManually ? (
-              <s-button variant="primary" icon="search" href="/app/manual-check">{t("actions.checkOneProduct")}</s-button>
-            ) : (
-              <s-button variant="primary" icon="product" href="/app/manual-check">{t("nav.catalogCoverage")}</s-button>
-            )}
-          </div>
-        </header>
+        <div className="overview-header__title">
+          {purpose}
+          {monitoringActive && !isScanning && <s-badge tone="success">{t("settingsOverview.active")}</s-badge>}
+        </div>
 
         <div className="overview-metrics">
           <div className="overview-metric">
             <s-icon type="product" aria-hidden="true" />
             <div>
-              <div className="overview-metric-value">{number.format(stats.checkedProducts)}</div>
+              {catalog ? (
+                <div className="overview-metric-value">{number.format(stats.checkedProducts)}</div>
+              ) : catalog === null ? (
+                <div className="overview-metric-value">—</div>
+              ) : (
+                <div className="overview-loading__lines" role="status" aria-label={t("loadingOverview")}><span /></div>
+              )}
               <div>{t("redesign.productsScanned")}</div>
             </div>
           </div>
@@ -965,14 +999,26 @@ function Overview({ data }: { data: Awaited<ReturnType<typeof loadOverview>> }) 
             <s-icon type="calendar" aria-hidden="true" />
             <div>
               <div className="overview-metric-value">
-                {lastCatalogCheckAt ? <LocalDateTime value={lastCatalogCheckAt} locale={i18n.language} format={scanDateFormat.format} /> : "—"}
+                {lastCatalogCheckAt ? (
+                  <time dateTime={lastCatalogCheckAt} title={lastCatalogCheckAt}>
+                    {scanDateFormat.format(new Date(lastCatalogCheckAt))}
+                  </time>
+                ) : "—"}
               </div>
               <div>{t("redesign.lastScan")}</div>
             </div>
           </div>
         </div>
 
-        {!isScanning && (
+        {!isScanning && access === undefined && (
+          <section className="overview-monitor overview-monitor--loading" role="status" aria-label={t("loadingOverview")}>
+            <div className="overview-loading__lines">
+              <span />
+              <span />
+            </div>
+          </section>
+        )}
+        {!isScanning && automaticStatus && (
           <section className="overview-monitor" data-status={monitoringActive ? "active" : automaticChecksExpected ? "pending" : "warning"}>
             <s-icon
               type={monitoringActive ? "check-circle" : automaticChecksExpected ? "clock" : "alert-circle"}
@@ -998,58 +1044,79 @@ function Overview({ data }: { data: Awaited<ReturnType<typeof loadOverview>> }) 
             </div>
           </section>
         )}
+        {!isScanning && (catalog === null || history === null || access === null) && (
+          <s-banner tone="warning" heading={t("errors.pageLoadFailed")}>
+            <s-button loading={revalidator.state !== "idle"} onClick={() => revalidator.revalidate()}>
+              {t("actions.retry")}
+            </s-button>
+          </s-banner>
+        )}
         {!isScanning && (
           <s-section>
             <details className="overview-activity">
               <summary>{t("catalogOverview.activityTitle")}</summary>
-              <dl className="catalog-overview__facts">
-                <div>
-                  <dt>{t("nav.catalogCoverage")}</dt>
-                  {stats.totalProducts > 0 && (
-                    <dd className="catalog-overview__detail">
-                      <s-link href={stats.uncheckedProducts > 0 ? "#pending-catalog-products" : "/app/manual-check?coverage=all#product-catalogue"}>
-                        {stats.uncheckedProducts > 0
-                          ? `${t("pendingCoverage.pendingTab")} (${number.format(stats.uncheckedProducts)})`
-                          : t("nav.catalogCoverage")}
-                      </s-link>
-                    </dd>
-                  )}
+              {history === undefined && (
+                <div className="overview-loading__facts" role="status" aria-label={t("loadingOverview")}>
+                  {[0, 1, 2].map(index => (
+                    <div key={index} className="overview-loading__lines">
+                      <span />
+                      <span />
+                    </div>
+                  ))}
                 </div>
-                {lastCatalogCheckAt && (
-                  <div>
-                    <dt>{t("catalogOverview.recordsSinceCheck")}</dt>
-                    <dd>{newSourceRecords == null ? "—" : number.format(newSourceRecords)}</dd>
+              )}
+              {history && (
+                <>
+                  <dl className="catalog-overview__facts">
+                    <div>
+                      <dt>{t("nav.catalogCoverage")}</dt>
+                      {stats.totalProducts > 0 && (
+                        <dd className="catalog-overview__detail">
+                          <s-link href={stats.uncheckedProducts > 0 ? "#pending-catalog-products" : "/app/manual-check?coverage=all#product-catalogue"}>
+                            {stats.uncheckedProducts > 0
+                              ? `${t("pendingCoverage.pendingTab")} (${number.format(stats.uncheckedProducts)})`
+                              : t("nav.catalogCoverage")}
+                          </s-link>
+                        </dd>
+                      )}
+                    </div>
+                    {lastCatalogCheckAt && (
+                      <div>
+                        <dt>{t("catalogOverview.recordsSinceCheck")}</dt>
+                        <dd>{history.newSourceRecords == null ? "—" : number.format(history.newSourceRecords)}</dd>
+                      </div>
+                    )}
+                    {history.monitoringActivity && (
+                      <div>
+                        <dt>{t("catalogOverview.activityRuns")}</dt>
+                        <dd>{number.format(history.monitoringActivity.completedRuns)}</dd>
+                      </div>
+                    )}
+                    {history.recentCheckedProducts !== null && (
+                      <div>
+                        <dt>{t("catalogOverview.currentProducts")}</dt>
+                        <dd>{number.format(history.recentCheckedProducts)}</dd>
+                      </div>
+                    )}
+                    {history.monitoringActivity && (
+                      <div>
+                        <dt>{t("catalogOverview.activityRecords")}</dt>
+                        <dd>{history.monitoringActivity.recordsConsidered == null ? "—" : number.format(history.monitoringActivity.recordsConsidered)}</dd>
+                      </div>
+                    )}
+                  </dl>
+                  <div className="overview-activity__links">
+                    <s-link href="/app/settings">{t("settingsAdmin.notifications.enabledTitle")}</s-link>
+                    <s-badge tone={alertEmailEnabled ? "info" : "neutral"}>{t(alertEmailEnabled ? "settingsOverview.on" : "settingsOverview.off")}</s-badge>
+                    {billingStatus?.pricingPlansUrl && <s-link href="/app/settings#subscription">{t("billing.managePlanButton")}</s-link>}
                   </div>
-                )}
-                {monitoringActivity && (
-                  <div>
-                    <dt>{t("catalogOverview.activityRuns")}</dt>
-                    <dd>{number.format(monitoringActivity.completedRuns)}</dd>
-                  </div>
-                )}
-                {recentCheckedProducts !== null && (
-                  <div>
-                    <dt>{t("catalogOverview.currentProducts")}</dt>
-                    <dd>{number.format(recentCheckedProducts)}</dd>
-                  </div>
-                )}
-                {monitoringActivity && (
-                  <div>
-                    <dt>{t("catalogOverview.activityRecords")}</dt>
-                    <dd>{monitoringActivity.recordsConsidered == null ? "—" : number.format(monitoringActivity.recordsConsidered)}</dd>
-                  </div>
-                )}
-              </dl>
-              <div className="overview-activity__links">
-                <s-link href="/app/settings">{t("settingsAdmin.notifications.enabledTitle")}</s-link>
-                <s-badge tone={alertEmailEnabled ? "info" : "neutral"}>{t(alertEmailEnabled ? "settingsOverview.on" : "settingsOverview.off")}</s-badge>
-                {billingStatus.pricingPlansUrl && <s-link href="/app/settings#subscription">{t("billing.managePlanButton")}</s-link>}
-              </div>
+                </>
+              )}
             </details>
           </s-section>
         )}
 
-        {!isScanning && showFirstAuditResult && firstAudit && (
+        {!isScanning && showFirstAuditResult && firstAudit && summary && (
           <s-banner
             tone={firstAuditIsSummary ? summary.tone : "info"}
             heading={firstAuditIsSummary && dashboardState === "monitoring-pending" ? summary.title : t("catalogOverview.firstResultTitle")}
@@ -1233,14 +1300,19 @@ function Overview({ data }: { data: Awaited<ReturnType<typeof loadOverview>> }) 
                 <s-table-body>
                   {reviewPreview.map(finding => {
                     const href = `/app/alerts?status=active&open=${encodeURIComponent(finding.id)}`;
+                    const product = reviewProducts?.[`gid://shopify/Product/${finding.productId}`];
                     return (
                       <s-table-row key={finding.id}>
                         <s-table-cell>
                           <div className="overview-finding-product">
-                            <s-thumbnail src={finding.productImage || undefined} alt="" size="base" />
+                            {reviewProducts === undefined ? (
+                              <span className="overview-loading__thumb" aria-hidden="true" />
+                            ) : (
+                              <s-thumbnail src={product?.image || undefined} alt="" size="base" />
+                            )}
                             <div>
                               <Link to={href}>{finding.productTitle || t("common.unknown")}</Link>
-                              {finding.productSku && <div className="overview-finding-product__sku">SKU: {finding.productSku}</div>}
+                              {product?.sku && <div className="overview-finding-product__sku">SKU: {product.sku}</div>}
                             </div>
                           </div>
                         </s-table-cell>
