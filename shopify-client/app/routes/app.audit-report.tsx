@@ -1,5 +1,5 @@
 import { AdminCard } from "../components/AdminCard";
-import { LocalDateTime } from "../components/LocalDateTime";
+import { LocalDateTime, useHydrated } from "../components/LocalDateTime";
 import type { LoaderFunctionArgs } from "react-router";
 import {
   Form,
@@ -47,6 +47,7 @@ export default function AuditReportPage() {
   const { records, generatedAt, total, shop, filters, summary, scope, monitoring, ledger } =
     useLoaderData<typeof loader>();
   const { t, i18n } = useTranslation();
+  const hydrated = useHydrated();
   const [exporting, setExporting] = useState(false);
   const [exportFailed, setExportFailed] = useState(false);
   const [download, setDownload] = useState<{ url: string; query: string } | null>(null);
@@ -138,14 +139,18 @@ export default function AuditReportPage() {
           {scope.from && scope.to && (
             <p>
               {t("workspace.scope", {
-                from: new Date(scope.from).toLocaleDateString(
-                  i18n.resolvedLanguage || i18n.language || undefined,
-                  { timeZone: filters.timeZone },
-                ),
-                to: new Date(scope.to).toLocaleDateString(
-                  i18n.resolvedLanguage || i18n.language || undefined,
-                  { timeZone: filters.timeZone },
-                ),
+                from: hydrated
+                  ? new Date(scope.from).toLocaleDateString(
+                      i18n.resolvedLanguage || i18n.language || undefined,
+                      { timeZone: filters.timeZone || "UTC" },
+                    )
+                  : scope.from.slice(0, 10),
+                to: hydrated
+                  ? new Date(scope.to).toLocaleDateString(
+                      i18n.resolvedLanguage || i18n.language || undefined,
+                      { timeZone: filters.timeZone || "UTC" },
+                    )
+                  : scope.to.slice(0, 10),
               })}
             </p>
           )}
@@ -185,7 +190,7 @@ export default function AuditReportPage() {
               {t("workspace.exportReady")}
               <a
                 href={downloadUrl}
-                download={`safety-gate-audit-report-${new Date().toISOString().slice(0, 10)}.csv`}
+                download={`safety-gate-audit-report-${generatedAt.slice(0, 10)}.csv`}
               >
                 {t("auditReport.download")}
               </a>

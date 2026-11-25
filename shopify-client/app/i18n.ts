@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import i18n, { createInstance } from "i18next";
 import { initReactI18next } from "react-i18next";
 import { englishResources, loadLocaleBundle } from "./locales/client-loader";
 
@@ -16,6 +16,23 @@ i18nInstance.init({
 });
 
 export default i18n;
+
+export async function createServerI18n(language: string) {
+  const code = language.toLowerCase().split(/[-_]/)[0] || "en";
+  const catalog = code !== "en" ? await loadLocaleBundle(code) : null;
+  const instance = createInstance().use(initReactI18next);
+  await instance.init({
+    resources: catalog
+      ? { ...englishResources, [code]: { translation: catalog } }
+      : englishResources,
+    fallbackLng: "en",
+    lng: catalog ? code : "en",
+    interpolation: {
+      escapeValue: false,
+    },
+  });
+  return instance;
+}
 
 let languageRequest = 0;
 export async function changeMerchantLanguage(language: string) {

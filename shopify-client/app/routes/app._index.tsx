@@ -1,4 +1,4 @@
-import { useHydrated } from "../components/LocalDateTime";
+import { LocalDateTime, useHydrated } from "../components/LocalDateTime";
 import { interfaceLanguageFromCookie, normalizeInterfaceLanguage, preferredInterfaceLanguage } from "../services/interface-language";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { randomUUID } from "node:crypto";
@@ -990,9 +990,12 @@ function Overview({ data, sections, shopifyLocale }: {
             <div>
               <div className="overview-metric-value">
                 {lastCatalogCheckAt ? (
-                  <time dateTime={lastCatalogCheckAt} title={lastCatalogCheckAt}>
-                    {scanDateFormat.format(new Date(lastCatalogCheckAt))}
-                  </time>
+                  <LocalDateTime
+                    value={lastCatalogCheckAt}
+                    locale={language}
+                    timeZone={monitoringTimeZone}
+                    format={(date) => scanDateFormat.format(date)}
+                  />
                 ) : "—"}
               </div>
               <div>{t("redesign.lastScan")}</div>

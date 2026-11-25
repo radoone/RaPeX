@@ -37,6 +37,7 @@ vi.mock("react", async (original) => ({
     const index = state.refIndex++;
     return state.refs[index] ||= { current: initial };
   },
+  useSyncExternalStore: (_subscribe: unknown, getClientSnapshot: () => unknown) => getClientSnapshot(),
 }));
 vi.mock("react-router", async (original) => ({
   ...await original<typeof import("react-router")>(),

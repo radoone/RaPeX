@@ -364,7 +364,7 @@ function EvidenceRecords({ data }: { data: Exclude<HistoryData, { view: "scans" 
               {t("workspace.exportReady")}{" "}
               <a
                 href={downloadUrl}
-                download={`zerorecall-checks-decisions-${new Date().toISOString().slice(0, 10)}.csv`}
+                download="zerorecall-checks-decisions.csv"
               >
                 {t("auditReport.download")}
               </a>

@@ -21,6 +21,7 @@ import { authenticate } from "../shopify.server";
 import db, { safetySettingFromSnapshot } from "../merchant-db.server";
 import { LanguageSwitcher } from "../components";
 import { MonitoringStatus } from "../components/MonitoringStatus";
+import { useHydrated } from "../components/LocalDateTime";
 import { getBillingStatus, invalidateBillingStatusCache } from "../services/billing.server";
 import { cancelSubscription } from "../services/cancel-subscription.server";
 import { SHOPIFY_BILLING_MODE } from "../shopify.server";
@@ -399,10 +400,15 @@ export function SettingsContent({ data }: { data: Awaited<ReturnType<typeof load
   const refreshStatusAvailable = automaticMonitoring === "unknown" || automaticMonitoring === "unverified";
   const planButtonLabel = planVerified && !billingStatus.hasActivePayment
     ? t("billingRedirect.openPricingPlans") : t("billing.managePlanButton");
-  const planEnd = billingStatus.validUntil && new Intl.DateTimeFormat(i18n.language, {
-    dateStyle: "medium",
-    timeZone: "UTC",
-  }).format(new Date(billingStatus.validUntil));
+  const hydrated = useHydrated();
+  const planEnd = billingStatus.validUntil && (
+    hydrated
+      ? new Intl.DateTimeFormat(i18n.language, {
+          dateStyle: "medium",
+          timeZone: "UTC",
+        }).format(new Date(billingStatus.validUntil))
+      : new Date(billingStatus.validUntil).toISOString().slice(0, 10)
+  );
   const cancelResult = cancellation.data && "cancellation" in cancellation.data ? cancellation.data.cancellation : null;
   const cancellationScheduled = planVerified && billingStatus.hasActivePayment && billingStatus.cancelAtEndOfCycle && planEnd;
 
