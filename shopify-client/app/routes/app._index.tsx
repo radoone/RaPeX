@@ -950,6 +950,18 @@ function Overview({ data, sections, shopifyLocale }: {
     </s-button>
   );
 
+  const monitorMetaLine = (verifiedPlanName || nextAutomaticCheckAt) ? (
+    <p>
+      {verifiedPlanName && (
+        <>
+          <strong>{verifiedPlanName}</strong>
+          {nextAutomaticCheckAt ? " · " : null}
+        </>
+      )}
+      {nextAutomaticCheckAt && <NextMonitoringCheck value={nextAutomaticCheckAt} />}
+    </p>
+  ) : null;
+
   return (
     <s-page inlineSize="large" heading={t("redesign.overview")} className="overview-page" suppressHydrationWarning>
       {stats.activeAlerts > 0 && nextReviewHref ? (
@@ -1028,35 +1040,22 @@ function Overview({ data, sections, shopifyLocale }: {
               aria-hidden="true"
             />
             <div className="overview-monitor__copy">
-              {verifiedPlanName && (
-                <div>
-                  <s-badge tone="success">{`${verifiedPlanName} · ${t("settingsOverview.active")}`}</s-badge>
-                </div>
-              )}
               <h2>{monitoringActive ? t("dashboard.admin.monitoringStatusAllClear") : monitorStatusText}</h2>
               {monitoringActive ? (
-                nextAutomaticCheckAt && <p><NextMonitoringCheck value={nextAutomaticCheckAt} /></p>
+                monitorMetaLine
               ) : automaticStatus === "starting" ? (
                 <>
                   <p>{t("billing.planActiveDescription")}</p>
-                  {nextAutomaticCheckAt && <p><NextMonitoringCheck value={nextAutomaticCheckAt} /></p>}
+                  {monitorMetaLine}
                 </>
               ) : (
-                <p>{t(`catalogOverview.monitoringHelp.${automaticStatus}`, { defaultValue: "" })}</p>
+                <>
+                  <p>{t(`catalogOverview.monitoringHelp.${automaticStatus}`, { defaultValue: "" })}</p>
+                  {verifiedPlanName && <p><strong>{verifiedPlanName}</strong></p>}
+                </>
               )}
             </div>
             <div className="overview-actions">
-              {!monitoringActive && runCheckAvailable && automaticStatus !== "processing" && (
-                <s-button
-                  variant="secondary"
-                  icon="play"
-                  disabled={isScanning || monitoringFetcher.state !== "idle"}
-                  loading={monitoringFetcher.state !== "idle"}
-                  onClick={() => monitoringFetcher.submit({ action: "bulkCheck", monitoringMode: "since-last-check" }, { method: "POST" })}
-                >
-                  {t("redesign.runDelta")}
-                </s-button>
-              )}
               {monitoringNeedsRefresh && (
                 <s-button variant="secondary" loading={revalidator.state !== "idle"} onClick={() => revalidator.revalidate()}>
                   {t("catalogOverview.refreshStatus")}

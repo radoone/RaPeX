@@ -93,11 +93,16 @@ describe("Built for Shopify & UX improvements", () => {
     expect(src).toContain('<p className="admin-helper">{t("catalogOverview.resultBoundary")}</p>');
   });
 
-  it("shows active verified plan confirmation and run trigger for recently activated monitoring on Overview", () => {
+  it("shows active verified plan confirmation subtly without a duplicate check button or bright green badge on Overview", () => {
     const src = readFileSync(path.join(ROOT, "app/routes/app._index.tsx"), "utf8");
     expect(src).toContain("displayShopifyPlan");
     expect(src).toContain('t("billing.planActiveDescription")');
     expect(src).toContain('automaticStatus === "starting"');
+    const monitorSection = src.match(/<section className="overview-monitor"[\s\S]*?<\/section>/)?.[0] || "";
+    expect(monitorSection).toBeTruthy();
+    expect(monitorSection).not.toContain('<s-badge tone="success">');
+    expect(monitorSection).not.toContain('t("redesign.runDelta")');
+    expect(src).toContain("monitorMetaLine");
   });
 
   it("constrains CSS grid tracks on the decision panel so Polaris web components wrap cleanly", () => {
