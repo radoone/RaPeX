@@ -1,10 +1,12 @@
 import type { ActionFunctionArgs } from "react-router";
 import { authenticate } from "../shopify.server";
 import { queueShopifyProductDeletion } from "../services/safety-gate-checker.server";
+import { invalidateCatalogProductsCache } from "../services/catalog-products-cache.server";
 
 /** Persist catalog removal and keep its review history available. */
 export const action = async ({ request }: ActionFunctionArgs) => {
   const { payload, shop } = await authenticate.webhook(request);
+  invalidateCatalogProductsCache(shop);
   const product = payload as Record<string, unknown>;
   const productId = String(product.id || "");
   if (!productId) {

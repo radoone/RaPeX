@@ -2,7 +2,7 @@
 
 client_id = "0f8c446d88af9f13ac49947a87c47207"
 name = "ZeroRecall"
-application_url = "https://zerorecall-29849753697.europe-west1.run.app"
+application_url = "https://zerorecall-29849753697.europe-west1.run.app/app"
 embedded = true
 handle = "safety-gate-monitor-eu"
 

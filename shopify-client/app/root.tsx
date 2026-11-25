@@ -71,7 +71,16 @@ export default function App() {
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <meta name="shopify-api-key" content={apiKey} />
         <link rel="preconnect" href="https://cdn.shopify.com/" />
+        <link rel="preload" as="script" href="https://cdn.shopify.com/shopifycloud/app-bridge.js" />
+        <link rel="preload" as="script" href={POLARIS_URL} />
         <link rel="preload" as="style" href="https://cdn.shopify.com/static/fonts/inter/v4/styles.css" />
+        <style dangerouslySetInnerHTML={{ __html: `
+          html, body { margin: 0; background: #f1f1f1; color: #303030; font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+          .zr-boot-progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; background: rgba(0, 91, 211, 0.14); overflow: hidden; z-index: 9999; pointer-events: none; }
+          .zr-boot-progress::after { content: ""; position: absolute; inset: 0 auto 0 0; width: 38%; background: #005bd3; border-radius: 999px; animation: zr-boot-slide 1.15s ease-in-out infinite; }
+          @keyframes zr-boot-slide { 0% { transform: translateX(-110%); } 100% { transform: translateX(360%); } }
+          @keyframes skeleton-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+        ` }} />
         <link rel="stylesheet" href={themeStyles} />
         <Meta />
         <Links />

@@ -35,6 +35,7 @@ import { getMonitoringActivity, getRecentMonitoringRuns, recordManualMonitoringR
 import { recentlyCheckedProductCount, toIsoString } from "../services/monitoring-runs";
 import { mirrorOfflineSessionForCatalogAudit } from "../services/catalog-audit-session.server";
 import { getShopifyNotificationEmail } from "../services/shopify-notification-email.server";
+import { getCachedCatalogProducts } from "../services/catalog-products-cache.server";
 
 type BulkCheckResults = {
   processed: number;
@@ -74,51 +75,8 @@ type CatalogAuditProgress = {
   failureCode: string | null;
 };
 
-type DashboardProduct = { id: string; title: string; updatedAt: string | null };
 const pendingPreviewLimit = 8;
 const reviewPreviewLimit = 3;
-
-async function fetchCurrentCatalogProducts(admin: any): Promise<DashboardProduct[]> {
-  const products: DashboardProduct[] = [];
-  let after: string | null = null;
-  let hasNextPage = true;
-  while (hasNextPage) {
-    const response: { json: () => Promise<any> } = await admin.graphql(
-      `#graphql
-      query dashboardCatalogProducts($first: Int!, $after: String) {
-        products(first: $first, after: $after) {
-          pageInfo { hasNextPage endCursor }
-          nodes { id title updatedAt }
-        }
-      }
-    `,
-      { variables: { first: 250, after } },
-    );
-    const payload = await response.json();
-    if (payload.errors?.length)
-      throw new Error(
-        payload.errors[0]?.message || "Could not load Shopify catalog versions",
-      );
-    const connection = payload.data?.products;
-    const nodes = (connection?.nodes || []) as Array<{
-      id: string;
-      title: string;
-      updatedAt?: string | null;
-    }>;
-    products.push(
-      ...nodes.map((product) => ({
-        id: product.id.replace("gid://shopify/Product/", ""),
-        title: product.title,
-        updatedAt: product.updatedAt || null,
-      })),
-    );
-    hasNextPage = Boolean(connection?.pageInfo?.hasNextPage);
-    after = connection?.pageInfo?.endCursor || null;
-    if (hasNextPage && !after)
-      throw new Error("Shopify catalog page did not include its next cursor");
-  }
-  return products;
-}
 
 type DashboardContext = Awaited<ReturnType<typeof authenticate.admin>>;
 type DashboardChecks = Promise<Parameters<typeof catalogCheckStates>[1]>;
@@ -135,7 +93,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     orderBy: { checkedAt: "desc" },
     select: { productId: true, checkedAt: true, sourceUpdatedAt: true },
   });
-  const catalog = loadOverviewCatalog(context.admin, loadCheckedProducts());
+  const catalog = loadOverviewCatalog(context.session.shop, context.admin, loadCheckedProducts());
 
   return {
     shopifyLocale,
@@ -252,9 +210,9 @@ async function initializeOverviewSettings({ session, admin }: DashboardContext, 
   return settings;
 }
 
-async function loadOverviewCatalog(admin: DashboardContext["admin"], checkedProducts: DashboardChecks) {
+async function loadOverviewCatalog(shop: string, admin: DashboardContext["admin"], checkedProducts: DashboardChecks) {
   const [currentCatalogProducts, checkedProductIds] = await Promise.all([
-    fetchCurrentCatalogProducts(admin),
+    getCachedCatalogProducts(shop, admin),
     checkedProducts,
   ]);
   const totalProductsCount = currentCatalogProducts.length;
@@ -597,11 +555,18 @@ export function ErrorBoundary() {
   );
 }
 
-export default function Index() {
-  const { summary, shopifyLocale, ...sections } = useLoaderData<typeof loader>();
+function OverviewLoadingFallback({ shopifyLocale }: { shopifyLocale?: string }) {
   const { t } = useTranslation();
+  const shopify = useAppBridge();
+
+  useEffect(() => {
+    shopify.loading(true);
+    return () => shopify.loading(false);
+  }, [shopify]);
+
   return (
-    <Suspense fallback={
+    <>
+      <div className="zr-boot-progress" aria-hidden="true" />
       <s-page inlineSize="large" heading={t("redesign.overview", { lng: shopifyLocale })} className="overview-page" suppressHydrationWarning>
         <div className="overview-layout">
           <p className="catalog-overview__purpose" role="status">{t("loadingOverview", { lng: shopifyLocale })}</p>
@@ -641,7 +606,14 @@ export default function Index() {
           </div>
         </div>
       </s-page>
-    }>
+    </>
+  );
+}
+
+export default function Index() {
+  const { summary, shopifyLocale, ...sections } = useLoaderData<typeof loader>();
+  return (
+    <Suspense fallback={<OverviewLoadingFallback shopifyLocale={shopifyLocale} />}>
       <Await resolve={summary}>
         {(data: Awaited<ReturnType<typeof loadOverviewSummary>>) => (
           <Overview data={data} sections={sections} shopifyLocale={shopifyLocale} />

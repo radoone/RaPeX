@@ -6,10 +6,12 @@ import {
   shopifyProductToProductData,
 } from "../services/safety-gate-checker.server";
 import { hasCurrentMonitoringEntitlement } from "../services/billing.server";
+import { invalidateCatalogProductsCache } from "../services/catalog-products-cache.server";
 
 /** Queue the re-check durably; processing continues after this webhook returns. */
 export const action = async ({ request }: ActionFunctionArgs) => {
   const { payload, topic, shop } = await authenticate.webhook(request);
+  invalidateCatalogProductsCache(shop);
   if (!(await hasCurrentMonitoringEntitlement(shop))) return new Response(null, { status: 200 });
 
   const product = payload as Record<string, any>;
