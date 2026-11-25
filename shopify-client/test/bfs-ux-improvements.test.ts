@@ -99,4 +99,13 @@ describe("Built for Shopify & UX improvements", () => {
     expect(src).toContain('t("billing.planActiveDescription")');
     expect(src).toContain('automaticStatus === "starting"');
   });
+
+  it("constrains CSS grid tracks on the decision panel so Polaris web components wrap cleanly", () => {
+    const css = readFileSync(path.join(ROOT, "app/styles/theme.css"), "utf8");
+    const decisionBlock = css.match(/\.review-modal__decision\s*\{[^}]*\}/)?.[0] || "";
+    const finalRowBlock = css.match(/\.review-modal__final-row\s*\{[^}]*\}/)?.[0] || "";
+    expect(decisionBlock).toContain("grid-template-columns: minmax(0, 1fr)");
+    expect(decisionBlock).toContain("min-width: 0");
+    expect(finalRowBlock).toContain("min-width: 0");
+  });
 });

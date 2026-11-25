@@ -711,6 +711,8 @@ body {
 /* ===== Review Detail Page & Gallery ===== */
 .review-modal {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
   gap: 20px;
   padding: 4px 0 12px;
   color: var(--text);
@@ -760,6 +762,7 @@ body {
 
 .review-modal__evidence-column {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
   min-width: 0;
 }
@@ -768,6 +771,8 @@ body {
   display: flex;
   flex-direction: column;
   gap: 14px;
+  min-width: 0;
+  max-width: 100%;
   position: sticky;
   top: 8px;
 }
@@ -780,6 +785,8 @@ body {
 
 .review-modal__section {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
   gap: 12px;
 }
 
@@ -1058,6 +1065,11 @@ body {
 .review-modal__decision {
   order: -1;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  box-sizing: border-box;
   gap: 14px;
   padding: 14px;
   border: 1px solid var(--p-color-border-info, #a1c5e2);
@@ -1067,8 +1079,15 @@ body {
   scroll-margin-block-start: 16px;
 }
 
+.review-modal__decision > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
 .review-modal__decision-footer {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
   gap: 8px;
   padding-block-start: 12px;
   border-block-start: 1px solid var(--border);
@@ -1090,6 +1109,8 @@ body {
 
 .review-modal__recorded {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
   gap: 8px;
   padding: 14px;
   border: 1px solid var(--border);
@@ -1144,6 +1165,8 @@ body {
 
 .review-modal__evidence-content {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
   gap: 12px;
   padding-top: 14px;
 }
@@ -1468,7 +1491,7 @@ body {
 }
 
 /* ===== Responsive Breakpoints ===== */
-@media (max-width: 860px) {
+@media (max-width: 960px) {
   .review-modal__body-grid,
   .review-page .review-modal__body-grid {
     grid-template-columns: minmax(0, 1fr);
@@ -1538,7 +1561,7 @@ body {
 
   .review-modal__comparison,
   .review-modal__final-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .review-modal__image-button {
