@@ -106,6 +106,39 @@ describe("truthful monitoring status", () => {
     expect(monitoringState(billing, "FAILURE", now, old)).toBe("failed");
     expect(monitoringState(billing, "SUCCESS", now, "invalid")).toBe("enabled");
   });
+  it("treats recently activated subscriptions as starting until first scheduled run or after reactivation", () => {
+    const now = Date.parse("2026-11-25T22:00:00Z");
+    const activatedRecently = "2026-11-25T21:50:00Z";
+    const activatedLongAgo = "2026-11-20T10:00:00Z";
+    const oldAudit = "2026-11-01T10:00:00Z";
+    const oldRun = "2026-11-15T02:47:00Z";
+    expect(
+      monitoringState(
+        { ...billing, subscriptionActivatedAt: activatedRecently },
+        null,
+        now,
+        null,
+        oldAudit,
+      ),
+    ).toBe("starting");
+    expect(
+      monitoringState(
+        { ...billing, subscriptionActivatedAt: activatedLongAgo },
+        null,
+        now,
+        null,
+        oldAudit,
+      ),
+    ).toBe("unknown");
+    expect(
+      monitoringState(
+        { ...billing, subscriptionActivatedAt: activatedRecently },
+        "completed",
+        now,
+        oldRun,
+      ),
+    ).toBe("starting");
+  });
 });
 
 describe("official source evidence", () => {

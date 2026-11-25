@@ -23,6 +23,7 @@ import {
   getBillingStatus,
   requireActiveBilling,
 } from "../services/billing.server";
+import { displayShopifyPlan } from "../services/partner-entitlement";
 import {
   runMerchantDeltaMonitoring,
   startMerchantCatalogAudit,
@@ -741,7 +742,7 @@ function Overview({ data, sections, shopifyLocale }: {
       actionLabel: t("pendingCoverage.pendingTab"),
     },
     "monitoring-pending": {
-      tone: "warning",
+      tone: "info",
       title: t(`catalogOverview.monitoring.${automaticStatus}`),
       description: null,
       actionHref: null,
@@ -919,6 +920,14 @@ function Overview({ data, sections, shopifyLocale }: {
     ? `dashboard.admin.monitoringRunStatus.${latestMonitoringStatus}`
     : `catalogOverview.monitoring.${automaticStatus}`);
   const monitoringActive = automaticStatus === "enabled";
+  const verifiedPlanName =
+    billingStatus &&
+    billingStatus.billingVerified &&
+    billingStatus.hasActivePayment &&
+    !billingStatus.ownerTestAccess &&
+    !billingStatus.developmentBypass
+      ? displayShopifyPlan(billingStatus.planHandle) || t("settingsOverview.activePlan")
+      : null;
   const mayCheckManually = Boolean(billingStatus && (
     (billingStatus.hasActivePayment && billingStatus.billingVerified) ||
     billingStatus.ownerTestAccess || billingStatus.developmentBypass
@@ -1019,14 +1028,35 @@ function Overview({ data, sections, shopifyLocale }: {
               aria-hidden="true"
             />
             <div className="overview-monitor__copy">
+              {verifiedPlanName && (
+                <div>
+                  <s-badge tone="success">{`${verifiedPlanName} · ${t("settingsOverview.active")}`}</s-badge>
+                </div>
+              )}
               <h2>{monitoringActive ? t("dashboard.admin.monitoringStatusAllClear") : monitorStatusText}</h2>
               {monitoringActive ? (
                 nextAutomaticCheckAt && <p><NextMonitoringCheck value={nextAutomaticCheckAt} /></p>
+              ) : automaticStatus === "starting" ? (
+                <>
+                  <p>{t("billing.planActiveDescription")}</p>
+                  {nextAutomaticCheckAt && <p><NextMonitoringCheck value={nextAutomaticCheckAt} /></p>}
+                </>
               ) : (
                 <p>{t(`catalogOverview.monitoringHelp.${automaticStatus}`, { defaultValue: "" })}</p>
               )}
             </div>
             <div className="overview-actions">
+              {!monitoringActive && runCheckAvailable && automaticStatus !== "processing" && (
+                <s-button
+                  variant="secondary"
+                  icon="play"
+                  disabled={isScanning || monitoringFetcher.state !== "idle"}
+                  loading={monitoringFetcher.state !== "idle"}
+                  onClick={() => monitoringFetcher.submit({ action: "bulkCheck", monitoringMode: "since-last-check" }, { method: "POST" })}
+                >
+                  {t("redesign.runDelta")}
+                </s-button>
+              )}
               {monitoringNeedsRefresh && (
                 <s-button variant="secondary" loading={revalidator.state !== "idle"} onClick={() => revalidator.revalidate()}>
                   {t("catalogOverview.refreshStatus")}
@@ -1127,7 +1157,7 @@ function Overview({ data, sections, shopifyLocale }: {
             </s-stack>
           </s-banner>
         )}
-        {!isScanning && dashboardState !== "review-needed" && summary && (scanStatus !== "failed" || stats.activeAlerts > 0) &&
+        {!isScanning && dashboardState !== "review-needed" && dashboardState !== "monitoring-pending" && summary && (scanStatus !== "failed" || stats.activeAlerts > 0) &&
           !firstAuditIsSummary && (
           <s-banner tone={summary.tone} heading={summary.title}>
             <s-stack gap="small">

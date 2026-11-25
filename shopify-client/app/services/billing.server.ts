@@ -44,6 +44,7 @@ export type BillingStatus = {
   developmentBypass: boolean;
   planHandle: string | null;
   cancelAtEndOfCycle: boolean;
+  subscriptionActivatedAt?: Date | null;
   validUntil: Date | null;
 };
 
@@ -151,13 +152,20 @@ async function readEntitlement(
 async function saveEntitlement(
   shop: string,
   entitlement: Awaited<ReturnType<typeof readEntitlement>>,
-) {
+): Promise<{ saved: boolean; subscriptionActivatedAt: Date | null }> {
   // A failed lookup is not a Shopify cancellation. Keep the verified finite
   // snapshot for background workers while the current request fails closed.
-  if (!entitlement.verified) return false;
+  if (!entitlement.verified) return { saved: false, subscriptionActivatedAt: null };
 
   try {
     const existing = await db.safetySetting.findUnique({ where: { shop } });
+    const subscriptionActivatedAt = entitlement.active
+      ? existing?.subscriptionStatus === "active" &&
+          existing.planHandle === entitlement.planHandle &&
+          existing.subscriptionActivatedAt
+        ? existing.subscriptionActivatedAt
+        : new Date()
+      : null;
     await db.safetySetting.upsert({
       where: { shop },
       update: {
@@ -169,6 +177,7 @@ async function saveEntitlement(
         planHandle: entitlement.planHandle,
         monitoringEntitled: entitlement.verified && entitlement.active,
         billingVerifiedAt: entitlement.verified ? new Date() : null,
+        subscriptionActivatedAt,
         subscriptionValidUntil: entitlement.validUntil
           ? new Date(
               Math.min(
@@ -196,6 +205,7 @@ async function saveEntitlement(
         planHandle: entitlement.planHandle,
         monitoringEntitled: entitlement.verified && entitlement.active,
         billingVerifiedAt: entitlement.verified ? new Date() : null,
+        subscriptionActivatedAt,
         subscriptionValidUntil: entitlement.validUntil
           ? new Date(
               Math.min(
@@ -213,10 +223,10 @@ async function saveEntitlement(
           : {}),
       },
     });
-    return true;
+    return { saved: true, subscriptionActivatedAt };
   } catch {
     console.warn("Could not persist verified Shopify subscription state");
-    return false;
+    return { saved: false, subscriptionActivatedAt: null };
   }
 }
 
@@ -290,7 +300,7 @@ async function loadBillingStatus(
   const freeScanCompletedAt = settings?.freeScanCompletedAt || null;
 
   if (await hasOwnerTestAccess(shop)) {
-    return { hasActivePayment: false, ownerTestAccess: true, freeScanUsed, freeScanCompletedAt, canPerformScan: true, pricingPlansUrl, billingVerified: false, developmentBypass: false, planHandle: null, cancelAtEndOfCycle: false, validUntil: null };
+    return { hasActivePayment: false, ownerTestAccess: true, freeScanUsed, freeScanCompletedAt, canPerformScan: true, pricingPlansUrl, billingVerified: false, developmentBypass: false, planHandle: null, cancelAtEndOfCycle: false, subscriptionActivatedAt: null, validUntil: null };
   }
 
   if (SHOPIFY_BILLING_BYPASS) {
@@ -304,13 +314,15 @@ async function loadBillingStatus(
       developmentBypass: true,
       planHandle: null,
       cancelAtEndOfCycle: false,
+      subscriptionActivatedAt: null,
       validUntil: null,
     };
   }
 
   try {
     const entitlement = await readEntitlement(billing, admin);
-    if (!(await saveEntitlement(shop, entitlement)))
+    const persisted = await saveEntitlement(shop, entitlement);
+    if (!persisted.saved)
       throw new Error("Subscription verification could not be persisted");
     return {
       hasActivePayment: entitlement.active,
@@ -323,6 +335,7 @@ async function loadBillingStatus(
       developmentBypass: false,
       planHandle: entitlement.planHandle,
       cancelAtEndOfCycle: entitlement.cancelAtEndOfCycle,
+      subscriptionActivatedAt: persisted.subscriptionActivatedAt,
       validUntil: entitlement.validUntil,
     };
   } catch (error) {
@@ -337,6 +350,7 @@ async function loadBillingStatus(
       developmentBypass: false,
       planHandle: null,
       cancelAtEndOfCycle: false,
+      subscriptionActivatedAt: null,
       validUntil: null,
     };
   }
@@ -362,7 +376,7 @@ export async function requireActiveBilling(
       validUntil: null,
     };
   }
-  if (!(await saveEntitlement(shop, entitlement))) {
+  if (!(await saveEntitlement(shop, entitlement)).saved) {
     entitlement = {
       active: false,
       verified: false,

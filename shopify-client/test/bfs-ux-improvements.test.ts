@@ -92,4 +92,11 @@ describe("Built for Shopify & UX improvements", () => {
     expect(src).not.toContain("showScopeNote");
     expect(src).toContain('<p className="admin-helper">{t("catalogOverview.resultBoundary")}</p>');
   });
+
+  it("shows active verified plan confirmation and run trigger for recently activated monitoring on Overview", () => {
+    const src = readFileSync(path.join(ROOT, "app/routes/app._index.tsx"), "utf8");
+    expect(src).toContain("displayShopifyPlan");
+    expect(src).toContain('t("billing.planActiveDescription")');
+    expect(src).toContain('automaticStatus === "starting"');
+  });
 });

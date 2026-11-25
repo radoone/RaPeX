@@ -123,6 +123,7 @@ export type SafetySettingRecord = {
   planHandle?: string | null;
   monitoringEntitled?: boolean;
   billingVerifiedAt?: Date | null;
+  subscriptionActivatedAt?: Date | null;
   subscriptionValidUntil?: Date | null;
   subscriptionPeriodEnd?: Date | null;
   shopifyShopId?: string;
@@ -865,6 +866,7 @@ export function safetySettingFromSnapshot(
     planHandle: data.planHandle !== undefined ? String(data.planHandle || "") : undefined,
     monitoringEntitled: data.monitoringEntitled !== undefined ? Boolean(data.monitoringEntitled) : undefined,
     billingVerifiedAt: normalizeDate(data.billingVerifiedAt),
+    subscriptionActivatedAt: normalizeDate(data.subscriptionActivatedAt),
     subscriptionValidUntil: normalizeDate(data.subscriptionValidUntil),
     slackWebhookUrl: data.slackWebhookUrl !== undefined ? String(data.slackWebhookUrl || "") : undefined,
     createdAt: normalizeDate(data.createdAt) || new Date(0),
@@ -920,6 +922,7 @@ const safetySetting = {
       planHandle: payload.planHandle !== undefined ? String(payload.planHandle || "") : undefined,
       monitoringEntitled: payload.monitoringEntitled !== undefined ? Boolean(payload.monitoringEntitled) : undefined,
       billingVerifiedAt: normalizeDate(payload.billingVerifiedAt),
+      subscriptionActivatedAt: normalizeDate(payload.subscriptionActivatedAt),
       subscriptionValidUntil: normalizeDate(payload.subscriptionValidUntil),
       slackWebhookUrl: payload.slackWebhookUrl !== undefined ? String(payload.slackWebhookUrl || "") : undefined,
       createdAt: normalizeDate(payload.createdAt) || now,
