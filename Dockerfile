@@ -18,18 +18,35 @@ RUN npm ci
 
 COPY . .
 RUN npm run build --workspace=shopify-client
-RUN npm prune --omit=dev --ignore-scripts
+
+FROM node:22.23.4-bookworm-slim AS prod-deps
+RUN npm install --global npm@12.2.1
+
+WORKDIR /app
+COPY .npmrc ./
+COPY package.json package-lock.json ./
+COPY firebase/package.json ./firebase/package.json
+COPY firebase/functions/package.json ./firebase/functions/package.json
+COPY shopify-client/package.json ./shopify-client/package.json
+COPY shopify-client/extensions/safety-gate-product-action/package.json ./shopify-client/extensions/safety-gate-product-action/package.json
+COPY shopify-client/extensions/safety-gate-product-block/package.json ./shopify-client/extensions/safety-gate-product-block/package.json
+RUN npm ci --omit=dev --workspace=shopify-client --include-workspace-root=false --ignore-scripts \
+  && mkdir -p /app/shopify-client/node_modules
 
 FROM node:22.23.4-bookworm-slim AS runtime
-RUN npm install --global npm@12.2.1
 RUN apt-get update && apt-get install -y --no-install-recommends openssl libstdc++6 \
   && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=8080
-COPY --from=build /app ./
+COPY --from=prod-deps /app/package.json ./package.json
+COPY --from=prod-deps /app/node_modules ./node_modules
+COPY --from=prod-deps /app/shopify-client/package.json ./shopify-client/package.json
+COPY --from=prod-deps /app/shopify-client/node_modules ./shopify-client/node_modules
+COPY --from=build /app/shopify-client/build ./shopify-client/build
+COPY --from=build /app/shopify-client/public ./shopify-client/public
 
 WORKDIR /app/shopify-client
 EXPOSE 8080
-CMD ["npm", "run", "start"]
+CMD ["node", "/app/node_modules/@react-router/serve/bin.js", "./build/server/index.js"]

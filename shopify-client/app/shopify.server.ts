@@ -82,11 +82,18 @@ const shopify = shopifyApp({
 
 const WEBHOOK_REGISTRATION_VERSION = "product-events-2026-07-v2";
 const pendingWebhookRegistrations = new Map<string, Promise<void>>();
+const verifiedWebhookShops = new Set<string>();
+
+export function invalidateWebhookRegistrationCache(shop?: string): void {
+  if (shop) verifiedWebhookShops.delete(shop);
+  else verifiedWebhookShops.clear();
+}
 
 /** Register app-managed subscriptions after OAuth and restore them on existing sessions. */
 export async function ensureShopifyWebhooksRegistered(
   session: Parameters<typeof shopify.registerWebhooks>[0]["session"],
 ): Promise<void> {
+  if (verifiedWebhookShops.has(session.shop)) return;
   const pending = pendingWebhookRegistrations.get(session.shop);
   if (pending) return pending;
 
@@ -104,7 +111,10 @@ async function registerShopWebhooks(
 ) {
   const merchantRef = firestore.collection("merchants").doc(encodeURIComponent(session.shop));
   const merchantSnapshot = await merchantRef.get();
-  if (merchantSnapshot.get("webhookRegistrationVersion") === WEBHOOK_REGISTRATION_VERSION) return;
+  if (merchantSnapshot.get("webhookRegistrationVersion") === WEBHOOK_REGISTRATION_VERSION) {
+    verifiedWebhookShops.add(session.shop);
+    return;
+  }
 
   const registrations = await shopify.registerWebhooks({ session });
   if (!registrations) throw new Error("Shopify did not confirm webhook registration");
@@ -135,6 +145,7 @@ async function registerShopWebhooks(
     webhookRegistrationVersion: WEBHOOK_REGISTRATION_VERSION,
     webhooksRegisteredAt: FieldValue.serverTimestamp(),
   }, { merge: true });
+  verifiedWebhookShops.add(session.shop);
 }
 
 const requestAdminAuth = new WeakMap<

@@ -4,10 +4,12 @@ import { useTranslation } from "react-i18next";
 import { Suspense, useEffect, useState } from "react";
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { authenticate, ensureShopifyWebhooksRegistered } from "../shopify.server";
+import { firestore } from "../firestore.server";
 import db from "../merchant-db.server";
 import { getBillingStatus } from "../services/billing.server";
 import { isWaitingForSupplier } from "../services/review-evidence";
-import { preferredInterfaceLanguage } from "../services/interface-language";
+import { normalizeInterfaceLanguage, preferredInterfaceLanguage } from "../services/interface-language";
+import { notificationLanguageSelection } from "../services/notification-language";
 
 export const headers = (headersArgs: any) => {
   return boundary.headers(headersArgs);
@@ -22,15 +24,32 @@ export const loader = async ({ request }: { request: Request }) => {
     select: { status: true, reviewState: true, resolutionType: true },
   }).then(alerts => alerts.filter(alert => !isWaitingForSupplier(alert)).length);
   const webhookRegistration = ensureShopifyWebhooksRegistered(session);
+  const notificationLanguage = firestore
+    .collection("merchants")
+    .doc(encodeURIComponent(session.shop))
+    .get()
+    .then((snapshot) => {
+      const data = snapshot.data();
+      if (!data) return null;
+      return {
+        selection: notificationLanguageSelection(data),
+        language:
+          data.notificationLanguageSource === "app" && typeof data.notificationLanguage === "string"
+            ? normalizeInterfaceLanguage(data.notificationLanguage) ?? null
+            : null,
+      };
+    })
+    .catch(() => null);
   return {
     activeAlertsCount,
+    notificationLanguage,
     shopifyLocale,
     ready: Promise.all([billingStatus, webhookRegistration]).then(([status]) => status),
   };
 };
 
 export default function App() {
-  const { activeAlertsCount, ready, shopifyLocale } = useLoaderData<typeof loader>();
+  const { activeAlertsCount, notificationLanguage, ready, shopifyLocale } = useLoaderData<typeof loader>();
   const { t, i18n } = useTranslation();
   const navigation = useNavigation();
   const shopify = useAppBridge();
@@ -53,10 +72,14 @@ export default function App() {
   }, [activeAlertsCount]);
 
   useEffect(() => {
+    let cancelled = false;
     let lastLanguage: string | undefined;
+    let followAppLanguage = false;
     let request = Promise.resolve();
-    const sync = (language: string) => {
-      if (language === lastLanguage) return;
+    const sync = (rawLanguage: string) => {
+      if (cancelled || !followAppLanguage) return;
+      const language = normalizeInterfaceLanguage(rawLanguage);
+      if (!language || language === lastLanguage) return;
       lastLanguage = language;
       request = request.then(async () => {
         const response = await fetch("/api/notification-language", {
@@ -69,10 +92,19 @@ export default function App() {
         if (lastLanguage === language) lastLanguage = undefined;
       });
     };
-    sync(preferredInterfaceLanguage(shopifyLocale));
+    void Promise.resolve(notificationLanguage).then((saved) => {
+      if (cancelled) return;
+      if (!saved || saved.selection !== "app") return;
+      followAppLanguage = true;
+      lastLanguage = saved.language ?? undefined;
+      sync(preferredInterfaceLanguage(shopifyLocale));
+    });
     i18n.on("languageChanged", sync);
-    return () => i18n.off("languageChanged", sync);
-  }, [i18n, shopifyLocale]);
+    return () => {
+      cancelled = true;
+      i18n.off("languageChanged", sync);
+    };
+  }, [i18n, notificationLanguage, shopifyLocale]);
 
   return (
     <>

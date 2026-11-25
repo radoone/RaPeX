@@ -40,6 +40,16 @@ describe("shared offline token rotation", () => {
     expect(await loadOfflineAccessToken(db as never, shop)).toBe("legacy-access");
     expect(fetch).not.toHaveBeenCalled();
   });
+  it("reads a valid offline token without opening a Firestore transaction", async () => {
+    const valid = session({ expires: new Date(Date.now() + 3600_000) });
+    const runTransaction = vi.fn();
+    const get = vi.fn(async () => ({ exists: true, data: () => ({ ...valid }) }));
+    const db = { collection: () => ({ doc: () => ({ get }) }), runTransaction };
+    expect(await loadOfflineAccessToken(db as never, shop)).toBe("legacy-access");
+    expect(get).toHaveBeenCalledTimes(1);
+    expect(runTransaction).not.toHaveBeenCalled();
+    expect(fetch).not.toHaveBeenCalled();
+  });
   it("refreshes an expiring token using the encrypted refresh credential", async () => {
     const db = new MemoryStore(session({ expires: new Date(0), refreshToken: encryptShopifyToken("old-refresh"), refreshTokenExpires: new Date(Date.now() + 86400_000) }));
     await loadOfflineAccessToken(db as never, shop);

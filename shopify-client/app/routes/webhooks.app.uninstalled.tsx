@@ -1,5 +1,5 @@
 import type { ActionFunctionArgs } from "react-router";
-import { authenticate, sessionStorage } from "../shopify.server";
+import { authenticate, invalidateWebhookRegistrationCache, sessionStorage } from "../shopify.server";
 import { purgeMerchantShopData } from "../merchant-db.server";
 import { deleteCatalogAuditSessions } from "../services/catalog-audit-session.server";
 
@@ -7,6 +7,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const { shop, topic } = await authenticate.webhook(request);
 
   console.log(`Received ${topic} webhook for ${shop}`);
+  invalidateWebhookRegistrationCache(shop);
 
   // Webhook requests can trigger multiple times after the app is uninstalled.
   // Find first because the webhook's own session may already have been removed.

@@ -22,7 +22,7 @@ vi.mock("../app/firestore-session-storage.server", () => ({
   FirestoreSessionStorage: class {},
 }));
 
-import { ensureShopifyWebhooksRegistered } from "../app/shopify.server";
+import { ensureShopifyWebhooksRegistered, invalidateWebhookRegistrationCache } from "../app/shopify.server";
 
 describe("Shopify webhook registration", () => {
   const baseUrl = "https://example.test";
@@ -35,6 +35,7 @@ describe("Shopify webhook registration", () => {
   ];
   beforeEach(() => {
     vi.resetAllMocks();
+    invalidateWebhookRegistrationCache();
     vi.stubEnv("SHOPIFY_APP_URL", baseUrl);
     get.mockResolvedValue({ get: () => null });
   });
@@ -47,6 +48,10 @@ describe("Shopify webhook registration", () => {
     ]);
     expect(register).toHaveBeenCalledTimes(1);
     expect(set).toHaveBeenCalledTimes(1);
+
+    await ensureShopifyWebhooksRegistered(session);
+    expect(get).toHaveBeenCalledTimes(1);
+    expect(register).toHaveBeenCalledTimes(1);
   });
 
   it("confirms a concurrent registration only if all destinations are present", async () => {

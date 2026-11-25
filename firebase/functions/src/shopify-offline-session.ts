@@ -45,6 +45,17 @@ export function sessionDate(value: unknown): Date | undefined {
 /** One canonical session and a distributed lease shared by web and background workers. */
 export async function ensureOfflineSession(db: Firestore, id: string, forceRefresh = false): Promise<Record<string, any> | undefined> {
   const ref = db.collection("shopify_sessions").doc(encodeURIComponent(id));
+  if (!forceRefresh && typeof (ref as { get?: unknown }).get === "function") {
+    const fastSnapshot = await ref.get();
+    if (!fastSnapshot.exists) return undefined;
+    const session = fastSnapshot.data()!;
+    if (session.isOnline) return session;
+    if (!/^[a-z0-9][a-z0-9-]*\.myshopify\.com$/.test(session.shop) || id !== `offline_${session.shop}`) {
+      throw new Error("Invalid Shopify offline session identity");
+    }
+    const expires = sessionDate(session.expires);
+    if (expires && expires.getTime() > Date.now() + REFRESH_AHEAD_MS) return session;
+  }
   const leaseId = randomUUID();
   for (let attempt = 0; attempt < 100; attempt++) {
     const reservation = await db.runTransaction(async transaction => {

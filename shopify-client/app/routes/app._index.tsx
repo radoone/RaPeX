@@ -128,24 +128,26 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const shopifyLocale = normalizeInterfaceLanguage(new URL(request.url).searchParams.get("locale"));
   const merchant = firestore.collection("merchants").doc(encodeURIComponent(context.session.shop)).get();
   const summary = loadOverviewSummary(context.session.shop, merchant);
+  const billingStatus = getBillingStatus(context.billing, context.session.shop, context.admin);
   let checkedProducts: DashboardChecks | undefined;
   const loadCheckedProducts = () => checkedProducts ??= db.safetyCheck.findMany({
     where: { shop: context.session.shop },
     orderBy: { checkedAt: "desc" },
     select: { productId: true, checkedAt: true, sourceUpdatedAt: true },
   });
+  const catalog = loadOverviewCatalog(context.admin, loadCheckedProducts());
 
   return {
     shopifyLocale,
     summary,
-    access: summary.then(async ({ settings }) => {
-      const [billingStatus, initializedSettings] = await Promise.all([
-        getBillingStatus(context.billing, context.session.shop, context.admin),
-        initializeOverviewSettings(context, settings),
-      ]);
-      return { billingStatus, settings: initializedSettings };
-    }),
-    catalog: summary.then(() => loadOverviewCatalog(context.admin, loadCheckedProducts())),
+    access: Promise.all([
+      billingStatus,
+      summary.then(({ settings }) => initializeOverviewSettings(context, settings)),
+    ]).then(([resolvedBillingStatus, initializedSettings]) => ({
+      billingStatus: resolvedBillingStatus,
+      settings: initializedSettings,
+    })),
+    catalog,
     history: summary.then(data => loadOverviewHistory(context.session.shop, merchant, loadCheckedProducts(), data)),
     reviewProducts: summary.then(({ reviewPreview }) => loadOverviewReviewProducts(context.admin, reviewPreview)),
   };
