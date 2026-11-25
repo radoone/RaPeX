@@ -1,5 +1,5 @@
 import { useHydrated } from "../components/LocalDateTime";
-import { normalizeInterfaceLanguage, preferredInterfaceLanguage } from "../services/interface-language";
+import { interfaceLanguageFromCookie, normalizeInterfaceLanguage, preferredInterfaceLanguage } from "../services/interface-language";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { randomUUID } from "node:crypto";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
@@ -83,7 +83,9 @@ type DashboardChecks = Promise<Parameters<typeof catalogCheckStates>[1]>;
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const context = await authenticate.admin(request);
-  const shopifyLocale = normalizeInterfaceLanguage(new URL(request.url).searchParams.get("locale"));
+  const shopifyLocale =
+    interfaceLanguageFromCookie(request.headers.get("Cookie")) ||
+    normalizeInterfaceLanguage(new URL(request.url).searchParams.get("locale"));
   const merchant = firestore.collection("merchants").doc(encodeURIComponent(context.session.shop)).get();
   const summary = loadOverviewSummary(context.session.shop, merchant);
   const billingStatus = getBillingStatus(context.billing, context.session.shop, context.admin);
@@ -770,7 +772,6 @@ function Overview({ data, sections, shopifyLocale }: {
       tone: "success",
       title: t("dashboard.admin.status.noActionNeeded.title"),
       description: t("catalogOverview.noActionHelp"),
-      showScopeNote: true,
       actionHref: null,
       actionLabel: "",
     },
@@ -924,28 +925,43 @@ function Overview({ data, sections, shopifyLocale }: {
   ));
   const runCheckAvailable = hasMonitoringBaseline && mayCheckManually;
 
+  const nextReviewHref = reviewPreview[0]
+    ? `/app/alerts?status=active&open=${encodeURIComponent(reviewPreview[0].id)}`
+    : null;
+  const runDeltaButton = (slot: "primary-action" | "secondary-actions", variant: "primary" | "secondary") => (
+    <s-button
+      slot={slot}
+      variant={variant}
+      icon="play"
+      disabled={isScanning || automaticStatus === "processing" || monitoringFetcher.state !== "idle"}
+      loading={monitoringFetcher.state !== "idle"}
+      onClick={() => monitoringFetcher.submit({ action: "bulkCheck", monitoringMode: "since-last-check" }, { method: "POST" })}
+    >
+      {t("redesign.runDelta")}
+    </s-button>
+  );
+
   return (
     <s-page inlineSize="large" heading={t("redesign.overview")} className="overview-page" suppressHydrationWarning>
-      {access !== undefined && (runCheckAvailable ? (
-        <s-button
-          slot="primary-action"
-          variant="primary"
-          icon="play"
-          disabled={isScanning || automaticStatus === "processing" || monitoringFetcher.state !== "idle"}
-          loading={monitoringFetcher.state !== "idle"}
-          onClick={() => monitoringFetcher.submit({ action: "bulkCheck", monitoringMode: "since-last-check" }, { method: "POST" })}
-        >
-          {t("redesign.runDelta")}
-        </s-button>
-      ) : mayCheckManually ? (
-        <s-button slot="primary-action" variant="primary" icon="search" href="/app/manual-check">
-          {t("actions.checkOneProduct")}
-        </s-button>
-      ) : null)}
+      {stats.activeAlerts > 0 && nextReviewHref ? (
+        <>
+          <s-button slot="primary-action" variant="primary" href={nextReviewHref}>
+            {t("catalogOverview.reviewNext")}
+          </s-button>
+          {access !== undefined && runCheckAvailable && runDeltaButton("secondary-actions", "secondary")}
+        </>
+      ) : (
+        access !== undefined && (runCheckAvailable ? (
+          runDeltaButton("primary-action", "primary")
+        ) : mayCheckManually ? (
+          <s-button slot="primary-action" variant="primary" icon="search" href="/app/manual-check">
+            {t("actions.checkOneProduct")}
+          </s-button>
+        ) : null)
+      )}
       <div className="overview-layout">
         <div className="overview-header__title">
           {purpose}
-          {monitoringActive && !isScanning && <s-badge tone="success">{t("settingsOverview.active")}</s-badge>}
         </div>
 
         <div className="overview-metrics">
@@ -1113,7 +1129,6 @@ function Overview({ data, sections, shopifyLocale }: {
           <s-banner tone={summary.tone} heading={summary.title}>
             <s-stack gap="small">
               {summary.description && <s-text>{summary.description}</s-text>}
-              {"showScopeNote" in summary && <s-text>{t("catalogOverview.resultBoundary")}</s-text>}
               {summary.actionHref && (
                 <div>
                   <s-button
@@ -1269,7 +1284,7 @@ function Overview({ data, sections, shopifyLocale }: {
                   <s-table-header listSlot="labeled">{t("findingOverview.officialRisk")}</s-table-header>
                   <s-table-header listSlot="labeled">{t("redesign.safetyGateReference")}</s-table-header>
                   <s-table-header listSlot="inline">{t("alerts.table.headers.status")}</s-table-header>
-                  <s-table-header>{t("alerts.table.headers.actions")}</s-table-header>
+                  <s-table-header listSlot="labeled">{t("alerts.table.headers.actions")}</s-table-header>
                 </s-table-header-row>
                 <s-table-body>
                   {reviewPreview.map(finding => {
@@ -1345,17 +1360,19 @@ function Overview({ data, sections, shopifyLocale }: {
           </div>
         )}
         {!isScanning ? (
-          <>
-            <s-stack direction="inline" gap="base" wrap>
-              <s-link href="/app/audit-report">{t("workspace.reportTitle")}</s-link>
-              {stats.waitingForSupplier > 0 && dashboardState !== "waiting-for-supplier" && (
-                <s-link href={waitingFindingsHref}>
-                  {t("workspace.waiting")} ({stats.waitingForSupplier})
-                </s-link>
-              )}
+          <footer className="admin-stack">
+            <s-stack gap="small">
+              <s-stack direction="inline" gap="base" wrap>
+                <s-link href="/app/audit-report">{t("workspace.reportTitle")}</s-link>
+                {stats.waitingForSupplier > 0 && dashboardState !== "waiting-for-supplier" && (
+                  <s-link href={waitingFindingsHref}>
+                    {t("workspace.waiting")} ({stats.waitingForSupplier})
+                  </s-link>
+                )}
+              </s-stack>
+              <p className="admin-helper">{t("catalogOverview.resultBoundary")}</p>
             </s-stack>
-
-          </>
+          </footer>
         ) : null}
       </div>
     </s-page>

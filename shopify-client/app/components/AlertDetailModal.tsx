@@ -318,8 +318,7 @@ export function AlertDetailModal({
           <h2 className="review-modal__title">{alert.productTitle}</h2>
           <p>{t("analysis.sections.whatHappenedSafe")} {t("catalogOverview.resultBoundary")}</p>
           <s-link
-            href={`https://${alert.shop}/admin/products/${alert.productId}`}
-            target="_blank"
+            href={`shopify:admin/products/${productId || alert.productId}`}
           >
             {t("analysis.editInShopify")}
           </s-link>
@@ -423,8 +422,7 @@ export function AlertDetailModal({
                   </div>
                   <div>
                     <s-link
-                      href={`https://${alert.shop}/admin/products/${productId}`}
-                      target="_blank"
+                      href={`shopify:admin/products/${productId}`}
                     >
                       {t("analysis.editInShopify")}
                     </s-link>
@@ -925,12 +923,12 @@ function WarningCard({
   onOpenGallery: OpenGallery;
   merchantProduct: any;
 }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const fields = warning.alertDetails?.fields || {};
   const meta = warning.alertDetails?.meta || {};
   const alertDate = fields.alert_date || meta.alert_date;
   const formattedDate = alertDate
-    ? new Date(alertDate).toLocaleDateString("en-GB")
+    ? new Date(alertDate).toLocaleDateString(i18n.resolvedLanguage || i18n.language || undefined)
     : "—";
   const warningOverallSimilarity =
     typeof warning.overallSimilarity === "number"

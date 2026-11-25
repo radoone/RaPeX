@@ -24,6 +24,26 @@ uri = "https://zerorecall-29849753697.europe-west1.run.app/webhooks/customers/re
 compliance_topics = ["shop/redact"]
 uri = "https://zerorecall-29849753697.europe-west1.run.app/webhooks/shop/redact"
 
+[[webhooks.subscriptions]]
+topics = ["products/create"]
+uri = "https://zerorecall-29849753697.europe-west1.run.app/webhooks/products/create"
+
+[[webhooks.subscriptions]]
+topics = ["products/update"]
+uri = "https://zerorecall-29849753697.europe-west1.run.app/webhooks/products/update"
+
+[[webhooks.subscriptions]]
+topics = ["products/delete"]
+uri = "https://zerorecall-29849753697.europe-west1.run.app/webhooks/products/delete"
+
+[[webhooks.subscriptions]]
+topics = ["app/uninstalled"]
+uri = "https://zerorecall-29849753697.europe-west1.run.app/webhooks/app/uninstalled"
+
+[[webhooks.subscriptions]]
+topics = ["app/scopes_update"]
+uri = "https://zerorecall-29849753697.europe-west1.run.app/webhooks/app/scopes_update"
+
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
 scopes = "read_products"

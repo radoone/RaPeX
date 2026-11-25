@@ -1431,7 +1431,15 @@
     "waiting": "Venter på leverandør",
     "when": "Registreret den",
     "who": "Registreret af",
-    "whyMatch": "Hvorfor dette kan matche"
+    "whyMatch": "Hvorfor dette kan matche",
+    "viewRemainingProducts_one": "Se {{count}} produkt, der skal kontrolleres",
+    "viewRemainingProducts_other": "Se {{count}} produkter, der skal kontrolleres",
+    "coverageIncomplete_one": "{{count}} produkt skal have en aktuel kontrol",
+    "coverageIncomplete_other": "{{count}} produkter skal have en aktuel kontrol",
+    "oldest_one": "Åben i {{count}} dag",
+    "oldest_other": "Åben i {{count}} dage",
+    "eventCount_one": "{{count}} beslutningshændelse",
+    "eventCount_other": "{{count}} beslutningshændelser"
   },
   "responseGuide": {
     "title": "Guide: svar på et bekræftet match",

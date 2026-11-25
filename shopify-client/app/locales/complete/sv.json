@@ -1431,7 +1431,15 @@
     "waiting": "Väntar på leverantör",
     "when": "Registrerad vid",
     "who": "Inspelad av",
-    "whyMatch": "Varför detta kan matcha"
+    "whyMatch": "Varför detta kan matcha",
+    "viewRemainingProducts_one": "Visa {{count}} produkt som behöver en kontroll",
+    "viewRemainingProducts_other": "Visa {{count}} produkter som behöver en kontroll",
+    "coverageIncomplete_one": "{{count}} produkt behöver en aktuell kontroll",
+    "coverageIncomplete_other": "{{count}} produkter behöver en aktuell kontroll",
+    "oldest_one": "Öppen i {{count}} dag",
+    "oldest_other": "Öppen i {{count}} dagar",
+    "eventCount_one": "{{count}} beslutshändelse",
+    "eventCount_other": "{{count}} beslutshändelser"
   },
   "responseGuide": {
     "title": "Guide: svara på en bekräftad matchning",

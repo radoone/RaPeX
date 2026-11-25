@@ -6,7 +6,6 @@ import {
   data as json,
   isRouteErrorResponse,
   useLoaderData,
-  useNavigate,
   useRouteError,
 } from "react-router";
 import { useTranslation } from "react-i18next";
@@ -23,6 +22,7 @@ import {
   isWaitingForSupplier,
 } from "../services/review-evidence";
 import { localizeRisk } from "../components/AlertBadge";
+import { HistoryNav } from "../components/HistoryNav";
 import { monitoringEvidence } from "../services/monitoring-evidence.server";
 import { ReviewStatusSummary, reviewStatusOptions } from "../components/ReviewStatusSummary";
 import { checkLedger } from "../services/check-ledger.server";
@@ -47,10 +47,13 @@ export default function AuditReportPage() {
   const { records, generatedAt, total, shop, filters, summary, scope, monitoring, ledger } =
     useLoaderData<typeof loader>();
   const { t, i18n } = useTranslation();
-  const navigate = useNavigate();
   const [exporting, setExporting] = useState(false);
   const [exportFailed, setExportFailed] = useState(false);
   const [download, setDownload] = useState<{ url: string; query: string } | null>(null);
+  const [statusFilter, setStatusFilter] = useState(filters.status || "");
+  useEffect(() => {
+    setStatusFilter(filters.status || "");
+  }, [filters.status]);
   useEffect(
     () => () => {
       if (download) URL.revokeObjectURL(download.url);
@@ -106,17 +109,11 @@ export default function AuditReportPage() {
       >
         {t("checkLedger.findingDownload")}
       </s-button>
-      <s-button
-        slot="secondary-actions"
-        variant="secondary"
-        onClick={() => navigate("/app/evidence")}
-      >
-        {t("auditReport.viewHistory")}
-      </s-button>
       <s-button slot="secondary-actions" variant="secondary" onClick={() => window.print()}>
         {t("workspace.print")}
       </s-button>
       <div className="admin-stack">
+        <HistoryNav active="report" />
         <CheckLedger ledger={ledger} />
         {exportFailed ? (
           <s-banner tone="critical" heading={t("errors.apiError")}>
@@ -142,15 +139,11 @@ export default function AuditReportPage() {
             <p>
               {t("workspace.scope", {
                 from: new Date(scope.from).toLocaleDateString(
-                  i18n.language.split(/[-_]/)[0] === "en"
-                    ? "en-GB"
-                    : i18n.language,
+                  i18n.resolvedLanguage || i18n.language || undefined,
                   { timeZone: filters.timeZone },
                 ),
                 to: new Date(scope.to).toLocaleDateString(
-                  i18n.language.split(/[-_]/)[0] === "en"
-                    ? "en-GB"
-                    : i18n.language,
+                  i18n.resolvedLanguage || i18n.language || undefined,
                   { timeZone: filters.timeZone },
                 ),
               })}
@@ -161,6 +154,7 @@ export default function AuditReportPage() {
             <Form method="get" className="report-filters" key={filterQuery}>
               {filters.timeZone && <input type="hidden" name="timeZone" value={filters.timeZone} />}
               {filters.query && <input type="hidden" name="q" value={filters.query} />}
+              <input type="hidden" name="status" value={statusFilter} />
               <label>
                 {t("workspace.findingFrom")}
                 <input type="date" name="from" defaultValue={filters.from} />
@@ -169,16 +163,17 @@ export default function AuditReportPage() {
                 {t("workspace.findingTo")}
                 <input type="date" name="to" defaultValue={filters.to} />
               </label>
-              <label>
-                {t("workspace.status")}
-                <select name="status" defaultValue={filters.status}>
-                  <option value="">{t("workspace.all")}</option>
-                  {reviewStatusOptions.map(([value, label]) => (
-                    <option key={value} value={value}>{t(label)}</option>
-                  ))}
-                </select>
-              </label>
-              <s-button type="submit">{t("workspace.applyFilters")}</s-button>
+              <s-select
+                label={t("workspace.status")}
+                value={statusFilter}
+                onChange={(event: any) => setStatusFilter(event.currentTarget.value)}
+              >
+                <s-option value="">{t("workspace.all")}</s-option>
+                {reviewStatusOptions.map(([value, label]) => (
+                  <s-option key={value} value={value}>{t(label)}</s-option>
+                ))}
+              </s-select>
+              <s-button type="submit" variant="secondary">{t("workspace.applyFilters")}</s-button>
               {hasFilters && <s-link href="/app/audit-report">{t("workspace.clearFilters")}</s-link>}
             </Form>
           </details>
@@ -222,10 +217,10 @@ export default function AuditReportPage() {
                   <s-table-header listSlot="inline">
                     {t("workspace.status")}
                   </s-table-header>
-                  <s-table-header>{t("workspace.findings")}</s-table-header>
-                  <s-table-header>{t("workspace.outcome")}</s-table-header>
-                  <s-table-header>{t("workspace.detectedAt")}</s-table-header>
-                  <s-table-header>{t("workspace.decisionAt")}</s-table-header>
+                  <s-table-header listSlot="labeled">{t("workspace.findings")}</s-table-header>
+                  <s-table-header listSlot="labeled">{t("workspace.outcome")}</s-table-header>
+                  <s-table-header listSlot="labeled">{t("workspace.detectedAt")}</s-table-header>
+                  <s-table-header listSlot="labeled">{t("workspace.decisionAt")}</s-table-header>
                 </s-table-header-row>
                 <s-table-body>
                   {records.map((record) => (

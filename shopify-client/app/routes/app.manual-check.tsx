@@ -16,7 +16,7 @@ import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
 import db from "../merchant-db.server";
 import { withOfficialReferences } from "../services/review-evidence.server";
-import { normalizeInterfaceLanguage } from "../services/interface-language";
+import { normalizeInterfaceLanguage, interfaceLanguageFromCookie } from "../services/interface-language";
 import { firestore } from "../firestore.server";
 import { runProductSafetyCheckForAdminProduct } from "../services/product-safety-admin.server";
 import { AlertDetailModal } from "../components";
@@ -35,72 +35,108 @@ import { hasOwnerTestAccess } from "../services/owner-test-access.server";
 import { isWaitingForSupplier } from "../services/review-evidence";
 import { ProductCheckExcludedError } from "../services/safety-gate-checker.server";
 import { exclusionPreview } from "../services/exclusion-preview";
-import { shopifyProductToProductData } from "../services/safety-gate-product-data";
+import { getCachedCatalogProducts, type DashboardCatalogProduct } from "../services/catalog-products-cache.server";
 
 type ShopifyCatalogProduct = {
   id: string;
   title: string;
+  status?: string;
+  vendor?: string;
+  productType?: string;
+  featuredImage?: { url?: string; altText?: string } | null;
+  images?: { nodes?: Array<{ url?: string; altText?: string }> };
   updatedAt?: string;
   [key: string]: unknown;
 };
 
 const manualBatchSize = 3;
+const catalogPageSize = 50;
 
-async function fetchCatalogProductsForManualCheck(
+const PRODUCT_ROW_FIELDS = `
+  id
+  title
+  status
+  vendor
+  productType
+  tags
+  featuredImage { url altText }
+  images(first: 1) { nodes { url altText } }
+  updatedAt
+`;
+
+async function fetchCatalogProductsPage(
   admin: any,
-  limit = 300,
-  query: string | null = null,
-): Promise<ShopifyCatalogProduct[]> {
-  const products: ShopifyCatalogProduct[] = [];
-  let after: string | null = null;
-  let hasNextPage = true;
-
-  while (hasNextPage && products.length < limit) {
-    const first = Math.min(100, limit - products.length);
-    const response: { json: () => Promise<any> } = await admin.graphql(
-      `#graphql
-      query manualCheckCatalogProducts($first: Int!, $after: String, $query: String) {
-        products(first: $first, after: $after, sortKey: UPDATED_AT, reverse: true, query: $query) {
-          pageInfo {
-            hasNextPage
-            endCursor
-          }
-          edges {
-            node {
-              id
-              title
-              status
-              vendor
-              productType
-              tags
-              featuredImage { url altText }
-              images(first: 1) { nodes { url altText } }
-              updatedAt
-            }
+  options: { after?: string | null; before?: string | null; query?: string | null; pageSize?: number },
+): Promise<{
+  products: ShopifyCatalogProduct[];
+  pageInfo: { hasNextPage: boolean; hasPreviousPage: boolean; startCursor: string | null; endCursor: string | null };
+}> {
+  const pageSize = options.pageSize ?? catalogPageSize;
+  const usingBefore = Boolean(options.before);
+  const response: { json: () => Promise<any> } = await admin.graphql(
+    `#graphql
+    query manualCheckCatalogPage($first: Int, $after: String, $last: Int, $before: String, $query: String) {
+      products(first: $first, after: $after, last: $last, before: $before, sortKey: UPDATED_AT, reverse: true, query: $query) {
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+          startCursor
+          endCursor
+        }
+        edges {
+          node {
+            ${PRODUCT_ROW_FIELDS}
           }
         }
       }
-    `,
-      { variables: { first, after, query } },
-    );
+    }
+  `,
+    {
+      variables: usingBefore
+        ? { last: pageSize, before: options.before, query: options.query || null }
+        : { first: pageSize, after: options.after || null, query: options.query || null },
+    },
+  );
 
-    const jsonResponse: any = await response.json();
-    if (jsonResponse.errors?.length || !jsonResponse.data?.products)
-      throw new Error("Could not load Shopify catalog");
-    const connection: any = jsonResponse.data.products;
-    const edges = connection?.edges || [];
-    products.push(...edges.map((edge: any) => edge.node));
-    hasNextPage =
-      Boolean(connection?.pageInfo?.hasNextPage) && products.length < limit;
-    after = connection?.pageInfo?.endCursor || null;
-    if (hasNextPage && !after)
-      throw new Error("Shopify catalog cursor is missing");
-  }
-
-  return products;
+  const jsonResponse: any = await response.json();
+  if (jsonResponse.errors?.length || !jsonResponse.data?.products)
+    throw new Error("Could not load Shopify catalog");
+  const connection = jsonResponse.data.products;
+  return {
+    products: (connection.edges || []).map((edge: any) => edge.node),
+    pageInfo: {
+      hasNextPage: Boolean(connection.pageInfo?.hasNextPage),
+      hasPreviousPage: Boolean(connection.pageInfo?.hasPreviousPage),
+      startCursor: connection.pageInfo?.startCursor || null,
+      endCursor: connection.pageInfo?.endCursor || null,
+    },
+  };
 }
 
-async function loadCoverage(shop: string, products: ShopifyCatalogProduct[], ownerTestAccess: boolean, strict = false) {
+async function fetchCatalogProductsByIds(
+  admin: any,
+  productIds: string[],
+): Promise<ShopifyCatalogProduct[]> {
+  if (productIds.length === 0) return [];
+  const gids = productIds.map((id) => (id.startsWith("gid://") ? id : `gid://shopify/Product/${id}`));
+  const response: { json: () => Promise<any> } = await admin.graphql(
+    `#graphql
+    query manualCheckCatalogNodes($ids: [ID!]!) {
+      nodes(ids: $ids) {
+        ... on Product {
+          ${PRODUCT_ROW_FIELDS}
+        }
+      }
+    }
+  `,
+    { variables: { ids: gids } },
+  );
+  const jsonResponse: any = await response.json();
+  if (jsonResponse.errors?.length) throw new Error("Could not load Shopify catalog");
+  return (jsonResponse.data?.nodes || []).filter((node: any) => Boolean(node?.id));
+}
+
+async function loadCoverage(shop: string, products: DashboardCatalogProduct[], ownerTestAccess: boolean, strict = false) {
   const [checks, merchant] = await Promise.all([
     db.safetyCheck.findMany({
       where: { shop },
@@ -123,10 +159,11 @@ async function loadCoverage(shop: string, products: ShopifyCatalogProduct[], own
     !automaticIds.has(product.id.replace("gid://shopify/Product/", ""))
   );
   const manualExcluded = exclusionPreview(
-    products.map(product => {
-      const { brand, category } = shopifyProductToProductData(product);
-      return { id: product.id, vendor: brand, productType: category };
-    }),
+    products.map(product => ({
+      id: product.id,
+      vendor: product.vendor || "",
+      productType: product.productType || "",
+    })),
     String(merchant.get("excludeVendors") || ""),
     String(merchant.get("excludeTypes") || ""),
   );
@@ -139,7 +176,9 @@ async function loadCoverage(shop: string, products: ShopifyCatalogProduct[], own
 
 export const loader = async ({ request, url }: LoaderFunctionArgs) => {
   const context = await authenticate.admin(request);
-  const shopifyLocale = normalizeInterfaceLanguage(url.searchParams.get("locale"));
+  const shopifyLocale =
+    interfaceLanguageFromCookie(request.headers.get("Cookie")) ||
+    normalizeInterfaceLanguage(url.searchParams.get("locale"));
   return {
     data: loadManualCheckPage(context, url),
     shopifyLocale,
@@ -152,22 +191,60 @@ async function loadManualCheckPage(
 ) {
   const billingStatus = await getBillingStatus(billing, session.shop, admin);
   const search = url.searchParams.get("search")?.trim() || "";
+  const coverageParam = url.searchParams.get("coverage");
+  const shopifyStatusParam = url.searchParams.get("shopifyStatus") || "all";
+  const after = url.searchParams.get("after");
+  const before = url.searchParams.get("before");
+  const page = Math.max(1, Number.parseInt(url.searchParams.get("page") || "1", 10) || 1);
 
-  const coverageCatalogProducts = await fetchCatalogProductsForManualCheck(
-    admin,
-    Infinity,
+  const cachedCatalogProducts = await getCachedCatalogProducts(session.shop, admin);
+  const totalProducts = cachedCatalogProducts.length;
+  const { checks: productChecks, productStates, pending, unconfirmed, automaticProductIds, manualCandidates, manualExcludedProductIds } = await loadCoverage(
+    session.shop, cachedCatalogProducts, Boolean(billingStatus.ownerTestAccess),
   );
-  const totalProducts = coverageCatalogProducts.length;
-  const products = search
-    ? await fetchCatalogProductsForManualCheck(admin, Infinity, search)
-    : coverageCatalogProducts;
+
+  let products: ShopifyCatalogProduct[];
+  let pagination: {
+    mode: "cursor" | "offset";
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+    startCursor: string | null;
+    endCursor: string | null;
+    page: number;
+  };
+
+  if (coverageParam === "remaining" && !search && shopifyStatusParam === "all") {
+    const start = (page - 1) * catalogPageSize;
+    const slice = pending.slice(start, start + catalogPageSize);
+    products = await fetchCatalogProductsByIds(admin, slice.map((item) => item.id));
+    pagination = {
+      mode: "offset",
+      hasNextPage: start + catalogPageSize < pending.length,
+      hasPreviousPage: page > 1,
+      startCursor: null,
+      endCursor: null,
+      page,
+    };
+  } else {
+    const queryParts: string[] = [];
+    if (search) queryParts.push(search);
+    if (shopifyStatusParam !== "all") queryParts.push(`status:${shopifyStatusParam.toLowerCase()}`);
+    const pageResult = await fetchCatalogProductsPage(admin, {
+      after,
+      before,
+      query: queryParts.length ? queryParts.join(" ") : null,
+      pageSize: catalogPageSize,
+    });
+    products = pageResult.products;
+    pagination = {
+      mode: "cursor",
+      ...pageResult.pageInfo,
+      page,
+    };
+  }
 
   const productIds = products.map((p: any) =>
     p.id.replace("gid://shopify/Product/", ""),
-  );
-
-  const { checks: productChecks, productStates, pending, unconfirmed, automaticProductIds, manualCandidates, manualExcludedProductIds } = await loadCoverage(
-    session.shop, coverageCatalogProducts, Boolean(billingStatus.ownerTestAccess),
   );
 
   // Load existing alerts for products (same transformation as Alerts page)
@@ -255,9 +332,11 @@ async function loadManualCheckPage(
 
   return {
     products,
+    pagination,
     checksByProduct,
     alertsByProduct,
     search,
+    shopifyStatusFilter: shopifyStatusParam,
     shop: session.shop,
     totalProducts,
     productStates,
@@ -329,7 +408,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   if (action === "checkPendingProducts") {
     try {
       const [products, ownerTestAccess] = await Promise.all([
-        fetchCatalogProductsForManualCheck(admin, Infinity),
+        getCachedCatalogProducts(session.shop, admin),
         hasOwnerTestAccess(session.shop),
       ]);
       const { manualCandidates } = await loadCoverage(session.shop, products, ownerTestAccess, true);
@@ -484,9 +563,11 @@ export default function ManualCheckPage() {
 function ManualCheckContent({ data }: { data: Awaited<ReturnType<typeof loadManualCheckPage>> }) {
   const {
     products,
+    pagination,
     checksByProduct,
     alertsByProduct,
     search,
+    shopifyStatusFilter: initialShopifyStatus,
     shop,
     totalProducts,
     coverage,
@@ -505,16 +586,14 @@ function ManualCheckContent({ data }: { data: Awaited<ReturnType<typeof loadManu
   const [showResult, setShowResult] = useState(false);
   const [hasProcessedResult, setHasProcessedResult] = useState(false);
   const [searchValue, setSearchValue] = useState(search);
-  const [visibleCount, setVisibleCount] = useState(50);
   const [searchParams] = useSearchParams();
-  const [tabFilter, setTabFilter] = useState<CatalogCheckFilter>(() => search || searchParams.get("coverage") === "all"
-    ? "all"
-    : searchParams.get("coverage") === "remaining" || coverage.uncheckedProductCount > 0
-      ? "pending" : "all");
+  const [tabFilter, setTabFilter] = useState<CatalogCheckFilter>(() =>
+    searchParams.get("coverage") === "remaining" ? "pending" : "all",
+  );
   const [findingFilter, setFindingFilter] = useState<CatalogFindingFilter>("all");
   const [submittedDecisionId, setSubmittedDecisionId] = useState<string | null>(null);
-  const [shopifyStatusFilter, setShopifyStatusFilter] = useState("all");
-  const dateLocale = i18n.language === "en" ? "en-GB" : i18n.language;
+  const [shopifyStatusFilter, setShopifyStatusFilter] = useState(initialShopifyStatus || "all");
+  const dateLocale = i18n.resolvedLanguage || i18n.language || "en";
 
   const filterCounts = useMemo(() => {
     const scoped = products.filter((product: any) => shopifyStatusFilter === "all" || product.status === shopifyStatusFilter);
@@ -528,10 +607,39 @@ function ManualCheckContent({ data }: { data: Awaited<ReturnType<typeof loadManu
     return matchesCatalogFilters(productStates[id]?.state, alertsByProduct[id], tabFilter, findingFilter);
   }), [products, productStates, alertsByProduct, tabFilter, findingFilter, shopifyStatusFilter]);
 
+  const navigateWithParams = useCallback(
+    (overrides: {
+      search?: string;
+      shopifyStatus?: string;
+      coverage?: string | null;
+      after?: string | null;
+      before?: string | null;
+      page?: number | null;
+    }) => {
+      const params = new URLSearchParams();
+      const nextSearch = (overrides.search ?? searchValue).trim();
+      const nextStatus = overrides.shopifyStatus ?? shopifyStatusFilter;
+      const nextCoverage = overrides.coverage === undefined ? searchParams.get("coverage") : overrides.coverage;
+      if (nextSearch) params.set("search", nextSearch);
+      if (nextStatus && nextStatus !== "all") params.set("shopifyStatus", nextStatus);
+      if (nextCoverage) params.set("coverage", nextCoverage);
+      if (overrides.after) params.set("after", overrides.after);
+      if (overrides.before) params.set("before", overrides.before);
+      if (overrides.page && overrides.page > 1) params.set("page", String(overrides.page));
+      const query = params.toString();
+      navigate(query ? `/app/manual-check?${query}` : "/app/manual-check");
+    },
+    [navigate, searchParams, searchValue, shopifyStatusFilter],
+  );
+
   // Synchronize searchValue with URL parameter when it changes (e.g., cleared/updated externally)
   useEffect(() => {
     setSearchValue(search);
   }, [search]);
+
+  useEffect(() => {
+    setShopifyStatusFilter(initialShopifyStatus || "all");
+  }, [initialShopifyStatus]);
 
   // Debounced search effect (400ms delay)
   useEffect(() => {
@@ -540,29 +648,14 @@ function ManualCheckContent({ data }: { data: Awaited<ReturnType<typeof loadManu
       const currentSearch = search.trim();
       if (trimmedSearch !== currentSearch) {
         if (trimmedSearch) setTabFilter("all");
-        const params = new URLSearchParams();
-        if (trimmedSearch) params.set("search", trimmedSearch);
-        const query = params.toString();
-        navigate(query ? `/app/manual-check?${query}` : "/app/manual-check");
+        navigateWithParams({ search: trimmedSearch, coverage: trimmedSearch ? null : undefined, after: null, before: null, page: null });
       }
     }, 400);
 
     return () => {
       clearTimeout(handler);
     };
-  }, [searchValue, search, navigate]);
-
-  // Get all alerts from alertsByProduct for modals
-  const existingAlerts = (Object.values(alertsByProduct || {}) as any[]).filter(
-    (alert) =>
-      filteredProducts
-        .slice(0, visibleCount)
-        .some(
-          (product: any) =>
-            product.id.replace("gid://shopify/Product/", "") ===
-            alert.productId,
-        ),
-  );
+  }, [searchValue, search, navigateWithParams]);
 
   const mayCheckManually = billingStatus.ownerTestAccess || billingStatus.developmentBypass ||
     (billingStatus.billingVerified && billingStatus.hasActivePayment);
@@ -580,15 +673,10 @@ function ManualCheckContent({ data }: { data: Awaited<ReturnType<typeof loadManu
       : mayCheckManually ? "manualHelp" : noManualAccessKey;
 
   const applySearch = useCallback(() => {
-    const params = new URLSearchParams();
     const value = searchValue.trim();
-    if (value) {
-      params.set("search", value);
-      setTabFilter("all");
-    }
-    const query = params.toString();
-    navigate(query ? `/app/manual-check?${query}` : "/app/manual-check");
-  }, [navigate, searchValue]);
+    if (value) setTabFilter("all");
+    navigateWithParams({ search: value, coverage: null, after: null, before: null, page: null });
+  }, [navigateWithParams, searchValue]);
 
   const handleProductCheck = useCallback(
     (product: any) => {
@@ -893,7 +981,16 @@ function ManualCheckContent({ data }: { data: Awaited<ReturnType<typeof loadManu
                 </div>
               </form>
 
-              <s-select label={t("workspace.productStatus")} value={shopifyStatusFilter} onChange={(event: any) => { setShopifyStatusFilter(event.currentTarget.value); setTabFilter("all"); }}>
+              <s-select
+                label={t("workspace.productStatus")}
+                value={shopifyStatusFilter}
+                onChange={(event: any) => {
+                  const nextStatus = event.currentTarget.value;
+                  setShopifyStatusFilter(nextStatus);
+                  setTabFilter("all");
+                  navigateWithParams({ shopifyStatus: nextStatus, coverage: null, after: null, before: null, page: null });
+                }}
+              >
                 <s-option value="all">{t("workspace.productStatusAll")}</s-option>
                 <s-option value="ACTIVE">{t("workspace.productStatusActive")}</s-option>
                 <s-option value="DRAFT">{t("workspace.productStatusDraft")}</s-option>
@@ -902,14 +999,25 @@ function ManualCheckContent({ data }: { data: Awaited<ReturnType<typeof loadManu
             </div>
           </details>
           <div className="catalog-coverage__state-filters">
-            <s-select label={t("catalogUx.checkStatus")} value={tabFilter}
-              onChange={(event: any) => { setTabFilter(event.currentTarget.value); setVisibleCount(50); }}>
+            <s-select
+              label={t("catalogUx.checkStatus")}
+              value={tabFilter}
+              onChange={(event: any) => {
+                const nextTab = event.currentTarget.value as CatalogCheckFilter;
+                setTabFilter(nextTab);
+                if (nextTab === "pending" && !searchValue.trim() && shopifyStatusFilter === "all") {
+                  navigateWithParams({ coverage: "remaining", after: null, before: null, page: 1 });
+                } else if (searchParams.get("coverage") === "remaining" && nextTab !== "pending") {
+                  navigateWithParams({ coverage: null, after: null, before: null, page: 1 });
+                }
+              }}
+            >
               <s-option value="all">{t("alerts.table.tabs.all")} ({filterCounts.all})</s-option>
-              <s-option value="pending">{t("pendingCoverage.pendingTab")} ({filterCounts.pending})</s-option>
+              <s-option value="pending">{t("pendingCoverage.pendingTab")} ({coverage.uncheckedProductCount})</s-option>
               <s-option value="current">{t("catalogUx.current")} ({filterCounts.current})</s-option>
             </s-select>
             <s-select label={t("catalogUx.findingStatus")} value={findingFilter}
-              onChange={(event: any) => { setFindingFilter(event.currentTarget.value); setVisibleCount(50); }}>
+              onChange={(event: any) => { setFindingFilter(event.currentTarget.value); }}>
               <s-option value="all">{t("alerts.table.tabs.all")}</s-option>
               <s-option value="active">{t("status.needsReview")}</s-option>
               <s-option value="waiting">{t("workspace.waiting")}</s-option>
@@ -920,7 +1028,7 @@ function ManualCheckContent({ data }: { data: Awaited<ReturnType<typeof loadManu
           {filteredProducts.length === 0 ? (
             <div className="admin-empty-state">
               {tabFilter === "pending" && coverage.uncheckedProductCount === 0 ? (
-                <s-button onClick={() => setTabFilter("all")}>{t("pendingCoverage.viewAll")}</s-button>
+                <s-button onClick={() => { setTabFilter("all"); navigateWithParams({ coverage: null, after: null, before: null, page: 1 }); }}>{t("pendingCoverage.viewAll")}</s-button>
               ) : (
                 <>
                   <h3>{t("manualCheck.catalogue.emptyHeading")}</h3>
@@ -931,6 +1039,23 @@ function ManualCheckContent({ data }: { data: Awaited<ReturnType<typeof loadManu
           ) : (
             <s-table
               accessibilityLabel={t("manualCheck.catalogue.accessibilityLabel")}
+              paginate={pagination.hasPreviousPage || pagination.hasNextPage}
+              hasPreviousPage={pagination.hasPreviousPage}
+              hasNextPage={pagination.hasNextPage}
+              onpreviouspage={() => {
+                if (pagination.mode === "offset") {
+                  navigateWithParams({ coverage: "remaining", page: Math.max(1, pagination.page - 1) });
+                } else if (pagination.startCursor) {
+                  navigateWithParams({ before: pagination.startCursor, after: null });
+                }
+              }}
+              onnextpage={() => {
+                if (pagination.mode === "offset") {
+                  navigateWithParams({ coverage: "remaining", page: pagination.page + 1 });
+                } else if (pagination.endCursor) {
+                  navigateWithParams({ after: pagination.endCursor, before: null });
+                }
+              }}
             >
               <s-table-header-row>
                 <s-table-header listSlot="primary">
@@ -939,13 +1064,13 @@ function ManualCheckContent({ data }: { data: Awaited<ReturnType<typeof loadManu
                 <s-table-header listSlot="inline">
                   {t("catalogUx.checkStatus")}
                 </s-table-header>
-                <s-table-header>{t("catalogUx.findingStatus")}</s-table-header>
+                <s-table-header listSlot="labeled">{t("catalogUx.findingStatus")}</s-table-header>
                 <s-table-header>
                   {t("manualCheck.catalogue.columns.action")}
                 </s-table-header>
               </s-table-header-row>
               <s-table-body>
-                {filteredProducts.slice(0, visibleCount).map((product: any) => {
+                {filteredProducts.map((product: any) => {
                   const productId = product.id.replace(
                     "gid://shopify/Product/",
                     "",
@@ -1071,8 +1196,7 @@ function ManualCheckContent({ data }: { data: Awaited<ReturnType<typeof loadManu
                                 "manualCheck.catalogue.actions.viewForProduct",
                                 { title: product.title },
                               )}
-                              commandFor={`manual-alert-${existingAlert.id}`}
-                              command="--show"
+                              href={`/app/alerts?view=all&open=${encodeURIComponent(existingAlert.id)}&from=catalog`}
                             >
                               {t("actions.view")}
                             </s-button>
@@ -1115,35 +1239,12 @@ function ManualCheckContent({ data }: { data: Awaited<ReturnType<typeof loadManu
         </AdminCard>
       </div>
 
-      {filteredProducts.length > visibleCount && (
-        <s-button onClick={() => setVisibleCount((count) => count + 50)}>
-          {t("workspace.showMore")}
-        </s-button>
-      )}
       <p className="admin-helper" role="status">
         {t("workspace.coverageScope", {
-          visible: Math.min(filteredProducts.length, visibleCount),
+          visible: filteredProducts.length,
           total: totalProducts,
         })}
       </p>
-      {/* Modals for existing alerts - same as Alerts page */}
-      {existingAlerts.map((alert) => (
-        <AlertDetailModal
-          key={alert.id}
-          modalId={`manual-alert-${alert.id}`}
-          alert={alert}
-          onResolve={(id, resolutionType, notes) =>
-            handleResolve(id, resolutionType, notes)
-          }
-          onDismiss={(id, resolutionType, notes) =>
-            handleDismiss(id, resolutionType, notes)
-          }
-          onReactivate={(id) => handleReactivate(id)}
-          waitForDecisionSave
-          decisionSaveFailed={submittedDecisionId === alert.id && resolveFetcher.state === "idle" && resolveFetcher.data?.success === false}
-          isLoading={resolveFetcher.state !== "idle"}
-        />
-      ))}
 
       {/* New check result modal - for freshly checked products */}
       {checkResult &&

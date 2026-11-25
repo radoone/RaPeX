@@ -19,7 +19,7 @@ import db from "../merchant-db.server";
 import { withOfficialReferences } from "../services/review-evidence.server";
 import { isWaitingForSupplier } from "../services/review-evidence";
 import { compareReviewPriority } from "../services/review-priority";
-import { normalizeInterfaceLanguage } from "../services/interface-language";
+import { interfaceLanguageFromCookie, normalizeInterfaceLanguage } from "../services/interface-language";
 import { AlertTable, AlertDetailModal } from "../components";
 
 // Historic findings store either the normalized severity or the original Safety Gate label.
@@ -35,7 +35,9 @@ export const headers = boundary.headers;
 
 export const loader = async ({ request, url }: LoaderFunctionArgs) => {
   const { session, admin } = await authenticate.admin(request);
-  const shopifyLocale = normalizeInterfaceLanguage(url.searchParams.get("locale"));
+  const shopifyLocale =
+    interfaceLanguageFromCookie(request.headers.get("Cookie")) ||
+    normalizeInterfaceLanguage(url.searchParams.get("locale"));
   return {
     data: loadAlertsPage(session.shop, admin, url),
     shopifyLocale,
@@ -586,9 +588,12 @@ function AlertsContent({ data }: { data: Awaited<ReturnType<typeof loadAlertsPag
             : null
     );
     const destinationLabel = destination && t(destination.label);
+    const fromCatalog = locationParams.get("from") === "catalog";
+    const backHref = fromCatalog ? "/app/manual-check" : queueHref;
+    const backLabel = fromCatalog ? t("nav.catalogCoverage") : t("redesign.potentialMatches");
     return (
       <s-page inlineSize="large" heading={t("redesign.matchReview")}>
-        <Link to={queueHref} className="review-queue-link">{t("redesign.potentialMatches")}</Link>
+        <s-link slot="breadcrumb-actions" href={backHref}>{backLabel}</s-link>
         {decisionSaved && (
           <div id="decision-saved" tabIndex={-1} role="status">
             <s-banner tone="success" heading={t("analysis.decisionRecorded")}>

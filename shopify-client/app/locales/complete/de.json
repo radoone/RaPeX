@@ -1431,7 +1431,15 @@
     "waiting": "Warten auf Lieferanten",
     "when": "Aufgezeichnet am",
     "who": "Aufgezeichnet von",
-    "whyMatch": "Warum dies übereinstimmen könnte"
+    "whyMatch": "Warum dies übereinstimmen könnte",
+    "viewRemainingProducts_one": "{{count}} Produkt anzeigen, das eine Überprüfung benötigt",
+    "viewRemainingProducts_other": "{{count}} Produkte anzeigen, die eine Überprüfung benötigen",
+    "coverageIncomplete_one": "{{count}} Produkt benötigt eine aktuelle Prüfung",
+    "coverageIncomplete_other": "{{count}} Produkte benötigen eine aktuelle Prüfung",
+    "oldest_one": "Seit {{count}} Tag offen",
+    "oldest_other": "Seit {{count}} Tagen offen",
+    "eventCount_one": "{{count}} Entscheidungsereignis",
+    "eventCount_other": "{{count}} Entscheidungsereignisse"
   },
   "responseGuide": {
     "title": "Anleitung: Auf eine bestätigte Übereinstimmung reagieren",

@@ -1431,7 +1431,15 @@
     "waiting": "Αναμονή για προμηθευτή",
     "when": "Καταγράφηκε στις",
     "who": "Καταγράφηκε από",
-    "whyMatch": "Γιατί μπορεί να ταιριάζει"
+    "whyMatch": "Γιατί μπορεί να ταιριάζει",
+    "viewRemainingProducts_one": "Προβολή {{count}} προϊόντος που χρειάζεται έλεγχο",
+    "viewRemainingProducts_other": "Προβολή {{count}} προϊόντων που χρειάζονται έλεγχο",
+    "coverageIncomplete_one": "{{count}} προϊόν χρειάζεται τρέχοντα έλεγχο",
+    "coverageIncomplete_other": "{{count}} προϊόντα χρειάζονται τρέχοντα έλεγχο",
+    "oldest_one": "Ανοιχτό για {{count}} ημέρα",
+    "oldest_other": "Ανοιχτό για {{count}} ημέρες",
+    "eventCount_one": "{{count}} συμβάν απόφασης",
+    "eventCount_other": "{{count}} συμβάντα απόφασης"
   },
   "responseGuide": {
     "title": "Οδηγός: ανταπόκριση σε επιβεβαιωμένη αντιστοιχία",

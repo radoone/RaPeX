@@ -21,12 +21,11 @@ import { authenticate } from "../shopify.server";
 import db, { safetySettingFromSnapshot } from "../merchant-db.server";
 import { LanguageSwitcher } from "../components";
 import { MonitoringStatus } from "../components/MonitoringStatus";
-import { exclusionPreview } from "../services/exclusion-preview";
 import { getBillingStatus, invalidateBillingStatusCache } from "../services/billing.server";
 import { cancelSubscription } from "../services/cancel-subscription.server";
 import { SHOPIFY_BILLING_MODE } from "../shopify.server";
 import { EU_LANGUAGES } from "../locales/languages";
-import { normalizeInterfaceLanguage, selectInterfaceLanguage } from "../services/interface-language";
+import { interfaceLanguageFromCookie, normalizeInterfaceLanguage, selectInterfaceLanguage } from "../services/interface-language";
 import { notificationLanguageSelection } from "../services/notification-language";
 import { firestore } from "../firestore.server";
 import { getRecentMonitoringRuns } from "../services/monitoring-runs.server";
@@ -39,7 +38,9 @@ import { getShopifyNotificationEmail, notificationEmailPattern } from "../servic
 
 export const loader = async ({ request, url }: LoaderFunctionArgs) => {
   const context = await authenticate.admin(request);
-  const shopifyLocale = normalizeInterfaceLanguage(url.searchParams.get("locale"));
+  const shopifyLocale =
+    interfaceLanguageFromCookie(request.headers.get("Cookie")) ||
+    normalizeInterfaceLanguage(url.searchParams.get("locale"));
   return {
     data: loadSettingsPage(context, url),
     shopifyLocale,
@@ -129,31 +130,7 @@ async function loadSettingsPage(
     settings = await db.safetySetting.findUnique({ where: { shop: session.shop } }) ?? initialized;
   }
 
-  const catalog: Array<{
-    id: string;
-    title: string;
-    vendor: string;
-    productType: string;
-  }> = [];
-  let cursor: string | null = null;
-  do {
-    const response: any = await admin.graphql(
-      `#graphql
-      query exclusionPreview($after: String) { products(first: 250, after: $after) { nodes { id title vendor productType } pageInfo { hasNextPage endCursor } } }
-    `,
-      { variables: { after: cursor } },
-    );
-    const payload = await response.json();
-    if (payload.errors?.length || !payload.data?.products)
-      throw new Error("Could not load exclusion preview");
-    catalog.push(...payload.data.products.nodes);
-    const pageInfo = payload.data.products.pageInfo;
-    if (pageInfo.hasNextPage && !pageInfo.endCursor)
-      throw new Error("Shopify catalog cursor is missing");
-    cursor = pageInfo.hasNextPage ? pageInfo.endCursor : null;
-  } while (cursor);
   return {
-    catalog,
     saved: url.searchParams.get("saved") === "1",
     settings: settings || {
       similarityThreshold: fallbackDefault,
@@ -311,17 +288,20 @@ export default function Settings() {
   );
 }
 
-function SettingsContent({ data }: { data: Awaited<ReturnType<typeof loadSettingsPage>> }) {
-  const { settings, billingStatus, catalog, saved, lastMonitoringAt, automaticMonitoring, initialAuditCompleted, nextCheck, emailDelivery, lastVerifiedPlan, supportsCancellation } = data;
+export function SettingsContent({ data }: { data: Awaited<ReturnType<typeof loadSettingsPage>> }) {
+  const { settings, billingStatus, saved, lastMonitoringAt, automaticMonitoring, initialAuditCompleted, nextCheck, emailDelivery, lastVerifiedPlan, supportsCancellation } = data;
   const actionData = useActionData<typeof action>();
   const cancellation = useFetcher<typeof action>();
+  const previewFetcher = useFetcher<{ total: number; excludedCount: number; sample: Array<{ id: string; title: string }> }>();
   const navigation = useNavigation();
   const location = useLocation();
   const shopify = useAppBridge();
   const formRef = useRef<HTMLFormElement>(null);
   const savingRef = useRef(false);
+  const shownSavedToastKey = useRef<string | null>(null);
   const revalidator = useRevalidator();
   const { t, i18n } = useTranslation();
+  const [exclusionsOpen, setExclusionsOpen] = useState(false);
   const initial = {
     threshold: String(settings.similarityThreshold ?? 70),
     priority: settings.autoDraftHighRisk ?? false,
@@ -376,11 +356,28 @@ function SettingsContent({ data }: { data: Awaited<ReturnType<typeof loadSetting
     window.addEventListener("beforeunload", preventUnsavedReload);
     return () => window.removeEventListener("beforeunload", preventUnsavedReload);
   }, [dirty]);
+  useEffect(() => {
+    if (!saved || dirty) return;
+    if (shownSavedToastKey.current === location.key) return;
+    shownSavedToastKey.current = location.key;
+    shopify.toast?.show?.(t("workspace.saved"));
+  }, [saved, dirty, location.key, shopify, t]);
+  const loadPreview = previewFetcher.load;
+  useEffect(() => {
+    if (!exclusionsOpen) return;
+    const timer = window.setTimeout(() => {
+      const params = new URLSearchParams({
+        vendors: values.vendors,
+        types: values.types,
+      });
+      loadPreview(`/api/exclusion-preview?${params}`);
+    }, 200);
+    return () => window.clearTimeout(timer);
+  }, [exclusionsOpen, values.vendors, values.types, loadPreview]);
   const change = <K extends keyof typeof values>(
     key: K,
     value: (typeof values)[K],
   ) => setValues((current) => ({ ...current, [key]: value }));
-  const excluded = exclusionPreview(catalog, values.vendors, values.types);
   const mode =
     Number(values.threshold) < 60
       ? "broad"
@@ -455,17 +452,42 @@ function SettingsContent({ data }: { data: Awaited<ReturnType<typeof loadSetting
                   {cancelResult === "accepted" ? (
                     <p className="admin-helper" role="status">{t("settingsOverview.cancellationPending")}</p>
                   ) : (
-                    <details>
-                      <summary>{t("settingsOverview.stopRenewal")}</summary>
-                      <p className="admin-helper">{t("settingsOverview.stopRenewalHelp", { date: planEnd })}</p>
-                      <cancellation.Form method="post">
-                        <input type="hidden" name="intent" value="stop-renewal" />
-                        <s-button type="submit" loading={cancellation.state !== "idle"} disabled={cancellation.state !== "idle"}>
+                    <>
+                      <div>
+                        <s-button
+                          variant="tertiary"
+                          tone="critical"
+                          commandFor="stop-renewal-modal"
+                          command="--show"
+                        >
                           {t("settingsOverview.stopRenewal")}
                         </s-button>
-                      </cancellation.Form>
+                      </div>
                       {cancelResult && <p role="alert" className="admin-helper">{t(`settingsOverview.cancelError.${cancelResult}`)}</p>}
-                    </details>
+                      <s-modal id="stop-renewal-modal" heading={t("settingsOverview.stopRenewal")}>
+                        <s-text>{t("settingsOverview.stopRenewalHelp", { date: planEnd })}</s-text>
+                        <s-button
+                          slot="primary-action"
+                          variant="primary"
+                          tone="critical"
+                          loading={cancellation.state !== "idle" || undefined}
+                          disabled={cancellation.state !== "idle" || undefined}
+                          commandFor="stop-renewal-modal"
+                          command="--hide"
+                          onClick={() => cancellation.submit({ intent: "stop-renewal" }, { method: "post" })}
+                        >
+                          {t("settingsOverview.stopRenewal")}
+                        </s-button>
+                        <s-button
+                          slot="secondary-actions"
+                          variant="secondary"
+                          commandFor="stop-renewal-modal"
+                          command="--hide"
+                        >
+                          {t("common.cancel")}
+                        </s-button>
+                      </s-modal>
+                    </>
                   )}
                 </>
               )}
@@ -513,7 +535,6 @@ function SettingsContent({ data }: { data: Awaited<ReturnType<typeof loadSetting
             </s-button>
           )}
         </AdminCard>
-        {saved && !dirty && <p role="status">{t("workspace.saved")}</p>}
         {actionData && "error" in actionData && (
           <s-banner
             tone="critical"
@@ -623,10 +644,20 @@ function SettingsContent({ data }: { data: Awaited<ReturnType<typeof loadSetting
           <s-section heading={t("redesign.matching")}>
               <div className="admin-stack">
                 <p className="admin-helper">{t("workspace.balancedHelp")}</p>
-                <div
-                  className="monitoring-mode-grid"
-                  role="group"
-                  aria-label={t("settings.threshold.title")}
+                <s-choice-list
+                  label={t("settings.threshold.title")}
+                  name="monitoringModeChoice"
+                  onChange={(event: any) => {
+                    const chosen = event.currentTarget.values?.[0];
+                    const thresholds: Record<string, string> = {
+                      broad: "50",
+                      balanced: "70",
+                      strict: "85",
+                    };
+                    if (chosen && thresholds[chosen]) {
+                      change("threshold", thresholds[chosen]);
+                    }
+                  }}
                 >
                   {(
                     [
@@ -634,31 +665,18 @@ function SettingsContent({ data }: { data: Awaited<ReturnType<typeof loadSetting
                       ["balanced", "70"],
                       ["strict", "85"],
                     ] as const
-                  ).map(([name, number]) => (
-                    <button
+                  ).map(([name]) => (
+                    <s-choice
                       key={name}
-                      type="button"
-                      aria-pressed={mode === name}
-                      className={`monitoring-mode-option ${mode === name ? "monitoring-mode-option--active" : ""}`}
-                      onClick={() => change("threshold", number)}
+                      value={name}
+                      selected={mode === name}
                     >
-                      <strong>
-                        {mode === name ? "✓ " : ""}
-                        {t(`settingsAdmin.mode.${name}`)}
-                      </strong>
-                      <span>{t(`workspace.${name}Help`)}</span>
-                    </button>
+                      {t(`settingsAdmin.mode.${name}`)}
+                      {name === "balanced" ? ` (${t("workspace.recommended")})` : ""}
+                      <span slot="details">{t(`workspace.${name}Help`)}</span>
+                    </s-choice>
                   ))}
-                </div>
-                <s-number-field
-                  label={t("settings.threshold.label")}
-                  min="0"
-                  max="100"
-                  value={values.threshold}
-                  onChange={(event: any) =>
-                    change("threshold", event.currentTarget.value)
-                  }
-                />
+                </s-choice-list>
                 <s-checkbox
                   label={t("settingsAdmin.automation.autoDraftTitle")}
                   checked={values.priority}
@@ -669,10 +687,22 @@ function SettingsContent({ data }: { data: Awaited<ReturnType<typeof loadSetting
                 <p className="admin-helper">
                   {t("settingsAdmin.automation.autoDraftDescription")}
                 </p>
-                <details className="advanced-settings-disclosure">
-                  <summary>{t("settingsAdmin.exclusions.title")}</summary>
+                <details
+                  className="advanced-settings-disclosure"
+                  onToggle={(event) => setExclusionsOpen(event.currentTarget.open)}
+                >
+                  <summary>{t("workspace.settingsAdvanced")}</summary>
                   <s-stack gap="base">
-                    <p>{t("workspace.excludeHelp")}</p>
+                    <s-number-field
+                      label={t("settings.threshold.label")}
+                      min="45"
+                      max="95"
+                      value={values.threshold}
+                      onChange={(event: any) =>
+                        change("threshold", event.currentTarget.value)
+                      }
+                    />
+                    <p className="admin-helper">{t("workspace.excludeHelp")}</p>
                     <s-text-field
                       label={t("settingsAdmin.exclusions.vendorsTitle")}
                       value={values.vendors}
@@ -689,22 +719,40 @@ function SettingsContent({ data }: { data: Awaited<ReturnType<typeof loadSetting
                       }
                       helpText={t("settingsAdmin.exclusions.typesDescription")}
                     />
-                    <p role="status">
-                      {t("workspace.excluded", {
-                        count: excluded.length,
-                        total: catalog.length,
-                      })}
-                    </p>
-                    {excluded.length > 0 && (
-                      <ul>
-                        {excluded.slice(0, 10).map((product) => (
-                          <li key={product.id}>{product.title}</li>
-                        ))}
-                      </ul>
+                    {previewFetcher.state !== "idle" && !previewFetcher.data && (
+                      <p role="status" className="admin-helper">{t("common.loading")}</p>
+                    )}
+                    {previewFetcher.data && (
+                      <>
+                        <p role="status" className="admin-helper">
+                          {t("workspace.excluded", {
+                            count: previewFetcher.data.excludedCount,
+                            total: previewFetcher.data.total,
+                          })}
+                        </p>
+                        {previewFetcher.data.sample.length > 0 && (
+                          <ul>
+                            {previewFetcher.data.sample.map((product) => (
+                              <li key={product.id}>{product.title}</li>
+                            ))}
+                          </ul>
+                        )}
+                      </>
                     )}
                   </s-stack>
                 </details>
               </div>
+          </s-section>
+          <s-section heading={t("settingsUx.supportTitle")}>
+            <s-stack gap="small">
+              <p className="admin-helper">{t("settingsUx.supportBody")}</p>
+              <s-stack direction="inline" gap="base" wrap>
+                <s-link href="mailto:info@zerorecall.online">info@zerorecall.online</s-link>
+                <s-link href="https://ec.europa.eu/safety-gate-alerts/screen/home" target="_blank">
+                  {t("viewExternalSource")}
+                </s-link>
+              </s-stack>
+            </s-stack>
           </s-section>
         </Form>
       </div>

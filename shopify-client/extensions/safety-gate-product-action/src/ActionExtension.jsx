@@ -49,9 +49,13 @@ function Extension() {
       setPricingUrl(null);
       setExcluded(false);
 
+      const token = await shopify.auth?.idToken?.();
       const response = await fetch("/api/product-safety-check", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify({ productId }),
       });
       const payload = await response.json();
@@ -78,18 +82,20 @@ function Extension() {
   }, [productId, running, notifyUpdate]);
 
   const hasResult = Boolean(result);
-  const reviewUrl = result?.reviewUrl;
+  const alertId = result?.status?.alertId || result?.alertId;
+  const reviewHref = alertId ? `app:/alerts?open=${encodeURIComponent(alertId)}` : result?.reviewUrl;
+  const pricingHref = pricingUrl ? "shopify:admin/charges/safety-gate-monitor-eu/pricing_plans" : null;
 
   return (
     <s-admin-action heading={translate("name")} loading={running}>
       {hasResult ? (
-        reviewUrl ? (
+        reviewHref ? (
           <>
             <s-button
               slot="primary-action"
               variant="primary"
-              href={reviewUrl}
-              target="_blank"
+              href={reviewHref}
+              target={alertId ? undefined : "_blank"}
             >
               {translate("openReview")}
             </s-button>
@@ -112,9 +118,9 @@ function Extension() {
         )
       ) : excluded ? (
         <s-button slot="primary-action" variant="primary" onClick={close}>{translate("close")}</s-button>
-      ) : pricingUrl ? (
+      ) : pricingHref ? (
         <>
-          <s-button slot="primary-action" variant="primary" href={pricingUrl} target="_blank">
+          <s-button slot="primary-action" variant="primary" href={pricingHref}>
             {translate("viewPlans")}
           </s-button>
           <s-button slot="secondary-actions" onClick={close}>{translate("close")}</s-button>

@@ -1431,7 +1431,19 @@
     "waiting": "En attente du fournisseur",
     "when": "Enregistré le",
     "who": "Enregistré par",
-    "whyMatch": "Pourquoi cela peut correspondre"
+    "whyMatch": "Pourquoi cela peut correspondre",
+    "viewRemainingProducts_one": "Voir {{count}} produit nécessitant une vérification",
+    "viewRemainingProducts_many": "Voir {{count}} produits nécessitant une vérification",
+    "viewRemainingProducts_other": "Voir {{count}} produits nécessitant une vérification",
+    "coverageIncomplete_one": "{{count}} produit nécessite une vérification actuelle",
+    "coverageIncomplete_many": "{{count}} produits nécessitent une vérification actuelle",
+    "coverageIncomplete_other": "{{count}} produits nécessitent une vérification actuelle",
+    "oldest_one": "Ouvert depuis {{count}} jour",
+    "oldest_many": "Ouvert depuis {{count}} jours",
+    "oldest_other": "Ouvert depuis {{count}} jours",
+    "eventCount_one": "{{count}} événement de décision",
+    "eventCount_many": "{{count}} événements de décision",
+    "eventCount_other": "{{count}} événements de décision"
   },
   "responseGuide": {
     "title": "Guide : répondre à une correspondance confirmée",

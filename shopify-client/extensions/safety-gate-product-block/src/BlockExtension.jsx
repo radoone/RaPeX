@@ -23,8 +23,10 @@ function Extension() {
     try {
       if (!productId) return;
       setError("");
+      const token = await shopify.auth?.idToken?.();
       const response = await fetch(
         `/api/product-safety-status?productId=${encodeURIComponent(productId)}`,
+        token ? { headers: { Authorization: `Bearer ${token}` } } : undefined,
       );
       const payload = await response.json();
 
@@ -84,8 +86,14 @@ function Extension() {
     };
   }, [productId, loadStatus]);
 
+  const reviewHref = !error && status?.alertId
+    ? `app:/alerts?open=${encodeURIComponent(status.alertId)}`
+    : !error && status?.reviewUrl
+      ? status.reviewUrl
+      : null;
+
   return (
-    <s-admin-block title="Safety Gate">
+    <s-admin-block title={translate("name")}>
       <s-box padding="base">
         <s-stack direction="block" gap="base">
           {error ? (
@@ -97,8 +105,12 @@ function Extension() {
             </>
           ) : <s-text>{translate("loading")}</s-text>}
           <s-stack direction="inline" gap="base">
-            {!error && status?.reviewUrl ? (
-              <s-button variant="primary" href={status.reviewUrl} target="_blank">
+            {reviewHref ? (
+              <s-button
+                variant="primary"
+                href={reviewHref}
+                target={status?.alertId ? undefined : "_blank"}
+              >
                 {translate("openReview")}
               </s-button>
             ) : null}
@@ -113,13 +125,11 @@ function Extension() {
 }
 
 function StatusBadge({ status }) {
-  const tone = status.state === "unsafe"
-    ? "warning"
-    : status.state === "resolved"
-      ? "success"
-      : status.state === "unchecked"
-        ? "info"
-        : "warning";
+  const tone = status.state === "resolved"
+    ? "success"
+    : status.state === "safe" || status.state === "unchecked"
+      ? "info"
+      : "warning";
 
   return <s-badge tone={tone}>{labelForState(status.state)}</s-badge>;
 }

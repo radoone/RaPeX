@@ -1431,7 +1431,19 @@
     "waiting": "Esperando al proveedor",
     "when": "Registrado en",
     "who": "Registrado por",
-    "whyMatch": "Por qué esto podría coincidir"
+    "whyMatch": "Por qué esto podría coincidir",
+    "viewRemainingProducts_one": "Ver {{count}} producto que necesita una verificación",
+    "viewRemainingProducts_many": "Ver {{count}} productos que necesitan una verificación",
+    "viewRemainingProducts_other": "Ver {{count}} productos que necesitan una verificación",
+    "coverageIncomplete_one": "{{count}} producto necesita una verificación actual",
+    "coverageIncomplete_many": "{{count}} productos necesitan una verificación actual",
+    "coverageIncomplete_other": "{{count}} productos necesitan una verificación actual",
+    "oldest_one": "Abierto por {{count}} día",
+    "oldest_many": "Abierto por {{count}} días",
+    "oldest_other": "Abierto por {{count}} días",
+    "eventCount_one": "{{count}} evento de decisión",
+    "eventCount_many": "{{count}} eventos de decisión",
+    "eventCount_other": "{{count}} eventos de decisión"
   },
   "responseGuide": {
     "title": "Guía: responder a una coincidencia confirmada",

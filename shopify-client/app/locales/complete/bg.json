@@ -1431,7 +1431,15 @@
     "waiting": "В очакване на доставчик",
     "when": "Записано на",
     "who": "Записано от",
-    "whyMatch": "Защо това може да съвпада"
+    "whyMatch": "Защо това може да съвпада",
+    "viewRemainingProducts_one": "Преглед на {{count}} продукт, нуждаещ се от проверка",
+    "viewRemainingProducts_other": "Преглед на {{count}} продукта, нуждаещи се от проверка",
+    "coverageIncomplete_one": "{{count}} продукт се нуждае от текуща проверка",
+    "coverageIncomplete_other": "{{count}} продукта се нуждаят от текуща проверка",
+    "oldest_one": "Отворено от {{count}} ден",
+    "oldest_other": "Отворено от {{count}} дни",
+    "eventCount_one": "{{count}} събитие за решение",
+    "eventCount_other": "{{count}} събития за решение"
   },
   "responseGuide": {
     "title": "Наръчник: отговор при потвърдено съвпадение",

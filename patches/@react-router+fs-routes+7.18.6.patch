@@ -1,8 +1,7 @@
 diff --git a/node_modules/@react-router/fs-routes/dist/index.js b/node_modules/@react-router/fs-routes/dist/index.js
-index de4b47b..2dd9b79 100644
 --- a/node_modules/@react-router/fs-routes/dist/index.js
 +++ b/node_modules/@react-router/fs-routes/dist/index.js
-@@ -133,7 +133,10 @@ var PrefixLookupTrie = class {
+@@ -133,7 +133,10 @@
    }
  };
  function flatRoutes(appDirectory, ignoredFilePatterns = [], prefix = "routes") {

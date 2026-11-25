@@ -12,26 +12,29 @@
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
     "backfill:history": "node lib/scripts/backfill-history.js",
-    "scan": "tsx src/scripts/trigger-store-scan.ts"
+    "scan": "tsx src/scripts/trigger-store-scan.ts",
+    "snapshot:build": "tsx src/scripts/build-vector-snapshot.ts"
   },
   "main": "lib/index.js",
   "type": "module",
   "dependencies": {
-    "@genkit-ai/firebase": "1.43.0",
-    "@genkit-ai/google-genai": "1.43.0",
-    "axios": "1.21.0",
-    "firebase-admin": "14.5.0",
+    "@genkit-ai/firebase": "1.44.0",
+    "@genkit-ai/google-genai": "1.44.0",
+    "axios": "1.21.1",
+    "firebase-admin": "14.5.1",
     "firebase-functions": "7.4.0",
-    "genkit": "1.43.0"
+    "genkit": "1.44.0"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "8.72.1",
-    "@typescript-eslint/parser": "8.72.1",
-    "eslint": "10.14.0",
+    "@typescript-eslint/eslint-plugin": "8.73.0",
+    "@typescript-eslint/parser": "8.73.0",
+    "eslint": "10.15.0",
     "typescript": "6.0.3",
     "@eslint/js": "10.0.1",
     "@types/node": "22.20.5",
-    "tsx": "4.23.15"
+    "tsx": "4.23.15",
+    "glob": "14.0.6",
+    "follow-redirects": "1.16.3"
   },
   "private": true,
   "engines": {
@@ -46,8 +49,8 @@
   "overrides": {
     "@opentelemetry/propagator-jaeger": "2.12.0",
     "uuid": "11.1.1",
-    "glob": "14.0.2",
-    "minimatch@>=9.0.0": "11.0.1",
-    "follow-redirects": "1.16.2"
+    "glob": "14.0.6",
+    "minimatch@>=9.0.0": "11.0.9",
+    "follow-redirects": "1.16.3"
   }
 }

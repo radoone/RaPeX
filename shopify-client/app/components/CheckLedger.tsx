@@ -66,11 +66,11 @@ export function CheckLedger({ ledger }: { ledger: Awaited<ReturnType<typeof chec
           <s-table-header-row>
             <s-table-header listSlot="primary">{t("checkLedger.product")}</s-table-header>
             <s-table-header listSlot="inline">{t("checkLedger.state")}</s-table-header>
-            <s-table-header>{t("checkLedger.checkedAt")}</s-table-header>
-            <s-table-header>{t("checkLedger.version")}</s-table-header>
-            <s-table-header>{t("checkLedger.checkedVersion")}</s-table-header>
-            <s-table-header>{t("checkLedger.result")}</s-table-header>
-            <s-table-header>{t("checkLedger.evidence")}</s-table-header>
+            <s-table-header listSlot="labeled">{t("checkLedger.checkedAt")}</s-table-header>
+            <s-table-header listSlot="labeled">{t("checkLedger.version")}</s-table-header>
+            <s-table-header listSlot="labeled">{t("checkLedger.checkedVersion")}</s-table-header>
+            <s-table-header listSlot="labeled">{t("checkLedger.result")}</s-table-header>
+            <s-table-header listSlot="labeled">{t("checkLedger.evidence")}</s-table-header>
           </s-table-header-row>
           <s-table-body>{ledger.records.map(record => <s-table-row key={record.id}>
             <s-table-cell>{record.title}<p className="admin-helper">{record.id}</p></s-table-cell>

@@ -1,8 +1,7 @@
 diff --git a/node_modules/@react-router/dev/dist/cli/index.js b/node_modules/@react-router/dev/dist/cli/index.js
-index fde70f9..373f0f9 100644
 --- a/node_modules/@react-router/dev/dist/cli/index.js
 +++ b/node_modules/@react-router/dev/dist/cli/index.js
-@@ -160,7 +160,7 @@ async function createContext({
+@@ -160,7 +160,7 @@
        postcss: {}
      },
      configFile: false,
@@ -12,10 +11,9 @@ index fde70f9..373f0f9 100644
    });
    await devServer.pluginContainer.buildStart({});
 diff --git a/node_modules/@react-router/dev/dist/vite.js b/node_modules/@react-router/dev/dist/vite.js
-index e19423e..cd2d79b 100644
 --- a/node_modules/@react-router/dev/dist/vite.js
 +++ b/node_modules/@react-router/dev/dist/vite.js
-@@ -173,7 +173,7 @@ async function createContext({
+@@ -173,7 +173,7 @@
        postcss: {}
      },
      configFile: false,
@@ -24,7 +22,7 @@ index e19423e..cd2d79b 100644
      plugins: []
    });
    await devServer.pluginContainer.buildStart({});
-@@ -3773,7 +3773,7 @@ var reactRouterVitePlugin = () => {
+@@ -3820,7 +3820,7 @@
              hmr: false
            },
            configFile: false,

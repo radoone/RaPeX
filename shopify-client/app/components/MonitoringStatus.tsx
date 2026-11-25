@@ -5,7 +5,7 @@ import type { monitoringState } from "../services/monitoring-state";
 
 export function NextMonitoringCheck({ value }: { value: string }) {
   const { t, i18n } = useTranslation();
-  const locale = i18n.language === "en" ? "en-GB" : i18n.language;
+  const locale = i18n.resolvedLanguage || i18n.language || "en";
   return (
     <>
       {t("dashboard.admin.nextAutomaticCheck")} <strong>

@@ -1431,7 +1431,15 @@
     "waiting": "Odotetaan toimittajaa",
     "when": "Tallennettu",
     "who": "Tallentanut",
-    "whyMatch": "Miksi tämä voi vastata"
+    "whyMatch": "Miksi tämä voi vastata",
+    "viewRemainingProducts_one": "Näytä {{count}} tarkistusta tarvitseva tuote",
+    "viewRemainingProducts_other": "Näytä {{count}} tarkistusta tarvitsevaa tuotetta",
+    "coverageIncomplete_one": "{{count}} tuote tarvitsee ajantasaisen tarkistuksen",
+    "coverageIncomplete_other": "{{count}} tuotetta tarvitsee ajantasaisen tarkistuksen",
+    "oldest_one": "Avoinna {{count}} päivä",
+    "oldest_other": "Avoinna {{count}} päivää",
+    "eventCount_one": "{{count}} päätöstapahtuma",
+    "eventCount_other": "{{count}} päätöstapahtumaa"
   },
   "responseGuide": {
     "title": "Ohje: vastaa vahvistettuun osumaan",

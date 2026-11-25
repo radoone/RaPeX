@@ -1431,7 +1431,15 @@
     "waiting": "Ootan tarnijat",
     "when": "Salvestatud",
     "who": "Salvestas",
-    "whyMatch": "Miks see võib sobida"
+    "whyMatch": "Miks see võib sobida",
+    "viewRemainingProducts_one": "Vaata {{count}} toodet, mis vajab kontrolli",
+    "viewRemainingProducts_other": "Vaata {{count}} toodet, mis vajavad kontrolli",
+    "coverageIncomplete_one": "{{count}} toode vajab praegust kontrolli",
+    "coverageIncomplete_other": "{{count}} toodet vajavad praegust kontrolli",
+    "oldest_one": "Avatud {{count}} päev",
+    "oldest_other": "Avatud {{count}} päeva",
+    "eventCount_one": "{{count}} otsuse sündmus",
+    "eventCount_other": "{{count}} otsuse sündmust"
   },
   "responseGuide": {
     "title": "Juhend: reageeri kinnitatud vastavusele",

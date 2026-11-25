@@ -3,12 +3,12 @@ import { NavMenu, useAppBridge } from "@shopify/app-bridge-react";
 import { useTranslation } from "react-i18next";
 import { Suspense, useEffect, useState } from "react";
 import { boundary } from "@shopify/shopify-app-react-router/server";
-import { authenticate, ensureShopifyWebhooksRegistered } from "../shopify.server";
+import { authenticate } from "../shopify.server";
 import { firestore } from "../firestore.server";
 import db from "../merchant-db.server";
 import { getBillingStatus } from "../services/billing.server";
 import { isWaitingForSupplier } from "../services/review-evidence";
-import { normalizeInterfaceLanguage, preferredInterfaceLanguage } from "../services/interface-language";
+import { interfaceLanguageFromCookie, normalizeInterfaceLanguage, preferredInterfaceLanguage } from "../services/interface-language";
 import { notificationLanguageSelection } from "../services/notification-language";
 
 export const headers = (headersArgs: any) => {
@@ -17,13 +17,15 @@ export const headers = (headersArgs: any) => {
 
 export const loader = async ({ request }: { request: Request }) => {
   const { billing, session, admin } = await authenticate.admin(request);
-  const shopifyLocale = new URL(request.url).searchParams.get("locale") || undefined;
+  const shopifyLocale =
+    interfaceLanguageFromCookie(request.headers.get("Cookie")) ||
+    new URL(request.url).searchParams.get("locale") ||
+    undefined;
   const billingStatus = getBillingStatus(billing, session.shop, admin);
   const activeAlertsCount = db.safetyAlert.findMany({
     where: { shop: session.shop, status: "active" },
     select: { status: true, reviewState: true, resolutionType: true },
   }).then(alerts => alerts.filter(alert => !isWaitingForSupplier(alert)).length);
-  const webhookRegistration = ensureShopifyWebhooksRegistered(session);
   const notificationLanguage = firestore
     .collection("merchants")
     .doc(encodeURIComponent(session.shop))
@@ -44,7 +46,7 @@ export const loader = async ({ request }: { request: Request }) => {
     activeAlertsCount,
     notificationLanguage,
     shopifyLocale,
-    ready: Promise.all([billingStatus, webhookRegistration]).then(([status]) => status),
+    ready: billingStatus,
   };
 };
 

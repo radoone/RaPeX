@@ -1431,7 +1431,15 @@
     "waiting": "Várakozás a beszállítóra",
     "when": "Rögzítve ekkor",
     "who": "Rögzítette",
-    "whyMatch": "Miért egyezhet ez"
+    "whyMatch": "Miért egyezhet ez",
+    "viewRemainingProducts_one": "{{count}} ellenőrzésre szoruló termék megtekintése",
+    "viewRemainingProducts_other": "{{count}} ellenőrzésre szoruló termék megtekintése",
+    "coverageIncomplete_one": "{{count}} terméknek aktuális ellenőrzésre van szüksége",
+    "coverageIncomplete_other": "{{count}} terméknek aktuális ellenőrzésre van szüksége",
+    "oldest_one": "Nyitva {{count}} napja",
+    "oldest_other": "Nyitva {{count}} napja",
+    "eventCount_one": "{{count}} döntési esemény",
+    "eventCount_other": "{{count}} döntési esemény"
   },
   "responseGuide": {
     "title": "Útmutató: válasz megerősített egyezésre",

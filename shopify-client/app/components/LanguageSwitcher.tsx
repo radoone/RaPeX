@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { EU_LANGUAGES, changeMerchantLanguage } from "../i18n";
 
-import { LANGUAGE_STORAGE_KEY } from "../services/interface-language";
+import { LANGUAGE_COOKIE_NAME, LANGUAGE_STORAGE_KEY } from "../services/interface-language";
 
 export function LanguageSwitcher() {
     const { i18n, t } = useTranslation();
@@ -34,6 +34,10 @@ export function LanguageSwitcher() {
         try {
             await changeMerchantLanguage(lng);
             try { window.localStorage.setItem(LANGUAGE_STORAGE_KEY, lng); } catch { /* Keep the selection for this visit when storage is blocked. */ }
+            try {
+              const secure = window.location.protocol === "https:" ? "; SameSite=None; Secure" : "; SameSite=Lax";
+              document.cookie = `${LANGUAGE_COOKIE_NAME}=${encodeURIComponent(lng)}; Path=/; Max-Age=31536000${secure}`;
+            } catch { /* Ignore blocked cookie writes in strict embedded contexts. */ }
             setCurrentLang(lng);
         } catch {
             setCurrentLang(previous);

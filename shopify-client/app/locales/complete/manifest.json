@@ -1,8 +1,8 @@
 {
   "createdOn": "2026-11-01T10:02:43.104Z",
   "model": "gemini-2.5-flash",
-  "sourceSha256": "14823a4351cf8074921001b7bc733087a42ef24abf794e8db29eed4641e0c190",
-  "sourceKeys": 1352,
+  "sourceSha256": "d4baae1c91330fbe9878a534d9ca943642526e1f8c14cb597a4c1e48b56b42df",
+  "sourceKeys": 1362,
   "scope": "Complete Shopify merchant UI, excluding stored product facts, identifiers and original Safety Gate records; response guide translations updated with Gemini 2.5 Flash; response guide and monitoring evidence translations updated with Gemini 2.5 Flash",
   "nativeSpeakerReview": "Not performed for every language",
   "locales": {
@@ -292,9 +292,47 @@
         "sv"
       ],
       "source": "Manually authored in app/locales/gallery.ts; no model translation job was run for this addition."
+    },
+    {
+      "date": "2026-11-25",
+      "keys": [
+        "settingsUx.supportTitle",
+        "settingsUx.supportBody",
+        "workspace.viewRemainingProducts_*",
+        "workspace.coverageIncomplete_*",
+        "workspace.oldest_*",
+        "workspace.eventCount_*"
+      ],
+      "languages": [
+        "en",
+        "sk",
+        "bg",
+        "cs",
+        "da",
+        "de",
+        "el",
+        "es",
+        "et",
+        "fi",
+        "fr",
+        "ga",
+        "hr",
+        "hu",
+        "it",
+        "lt",
+        "lv",
+        "mt",
+        "nl",
+        "pl",
+        "pt",
+        "ro",
+        "sl",
+        "sv"
+      ],
+      "method": "Manually authored CLDR plural forms and support copy aligned with existing complete locale catalogs; no translation API calls."
     }
   ],
-  "updatedOn": "2026-11-18T15:37:02.794Z",
+  "updatedOn": "2026-11-25T20:56:14.241Z",
   "copyUpdates": [
     "2026-11-20: Monitoring activity, notification settings and catalog check status copy added in all 24 languages."
   ],

@@ -2,6 +2,8 @@ export type DashboardCatalogProduct = {
   id: string;
   title: string;
   updatedAt: string | null;
+  vendor?: string;
+  productType?: string;
 };
 
 type AdminGraphql = {
@@ -43,7 +45,7 @@ async function fetchCurrentCatalogProductsFromShopify(
       query dashboardCatalogProducts($first: Int!, $after: String) {
         products(first: $first, after: $after) {
           pageInfo { hasNextPage endCursor }
-          nodes { id title updatedAt }
+          nodes { id title updatedAt vendor productType }
         }
       }
     `,
@@ -60,12 +62,16 @@ async function fetchCurrentCatalogProductsFromShopify(
       id: string;
       title: string;
       updatedAt?: string | null;
+      vendor?: string | null;
+      productType?: string | null;
     }>;
     products.push(
       ...nodes.map((product) => ({
         id: product.id.replace("gid://shopify/Product/", ""),
         title: product.title,
         updatedAt: product.updatedAt || null,
+        ...(product.vendor ? { vendor: product.vendor } : {}),
+        ...(product.productType ? { productType: product.productType } : {}),
       })),
     );
     hasNextPage = Boolean(connection?.pageInfo?.hasNextPage);

@@ -20,6 +20,9 @@ type Pages = {
   "/webhooks/app/scopes_update": {
     params: {};
   };
+  "/api/notification-language": {
+    params: {};
+  };
   "/api/product-safety-status": {
     params: {};
   };
@@ -42,6 +45,9 @@ type Pages = {
     params: {};
   };
   "/webhooks/products/update": {
+    params: {};
+  };
+  "/api/exclusion-preview": {
     params: {};
   };
   "/webhooks/shop/redact": {
@@ -82,6 +88,9 @@ type Pages = {
   "/app/audit-report.csv": {
     params: {};
   };
+  "/app/check-ledger.csv": {
+    params: {};
+  };
   "/app/audit-report": {
     params: {};
   };
@@ -102,7 +111,7 @@ type Pages = {
 type RouteFiles = {
   "root.tsx": {
     id: "root";
-    page: "/" | "/webhooks/customers/data_request" | "/webhooks/app/scopes_update" | "/api/product-safety-status" | "/webhooks/customers/redact" | "/api/catalog-audit-status" | "/api/product-safety-check" | "/webhooks/app/uninstalled" | "/webhooks/products/create" | "/webhooks/products/delete" | "/webhooks/products/update" | "/webhooks/shop/redact" | "/api/product-images" | "/billing/redirect" | "/audit-report" | "/manual-check" | "/auth/login" | "/evidence" | "/settings" | "/alerts" | "/auth/*" | "/app" | "/app/audit-report.csv" | "/app/audit-report" | "/app/manual-check" | "/app/evidence" | "/app/settings" | "/app/alerts";
+    page: "/" | "/webhooks/customers/data_request" | "/webhooks/app/scopes_update" | "/api/notification-language" | "/api/product-safety-status" | "/webhooks/customers/redact" | "/api/catalog-audit-status" | "/api/product-safety-check" | "/webhooks/app/uninstalled" | "/webhooks/products/create" | "/webhooks/products/delete" | "/webhooks/products/update" | "/api/exclusion-preview" | "/webhooks/shop/redact" | "/api/product-images" | "/billing/redirect" | "/audit-report" | "/manual-check" | "/auth/login" | "/evidence" | "/settings" | "/alerts" | "/auth/*" | "/app" | "/app/audit-report.csv" | "/app/check-ledger.csv" | "/app/audit-report" | "/app/manual-check" | "/app/evidence" | "/app/settings" | "/app/alerts";
   };
   "routes/webhooks.customers.data_request.tsx": {
     id: "routes/webhooks.customers.data_request";
@@ -111,6 +120,10 @@ type RouteFiles = {
   "routes/webhooks.app.scopes_update.tsx": {
     id: "routes/webhooks.app.scopes_update";
     page: "/webhooks/app/scopes_update";
+  };
+  "routes/api.notification-language.ts": {
+    id: "routes/api.notification-language";
+    page: "/api/notification-language";
   };
   "routes/api.product-safety-status.ts": {
     id: "routes/api.product-safety-status";
@@ -143,6 +156,10 @@ type RouteFiles = {
   "routes/webhooks.products.update.tsx": {
     id: "routes/webhooks.products.update";
     page: "/webhooks/products/update";
+  };
+  "routes/api.exclusion-preview.ts": {
+    id: "routes/api.exclusion-preview";
+    page: "/api/exclusion-preview";
   };
   "routes/webhooks.shop.redact.tsx": {
     id: "routes/webhooks.shop.redact";
@@ -190,11 +207,15 @@ type RouteFiles = {
   };
   "routes/app.tsx": {
     id: "routes/app";
-    page: "/app" | "/app/audit-report.csv" | "/app/audit-report" | "/app/manual-check" | "/app/evidence" | "/app/settings" | "/app/alerts";
+    page: "/app" | "/app/audit-report.csv" | "/app/check-ledger.csv" | "/app/audit-report" | "/app/manual-check" | "/app/evidence" | "/app/settings" | "/app/alerts";
   };
   "routes/app.audit-report[.]csv.ts": {
     id: "routes/app.audit-report[.]csv";
     page: "/app/audit-report.csv";
+  };
+  "routes/app.check-ledger[.]csv.ts": {
+    id: "routes/app.check-ledger[.]csv";
+    page: "/app/check-ledger.csv";
   };
   "routes/app.audit-report.tsx": {
     id: "routes/app.audit-report";
@@ -226,6 +247,7 @@ type RouteModules = {
   "root": typeof import("./app/root.tsx");
   "routes/webhooks.customers.data_request": typeof import("./app/routes/webhooks.customers.data_request.tsx");
   "routes/webhooks.app.scopes_update": typeof import("./app/routes/webhooks.app.scopes_update.tsx");
+  "routes/api.notification-language": typeof import("./app/routes/api.notification-language.ts");
   "routes/api.product-safety-status": typeof import("./app/routes/api.product-safety-status.ts");
   "routes/webhooks.customers.redact": typeof import("./app/routes/webhooks.customers.redact.tsx");
   "routes/api.catalog-audit-status": typeof import("./app/routes/api.catalog-audit-status.tsx");
@@ -234,6 +256,7 @@ type RouteModules = {
   "routes/webhooks.products.create": typeof import("./app/routes/webhooks.products.create.tsx");
   "routes/webhooks.products.delete": typeof import("./app/routes/webhooks.products.delete.tsx");
   "routes/webhooks.products.update": typeof import("./app/routes/webhooks.products.update.tsx");
+  "routes/api.exclusion-preview": typeof import("./app/routes/api.exclusion-preview.ts");
   "routes/webhooks.shop.redact": typeof import("./app/routes/webhooks.shop.redact.tsx");
   "routes/api.product-images": typeof import("./app/routes/api.product-images.ts");
   "routes/billing.redirect": typeof import("./app/routes/billing.redirect.tsx");
@@ -247,6 +270,7 @@ type RouteModules = {
   "routes/auth.$": typeof import("./app/routes/auth.$.tsx");
   "routes/app": typeof import("./app/routes/app.tsx");
   "routes/app.audit-report[.]csv": typeof import("./app/routes/app.audit-report[.]csv.ts");
+  "routes/app.check-ledger[.]csv": typeof import("./app/routes/app.check-ledger[.]csv.ts");
   "routes/app.audit-report": typeof import("./app/routes/app.audit-report.tsx");
   "routes/app.manual-check": typeof import("./app/routes/app.manual-check.tsx");
   "routes/app.evidence": typeof import("./app/routes/app.evidence.tsx");

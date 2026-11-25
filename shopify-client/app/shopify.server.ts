@@ -16,6 +16,7 @@ const SHOP_WEBHOOK_PATHS = {
   PRODUCTS_UPDATE: "/webhooks/products/update",
   PRODUCTS_DELETE: "/webhooks/products/delete",
   APP_UNINSTALLED: "/webhooks/app/uninstalled",
+  APP_SCOPES_UPDATE: "/webhooks/app/scopes_update",
 } as const;
 
 export const SHOPIFY_BILLING_TEST = process.env.SHOPIFY_BILLING_TEST !== "false";
@@ -60,6 +61,10 @@ const shopify = shopifyApp({
     APP_UNINSTALLED: {
       deliveryMethod: DeliveryMethod.Http,
       callbackUrl: SHOP_WEBHOOK_PATHS.APP_UNINSTALLED,
+    },
+    APP_SCOPES_UPDATE: {
+      deliveryMethod: DeliveryMethod.Http,
+      callbackUrl: SHOP_WEBHOOK_PATHS.APP_SCOPES_UPDATE,
     },
     // GDPR mandatory webhooks
     CUSTOMERS_DATA_REQUEST: {
@@ -124,7 +129,7 @@ async function registerShopWebhooks(
     // Confirm the destinations in Shopify before recording successful setup.
     const { admin } = await shopify.unauthenticated.admin(session.shop);
     const response = await admin.graphql(`query VerifyShopWebhooks {
-      webhookSubscriptions(first: 100, topics: [PRODUCTS_CREATE, PRODUCTS_UPDATE, PRODUCTS_DELETE, APP_UNINSTALLED]) {
+      webhookSubscriptions(first: 100, topics: [PRODUCTS_CREATE, PRODUCTS_UPDATE, PRODUCTS_DELETE, APP_UNINSTALLED, APP_SCOPES_UPDATE]) {
         nodes { topic uri }
       }
     }`);

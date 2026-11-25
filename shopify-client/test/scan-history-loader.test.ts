@@ -53,7 +53,7 @@ describe("scan history", () => {
   });
 
   it("merges the authenticated shop's recorded initial audit and monitoring runs", async () => {
-    const result = (await load("scans")).data;
+    const result = await (await load("scans")).data;
     expect(result).toMatchObject({
       failed: false,
       runs: [
@@ -71,8 +71,8 @@ describe("scan history", () => {
     reviewRecords.mockResolvedValue({ records: [] });
     const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
     try {
-      expect((await load("scans")).data).toEqual({ view: "scans", runs: [], failed: true });
-      expect((await load("decisions")).data).toMatchObject({ view: "decisions", records: [] });
+      expect(await (await load("scans")).data).toEqual({ view: "scans", runs: [], failed: true });
+      expect(await (await load("decisions")).data).toMatchObject({ view: "decisions", records: [] });
       expect(reviewRecords).toHaveBeenCalledWith(shop, { dateBasis: "decisions" }, 100);
     } finally {
       warn.mockRestore();

@@ -1431,7 +1431,19 @@
     "waiting": "Čeka se dobavljač",
     "when": "Zabilježeno u",
     "who": "Zabilježio/la",
-    "whyMatch": "Zašto se ovo može podudarati"
+    "whyMatch": "Zašto se ovo može podudarati",
+    "viewRemainingProducts_one": "Prikaži {{count}} proizvod koji treba provjeru",
+    "viewRemainingProducts_few": "Prikaži {{count}} proizvoda koji trebaju provjeru",
+    "viewRemainingProducts_other": "Prikaži {{count}} proizvoda koji trebaju provjeru",
+    "coverageIncomplete_one": "{{count}} proizvod treba trenutnu provjeru",
+    "coverageIncomplete_few": "{{count}} proizvoda trebaju trenutnu provjeru",
+    "coverageIncomplete_other": "{{count}} proizvoda treba trenutnu provjeru",
+    "oldest_one": "Otvoreno {{count}} dan",
+    "oldest_few": "Otvoreno {{count}} dana",
+    "oldest_other": "Otvoreno {{count}} dana",
+    "eventCount_one": "{{count}} događaj odluke",
+    "eventCount_few": "{{count}} događaja odluke",
+    "eventCount_other": "{{count}} događaja odluke"
   },
   "responseGuide": {
     "title": "Vodič: odgovorite na potvrđeno podudaranje",

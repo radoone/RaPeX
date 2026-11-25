@@ -1,3 +1,2 @@
-// Shopify adapter v4 defaults to Polaris 2; keep the current component contract
-// until its visual migration is reviewed separately. Use one URL for script and preload.
-export const POLARIS_URL = "https://cdn.shopify.com/shopifycloud/polaris-1.js";
+// Keep one canonical Polaris 2 script URL for AppProvider and <link rel="preload">.
+export const POLARIS_URL = "https://cdn.shopify.com/shopifycloud/polaris-2.js";

@@ -1447,7 +1447,19 @@
     "waiting": "Gaida piegādātāju",
     "when": "Reģistrēts",
     "who": "Ierakstījis",
-    "whyMatch": "Kāpēc tas varētu atbilst"
+    "whyMatch": "Kāpēc tas varētu atbilst",
+    "viewRemainingProducts_zero": "Skatīt {{count}} produktus, kuriem nepieciešama pārbaude",
+    "viewRemainingProducts_one": "Skatīt {{count}} produktu, kuram nepieciešama pārbaude",
+    "viewRemainingProducts_other": "Skatīt {{count}} produktus, kuriem nepieciešama pārbaude",
+    "coverageIncomplete_zero": "{{count}} produktiem nepieciešama pašreizējā pārbaude",
+    "coverageIncomplete_one": "{{count}} produktam nepieciešama pašreizējā pārbaude",
+    "coverageIncomplete_other": "{{count}} produktiem nepieciešama pašreizējā pārbaude",
+    "oldest_zero": "Atvērts {{count}} dienas",
+    "oldest_one": "Atvērts {{count}} dienu",
+    "oldest_other": "Atvērts {{count}} dienas",
+    "eventCount_zero": "{{count}} lēmumu notikumi",
+    "eventCount_one": "{{count}} lēmuma notikums",
+    "eventCount_other": "{{count}} lēmumu notikumi"
   },
   "responseGuide": {
     "title": "Ceļvedis: atbildēt uz apstiprinātu atbilstību",

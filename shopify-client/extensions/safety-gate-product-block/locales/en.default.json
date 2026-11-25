@@ -18,7 +18,7 @@
   "reason": "Reason",
   "checked": "Last checked",
   "risk": "Risk in the official alert",
-  "name": "Safety Gate",
+  "name": "ZeroRecall · Safety Gate",
   "noMatchHelp": "A Safety Gate check cannot certify product safety.",
   "waiting": "Waiting for supplier",
   "changed": "Changed since last check"

@@ -32,6 +32,7 @@ describe("Shopify webhook registration", () => {
     { topic: "PRODUCTS_UPDATE", uri: `${baseUrl}/webhooks/products/update` },
     { topic: "PRODUCTS_DELETE", uri: `${baseUrl}/webhooks/products/delete` },
     { topic: "APP_UNINSTALLED", uri: `${baseUrl}/webhooks/app/uninstalled` },
+    { topic: "APP_SCOPES_UPDATE", uri: `${baseUrl}/webhooks/app/scopes_update` },
   ];
   beforeEach(() => {
     vi.resetAllMocks();

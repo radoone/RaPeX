@@ -138,21 +138,15 @@ export function AlertTable({
     submittedBulk.current = true;
     onBulkAction(decision.ids, decision.action, decision.outcome, decision.notes);
   };
+  const hasActiveFilters = Boolean(searchValue.trim() || riskLevelFilter.length > 0 || (activeTab !== "active" && activeTab !== "all"));
 
   return (
     <s-section
       padding="none"
       accessibilityLabel={t("alerts.table.accessibilityLabel")}
     >
-      <s-table
-        accessibilityLabel={t("alerts.table.accessibilityLabel")}
-        paginate={pagination.hasPrevious || pagination.hasNext}
-        hasPreviousPage={pagination.hasPrevious}
-        hasNextPage={pagination.hasNext}
-        onpreviouspage={pagination.onPrevious}
-        onnextpage={pagination.onNext}
-      >
-        <s-stack slot="filters" gap="small">
+      <s-box padding="base">
+        <s-stack gap="small">
           <div className="review-status-filters" role="group" aria-label={t("workspace.currentFindingStatus")}>
             {[
               ["active", "status.needsReview", stats?.active],
@@ -264,56 +258,73 @@ export function AlertTable({
             </s-popover>
           </div>
         </s-stack>
+      </s-box>
 
-        <s-table-header-row>
-          <s-table-header>
-            <s-checkbox
-              accessibilityLabel={t("alerts.table.selectAll")}
-              checked={
-                visibleSelectedIds.length === alerts.length &&
-                alerts.length > 0
-              }
-              indeterminate={
-                visibleSelectedIds.length > 0 &&
-                visibleSelectedIds.length < alerts.length
-              }
-              disabled={isLoading || alerts.length === 0}
-              onChange={toggleSelectAll}
-            />
-          </s-table-header>
-          <s-table-header listSlot="primary">
-            {t("alerts.table.headers.product")}
-          </s-table-header>
-          <s-table-header listSlot="inline">
-            {t("alerts.table.headers.status")}
-          </s-table-header>
-          <s-table-header listSlot="labeled">{t("redesign.aiSimilarity")}</s-table-header>
-          <s-table-header listSlot="labeled">
-            {t("findingOverview.officialRisk")}
-          </s-table-header>
-          <s-table-header listSlot="labeled">{t("redesign.safetyGateReference")}</s-table-header>
-          <s-table-header listSlot="labeled">
-            {t("alerts.table.headers.detected")}
-          </s-table-header>
-          <s-table-header>{t("alerts.table.headers.actions")}</s-table-header>
-        </s-table-header-row>
-        <s-table-body>
-          {alerts.length === 0 ? (
-            <s-table-row>
-              <s-table-cell colSpan={8}>
-                <s-box padding="large">
-                  <s-stack gap="small" align="center">
-                    <s-text fontWeight="semibold">
-                      {activeTab === "active" && stats?.active === 0 && stats?.waiting === 0
-                        ? t("alerts.table.emptyAllClearTitle")
-                        : t("alerts.table.emptyFilteredTitle")}
-                    </s-text>
-                  </s-stack>
-                </s-box>
-              </s-table-cell>
-            </s-table-row>
-          ) : (
-            alerts.map((alert) => (
+      {alerts.length === 0 ? (
+        <s-box padding="large">
+          <s-stack gap="small" alignItems="center">
+            <s-text fontWeight="semibold">
+              {activeTab === "active" && stats?.active === 0 && stats?.waiting === 0
+                ? t("alerts.table.emptyAllClearTitle")
+                : t("alerts.table.emptyFilteredTitle")}
+            </s-text>
+            {hasActiveFilters && (
+              <s-button
+                variant="secondary"
+                onClick={() => {
+                  onSearchChange?.("");
+                  onRiskLevelChange?.([]);
+                  onStatusChange?.("active");
+                }}
+              >
+                {t("workspace.clearFilters")}
+              </s-button>
+            )}
+          </s-stack>
+        </s-box>
+      ) : (
+        <s-table
+          accessibilityLabel={t("alerts.table.accessibilityLabel")}
+          paginate={pagination.hasPrevious || pagination.hasNext}
+          hasPreviousPage={pagination.hasPrevious}
+          hasNextPage={pagination.hasNext}
+          onpreviouspage={pagination.onPrevious}
+          onnextpage={pagination.onNext}
+        >
+          <s-table-header-row>
+            <s-table-header listSlot="inline">
+              <s-checkbox
+                accessibilityLabel={t("alerts.table.selectAll")}
+                checked={
+                  visibleSelectedIds.length === alerts.length &&
+                  alerts.length > 0
+                }
+                indeterminate={
+                  visibleSelectedIds.length > 0 &&
+                  visibleSelectedIds.length < alerts.length
+                }
+                disabled={isLoading || alerts.length === 0}
+                onChange={toggleSelectAll}
+              />
+            </s-table-header>
+            <s-table-header listSlot="primary">
+              {t("alerts.table.headers.product")}
+            </s-table-header>
+            <s-table-header listSlot="inline">
+              {t("alerts.table.headers.status")}
+            </s-table-header>
+            <s-table-header listSlot="labeled">{t("redesign.aiSimilarity")}</s-table-header>
+            <s-table-header listSlot="labeled">
+              {t("findingOverview.officialRisk")}
+            </s-table-header>
+            <s-table-header listSlot="labeled">{t("redesign.safetyGateReference")}</s-table-header>
+            <s-table-header listSlot="labeled">
+              {t("alerts.table.headers.detected")}
+            </s-table-header>
+            <s-table-header listSlot="labeled">{t("alerts.table.headers.actions")}</s-table-header>
+          </s-table-header-row>
+          <s-table-body>
+            {alerts.map((alert) => (
               <AlertRow
                 key={alert.id}
                 alert={alert}
@@ -322,10 +333,10 @@ export function AlertTable({
                 isLoading={isLoading}
                 onSelect={(id) => { if (!isLoading) toggleSelect(id); }}
               />
-            ))
-          )}
-        </s-table-body>
-      </s-table>
+            ))}
+          </s-table-body>
+        </s-table>
+      )}
 
       {visibleSelectedIds.length > 0 && onBulkAction && (
         <div className="floating-bulk-actions is-visible" role="region" aria-label={t("reviewUx.bulkTitle")}>
@@ -391,7 +402,7 @@ function AlertRow({
 }) {
   const { t, i18n } = useTranslation();
 
-  const dateLocale = i18n.language === "en" ? "en-GB" : i18n.language;
+  const dateLocale = i18n.resolvedLanguage || i18n.language || "en";
 
   const createdDate = new Date(alert.createdAt);
   const [observedAt] = useState(() => Date.now());
@@ -548,7 +559,7 @@ export function formatRelativeDate(
       numeric: "auto",
     }).format(-count, unit);
   }
-  const resolvedLocale = !locale || locale === "en" ? "en-GB" : locale;
+  const resolvedLocale = locale || "en";
   return parsedDate.toLocaleDateString(resolvedLocale, {
     day: "numeric",
     month: "short",

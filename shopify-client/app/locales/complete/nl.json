@@ -1431,7 +1431,15 @@
     "waiting": "Wachten op leverancier",
     "when": "Vastgelegd op",
     "who": "Opgenomen door",
-    "whyMatch": "Waarom dit kan overeenkomen"
+    "whyMatch": "Waarom dit kan overeenkomen",
+    "viewRemainingProducts_one": "{{count}} product bekijken dat een controle nodig heeft",
+    "viewRemainingProducts_other": "{{count}} producten bekijken die een controle nodig hebben",
+    "coverageIncomplete_one": "{{count}} product heeft een huidige controle nodig",
+    "coverageIncomplete_other": "{{count}} producten hebben een huidige controle nodig",
+    "oldest_one": "Open voor {{count}} dag",
+    "oldest_other": "Open voor {{count}} dagen",
+    "eventCount_one": "{{count}} beslissingsgebeurtenis",
+    "eventCount_other": "{{count}} beslissingsgebeurtenissen"
   },
   "responseGuide": {
     "title": "Gids: reageren op een bevestigde match",

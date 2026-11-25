@@ -1431,7 +1431,19 @@
     "waiting": "In attesa del fornitore",
     "when": "Registrato il",
     "who": "Registrato da",
-    "whyMatch": "Perché potrebbe corrispondere"
+    "whyMatch": "Perché potrebbe corrispondere",
+    "viewRemainingProducts_one": "Visualizza {{count}} prodotto che necessita di un controllo",
+    "viewRemainingProducts_many": "Visualizza {{count}} prodotti che necessitano di un controllo",
+    "viewRemainingProducts_other": "Visualizza {{count}} prodotti che necessitano di un controllo",
+    "coverageIncomplete_one": "{{count}} prodotto necessita di un controllo attuale",
+    "coverageIncomplete_many": "{{count}} prodotti necessitano di un controllo attuale",
+    "coverageIncomplete_other": "{{count}} prodotti necessitano di un controllo attuale",
+    "oldest_one": "Aperto da {{count}} giorno",
+    "oldest_many": "Aperto da {{count}} giorni",
+    "oldest_other": "Aperto da {{count}} giorni",
+    "eventCount_one": "{{count}} evento di decisione",
+    "eventCount_many": "{{count}} eventi di decisione",
+    "eventCount_other": "{{count}} eventi di decisione"
   },
   "responseGuide": {
     "title": "Guida: rispondi a una corrispondenza confermata",

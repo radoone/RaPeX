@@ -26,13 +26,16 @@ import {
   formatActorId,
   isWaitingForSupplier,
 } from "../services/review-evidence";
-import { normalizeInterfaceLanguage } from "../services/interface-language";
+import { interfaceLanguageFromCookie, normalizeInterfaceLanguage } from "../services/interface-language";
 import { localizeRisk } from "../components/AlertBadge";
+import { HistoryNav } from "../components/HistoryNav";
 import { ReviewStatusSummary, reviewStatusOptions } from "../components/ReviewStatusSummary";
 export const headers = boundary.headers;
 export const loader = async ({ request, url }: LoaderFunctionArgs) => {
   const { session } = await authenticate.admin(request);
-  const shopifyLocale = normalizeInterfaceLanguage(url.searchParams.get("locale"));
+  const shopifyLocale =
+    interfaceLanguageFromCookie(request.headers.get("Cookie")) ||
+    normalizeInterfaceLanguage(url.searchParams.get("locale"));
   const requestedView = url.searchParams.get("view");
   return {
     data: loadEvidencePage(session.shop, url, requestedView),
@@ -110,18 +113,6 @@ export default function EvidencePage() {
   );
 }
 
-function HistoryLinks({ scans }: { scans: boolean }) {
-  const { t } = useTranslation();
-  return (
-    <s-stack direction="inline" gap="base" alignItems="center" wrap>
-      {scans ? <s-text fontWeight="semibold">{t("redesign.scans")}</s-text> :
-        <s-link href="/app/evidence?view=scans">{t("redesign.scans")}</s-link>}
-      {scans ? <s-link href="/app/evidence">{t("workspace.history")}</s-link> :
-        <s-text fontWeight="semibold">{t("workspace.history")}</s-text>}
-    </s-stack>
-  );
-}
-
 type HistoryData = Awaited<ReturnType<typeof loadEvidencePage>>;
 
 function ScanHistory({ data }: { data: Extract<HistoryData, { view: "scans" }> }) {
@@ -131,10 +122,7 @@ function ScanHistory({ data }: { data: Extract<HistoryData, { view: "scans" }> }
   return (
     <s-page inlineSize="large" heading={t("redesign.scanHistory")}>
       <s-stack gap="base">
-        <s-stack direction="inline" gap="base" justifyContent="space-between" alignItems="center" wrap>
-          <HistoryLinks scans />
-          <s-button href="/app/audit-report" variant="secondary">{t("workspace.reportTitle")}</s-button>
-        </s-stack>
+        <HistoryNav active="scans" />
         {data.failed ? (
           <s-banner tone="warning" heading={t("errors.pageLoadFailed")}>
             <s-button onClick={() => revalidator.revalidate()} loading={revalidator.state !== "idle"}>{t("actions.retry")}</s-button>
@@ -282,15 +270,8 @@ function EvidenceRecords({ data }: { data: Exclude<HistoryData, { view: "scans" 
       >
         {t("workspace.print")}
       </s-button>
-      <s-button
-        slot="secondary-actions"
-        variant="tertiary"
-        href="/app/audit-report"
-      >
-        {t("workspace.reportTitle")}
-      </s-button>
       <div className="admin-stack">
-        <HistoryLinks scans={false} />
+        <HistoryNav active="decisions" />
         {exportFailed ? (
           <s-banner tone="critical" heading={t("errors.apiError")}>
             <s-text>{t("actions.retry")}</s-text>
@@ -449,7 +430,7 @@ function EvidenceRecords({ data }: { data: Exclude<HistoryData, { view: "scans" 
                 <s-table-header listSlot="inline">
                   {t("workspace.status")}
                 </s-table-header>
-                <s-table-header>{t("workspace.outcome")}</s-table-header>
+                <s-table-header listSlot="labeled">{t("workspace.outcome")}</s-table-header>
               </s-table-header-row>
               <s-table-body>
                 {findings.map((record) => (

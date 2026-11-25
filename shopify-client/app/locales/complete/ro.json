@@ -1431,7 +1431,19 @@
     "waiting": "Așteaptă furnizorul",
     "when": "Înregistrat la",
     "who": "Înregistrat de",
-    "whyMatch": "De ce ar putea corespunde"
+    "whyMatch": "De ce ar putea corespunde",
+    "viewRemainingProducts_one": "Vizualizați {{count}} produs care necesită o verificare",
+    "viewRemainingProducts_few": "Vizualizați {{count}} produse care necesită o verificare",
+    "viewRemainingProducts_other": "Vizualizați {{count}} de produse care necesită o verificare",
+    "coverageIncomplete_one": "{{count}} produs necesită o verificare curentă",
+    "coverageIncomplete_few": "{{count}} produse necesită o verificare curentă",
+    "coverageIncomplete_other": "{{count}} de produse necesită o verificare curentă",
+    "oldest_one": "Deschis de {{count}} zi",
+    "oldest_few": "Deschis de {{count}} zile",
+    "oldest_other": "Deschis de {{count}} de zile",
+    "eventCount_one": "{{count}} eveniment de decizie",
+    "eventCount_few": "{{count}} evenimente de decizie",
+    "eventCount_other": "{{count}} de evenimente de decizie"
   },
   "responseGuide": {
     "title": "Ghid: răspundeți unei potriviri confirmate",
